@@ -339,15 +339,16 @@ $('#mpanel6').pointsVerify({
 		WfMsg(option);
 		
 		var username = $("#username1").val();
-		var password = $("#password").val();
-		var pwdEcodeType=$('#pwdEcodeType').val();
-		
-		var encodeUserName = encode64(username);
-		var encodePassword = encode64(password);
-		var rsapwd=encrypt(pwdEcodeType,encodePassword);
-		$("#username1").val(encodeUserName);
-		$("#password1").val(rsapwd);
-		$("#fm1").submit();
+        var password = $("#password").val();
+        var rsaPublicKey=$('#rsaPublicKey').val();
+        
+        //var encodeUsername = encode64(username);
+        //var encodePassword = encode64(password);
+        var encryptedUserName=encrypt(rsaPublicKey,username);
+        var encryptedPassword=encrypt(rsaPublicKey,password);
+        $("#username1").val(encryptedUserName);
+        $("#password1").val(encryptedPassword);
+        $("#fm1").submit();
 	},
 	error : function() {
 		let option = {

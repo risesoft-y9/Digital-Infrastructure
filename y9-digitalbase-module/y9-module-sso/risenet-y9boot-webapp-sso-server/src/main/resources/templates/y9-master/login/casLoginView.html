@@ -56,7 +56,7 @@
             <input type="hidden" id="tenantShortName" name="tenantShortName"/>
             <input type="hidden" id="loginType" name="loginType" value="loginName"/>
             <input type="hidden" id="screenDimension" name="screenDimension" value=""/>
-            <input type="hidden" id="pwdEcodeType" name="pwdEcodeType" value=""/>
+            <input type="hidden" id="rsaPublicKey" name="rsaPublicKey" value=""/>
             <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
             <input type="hidden" name="_eventId" value="submit"/>
             <input type="hidden" name="geolocation"/>
@@ -323,11 +323,11 @@
                         async: false,
                         cache: false,
                         type: "GET",
-                        url: ctx + '/api/getRandom',
+                        url: ctx + '/api/getRsaPublicKey',
                         dataType: "json",
                         success: function (y9Result) {
                             if (y9Result.success) {
-                                $('#pwdEcodeType').val(y9Result.data);
+                                $('#rsaPublicKey').val(y9Result.data);
                             }
                         }
                     })

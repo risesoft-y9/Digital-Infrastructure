@@ -12,17 +12,13 @@ import y9.util.Y9Result;
 @Lazy(false)
 @Controller
 @RequestMapping(value = "/api")
-public class RandomController {
-
-    public RandomController() {
-        System.out.println("RandomController created...");
-    }
+public class RsaPublicKeyController {
 
     @ResponseBody
-    @GetMapping(value = "/getRandom")
-    public Y9Result<Object> getRandom() {
+    @GetMapping(value = "/getRsaPublicKey")
+    public Y9Result<Object> getRsaPublicKey() {
         try {
-            return Y9Result.success(Y9Context.getProperty("y9.encryptionRsaPublicKey"), "获取成功");
+            return Y9Result.success(Y9Context.getProperty("y9.rsaPublicKey"), "获取成功");
         } catch (Exception e) {
             e.printStackTrace();
             return Y9Result.failure("获取失败");

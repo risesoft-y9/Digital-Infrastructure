@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
+import org.apereo.cas.authentication.credential.UsernamePasswordCredential;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import cz.mallat.uasparser.UserAgentInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import y9.entity.Y9LoginUser;
 import y9.entity.Y9User;
 import y9.repository.Y9LoginUserRepository;
@@ -21,8 +21,6 @@ import y9.util.InetAddressUtil;
 import y9.util.Y9Context;
 import y9.util.common.UserAgentUtil;
 import y9.util.json.Y9JacksonUtil;
-
-import cz.mallat.uasparser.UserAgentInfo;
 
 @Service("y9LoginUserService")
 @Slf4j
@@ -35,7 +33,7 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
     private final Y9UserRepository y9UserRepository;
 
     @Override
-    public void save(RememberMeUsernamePasswordCredential credential, String success, String logMessage) {
+    public void save(UsernamePasswordCredential credential, String success, String logMessage) {
         try {
             String userLoginName = credential.getUsername();
             Map<String, Object> customFields = credential.getCustomFields();
@@ -61,19 +59,15 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
                 List<Y9User> users = null;
                 if ("mobile".equals(loginType)) {
                     if (StringUtils.hasText(deptId)) {
-                        users = y9UserRepository.findByTenantShortNameAndMobileAndParentId(tenantShortName,
-                            userLoginName, deptId);
+                        users = y9UserRepository.findByTenantShortNameAndMobileAndParentId(tenantShortName, userLoginName, deptId);
                     } else {
-                        users = y9UserRepository.findByTenantShortNameAndMobileAndOriginal(tenantShortName,
-                            userLoginName, Boolean.TRUE);
+                        users = y9UserRepository.findByTenantShortNameAndMobileAndOriginal(tenantShortName, userLoginName, Boolean.TRUE);
                     }
                 } else {
                     if (StringUtils.hasText(deptId)) {
-                        users = y9UserRepository.findByTenantShortNameAndLoginNameAndParentId(tenantShortName,
-                            userLoginName, deptId);
+                        users = y9UserRepository.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, userLoginName, deptId);
                     } else {
-                        users = y9UserRepository.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName,
-                            userLoginName, Boolean.TRUE);
+                        users = y9UserRepository.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, userLoginName, Boolean.TRUE);
                     }
                 }
                 if (users != null && users.size() > 0) {

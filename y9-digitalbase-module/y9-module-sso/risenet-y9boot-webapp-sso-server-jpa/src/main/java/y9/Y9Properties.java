@@ -29,8 +29,8 @@ public class Y9Properties {
     private String internalIp = "192.168.x.x,10.0.x.x,172.20.x.x";
 
     /** 非对称公钥 */
-    private String encryptionRsaPublicKey = "";
+    private String rsaPublicKey = "";
 
     /** 非对称私钥 */
-    private String encryptionRsaPrivateKey = "";
+    private String rsaPrivateKey = "";
 }

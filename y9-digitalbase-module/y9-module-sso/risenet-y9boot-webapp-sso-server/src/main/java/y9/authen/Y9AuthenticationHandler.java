@@ -1,11 +1,9 @@
 package y9.authen;
 
 import java.security.GeneralSecurityException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.FailedLoginException;
@@ -17,12 +15,10 @@ import org.apereo.cas.authentication.AuthenticationHandlerExecutionResult;
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.DefaultAuthenticationHandlerExecutionResult;
 import org.apereo.cas.authentication.PreventedException;
-import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
 import org.apereo.cas.authentication.credential.UsernamePasswordCredential;
 import org.apereo.cas.authentication.principal.PrincipalFactoryUtils;
 import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.services.ServicesManager;
-import org.apereo.cas.web.support.WebUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -30,14 +26,12 @@ import com.google.common.collect.Lists;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
-
 import y9.entity.Y9User;
 import y9.service.Y9LoginUserService;
 import y9.service.Y9UserService;
 import y9.util.Y9Context;
 import y9.util.Y9MessageDigest;
 import y9.util.common.AESUtil;
-import y9.util.common.Base64Util;
 import y9.util.common.RSAUtil;
 
 @Slf4j
@@ -45,63 +39,49 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
     private final Y9UserService y9UserService;
     private final Y9LoginUserService y9LoginUserService;
 
-    public Y9AuthenticationHandler(String name, ServicesManager servicesManager, Integer order,
-        Y9UserService y9UserService, Y9LoginUserService y9LoginUserService) {
+    public Y9AuthenticationHandler(String name, ServicesManager servicesManager, Integer order, Y9UserService y9UserService, Y9LoginUserService y9LoginUserService) {
         super(name, servicesManager, PrincipalFactoryUtils.newPrincipalFactory(), order);
         this.y9UserService = y9UserService;
         this.y9LoginUserService = y9LoginUserService;
     }
 
     @Override
-    public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service)
-        throws GeneralSecurityException, PreventedException {
-        RememberMeUsernamePasswordCredential riseCredential = (RememberMeUsernamePasswordCredential)credential;
+    public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service) throws GeneralSecurityException, PreventedException {
+        UsernamePasswordCredential riseCredential = (UsernamePasswordCredential)credential;
+        // HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext();
+        HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+        String loginType = request.getParameter("loginType");
+        String tenantShortName = request.getParameter("tenantShortName");
+        String positionId = request.getParameter("positionId");
+        String deptId = request.getParameter("deptId");
+        String systemName = request.getParameter("systemName");
+        String screenDimension = request.getParameter("screenDimension");
+        // String rsaPublicKey = request.getParameter("rsaPublicKey");
 
         Map<String, Object> customFields = riseCredential.getCustomFields();
-        HttpServletRequest request =
-            ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+        customFields.put("tenantShortName", tenantShortName);
+        customFields.put("noLoginScreen", true);
+        customFields.put("deptId", deptId);
+        customFields.put("positionId", positionId);
+        customFields.put("loginType", loginType);
+        customFields.put("screenDimension", screenDimension);
+        customFields.put("systemName", systemName);
+        riseCredential.setCustomFields(customFields);
 
-        String loginType =
-            Optional.ofNullable((String)customFields.get("loginType")).orElse(request.getParameter("loginType"));
-        String tenantShortName = Optional.ofNullable((String)customFields.get("tenantShortName"))
-            .orElse(request.getParameter("tenantShortName"));
-        String deptId = Optional.ofNullable((String)customFields.get("deptId")).orElse(request.getParameter("deptId"));
-        String pwdEcodeType =
-            Optional.ofNullable((String)customFields.get("pwdEcodeType")).orElse(request.getParameter("pwdEcodeType"));
-
-        String base64Username = riseCredential.getUsername();
-        String encryptedBase64Password = riseCredential.toPassword();
-
-        String base64Password;
-        String plainUsername;
-        String plainPassword;
+        String encryptedUsername = riseCredential.getUsername();
+        String encryptedPassword = riseCredential.toPassword();
         Y9User y9User;
         try {
-            if (StringUtils.isNotBlank(pwdEcodeType)) {
-                String rsaPrivateKey = Y9Context.getProperty("y9.encryptionRsaPrivateKey");
-                if (null != rsaPrivateKey) {
-                    try {
-                        base64Password = RSAUtil.privateDecrypt(encryptedBase64Password, rsaPrivateKey);
-                    } catch (Exception e) {
-                        LOGGER.warn("解密失败", e);
-                        throw new FailedLoginException("认证失败：加密公私钥不匹配!");
-                    }
-                } else {
-                    throw new FailedLoginException("认证失败：解密私钥未配置!");
-                }
-            } else {
-                base64Password = encryptedBase64Password;
-            }
-            plainPassword = Base64Util.decode(base64Password, "Unicode");
-            plainUsername = Base64Util.decode(base64Username, "Unicode");
-
+            String rsaPrivateKey = Y9Context.getProperty("y9.rsaPrivateKey");
+            String plainUsername = RSAUtil.privateDecrypt(encryptedUsername, rsaPrivateKey);
+            String plainPassword = RSAUtil.privateDecrypt(encryptedPassword, rsaPrivateKey);
             if (plainUsername.contains("&")) {
                 String agentUserName = plainUsername.substring(plainUsername.indexOf("&") + 1);
                 String agentTenantShortName = "operation";
 
                 plainUsername = plainUsername.substring(0, plainUsername.indexOf("&"));
 
-                updateCredential(riseCredential, plainUsername, plainPassword, tenantShortName);
+                updateCredential(request, riseCredential, plainUsername, plainPassword, tenantShortName);
 
                 List<Y9User> agentUsers = getAgentUsers(deptId, agentTenantShortName, agentUserName);
                 if (agentUsers == null || agentUsers.isEmpty()) {
@@ -115,16 +95,14 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
                 }
 
             } else {
-
-                updateCredential(riseCredential, plainUsername, plainPassword, tenantShortName);
+                updateCredential(request, riseCredential, plainUsername, plainPassword, tenantShortName);
 
                 List<Y9User> users = getUsers(loginType, deptId, tenantShortName, plainUsername);
                 if (users == null || users.isEmpty()) {
                     throw new AccountNotFoundException("没有找到这个用户。");
-                } else if ("qrCode".equals(loginType) || "noLoginScreen".equals(loginType)) {
+                } else if ("qrCode".equals(loginType)) {
                     y9User = users.get(0);
-                    updateCredential(riseCredential, y9User.getLoginName(), y9User.getPassword(),
-                        y9User.getTenantShortName());
+                    updateCredential(request, riseCredential, y9User.getLoginName(), y9User.getPassword(), y9User.getTenantShortName());
                 } else {
                     y9User = users.get(0);
                     String hashed = y9User.getPassword();
@@ -150,52 +128,47 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
 
     }
 
-    private static void updateCredential(RememberMeUsernamePasswordCredential riseCredential, String username,
-        String password, String tenantShortName) {
+    private static void updateCredential(HttpServletRequest request, UsernamePasswordCredential riseCredential, String username, String password, String tenantShortName) {
         riseCredential.setUsername(username);
         riseCredential.assignPassword(password);
         Map<String, Object> customFields = riseCredential.getCustomFields();
         if (StringUtils.isNotBlank(tenantShortName)) {
             customFields.put("tenantShortName", tenantShortName);
         }
-
-        HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext();
-        if (null != request) {
-            String systemName = request.getParameter("systemName");
-            if (StringUtils.isNotBlank(systemName)) {
-                customFields.put("systemName", systemName);
-            }
-            String loginType = request.getParameter("loginType");
-            if (StringUtils.isNotBlank(loginType)) {
-                customFields.put("loginType", loginType);
-            }
-            String deptId = request.getParameter("deptId");
-            if (StringUtils.isNotBlank(deptId)) {
-                customFields.put("deptId", deptId);
-            }
-            String pwdEcodeType = request.getParameter("pwdEcodeType");
-            if (StringUtils.isNotBlank(pwdEcodeType)) {
-                customFields.put("pwdEcodeType", pwdEcodeType);
-            }
-            String positionId = request.getParameter("positionId");
-            if (StringUtils.isNotBlank(positionId)) {
-                customFields.put("positionId", positionId);
-            }
-            String screenDimension = request.getParameter("screenDimension");
-            if (StringUtils.isNotBlank(screenDimension)) {
-                customFields.put("screenDimension", screenDimension);
-            }
-            customFields.put("userAgent", request.getHeader("User-Agent"));
-            customFields.put("clientIp", Y9Context.getIpAddr(request));
+        String systemName = request.getParameter("systemName");
+        if (StringUtils.isNotBlank(systemName)) {
+            customFields.put("systemName", systemName);
         }
+        String loginType = request.getParameter("loginType");
+        if (StringUtils.isNotBlank(loginType)) {
+            customFields.put("loginType", loginType);
+        }
+        String deptId = request.getParameter("deptId");
+        if (StringUtils.isNotBlank(deptId)) {
+            customFields.put("deptId", deptId);
+        }
+        String rsaPublicKey = request.getParameter("rsaPublicKey");
+        if (StringUtils.isNotBlank(rsaPublicKey)) {
+            customFields.put("rsaPublicKey", rsaPublicKey);
+        }
+        String positionId = request.getParameter("positionId");
+        if (StringUtils.isNotBlank(positionId)) {
+            customFields.put("positionId", positionId);
+        }
+        String screenDimension = request.getParameter("screenDimension");
+        if (StringUtils.isNotBlank(screenDimension)) {
+            customFields.put("screenDimension", screenDimension);
+        }
+        customFields.put("userAgent", request.getHeader("User-Agent"));
+        customFields.put("clientIp", Y9Context.getIpAddr(request));
+
     }
 
     private List<Y9User> getAgentUsers(String deptId, String agentTenantShortName, String agentUserName) {
         if (StringUtils.isNotBlank(deptId)) {
             return y9UserService.findByTenantShortNameAndMobileAndParentId(agentTenantShortName, agentUserName, deptId);
         } else {
-            return y9UserService.findByTenantShortNameAndLoginNameAndOriginal(agentTenantShortName, agentUserName,
-                Boolean.TRUE);
+            return y9UserService.findByTenantShortNameAndLoginNameAndOriginal(agentTenantShortName, agentUserName, Boolean.TRUE);
         }
     }
 
@@ -212,8 +185,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
             if (StringUtils.isNotBlank(deptId)) {
                 return y9UserService.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, username, deptId);
             } else {
-                return y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username,
-                    Boolean.TRUE);
+                return y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username, Boolean.TRUE);
             }
         }
 
@@ -226,20 +198,15 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
             }
         }
 
-        if ("noLoginScreen".equals(loginType)) {
-            if (StringUtils.isNotBlank(deptId)) {
-                // 一人多账号
-                return y9UserService.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, username, deptId);
-            } else {
-                return List.of();
-            }
+        if (StringUtils.isNotBlank(deptId)) {
+            // 一人多账号
+            return y9UserService.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, username, deptId);
+        } else {
+            return y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username, Boolean.TRUE);
         }
-
-        return y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username, Boolean.TRUE);
     }
 
-    protected Map<String, List<Object>> buildAttributes(RememberMeUsernamePasswordCredential riseCredential,
-        Y9User y9User) {
+    protected Map<String, List<Object>> buildAttributes(UsernamePasswordCredential riseCredential, Y9User y9User) {
         String username = riseCredential.getUsername();
         Map<String, Object> customFields = riseCredential.getCustomFields();
         String tenantShortName = (String)customFields.get("tenantShortName");
@@ -248,46 +215,59 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         String loginType = (String)customFields.get("loginType");
 
         val attributes = new HashMap<String, List<Object>>();
-        attributes.put("tenantId", Lists.newArrayList(y9User.getTenantId()));
-        attributes.put("tenantShortName", Lists.newArrayList(tenantShortName));
-        attributes.put("tenantName", Lists.newArrayList(y9User.getTenantName()));
-        attributes.put("personId", Lists.newArrayList(y9User.getPersonId()));
-        attributes.put("loginName", Lists.newArrayList(username));
-        attributes.put("sex", Lists.newArrayList(y9User.getSex() == null ? 0 : y9User.getSex()));
-        attributes.put("caid", Lists.newArrayList(y9User.getCaid() == null ? "" : y9User.getCaid()));
-        attributes.put("email", Lists.newArrayList(y9User.getEmail() == null ? "" : y9User.getEmail()));
-        attributes.put("mobile", Lists.newArrayList(y9User.getMobile() == null ? "" : y9User.getMobile()));
-        attributes.put("guidPath", Lists.newArrayList(y9User.getGuidPath() == null ? "" : y9User.getGuidPath()));
-        attributes.put("dn", Lists.newArrayList(y9User.getDn() == null ? "" : y9User.getDn()));
-        attributes.put("loginType", Lists.newArrayList(loginType));
+        attributes.put("tenantId", toArrayList(y9User.getTenantId()));
+        attributes.put("tenantShortName", toArrayList(tenantShortName));
+        attributes.put("tenantName", toArrayList(y9User.getTenantName()));
+        attributes.put("personId", toArrayList(y9User.getPersonId()));
+        attributes.put("loginName", toArrayList(username));
+        attributes.put("sex", toArrayList(y9User.getSex()));
+        attributes.put("caid", toArrayList(y9User.getCaid()));
+        attributes.put("email", toArrayList(y9User.getEmail()));
+        attributes.put("mobile", toArrayList(y9User.getMobile()));
+        attributes.put("guidPath", toArrayList(y9User.getGuidPath()));
+        attributes.put("dn", toArrayList(y9User.getDn()));
+        attributes.put("loginType", toArrayList(loginType));
 
-        attributes.put("name", Lists.newArrayList(y9User.getName()));
-        attributes.put("parentId", Lists.newArrayList(y9User.getParentId() == null ? "" : y9User.getParentId()));
-        attributes.put("idNum", Lists.newArrayList(y9User.getIdNum() == null ? "" : y9User.getIdNum()));
-        attributes.put("avator", Lists.newArrayList(y9User.getAvator() == null ? "" : y9User.getAvator()));
-        attributes.put("personType", Lists.newArrayList(y9User.getPersonType() == null ? "" : y9User.getPersonType()));
+        attributes.put("name", toArrayList(y9User.getName()));
+        attributes.put("parentId", toArrayList(y9User.getParentId()));
+        attributes.put("idNum", toArrayList(y9User.getIdNum()));
+        attributes.put("avator", toArrayList(y9User.getAvator()));
+        attributes.put("personType", toArrayList(y9User.getPersonType()));
 
-        attributes.put("password", Lists.newArrayList(y9User.getPassword() == null ? "" : y9User.getPassword()));
-        attributes.put("original", Lists.newArrayList(y9User.getOriginal() == null ? 1 : y9User.getOriginal()));
-        attributes.put("originalId", Lists.newArrayList(y9User.getOriginalId() == null ? "" : y9User.getOriginalId()));
-        attributes.put("globalManager",
-            Lists.newArrayList(y9User.getGlobalManager() != null && y9User.getGlobalManager()));
-        attributes.put("managerLevel",
-            Lists.newArrayList(y9User.getManagerLevel() == null ? 0 : y9User.getManagerLevel()));
-        attributes.put("positions", Lists.newArrayList(y9User.getPositions() == null ? "" : y9User.getPositions()));
+        attributes.put("password", toArrayList(y9User.getPassword()));
+        attributes.put("original", Lists.newArrayList(y9User.getOriginal() == null ? true : y9User.getOriginal()));
+        attributes.put("originalId", toArrayList(y9User.getOriginalId()));
+        attributes.put("globalManager", Lists.newArrayList(y9User.getGlobalManager() == null ? false : y9User.getGlobalManager()));
+        attributes.put("managerLevel", toArrayList(y9User.getManagerLevel()));
+        attributes.put("positions", toArrayList(y9User.getPositions()));
 
-        if (StringUtils.isNotBlank(positionId)) {
-            attributes.put("positionId", Lists.newArrayList(positionId));
-        } else {
-            String[] positionIds = StringUtils.split(Optional.ofNullable(y9User.getPositions()).orElse(""), ",");
-            Optional<String> positionIdOptional = Arrays.stream(positionIds).findFirst();
-            // 当前登陆岗位默认返回排序靠前的岗位id
-            attributes.put("positionId", Lists.newArrayList(positionIdOptional.orElse("")));
+        if (!org.springframework.util.StringUtils.hasText(positionId)) {
+            if (!org.springframework.util.StringUtils.hasText(y9User.getPositions())) {
+                positionId = "";
+            } else {
+                String positionsStr = y9User.getPositions();
+                positionId = positionsStr.split(",")[0];
+            }
         }
-        if (StringUtils.isNotBlank(deptId)) {
-            attributes.put("deptId", Lists.newArrayList(deptId));
+        attributes.put("positionId", toArrayList(positionId));
+        customFields.put("positionId", positionId);
+
+        if (!org.springframework.util.StringUtils.hasText(deptId)) {
+            deptId = "";
         }
+        attributes.put("deptId", toArrayList(deptId));
+        customFields.put("deptId", deptId);
+
+        riseCredential.setCustomFields(customFields);
         return attributes;
+    }
+
+    private List<Object> toArrayList(String str) {
+        return Lists.newArrayList(StringUtils.isEmpty(str) ? "" : str);
+    }
+
+    private List<Object> toArrayList(Integer num) {
+        return Lists.newArrayList(num == null ? 0 : num);
     }
 
     @Override

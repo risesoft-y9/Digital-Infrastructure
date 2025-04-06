@@ -1,97 +1,196 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Configuration monitorInterval="300">
+<!--
+All loggers are asynchronous because of log42.component.properties in cas-server-core-logging-api.
+Set -Dlog4j2.contextSelector=org.apache.logging.log4j.core.selector.BasicContextSelector
+or override log42.component.properties to turn off async
+-->
+<!-- Specify the refresh internal in seconds. -->
+<Configuration monitorInterval="5">
     <Properties>
-        <Property name="cas.log.dir">c:/logs/sso-server</Property>
-        <Property name="cas.log.level">debug</Property>
+        <Property name="baseDir">/tmp/logs</Property>
+
+        <Property name="cas.log.level">${main:\--logging.level.org.apereo.cas:-info}</Property>
+        <Property name="spring.webflow.log.level">${main:\--logging.level.org.springframework.webflow:-info}</Property>
+        <Property name="spring.security.log.level">${main:\--logging.level.org.springframework.security:-warn}</Property>
+        <Property name="thymeleaf.log.level">${main:\--logging.level.org.thymeleaf:-warn}</Property>
+        <Property name="spring.cloud.log.level">${main:\--logging.level.org.springframework.cloud:-warn}</Property>
+        <Property name="spring.web.log.level">${main:\--logging.level.org.springframework.web:-warn}</Property>
+        <Property name="spring.boot.log.level">${main:\--logging.level.org.springframework.boot:-warn}</Property>
+        <Property name="ldap.log.level">${main:\--logging.level.org.ldaptive:-warn}</Property>
+        <Property name="pac4j.log.level">${main:\--logging.level.org.pac4j:-warn}</Property>
+        <Property name="opensaml.log.level">${main:\--logging.level.org.opensaml:-warn}</Property>
+        <Property name="hazelcast.log.level">${main:\--logging.level.com.hazelcast:-warn}</Property>
+        <Property name="jdbc.log.level">${main:\--logging.level.org.hibernate:-error}</Property>
+
+        <Property name="log.console.stacktraces">true</Property>
+        <Property name="log.file.stacktraces">false</Property>
+        <!-- -Dlog.stacktraceappender=null to disable stacktrace log -->
+        <Property name="log.stacktraceappender">casStackTraceFile</Property>
+        <Property name="log.include.location">false</Property>
+
+        <Property name="log.pattern">%highlight{%d %p [%c] - &lt;%m&gt;%n%throwable}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=cyan, TRACE=blue}</Property>
+        <!-- properties for controlling whether to actually skip the highlighting in individual appenders: -->
+        <Property name="log.pattern.disable.highlight.console">false</Property>
+        <Property name="log.pattern.disable.highlight.file">true</Property>
+
     </Properties>
     <Appenders>
+        <Null name="null" />
+
         <Console name="console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d %p [%c] - &lt;%m&gt;%n"/>
+            <PatternLayout pattern="${sys:log.pattern}"
+                           alwaysWriteExceptions="${sys:log.console.stacktraces}"
+                           disableAnsi="${sys:log.pattern.disable.highlight.console}" />
         </Console>
-        <RollingFile name="file" fileName="${sys:cas.log.dir}/cas.log" append="true"
-                     filePattern="${sys:cas.log.dir}/cas-%d{yyyy-MM-dd-HH}-%i.log">
-            <PatternLayout pattern="%d %p [%c] - &lt;%m&gt;%n"/>
+
+        <RollingFile name="file" fileName="${sys:baseDir}/cas.log" append="true"
+                     filePattern="${sys:baseDir}/cas-%d{yyyy-MM-dd-HH}-%i.log.gz"
+                     immediateFlush="false">
+            <PatternLayout pattern="${sys:log.pattern}"
+                           alwaysWriteExceptions="${sys:log.file.stacktraces}"
+                           disableAnsi="${sys:log.pattern.disable.highlight.file}" />
             <Policies>
-                <OnStartupTriggeringPolicy/>
+                <OnStartupTriggeringPolicy />
                 <SizeBasedTriggeringPolicy size="10 MB"/>
-                <TimeBasedTriggeringPolicy/>
+                <TimeBasedTriggeringPolicy />
             </Policies>
-        </RollingFile>
-        <RollingFile name="auditlogfile" fileName="${sys:cas.log.dir}/cas_audit.log" append="true"
-                     filePattern="${sys:cas.log.dir}/cas_audit-%d{yyyy-MM-dd-HH}-%i.log">
-            <PatternLayout pattern="%d %p [%c] - %m%n"/>
-            <Policies>
-                <OnStartupTriggeringPolicy/>
-                <SizeBasedTriggeringPolicy size="10 MB"/>
-                <TimeBasedTriggeringPolicy/>
-            </Policies>
+            <DefaultRolloverStrategy max="5" compressionLevel="9">
+                <Delete basePath="${sys:baseDir}" maxDepth="2">
+                    <IfFileName glob="*/*.log.gz" />
+                    <IfLastModified age="7d" />
+                </Delete>
+            </DefaultRolloverStrategy>
         </RollingFile>
 
-        <RollingFile name="perfFileAppender" fileName="${sys:cas.log.dir}/perfStats.log" append="true"
-                     filePattern="${sys:cas.log.dir}/perfStats-%d{yyyy-MM-dd-HH}-%i.log">
-            <PatternLayout pattern="%m%n"/>
+        <RollingFile name="stacktracefile" fileName="${sys:baseDir}/cas_stacktrace.log" append="true"
+                     filePattern="${sys:baseDir}/cas_stacktrace-%d{yyyy-MM-dd-HH}-%i.log.gz"
+                     immediateFlush="false">
+            <PatternLayout pattern="%highlight{%d %p [%c] - &lt;%m&gt;%n}" />
             <Policies>
-                <OnStartupTriggeringPolicy/>
+                <OnStartupTriggeringPolicy />
                 <SizeBasedTriggeringPolicy size="10 MB"/>
-                <TimeBasedTriggeringPolicy/>
+                <TimeBasedTriggeringPolicy />
             </Policies>
+            <DefaultRolloverStrategy max="5" compressionLevel="9">
+                <Delete basePath="${sys:baseDir}" maxDepth="2">
+                    <IfFileName glob="*/*.log.gz" />
+                    <IfLastModified age="7d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile name="auditlogfile" fileName="${sys:baseDir}/cas_audit.log" append="true"
+                     filePattern="${sys:baseDir}/cas_audit-%d{yyyy-MM-dd-HH}-%i.log.gz"
+                     immediateFlush="false">
+            <PatternLayout pattern="%highlight{%d %p [%c] - %m%n}" />
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy max="5" compressionLevel="9">
+                <Delete basePath="${sys:baseDir}" maxDepth="2">
+                    <IfFileName glob="*/*.log.gz" />
+                    <IfLastModified age="7d" />
+                </Delete>
+            </DefaultRolloverStrategy>
         </RollingFile>
 
         <CasAppender name="casAudit">
-            <AppenderRef ref="auditlogfile"/>
+            <AppenderRef ref="auditlogfile" />
         </CasAppender>
         <CasAppender name="casFile">
-            <AppenderRef ref="file"/>
+            <AppenderRef ref="file" />
+        </CasAppender>
+        <CasAppender name="casStackTraceFile">
+            <AppenderRef ref="stacktracefile" />
+            <ExceptionOnlyFilter/>
         </CasAppender>
         <CasAppender name="casConsole">
-            <AppenderRef ref="console"/>
-        </CasAppender>
-        <CasAppender name="casPerf">
-            <AppenderRef ref="perfFileAppender"/>
+            <AppenderRef ref="console" />
         </CasAppender>
     </Appenders>
     <Loggers>
-        <!-- If adding a Logger with level set higher than warn, make category as selective as possible -->
-        <!-- Loggers inherit appenders from Root Logger unless additivity is false -->
-        <AsyncLogger name="org.apereo" level="${sys:cas.log.level}" includeLocation="true"/>
-        <AsyncLogger name="org.apereo.services.persondir" level="${sys:cas.log.level}" includeLocation="true"/>
-        <AsyncLogger name="org.apereo.cas.web.flow" level="${sys:cas.log.level}" includeLocation="true"/>
-        <AsyncLogger name="org.apereo.cas.ticket.registry.AbstractTicketRegistry" level="error"/>
-        <AsyncLogger name="org.apache" level="warn"/>
-        <AsyncLogger name="org.apache.http" level="error"/>
-        <AsyncLogger name="org.springframework" level="warn"/>
-        <AsyncLogger name="org.thymeleaf" level="warn"/>
-        <AsyncLogger name="org.pac4j" level="warn"/>
-        <AsyncLogger name="org.opensaml" level="warn"/>
-        <AsyncLogger name="net.sf.ehcache" level="warn"/>
-        <AsyncLogger name="com.couchbase" level="warn" includeLocation="true"/>
-        <AsyncLogger name="com.ryantenney.metrics" level="warn"/>
-        <AsyncLogger name="net.jradius" level="warn"/>
-        <AsyncLogger name="org.openid4java" level="warn"/>
-        <AsyncLogger name="org.ldaptive" level="warn"/>
-        <AsyncLogger name="com.hazelcast" level="warn"/>
-        <AsyncLogger name="org.jasig.spring" level="warn"/>
-        <AsyncLogger name="org.apache.catalina.startup.Catalina" level="info"/>
-        <AsyncLogger name="com.alibaba.cloud.nacos" level="info"/>
+        <Logger name="org.apereo.cas" level="${sys:cas.log.level}" />
+        <Logger name="org.apereo.cas.web.view.CasReloadableMessageBundle" level="info" />
+        <Logger name="org.apereo.cas.services" level="${sys:cas.log.level}" />
+        <Logger name="org.apereo.spring" level="${sys:cas.log.level}" />
+        <Logger name="org.apereo.services.persondir" level="${sys:cas.log.level}" />
+        <Logger name="org.apereo.cas.web.flow" level="${sys:cas.log.level}" />
+        <Logger name="org.apereo.cas.web.CasWebApplication" level="${sys:cas.log.level}"/>
 
-        <!-- Log perf stats only to perfStats.log -->
-        <AsyncLogger name="perfStatsLogger" level="warn" additivity="false" includeLocation="true">
-            <AppenderRef ref="casPerf"/>
-        </AsyncLogger>
-
-        <!-- Log audit to all root appenders, and also to audit log (additivity is not false) -->
-        <AsyncLogger name="org.apereo.inspektr.audit.support" level="warn" includeLocation="true">
-            <AppenderRef ref="casAudit"/>
-        </AsyncLogger>
-
-        <!-- All Loggers inherit appenders specified here, unless additivity="false" on the Logger -->
-        <AsyncRoot level="warn">
-            <AppenderRef ref="casFile"/>
-            <!-- 
-                 For deployment to an application server running as service, 
-                 delete the casConsole appender below
-            -->
+        <Logger name="org.apereo.inspektr" additivity="false" level="info">
             <AppenderRef ref="casConsole"/>
-        </AsyncRoot>
+            <AppenderRef ref="casFile"/>
+            <AppenderRef ref="casAudit"/>
+        </Logger>
+
+        <Logger name="org.springframework.boot" level="${sys:spring.boot.log.level}" />
+        <Logger name="org.springframework.boot.context.embedded" level="info" />
+        <Logger name="org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration" level="${sys:spring.security.log.level}" />
+        <Logger name="org.springframework.boot.autoconfigure.security" level="${sys:spring.security.log.level}" />
+        <Logger name="org.springframework.boot.devtools" level="debug" />
+
+        <Logger name="org.springframework" level="warn" />
+        <Logger name="org.springframework.ui" level="warn" />
+        <Logger name="org.springframework.context" level="warn" />
+        <Logger name="org.springframework.context.support" level="warn" />
+
+        <Logger name="org.springframework.webflow" level="${sys:spring.webflow.log.level}"/>
+        <Logger name="org.springframework.webflow.mvc.servlet.FlowHandlerMapping" level="warn"/>
+        <Logger name="org.springframework.webflow.engine.impl.FlowExecutionImpl" level="warn"/>
+        <Logger name="org.springframework.webflow.executor.FlowExecutorImpl" level="warn"/>
+        <Logger name="org.springframework.webflow.mvc.view.AbstractMvcView" level="warn"/>
+
+        <Logger name="org.springframework.aop" level="warn" />
+        <Logger name="org.springframework.session" level="warn"/>
+        <Logger name="org.springframework.scheduling" level="info"/>
+        <Logger name="org.springframework.cloud.vault" level="warn" />
+        <Logger name="org.springframework.web.client" level="warn" />
+        <Logger name="org.springframework.security" level="${sys:spring.security.log.level}"/>
+        <Logger name="org.springframework.security.config.annotation.web.builders" level="error" />
+        <Logger name="org.springframework.cloud" level="${sys:spring.cloud.log.level}"/>
+        <Logger name="org.springframework.amqp" level="error" />
+        <Logger name="org.springframework.integration" level="warn"/>
+        <Logger name="org.springframework.messaging" level="warn"/>
+        <Logger name="org.springframework.beans" level="warn"/>
+        <Logger name="org.springframework.web" level="${sys:spring.web.log.level}"/>
+        <Logger name="org.springframework.scheduling" level="warn"/>
+        <Logger name="org.springframework.context.annotation" level="off"/>
+        <Logger name="org.springframework.web.socket" level="warn"/>
+        <Logger name="org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter" level="trace"/>
+        <Logger name="org.springframework.cloud.netflix.eureka" level="debug" />
+
+        <Logger name="de.codecentric.boot" level="info" />
+
+        <Logger name="io.micrometer" level="warn" />
+
+        <Logger name="org.apache" level="error"/>
+        <Logger name="com.netflix" level="warn"/>
+        <Logger name="org.quartz" level="warn"/>
+
+        <Logger name="org.thymeleaf" level="${sys:thymeleaf.log.level}" />
+
+        <Logger name="org.springframework.orm.jpa" level="${sys:jdbc.log.level}"/>
+        <Logger name="org.hibernate" level="${sys:jdbc.log.level}"/>
+
+        <Logger name="org.pac4j" level="${sys:pac4j.log.level}"/>
+
+        <Logger name="org.opensaml" level="${sys:opensaml.log.level}"/>
+
+        <Logger name="PROTOCOL_MESSAGE" level="info" />
+
+        <Logger name="net.jradius" level="warn"/>
+        <Logger name="org.ldaptive" level="${sys:ldap.log.level}"/>
+        <Logger name="com.hazelcast" level="${sys:hazelcast.log.level}" />
+        <Logger name="org.apache.cxf" level="warn" />
+        <Logger name="org.apache.http" level="warn" />
+        <Logger name="com.netflix" level="debug"/>
+
+        <Root level="warn" includeLocation="${sys:log.include.location}">
+            <AppenderRef ref="casFile"/>
+            <AppenderRef ref="casConsole"/>
+            <AppenderRef ref="${sys:log.stacktraceappender}"/>
+        </Root>
     </Loggers>
 </Configuration>

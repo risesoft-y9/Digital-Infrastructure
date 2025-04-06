@@ -6,12 +6,11 @@
     "name" : "oidcServiceDemo",
     "description" : "oidc Authentication app demo",
     "theme" : "y9-apereo",
-    "id" : 1004,
-    "evaluationOrder": 1004,
+    "id" : 1003,
+    "evaluationOrder": 1003,
     "logoutType" : "BACK_CHANNEL",
     "scopes": [
-        "java.util.HashSet",
-        [
+        "java.util.HashSet", [
             "openid",
             "y9"
         ]
@@ -23,21 +22,30 @@
         "excludeDefaultAttributes" : false
     },
     "supportedGrantTypes": [
-        "java.util.HashSet",
-        [
+        "java.util.HashSet", [
             "authorization_code",
             "password",
             "client_credentials",
-            "refresh_token"
+            "refresh_token",
+            "urn:ietf:params:oauth:grant-type:token-exchange"
         ]
     ],
     "supportedResponseTypes": [
-        "java.util.HashSet",
-        [
+        "java.util.HashSet", [
             "code",
             "token"
         ]
     ],
+    "tokenExchangePolicy": {
+        "@class": "org.apereo.cas.support.oauth.services.DefaultRegisteredServiceOAuthTokenExchangePolicy",
+        "allowedTokenTypes": [
+            "java.util.HashSet", [
+                "urn:ietf:params:oauth:token-type:access_token",
+                "urn:ietf:params:oauth:token-type:id_token",
+                "urn:ietf:params:oauth:token-type:jwt"
+            ]
+        ]
+    },
     "bypassApprovalPrompt": true,
     "generateRefreshToken": true,
     "renewRefreshToken": true,

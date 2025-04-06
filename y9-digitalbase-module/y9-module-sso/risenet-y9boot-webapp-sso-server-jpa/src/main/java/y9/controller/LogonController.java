@@ -45,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api")
 @Slf4j
-public class LoginController {
+public class LogonController {
 
     private final CentralAuthenticationService centralAuthenticationService;
     private final CasCookieBuilder ticketGrantingTicketCookieGenerator;
@@ -54,7 +54,7 @@ public class LoginController {
     private final LogoutManager logoutManager;
     private final TicketRegistry ticketRegistry;
 
-    public LoginController(CentralAuthenticationService centralAuthenticationService,
+    public LogonController(CentralAuthenticationService centralAuthenticationService,
         @Qualifier("ticketGrantingTicketCookieGenerator") CasCookieBuilder ticketGrantingTicketCookieGenerator,
         @Qualifier("defaultAuthenticationSystemSupport") AuthenticationSystemSupport authenticationSystemSupport,
         @Qualifier("webApplicationServiceFactory") ServiceFactory webApplicationServiceFactory,
