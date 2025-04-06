@@ -315,6 +315,7 @@ dependencies {
     implementation "org.apereo.cas:cas-server-support-jpa-util"
     implementation "org.apereo.cas:cas-server-support-jpa-hibernate"
     implementation "org.apereo.cas:cas-server-support-jpa-service-registry"
+    //implementation "org.apereo.cas:cas-server-support-jpa-ticket-registry"
     implementation "org.apereo.cas:cas-server-support-redis-ticket-registry"
     implementation "org.apereo.cas:cas-server-support-themes"
     implementation "org.apereo.cas:cas-server-support-themes-collection"

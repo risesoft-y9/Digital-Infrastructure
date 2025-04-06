@@ -1,11 +1,14 @@
 package y9;
 
+import com.zaxxer.hikari.HikariDataSource;
 import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -28,20 +31,29 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
     entityManagerFactoryRef = "rsPublicEntityManagerFactory", transactionManagerRef = "rsPublicTransactionManager")
 public class JpaPublicConfiguration {
 
+    @Autowired
+    JpaProperties jpaProperties;
+
+    @ConfigurationProperties("spring.datasource.hikari.y9-public")
+    @Bean("y9PublicDS")
+    @Primary
+    public HikariDataSource y9PublicDS() {
+        return new HikariDataSource();
+    }
+
     @Bean
-    @ConditionalOnMissingBean
-    public JpaVendorAdapter jpaVendorAdapter() {
+    @Primary
+    public JpaVendorAdapter rsJpaVendorAdapter() {
         return new HibernateJpaVendorAdapter();
     }
 
     @Primary
     @Bean
-    public LocalContainerEntityManagerFactoryBean rsPublicEntityManagerFactory(DataSource dataSource,
-        JpaProperties jpaProperties) {
+    public LocalContainerEntityManagerFactoryBean rsPublicEntityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setPersistenceUnitName("y9Public");
-        em.setDataSource(dataSource);
-        em.setJpaVendorAdapter(jpaVendorAdapter());
+        em.setDataSource(y9PublicDS());
+        em.setJpaVendorAdapter(rsJpaVendorAdapter());
         em.setPackagesToScan("y9");
         em.setJpaPropertyMap(jpaProperties.getProperties());
         return em;
@@ -49,10 +61,9 @@ public class JpaPublicConfiguration {
 
     @Primary
     @Bean
-    public PlatformTransactionManager
-        rsPublicTransactionManager(@Qualifier("rsPublicEntityManagerFactory") EntityManagerFactory emf) {
+    public PlatformTransactionManager rsPublicTransactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(emf);
+        transactionManager.setEntityManagerFactory(rsPublicEntityManagerFactory().getObject());
         return transactionManager;
     }
 

@@ -39,7 +39,7 @@
         <form method="post" id="fm1" th:object="${credential}">
             <div class="login_fields__user">
                 <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/user_icon_copy.png}"/></div>
-                <input id="username" placeholder="用户名" type="text" autocomplete="off" value="" oninput="inputEvent()" onblur="getTenant();"/>
+                <input id="username" tabindex="1" placeholder="用户名" type="text" autocomplete="off" value="" oninput="inputEvent()" onblur="getTenant();"/>
                 <input id="username1" name="username" style="width: 150px;" tabindex="1" autocomplete="false" htmlescape="true" type="hidden"/>
                 <input id="tenantShortName" name="tenantShortName" style="width: 150px;" autocomplete="false" htmlescape="true" type="hidden"/>
                 <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
@@ -48,7 +48,6 @@
                 <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/lock_icon_copy.png}"/></div>
                 <input id="password" tabindex="2" type="text" htmlescape="true" autocomplete="off" placeholder="请输入您的密码" onfocus="this.type='password'"/>
                 <input id="password1" name="password" htmlescape="true" autocomplete="off" type="hidden"/>
-
                 <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
             </div>
             <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
@@ -56,18 +55,17 @@
             </div>
             <!-- 表单隐藏数据块开始 -->
             <input type="hidden" id="loginType" name="loginType" value="loginName"/>
-            <input type="hidden" id="captchaKey" name="captchaKey" value=""/>
-            <input type="hidden" id="noLoginScreen" name="noLoginScreen" value="false"/>
-             <input type="hidden" id="screenDimension" name="screenDimension" value=""/>
-            <input type="hidden" id="rsaPublicKey" name="rsaPublicKey" value=""/>
+            <input type="hidden" id="screenDimension" name="screenDimension" value=""/>
+            <input type="hidden" id="rsaPublicKey" value=""/>
             <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
-            <input type="hidden" name="_eventId" value="submit"/> <input type="hidden" name="geolocation"/>
+            <input type="hidden" name="_eventId" value="submit"/>
+			<input type="hidden" name="geolocation"/>
             <!-- 表单隐藏数据块结束 -->
         </form>
         <!--点选验证码  -->
         <div id="mpanel6"></div>
         <div class="login_fields__submit">
-            <input type="button" value="登录"/>
+            <input tabindex="3" type="button" value="登录"/>
         </div>
     </div>
     <div></div>
@@ -108,10 +106,10 @@
     var inputTimer = null;
     $(function () {
         changeLoginType($.cookie("loginTip"));
-        validateIE();
+        screenSize();
     });
 
-    function validateIE() {
+    function screenSize() {
         try {
             $("#screenDimension").val(window.screen.width + '*' + window.screen.height);
         } catch (e) {
@@ -122,29 +120,28 @@
         if (inputTimer) {
             clearTimeout(inputTimer);
         }
-        let params = {loginName: $("#username").val()};
-        if (!$("#username").val()) {
+        let userName = $("#username").val();
+        if (!userName) {
             $(".toolTips").attr({style: "display: none;"});
             return null;
         }
         inputTimer = setTimeout(() => {
-            fetch(ctx + "/api/loginNameAndTenants", {
-                method: "POST",
+            fetch(ctx + "/api/loginNameAndTenants?loginName=" + userName, {
+                method: "GET",
                 credentials: "include",
                 headers: {
-                    "Content-Type":
-                        "application/x-www-form-urlencoded;charset=UTF-8",
-                },
-                body: Object.keys(params).map((key) => {
-                    return (encodeURIComponent(key) + "=" + encodeURIComponent(params[key]));
-                }).join("&"),
+                    "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+                }
             }).then((response) => {
                 return response.json();
             }).then((data) => {
                 $("#toolTipsUl").empty();
                 $(".toolTips").attr({style: "display: flex;"});
                 data.length && data.map((item) => {
-                    $("<li></li>", {text: item.loginName, id: item.tenantShortName}).appendTo("#toolTipsUl").on("click", mouseClickEvent);
+                    $("<li></li>", {
+                        text: item.loginName,
+                        id: item.tenantShortName
+                    }).appendTo("#toolTipsUl").on("click", mouseClickEvent);
                 });
             });
         }, 250);
@@ -190,8 +187,8 @@
     $(document).keydown(function (e) {
         // 上下选择事件
         function shooseItem(value) {
-            let activeIndex = null, listLength = $("#toolTipsUl").children().length, scrollHeight=0, tempArr=[], totalHeight=0;
-            let speed="fast"; // slow \ fast \ normal
+            let activeIndex = null, listLength = $("#toolTipsUl").children().length, scrollHeight = 0, tempArr = [], totalHeight = 0;
+            let speed = "fast"; // slow \ fast \ normal
             // 清除所有的active class，并找到下一个高亮的index
             listLength &&
             $("#toolTipsUl li").each(function (index, element) {
@@ -208,13 +205,13 @@
                 return false;
             }
             // 计算滚动条位置
-            for (let i=0; i<activeIndex; i++){
-                scrollHeight+=tempArr[i];
+            for (let i = 0; i < activeIndex; i++) {
+                scrollHeight += tempArr[i];
             }
             // UP键 上面找到的index添加active
             if (value === 38 && activeIndex) {
                 $("#toolTipsUl").animate({
-                    scrollTop: scrollHeight-90
+                    scrollTop: scrollHeight - 90
                 }, speed);
                 $("#toolTipsUl").children().eq(activeIndex - 1).addClass("active");
                 return true;

@@ -135,6 +135,30 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         if (StringUtils.isNotBlank(tenantShortName)) {
             customFields.put("tenantShortName", tenantShortName);
         }
+        String systemName = request.getParameter("systemName");
+        if (StringUtils.isNotBlank(systemName)) {
+            customFields.put("systemName", systemName);
+        }
+        String loginType = request.getParameter("loginType");
+        if (StringUtils.isNotBlank(loginType)) {
+            customFields.put("loginType", loginType);
+        }
+        String deptId = request.getParameter("deptId");
+        if (StringUtils.isNotBlank(deptId)) {
+            customFields.put("deptId", deptId);
+        }
+        String pwdEcodeType = request.getParameter("pwdEcodeType");
+        if (StringUtils.isNotBlank(pwdEcodeType)) {
+            customFields.put("pwdEcodeType", pwdEcodeType);
+        }
+        String positionId = request.getParameter("positionId");
+        if (StringUtils.isNotBlank(positionId)) {
+            customFields.put("positionId", positionId);
+        }
+        String screenDimension = request.getParameter("screenDimension");
+        if (StringUtils.isNotBlank(screenDimension)) {
+            customFields.put("screenDimension", screenDimension);
+        }
 
         customFields.put("userAgent", request.getHeader("User-Agent"));
         customFields.put("clientIp", Y9Context.getIpAddr(request));
