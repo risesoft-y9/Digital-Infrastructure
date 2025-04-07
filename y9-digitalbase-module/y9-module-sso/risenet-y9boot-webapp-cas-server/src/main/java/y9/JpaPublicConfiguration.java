@@ -34,7 +34,7 @@ public class JpaPublicConfiguration {
     @Autowired
     JpaProperties jpaProperties;
 
-    @ConfigurationProperties("spring.datasource.hikari.y9-public")
+    @ConfigurationProperties("spring.datasource.hikari")
     @Bean("y9PublicDS")
     @Primary
     public HikariDataSource y9PublicDS() {

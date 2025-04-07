@@ -330,24 +330,23 @@ spring:
             - optional:nacos:sso.yml
     datasource:
         hikari:
-            y9-public:
-                driverClassName: com.mysql.cj.jdbc.Driver
-                jdbcUrl: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
-                username: root
-                password: '111111'
-                maximumPoolSize: 20
-                minimumIdle: 1
+            driverClassName: com.mysql.cj.jdbc.Driver
+            jdbcUrl: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
+            username: root
+            password: '111111'
+            maximumPoolSize: 20
+            minimumIdle: 1
     jpa:
         properties:
             hibernate:
                 dialect: org.hibernate.dialect.MySQL8Dialect
                 hbm2ddl:
-                    auto: none
+                    auto: update
                 jdbc:
                     batchSize: 100
                 showSql: true
         hibernate:
-            ddl-auto: none
+            ddl-auto: update
             naming:
                 implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
                 physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
