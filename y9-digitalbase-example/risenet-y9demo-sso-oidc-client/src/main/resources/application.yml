@@ -1,0 +1,38 @@
+server:
+    #port: 7099
+    servlet:
+        session:
+            tracking-modes: COOKIE
+            timeout: 300
+            cookie:
+                http-only: true
+                secure: false
+        encoding:
+            charset: UTF-8
+            enabled: true
+            force: true
+spring:
+    main:
+        allow-bean-definition-overriding: false
+    mvc:
+        view:
+            prefix: /WEB-INF/jsp/
+            suffix: .jsp
+y9:
+    feature:
+        oauth2:
+            client:
+                enabled: true
+                clientId: clientid_oidc
+                clientSecret: secret_oidc
+                scope: openid y9
+                responseType: code
+                authorization-uri: http://localhost:7055/sso/oidc/authorize
+                accessToken-uri: http://localhost:7055/sso/oidc/accessToken
+                jwks-uri: http://localhost:7055/sso/oidc/jwks
+                introspection-uri: http://localhost:7055/sso/oidc/introspect
+                profile-uri: http://localhost:7055/sso/oidc/profile
+                logout-uri: http://localhost:7055/sso/oidc/logout
+                root-uri: http://localhost:7099/oidc
+                protectedUrlPatterns: /admin/*
+                

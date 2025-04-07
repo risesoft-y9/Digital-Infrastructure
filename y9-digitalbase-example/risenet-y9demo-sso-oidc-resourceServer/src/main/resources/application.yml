@@ -1,0 +1,46 @@
+server:
+    #port: 8088
+    servlet:
+        session:
+            tracking-modes: COOKIE
+            timeout: 300
+            cookie:
+                http-only: true
+                secure: false
+        encoding:
+            charset: UTF-8
+            enabled: true
+            force: true
+spring:
+    application:
+        name: oauth-resource
+    main:
+        allow-bean-definition-overriding: false
+    mvc:
+        view:
+            prefix: /WEB-INF/jsp/
+            suffix: .jsp
+    servlet:
+        multipart:
+            max-file-size: 200MB
+            max-request-size: 1000MB
+y9:
+    feature:
+        oauth2:
+            resource:
+                enabled: true
+                saveLogMessage: false
+                saveOnlineMessage: false
+                allowBasicAuthentication: true
+                allowFormEncodedBodyParameter: true
+                allowUriQueryParameter: true
+                protectedUrlPatterns: /bars/*
+                opaque:
+                    client-id: clientid_oidc
+                    client-secret: secret_oidc
+                    introspection-uri: http://localhost:7055/sso/oauth2.0/introspect
+                    profile-uri: http://localhost:7055/sso/oauth2.0/profile
+                
+                
+                    
+                
