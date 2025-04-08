@@ -171,13 +171,14 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
         }
         if (StringUtils.isEmpty(position.getId())) {
             position.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+            position.setDisabled(false);
         }
+        position.setTabIndex(null == position.getTabIndex() ? compositeOrgBaseManager.getNextSubTabIndex(parent.getId())
+            : position.getTabIndex());
         position.setTenantId(Y9LoginUserHolder.getTenantId());
         position.setJobName(y9Job.getName());
-        position.setDisabled(false);
         position.setName(this.buildName(y9Job, Collections.emptyList()));
         position.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.POSITION, position.getName(), parent.getDn()));
-        position.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parent.getId()));
         position.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(position));
         position.setParentId(parent.getId());
         position.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), position.getId()));
