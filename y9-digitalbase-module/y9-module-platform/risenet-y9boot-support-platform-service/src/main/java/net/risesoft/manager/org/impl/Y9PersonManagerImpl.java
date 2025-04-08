@@ -172,19 +172,21 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
             }
         } else {
             person.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+            person.setDisabled(false);
         }
 
         if (StringUtils.isBlank(person.getEmail())) {
             person.setEmail(null);
         }
+
         person.setTenantId(Y9LoginUserHolder.getTenantId());
         person.setVersion(InitDataConsts.Y9_VERSION);
         person.setOfficial(1);
-        person.setDisabled(false);
         person.setParentId(parent.getId());
         person.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, person.getName(), parent.getDn()));
         person.setGuidPath(compositeOrgBaseManager.buildGuidPath(person));
-        person.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parent.getId()));
+        person.setTabIndex(null == person.getTabIndex() ? compositeOrgBaseManager.getNextSubTabIndex(parent.getId())
+            : person.getTabIndex());
         person.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(person));
 
         String password = y9SettingService.getTenantSetting().getUserDefaultPassword();
