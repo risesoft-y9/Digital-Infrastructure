@@ -17,6 +17,9 @@
     
     <h3>current access token jwtId</h3>
     <div id="jwtId">${sessionScope.jwtId}</div><br/>
+    
+    <h3>current idToken</h3>
+    <textarea id="idToken" rows="10" cols="100">${sessionScope.idToken}</textarea><br/>
         
     <h3><a id="api01" href="#">api调用(Header传参)</a></h3>
     返回的json:<br/>
@@ -34,9 +37,15 @@
     返回的json:<br/>
     <textarea id="content03" rows="10" cols="100"></textarea><br/>
     错误码：<span id="error_details_03"></span>
+    
+    <br/><br/><br/><br/>
+    <h3><a id="api04" href="#">logout</a></h3>
+    返回的json:<br/>
+    <textarea id="content04" rows="10" cols="100"></textarea><br/>
+    错误码：<span id="error_details_04"></span>
         
     <br/><br/><br/><br/>
-    <h3><a id="api04" href="http://localhost:7055/sso/oidc/logout?id_token_hint=${sessionScope.idToken}&post_logout_redirect_uri=http://localhost:7099/oidc">logout</a></h3>
+    <h3><a id="api04" href="http://localhost:7055/sso/oidc/logout?id_token_hint=${sessionScope.idToken}&post_logout_redirect_uri=https://www.baidu.com">logout</a></h3>
 </center>
 <script>
 // Base64-urlencodes the input string
@@ -151,6 +160,24 @@ document.getElementById("api03").addEventListener("click", function(e){
         }
     }
     xhr.send();
+});
+
+document.getElementById("api04").addEventListener("click", function(e){
+    e.preventDefault();
+    var params = new URLSearchParams("");
+    params.append("id_token_hint", encodeURIComponent("${sessionScope.idToken}"));
+    params.append("post_logout_redirect_uri", encodeURIComponent("=http://localhost:7099/oidc/admin/test"));
+        
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://localhost:7055/sso/oidc/logout?" + params.toString(), true);
+    xhr.onload = function() {
+         if(xhr.status == 200) {
+            document.getElementById("content04").innerText = xhr.responseText;
+        } else {
+            document.getElementById("error_details_04").innerText = xhr.status;
+        }
+    }
+    xhr.send();        
 });
 
 </script>
