@@ -57,7 +57,6 @@ cas:
             jwks:
                 fileSystem:
                     jwksFile: classpath:/keystore.jwks
-                
         token:
             crypto:
                 encryption:
@@ -174,7 +173,7 @@ cas:
                 keySize: 16
             signing:
                 key: CzPeT3D2l7C-dwR2LfV9DFHrwmPGXCSsEReZeTn76xiWNU45De8s1CAdPNXovoBpEilbeTY1PkwPQuMxZdN4mQ
-                keySize: 512                              
+                keySize: 512
     httpClient:
         allowLocalUrls: true
         hostNameVerifier: none
@@ -235,10 +234,11 @@ cas:
         removeDescendantTickets: true
         confirmLogout: false
     slo:
-        asynchronous: false  
+        asynchronous: false
 logging:
     level:
-        "[org.apereo.cas]": info
+        org.apereo.cas: "info"
+        org.apereo.inspektr: "info"
 management:
     metrics:
         enable:
