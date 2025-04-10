@@ -141,7 +141,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
             appIcon.setIconData(Base64.encodeToString(iconData));
             return appIconRepository.save(appIcon);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.warn("上传文件异常", e);
             throw new Y9BusinessException(500, "上传文件异常,错误信息为：" + e.getMessage());
         }
 
@@ -184,7 +184,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
             appIcon.setIconData(Base64.encodeToString(iconData));
             return appIconRepository.save(appIcon);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.warn("上传文件异常", e);
             throw new Y9BusinessException(500, "上传文件异常,错误信息为：" + e.getMessage());
         }
 

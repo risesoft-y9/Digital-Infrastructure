@@ -160,6 +160,7 @@ public class PersonController {
      * @return {@code Y9Result<Y9Person>}
      */
     @RiseLog(operationName = "根据人员id，获取人员信息")
+    @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
     @RequestMapping(value = "/getPersonById")
     public Y9Result<Y9Person> getPersonById(@NotBlank @RequestParam String personId) {
         return Y9Result.success(y9PersonService.getById(personId), "根据人员id，获取人员信息成功");
