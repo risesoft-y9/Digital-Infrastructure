@@ -27,7 +27,7 @@ public class HasAuthoritiesAdvisor extends StaticMethodMatcherPointcutAdvisor {
     private boolean isAnnotationPresent(Method method) {
         Annotation a = AnnotationUtils.findAnnotation(method, HasAuthorities.class);
         if (a != null) {
-            LOGGER.info("findAnnotation HasAuthorities: " + method.getName());
+            LOGGER.trace("findAnnotation HasAuthorities: " + method.getName());
             return true;
         }
         return false;

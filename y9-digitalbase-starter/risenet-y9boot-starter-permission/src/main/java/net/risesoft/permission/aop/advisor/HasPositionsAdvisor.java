@@ -27,7 +27,7 @@ public class HasPositionsAdvisor extends StaticMethodMatcherPointcutAdvisor {
     private boolean isAnnotationPresent(Method method) {
         Annotation a = AnnotationUtils.findAnnotation(method, HasPositions.class);
         if (a != null) {
-            LOGGER.info("findAnnotation HasPositions: " + method.getName());
+            LOGGER.trace("findAnnotation HasPositions: " + method.getName());
             return true;
         }
         return false;

@@ -30,12 +30,12 @@ public class IsAnyManagerAdvisor extends StaticMethodMatcherPointcutAdvisor {
 
         Annotation annotation = AnnotationUtils.findAnnotation(method, IsAnyManager.class);
         if (annotation != null) {
-            LOGGER.info("findAnnotation IsManager: " + method.getName());
+            LOGGER.trace("findAnnotation IsManager: " + method.getName());
             return true;
         }
         annotation = AnnotationUtils.findAnnotation(targetClass, IsAnyManager.class);
         if (annotation != null) {
-            LOGGER.info("findAnnotation IsManager: " + targetClass.getName());
+            LOGGER.trace("findAnnotation IsManager: " + targetClass.getName());
             return true;
         }
 
