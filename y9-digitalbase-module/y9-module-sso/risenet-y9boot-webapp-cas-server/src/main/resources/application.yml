@@ -249,6 +249,7 @@ cas:
 logging:
     level:
         org.apereo.cas: info
+        org.apereo.inspektr: info
 server:
     port: 7055
     servlet:

@@ -242,6 +242,8 @@ y9:
                     - whereClause
                     - url
                     - positionNameTemplate
+                    - iconUrl
+                    - url2
         oauth2:
             resource:
                 enabled: true
