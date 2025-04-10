@@ -248,8 +248,11 @@ cas:
                     access: ANONYMOUS
 logging:
     level:
-        org.apereo.cas: info
-        org.apereo.inspektr: info
+        org:
+            apereo:
+                cas: info
+                inspektr: warn
+        root: warn
 server:
     port: 7055
     servlet:
