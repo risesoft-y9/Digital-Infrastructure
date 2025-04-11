@@ -51,7 +51,7 @@
     错误码：<span id="error_details_05"></span>
         
     <br/><br/><br/><br/>
-    <h3><a id="logout" href="http://localhost:7055/sso/oidc/logout?id_token_hint=${sessionScope.idToken}&post_logout_redirect_uri=https://www.baidu.com">logout</a></h3>
+    <h3><a id="logout" href="http://localhost:7055/sso/oidc/logout?id_token_hint=${sessionScope.idToken}&post_logout_redirect_uri=http://localhost:7099/oidc/admin/test">logout</a></h3>
 </center>
 <script>
 // Base64-urlencodes the input string
@@ -89,7 +89,7 @@ document.getElementById("api01").addEventListener("click", function(e){
             document.getElementById("error_details_01").innerText = xhr.status;
         }
     }
-    xhr.send();        
+    xhr.send();
 });
 
 document.getElementById("api02").addEventListener("click", function(e){
@@ -174,10 +174,10 @@ document.getElementById("api04").addEventListener("click", function(e){
     e.preventDefault();
     var params = new URLSearchParams("");
     params.append("id_token_hint", encodeURIComponent("${sessionScope.idToken}"));
-    params.append("post_logout_redirect_uri", encodeURIComponent("=http://localhost:7099/oidc/admin/test"));
+    params.append("post_logout_redirect_uri", encodeURIComponent("http://localhost:7099/oidc/admin/test"));
         
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "http://localhost:7055/sso/oidc/logout?" + params.toString(), true);
+    xhr.open("GET", "http://localhost:7055/sso/oidc/logout?" + params.toString(), false);
     xhr.onload = function() {
          if(xhr.status == 200) {
             document.getElementById("content04").innerText = xhr.responseText;
@@ -194,14 +194,17 @@ document.getElementById("api05").addEventListener("click", function(e){
     params.append("client_id", encodeURIComponent("clientid_oidc"));
     params.append("client_secret", encodeURIComponent("secret_oidc"));
     var jwtId = document.getElementById("jwtId").innerText;
+    //var jwtId = document.getElementById("accessToken").innerText;
     params.append("token", encodeURIComponent(jwtId));
-        
+    
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "http://localhost:7055/sso/oidc/revoke?" + params.toString(), true);
     xhr.onload = function() {
          if(xhr.status == 200) {
             document.getElementById("content05").innerText = xhr.responseText;
+            document.getElementById("error_details_05").innerText = "";
         } else {
+            document.getElementById("content05").innerText = "";
             document.getElementById("error_details_05").innerText = xhr.status;
         }
     }
