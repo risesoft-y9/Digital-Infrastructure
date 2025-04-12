@@ -52,6 +52,7 @@
         
     <br/><br/><br/><br/>
     <h3><a id="logout" href="http://localhost:7055/sso/oidc/logout?id_token_hint=${sessionScope.idToken}&post_logout_redirect_uri=http://localhost:7099/oidc/admin/test">logout</a></h3>
+    <iframe id="hiddenFrame" width="1px" height="1px"></iframe>
 </center>
 <script>
 // Base64-urlencodes the input string
@@ -170,22 +171,38 @@ document.getElementById("api03").addEventListener("click", function(e){
     xhr.send();
 });
 
-document.getElementById("api04").addEventListener("click", function(e){
-    e.preventDefault();
-    var params = new URLSearchParams("");
-    params.append("id_token_hint", encodeURIComponent("${sessionScope.idToken}"));
-    params.append("post_logout_redirect_uri", encodeURIComponent("http://localhost:7099/oidc/admin/test"));
-        
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "http://localhost:7055/sso/oidc/logout?" + params.toString(), false);
-    xhr.onload = function() {
-         if(xhr.status == 200) {
-            document.getElementById("content04").innerText = xhr.responseText;
-        } else {
-            document.getElementById("error_details_04").innerText = xhr.status;
-        }
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+document.getElementById("api04").addEventListener("click", async () => {
+    try {
+        var params = new URLSearchParams("");
+            params.append("id_token_hint", "${sessionScope.idToken}");
+            params.append("post_logout_redirect_uri", "http://localhost:7099/oidc/admin/test");
+            //alert(params.toString());
+        const res = await fetch("http://localhost:7055/sso/oidc/logout?" + params.toString(), {
+            method: "GET",
+            redirect: "manual"
+        }).then(res => {
+            if (res.type === 'opaqueredirect') {
+               //window.location.href = res.url;
+               document.getElementById("hiddenFrame").src = res.url;
+               //等待3秒,backchanel logout finished
+               sleep(3000).then(() => {
+                   window.location.reload(true);
+               });
+               return;
+            } else {
+               return res.text();
+            }
+        })
+        .catch(error => {
+            alert(error);
+        });
+    } catch (error) {
+        alert('There has been a problem with your fetch operation:'+error);
     }
-    xhr.send();        
 });
 
 document.getElementById("api05").addEventListener("click", function(e){
@@ -208,7 +225,7 @@ document.getElementById("api05").addEventListener("click", function(e){
             document.getElementById("error_details_05").innerText = xhr.status;
         }
     }
-    xhr.send();        
+    xhr.send();
 });
 
 </script>
