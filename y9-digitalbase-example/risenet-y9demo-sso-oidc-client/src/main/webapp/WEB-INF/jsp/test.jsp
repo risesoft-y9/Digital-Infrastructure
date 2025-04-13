@@ -6,20 +6,69 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta charset="utf-8">
 <title>登录成功</title>
+<style>
+body {font-family: Arial;}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+</style>
 </head>
 <body>
 <center>
     <h1>登录成功!</h1>
     <h2 id="userName">欢迎您：${sessionScope.userInfo.loginName}</h2>
     
-    <h3>current access token jwt</h3>
-    <textarea id="accessToken" rows="10" cols="100">${sessionScope.accessToken}</textarea><br/>
-    
-    <h3>current access token jwtId</h3>
-    <div id="jwtId">${sessionScope.jwtId}</div><br/>
-    
-    <h3>current idToken</h3>
-    <textarea id="idToken" rows="10" cols="100">${sessionScope.idToken}</textarea><br/>
+    <div class="tab">
+      <button class="tablinks" onclick="openTab('tab1')" id="btn1">accessToken</button>
+      <button class="tablinks" onclick="openTab('tab2')">jwtId</button>
+      <button class="tablinks" onclick="openTab('tab3')">idToken</button>
+    </div>
+
+    <div id="tab1" class="tabcontent">
+      <textarea id="accessToken" rows="10" cols="100">${sessionScope.accessToken}</textarea>
+    </div>
+
+    <div id="tab2" class="tabcontent">
+      <textarea id="jwtId" rows="10" cols="100">${sessionScope.jwtId}</textarea>
+    </div>
+
+    <div id="tab3" class="tabcontent">
+        <textarea id="idToken" rows="10" cols="100">${sessionScope.idToken}</textarea>
+    </div>
         
     <h3><a id="api01" href="#">api调用(Header传参)</a></h3>
     返回的json:<br/>
@@ -73,6 +122,20 @@ function parseJwt(token) {
     }).join(''));
 
     return JSON.parse(jsonPayload);
+}
+
+function openTab(tabId) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabId).style.display = "block";
+    //document.getElementById(tabId).className += " active";
 }
 
 document.getElementById("api01").addEventListener("click", function(e){
@@ -226,6 +289,12 @@ document.getElementById("api05").addEventListener("click", function(e){
         }
     }
     xhr.send();
+});
+
+// Open the first tab by default
+document.addEventListener("DOMContentLoaded", function() {
+    //openTab('tab1');
+    document.getElementById("btn1").click();
 });
 
 </script>
