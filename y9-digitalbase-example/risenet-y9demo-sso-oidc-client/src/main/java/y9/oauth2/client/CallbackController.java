@@ -59,6 +59,7 @@ public class CallbackController {
             OpenIdOAuth2AccessToken token = serviceProxy.getAccessToken(code);
             if (token != null) {
                 String jwtId = "";
+                String refreshToken = token.getRefreshToken();
                 String accessToken = token.getAccessToken();
                 String idToken = token.getOpenIdToken();
                 if (isJwtAccessToken(accessToken)) {
@@ -74,6 +75,7 @@ public class CallbackController {
                         userInfo = toUserInfo(jwt);
                     }
                 }
+                session.setAttribute("refreshToken", refreshToken);
                 session.setAttribute("accessToken", accessToken);
                 session.setAttribute("idToken", idToken);
                 session.setAttribute("jwtId", jwtId);

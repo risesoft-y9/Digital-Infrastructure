@@ -56,6 +56,7 @@ body {font-family: Arial;}
       <button class="tablinks" onclick="openTab('tab1')" id="btn1">accessToken</button>
       <button class="tablinks" onclick="openTab('tab2')">jwtId</button>
       <button class="tablinks" onclick="openTab('tab3')">idToken</button>
+      <button class="tablinks" onclick="openTab('tab4')">refreshToken</button>
     </div>
 
     <div id="tab1" class="tabcontent">
@@ -69,6 +70,10 @@ body {font-family: Arial;}
     <div id="tab3" class="tabcontent">
         <textarea id="idToken" rows="10" cols="100">${sessionScope.idToken}</textarea>
     </div>
+    
+    <div id="tab4" class="tabcontent">
+        <textarea id="refreshToken" rows="10" cols="100">${sessionScope.refreshToken}</textarea>
+    </div>
         
     <h3><a id="api01" href="#">api调用(Header传参)</a></h3>
     返回的json:<br/>
@@ -78,25 +83,25 @@ body {font-family: Arial;}
     <br/><br/><br/><br/>
     <h3><a id="api02" href="#">Token Exchange(切换岗位)</a></h3>
     返回的json:<br/>
-    <textarea id="content02" rows="10" cols="100"></textarea><br/>
+    <textarea id="content02" rows="6" cols="100"></textarea><br/>
     错误码：<span id="error_details_02"></span>
     
     <br/><br/><br/><br/>
     <h3><a id="api03" href="#">another user logon(安全审计员)</a></h3>
     返回的json:<br/>
-    <textarea id="content03" rows="10" cols="100"></textarea><br/>
+    <textarea id="content03" rows="6" cols="100"></textarea><br/>
     错误码：<span id="error_details_03"></span>
     
     <br/><br/><br/><br/>
     <h3><a id="api04" href="#">logout</a></h3>
     返回的json:<br/>
-    <textarea id="content04" rows="10" cols="100"></textarea><br/>
+    <textarea id="content04" rows="4" cols="100"></textarea><br/>
     错误码：<span id="error_details_04"></span>
     
     <br/><br/><br/><br/>
     <h3><a id="api05" href="#">revoke token</a></h3>
     返回的json:<br/>
-    <textarea id="content05" rows="10" cols="100"></textarea><br/>
+    <textarea id="content05" rows="4" cols="100"></textarea><br/>
     错误码：<span id="error_details_05"></span>
         
     <br/><br/><br/><br/>
@@ -135,7 +140,7 @@ function openTab(tabId) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
     document.getElementById(tabId).style.display = "block";
-    //document.getElementById(tabId).className += " active";
+    window.event.currentTarget.className += " active";
 }
 
 document.getElementById("api01").addEventListener("click", function(e){
@@ -186,7 +191,7 @@ document.getElementById("api02").addEventListener("click", function(e){
             document.getElementById("accessToken").value = body["access_token"];
             var payload = parseJwt(body["access_token"]);
             document.getElementById("jwtId").innerText = payload.jti;
-            alert(payload.jti);
+            //alert(payload.jti);
         } else {
             document.getElementById("error_details_02").innerText = xhr.status;
         }
@@ -253,7 +258,7 @@ document.getElementById("api04").addEventListener("click", async () => {
                document.getElementById("hiddenFrame").src = res.url;
                //等待3秒,backchanel logout finished
                sleep(3000).then(() => {
-                   window.location.reload(true);
+                   //window.location.reload(true);
                });
                return;
             } else {
