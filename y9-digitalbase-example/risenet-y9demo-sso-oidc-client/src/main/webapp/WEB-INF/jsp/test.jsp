@@ -45,12 +45,20 @@ body {font-family: Arial;}
   border: 1px solid #ccc;
   border-top: none;
 }
+
+table, th, td {
+border: 1px solid black;
+border-collapse: collapse;
+}
+th, td {
+padding: 5px;
+text-align: left;
+}
 </style>
 </head>
 <body>
 <center>
-    <h1>登录成功!</h1>
-    <h2 id="userName">欢迎您：${sessionScope.userInfo.loginName}</h2>
+    <h2 id="userName">登录成功!欢迎您：${sessionScope.userInfo.loginName}</h2>
     
     <div class="tab">
       <button class="tablinks" onclick="openTab('tab1')" id="btn1">accessToken</button>
@@ -60,53 +68,60 @@ body {font-family: Arial;}
     </div>
 
     <div id="tab1" class="tabcontent">
-      <textarea id="accessToken" rows="10" cols="100">${sessionScope.accessToken}</textarea>
+      <textarea id="accessToken" rows="8" cols="100" style="width: 96%">${sessionScope.accessToken}</textarea>
     </div>
 
     <div id="tab2" class="tabcontent">
-      <textarea id="jwtId" rows="10" cols="100">${sessionScope.jwtId}</textarea>
+      <textarea id="jwtId" rows="8" cols="100" style="width: 96%">${sessionScope.jwtId}</textarea>
     </div>
 
     <div id="tab3" class="tabcontent">
-        <textarea id="idToken" rows="10" cols="100">${sessionScope.idToken}</textarea>
+        <textarea id="idToken" rows="8" cols="100" style="width: 96%">${sessionScope.idToken}</textarea>
     </div>
     
     <div id="tab4" class="tabcontent">
-        <textarea id="refreshToken" rows="10" cols="100">${sessionScope.refreshToken}</textarea>
+        <textarea id="refreshToken" rows="8" cols="100" style="width: 96%">${sessionScope.refreshToken}</textarea>
     </div>
+    
+    <table style="width:90%">
+        <tr>
+            <th style="width:300px"><a id="api01" href="#">api调用(Header传参)</a></th>
+            <td><div id="content01"></div></td>
+            <td style="width:100px">错误码：<span id="error_details_01"></span></td>
+        </tr>
         
-    <h3><a id="api01" href="#">api调用(Header传参)</a></h3>
-    返回的json:<br/>
-    <div id="content01"></div><br/>
-    错误码：<span id="error_details_01"></span>
+        <tr>
+            <th style="width:300px"><a id="api02" href="#">Token Exchange(切换岗位)</a></th>
+            <td><textarea id="content02" rows="5" cols="100" style="width: 96%"></textarea></td>
+            <td style="width:100px">错误码：<span id="error_details_02"></span></td>
+        </tr>
     
-    <br/><br/><br/><br/>
-    <h3><a id="api02" href="#">Token Exchange(切换岗位)</a></h3>
-    返回的json:<br/>
-    <textarea id="content02" rows="6" cols="100"></textarea><br/>
-    错误码：<span id="error_details_02"></span>
-    
-    <br/><br/><br/><br/>
-    <h3><a id="api03" href="#">another user logon(安全审计员)</a></h3>
-    返回的json:<br/>
-    <textarea id="content03" rows="6" cols="100"></textarea><br/>
-    错误码：<span id="error_details_03"></span>
-    
-    <br/><br/><br/><br/>
-    <h3><a id="api04" href="#">logout</a></h3>
-    返回的json:<br/>
-    <textarea id="content04" rows="4" cols="100"></textarea><br/>
-    错误码：<span id="error_details_04"></span>
-    
-    <br/><br/><br/><br/>
-    <h3><a id="api05" href="#">revoke token</a></h3>
-    返回的json:<br/>
-    <textarea id="content05" rows="4" cols="100"></textarea><br/>
-    错误码：<span id="error_details_05"></span>
+        <tr>
+            <th style="width:300px"><a id="api03" href="#">another user logon(安全审计员)</a></th>
+            <td><textarea id="content03" rows="5" cols="100" style="width: 96%"></textarea></td>
+            <td style="width:100px">错误码：<span id="error_details_03"></span></td>
+        </tr>
         
-    <br/><br/><br/><br/>
-    <h3><a id="logout" href="http://localhost:7055/sso/oidc/logout?id_token_hint=${sessionScope.idToken}&post_logout_redirect_uri=http://localhost:7099/oidc/admin/test">logout</a></h3>
-    <iframe id="hiddenFrame" width="1px" height="1px"></iframe>
+        <tr>
+            <th style="width:300px"><a id="api05" href="#">revoke token</a></th>
+            <td><textarea id="content05" rows="4" cols="100" style="width: 96%"></textarea></td>
+            <td style="width:100px">错误码：<span id="error_details_05"></span></td>
+        </tr>
+
+        <tr>
+            <th style="width:300px"><a id="api04" href="#">logout(利用hidden iframe)</a></th>
+            <td><textarea id="content04" rows="4" cols="100" style="width: 96%"></textarea></td>
+            <td style="width:100px">错误码：<span id="error_details_04"></span></td>
+        </tr>
+
+        <tr>
+            <th style="width:300px"><a id="logout" href="http://localhost:7055/sso/oidc/logout?id_token_hint=${sessionScope.idToken}&post_logout_redirect_uri=http://localhost:7099/oidc/admin/test">logout(本页跳转)</a></th>
+            <td><div id="content06"></div></td>
+            <td style="width:100px">错误码：<span id="error_details_06"></span></td>
+        </tr>
+
+    </table>
+    <iframe id="hiddenFrame" width="800px" height="60px"></iframe>
 </center>
 <script>
 // Base64-urlencodes the input string
