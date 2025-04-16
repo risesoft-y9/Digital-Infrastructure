@@ -26,7 +26,6 @@ import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.InetAddressUtil;
 
 /**
  *
@@ -40,11 +39,9 @@ import net.risesoft.y9.util.InetAddressUtil;
 public class RiseLogAdvice implements MethodInterceptor {
 
     private final AccessLogReporter accessLogReporter;
-    private final String serverIp;
 
     public RiseLogAdvice(AccessLogReporter accessLogReporter) {
         this.accessLogReporter = accessLogReporter;
-        this.serverIp = InetAddressUtil.getLocalAddress().getHostAddress();
     }
 
     @Override
@@ -101,7 +98,7 @@ public class RiseLogAdvice implements MethodInterceptor {
                     log.setLogMessage(errorMessage);
                     log.setThrowable(throwable);
                     log.setId(UUID.randomUUID().toString().replaceAll("-", ""));
-                    log.setServerIp(this.serverIp);
+                    log.setServerIp(Y9Context.getHostIp());
                     log.setUserHostIp(hostIp);
                     log.setUserAgent(userAgent);
                     log.setSystemName(systemName);

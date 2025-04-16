@@ -36,6 +36,7 @@ import net.risesoft.log.service.impl.AccessLogKafkaReporter;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.feature.log.Y9LogProperties;
+import net.risesoft.y9.util.InetAddressUtil;
 
 /**
  * @author dzj
@@ -117,9 +118,12 @@ public class Y9LogConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(name = "y9LogFilter")
-    public FilterRegistrationBean<LogFilter> y9LogFilter(AccessLogReporter accessLogReporter) {
+    public FilterRegistrationBean<LogFilter> y9LogFilter(AccessLogReporter accessLogReporter,
+        Y9Properties y9Properties) {
+        String serverIp = InetAddressUtil.getLocalAddress(y9Properties.getInternalIp()).getHostAddress();
+
         final FilterRegistrationBean<LogFilter> filterBean = new FilterRegistrationBean<>();
-        filterBean.setFilter(new LogFilter(accessLogReporter));
+        filterBean.setFilter(new LogFilter(accessLogReporter, serverIp));
         filterBean.setAsyncSupported(false);
         filterBean.addUrlPatterns("/*");
         filterBean.setOrder(FilterOrderConsts.LOG_ORDER);

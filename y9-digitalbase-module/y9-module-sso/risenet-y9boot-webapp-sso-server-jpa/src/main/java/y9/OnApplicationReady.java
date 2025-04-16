@@ -27,9 +27,10 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     public void onApplicationEvent(ApplicationReadyEvent event) {
         Y9User y9User = null;
         try {
-            y9User = y9UserService.findByPersonIdAndTenantId("11111111-1111-1111-1111-111111111117", "11111111-1111-1111-1111-111111111113");
+            y9User = y9UserService.findByPersonIdAndTenantId("11111111-1111-1111-1111-111111111117",
+                "11111111-1111-1111-1111-111111111113");
         } catch (Exception e) {
-            //e.printStackTrace();
+            // e.printStackTrace();
         }
         if (y9User == null) {
             y9User = new Y9User();
@@ -56,9 +57,10 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
         }
 
         try {
-            y9User = y9UserService.findByPersonIdAndTenantId("11111111-1111-1111-1111-111111111118", "11111111-1111-1111-1111-111111111113");
+            y9User = y9UserService.findByPersonIdAndTenantId("11111111-1111-1111-1111-111111111118",
+                "11111111-1111-1111-1111-111111111113");
         } catch (Exception e) {
-            //e.printStackTrace();
+            // e.printStackTrace();
         }
         if (y9User == null) {
             y9User = new Y9User();

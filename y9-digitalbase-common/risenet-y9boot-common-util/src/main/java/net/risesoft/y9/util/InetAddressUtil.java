@@ -1,7 +1,5 @@
 package net.risesoft.y9.util;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
@@ -9,17 +7,11 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.Enumeration;
 import java.util.Map;
-import java.util.Properties;
 import java.util.regex.Pattern;
 
-import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
-import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StringUtils;
 
 import lombok.extern.slf4j.Slf4j;
-
-import net.risesoft.y9.Y9Context;
 
 /**
  * 网络地址工具类
@@ -38,45 +30,8 @@ public class InetAddressUtil {
     private static final Pattern LOCAL_IP_PATTERN = Pattern.compile("127(\\.\\d{1,3}){3}$");
     private static final Pattern ADDRESS_PATTERN = Pattern.compile("^\\d{1,3}(\\.\\d{1,3}){3}\\:\\d{1,5}$");
     private static final Pattern IP_PATTERN = Pattern.compile("\\d{1,3}(\\.\\d{1,3}){3,5}$");
-    public static Properties properties = new Properties();
-    public static String ips = null;
+
     private static volatile InetAddress LOCAL_ADDRESS = null;
-
-    static {
-        Environment environment = Y9Context.getEnvironment();
-        if (environment == null) {
-            YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
-            yaml.setResources(new ClassPathResource("application.yml"));
-            properties = yaml.getObject();
-            if (properties.isEmpty()) {
-                getApplicationProperties();
-            }
-            ips = properties.getProperty("y9.internalIp");
-        } else {
-            ips = environment.getProperty("y9.internalIp");
-        }
-    }
-
-    public static void getApplicationProperties() {
-        try (InputStream inputStream =
-            InetAddressUtil.class.getClassLoader().getResourceAsStream("application.properties")) {
-            properties.load(inputStream);
-        } catch (IOException ignored) {
-        }
-
-        if (properties.isEmpty()) {
-            try (InputStream inputStream2 =
-                InetAddressUtil.class.getClassLoader().getResourceAsStream("properties/application.properties")) {
-                properties.load(inputStream2);
-            } catch (IOException ignored) {
-            }
-        }
-
-        if (properties.isEmpty()) {
-            LOGGER.error("application.properties not found!");
-            System.exit(0);
-        }
-    }
 
     // return ip to avoid lookup dns
     public static String getHostName(SocketAddress socketAddress) {
@@ -95,12 +50,13 @@ public class InetAddressUtil {
     }
 
     /**
-     * {@link #getLocalAddress(Map)}
-     * 
+     * 获取服务器地址
+     *
+     * @param validSubnets 有效的子网段，多个可用英文逗号,分隔
      * @return InetAddress IP地址
      */
-    public static InetAddress getLocalAddress() {
-        return getLocalAddress(null);
+    public static InetAddress getLocalAddress(String validSubnets) {
+        return getLocalAddress(null, validSubnets);
     }
 
     /**
@@ -111,40 +67,40 @@ public class InetAddressUtil {
      * @param destHostPorts host端口信息
      * @return InetAddress locaip
      */
-    public static InetAddress getLocalAddress(Map<String, Integer> destHostPorts) {
+    public static InetAddress getLocalAddress(Map<String, Integer> destHostPorts, String validSubnets) {
         if (LOCAL_ADDRESS != null) {
             return LOCAL_ADDRESS;
         }
 
         InetAddress localAddress = getLocalAddressByHostname();
-        if (!isValidAddress(localAddress)) {
-            localAddress = getLocalAddressBySocket(destHostPorts);
+        if (isValidAddress(localAddress, validSubnets)) {
+            return localAddress;
         }
 
-        if (!isValidAddress(localAddress)) {
-            localAddress = getLocalAddressByNetworkInterface();
+        localAddress = getLocalAddressBySocket(destHostPorts);
+        if (isValidAddress(localAddress, validSubnets)) {
+            return localAddress;
         }
 
-        if (isValidAddress(localAddress)) {
+        localAddress = getLocalAddressByNetworkInterface(validSubnets);
+        if (isValidAddress(localAddress, validSubnets)) {
             LOCAL_ADDRESS = localAddress;
+            return localAddress;
         }
 
-        return localAddress;
+        throw new IllegalArgumentException("invalid subnets, check your configuration");
     }
 
     private static InetAddress getLocalAddressByHostname() {
         try {
-            InetAddress localAddress = InetAddress.getLocalHost();
-            if (isValidAddress(localAddress)) {
-                return localAddress;
-            }
+            return InetAddress.getLocalHost();
         } catch (Throwable e) {
             LOGGER.warn("Failed to retrieve local address by hostname:" + e);
         }
         return null;
     }
 
-    private static InetAddress getLocalAddressByNetworkInterface() {
+    private static InetAddress getLocalAddressByNetworkInterface(String validSubnets) {
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
             if (interfaces != null) {
@@ -155,7 +111,7 @@ public class InetAddressUtil {
                         while (addresses.hasMoreElements()) {
                             try {
                                 InetAddress address = addresses.nextElement();
-                                if (isValidAddress(address)) {
+                                if (isValidAddress(address, validSubnets)) {
                                     return address;
                                 }
                             } catch (Throwable e) {
@@ -198,7 +154,7 @@ public class InetAddressUtil {
             || (LOCAL_IP_PATTERN.matcher(host).matches());
     }
 
-    public static boolean isValidAddress(InetAddress address) {
+    private static boolean isValidAddress(InetAddress address, String validSubnets) {
         if (address == null || address.isLoopbackAddress()) {
             return false;
         }
@@ -210,11 +166,9 @@ public class InetAddressUtil {
             return false;
         }
 
-        // application.propters中y9.internalIp=192.168.1.x,10.0.x.x
-        // String ips = Y9Context.getProperty("y9.internalIp");
-        if (StringUtils.hasText(ips)) {
+        if (StringUtils.hasText(validSubnets)) {
             valid = false;
-            String[] arry = ips.toLowerCase().split(",");
+            String[] arry = validSubnets.toLowerCase().split(",");
             for (String ip : arry) {
                 String ipSegment = ip;
                 int i = ip.trim().indexOf(".x");
@@ -235,7 +189,4 @@ public class InetAddressUtil {
         return ADDRESS_PATTERN.matcher(address).matches();
     }
 
-    public static boolean isValidLocalHost(String host) {
-        return !isInvalidLocalHost(host);
-    }
 }
