@@ -17,7 +17,6 @@ import y9.entity.Y9User;
 import y9.repository.Y9LoginUserRepository;
 import y9.repository.Y9UserRepository;
 import y9.service.Y9LoginUserService;
-import y9.util.InetAddressUtil;
 import y9.util.Y9Context;
 import y9.util.common.UserAgentUtil;
 import y9.util.json.Y9JacksonUtil;
@@ -28,8 +27,6 @@ import cz.mallat.uasparser.UserAgentInfo;
 @Slf4j
 @RequiredArgsConstructor
 public class Y9LoginUserServiceImpl implements Y9LoginUserService {
-
-    public static String SSO_SERVER_IP = InetAddressUtil.getLocalAddress().getHostAddress();
 
     private final Y9LoginUserRepository y9LoginUserRepository;
     private final Y9UserRepository y9UserRepository;
@@ -98,7 +95,7 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
                 user.setUserHostDiskId(userHostDiskId);
                 user.setTenantId(tenantId);
                 user.setTenantName(tenantName);
-                user.setServerIp(SSO_SERVER_IP);
+                user.setServerIp(Y9Context.getHostIp());
                 user.setSuccess(success);
                 user.setLogMessage(logMessage);
                 user.setBrowserName(browser);

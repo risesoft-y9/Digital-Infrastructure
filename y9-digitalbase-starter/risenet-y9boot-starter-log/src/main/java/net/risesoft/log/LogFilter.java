@@ -14,6 +14,7 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.log.service.AccessLogReporter;
@@ -21,7 +22,6 @@ import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.InetAddressUtil;
 
 /**
  * 日志过滤器 <br>
@@ -32,15 +32,11 @@ import net.risesoft.y9.util.InetAddressUtil;
  * @since 9.6.8
  */
 @Slf4j
+@RequiredArgsConstructor
 public class LogFilter implements Filter {
 
     private final AccessLogReporter accessLogReporter;
     private final String serverIp;
-
-    public LogFilter(AccessLogReporter accessLogReporter) {
-        this.accessLogReporter = accessLogReporter;
-        this.serverIp = InetAddressUtil.getLocalAddress().getHostAddress();
-    }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)

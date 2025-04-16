@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.json.Y9JsonUtil;
-import net.risesoft.y9.util.InetAddressUtil;
 
 /**
  * Apisix工具类
@@ -84,7 +83,7 @@ public class ApisixUtil {
                 upstreamNodeMap.put(upstreamAddrs[i], 1);
             }
         } else {
-            String host = InetAddressUtil.getLocalAddress().getHostAddress();
+            String host = Y9Context.getHostIp();
             String port = Y9Context.getProperty("server.port", "8080");
             Map<String, Integer> nodeMap = getUpstreamNodeMapByService(adminAddress, adminKey, serviceId);
             upstreamNodeMap.putAll(nodeMap);
@@ -133,7 +132,7 @@ public class ApisixUtil {
                 upstreamNodeMap.put(upstreamAddrs[i], 1);
             }
         } else {
-            String host = InetAddressUtil.getLocalAddress().getHostAddress();
+            String host = Y9Context.getHostIp();
             String port = Y9Context.getProperty("server.port", "8080");
             Map<String, Integer> nodeMap = getUpstreamNodeMap(adminAddress, adminKey, upstreamId);
             upstreamNodeMap.putAll(nodeMap);

@@ -1,8 +1,12 @@
 package y9.util;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -13,8 +17,7 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.web.context.ServletContextAware;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 获取WebApplicationContext的一条途径
@@ -28,6 +31,16 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
 
     private static String hostName;
     private static String hostIp;
+
+    @PostConstruct
+    public void init() {
+        Y9Context.hostIp = InetAddressUtil.getLocalAddress(environment.getProperty("y9.internalIp")).getHostAddress();
+        try {
+            Y9Context.hostName = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            LOGGER.warn(e.getMessage(), e);
+        }
+    }
 
     /**
      * 如果BeanFactory包含一个与所给名称匹配的bean定义，则返回true
@@ -91,21 +104,10 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
     }
 
     public static String getHostIp() {
-        if (Y9Context.hostIp == null) {
-            Y9Context.hostIp = InetAddressUtil.getLocalAddress().getHostAddress();
-        }
         return Y9Context.hostIp;
     }
 
     public static String getHostName() {
-        if (Y9Context.hostName == null) {
-            try {
-                Y9Context.hostName = InetAddress.getLocalHost().getHostName();
-            } catch (UnknownHostException e) {
-                LOGGER.warn(e.getMessage(), e);
-            }
-        }
-
         return Y9Context.hostName;
     }
 
@@ -164,7 +166,7 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
     }
 
     public static String getSystemName() {
-        return getProperty("systemName");
+        return getProperty("y9.systemName");
     }
 
     /**

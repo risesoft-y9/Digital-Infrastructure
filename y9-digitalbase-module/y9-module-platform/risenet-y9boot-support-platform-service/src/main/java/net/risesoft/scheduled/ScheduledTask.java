@@ -29,7 +29,6 @@ import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.InetAddressUtil;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
 
@@ -37,7 +36,6 @@ import net.risesoft.y9public.service.tenant.Y9TenantService;
 @Slf4j
 @RequiredArgsConstructor
 public class ScheduledTask {
-    private final String serverIp = InetAddressUtil.getLocalAddress().getHostAddress();
 
     private final UserLoginInfoApi userLoginInfoApi;
     private final Y9ManagerService y9ManagerService;
@@ -92,8 +90,8 @@ public class ScheduledTask {
                         log.setLogMessage(y9Manager.getName() + "已超过" + reviewLogCycle + "天未登录系统审查。");
                         log.setTenantId(tenantId);
                         log.setId(Y9IdGenerator.genId());
-                        log.setServerIp(this.serverIp);
-                        log.setUserHostIp(this.serverIp);
+                        log.setServerIp(Y9Context.getHostIp());
+                        log.setUserHostIp(Y9Context.getHostIp());
                         log.setSystemName(systemName);
                         log.setMethodName("checkManagerLogReview");
                         log.setModularName("数字底座");
@@ -157,8 +155,8 @@ public class ScheduledTask {
                     log.setLogMessage(y9Manager.getName() + "已超过" + modifyPasswordCycle + "天未修改密码。");
                     log.setTenantId(tenantId);
                     log.setId(Y9IdGenerator.genId());
-                    log.setServerIp(this.serverIp);
-                    log.setUserHostIp(this.serverIp);
+                    log.setServerIp(Y9Context.getHostIp());
+                    log.setUserHostIp(Y9Context.getHostIp());
                     log.setSystemName(systemName);
                     log.setMethodName("checkManagerPasswordModification");
                     log.setModularName("数字底座");
