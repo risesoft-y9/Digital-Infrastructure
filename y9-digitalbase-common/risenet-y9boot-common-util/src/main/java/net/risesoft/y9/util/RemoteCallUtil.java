@@ -261,7 +261,7 @@ public class RemoteCallUtil {
         return post(url, params, null, clz);
     }
 
-    public static <T> Y9Result<T> postXml(String url, String xmlData, Class<T> clz) {
+    public static <T> String postXml(String url, String xmlData, Class<T> clz) {
         HttpClient client = new HttpClient();
         client.getParams().setParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024 * 1024 * 10);
         client.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, StandardCharsets.UTF_8.name());
@@ -282,8 +282,10 @@ public class RemoteCallUtil {
                 response = stringBuffer.toString();
             }
             if (code == HttpStatus.SC_OK) {
-                JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Y9Result.class, clz);
-                return objectMapper.readValue(response, javaType);
+//                JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Y9Result.class, clz);
+//                return objectMapper.readValue(response, javaType);
+                System.out.println(response);
+                return response;
             } else {
                 LOGGER.info("http status code: {}, response: {}", code, response);
             }
