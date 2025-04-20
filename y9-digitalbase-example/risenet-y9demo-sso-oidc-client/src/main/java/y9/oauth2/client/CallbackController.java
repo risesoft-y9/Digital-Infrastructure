@@ -92,17 +92,18 @@ public class CallbackController {
             }
 
             String logoutToken = request.getParameter("logout_token");
-            DecodedJWT jwt = JWT.decode(logoutToken);
-            String oidcSessionId = jwt.getClaim("sid").asString();
-            System.out.println("oidcSessionId === " + oidcSessionId);
-            
-            session.invalidate();
-            try {
-                request.logout();
-            } catch (ServletException e) {
-                 e.printStackTrace();
+            if (logoutToken != null) {
+                DecodedJWT jwt = JWT.decode(logoutToken);
+                String oidcSessionId = jwt.getClaim("sid").asString();
+                System.out.println("oidcSessionId === " + oidcSessionId);
+                
+                session.invalidate();
+                try {
+                    request.logout();
+                } catch (ServletException e) {
+                     e.printStackTrace();
+                }
             }
-            //return "redirect:http://www.sina.com.cn";// + originalUri;
         }
         return "redirect:" + originalUri;
     }

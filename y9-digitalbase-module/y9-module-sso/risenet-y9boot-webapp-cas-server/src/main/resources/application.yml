@@ -106,11 +106,20 @@ cas:
     ticket:
         trackDescendantTickets: true
         registry:
+            core:
+                enable-locking: false
             cleaner:
                 schedule:
                     enabled: true
                     startDelay: "PT15S"
                     repeatInterval: "PT30M"
+            in-memory:
+                crypto:
+                    enabled: true
+                    encryption:
+                        key: "6vJAg4gWORY0f8dF5XIc8Q"
+                    signing:
+                        key: "CzPeT3D2l7C-dwR2LfV9DFHrwmPGXCSsEReZeTn76xiWNU45De8s1CAdPNXovoBpEilbeTY1PkwPQuMxZdN4mQ"
             jpa:
                 enabled: false
                 dialect: org.hibernate.dialect.MySQLDialect
@@ -118,7 +127,10 @@ cas:
                 url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
                 user: root
                 password: "111111"
+                leakThreshold: 0
                 idleTimeout: PT5M
+                autocommit: true
+                ddl-auto: update
                 crypto:
                     enabled: true
                     encryption:
@@ -149,6 +161,8 @@ cas:
                     signing:
                         key: "CzPeT3D2l7C-dwR2LfV9DFHrwmPGXCSsEReZeTn76xiWNU45De8s1CAdPNXovoBpEilbeTY1PkwPQuMxZdN4mQ"
                         keySize: 512
+                cache:
+                    initial-capacity: 0
         st:
             maxLength: 50
             numberOfUses: 10
@@ -250,7 +264,9 @@ logging:
     level:
         org:
             apereo:
-                cas: info
+                cas:
+                    ticket:
+                        registry: debug
                 inspektr: warn
         root: warn
 server:
@@ -359,6 +375,9 @@ spring:
         compose:
             enabled: false
             file: docker-dev.yml
+    integration:
+        jdbc:
+            initialize-schema: always
     jmx:
         enabled: false
     session:

@@ -36,18 +36,15 @@ public class JpaPublicConfiguration {
 
     @ConfigurationProperties("spring.datasource.hikari")
     @Bean("y9PublicDS")
-    @Primary
     public HikariDataSource y9PublicDS() {
         return new HikariDataSource();
     }
 
     @Bean
-    @Primary
     public JpaVendorAdapter rsJpaVendorAdapter() {
         return new HibernateJpaVendorAdapter();
     }
 
-    @Primary
     @Bean
     public LocalContainerEntityManagerFactoryBean rsPublicEntityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
@@ -59,7 +56,6 @@ public class JpaPublicConfiguration {
         return em;
     }
 
-    @Primary
     @Bean
     public PlatformTransactionManager rsPublicTransactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();

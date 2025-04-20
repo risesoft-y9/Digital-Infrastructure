@@ -25,7 +25,7 @@ public class Y9AuthenticationEventExecutionPlanConfigurer implements Authenticat
         Y9PrincipalResolver y9PrincipalResolver = new Y9PrincipalResolver(y9UserService);
         Y9AuthenticationHandler handler = new Y9AuthenticationHandler("y9AuthenticationHandler",
                 servicesManager, 0, y9UserService, y9LoginUserService);
-        //plan.registerAuthenticationHandlerWithPrincipalResolver(handler, y9PrincipalResolver);
-        plan.registerAuthenticationHandler(handler);
+        plan.registerAuthenticationHandlerWithPrincipalResolver(handler, y9PrincipalResolver);
+        //plan.registerAuthenticationHandler(handler);
     }
 }

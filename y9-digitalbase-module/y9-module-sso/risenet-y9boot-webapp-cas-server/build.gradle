@@ -288,7 +288,7 @@ dependencies {
         implementation "org.apereo.cas:cas-server-webapp-init-tomcat"
     }
     
-    developmentOnly "org.springframework.boot:spring-boot-devtools:${project.springBootVersion}"
+    //developmentOnly "org.springframework.boot:spring-boot-devtools:${project.springBootVersion}"
     // developmentOnly "org.springframework.boot:spring-boot-docker-compose:${project.springBootVersion}"
         
     /**
@@ -299,15 +299,12 @@ dependencies {
      * plugin via the CAS bom.
      **/
     implementation "org.apereo.cas:cas-server-core-logging"
-    //implementation "org.apereo.cas:cas-server-support-oauth-webflow"
-    //implementation "org.apereo.cas:cas-server-support-token-webflow"
     implementation "org.apereo.cas:cas-server-support-oauth-services"
     implementation "org.apereo.cas:cas-server-support-oauth-api"
     implementation "org.apereo.cas:cas-server-support-oauth-core-api"
     implementation "org.apereo.cas:cas-server-support-token-core-api"
 
     implementation "org.apereo.cas:cas-server-support-oidc"
-    //implementation "org.apereo.cas:cas-server-support-oidc-jpa"
     implementation "org.apereo.cas:cas-server-support-oidc-services"
     implementation "org.apereo.cas:cas-server-support-oidc-core-api"
 
@@ -328,6 +325,7 @@ dependencies {
     implementation "org.apereo.cas:cas-server-core"
     implementation "org.apereo.cas:cas-server-core-api"
     implementation "org.apereo.cas:cas-server-core-api-authentication"
+    implementation "org.apereo.cas:cas-server-core-api-configuration-model"
     implementation "org.apereo.cas:cas-server-core-cookie"
     implementation "org.apereo.cas:cas-server-core-api-cookie"
     implementation "org.apereo.cas:cas-server-core-util-api"

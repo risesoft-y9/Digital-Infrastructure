@@ -35,9 +35,7 @@ public class Y9PrincipalResolver implements PrincipalResolver {
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private boolean isReturnNullIfNoAttributes = false;
-
-    private PrincipalFactory principalFactory = new DefaultPrincipalFactory();
+    private final PrincipalFactory principalFactory = new DefaultPrincipalFactory();
 
     private final Y9UserService y9UserService;
 
@@ -58,13 +56,7 @@ public class Y9PrincipalResolver implements PrincipalResolver {
         String positionId = (String) customFields.get("positionId");
         String loginType = (String) customFields.get("loginType");
 
-        if (username == null) {
-            logger.debug("Got null for extracted principal ID; returning null.");
-            return null;
-        }
-
         PersonAttributes personAttributes = null;
-
         List<Y9User> users = null;
         if ("mobile".equals(loginType)) {
             if (StringUtils.hasText(deptId)) {
@@ -119,15 +111,10 @@ public class Y9PrincipalResolver implements PrincipalResolver {
         }
 
         final Map<String, List<Object>> attributes;
-
         if (personAttributes == null) {
             attributes = null;
         } else {
             attributes = personAttributes.getAttributes();
-        }
-
-        if (attributes == null & !isReturnNullIfNoAttributes) {
-            return principalFactory.createPrincipal(username);
         }
 
         if (attributes == null) {
