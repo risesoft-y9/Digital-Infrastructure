@@ -18,6 +18,15 @@ public class CreatePositionDTO implements Serializable {
 
     private static final long serialVersionUID = -6444031768723849631L;
 
+    /** 岗位id */
+    protected String id;
+
+    /** 排序 */
+    protected Integer tabIndex = 0;
+
+    /** 是否禁用 */
+    protected Boolean disabled = false;
+
     /** 父节点id */
     @NotBlank
     private String parentId;
@@ -28,5 +37,7 @@ public class CreatePositionDTO implements Serializable {
 
     /** 岗位容量，默认容量为1，即一人一岗 */
     private Integer capacity = 1;
+
+
 
 }
