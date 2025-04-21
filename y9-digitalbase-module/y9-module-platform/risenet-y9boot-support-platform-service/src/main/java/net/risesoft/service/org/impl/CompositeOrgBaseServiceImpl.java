@@ -921,11 +921,6 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
      * 查询顺序:{@code 机构->部门->用户组->岗位->人员->三员}
      */
     @Override
-    public List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType) {
-        return treeSearch(name, treeType, Boolean.FALSE);
-    }
-
-    @Override
     public List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType, Boolean disabled) {
         Set<Y9OrgBase> orgBaseSet = new HashSet<>();
 

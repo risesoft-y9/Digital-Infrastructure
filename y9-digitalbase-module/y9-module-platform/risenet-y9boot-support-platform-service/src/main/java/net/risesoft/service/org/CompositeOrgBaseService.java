@@ -259,15 +259,6 @@ public interface CompositeOrgBaseService {
     void sync(String syncId, OrgTypeEnum orgType, boolean needRecursion, String targetSystemName);
 
     /**
-     * 根据name，和结构树类型查询机构主体
-     *
-     * @param name 组织节点名称
-     * @param treeType 树类型{@link OrgTreeTypeEnum}
-     * @return {@code List<Y9OrgBase>}
-     */
-    List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType);
-
-    /**
      * 根据name，和结构树类型查询机构主体(不含禁用人员)
      *
      * @param name 组织节点名称
