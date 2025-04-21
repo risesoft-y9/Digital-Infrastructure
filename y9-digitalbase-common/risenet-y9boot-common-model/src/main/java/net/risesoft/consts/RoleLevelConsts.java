@@ -9,17 +9,12 @@ package net.risesoft.consts;
  * @author shidaobang
  * @date 2022/4/21
  */
-public class RoleLevelConsts {
+public class RoleLevelConsts extends LevelConsts {
 
     /**
      * DN分割符
      */
     public static final String CN = "cn=";
-
-    /**
-     * 色角树层次分隔符
-     */
-    public static final String SEPARATOR = ",";
 
     private RoleLevelConsts() {
         throw new IllegalStateException("RoleLevelConsts class");

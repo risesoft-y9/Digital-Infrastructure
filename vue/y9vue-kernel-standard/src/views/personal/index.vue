@@ -609,7 +609,9 @@
                             closeOnPressEscape: false
                         }).then(() => {
                             try {
-                                const params = {};
+                                const params = {
+                                    redirect_uri: import.meta.env.VUE_APP_HOST_INDEX
+                                };
                                 $y9_SSO.ssoLogout(params);
                             } catch (error) {
                                 ElMessage.error(error.msg || 'Has Error');

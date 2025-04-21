@@ -1,6 +1,10 @@
 package net.risesoft.util;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -111,5 +115,19 @@ public class Y9OrgUtil {
             return id;
         }
         return parentGuidPath + OrgLevelConsts.SEPARATOR + id;
+    }
+
+    public static String dnToNamePath(String dn) {
+        if (StringUtils.isEmpty(dn)) {
+            return null;
+        }
+
+        List<String> nameList = Arrays.asList(dn.split(OrgLevelConsts.SEPARATOR)).stream().map(s -> s
+            .replace(OrgLevelConsts.ORGANIZATION, "").replace(OrgLevelConsts.UNIT, "").replace(OrgLevelConsts.CN, ""))
+            .collect(Collectors.toList());
+
+        Collections.reverse(nameList);
+
+        return StringUtils.join(nameList, OrgLevelConsts.NAME_SEPARATOR);
     }
 }

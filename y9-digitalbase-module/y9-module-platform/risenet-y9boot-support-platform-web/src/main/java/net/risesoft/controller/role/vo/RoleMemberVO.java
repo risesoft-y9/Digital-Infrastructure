@@ -1,12 +1,16 @@
 package net.risesoft.controller.role.vo;
 
 import java.io.Serializable;
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;
+import net.risesoft.util.Y9OrgUtil;
 
 /**
  * 角色关联组织节点
@@ -26,28 +30,37 @@ public class RoleMemberVO implements Serializable {
     private String id;
 
     /** 是否为负角色关联 */
-    private String negative;
+    private Boolean negative;
 
     /** 组织节点id */
     private String orgUnitId;
 
     /** 组织节点dn */
-    private String unitDn;
+    private String orgUnitDn;
 
     /** 组织节点名称 */
-    private String unitName;
+    private String orgUnitName;
+
+    /** 组织节点名称路径 > 分隔 */
+    private String orgUnitNamePath;
 
     /** 组织节点类型 */
-    private String unitTypeName;
+    private String orgTypeStr;
+
+    /** 创建时间 */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date createTime;
 
     public static RoleMemberVO of(Y9OrgBasesToRoles y9OrgBasesToRoles, Y9OrgBase y9OrgBase) {
         RoleMemberVO roleMemberVO = new RoleMemberVO();
         roleMemberVO.setId(y9OrgBasesToRoles.getId());
         roleMemberVO.setOrgUnitId(y9OrgBasesToRoles.getOrgId());
-        roleMemberVO.setUnitName(y9OrgBase.getName());
-        roleMemberVO.setUnitTypeName(y9OrgBase.getOrgType().getName());
-        roleMemberVO.setUnitDn(y9OrgBase.getDn());
-        roleMemberVO.setNegative(Boolean.TRUE.equals(y9OrgBasesToRoles.getNegative()) ? "是" : "否");
+        roleMemberVO.setOrgUnitName(y9OrgBase.getName());
+        roleMemberVO.setOrgTypeStr(y9OrgBase.getOrgType().getName());
+        roleMemberVO.setOrgUnitDn(y9OrgBase.getDn());
+        roleMemberVO.setOrgUnitNamePath(Y9OrgUtil.dnToNamePath(y9OrgBase.getDn()));
+        roleMemberVO.setNegative(y9OrgBasesToRoles.getNegative());
+        roleMemberVO.setCreateTime(y9OrgBasesToRoles.getCreateTime());
         return roleMemberVO;
     }
 

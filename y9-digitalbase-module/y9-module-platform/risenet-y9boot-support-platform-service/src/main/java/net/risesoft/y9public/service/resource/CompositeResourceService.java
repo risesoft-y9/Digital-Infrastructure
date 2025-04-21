@@ -100,4 +100,12 @@ public interface CompositeResourceService {
      * @return {@code List<Y9ResourceBase>}
      */
     List<Y9ResourceBase> treeSearch(String name);
+
+    /**
+     * 通过资源 id 列表查找
+     *
+     * @param resourceIdList 资源id列表
+     * @return {@code List<Y9ResourceBase> }
+     */
+    List<Y9ResourceBase> findByIdIn(List<String> resourceIdList);
 }

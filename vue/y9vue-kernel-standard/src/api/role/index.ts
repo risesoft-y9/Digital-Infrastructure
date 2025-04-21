@@ -135,11 +135,11 @@ export const removeOrgUnits = async (ids) => {
 };
 
 // 根据角色ID获取权限列表
-export const getRelateResourceList = async (roleId, page, rows) => {
+export const getRelateResourceList = async (roleId, page, size) => {
     const data = qs.stringify({
         roleId,
         page,
-        rows
+        size
     });
     return await roleRequest({
         url: '/api/rest/authorization/listRelateResource',

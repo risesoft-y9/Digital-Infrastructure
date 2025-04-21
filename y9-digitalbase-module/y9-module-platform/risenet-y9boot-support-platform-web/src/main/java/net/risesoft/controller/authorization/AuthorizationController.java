@@ -1,6 +1,7 @@
 package net.risesoft.controller.authorization;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.consts.LevelConsts;
 import net.risesoft.controller.authorization.vo.AuthorizationVO;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.permission.Y9Authorization;
@@ -29,12 +31,15 @@ import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.authorization.Y9AuthorizationService;
 import net.risesoft.service.org.CompositeOrgBaseService;
+import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.resource.CompositeResourceService;
+import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.role.Y9RoleService;
 
 /**
@@ -58,15 +63,16 @@ public class AuthorizationController {
     private final CompositeResourceService compositeResourceService;
     private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9RoleService y9RoleService;
+    private final Y9SystemService y9SystemService;
 
     private AuthorizationVO getAuthorizationVOForOrgBase(Y9Authorization y9Authorization) {
         AuthorizationVO authorizationVO = new AuthorizationVO();
         String orgId = y9Authorization.getPrincipalId();
         Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgId);
-        String dn = y9OrgBase.getDn();
         authorizationVO.setId(y9Authorization.getId());
-        authorizationVO.setOrgId(y9OrgBase.getId());
-        authorizationVO.setOrgName(dn.replace("cn=", "").replace(",ou=", " >> ").replace(",o=", " >> "));
+        authorizationVO.setOrgUnitId(y9OrgBase.getId());
+        authorizationVO.setOrgUnitName(y9OrgBase.getName());
+        authorizationVO.setOrgUnitNamePath(Y9OrgUtil.dnToNamePath(y9OrgBase.getDn()));
         authorizationVO.setOrgType(y9OrgBase.getOrgType().getName());
         authorizationVO.setResourceId(y9Authorization.getResourceId());
         authorizationVO.setResourceName(y9Authorization.getResourceName());
@@ -78,26 +84,37 @@ public class AuthorizationController {
     }
 
     private AuthorizationVO getAuthorizationVOForResourceBase(Y9Authorization y9Authorization,
-        Y9ResourceBase acResource) {
+        Y9ResourceBase y9ResourceBase) {
         AuthorizationVO authorizationVO = new AuthorizationVO();
         authorizationVO.setId(y9Authorization.getId());
-        authorizationVO.setResourceId(acResource.getId());
-        authorizationVO.setResourceName(acResource.getName());
+        authorizationVO.setResourceId(y9ResourceBase.getId());
+        authorizationVO.setResourceName(y9ResourceBase.getName());
+        authorizationVO.setResourceNamePath(buildResourceNamePath(y9ResourceBase));
+        authorizationVO.setResourceTypeStr(y9ResourceBase.getResourceType().getName());
+        authorizationVO.setSystemCnName(y9SystemService.getById(y9ResourceBase.getSystemId()).getCnName());
         authorizationVO.setAuthority(y9Authorization.getAuthority());
         authorizationVO.setAuthorityStr(y9Authorization.getAuthority().getName());
-        authorizationVO.setAuthorizer(y9Authorization.getAuthorizer() == null ? "" : y9Authorization.getAuthorizer());
+        authorizationVO.setAuthorizer(y9Authorization.getAuthorizer());
         authorizationVO.setAuthorizeTime(y9Authorization.getCreateTime());
-        authorizationVO.setUrl(acResource.getUrl() == null ? "" : acResource.getUrl());
+        authorizationVO.setUrl(y9ResourceBase.getUrl() == null ? "" : y9ResourceBase.getUrl());
         return authorizationVO;
+    }
+
+    private String buildResourceNamePath(Y9ResourceBase y9ResourceBase) {
+        String guidPath = y9ResourceBase.getGuidPath();
+        List<String> resourceIdList = Arrays.asList(guidPath.split(LevelConsts.SEPARATOR));
+        List<Y9ResourceBase> y9ResourceBaseList = compositeResourceService.findByIdIn(resourceIdList);
+        return y9ResourceBaseList.stream().map(Y9ResourceBase::getName)
+            .collect(Collectors.joining(LevelConsts.NAME_SEPARATOR));
     }
 
     private AuthorizationVO getAuthorizationVOForRole(Y9Authorization y9Authorization) {
         AuthorizationVO authorizationVO = new AuthorizationVO();
-        String roleId = y9Authorization.getPrincipalId();
-        String dn = y9RoleService.getById(roleId).getDn();
+        Y9Role y9Role = y9RoleService.getById(y9Authorization.getPrincipalId());
         authorizationVO.setId(y9Authorization.getId());
         authorizationVO.setRoleId(y9Authorization.getPrincipalId());
-        authorizationVO.setRoleName(dn.replace(",cn=", " >> ").replace("cn=", ""));
+        authorizationVO.setRoleName(y9Role.getName());
+        authorizationVO.setRoleNamePath(Y9OrgUtil.dnToNamePath(y9Role.getDn()));
         authorizationVO.setAuthorizer(y9Authorization.getAuthorizer() == null ? "" : y9Authorization.getAuthorizer());
         authorizationVO.setResourceId(y9Authorization.getResourceId());
         authorizationVO.setResourceName(y9Authorization.getResourceName());
@@ -127,27 +144,26 @@ public class AuthorizationController {
      * 根据角色ID获取权限列表
      *
      * @param roleId 角色ID
-     * @param page 页数
-     * @param rows 条数
+     * @param pageQuery 分页查询
      * @return {@code Y9Page<AuthorizationVO>}
      */
     @RiseLog(operationName = "根据角色ID获取权限列表 ")
     @RequestMapping(value = "/listRelateResource")
     public Y9Page<AuthorizationVO> listRelateResource(@RequestParam("roleId") @NotBlank String roleId,
-        @RequestParam("page") Integer page, @RequestParam("rows") Integer rows) {
-        Page<Y9Authorization> y9AuthorizationPage = y9AuthorizationService.pageByPrincipalId(roleId, rows, page);
+        Y9PageQuery pageQuery) {
+        Page<Y9Authorization> y9AuthorizationPage = y9AuthorizationService.pageByPrincipalId(roleId, pageQuery);
         List<AuthorizationVO> authorizationVOList = new ArrayList<>();
         for (Y9Authorization y9Authorization : y9AuthorizationPage) {
             String resourceId = y9Authorization.getResourceId();
-            Y9ResourceBase acResource = compositeResourceService.findById(resourceId);
-            if (acResource == null) {
+            Y9ResourceBase y9ResourceBase = compositeResourceService.findById(resourceId);
+            if (y9ResourceBase == null) {
                 continue;
             }
-            authorizationVOList.add(getAuthorizationVOForResourceBase(y9Authorization, acResource));
+            authorizationVOList.add(getAuthorizationVOForResourceBase(y9Authorization, y9ResourceBase));
         }
 
-        return Y9Page.success(page, y9AuthorizationPage.getTotalPages(), y9AuthorizationPage.getTotalElements(),
-            authorizationVOList, "获取数据成功");
+        return Y9Page.success(pageQuery.getPage4Db(), y9AuthorizationPage.getTotalPages(),
+            y9AuthorizationPage.getTotalElements(), authorizationVOList, "获取数据成功");
     }
 
     /**
