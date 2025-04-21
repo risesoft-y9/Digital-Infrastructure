@@ -11,7 +11,7 @@ import net.risesoft.enums.platform.OrgTypeEnum;
  * @author shidaobang
  * @date 2022/4/21
  */
-public class OrgLevelConsts {
+public class OrgLevelConsts extends LevelConsts {
 
     /** 机构层次 组织机构 */
     public static final String ORGANIZATION = "o=";
@@ -21,9 +21,6 @@ public class OrgLevelConsts {
 
     /** 角色，岗位，用户组，人员 */
     public static final String CN = "cn=";
-
-    /** 机构层次分隔符 */
-    public static final String SEPARATOR = ",";
 
     /**
      * 根据组织节点类型得到

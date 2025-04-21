@@ -141,6 +141,17 @@
                                 {{ $t('删除') }}
                             </el-button>
                         </template>
+                        <template #expandRowSlot="props">
+                            <div class="expand-rows">
+                                <p>名称: {{ props.row.orgUnitNamePath }}</p>
+                                <p>成员类型: {{ props.row.orgTypeStr }}</p>
+                                <p>负权限成员: {{ props.row.negative ? '是' : '否' }}</p>
+                                <p>添加时间: {{ props.row.createTime }}</p>
+                            </div>
+                        </template>
+                        <template #negativeSlot="props">
+                            <boolWarningCell :is-true="props.row.negative"></boolWarningCell>
+                        </template>
                     </y9Table>
                 </y9Card>
 
@@ -180,6 +191,23 @@
                                 <i class="ri-close-line"></i>
                                 {{ $t('删除') }}
                             </el-button>
+                        </template>
+                        <template #expandRowSlot="props">
+                            <div class="expand-rows">
+                                <p>资源名称: {{ props.row.resourceNamePath }}</p>
+                                <p>资源类型: {{ props.row.resourceTypeStr }}</p>
+                                <p>所属系统: {{ props.row.systemCnName }}</p>
+                                <p>权限: {{ props.row.authorityStr }}</p>
+                                <p>授权者: {{ props.row.authorizer }}</p>
+                                <p>授权时间: {{ props.row.authorizeTime }}</p>
+                            </div>
+                        </template>
+                        <template #authoritySlot="props">
+                            <boolWarningCell
+                                :is-true="props.row.authorityStr === '隐藏'"
+                                :true-text="props.row.authorityStr"
+                                :false-text="props.row.authorityStr"
+                            ></boolWarningCell>
                         </template>
                     </y9Table>
                 </y9Card>
@@ -279,6 +307,7 @@
     // 基本信息
     import BasicInfo from './comps/BasicInfo.vue';
     import auditLog from '@/views/y9log/entityAuditLog/index.vue';
+    import boolWarningCell from '@/components/BoolWarningCell/index.vue';
     import { useSettingStore } from '@/store/modules/settingStore';
 
     const settingStore = useSettingStore();
@@ -622,11 +651,16 @@
     let tableConfig = ref({
         columns: [
             { type: 'selection', fixed: 'left', width: 70 },
-            { title: computed(() => t('序号')), type: 'index', width: 100, showOverflowTooltip: false },
-            { title: computed(() => t('名称')), key: 'unitName' },
-            { title: computed(() => t('类型')), key: 'unitTypeName' },
-            { title: computed(() => t('所属部门')), key: 'unitDn' },
-            { title: computed(() => t('是否为负权限成员')), key: 'negative' }
+            { type: 'expand', width: 40, slot: 'expandRowSlot' },
+            { title: computed(() => t('序号')), type: 'index', width: 60, showOverflowTooltip: false },
+            { title: computed(() => t('名称')), align: 'left', key: 'orgUnitNamePath' },
+            { title: computed(() => t('成员类型')), width: 100, key: 'orgTypeStr' },
+            {
+                title: computed(() => t('负权限成员')),
+                width: 100,
+                key: 'negative',
+                slot: 'negativeSlot'
+            }
         ],
         tableData: [],
         pageConfig: false
@@ -845,18 +879,17 @@
     const resourceTableConfig = ref({
         columns: [
             { type: 'selection', fixed: 'left', width: 60 },
+            { type: 'expand', width: 40, slot: 'expandRowSlot' },
             { title: computed(() => t('序号')), type: 'index', width: 60, showOverflowTooltip: false },
-            { title: computed(() => t('资源名称')), key: 'resourceName' },
+            { title: computed(() => t('资源名称')), align: 'left', key: 'resourceNamePath' },
+            { title: computed(() => t('资源类型')), width: 120, key: 'resourceTypeStr' },
+            { title: computed(() => t('所属系统')), key: 'systemCnName' },
             {
-                title: computed(() => t('操作')),
+                title: computed(() => t('权限')),
+                width: 80,
                 key: 'authority',
-                render: (row) => {
-                    return getAuthrity(row.authority);
-                }
-            },
-            { title: computed(() => t('授权者')), key: 'authorizer' },
-            { title: computed(() => t('授权时间')), key: 'authorizeTime', width: settingStore.getDatetimeSpan },
-            { title: computed(() => t('是否继承')), key: 'inherit' }
+                slot: 'authoritySlot'
+            }
         ],
         tableData: [],
         pageConfig: {
@@ -865,22 +898,6 @@
             total: 10 //总条目数
         }
     });
-
-    // 操作对应显示
-    function getAuthrity(type) {
-        switch (type) {
-            case 0:
-                return '隐藏';
-            case 1:
-                return '浏览';
-            case 2:
-                return '维护';
-            case 3:
-                return '管理';
-            default:
-                break;
-        }
-    }
 
     //资源列表搜索条件
     const resourceFilterData = ref({});
@@ -1090,5 +1107,9 @@
         .search-input {
             margin-left: 15px;
         }
+    }
+
+    .expand-rows {
+        padding-left: 20px;
     }
 </style>

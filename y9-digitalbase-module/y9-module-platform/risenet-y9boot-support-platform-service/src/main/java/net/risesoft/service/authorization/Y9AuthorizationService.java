@@ -119,11 +119,10 @@ public interface Y9AuthorizationService {
      * 根据授权主体id，获取与此授权主体相关的权限分页记录
      *
      * @param principalId 授权主体的唯一标识
-     * @param rows 每页显示的行数
-     * @param page 当前第几页
+     * @param pageQuery 分页查询
      * @return {@code Page<Y9Authorization>}
      */
-    Page<Y9Authorization> pageByPrincipalId(String principalId, Integer rows, Integer page);
+    Page<Y9Authorization> pageByPrincipalId(String principalId, Y9PageQuery pageQuery);
 
     void save(AuthorityEnum authority, String principalId, AuthorizationPrincipalTypeEnum principalType,
         String[] resourceIds);

@@ -137,11 +137,8 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @Override
-    public Page<Y9Authorization> pageByPrincipalId(String principalId, Integer rows, Integer page) {
-        if (page < 1) {
-            page = 1;
-        }
-        PageRequest pageable = PageRequest.of(page - 1, rows);
+    public Page<Y9Authorization> pageByPrincipalId(String principalId, Y9PageQuery pageQuery) {
+        PageRequest pageable = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by("createTime"));
         return y9AuthorizationRepository.findByPrincipalId(principalId, pageable);
     }
 

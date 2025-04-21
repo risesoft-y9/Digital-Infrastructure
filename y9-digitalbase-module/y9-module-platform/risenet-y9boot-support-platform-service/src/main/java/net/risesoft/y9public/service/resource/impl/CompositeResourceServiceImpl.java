@@ -135,6 +135,18 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
     }
 
     @Override
+    public List<Y9ResourceBase> findByIdIn(List<String> resourceIdList) {
+        List<Y9ResourceBase> y9ResourceList = new ArrayList<>();
+        for (String resourceId : resourceIdList) {
+            Y9ResourceBase y9ResourceBase = this.findById(resourceId);
+            if (y9ResourceBase != null) {
+                y9ResourceList.add(y9ResourceBase);
+            }
+        }
+        return y9ResourceList;
+    }
+
+    @Override
     @Transactional(readOnly = false)
     public void sort(String[] ids) {
         if (ids != null) {

@@ -166,7 +166,7 @@ export const routerBeforeEach = async (to, from) => {
     let CHECK = await check();
     if (CHECK) {
         // 每跳转一次 url 就进行一次判断
-        if (flag > 1) {
+        if (flag > 1 && to.path !== '/password') {
             // console.log(flag, 'flag');
             const y9UserInfo = JSON.parse(sessionStorage.getItem('ssoUserInfo'));
             let result = await verifyPasswordExpiration(y9UserInfo.personId);
