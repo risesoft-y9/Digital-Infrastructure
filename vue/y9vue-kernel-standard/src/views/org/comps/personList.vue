@@ -61,7 +61,11 @@
             v-model:selectedVal="userSelectedData"
             :config="personListTableConfig"
             @on-current-change="onCurrentChange"
-        ></y9Table>
+        >
+            <template #disabledSlot="props">
+                <boolWarningCell :is-true="props.row.disabled"></boolWarningCell>
+            </template>
+        </y9Table>
     </y9Card>
     <y9Dialog v-model:config="dialogConfig">
         <selectTree
@@ -188,9 +192,7 @@
                     title: computed(() => t('是否禁用')),
                     key: 'disabled',
                     width: 100,
-                    render: (row) => {
-                        return h('div', row.disabled ? '是' : '否');
-                    }
+                    slot: 'disabledSlot'
                 },
                 {
                     title: computed(() => t('操作')),

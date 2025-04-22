@@ -1,6 +1,10 @@
 <template>
     <y9Card :title="`${$t('可继承的部门属性')}${currInfo.name ? ' - ' + currInfo.name : ''}`">
-        <y9Table :config="setDepartmentPropTableConfig" :filterConfig="filterConfig"> </y9Table>
+        <y9Table :config="setDepartmentPropTableConfig" :filterConfig="filterConfig">
+            <template #disabledSlot="props">
+                <boolWarningCell :is-true="props.row.disabled"></boolWarningCell>
+            </template>
+        </y9Table>
     </y9Card>
     <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
@@ -84,9 +88,7 @@
                     title: computed(() => t('是否禁用')),
                     key: 'disabled',
                     width: 100,
-                    render: (row) => {
-                        return h('div', row.disabled ? '是' : '否');
-                    }
+                    slot: 'disabledSlot'
                 }
             ],
             tableData: [],
