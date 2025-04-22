@@ -59,6 +59,9 @@
             :config="positionListTableConfig"
             @on-current-change="onCurrentChange"
         >
+            <template #disabledSlot="props">
+                <boolWarningCell :is-true="props.row.disabled"></boolWarningCell>
+            </template>
         </y9Table>
     </y9Card>
     <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
@@ -111,9 +114,7 @@
                     title: computed(() => t('是否禁用')),
                     key: 'disabled',
                     width: 100,
-                    render: (row) => {
-                        return h('div', row.disabled ? '是' : '否');
-                    }
+                    slot: 'disabledSlot'
                 },
                 {
                     title: computed(() => t('操作')),
