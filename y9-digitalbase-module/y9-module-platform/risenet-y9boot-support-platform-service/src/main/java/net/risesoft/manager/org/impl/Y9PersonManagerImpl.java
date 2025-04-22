@@ -153,11 +153,11 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
                 updatedPerson.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, updatedPerson.getName(), parent.getDn()));
                 updatedPerson.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(updatedPerson));
 
-                if (StringUtils.isBlank(originPerson.getEmail())) {
+                if (StringUtils.isBlank(updatedPerson.getEmail())) {
                     updatedPerson.setEmail(null);
                 }
 
-                if (Boolean.TRUE.equals(originPerson.getOriginal()) && null != personExt) {
+                if (Boolean.TRUE.equals(updatedPerson.getOriginal()) && null != personExt) {
                     updatePersonByOriginalId(updatedPerson, personExt);
                 }
                 final Y9Person savedPerson = save(updatedPerson);
