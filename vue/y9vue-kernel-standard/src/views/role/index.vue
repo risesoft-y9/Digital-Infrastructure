@@ -58,7 +58,7 @@
                                         </el-button>
                                     </span>
                                 </span>
-                                <span v-if="currData.nodeType == 'APP' || currData.nodeType == 'folder'">
+                                <span>
                                     <el-button
                                         :size="fontSizeObj.buttonSize"
                                         :style="{ fontSize: fontSizeObj.baseFontSize }"
@@ -276,7 +276,7 @@
     <y9Dialog v-model:config="moveConfigDialog">
         <selectTree
             ref="moveSelectTreeRef"
-            :selectField="[{ fieldName: 'nodeType', value: 'folder' }]"
+            :selectField="[{ fieldName: 'nodeType', value: ['folder', 'APP'] }]"
             :showHeader="false"
             :treeApiObj="treeMoveApiObj"
             checkStrictly
@@ -350,6 +350,7 @@
     import y9_storage from '@/utils/storage';
     import {
         addOrgUnits,
+        appRoleTree,
         deleteRoleById,
         getRelateResourceList,
         removeAuthPermissionRecord,
@@ -364,7 +365,7 @@
         treeSelect
     } from '@/api/role/index';
     import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
-    import { appTreeRoot, resourceTreeRoot, treeSearch } from '@/api/resource/index';
+    import { resourceTreeRoot, treeSearch } from '@/api/resource/index';
     // 基本信息
     import BasicInfo from './comps/BasicInfo.vue';
     import SystemBasicInfo from '@/views/system/comps/BasicInfo.vue';
@@ -644,8 +645,9 @@
                 await y9RoleFormInstance.validate(async (valid) => {
                     if (valid) {
                         const params = {
-                            appId: currData.value.appId,
+                            appId: currData.value.nodeType === 'SYSTEM' ? null : currData.value.appId,
                             parentId: currData.value.id,
+                            systemId: currData.value.nodeType === 'SYSTEM' ? currData.value.id : null,
                             type: roleForm.value.nodeType,
                             ...roleFormRef.value?.model
                         };
@@ -658,7 +660,7 @@
                                     //1.更新当前节点的子节点信息
                                     const treeData = fixedTreeRef.value.getTreeData(); //获取tree数据
                                     const currNode = fixedTreeRef.value.findNode(treeData, currData.value.id); //找到树节点对应的节点信息
-                                    const childData = await postNode({ id: currNode.id }); //重新请求当前节点的子节点，获取格式化后的子节点信息
+                                    const childData = await postNode({ id: currNode.id, nodeType: currNode.nodeType }); //重新请求当前节点的子节点，获取格式化后的子节点信息
                                     Object.assign(currNode, { children: childData }); //合并节点信息
                                     //2.手动设置点击当前节点
                                     fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
@@ -697,14 +699,8 @@
     const treeMoveApiObj = ref({
         topLevel: async () => {
             let data: any = [];
-            const res = await appTreeRoot(currData.value.appId);
-            data = res.data;
-            data.forEach((item) => {
-                if (item.resourceType === 0) {
-                    item.nodeType = 'folder';
-                }
-            });
-            return data;
+            const res = await appRoleTree(currData.value.appId);
+            return res.data;
         },
         childLevel: {
             api: async () => {
@@ -1272,15 +1268,8 @@
     // 资源授权 请求的tree接口
     let sourceTreeApiObj = ref({
         topLevel: async () => {
-            let data = [];
-            const res = await appTreeRoot(currData.value.appId);
-            data = res.data;
-            data.forEach((item) => {
-                if (item.resourceType === 0) {
-                    item.nodeType = 'APP';
-                }
-            });
-            return data;
+            const res = await appRoleTree(currData.value.appId);
+            return res.data;
         },
         childLevel: {
             //子级（二级及二级以上）tree接口

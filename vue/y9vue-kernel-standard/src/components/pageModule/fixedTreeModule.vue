@@ -242,11 +242,21 @@
                 case 'SYSTEM':
                     item.title_icon = 'ri-settings-line';
                     item.newName = item.name; //显示名称
-                    let systemManageableByCurrentTenant = isSystemManageableByCurrentTenant(item.tenantId);
-                    if (item.treeType === 'ROLE' || item.treeType === 'RESOURCE' || !systemManageableByCurrentTenant) {
+                    let manageable = false;
+                    if (item.treeType === 'ROLE') {
+                        item.delete_icon = false;
+                        manageable = managerLevel === 1 || managerLevel === 4;
+                    }
+                    if (item.treeType === 'RESOURCE') {
                         item.delete_icon = false;
                     }
-                    item.isManageable = systemManageableByCurrentTenant;
+                    if (item.treeType === 'SYSTEM') {
+                        manageable = isSystemManageableByCurrentTenant(item.tenantId);
+                        if (!manageable) {
+                            item.delete_icon = false;
+                        }
+                    }
+                    item.isManageable = manageable;
                     break;
                 case 'APP': //应用
                     item.title_icon = 'ri-apps-line';
