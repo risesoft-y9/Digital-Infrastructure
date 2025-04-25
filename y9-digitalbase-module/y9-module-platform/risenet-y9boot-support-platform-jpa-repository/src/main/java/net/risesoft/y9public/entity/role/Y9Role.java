@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
+import net.risesoft.consts.DefaultConsts;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.persistence.EnumConverter;
 
@@ -110,7 +111,7 @@ public class Y9Role extends BaseEntity implements Comparable<Y9Role> {
     /** 序列号 */
     @Column(name = "TAB_INDEX", nullable = false)
     @Comment("序列号")
-    private Integer tabIndex = 0;
+    private Integer tabIndex = DefaultConsts.TAB_INDEX;
 
     @Override
     public int compareTo(Y9Role o) {

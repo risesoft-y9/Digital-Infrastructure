@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
+import net.risesoft.consts.DefaultConsts;
+
 /**
  * @author shidaobang
  * @date 2023/11/03
@@ -38,6 +40,6 @@ public class CreateOrgUnitBaseDTO implements Serializable {
     protected String properties;
 
     /** 排序号 */
-    protected Integer tabIndex = 0;
+    protected Integer tabIndex = DefaultConsts.TAB_INDEX;
 
 }

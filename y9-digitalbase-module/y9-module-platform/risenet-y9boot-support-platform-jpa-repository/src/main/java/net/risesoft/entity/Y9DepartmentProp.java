@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
+import net.risesoft.consts.DefaultConsts;
 
 /**
  * 部门信息配置表
@@ -55,6 +56,6 @@ public class Y9DepartmentProp extends BaseEntity {
     /** 排序号 */
     @Column(name = "TAB_INDEX", nullable = false)
     @Comment("排序号")
-    private Integer tabIndex = 0;
+    private Integer tabIndex = DefaultConsts.TAB_INDEX;
 
 }

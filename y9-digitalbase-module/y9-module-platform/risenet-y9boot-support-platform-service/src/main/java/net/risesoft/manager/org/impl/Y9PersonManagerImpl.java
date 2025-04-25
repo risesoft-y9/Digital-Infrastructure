@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
+import net.risesoft.consts.DefaultConsts;
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
@@ -185,8 +186,8 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
         person.setParentId(parent.getId());
         person.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, person.getName(), parent.getDn()));
         person.setGuidPath(compositeOrgBaseManager.buildGuidPath(person));
-        person.setTabIndex(null == person.getTabIndex() ? compositeOrgBaseManager.getNextSubTabIndex(parent.getId())
-            : person.getTabIndex());
+        person.setTabIndex(DefaultConsts.TAB_INDEX.equals(person.getTabIndex())
+            ? compositeOrgBaseManager.getNextSubTabIndex(parent.getId()) : person.getTabIndex());
         person.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(person));
 
         String password = y9SettingService.getTenantSetting().getUserDefaultPassword();

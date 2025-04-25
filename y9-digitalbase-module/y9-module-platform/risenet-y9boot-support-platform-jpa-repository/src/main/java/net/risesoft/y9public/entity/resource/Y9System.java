@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
+import net.risesoft.consts.DefaultConsts;
 
 /**
  * 系统信息表
@@ -77,7 +78,7 @@ public class Y9System extends BaseEntity implements Comparable<Y9System> {
     /** 排序 */
     @Column(name = "TAB_INDEX", nullable = false)
     @Comment("排序")
-    private Integer tabIndex = 0;
+    private Integer tabIndex = DefaultConsts.TAB_INDEX;
 
     /** 是否启用独立数据源 */
     @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)

@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
+import net.risesoft.consts.DefaultConsts;
 import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.persistence.EnumConverter;
 
@@ -77,7 +78,7 @@ public class Y9Tenant extends BaseEntity {
     /** 排序号 */
     @Column(name = "TAB_INDEX", nullable = false)
     @Comment("排序号")
-    private Integer tabIndex = 0;
+    private Integer tabIndex = DefaultConsts.TAB_INDEX;
 
     /** 标志图标(保存url地址) */
     @Column(name = "LOGO_ICON", length = 255)

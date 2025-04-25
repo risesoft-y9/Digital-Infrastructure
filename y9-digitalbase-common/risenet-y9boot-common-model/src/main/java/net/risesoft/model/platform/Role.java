@@ -88,7 +88,7 @@ public class Role implements Serializable {
     /**
      * 租户自定义
      */
-    private Boolean tenantCustom = false;
+    private Boolean tenantCustom;
 
     /**
      * tenantCustom=true时的租户id
@@ -98,7 +98,7 @@ public class Role implements Serializable {
     /**
      * 动态角色
      */
-    private Boolean dynamic = false;
+    private Boolean dynamic;
 
     /**
      * 扩展属性键值对

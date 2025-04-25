@@ -38,5 +38,5 @@ public class OrgBasesToRoles implements Serializable {
     private String parentId;
 
     /** 是否为负角色关联 */
-    private Boolean negative = Boolean.FALSE;
+    private Boolean negative;
 }

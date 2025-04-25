@@ -62,7 +62,7 @@ public class System implements Serializable {
     private Boolean autoInit;
 
     /** 排序 */
-    private Integer tabIndex = 0;
+    private Integer tabIndex;
 
     /**
      * 创建时间

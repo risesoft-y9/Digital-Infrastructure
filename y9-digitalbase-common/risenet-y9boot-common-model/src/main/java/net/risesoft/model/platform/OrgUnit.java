@@ -63,7 +63,7 @@ public abstract class OrgUnit implements Serializable {
     /**
      * 是否禁用
      */
-    protected Boolean disabled = false;
+    protected Boolean disabled;
 
     /**
      * 描述
