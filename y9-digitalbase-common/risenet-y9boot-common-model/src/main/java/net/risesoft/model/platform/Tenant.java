@@ -65,9 +65,6 @@ public class Tenant implements Serializable {
     /** 门户页尾显示信息 */
     private String footer;
 
-    /** 租户编号 */
-    private Integer numeration = 0;
-
     /** 默认的租户数据源id，对应 DataSourceDefine 表的id字段 */
     private String defaultDataSourceId;
 

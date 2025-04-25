@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
+import net.risesoft.consts.DefaultConsts;
 
 /**
  * 自定义群组
@@ -65,6 +66,6 @@ public class Y9CustomGroup extends BaseEntity {
     /** 排序字段 */
     @Comment("排序字段")
     @Column(name = "TAB_INDEX", nullable = false)
-    private Integer tabIndex = 0;
+    private Integer tabIndex = DefaultConsts.TAB_INDEX;
 
 }
