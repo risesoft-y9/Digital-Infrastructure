@@ -7,6 +7,8 @@ import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
+import net.risesoft.consts.DefaultConsts;
+
 /**
  * @author shidaobang
  * @date 2023/11/06
@@ -22,7 +24,7 @@ public class CreatePositionDTO implements Serializable {
     protected String id;
 
     /** 排序 */
-    protected Integer tabIndex = 0;
+    protected Integer tabIndex = DefaultConsts.TAB_INDEX;
 
     /** 是否禁用 */
     protected Boolean disabled = false;
@@ -37,7 +39,5 @@ public class CreatePositionDTO implements Serializable {
 
     /** 岗位容量，默认容量为1，即一人一岗 */
     private Integer capacity = 1;
-
-
 
 }
