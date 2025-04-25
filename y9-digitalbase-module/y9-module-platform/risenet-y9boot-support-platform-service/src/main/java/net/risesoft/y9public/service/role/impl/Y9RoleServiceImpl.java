@@ -226,6 +226,11 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         if (StringUtils.isNotBlank(y9Role.getAppId())) {
             Y9App y9App = y9AppManager.getById(y9Role.getAppId());
             y9Role.setSystemId(y9App.getSystemId());
+        } else {
+            y9Role.setAppId(null);
+        }
+        if (StringUtils.isBlank(y9Role.getSystemId())) {
+            y9Role.setSystemId(null);
         }
 
         if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(y9Role.getParentId())) {

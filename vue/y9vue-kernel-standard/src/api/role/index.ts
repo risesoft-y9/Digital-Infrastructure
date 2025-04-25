@@ -3,6 +3,19 @@ import qs from 'qs';
 
 const roleRequest = Request();
 
+// 应用角色树
+export const appRoleTree = async (appId) => {
+    return await roleRequest({
+        // url: 'http://127.0.0.1:4523/mock/891645/platform/api/rest/role/appRoleTree',
+        url: '/api/rest/role/appRoleTree',
+        method: 'get',
+        cType: false,
+        params: {
+            appId
+        }
+    });
+};
+
 // 角色树
 export const roleTree = async (params) => {
     return await roleRequest({
