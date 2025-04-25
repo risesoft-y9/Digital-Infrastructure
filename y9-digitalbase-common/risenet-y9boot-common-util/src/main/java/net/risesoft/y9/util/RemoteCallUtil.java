@@ -16,8 +16,10 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.SimpleHttpConnectionManager;
+import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpMethodParams;
@@ -55,6 +57,45 @@ public class RemoteCallUtil {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         Y9DateFormat sdf = new Y9DateFormat();
         objectMapper.setDateFormat(sdf);
+    }
+
+    public static <T> T delete(String url, List<NameValuePair> params, Class<T> clz) {
+        HttpClient client = new HttpClient();
+        client.getParams().setParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024 * 1024 * 10);
+        client.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "UTF-8");
+        DeleteMethod method = new DeleteMethod(url);
+        try {
+            if (params != null && !params.isEmpty()) {
+                method.setQueryString(params.toArray(new NameValuePair[params.size()]));
+            }
+            int code = client.executeMethod(method);
+            String response = null;
+            InputStream inputStream = method.getResponseBodyAsStream();
+            if (null != inputStream) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                StringBuilder stringBuffer = new StringBuilder();
+                String b = "";
+                while ((b = br.readLine()) != null) {
+                    stringBuffer.append(b);
+                }
+                response = stringBuffer.toString();
+            }
+            if (code == HttpStatus.SC_OK) {
+                return objectMapper.readValue(response, clz);
+            } else {
+                LOGGER.info("http status code: {}, response: {}", code, response);
+            }
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.warn(e.getMessage(), e);
+        } catch (HttpException e1) {
+            LOGGER.warn(e1.getMessage(), e1);
+        } catch (IOException ioe) {
+            LOGGER.warn(ioe.getMessage(), ioe);
+        } finally {
+            method.releaseConnection();
+            ((SimpleHttpConnectionManager)client.getHttpConnectionManager()).shutdown();
+        }
+        return null;
     }
 
     public static <T> Y9Result<T> get(String url, List<NameValuePair> params, Class<T> clz) {
@@ -309,9 +350,12 @@ public class RemoteCallUtil {
         return sendRequest(MethodType.POST, url, params, bodyParams, javaType);
     }
 
-    public static <T> Y9Result<T> post(String url, List<NameValuePair> params, String requestBodyJson, Class<T> clz) {
-        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Y9Result.class, clz);
-        return sendPostRequest(url, params, requestBodyJson, javaType);
+    public static <T> T post(String url, List<NameValuePair> params, String requestBodyJson, Class<T> clz) {
+        return sendPostRequest(url, params, requestBodyJson, clz);
+    }
+
+    public static <T> T put(String url, List<NameValuePair> params, String requestBodyJson, Class<T> clz) {
+        return sendPutRequest(url, params, requestBodyJson, clz);
     }
 
     public static <T> T postCallRemoteService(String url, List<NameValuePair> params, Class<T> clz) {
@@ -541,7 +585,7 @@ public class RemoteCallUtil {
     }
 
     private static <T> T sendPostRequest(String url, List<NameValuePair> params, String requestBodyJson,
-        JavaType javaType) {
+        Class<T> clz) {
         HttpClient client = new HttpClient();
         client.getParams().setParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024 * 1024 * 10);
         client.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, StandardCharsets.UTF_8.name());
@@ -569,7 +613,52 @@ public class RemoteCallUtil {
                 response = stringBuffer.toString();
             }
             if (code == HttpStatus.SC_OK) {
-                return objectMapper.readValue(response, javaType);
+                return objectMapper.readValue(response, clz);
+            } else {
+                LOGGER.info("http status code: {}, response: {}", code, response);
+            }
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.warn(e.getMessage(), e);
+        } catch (HttpException e1) {
+            LOGGER.warn(e1.getMessage(), e1);
+        } catch (IOException ioe) {
+            LOGGER.warn(ioe.getMessage(), ioe);
+        } finally {
+            method.releaseConnection();
+            ((SimpleHttpConnectionManager)client.getHttpConnectionManager()).shutdown();
+        }
+        return null;
+    }
+
+    private static <T> T sendPutRequest(String url, List<NameValuePair> params, String requestBodyJson, Class<T> clz) {
+        HttpClient client = new HttpClient();
+        client.getParams().setParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024 * 1024 * 10);
+        client.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, StandardCharsets.UTF_8.name());
+        PutMethod method = new PutMethod(url);
+        try {
+            if (StringUtils.isNotBlank(requestBodyJson)) {
+                RequestEntity request = new StringRequestEntity(requestBodyJson, MediaType.APPLICATION_JSON_VALUE,
+                    StandardCharsets.UTF_8.name());
+                method.setRequestEntity(request);
+            }
+            if (params != null && !params.isEmpty()) {
+                method.setQueryString(params.toArray(new NameValuePair[params.size()]));
+            }
+
+            int code = client.executeMethod(method);
+            String response = null;
+            InputStream inputStream = method.getResponseBodyAsStream();
+            if (null != inputStream) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                StringBuilder stringBuffer = new StringBuilder();
+                String b;
+                while ((b = br.readLine()) != null) {
+                    stringBuffer.append(b);
+                }
+                response = stringBuffer.toString();
+            }
+            if (code == HttpStatus.SC_OK) {
+                return objectMapper.readValue(response, clz);
             } else {
                 LOGGER.info("http status code: {}, response: {}", code, response);
             }
