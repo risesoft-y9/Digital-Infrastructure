@@ -24,7 +24,7 @@ public class PersonInformation implements Serializable {
     private String loginName;
 
     @ExcelProperty("所属部门（用英文逗号分割各级部门）")
-    private String fullPath;
+    private String departmentNamePath;
 
     @ExcelProperty("性别")
     private String sex;

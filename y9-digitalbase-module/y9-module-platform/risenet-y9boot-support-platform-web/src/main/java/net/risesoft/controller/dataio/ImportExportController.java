@@ -100,7 +100,7 @@ public class ImportExportController {
         try (OutputStream outStream = response.getOutputStream()) {
             Y9OrgBase base = compositeOrgBaseService.getOrgUnit(orgId);
             String filename =
-                base.getName() + "-组织架构" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".json";
+                base.getName() + "-组织架构-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".json";
             response.setContentType(MediaTypeUtils.getMediaTypeForFileName(servletContext, filename).toString());
             response.setHeader("Content-Disposition", ContentDispositionUtil.standardizeAttachment(filename));
 
@@ -122,7 +122,7 @@ public class ImportExportController {
         try (OutputStream outStream = response.getOutputStream()) {
             Y9OrgBase base = compositeOrgBaseService.getOrgUnit(orgBaseId);
             String filename =
-                base.getName() + "-组织架构" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx";
+                base.getName() + "-组织架构-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx";
             response.setContentType(MediaTypeUtils.getMediaTypeForFileName(servletContext, filename).toString());
             response.setHeader("Content-Disposition", ContentDispositionUtil.standardizeAttachment(filename));
 
