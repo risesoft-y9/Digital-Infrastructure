@@ -29,6 +29,7 @@ import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
 import net.risesoft.service.org.Y9JobService;
 import net.risesoft.service.org.Y9PersonService;
+import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 
 import cn.hutool.core.lang.Validator;
@@ -64,18 +65,9 @@ public class Y9PersonExcelDataHandlerImpl implements Y9PersonDataHandler {
         List<PersonInformation> personList = new ArrayList<>();
         for (Y9Person person : persons) {
             PersonInformation personInformation = new PersonInformation();
-            String fullPath = person.getDn().replace("cn=", "").replace(",ou=", SPLITTER).replace(",o=", SPLITTER);
-            String path = fullPath.substring(0, fullPath.lastIndexOf(SPLITTER));
-            if (path.contains(SPLITTER) && fullPath.lastIndexOf(SPLITTER) == fullPath.lastIndexOf(SPLITTER)) {
-                path = path.substring(fullPath.indexOf(SPLITTER) + 1);
-                personInformation.setFullPath(reverseSplit(path));
-            } else if (!path.contains(SPLITTER)) {
-                personInformation.setFullPath(null);
-            } else {
-                path = path.substring(fullPath.indexOf(SPLITTER) + 1, fullPath.lastIndexOf(SPLITTER));
-                personInformation.setFullPath(reverseSplit(path));
-            }
-            personInformation.setName(fullPath.substring(0, fullPath.indexOf(SPLITTER)));
+
+            personInformation.setName(person.getName());
+            personInformation.setDepartmentNamePath(getDepartmentNamePath(person));
             personInformation.setEmail(person.getEmail());
             personInformation.setLoginName(person.getLoginName());
             personInformation.setMobile(person.getMobile());
@@ -85,6 +77,16 @@ public class Y9PersonExcelDataHandlerImpl implements Y9PersonDataHandler {
             personList.add(personInformation);
         }
         return personList;
+    }
+
+    private String getDepartmentNamePath(Y9Person person) {
+        String namePath = Y9OrgUtil.dnToNamePath(person.getDn(), OrgLevelConsts.SEPARATOR);
+        namePath = StringUtils.substringAfter(namePath, OrgLevelConsts.SEPARATOR);
+        if (StringUtils.contains(namePath, OrgLevelConsts.SEPARATOR)) {
+            return StringUtils.substringBeforeLast(namePath, OrgLevelConsts.SEPARATOR);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -144,7 +146,7 @@ public class Y9PersonExcelDataHandlerImpl implements Y9PersonDataHandler {
             throw new IllegalArgumentException("该登录名已被使用");
         }
 
-        String fullPath = Optional.ofNullable(pi.getFullPath()).orElse("");
+        String fullPath = Optional.ofNullable(pi.getDepartmentNamePath()).orElse("");
         String[] departments = fullPath.split(SPLITTER);
 
         Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgId);
@@ -188,20 +190,6 @@ public class Y9PersonExcelDataHandlerImpl implements Y9PersonDataHandler {
         } else {
             y9PersonService.saveOrUpdate(y9Person, null);
         }
-    }
-
-    private String reverseSplit(String path) {
-        if (!path.contains(SPLITTER)) {
-            return path;
-        }
-        String[] oldString = path.split(SPLITTER);
-        StringBuilder strBuffer = new StringBuilder();
-        for (int length = oldString.length; length > 0; length--) {
-            strBuffer.append(oldString[length - 1]);
-            strBuffer.append(SPLITTER);
-        }
-        String newString = strBuffer.toString();
-        return newString.substring(0, newString.lastIndexOf(SPLITTER));
     }
 
 }

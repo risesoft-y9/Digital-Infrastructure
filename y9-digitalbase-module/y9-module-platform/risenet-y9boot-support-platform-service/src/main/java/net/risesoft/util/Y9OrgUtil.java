@@ -118,6 +118,17 @@ public class Y9OrgUtil {
     }
 
     public static String dnToNamePath(String dn) {
+        return dnToNamePath(dn, OrgLevelConsts.NAME_SEPARATOR);
+    }
+
+    /**
+     * dn 转换为名称路径（正序，也就是从根节点往下）
+     *
+     * @param dn dn
+     * @param separator 分隔符
+     * @return {@code String }
+     */
+    public static String dnToNamePath(String dn, String separator) {
         if (StringUtils.isEmpty(dn)) {
             return null;
         }
@@ -128,6 +139,6 @@ public class Y9OrgUtil {
 
         Collections.reverse(nameList);
 
-        return StringUtils.join(nameList, OrgLevelConsts.NAME_SEPARATOR);
+        return StringUtils.join(nameList, separator);
     }
 }
