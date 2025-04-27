@@ -100,6 +100,7 @@ public class Y9SystemJsonDataHandlerImpl implements Y9SystemDataHandler {
         Y9System y9System = y9SystemService.getById(systemId);
         Y9SystemJsonModel y9SystemJsonModel = Y9ModelConvertUtil.convert(y9System, Y9SystemJsonModel.class);
         y9SystemJsonModel.setAppList(buildAppList(systemId));
+        y9SystemJsonModel.setSubRoleList(buildRoleList(systemId));
         return y9SystemJsonModel;
     }
 
@@ -142,6 +143,7 @@ public class Y9SystemJsonDataHandlerImpl implements Y9SystemDataHandler {
     public void importSystem(Y9SystemJsonModel y9SystemJsonModel) {
         Y9System y9System = Y9ModelConvertUtil.convert(y9SystemJsonModel, Y9System.class);
         y9System = y9SystemService.saveAndRegister4Tenant(y9System);
+        importRoleList(y9SystemJsonModel.getSubRoleList(), y9System.getId());
         importAppList(y9SystemJsonModel.getAppList(), y9System.getId());
     }
 

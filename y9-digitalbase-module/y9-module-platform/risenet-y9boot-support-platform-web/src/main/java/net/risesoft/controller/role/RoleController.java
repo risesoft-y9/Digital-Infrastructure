@@ -37,7 +37,6 @@ import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.role.Y9Role;
-import net.risesoft.y9public.service.resource.CompositeResourceService;
 import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.role.Y9RoleService;
@@ -63,7 +62,6 @@ public class RoleController {
 
     private final Y9RoleService y9RoleService;
     private final Y9AppService y9AppService;
-    private final CompositeResourceService compositeResourceService;
     private final Y9TenantAppService y9TenantAppService;
     private final Y9TenantSystemService y9TenantSystemService;
     private final Y9SystemService y9SystemService;
