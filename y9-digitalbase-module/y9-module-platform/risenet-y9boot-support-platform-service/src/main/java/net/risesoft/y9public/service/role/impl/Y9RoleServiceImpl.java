@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.consts.DefaultConsts;
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.consts.RoleLevelConsts;
 import net.risesoft.id.IdType;
@@ -213,7 +214,8 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         } else {
             y9Role.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
-        y9Role.setTabIndex(null == y9Role.getTabIndex() ? getNextTabIndex() : y9Role.getTabIndex());
+        y9Role.setTabIndex(
+            DefaultConsts.TAB_INDEX.equals(y9Role.getTabIndex()) ? getNextTabIndex() : y9Role.getTabIndex());
         if (parent != null) {
             y9Role.setParentId(parent.getId());
             y9Role.setDn(RoleLevelConsts.CN + y9Role.getName() + RoleLevelConsts.SEPARATOR + parent.getDn());
