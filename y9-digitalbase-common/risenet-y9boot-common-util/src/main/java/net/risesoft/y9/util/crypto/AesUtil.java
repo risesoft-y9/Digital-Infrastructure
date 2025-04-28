@@ -91,7 +91,7 @@ public class AesUtil {
                 byte[] raw = k.getEncoded();
                 SecretKeySpec secretKeySpec = new SecretKeySpec(raw, ALGORITHM);
                 Cipher cipher = Cipher.getInstance(AES_CTR_NOPADDING);
-                cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
+                cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(Hex.decodeHex(IV.toCharArray())));
                 cout = new CipherOutputStream(out, cipher);
                 byte[] cache = new byte[CACHE_SIZE];
                 int nRead = 0;
@@ -148,7 +148,7 @@ public class AesUtil {
         byte[] raw = k.getEncoded();
         SecretKeySpec secretKeySpec = new SecretKeySpec(raw, ALGORITHM);
         Cipher cipher = Cipher.getInstance(AES_CTR_NOPADDING);
-        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(Hex.decodeHex(IV.toCharArray())));
         return cipher.doFinal(data);
     }
 
@@ -178,7 +178,7 @@ public class AesUtil {
                 byte[] raw = k.getEncoded();
                 SecretKeySpec secretKeySpec = new SecretKeySpec(raw, ALGORITHM);
                 Cipher cipher = Cipher.getInstance(AES_CTR_NOPADDING);
-                cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+                cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(Hex.decodeHex(IV.toCharArray())));
                 cin = new CipherInputStream(in, cipher);
                 byte[] cache = new byte[CACHE_SIZE];
                 int nRead = 0;
