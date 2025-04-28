@@ -1,6 +1,8 @@
 package net.risesoft.y9public.service.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -43,7 +45,10 @@ public class LocalStoreServiceImpl implements StoreService {
 
     @Override
     public void retrieveFileStream(String fullPath, String realFileName, OutputStream outputStream) throws Exception {
-        IOUtils.write(this.retrieveFileBytes(fullPath, realFileName), outputStream);
+        IOUtils.copy(
+            new FileInputStream(
+                Y9FileStore.buildPath(y9LocalProperties.getBasePath(), fullPath) + File.separator + realFileName),
+            outputStream);
     }
 
     @Override
@@ -56,6 +61,7 @@ public class LocalStoreServiceImpl implements StoreService {
 
     @Override
     public void storeFile(String fullPath, String realFileName, InputStream inputStream) throws Exception {
-        this.storeFile(fullPath, realFileName, IOUtils.toByteArray(inputStream));
+        IOUtils.copy(inputStream, new FileOutputStream(
+            Y9FileStore.buildPath(y9LocalProperties.getBasePath(), fullPath) + File.separator + realFileName));
     }
 }
