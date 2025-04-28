@@ -1,0 +1,60 @@
+{
+    "@class" : "org.apereo.cas.services.OidcRegisteredService",
+    "clientId": "clientid_oidc",
+    "clientSecret": "secret_oidc",
+    "serviceId" : "^(https?)://localhost:7099/oidc.*",
+    "name" : "oidcServiceDemo",
+    "description" : "oidc Authentication app demo",
+    "theme" : "y9-apereo",
+    "id" : 1003,
+    "evaluationOrder": 1003,
+    "logoutType" : "BACK_CHANNEL",
+    "scopes": [
+        "java.util.HashSet", [
+            "openid",
+            "y9"
+        ]
+    ],
+    "attributeReleasePolicy" : {
+        "@class" : "org.apereo.cas.services.ReturnAllAttributeReleasePolicy",
+        "authorizedToReleaseCredentialPassword" : true,
+        "authorizedToReleaseProxyGrantingTicket" : true,
+        "excludeDefaultAttributes" : false
+    },
+    "supportedGrantTypes": [
+        "java.util.HashSet", [
+            "authorization_code",
+            "password",
+            "client_credentials",
+            "refresh_token",
+            "urn:ietf:params:oauth:grant-type:token-exchange",
+            "urn:ietf:params:oauth:grant-type:device_code",
+            "urn:openid:params:grant-type:ciba"
+        ]
+    ],
+    "supportedResponseTypes": [
+        "java.util.HashSet",
+        [
+            "code",
+            "token",
+            "device_code",
+            "id_token",
+            "id_token token",
+            "token id_token"
+        ]
+    ],
+    "tokenExchangePolicy": {
+        "@class": "org.apereo.cas.support.oauth.services.DefaultRegisteredServiceOAuthTokenExchangePolicy",
+        "allowedTokenTypes": [
+            "java.util.HashSet", [
+                "urn:ietf:params:oauth:token-type:access_token",
+                "urn:ietf:params:oauth:token-type:id_token",
+                "urn:ietf:params:oauth:token-type:jwt"
+            ]
+        ]
+    },
+    "bypassApprovalPrompt": true,
+    "generateRefreshToken": true,
+    "renewRefreshToken": true,
+    "jwtAccessToken": true
+}
