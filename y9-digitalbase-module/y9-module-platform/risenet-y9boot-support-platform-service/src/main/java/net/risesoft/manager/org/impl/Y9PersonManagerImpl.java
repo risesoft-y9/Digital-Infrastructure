@@ -186,7 +186,7 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
         person.setParentId(parent.getId());
         person.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, person.getName(), parent.getDn()));
         person.setGuidPath(compositeOrgBaseManager.buildGuidPath(person));
-        person.setTabIndex(DefaultConsts.TAB_INDEX.equals(person.getTabIndex())
+        person.setTabIndex((null == person.getTabIndex() || DefaultConsts.TAB_INDEX.equals(person.getTabIndex()))
             ? compositeOrgBaseManager.getNextSubTabIndex(parent.getId()) : person.getTabIndex());
         person.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(person));
 

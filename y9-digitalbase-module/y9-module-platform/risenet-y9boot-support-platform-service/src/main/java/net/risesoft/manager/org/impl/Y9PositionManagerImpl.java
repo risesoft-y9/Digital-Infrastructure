@@ -174,7 +174,7 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
             position.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
             position.setDisabled(false);
         }
-        position.setTabIndex(DefaultConsts.TAB_INDEX.equals(position.getTabIndex())
+        position.setTabIndex((null == position.getTabIndex() || DefaultConsts.TAB_INDEX.equals(position.getTabIndex()))
             ? compositeOrgBaseManager.getNextSubTabIndex(parent.getId()) : position.getTabIndex());
         position.setTenantId(Y9LoginUserHolder.getTenantId());
         position.setJobName(y9Job.getName());
