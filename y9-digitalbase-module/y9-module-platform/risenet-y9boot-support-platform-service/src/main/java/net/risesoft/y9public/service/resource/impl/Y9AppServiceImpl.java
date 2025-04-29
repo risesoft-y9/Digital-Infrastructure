@@ -182,10 +182,12 @@ public class Y9AppServiceImpl implements Y9AppService {
         Y9App savedApp = this.saveOrUpdate(y9App);
         // 审核应用
         this.verifyApp(y9App.getId(), true, Y9LoginUserHolder.getUserInfo().getName());
-        // 租用系统
-        y9TenantSystemManager.saveTenantSystem(savedApp.getSystemId(), Y9LoginUserHolder.getTenantId());
-        // 租用应用
-        y9TenantAppManager.save(savedApp.getId(), Y9LoginUserHolder.getTenantId(), "系统默认租用");
+        if (Y9LoginUserHolder.getUserInfo().getManagerLevel().isTenantManager()) {
+            // 租用系统
+            y9TenantSystemManager.saveTenantSystem(savedApp.getSystemId(), Y9LoginUserHolder.getTenantId());
+            // 租用应用
+            y9TenantAppManager.save(savedApp.getId(), Y9LoginUserHolder.getTenantId(), "系统默认租用");
+        }
         return savedApp;
     }
 
