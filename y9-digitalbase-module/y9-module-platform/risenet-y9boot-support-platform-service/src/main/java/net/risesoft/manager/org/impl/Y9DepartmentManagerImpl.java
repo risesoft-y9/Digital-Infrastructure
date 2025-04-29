@@ -106,7 +106,7 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
         } else {
             dept.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
             dept.setDisabled(false);
-            dept.setTabIndex(DefaultConsts.TAB_INDEX.equals(dept.getTabIndex())
+            dept.setTabIndex((null == dept.getTabIndex() || DefaultConsts.TAB_INDEX.equals(dept.getTabIndex()))
                 ? compositeOrgBaseManager.getNextSubTabIndex(parent.getId()) : dept.getTabIndex());
         }
         dept.setTenantId(Y9LoginUserHolder.getTenantId());

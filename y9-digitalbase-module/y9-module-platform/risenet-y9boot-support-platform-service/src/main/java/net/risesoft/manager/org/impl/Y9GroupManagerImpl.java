@@ -106,7 +106,7 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
         group.setTenantId(Y9LoginUserHolder.getTenantId());
         group.setDisabled(false);
         group.setParentId(parent.getId());
-        group.setTabIndex(DefaultConsts.TAB_INDEX.equals(group.getTabIndex())
+        group.setTabIndex((null == group.getTabIndex() || DefaultConsts.TAB_INDEX.equals(group.getTabIndex()))
             ? compositeOrgBaseManager.getNextSubTabIndex(parent.getId()) : group.getTabIndex());
         group.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.GROUP, group.getName(), parent.getDn()));
         group.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), group.getId()));
