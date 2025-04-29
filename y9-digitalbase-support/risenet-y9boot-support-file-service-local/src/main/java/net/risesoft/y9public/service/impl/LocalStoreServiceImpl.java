@@ -61,6 +61,8 @@ public class LocalStoreServiceImpl implements StoreService {
 
     @Override
     public void storeFile(String fullPath, String realFileName, InputStream inputStream) throws Exception {
+        File parentFolder = new File(Y9FileStore.buildPath(y9LocalProperties.getBasePath(), fullPath));
+        parentFolder.mkdirs();
         IOUtils.copy(inputStream, new FileOutputStream(
             Y9FileStore.buildPath(y9LocalProperties.getBasePath(), fullPath) + File.separator + realFileName));
     }
