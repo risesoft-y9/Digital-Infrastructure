@@ -203,6 +203,9 @@ public class RoleController {
             // 系统节点下为应用
             List<Y9App> appList = y9AppService.listBySystemId(parentId);
             roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9AppList(appList));
+
+            List<Y9Role> y9RoleList = y9RoleService.listByParentId(parentId);
+            roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9RoleList(y9RoleList));
         } else {
             // 应用节点下为角色文件夹或角色节点
             List<Y9Role> roleList = y9RoleService.listByParentId(parentId);
