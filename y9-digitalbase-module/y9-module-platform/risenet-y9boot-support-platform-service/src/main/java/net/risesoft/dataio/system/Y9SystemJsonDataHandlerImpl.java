@@ -143,8 +143,12 @@ public class Y9SystemJsonDataHandlerImpl implements Y9SystemDataHandler {
     public void importSystem(Y9SystemJsonModel y9SystemJsonModel) {
         Y9System y9System = Y9ModelConvertUtil.convert(y9SystemJsonModel, Y9System.class);
         y9System = y9SystemService.saveAndRegister4Tenant(y9System);
-        importRoleList(y9SystemJsonModel.getSubRoleList(), y9System.getId());
-        importAppList(y9SystemJsonModel.getAppList(), y9System.getId());
+        if (y9SystemJsonModel.getSubRoleList() != null && !y9SystemJsonModel.getSubRoleList().isEmpty()) {
+            importRoleList(y9SystemJsonModel.getSubRoleList(), y9System.getId());
+        }
+        if (y9SystemJsonModel.getAppList() != null && !y9SystemJsonModel.getAppList().isEmpty()) {
+            importAppList(y9SystemJsonModel.getAppList(), y9System.getId());
+        }
     }
 
     private void importAppList(List<Y9AppJsonModel> y9AppJsonModelList, String systemId) {
@@ -157,8 +161,12 @@ public class Y9SystemJsonDataHandlerImpl implements Y9SystemDataHandler {
         Y9Menu y9Menu = Y9ModelConvertUtil.convert(y9MenuJsonModel, Y9Menu.class);
         y9Menu.setSystemId(systemId);
         y9MenuService.saveOrUpdate(y9Menu);
-        importOperationList(y9MenuJsonModel.getSubOperationList(), systemId);
-        importMenuList(y9MenuJsonModel.getSubMenuList(), systemId);
+        if (null != y9MenuJsonModel.getSubOperationList() && !y9MenuJsonModel.getSubOperationList().isEmpty()) {
+            importOperationList(y9MenuJsonModel.getSubOperationList(), systemId);
+        }
+        if (null != y9MenuJsonModel.getSubMenuList() && !y9MenuJsonModel.getSubMenuList().isEmpty()) {
+            importMenuList(y9MenuJsonModel.getSubMenuList(), systemId);
+        }
     }
 
     private void importMenuList(List<Y9MenuJsonModel> y9MenuList, String systemId) {
@@ -171,8 +179,13 @@ public class Y9SystemJsonDataHandlerImpl implements Y9SystemDataHandler {
         Y9Operation y9Operation = Y9ModelConvertUtil.convert(y9OperationJsonModel, Y9Operation.class);
         y9Operation.setSystemId(systemId);
         y9OperationService.saveOrUpdate(y9Operation);
-        importOperationList(y9OperationJsonModel.getSubOperationList(), systemId);
-        importMenuList(y9OperationJsonModel.getSubMenuList(), systemId);
+        if (null != y9OperationJsonModel.getSubOperationList()
+            && !y9OperationJsonModel.getSubOperationList().isEmpty()) {
+            importOperationList(y9OperationJsonModel.getSubOperationList(), systemId);
+        }
+        if (null != y9OperationJsonModel.getSubMenuList() && !y9OperationJsonModel.getSubMenuList().isEmpty()) {
+            importMenuList(y9OperationJsonModel.getSubMenuList(), systemId);
+        }
     }
 
     private void importOperationList(List<Y9OperationJsonModel> y9OperationJsonModelList, String systemId) {
@@ -184,7 +197,9 @@ public class Y9SystemJsonDataHandlerImpl implements Y9SystemDataHandler {
     private void importRole(Y9RoleJsonModel y9RoleJsonModel, String systemId) {
         Y9Role y9Role = Y9ModelConvertUtil.convert(y9RoleJsonModel, Y9Role.class);
         y9RoleService.saveOrUpdate(y9Role);
-        importRoleList(y9RoleJsonModel.getSubRoleList(), systemId);
+        if (null != y9RoleJsonModel.getSubRoleList() && !y9RoleJsonModel.getSubRoleList().isEmpty()) {
+            importRoleList(y9RoleJsonModel.getSubRoleList(), systemId);
+        }
     }
 
     private void importRoleList(List<Y9RoleJsonModel> y9RoleJsonModelList, String systemId) {
