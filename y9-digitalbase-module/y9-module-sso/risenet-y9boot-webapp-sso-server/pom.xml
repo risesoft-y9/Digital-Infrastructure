@@ -6,15 +6,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.risesoft</groupId>
     <artifactId>risenet-y9boot-webapp-sso-server</artifactId>
-    <packaging>war</packaging>
-    <version>9.7.0-SNAPSHOT</version>
-
-    <!--<parent>
-        <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase</artifactId>
-        <version>9.7.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
-    </parent>-->
+    <packaging>jar</packaging>
+    <version>9.7.0-M1</version>
 
     <repositories>
         <repository>
@@ -27,7 +20,7 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-        <repository>
+        <!--<repository>
             <id>y9-internet-repo</id>
             <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
             <releases>
@@ -35,9 +28,31 @@
             </releases>
             <snapshots>
                 <enabled>true</enabled>
-                <!-- <updatePolicy>always</updatePolicy> -->
-                <!-- always,daily(default),interval:XXX,never -->
             </snapshots>
+        </repository>-->
+
+        <repository>
+            <id>sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>sonatype-release</id>
+            <url>https://oss.sonatype.org/content/repositories/releases</url>
+        </repository>
+
+        <repository>
+            <id>apache-snapshots</id>
+            <url>https://repository.apache.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>apache-release</id>
+            <url>https://repository.apache.org/content/repositories/releases</url>
         </repository>
 
         <repository>
@@ -84,10 +99,10 @@
             <id>aliyun-repo-plugin</id>
             <url>https://maven.aliyun.com/repository/public</url>
         </pluginRepository>
-        <pluginRepository>
+        <!--<pluginRepository>
             <id>y9-internet-repo-plugin</id>
             <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
-        </pluginRepository>
+        </pluginRepository>-->
 
         <pluginRepository>
             <id>spring-snapshots</id>
@@ -124,15 +139,9 @@
         <spring-framework.version>6.2.5</spring-framework.version>
         <spring-cloud.version>2024.0.1</spring-cloud.version>
         <lombok.version>1.18.38</lombok.version>
-        <mysql-driver.version>8.2.0</mysql-driver.version>
-        <mariadb-driver.version>3.5.0</mariadb-driver.version>
-        <postgresql-driver.version>42.7.3</postgresql-driver.version>
-        <kingbase-driver.version>8.6.1</kingbase-driver.version>
-        <dameng-driver.version>8.1.3.140</dameng-driver.version>
-        <oracle-driver.version>23.6.0.24.10</oracle-driver.version>
 
         <!-- Plugin versions -->
-        <jib-maven-plugin.version>3.4.4</jib-maven-plugin.version>
+        <jib-maven-plugin.version>3.4.5</jib-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -220,6 +229,17 @@
         <dependency>
             <groupId>com.googlecode.cqengine</groupId>
             <artifactId>cqengine</artifactId>
+            <exclusions>
+            	<exclusion>
+            		<groupId>org.antlr</groupId>
+            		<artifactId>antlr4-runtime</artifactId>
+            	</exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.13.2</version>
         </dependency>
 
         <dependency>
@@ -272,6 +292,15 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-themes</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-thymeleaf</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
         </dependency>
@@ -283,6 +312,12 @@
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
+            <exclusions>
+            	<exclusion>
+            		<groupId>org.antlr</groupId>
+            		<artifactId>antlr4-runtime</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -416,7 +451,7 @@
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-webapp-starter-tomcat</artifactId>
-            <exclusions>
+            <!--<exclusions>
                 <exclusion>
                     <groupId>org.apereo.cas</groupId>
                     <artifactId>cas-server-webapp-init-tomcat</artifactId>
@@ -433,7 +468,7 @@
                     <groupId>org.springframework.cloud</groupId>
                     <artifactId>spring-cloud-config-client</artifactId>
                 </exclusion>
-            </exclusions>
+            </exclusions>-->
         </dependency>
 
         <!--<dependency>
@@ -450,12 +485,17 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-logging</artifactId>
                 </exclusion>
+                <exclusion>
+                	<groupId>org.antlr</groupId>
+                	<artifactId>antlr4-runtime</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
+        
+        <!--<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-docker-compose</artifactId>
-        </dependency>
+        </dependency>-->
         
         <dependency>
             <groupId>org.springframework</groupId>
@@ -489,7 +529,6 @@
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
-            <version>3.5.3</version>
         </dependency>
 
         <dependency>
@@ -534,7 +573,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>3.14.0</version>
                 <configuration>
                     <annotationProcessorPaths>
                         <path>
@@ -565,7 +604,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.4.2</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -592,7 +631,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.1.4</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
@@ -600,7 +639,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.3.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
