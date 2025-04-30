@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class Y9LoginUserServiceImpl implements Y9LoginUserService {
 
-    public static String SSO_SERVER_IP = InetAddressUtil.getLocalAddress().getHostAddress();
-
     @Autowired
     private final ConfigurableApplicationContext applicationContext;
 
