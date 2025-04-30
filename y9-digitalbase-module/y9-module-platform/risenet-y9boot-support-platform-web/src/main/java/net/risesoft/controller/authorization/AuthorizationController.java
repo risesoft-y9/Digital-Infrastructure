@@ -102,10 +102,14 @@ public class AuthorizationController {
 
     private String buildResourceNamePath(Y9ResourceBase y9ResourceBase) {
         String guidPath = y9ResourceBase.getGuidPath();
-        List<String> resourceIdList = Arrays.asList(guidPath.split(LevelConsts.SEPARATOR));
-        List<Y9ResourceBase> y9ResourceBaseList = compositeResourceService.findByIdIn(resourceIdList);
-        return y9ResourceBaseList.stream().map(Y9ResourceBase::getName)
-            .collect(Collectors.joining(LevelConsts.NAME_SEPARATOR));
+        if (StringUtils.isNotEmpty(guidPath)) {
+            List<String> resourceIdList = Arrays.asList(guidPath.split(LevelConsts.SEPARATOR));
+            List<Y9ResourceBase> y9ResourceBaseList = compositeResourceService.findByIdIn(resourceIdList);
+            return y9ResourceBaseList.stream().map(Y9ResourceBase::getName)
+                .collect(Collectors.joining(LevelConsts.NAME_SEPARATOR));
+        } else {
+            return y9ResourceBase.getName();
+        }
     }
 
     private AuthorizationVO getAuthorizationVOForRole(Y9Authorization y9Authorization) {
