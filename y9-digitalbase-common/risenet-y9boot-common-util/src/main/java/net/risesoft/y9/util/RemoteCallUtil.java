@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,10 @@ import net.risesoft.y9.json.Y9JsonUtil;
 
 import cn.hutool.json.JSONObject;
 
+import javax.xml.namespace.QName;
+import org.apache.axis.client.Call;
+import org.apache.axis.client.Service;
+
 /**
  * 远程调用工具类
  *
@@ -52,6 +57,26 @@ import cn.hutool.json.JSONObject;
 @Slf4j
 public class RemoteCallUtil {
     public static ObjectMapper objectMapper = new ObjectMapper();
+
+    private static final Service service = new Service();
+
+    /**
+     * 双杨推送接口
+     * @param endpointURL
+     * @param methodName
+     * @param para
+     * @return
+     * @throws Exception
+     */
+    public static Object invoke(String endpointURL, String methodName, Object[] para) throws Exception {
+        Call call = (Call) service.createCall();
+        URL url = new URL(endpointURL);
+        call.setTargetEndpointAddress(url);
+        call.setTimeout(Integer.valueOf(5000));
+        call.setOperationName(new QName(endpointURL, methodName));
+        Object result = call.invoke(para);
+        return result;
+    }
 
     static {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
