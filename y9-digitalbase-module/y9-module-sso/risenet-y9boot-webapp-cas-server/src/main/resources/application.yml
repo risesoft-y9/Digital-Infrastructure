@@ -356,7 +356,7 @@ spring:
             naming:
                 implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
                 physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-        open-in-view: false
+        open-in-view: true
     docker:
         compose:
             enabled: false

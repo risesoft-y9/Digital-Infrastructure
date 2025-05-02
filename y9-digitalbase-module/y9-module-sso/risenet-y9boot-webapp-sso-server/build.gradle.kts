@@ -16,7 +16,12 @@ dependencies {
     implementation("org.apereo.cas:cas-server-core-util-api")
     implementation("org.apereo.cas:cas-server-core-services-api")
     implementation("org.apereo.cas:cas-server-core-services-registry")
-    implementation(libs.googlecode.cqengine)
+
+    implementation(libs.googlecode.cqengine) {
+        exclude(group = "org.antlr", module = "antlr4-runtime")
+    }
+    implementation("org.antlr:antlr4-runtime:4.13.2")
+
     implementation("org.apereo.cas:cas-server-core-services-authentication")
     implementation("org.apereo.cas:cas-server-core-tickets-api")
     implementation("org.apereo.cas:cas-server-core-api-ticket")
@@ -31,10 +36,11 @@ dependencies {
     implementation("org.apereo.cas:cas-server-support-ldap-core")
     implementation(libs.hibernate.core)
     implementation("org.apereo.cas:cas-server-support-redis-core")
+    implementation("org.apereo.cas:cas-server-support-redis-modules")
     implementation("org.apereo.cas:cas-server-support-redis-ticket-registry")
     implementation("org.apereo.cas:cas-server-support-session-redis")
     implementation("org.springframework.data:spring-data-redis")
-    implementation(libs.lettucemod)
+
     implementation("org.apereo.cas:cas-server-core-api-logout")
     implementation("org.apereo.cas:cas-server-core-logout")
     implementation("org.apereo.cas:cas-server-core-logout-api")
@@ -50,15 +56,29 @@ dependencies {
     implementation("org.apereo.cas:cas-server-support-oauth-core-api")
     implementation("org.apereo.cas:cas-server-support-oauth-core")
     implementation("org.apereo.cas:cas-server-support-oauth-services")
+
+    implementation("org.apereo.cas:cas-server-support-oidc")
+    implementation("org.apereo.cas:cas-server-support-oidc-core-api")
+    implementation("org.apereo.cas:cas-server-support-oidc-core")
+    implementation("org.apereo.cas:cas-server-support-oidc-services")
+
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa") {
+        // 排除项目依赖
+        exclude("org.springframework.boot", "spring-boot-starter-logging")
+        exclude("org.antlr", "gantlr4-runtime")
+    }
+
     implementation("org.apereo.cas:cas-server-support-pac4j-api")
     implementation("org.apereo.cas:cas-server-webapp-init")
     implementation("org.apereo.cas:cas-server-support-webconfig")
+
     implementation("org.apereo.cas:cas-server-webapp-starter-tomcat") {
         // 排除项目依赖
         exclude("org.springframework.cloud", "spring-cloud-config-client")
     }
     implementation(project(":y9-digitalbase-common:risenet-y9boot-common-nacos"))
-    implementation("org.springframework.boot:spring-boot-docker-compose")
+
+    //implementation("org.springframework.boot:spring-boot-docker-compose")
     implementation(libs.mysql.connector.j)
     implementation(libs.mariadb.java.client)
     implementation(libs.postgresql)

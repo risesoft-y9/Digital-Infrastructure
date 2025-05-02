@@ -81,3 +81,4 @@ include(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-webapp-platfor
 
 include(":y9-digitalbase-module:y9-module-sso:risenet-y9boot-webapp-cas-server")
 include(":y9-digitalbase-module:y9-module-sso:risenet-y9boot-webapp-spring-authorization-server")
+include(":y9-digitalbase-module:y9-module-sso:risenet-y9boot-webapp-sso-server")

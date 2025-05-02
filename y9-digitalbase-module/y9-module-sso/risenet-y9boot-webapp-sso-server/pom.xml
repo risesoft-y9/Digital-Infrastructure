@@ -20,28 +20,6 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-        <!--<repository>
-            <id>y9-internet-repo</id>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>-->
-
-        <repository>
-            <id>sonatype-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>sonatype-release</id>
-            <url>https://oss.sonatype.org/content/repositories/releases</url>
-        </repository>
 
         <repository>
             <id>apache-snapshots</id>
@@ -99,10 +77,6 @@
             <id>aliyun-repo-plugin</id>
             <url>https://maven.aliyun.com/repository/public</url>
         </pluginRepository>
-        <!--<pluginRepository>
-            <id>y9-internet-repo-plugin</id>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
-        </pluginRepository>-->
 
         <pluginRepository>
             <id>spring-snapshots</id>
@@ -189,25 +163,6 @@
 
         <dependency>
             <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-support-person-directory</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>netty-transport-native-unix-common</artifactId>
-                    <groupId>io.netty</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>netty-transport-classes-epoll</artifactId>
-                    <groupId>io.netty</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>netty-transport-classes-kqueue</artifactId>
-                    <groupId>io.netty</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-rest-api</artifactId>
         </dependency>
         <dependency>
@@ -230,10 +185,10 @@
             <groupId>com.googlecode.cqengine</groupId>
             <artifactId>cqengine</artifactId>
             <exclusions>
-            	<exclusion>
-            		<groupId>org.antlr</groupId>
-            		<artifactId>antlr4-runtime</artifactId>
-            	</exclusion>
+                <exclusion>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr4-runtime</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -275,10 +230,6 @@
 
         <dependency>
             <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-support-jpa-util</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-jpa-service-registry</artifactId>
         </dependency>
 
@@ -313,10 +264,10 @@
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
             <exclusions>
-            	<exclusion>
-            		<groupId>org.antlr</groupId>
-            		<artifactId>antlr4-runtime</artifactId>
-            	</exclusion>
+                <exclusion>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr4-runtime</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -408,10 +359,21 @@
             <artifactId>cas-server-support-pac4j-api</artifactId>
         </dependency>
         
-        <dependency>
+        <!--<dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-palantir</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.webjars.npm</groupId>
+                    <artifactId>npm-registry-client</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>npm-registry-client</artifactId>
+            <version>7.4.6-1</version>
+        </dependency>-->
         
         <dependency>
             <groupId>com.nimbusds</groupId>
@@ -451,24 +413,6 @@
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-webapp-starter-tomcat</artifactId>
-            <!--<exclusions>
-                <exclusion>
-                    <groupId>org.apereo.cas</groupId>
-                    <artifactId>cas-server-webapp-init-tomcat</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apereo.cas</groupId>
-                    <artifactId>cas-server-webapp-resources</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-starter-bootstrap</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-config-client</artifactId>
-                </exclusion>
-            </exclusions>-->
         </dependency>
 
         <!--<dependency>
@@ -486,16 +430,11 @@
                     <artifactId>spring-boot-starter-logging</artifactId>
                 </exclusion>
                 <exclusion>
-                	<groupId>org.antlr</groupId>
-                	<artifactId>antlr4-runtime</artifactId>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr4-runtime</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
-        
-        <!--<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-docker-compose</artifactId>
-        </dependency>-->
         
         <dependency>
             <groupId>org.springframework</groupId>
