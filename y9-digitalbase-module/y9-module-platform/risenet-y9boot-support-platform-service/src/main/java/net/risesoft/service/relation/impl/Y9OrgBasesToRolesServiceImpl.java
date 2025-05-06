@@ -7,7 +7,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +26,7 @@ import net.risesoft.entity.relation.Y9OrgBasesToRoles;
 import net.risesoft.exception.RoleErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
 import net.risesoft.y9.Y9Context;
@@ -133,6 +137,18 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
     public void removeOrgBases(String roleId, List<String> orgIds) {
         for (String orgId : orgIds) {
             remove(roleId, orgId);
+        }
+    }
+
+    @Override
+    public Page<Y9OrgBasesToRoles> page(Y9PageQuery pageQuery, String roleId, String unitName) {
+        if (StringUtils.isNotEmpty(unitName)) {
+            List<String> orgUnitIdList = compositeOrgBaseManager.listOrgUnitIdByName(unitName);
+            return y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdIn(roleId, orgUnitIdList, PageRequest
+                .of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "createTime")));
+        } else {
+            return y9OrgBasesToRolesRepository.findByRoleId(roleId, PageRequest.of(pageQuery.getPage4Db(),
+                pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "createTime")));
         }
     }
 

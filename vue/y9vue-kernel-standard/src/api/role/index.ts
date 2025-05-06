@@ -108,12 +108,12 @@ export const deleteRoleById = async (id) => {
 };
 
 // 根据 名称和 所属部门 查找角色成员
-export const searchByUnitNameAndUnitDN = async (roleId, unitName, unitDN) => {
+export const searchByUnitName = async (page, size, roleId, unitName) => {
     return await roleRequest({
-        url: '/api/rest/orgBasesToRoles/searchByUnitNameAndUnitDN',
+        url: '/api/rest/orgBasesToRoles/searchByUnitName',
         method: 'GET',
         cType: false,
-        params: { roleId: roleId, unitName: unitName, unitDn: unitDN }
+        params: { page, size, roleId, unitName }
     });
 };
 

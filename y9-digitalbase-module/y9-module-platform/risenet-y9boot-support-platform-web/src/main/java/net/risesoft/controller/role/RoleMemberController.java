@@ -2,11 +2,12 @@ package net.risesoft.controller.role;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,8 @@ import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.permission.annotation.IsAnyManager;
+import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
@@ -149,37 +152,20 @@ public class RoleMemberController {
      *
      * @param roleId 角色id
      * @param unitName 成员名称
-     * @param unitDn 部门名称
      * @return {@code Y9Result<List<}{@link RoleMemberVO}{@code >>}
      */
     @RiseLog(operationName = "根据名称和所属部门查找角色成员")
-    @RequestMapping(value = "/searchByUnitNameAndUnitDN")
-    public Y9Result<List<RoleMemberVO>> searchByUnitNameAndUnitDn(@RequestParam @NotBlank String roleId,
-        String unitName, String unitDn) {
-        List<Y9OrgBasesToRoles> y9OrgBasesToRolesList = y9OrgBasesToRolesService.listByRoleId(roleId);
+    @RequestMapping(value = "/searchByUnitName")
+    public Y9Page<RoleMemberVO> searchByUnitName(@RequestParam @NotBlank String roleId, String unitName,
+        Y9PageQuery pageQuery) {
+        Page<Y9OrgBasesToRoles> y9OrgBasesToRolesList = y9OrgBasesToRolesService.page(pageQuery, roleId, unitName);
 
-        List<RoleMemberVO> memberList = new ArrayList<>();
-        y9OrgBasesToRolesList.stream().forEach(y9OrgBasesToRoles -> {
-            Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(y9OrgBasesToRoles.getOrgId());
-            boolean addEnable = false;
-            if (StringUtils.isBlank(unitDn) && StringUtils.isBlank(unitName)) {
-                addEnable = true;
-            } else if (StringUtils.isNotBlank(unitName) && StringUtils.isNotBlank(unitDn)) {
-                if (y9OrgBase.getName().contains(unitName) && y9OrgBase.getDn().contains(unitDn)) {
-                    addEnable = true;
-                }
-            } else if (StringUtils.isNotBlank(unitName) && y9OrgBase.getName().contains(unitName)) {
-                addEnable = true;
-            } else if (StringUtils.isNotBlank(unitDn) && y9OrgBase.getDn().contains(unitDn)) {
-                addEnable = true;
-            }
+        List<RoleMemberVO> memberList = y9OrgBasesToRolesList.getContent().stream()
+            .map(o -> RoleMemberVO.of(o, compositeOrgBaseService.getOrgUnit(o.getOrgId())))
+            .collect(Collectors.toList());
 
-            if (addEnable) {
-                memberList.add(RoleMemberVO.of(y9OrgBasesToRoles, y9OrgBase));
-            }
-        });
-
-        return Y9Result.success(memberList, "获取数据成功");
+        return Y9Page.success(pageQuery.getPage(), y9OrgBasesToRolesList.getTotalPages(),
+            y9OrgBasesToRolesList.getTotalElements(), memberList);
     }
 
 }
