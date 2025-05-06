@@ -138,7 +138,7 @@ public class PositionRoleApiImpl implements PositionRoleApi {
      * @since 9.6.8
      */
     @Override
-    public Y9Result<List<Role>> listRolesByPersonId(String tenantId, String positionId) {
+    public Y9Result<List<Role>> listRolesByPositionId(String tenantId, String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Role> y9RoleList = y9PositionToRoleService.listRolesByPositionId(positionId);
