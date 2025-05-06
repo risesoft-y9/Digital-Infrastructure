@@ -1,5 +1,8 @@
 package net.risesoft.api.permission;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.validation.constraints.NotBlank;
 
 import org.springframework.context.annotation.Primary;
@@ -12,9 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.permission.PositionRoleApi;
+import net.risesoft.entity.Y9Position;
+import net.risesoft.model.platform.Position;
+import net.risesoft.model.platform.Role;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.identity.Y9PositionToRoleService;
+import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9public.entity.role.Y9Role;
 
 /**
  * 岗位角色组件
@@ -102,5 +111,41 @@ public class PositionRoleApiImpl implements PositionRoleApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PositionToRoleService.hasRoleByCustomId(positionId, customId));
+    }
+
+    /**
+     * 获取拥有角色的所有岗位（不包含禁用）集合
+     *
+     * @param tenantId 租户id
+     * @param roleId 角色唯一标识
+     * @return {@code Y9Result<List<Position>>} 通用请求返回对象 - data 是岗位对象集合
+     * @since 9.6.8
+     */
+    @Override
+    public Y9Result<List<Position>> listPositionsByRoleId(String tenantId, String roleId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        List<Y9Position> y9PersonList = y9PositionToRoleService.listPositionsByRoleId(roleId, Boolean.FALSE);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Position.class));
+    }
+
+    /**
+     * 获取岗位所拥有的角色集合
+     *
+     * @param tenantId 租户id
+     * @param positionId 岗位id
+     * @return {@code Y9Result<List<Role>>} 通用请求返回对象 - data 是角色集合
+     * @since 9.6.8
+     */
+    @Override
+    public Y9Result<List<Role>> listRolesByPersonId(String tenantId, String positionId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        List<Y9Role> y9RoleList = y9PositionToRoleService.listRolesByPositionId(positionId);
+        List<Role> roleList = new ArrayList<>();
+        for (Y9Role y9Role : y9RoleList) {
+            roleList.add(ModelConvertUtil.y9RoleToRole(y9Role));
+        }
+        return Y9Result.success(roleList);
     }
 }

@@ -2,7 +2,9 @@ package net.risesoft.service.identity;
 
 import java.util.List;
 
+import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.identity.position.Y9PositionToRole;
+import net.risesoft.y9public.entity.role.Y9Role;
 
 /**
  * @author dingzhaojun
@@ -49,4 +51,20 @@ public interface Y9PositionToRoleService {
      */
     void removeByRoleId(String roleId);
 
+    /**
+     * 根据角色id查询拥有角色的所有岗位
+     *
+     * @param roleId 角色id
+     * @param disabled 岗位是否禁用
+     * @return {@code List<Y9Position> }
+     */
+    List<Y9Position> listPositionsByRoleId(String roleId, Boolean disabled);
+
+    /**
+     * 根据岗位id查询其拥有的所有角色
+     *
+     * @param positionId 岗位id
+     * @return {@code List<Y9Role>}
+     */
+    List<Y9Role> listRolesByPositionId(String positionId);
 }

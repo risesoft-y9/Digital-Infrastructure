@@ -49,4 +49,9 @@ public interface Y9PositionToRoleRepository extends JpaRepository<Y9PositionToRo
     @Query("select distinct p.roleId from Y9PositionToRole p where p.positionId = ?1")
     List<String> listRoleIdsByPositionId(String positionId);
 
+    @Query("select p.positionId from Y9PositionToRole p where p.roleId = ?1")
+    List<String> findPositionIdByRoleId(String roleId);
+
+    @Query("select p.roleId from Y9PositionToRole p where p.positionId = ?1")
+    List<String> findRoleIdByPositionId(String positionId);
 }

@@ -144,7 +144,7 @@ public class PersonRoleApiImpl implements PersonRoleApi {
         @RequestParam("roleId") @NotBlank String roleId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonToRoleService.listPersonsByRoleId(roleId);
+        List<Y9Person> y9PersonList = y9PersonToRoleService.listPersonsByRoleId(roleId, Boolean.FALSE);
         return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
     }
 

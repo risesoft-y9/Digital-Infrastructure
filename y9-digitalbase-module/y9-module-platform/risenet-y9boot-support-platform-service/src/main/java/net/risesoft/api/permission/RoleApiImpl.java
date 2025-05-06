@@ -154,7 +154,9 @@ public class RoleApiImpl implements RoleApi {
      * @param orgType 数据类型
      * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是组织节点集合
      * @since 9.6.0
+     * @deprecated 9.6.9 移除
      */
+    @Deprecated(since = "9.6.9", forRemoval = true)
     @Override
     public Y9Result<List<OrgUnit>> listOrgUnitsById(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgType") OrgTypeEnum orgType) {
