@@ -98,6 +98,6 @@ public interface PositionRoleApi {
      * @since 9.6.8
      */
     @GetMapping("/listRolesByPositionId")
-    Y9Result<List<Role>> listRolesByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Role>> listRolesByPositionId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId);
 }
