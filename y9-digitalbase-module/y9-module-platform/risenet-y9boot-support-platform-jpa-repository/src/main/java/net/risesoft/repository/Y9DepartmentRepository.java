@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,4 +61,7 @@ public interface Y9DepartmentRepository
     List<Y9Department> findByParentIdOrderByTabIndexAsc(String parentId);
 
     Optional<Y9Department> findTopByParentIdOrderByTabIndexDesc(String parentId);
+
+    @Query("select o.id from Y9Department o where o.dn like %?1%")
+    List<String> findIdByDnContaining(String name);
 }

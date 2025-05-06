@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,4 +44,6 @@ public interface Y9GroupRepository extends JpaRepository<Y9Group, String> {
 
     Optional<Y9Group> findTopByParentIdOrderByTabIndexDesc(String parentId);
 
+    @Query("select o.id from Y9Group o where o.dn like %?1%")
+    List<String> findIdByDnContaining(String name);
 }

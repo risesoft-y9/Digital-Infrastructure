@@ -99,6 +99,8 @@
                         v-model:selectedVal="tableCurrSelectedVal"
                         :config="tableConfig"
                         :filterConfig="filterConfig"
+                        @on-curr-page-change="onTableCurrPageChange"
+                        @on-page-size-change="onTablePageSizeChange"
                     >
                         <template v-slot:filterBtnSlot>
                             <el-button
@@ -163,8 +165,8 @@
                         v-model:selectedVal="resourceTableCurrSelectedVal"
                         :config="resourceTableConfig"
                         :filterConfig="resourcefilterConfig"
-                        @on-curr-page-change="onCurrPageChange"
-                        @on-page-size-change="onPageSizeChange"
+                        @on-curr-page-change="onResourceTableCurrPageChange"
+                        @on-page-size-change="onResourceTablePageSizeChange"
                     >
                         <template v-slot:filterBtnSlot>
                             <!-- <el-button class="global-btn-main" @click="initList" type="primary">
@@ -300,7 +302,7 @@
         saveOrder,
         saveOrUpdate,
         saveOrUpdateRelateResource,
-        searchByUnitNameAndUnitDN
+        searchByUnitName
     } from '@/api/role/index';
     import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
     import { resourceTreeList, resourceTreeRoot, treeSearch } from '@/api/resource/index';
@@ -613,7 +615,7 @@
 
     // 角色成员  ------
     // 搜索条件
-    let filterData = ref({ rolePersonName: '', deptName: '' });
+    let filterData = ref({ orgUnitName: '' });
     // 树 ref
     const selectTreeRef = ref();
     // 表格 过滤条件
@@ -626,16 +628,8 @@
             {
                 type: 'input',
                 value: '',
-                key: 'rolePersonName',
+                key: 'orgUnitName',
                 label: computed(() => t('名称')),
-                span: settingStore.device === 'mobile' ? 24 : 5,
-                clearable: true
-            },
-            {
-                type: 'input',
-                value: '',
-                key: 'deptName',
-                label: computed(() => t('部门')),
                 span: settingStore.device === 'mobile' ? 24 : 5,
                 clearable: true
             },
@@ -663,7 +657,11 @@
             }
         ],
         tableData: [],
-        pageConfig: false
+        pageConfig: {
+            currentPage: 1, //当前页数，支持 v-model 双向绑定
+            pageSize: 10, //每页显示条目个数，支持 v-model 双向绑定
+            total: 10 //总条目数
+        }
     });
     // 表格选中的数据
     let tableCurrSelectedVal = ref([] as any);
@@ -693,12 +691,27 @@
     // 角色成员 请求 列表接口
     async function initList() {
         // filterData
-        let result = await searchByUnitNameAndUnitDN(
+        let result = await searchByUnitName(
+            tableConfig.value.pageConfig.currentPage,
+            tableConfig.value.pageConfig.pageSize,
             currData.value.id,
-            filterData.value.rolePersonName,
-            filterData.value.deptName
+            filterData.value.orgUnitName
         );
-        tableConfig.value.tableData = result.data;
+
+        tableConfig.value.pageConfig.total = result.total;
+        tableConfig.value.tableData = result.rows;
+    }
+
+    //当前页改变时触发
+    function onTableCurrPageChange(currPage) {
+        tableConfig.value.pageConfig.currentPage = currPage;
+        initList(); //获取列表
+    }
+
+    //每页条数改变时触发
+    function onTablePageSizeChange(pageSize) {
+        tableConfig.value.pageConfig.pageSize = pageSize;
+        initList(); //获取列表
     }
 
     // 正权限 负权限 弹框
@@ -927,13 +940,13 @@
     }
 
     //当前页改变时触发
-    function onCurrPageChange(currPage) {
+    function onResourceTableCurrPageChange(currPage) {
         resourceTableConfig.value.pageConfig.currentPage = currPage;
         getRelateResourceListFn(); //获取列表
     }
 
     //每页条数改变时触发
-    function onPageSizeChange(pageSize) {
+    function onResourceTablePageSizeChange(pageSize) {
         resourceTableConfig.value.pageConfig.pageSize = pageSize;
         getRelateResourceListFn(); //获取列表
     }
