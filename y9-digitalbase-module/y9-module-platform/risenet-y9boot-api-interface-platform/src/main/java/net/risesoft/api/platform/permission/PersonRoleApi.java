@@ -81,7 +81,7 @@ public interface PersonRoleApi {
         @RequestParam("personId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId);
 
     /**
-     * 获取拥有角色的所有人员
+     * 获取拥有角色的所有人员（不包含禁用）集合
      *
      * @param tenantId 租户id
      * @param roleId 角色唯一标识

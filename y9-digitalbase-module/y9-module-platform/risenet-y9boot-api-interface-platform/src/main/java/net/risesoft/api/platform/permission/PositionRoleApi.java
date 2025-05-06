@@ -1,11 +1,15 @@
 package net.risesoft.api.platform.permission;
 
+import java.util.List;
+
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import net.risesoft.model.platform.Position;
+import net.risesoft.model.platform.Role;
 import net.risesoft.pojo.Y9Result;
 
 /**
@@ -72,4 +76,28 @@ public interface PositionRoleApi {
     @GetMapping("/hasRole2")
     Y9Result<Boolean> hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId);
+
+    /**
+     * 获取拥有角色的所有岗位（不包含禁用）集合
+     *
+     * @param tenantId 租户id
+     * @param roleId 角色唯一标识
+     * @return {@code Y9Result<List<Position>>} 通用请求返回对象 - data 是岗位对象集合
+     * @since 9.6.8
+     */
+    @GetMapping("/listPositionsByRoleId")
+    Y9Result<List<Position>> listPositionsByRoleId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("roleId") @NotBlank String roleId);
+
+    /**
+     * 获取岗位所拥有的角色集合
+     *
+     * @param tenantId 租户id
+     * @param positionId 岗位id
+     * @return {@code Y9Result<List<Role>>} 通用请求返回对象 - data 是角色集合
+     * @since 9.6.8
+     */
+    @GetMapping("/listRolesByPositionId")
+    Y9Result<List<Role>> listRolesByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String positionId);
 }

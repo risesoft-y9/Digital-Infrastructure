@@ -91,9 +91,15 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
     }
 
     @Override
-    public List<Y9Person> listPersonsByRoleId(String roleId) {
+    public List<Y9Person> listPersonsByRoleId(String roleId, Boolean disabled) {
         List<String> personIdList = y9PersonToRoleRepository.findPersonIdByRoleId(roleId);
-        return personIdList.stream().map(y9PersonManager::getById).collect(Collectors.toList());
+        return personIdList.stream().map(y9PersonManager::getById).filter(p -> {
+            if (disabled == null) {
+                return true;
+            } else {
+                return disabled.equals(p.getDisabled());
+            }
+        }).collect(Collectors.toList());
     }
 
     @Override
