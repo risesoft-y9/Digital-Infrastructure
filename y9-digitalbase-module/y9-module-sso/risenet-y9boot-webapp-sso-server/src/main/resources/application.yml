@@ -1,4 +1,6 @@
 cas:
+    jdbc:
+        show-sql: true
     authn:
         accept:
             enabled: false
@@ -78,7 +80,7 @@ cas:
             watcherEnabled: true
         jpa:
             enabled: true
-            dialect: org.hibernate.dialect.PostgresPlusDialect
+            dialect: org.hibernate.dialect.PostgreSQLDialect
             driver-class: org.postgresql.Driver
             url: jdbc:postgresql://localhost:5432/postgres
             user: root
@@ -108,7 +110,7 @@ cas:
                     repeatInterval: PT30M
             jpa:
                 enabled: false
-                dialect: org.hibernate.dialect.PostgresPlusDialect
+                dialect: org.hibernate.dialect.PostgreSQLDialect
                 driver-class: org.postgresql.Driver
                 url: jdbc:postgresql://localhost:5432/postgres
                 user: root
@@ -297,7 +299,7 @@ server:
         uri-encoding: UTF-8
 management:
     auditevents:
-        enabled: false
+        enabled: true
     endpoints:
         web:
             exposure:
@@ -305,19 +307,14 @@ management:
         access:
             default: unrestricted
     tracing:
-        enabled: false
+        enabled: true
     defaults:
         metrics:
             export:
-                enabled: false
+                enabled: true
 spring:
     application:
         name: sso
-    autoconfigure:
-        exclude:
-            - org.apereo.cas.config.CasMetricsAutoConfiguration
-            - org.apereo.cas.config.CasCoreMonitorAutoConfiguration
-            - org.springframework.boot.autoconfigure.integration.IntegrationAutoConfiguration
     cloud:
         nacos:
             config:
@@ -345,7 +342,7 @@ spring:
     jpa:
         properties:
             hibernate:
-                dialect: org.hibernate.dialect.PostgresPlusDialect
+                dialect: org.hibernate.dialect.PostgreSQLDialect
                 hbm2ddl:
                     auto: update
                 jdbc:

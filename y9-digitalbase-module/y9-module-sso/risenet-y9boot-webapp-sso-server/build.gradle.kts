@@ -76,7 +76,7 @@ dependencies {
         // 排除项目依赖
         exclude("org.springframework.cloud", "spring-cloud-config-client")
     }
-    implementation(project(":y9-digitalbase-common:risenet-y9boot-common-nacos"))
+    //implementation(project(":y9-digitalbase-common:risenet-y9boot-common-nacos"))
 
     //implementation("org.springframework.boot:spring-boot-docker-compose")
     implementation(libs.mysql.connector.j)
@@ -87,6 +87,8 @@ dependencies {
     implementation(libs.kingbase.kesdialect.hibernate4)
     implementation(libs.dameng.dmdialect.hibernate62)
     implementation(libs.dameng.dmjdbcdriver18)
+
+    annotationProcessor("org.springframework:spring-context-indexer:6.2.6")
 }
 
 description = "risenet-y9boot-webapp-sso-server"

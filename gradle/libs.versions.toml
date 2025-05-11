@@ -1,10 +1,11 @@
 [versions]
 # spring boot & cloud bom
-spring-boot = "3.4.4"
+spring-bom = "6.2.6"
+spring-boot = "3.4.5"
 spring-cloud = "2024.0.1"
 io-spring-dependency-management = "1.1.6"
 # cas server bom
-cas-server-bom = "7.2.0"
+cas-server-bom = "7.2.2"
 # oracle bom
 ojdbc-bom = "23.6.0.24.10"
 # hutool
@@ -99,6 +100,7 @@ jaxws-rt = "4.0.3"
 
 [libraries]
 #spring boot & cloud dependencies
+spring-bom = { group = "org.springframework", name = "spring-framework-bom", version.ref = "spring-bom" }
 spring-boot-bom = { group = "org.springframework.boot", name = "spring-boot-dependencies", version.ref = "spring-boot" }
 spring-cloud-bom = { group = "org.springframework.cloud", name = "spring-cloud-dependencies", version.ref = "spring-cloud" }
 
