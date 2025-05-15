@@ -198,5 +198,5 @@ y9:
                 opaque:
                     client-id: clientid_oidc
                     client-secret: secret_oidc
-                    introspection-uri: https://test.youshengyun.com/sso/oidc/introspect
-                    profile-uri: https://test.youshengyun.com/sso/oidc/profile
+                    introspection-uri: http://localhost:7055/sso/oidc/introspect
+                    profile-uri: http://localhost:7055/sso/oidc/profile
