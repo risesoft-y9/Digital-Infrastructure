@@ -26,6 +26,7 @@ import com.google.common.collect.Lists;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
+
 import y9.entity.Y9User;
 import y9.service.Y9LoginUserService;
 import y9.service.Y9UserService;
@@ -39,17 +40,20 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
     private final Y9UserService y9UserService;
     private final Y9LoginUserService y9LoginUserService;
 
-    public Y9AuthenticationHandler(String name, ServicesManager servicesManager, Integer order, Y9UserService y9UserService, Y9LoginUserService y9LoginUserService) {
+    public Y9AuthenticationHandler(String name, ServicesManager servicesManager, Integer order,
+        Y9UserService y9UserService, Y9LoginUserService y9LoginUserService) {
         super(name, servicesManager, PrincipalFactoryUtils.newPrincipalFactory(), order);
         this.y9UserService = y9UserService;
         this.y9LoginUserService = y9LoginUserService;
     }
 
     @Override
-    public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service) throws GeneralSecurityException, PreventedException {
+    public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service)
+        throws GeneralSecurityException, PreventedException {
         UsernamePasswordCredential riseCredential = (UsernamePasswordCredential)credential;
         // HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext();
-        HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+        HttpServletRequest request =
+            ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
         String loginType = request.getParameter("loginType");
         String tenantShortName = request.getParameter("tenantShortName");
         String positionId = request.getParameter("positionId");
@@ -102,7 +106,8 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
                     throw new AccountNotFoundException("没有找到这个用户。");
                 } else if ("qrCode".equals(loginType)) {
                     y9User = users.get(0);
-                    updateCredential(request, riseCredential, y9User.getLoginName(), y9User.getPassword(), y9User.getTenantShortName());
+                    updateCredential(request, riseCredential, y9User.getLoginName(), y9User.getPassword(),
+                        y9User.getTenantShortName());
                 } else {
                     y9User = users.get(0);
                     String hashed = y9User.getPassword();
@@ -128,7 +133,8 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
 
     }
 
-    private static void updateCredential(HttpServletRequest request, UsernamePasswordCredential riseCredential, String username, String password, String tenantShortName) {
+    private static void updateCredential(HttpServletRequest request, UsernamePasswordCredential riseCredential,
+        String username, String password, String tenantShortName) {
         riseCredential.setUsername(username);
         riseCredential.assignPassword(password);
         Map<String, Object> customFields = riseCredential.getCustomFields();
@@ -160,7 +166,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
             customFields.put("screenDimension", screenDimension);
         }
         customFields.put("userAgent", request.getHeader("User-Agent"));
-        customFields.put("clientIp", Y9Context.getIpAddr(request));
+        customFields.put("userHostIP", Y9Context.getIpAddr(request));
 
     }
 
@@ -168,7 +174,8 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         if (StringUtils.isNotBlank(deptId)) {
             return y9UserService.findByTenantShortNameAndMobileAndParentId(agentTenantShortName, agentUserName, deptId);
         } else {
-            return y9UserService.findByTenantShortNameAndLoginNameAndOriginal(agentTenantShortName, agentUserName, Boolean.TRUE);
+            return y9UserService.findByTenantShortNameAndLoginNameAndOriginal(agentTenantShortName, agentUserName,
+                Boolean.TRUE);
         }
     }
 
@@ -185,7 +192,8 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
             if (StringUtils.isNotBlank(deptId)) {
                 return y9UserService.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, username, deptId);
             } else {
-                return y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username, Boolean.TRUE);
+                return y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username,
+                    Boolean.TRUE);
             }
         }
 
@@ -237,7 +245,8 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         attributes.put("password", toArrayList(y9User.getPassword()));
         attributes.put("original", Lists.newArrayList(y9User.getOriginal() == null ? true : y9User.getOriginal()));
         attributes.put("originalId", toArrayList(y9User.getOriginalId()));
-        attributes.put("globalManager", Lists.newArrayList(y9User.getGlobalManager() == null ? false : y9User.getGlobalManager()));
+        attributes.put("globalManager",
+            Lists.newArrayList(y9User.getGlobalManager() == null ? false : y9User.getGlobalManager()));
         attributes.put("managerLevel", toArrayList(y9User.getManagerLevel()));
         attributes.put("positions", toArrayList(y9User.getPositions()));
 
