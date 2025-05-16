@@ -42,9 +42,9 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
             String deptId = (String)customFields.get("deptId");
             String loginType = (String)customFields.get("loginType");
             String tenantShortName = (String)customFields.get("tenantShortName");
-            String userHostIP = (String)customFields.get("userHostIP");
             String userAgent = (String)customFields.get("userAgent");
             String screenResolution = (String)customFields.get("screenResolution");
+            String userHostIP = (String)customFields.get("userHostIP");
             String userHostMAC = (String)customFields.get("userHostMAC");
             String userHostName = (String)customFields.get("userHostName");
             String userHostDiskId = (String)customFields.get("userHostDiskId");
