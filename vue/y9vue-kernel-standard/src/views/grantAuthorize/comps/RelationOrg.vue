@@ -16,17 +16,7 @@
                 @click="handlerOrgClick"
             >
                 <i class="ri-add-line" />
-                {{ $t('组织') }}
-            </el-button>
-            <el-button
-                :size="fontSizeObj.buttonSize"
-                :style="{ fontSize: fontSizeObj.baseFontSize }"
-                class="global-btn-main"
-                type="primary"
-                @click="handlerPosClick"
-            >
-                <i class="ri-add-line" />
-                {{ $t('岗位') }}
+                {{ $t('组织节点') }}
             </el-button>
         </div>
         <!-- 表格 -->
@@ -86,7 +76,7 @@
             <selectTree
                 ref="selectTreeRef"
                 :checkStrictly="checkStrictly"
-                :selectField="selectField"
+                :defaultCheckedKeys="selectTreeDefaultCheckedKeys"
                 :showHeader="false"
                 :treeApiObj="treeApiObj"
                 @onTreeClick="handlerTreeClick"
@@ -105,6 +95,7 @@
     import { useSettingStore } from '@/store/modules/settingStore';
 
     import { useI18n } from 'vue-i18n';
+    import { listPrincipalIdByResourceId } from '@/api/role';
 
     const { t } = useI18n();
     const settingStore = useSettingStore();
@@ -125,6 +116,7 @@
 
     //选择tree实例
     const selectTreeRef = ref();
+    let selectTreeDefaultCheckedKeys = ref([]);
 
     // 变量 对象
     const state = reactive({
@@ -194,7 +186,7 @@
                 total: orgTotal.value // 总条数
             }
         },
-        // 组织，岗位 弹框 dialog
+        // 组织节点 弹框 dialog
         personConfigDialog: {
             show: false,
             title: t('授权管理 - 组织关联'),
@@ -202,15 +194,15 @@
             onOkLoading: true,
             onOk: (newConfig) => {
                 return new Promise(async (resolve, reject) => {
-                    let ids = selectTreeRef.value?.y9TreeRef?.getCheckedKeys(
-                        newConfig.value.selectTreeType == 'position' ? true : false
-                    );
+                    let checkedIds = selectTreeRef.value?.y9TreeRef?.getCheckedKeys();
+                    const ids = checkedIds.filter((item) => !selectTreeDefaultCheckedKeys.value.includes(item));
 
                     // 保存操作
                     const params = {
                         authority: currFilters.value.operationType,
                         resourceId: props.id
                     };
+
                     let result = { success: false, msg: '' };
                     result = await saveOrUpdateOrg(params, ids.toString());
                     ElNotification({
@@ -277,37 +269,22 @@
             childLevel: {
                 api: getTreeItemById,
                 params: {
-                    treeType: 'tree_type_person',
+                    treeType: 'tree_type_org',
                     disabled: false
                 }
             },
             search: {
                 api: searchByName,
                 params: {
-                    treeType: 'tree_type_org_person'
+                    treeType: 'tree_type_org',
+                    disabled: false
                 }
             }
-        },
-        //
-        selectField: [
-            //设置需要选择的字段
-            {
-                fieldName: 'nodeType',
-                value: ['Person', 'Organization', 'Department']
-            }
-        ]
+        }
     });
 
-    let {
-        loading,
-        tableOrgConfig,
-        personConfigDialog,
-        treeApiObj,
-        selectField,
-        filtersList,
-        currFilters,
-        filtersValueCallBack
-    } = toRefs(state);
+    let { loading, tableOrgConfig, personConfigDialog, treeApiObj, filtersList, currFilters, filtersValueCallBack } =
+        toRefs(state);
 
     function onRefreshTree() {
         selectTreeRef.value.onRefreshTree();
@@ -335,6 +312,18 @@
         }
     );
 
+    watch(
+        () => currFilters.value.operationType,
+        (new_, old_) => {
+            getSelectTreeDefaultCheckedKeys();
+        }
+    );
+
+    async function getSelectTreeDefaultCheckedKeys() {
+        let result = await listPrincipalIdByResourceId(props.id, currFilters.value.operationType);
+        selectTreeDefaultCheckedKeys.value = result.data;
+    }
+
     // 列表初始 数据
     async function initList() {
         let result = await getRelationOrgList(props.id);
@@ -343,36 +332,11 @@
         tableOrgConfig.value.pageConfig.total = orgTotal.value;
     }
 
-    const checkStrictly = ref(false); //父子是否关联
+    const checkStrictly = ref(true); //父子是否关联
     // 点击 组织  按钮 出现弹框选择
     function handlerOrgClick() {
-        personConfigDialog.value.title = computed(() => t('授权管理 - 组织关联'));
-        personConfigDialog.value.selectTreeType = 'org';
-        treeApiObj.value.childLevel.params.treeType = 'tree_type_person';
-        treeApiObj.value.search.params.treeType = 'tree_type_org_person';
-        selectField.value = [
-            {
-                fieldName: 'nodeType',
-                value: ['Person', 'Organization', 'Department']
-            }
-        ];
-        checkStrictly.value = true;
-        personConfigDialog.value.show = true;
-    }
+        getSelectTreeDefaultCheckedKeys();
 
-    // 点击 岗位  按钮 出现弹框选择
-    function handlerPosClick() {
-        personConfigDialog.value.title = computed(() => t('授权管理 - 岗位关联'));
-        personConfigDialog.value.selectTreeType = 'position';
-        treeApiObj.value.childLevel.params.treeType = 'tree_type_position';
-        treeApiObj.value.search.params.treeType = 'tree_type_org_position';
-        selectField.value = [
-            {
-                fieldName: 'nodeType',
-                value: ['Position']
-            }
-        ];
-        checkStrictly.value = false;
         personConfigDialog.value.show = true;
     }
 

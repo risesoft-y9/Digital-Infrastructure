@@ -294,6 +294,16 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
         return y9AuthorizationList;
     }
 
+    @Override
+    public List<String> listResourceIdByPrincipleId(String roleId, AuthorityEnum authority) {
+        return y9AuthorizationRepository.listResourceIdByPrincipleId(roleId, authority);
+    }
+
+    @Override
+    public List<String> listPrincipalIdByResourceId(String resourceId, AuthorityEnum authority) {
+        return y9AuthorizationRepository.listRoleIdByResourceId(resourceId, authority);
+    }
+
     private Y9Authorization getById(String id) {
         return y9AuthorizationRepository.findById(id).orElseThrow(
             () -> Y9ExceptionUtil.notFoundException(AuthorizationErrorCodeEnum.AUTHORIZATION_NOT_FOUND, id));

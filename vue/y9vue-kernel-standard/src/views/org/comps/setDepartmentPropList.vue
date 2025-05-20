@@ -93,7 +93,8 @@
             search: {
                 api: searchByName,
                 params: {
-                    treeType: 'tree_type_org_person'
+                    treeType: 'tree_type_org_person',
+                    disabled: false
                 }
             }
         },
@@ -107,7 +108,8 @@
             search: {
                 api: searchByName,
                 params: {
-                    treeType: 'tree_type_org_position'
+                    treeType: 'tree_type_org_position',
+                    disabled: false
                 }
             }
         },

@@ -86,7 +86,7 @@
             topLevel: treeInterface,
             childLevel: {
                 api: getTreeItemById,
-                params: { treeType: 'tree_type_org', disabled: true }
+                params: { treeType: 'tree_type_org' }
             },
             search: {
                 api: searchByName,

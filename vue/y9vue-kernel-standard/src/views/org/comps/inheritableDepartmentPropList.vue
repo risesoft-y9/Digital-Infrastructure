@@ -46,20 +46,6 @@
         departmentPropFormLine: {
             departmentPropCategory: null
         },
-        treeApiObj: {
-            //tree接口对象
-            topLevel: treeInterface,
-            childLevel: {
-                api: getTreeItemById,
-                params: { treeType: 'tree_type_person', disabled: false }
-            },
-            search: {
-                api: searchByName,
-                params: {
-                    treeType: 'tree_type_org_person'
-                }
-            }
-        },
         //当前节点信息
         currInfo: props.currTreeNodeInfo,
         setDepartmentPropTableConfig: {
@@ -123,7 +109,7 @@
         }
     });
 
-    let { treeApiObj, currInfo, setDepartmentPropTableConfig, filterConfig, loading, departmentPropFormLine } =
+    let { currInfo, setDepartmentPropTableConfig, filterConfig, loading, departmentPropFormLine } =
         toRefs(data);
 
     watch(

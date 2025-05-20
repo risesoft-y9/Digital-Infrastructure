@@ -33,6 +33,7 @@
         ref="y9TreeRef"
         :checkStrictly="checkStrictly"
         :data="alreadyLoadTreeData"
+        :defaultCheckedKeys="defaultCheckedKeys"
         :highlightCurrent="highlightCurrent"
         :lazy="lazy"
         :load="onTreeLazyLoad"
@@ -114,6 +115,10 @@
             //是否高亮当前选中节点
             type: Boolean,
             default: false
+        },
+
+        defaultCheckedKeys: {
+            type: Array //默认勾选的节点的 key 的数组，一维数组
         }
     });
 
@@ -212,6 +217,12 @@
                 default:
                     item.title_icon = '';
             }
+
+            if (props.defaultCheckedKeys?.includes(item.id)) {
+                // 默认勾选的，禁止其操作
+                item.disabled = true;
+            }
+
             // 资源
             // switch (item.resourceType) {
             //     case 0: //应用
@@ -294,6 +305,20 @@
         () => props.treeApiObj?.search?.params?.key,
         (searchKey) => {
             postSearchApi(searchKey);
+        }
+    );
+
+    watch(
+        () => props.defaultCheckedKeys,
+        (newDefaultCheckedKeys, oldDefaultCheckedKeys) => {
+            oldDefaultCheckedKeys?.map((item) => {
+                let node = y9TreeRef.value.getNode(item);
+                node.disabled = false;
+            });
+            newDefaultCheckedKeys?.map((item) => {
+                let node = y9TreeRef.value.getNode(item);
+                node.disabled = true;
+            });
         }
     );
 

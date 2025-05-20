@@ -47,7 +47,7 @@ export const searchByName = async (params) => {
         // url: 'http://127.0.0.1:4523/mock/891645/platform/api/rest/org/treeSearch',      // apifox - mock
         method: 'GET',
         cType: false,
-        params: { name: params.key, treeType: params.treeType }
+        params: { name: params.key, treeType: params.treeType, disabled: params.disabled }
     });
 };
 

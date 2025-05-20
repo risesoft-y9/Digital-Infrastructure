@@ -78,7 +78,7 @@
             },
             childLevel: {
                 api: getTreeItemById,
-                params: { treeType: 'tree_type_position', disabled: false }
+                params: { treeType: 'tree_type_position' }
             },
             search: {
                 api: searchByName,

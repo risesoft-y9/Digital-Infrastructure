@@ -153,6 +153,15 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
     }
 
     @Override
+    public List<String> listOrgUnitIdByRoleId(String roleId, Boolean negative) {
+        if (negative == null) {
+            return y9OrgBasesToRolesRepository.listOrgIdsByRoleId(roleId);
+        } else {
+            return y9OrgBasesToRolesRepository.listOrgIdsByRoleIdAndNegative(roleId, negative);
+        }
+    }
+
+    @Override
     @Transactional(readOnly = false)
     public List<Y9OrgBasesToRoles> addRolesForOrgUnit(String orgId, List<String> roleIds, Boolean negative) {
         List<Y9OrgBasesToRoles> mappingList = new ArrayList<>();

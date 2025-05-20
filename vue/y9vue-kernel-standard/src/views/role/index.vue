@@ -166,7 +166,7 @@
                                     @click="handlerClick('positive')"
                                 >
                                     <i class="ri-add-line"></i>
-                                    {{ $t('正权限人员') }}
+                                    {{ $t('正权限成员') }}
                                 </el-button>
                                 <el-button
                                     :size="fontSizeObj.buttonSize"
@@ -175,7 +175,7 @@
                                     @click="handlerClick('negative')"
                                 >
                                     <i class="ri-add-line"></i>
-                                    {{ $t('负权限人员') }}
+                                    {{ $t('负权限成员') }}
                                 </el-button>
                             </div>
                             <el-button
@@ -286,17 +286,17 @@
             @onNodeExpand="onNodeExpand"
         ></selectTree>
     </y9Dialog>
-    <!-- 正权限 负权限 -->
+    <!-- 正权限、负权限成员 -->
     <y9Dialog v-model:config="negativeConfigDialog">
         <selectTree
             ref="selectTreeRef"
-            :selectField="selectField"
+            :defaultCheckedKeys="selectTreeDefaultCheckedKeys"
             :treeApiObj="negativeTreeApiObj"
             checkStrictly
         ></selectTree>
     </y9Dialog>
     <!-- 资源授权 -->
-    <y9Dialog v-model:config="iconSourceConfigDialog">
+    <y9Dialog v-model:config="addAuthorizationConfigDialog">
         <y9Filter
             ref="resourceFilterRef"
             :filtersValueCallBack="sourceFiltersValueCallBack"
@@ -338,8 +338,9 @@
         <selectTree
             ref="resourceSelectTree"
             :selectField="selectResourceField"
+            :defaultCheckedKeys="resourceTreeDefaultCheckedKeys"
             :showHeader="false"
-            :treeApiObj="sourceTreeApiObj"
+            :treeApiObj="resourceTreeApiObj"
             checkStrictly
         ></selectTree>
     </y9Dialog>
@@ -355,6 +356,8 @@
         appRoleTree,
         deleteRoleById,
         getRelateResourceList,
+        listOrgUnitIdByRoleId,
+        listResourceIdByRoleId,
         removeAuthPermissionRecord,
         removeOrgUnits,
         roleTree,
@@ -367,7 +370,7 @@
         treeSelect
     } from '@/api/role/index';
     import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
-    import { resourceTreeRoot, treeSearch } from '@/api/resource/index';
+    import { appTreeRoot, resourceTreeRoot, treeSearch } from '@/api/resource/index';
     // 基本信息
     import BasicInfo from './comps/BasicInfo.vue';
     import SystemBasicInfo from '@/views/system/comps/BasicInfo.vue';
@@ -441,6 +444,11 @@
         }
     });
 
+    async function getResourceTreeDefaultCheckedKeys() {
+        let result = await listResourceIdByRoleId(currData.value.id, resourceOperationType.value);
+        resourceTreeDefaultCheckedKeys.value = result.data;
+    }
+
     //排序按钮点击时触发
     const onSort = (type) => {
         if (type === 'sort') {
@@ -454,7 +462,8 @@
                 title: computed(() => t('移动'))
             });
         } else if (type === 'resource') {
-            Object.assign(iconSourceConfigDialog.value, {
+            getResourceTreeDefaultCheckedKeys();
+            Object.assign(addAuthorizationConfigDialog.value, {
                 show: true,
                 title: computed(() => t('添加资源授权'))
             });
@@ -810,6 +819,8 @@
     let filterData = ref({} as any);
     // 树 ref
     const selectTreeRef = ref();
+    let selectTreeDefaultCheckedKeys = ref([]);
+
     // 表格 过滤条件
     const filterConfig = ref({
         filtersValueCallBack: (filters) => {
@@ -984,7 +995,9 @@
         width: '30%',
         onOk: () => {
             return new Promise(async (resolve, reject) => {
-                let ids = selectTreeRef.value?.y9TreeRef?.getCheckedKeys();
+                let checkedIds = selectTreeRef.value?.y9TreeRef?.getCheckedKeys();
+                // 只需要新选中的 id 数组
+                const ids = checkedIds.filter((item) => !selectTreeDefaultCheckedKeys.value.includes(item));
 
                 if (ids.length === 0) {
                     ElNotification({
@@ -1000,13 +1013,13 @@
 
                 let result;
 
-                if (negativeConfigDialog.value.title == computed(() => t('添加正权限人员')).value) {
+                if (negativeConfigDialog.value.title == computed(() => t('添加正权限成员')).value) {
                     await addOrgUnits(currData.value.id, ids.join(','), false)
                         .then((res) => {
                             result = res;
                         })
                         .catch(() => {});
-                } else if (negativeConfigDialog.value.title == computed(() => t('添加负权限人员')).value) {
+                } else if (negativeConfigDialog.value.title == computed(() => t('添加负权限成员')).value) {
                     await addOrgUnits(currData.value.id, ids.join(','), true)
                         .then((res) => {
                             result = res;
@@ -1032,11 +1045,15 @@
     });
 
     // 点击 添加正权限 添加负权限
-    function handlerClick(type) {
+    async function handlerClick(type) {
         if (type === 'positive') {
-            negativeConfigDialog.value.title = computed(() => t('添加正权限人员'));
+            let result = await listOrgUnitIdByRoleId(currData.value.id, false);
+            selectTreeDefaultCheckedKeys.value = result.data;
+            negativeConfigDialog.value.title = computed(() => t('添加正权限成员'));
         } else {
-            negativeConfigDialog.value.title = computed(() => t('添加负权限人员'));
+            let result = await listOrgUnitIdByRoleId(currData.value.id, true);
+            selectTreeDefaultCheckedKeys.value = result.data;
+            negativeConfigDialog.value.title = computed(() => t('添加负权限成员'));
         }
         negativeConfigDialog.value.show = true;
     }
@@ -1133,13 +1150,6 @@
         }
     ]);
 
-    // 选择树的选择 框
-    let selectField = [
-        {
-            fieldName: 'nodeType',
-            value: ['Person', 'Position', 'Organization', 'Department']
-        }
-    ];
     // 正权限  负权限 请求的tree接口
     let negativeTreeApiObj = ref({
         topLevel: treeInterface,
@@ -1155,7 +1165,8 @@
             //搜索接口及参数
             api: searchByName,
             params: {
-                treeType: 'tree_type_org'
+                treeType: 'tree_type_org',
+                disabled: false
             }
         }
     });
@@ -1165,16 +1176,24 @@
     // 资源授权的 操作权限
     let resourceOperationType = ref(1);
 
+    watch(resourceOperationType, (current, prev) => {
+        getResourceTreeDefaultCheckedKeys();
+    });
+
     const resourceSelectTree = ref();
+    let resourceTreeDefaultCheckedKeys = ref([]);
 
     // 资源授权  弹框
-    let iconSourceConfigDialog = ref({
+    let addAuthorizationConfigDialog = ref({
         show: false,
         title: computed(() => t('添加资源授权')),
         width: '45%',
         onOk: () => {
             return new Promise(async (resolve, reject) => {
-                let ids = resourceSelectTree.value?.y9TreeRef?.getCheckedKeys();
+                let checkedIds = resourceSelectTree.value?.y9TreeRef?.getCheckedKeys();
+                // 只需要新选中的 id 数组
+                const ids = checkedIds.filter((item) => !resourceTreeDefaultCheckedKeys.value.includes(item));
+
                 if (ids.length == 0) {
                     ElNotification({
                         title: t('失败'),
@@ -1279,9 +1298,9 @@
         }
     ];
     // 资源授权 请求的tree接口
-    let sourceTreeApiObj = ref({
+    let resourceTreeApiObj = ref({
         topLevel: async () => {
-            const res = await appRoleTree(currData.value.appId);
+            const res = await appTreeRoot(currData.value.appId);
             return res.data;
         },
         childLevel: {
@@ -1306,8 +1325,8 @@
     function onSearchKeyChange(searchVal) {
         clearTimeout(searchTimer);
         searchTimer = setTimeout(() => {
-            sourceTreeApiObj.value.search.params.key = searchVal;
-            sourceTreeApiObj.value.search.params.appId = currData.value.appId;
+            resourceTreeApiObj.value.search.params.key = searchVal;
+            resourceTreeApiObj.value.search.params.appId = currData.value.appId;
         }, 500);
     }
 </script>

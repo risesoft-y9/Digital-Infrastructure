@@ -134,4 +134,6 @@ public interface Y9OrgBasesToRolesService {
     void removeOrgBases(String roleId, List<String> orgIds);
 
     Page<Y9OrgBasesToRoles> page(Y9PageQuery pageQuery, String roleId, String unitName);
+
+    List<String> listOrgUnitIdByRoleId(String roleId, Boolean negative);
 }
