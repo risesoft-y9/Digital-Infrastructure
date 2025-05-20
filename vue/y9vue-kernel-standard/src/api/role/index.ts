@@ -117,6 +117,16 @@ export const searchByUnitName = async (page, size, roleId, unitName) => {
     });
 };
 
+// 根据角色 id，返回角色关联的机构节点 id 集合（用于添加授权树的选择回显）
+export const listOrgUnitIdByRoleId = async (roleId, negative) => {
+    return await roleRequest({
+        url: '/api/rest/orgBasesToRoles/listOrgUnitIdByRoleId',
+        method: 'GET',
+        cType: false,
+        params: { roleId: roleId, negative: negative }
+    });
+};
+
 // 添加组织机构节点 对此角色的映射
 export const addOrgUnits = async (roleNodeID, orgUnitIDs, negative) => {
     const params = {
@@ -181,6 +191,26 @@ export const saveOrUpdateRelateResource = async (params) => {
         method: 'POST',
         cType: false,
         data
+    });
+};
+
+// 根据角色id，返回授权的资源 id 集合（用于添加资源授权的资源树的选择回显）
+export const listResourceIdByRoleId = async (roleId, authority) => {
+    return await roleRequest({
+        url: '/api/rest/authorization/listResourceIdByRoleId',
+        method: 'GET',
+        cType: false,
+        params: { roleId: roleId, authority: authority }
+    });
+};
+
+// 根据资源 id，返回授权的角色 id 集合（用于添加资源授权的角色树的选择回显）
+export const listPrincipalIdByResourceId = async (resourceId, authority) => {
+    return await roleRequest({
+        url: '/api/rest/authorization/listPrincipalIdByResourceId',
+        method: 'GET',
+        cType: false,
+        params: { resourceId: resourceId, authority: authority }
     });
 };
 

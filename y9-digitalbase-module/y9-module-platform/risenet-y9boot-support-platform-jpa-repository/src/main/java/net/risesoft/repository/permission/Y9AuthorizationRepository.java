@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,4 +66,10 @@ public interface Y9AuthorizationRepository extends JpaRepository<Y9Authorization
     List<Y9Authorization> getByPrincipalIdIn(List<String> principalIds);
 
     List<Y9Authorization> findByResourceIdAndAuthority(String resourceId, AuthorityEnum authority);
+
+    @Query("select resourceId from Y9Authorization where principalId = ?1 and authority = ?2")
+    List<String> listResourceIdByPrincipleId(String principalId, AuthorityEnum authority);
+
+    @Query("select principalId from Y9Authorization where resourceId = ?1 and authority = ?2")
+    List<String> listRoleIdByResourceId(String resourceId, AuthorityEnum authority);
 }

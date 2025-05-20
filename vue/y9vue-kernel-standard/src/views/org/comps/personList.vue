@@ -149,7 +149,8 @@
             search: {
                 api: searchByName,
                 params: {
-                    treeType: 'tree_type_org'
+                    treeType: 'tree_type_org',
+                    disabled: false
                 }
             }
         },

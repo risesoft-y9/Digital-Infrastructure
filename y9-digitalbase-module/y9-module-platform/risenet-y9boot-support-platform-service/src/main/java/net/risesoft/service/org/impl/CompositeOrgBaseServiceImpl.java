@@ -656,7 +656,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
-    public List<Y9OrgBase> getTree4DeptManager(String id, OrgTreeTypeEnum treeType) {
+    public List<Y9OrgBase> getTree4DeptManager(String id, OrgTreeTypeEnum treeType, Boolean disabled) {
         Set<Y9OrgBase> orgBaseSet = new HashSet<>();
         Optional<Y9Department> managerDeptOptional = y9DepartmentManager.findById(Y9LoginUserHolder.getDeptId());
         if (managerDeptOptional.isPresent()) {
@@ -675,7 +675,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
                     orgBaseSet.remove(org);
                 }
             } else {
-                List<Y9Department> deptList = findDepartmentByParentId(id, Boolean.FALSE);
+                List<Y9Department> deptList = findDepartmentByParentId(id, disabled);
                 for (Y9Department dept : deptList) {
                     if (Y9OrgUtil.isSameOf(dept, managerDept) || Y9OrgUtil.isAncestorOf(dept, managerDept)) {
                         // 筛选当前管理员所在部门及祖先部门
@@ -689,23 +689,23 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
                     if (Y9OrgUtil.isSameOf(y9Department, managerDept)
                         || Y9OrgUtil.isDescendantOf(y9Department, managerDept)) {
 
-                        orgBaseSet.addAll(findDepartmentByParentId(id, Boolean.FALSE));
+                        orgBaseSet.addAll(findDepartmentByParentId(id, disabled));
 
                         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG)
                             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_GROUP)
                             || OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON.equals(treeType)) {
-                            orgBaseSet.addAll(findGroupByParentId(id, Boolean.FALSE));
+                            orgBaseSet.addAll(findGroupByParentId(id, disabled));
                         }
 
                         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG)
                             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_POSITION)) {
-                            orgBaseSet.addAll(findPositionByParentId(id, Boolean.FALSE));
+                            orgBaseSet.addAll(findPositionByParentId(id, disabled));
                         }
 
                         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG)
                             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_PERSON)
                             || OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON.equals(treeType)) {
-                            orgBaseSet.addAll(findPersonByParentId(id, Boolean.FALSE));
+                            orgBaseSet.addAll(findPersonByParentId(id, disabled));
                         }
                     }
                 }
@@ -1035,9 +1035,9 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
-    public List<Y9OrgBase> treeSearch4DeptManager(String name, OrgTreeTypeEnum treeType) {
+    public List<Y9OrgBase> treeSearch4DeptManager(String name, OrgTreeTypeEnum treeType, Boolean disabled) {
         Y9Department y9Department = y9DepartmentManager.getById(Y9LoginUserHolder.getDeptId());
-        return treeSearch(name, treeType, y9Department.getDn(), Boolean.FALSE);
+        return treeSearch(name, treeType, y9Department.getDn(), disabled);
     }
 
     @Override

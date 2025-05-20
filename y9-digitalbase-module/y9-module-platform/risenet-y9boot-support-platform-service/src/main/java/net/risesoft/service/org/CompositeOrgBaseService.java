@@ -175,9 +175,10 @@ public interface CompositeOrgBaseService {
      *
      * @param id 组织节点id
      * @param treeType 树类型
+     * @param disabled 是否禁用
      * @return {@code List<Y9OrgBase>}
      */
-    List<Y9OrgBase> getTree4DeptManager(String id, OrgTreeTypeEnum treeType);
+    List<Y9OrgBase> getTree4DeptManager(String id, OrgTreeTypeEnum treeType, Boolean disabled);
 
     /**
      * 根据父节点id，获取子节点下的所有人员，包括用户组和岗位下的人员
@@ -284,9 +285,10 @@ public interface CompositeOrgBaseService {
      *
      * @param name 组织节点名称
      * @param treeType 树类型{@link OrgTreeTypeEnum}
+     * @param disabled 是否禁用
      * @return {@code List<Y9OrgBase>}
      */
-    List<Y9OrgBase> treeSearch4DeptManager(String name, OrgTreeTypeEnum treeType);
+    List<Y9OrgBase> treeSearch4DeptManager(String name, OrgTreeTypeEnum treeType, Boolean disabled);
 
     /**
      * 列出所有祖先节点

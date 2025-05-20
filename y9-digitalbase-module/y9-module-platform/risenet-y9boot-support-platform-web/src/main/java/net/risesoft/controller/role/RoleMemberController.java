@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotEmpty;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -132,6 +133,15 @@ public class RoleMemberController {
             }
         }
         return Y9Result.success(memberList, "获取数据成功");
+    }
+
+    @RiseLog(operationName = "根据角色id，返回角色关联的机构节点 id 集合（用于添加角色成员的组织架构树的选择回显）")
+    @GetMapping(value = "/listOrgUnitIdByRoleId")
+    public Y9Result<List<String>> listOrgUnitIdByRoleId(@RequestParam @NotBlank String roleId,
+        @RequestParam(required = false) Boolean negative) {
+        List<String> orgUnitIdList = y9OrgBasesToRolesService.listOrgUnitIdByRoleId(roleId, negative);
+
+        return Y9Result.success(orgUnitIdList, "获取数据成功");
     }
 
     /**

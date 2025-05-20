@@ -164,4 +164,8 @@ public interface Y9AuthorizationService {
      * @return {@code List<Y9Authorization> }
      */
     List<Y9Authorization> listInheritByPrincipalTypeIsOrgUnitAndResourceId(String resourceId);
+
+    List<String> listResourceIdByPrincipleId(String roleId, AuthorityEnum authority);
+
+    List<String> listPrincipalIdByResourceId(String resourceId, AuthorityEnum authority);
 }

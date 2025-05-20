@@ -92,7 +92,7 @@ public class ResourceController {
      */
     @RiseLog(operationName = "查询所有的根资源（有权限的App资源）")
     @GetMapping(value = "/treeRoot2")
-    public Y9Result<List<ResourceTreeNodeVO>> rootTree2() {
+    public Y9Result<List<ResourceTreeNodeVO>> treeRoot2() {
         List<Y9App> appResourceList = compositeResourceService.listRootResourceList();
         List<Y9App> accessibleAppResourceList;
 
@@ -185,9 +185,9 @@ public class ResourceController {
      */
     @RiseLog(operationName = "根据应用id查询资源（App资源）")
     @GetMapping(value = "/appTreeRoot/{appId}")
-    public Y9Result<List<ResourceBaseVO>> treeRootByAppId(@PathVariable @NotBlank String appId) {
+    public Y9Result<List<ResourceTreeNodeVO>> treeRootByAppId(@PathVariable @NotBlank String appId) {
         Y9App y9App = y9AppService.getById(appId);
-        return Y9Result.success(Y9ModelConvertUtil.convert(Collections.singletonList(y9App), ResourceBaseVO.class),
+        return Y9Result.success(ResourceTreeNodeVO.convertY9ResourceBaseList(Collections.singletonList(y9App)),
             "根据应用id查询资源成功");
     }
 
