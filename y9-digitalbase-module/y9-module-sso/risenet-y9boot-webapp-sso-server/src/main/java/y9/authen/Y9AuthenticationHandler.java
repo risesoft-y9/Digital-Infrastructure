@@ -1,9 +1,15 @@
 package y9.authen;
 
-import com.google.common.collect.Lists;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.security.auth.login.AccountNotFoundException;
+import javax.security.auth.login.FailedLoginException;
+
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.authentication.AbstractAuthenticationHandler;
 import org.apereo.cas.authentication.AuthenticationHandlerExecutionResult;
@@ -13,6 +19,14 @@ import org.apereo.cas.authentication.credential.UsernamePasswordCredential;
 import org.apereo.cas.authentication.principal.PrincipalFactoryUtils;
 import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.services.ServicesManager;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import com.google.common.collect.Lists;
+
+import lombok.val;
+import lombok.extern.slf4j.Slf4j;
+
 import y9.entity.Y9User;
 import y9.service.Y9LoginUserService;
 import y9.service.Y9UserService;
@@ -20,44 +34,77 @@ import y9.util.Y9Context;
 import y9.util.Y9MessageDigest;
 import y9.util.common.AESUtil;
 import y9.util.common.RSAUtil;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.security.auth.login.AccountNotFoundException;
-import javax.security.auth.login.FailedLoginException;
-import java.util.*;
 
 @Slf4j
 public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
     private final Y9UserService y9UserService;
     private final Y9LoginUserService y9LoginUserService;
 
-    public Y9AuthenticationHandler(String name, ServicesManager servicesManager,
-                                   Integer order, Y9UserService y9UserService, Y9LoginUserService y9LoginUserService) {
+    public Y9AuthenticationHandler(String name, ServicesManager servicesManager, Integer order,
+        Y9UserService y9UserService, Y9LoginUserService y9LoginUserService) {
         super(name, servicesManager, PrincipalFactoryUtils.newPrincipalFactory(), order);
         this.y9UserService = y9UserService;
         this.y9LoginUserService = y9LoginUserService;
     }
 
+    private static void updateCredential(HttpServletRequest request, UsernamePasswordCredential riseCredential,
+        String username, String password, String tenantShortName) {
+        riseCredential.setUsername(username);
+        riseCredential.assignPassword(password);
+        Map<String, Object> customFields = riseCredential.getCustomFields();
+        if (StringUtils.isNotBlank(tenantShortName)) {
+            customFields.put("tenantShortName", tenantShortName);
+        }
+        String systemName = request.getParameter("systemName");
+        if (StringUtils.isNotBlank(systemName)) {
+            customFields.put("systemName", systemName);
+        }
+        String loginType = request.getParameter("loginType");
+        if (StringUtils.isNotBlank(loginType)) {
+            customFields.put("loginType", loginType);
+        }
+        String deptId = request.getParameter("deptId");
+        if (StringUtils.isNotBlank(deptId)) {
+            customFields.put("deptId", deptId);
+        }
+        String pwdEcodeType = request.getParameter("pwdEcodeType");
+        if (StringUtils.isNotBlank(pwdEcodeType)) {
+            customFields.put("pwdEcodeType", pwdEcodeType);
+        }
+        String positionId = request.getParameter("positionId");
+        if (StringUtils.isNotBlank(positionId)) {
+            customFields.put("positionId", positionId);
+        }
+        String screenDimension = request.getParameter("screenDimension");
+        if (StringUtils.isNotBlank(screenDimension)) {
+            customFields.put("screenDimension", screenDimension);
+        }
+
+        customFields.put("userAgent", request.getHeader("User-Agent"));
+        customFields.put("userHostIP", Y9Context.getIpAddr(request));
+        riseCredential.setCustomFields(customFields);
+    }
+
     @Override
     public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service) throws Throwable {
-        //isValidateIE screenDimension userAgent clientIp clientMac clientDiskId clientHostName  noLoginScreen
-        UsernamePasswordCredential riseCredential = (UsernamePasswordCredential) credential;
+        // isValidateIE screenDimension userAgent clientIp clientMac clientDiskId clientHostName noLoginScreen
+        UsernamePasswordCredential riseCredential = (UsernamePasswordCredential)credential;
         /*Map<String, Object> customFields = riseCredential.getCustomFields();
         String loginType = (String) customFields.get("loginType");
         String tenantShortName = (String) customFields.get("tenantShortName");
         String deptId = (String) customFields.get("deptId");
         String rsaPublicKey = (String) customFields.get("rsaPublicKey");*/
 
-        //HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext();
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        // HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext();
+        HttpServletRequest request =
+            ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
         String loginType = request.getParameter("loginType");
         String tenantShortName = request.getParameter("tenantShortName");
         String positionId = request.getParameter("positionId");
         String deptId = request.getParameter("deptId");
         String systemName = request.getParameter("systemName");
         String screenDimension = request.getParameter("screenDimension");
-        //String rsaPublicKey = request.getParameter("rsaPublicKey");
+        // String rsaPublicKey = request.getParameter("rsaPublicKey");
 
         Map<String, Object> customFields = new LinkedHashMap<>();
         customFields.put("tenantShortName", tenantShortName);
@@ -102,7 +149,8 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
                     throw new AccountNotFoundException("没有找到这个用户。");
                 } else if ("qrCode".equals(loginType)) {
                     y9User = users.getFirst();
-                    updateCredential(request, riseCredential, y9User.getLoginName(), y9User.getPassword(), y9User.getTenantShortName());
+                    updateCredential(request, riseCredential, y9User.getLoginName(), y9User.getPassword(),
+                        y9User.getTenantShortName());
                 } else {
                     y9User = users.getFirst();
                     String hashed = y9User.getPassword();
@@ -124,52 +172,12 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
 
     }
 
-    private static void updateCredential(HttpServletRequest request,
-                                         UsernamePasswordCredential riseCredential,
-                                         String username,
-                                         String password,
-                                         String tenantShortName) {
-        riseCredential.setUsername(username);
-        riseCredential.assignPassword(password);
-        Map<String, Object> customFields = riseCredential.getCustomFields();
-        if (StringUtils.isNotBlank(tenantShortName)) {
-            customFields.put("tenantShortName", tenantShortName);
-        }
-        String systemName = request.getParameter("systemName");
-        if (StringUtils.isNotBlank(systemName)) {
-            customFields.put("systemName", systemName);
-        }
-        String loginType = request.getParameter("loginType");
-        if (StringUtils.isNotBlank(loginType)) {
-            customFields.put("loginType", loginType);
-        }
-        String deptId = request.getParameter("deptId");
-        if (StringUtils.isNotBlank(deptId)) {
-            customFields.put("deptId", deptId);
-        }
-        String pwdEcodeType = request.getParameter("pwdEcodeType");
-        if (StringUtils.isNotBlank(pwdEcodeType)) {
-            customFields.put("pwdEcodeType", pwdEcodeType);
-        }
-        String positionId = request.getParameter("positionId");
-        if (StringUtils.isNotBlank(positionId)) {
-            customFields.put("positionId", positionId);
-        }
-        String screenDimension = request.getParameter("screenDimension");
-        if (StringUtils.isNotBlank(screenDimension)) {
-            customFields.put("screenDimension", screenDimension);
-        }
-
-        customFields.put("userAgent", request.getHeader("User-Agent"));
-        customFields.put("clientIp", Y9Context.getIpAddr(request));
-        riseCredential.setCustomFields(customFields);
-    }
-
     private List<Y9User> getAgentUsers(String deptId, String agentTenantShortName, String agentUserName) {
         if (StringUtils.isNotBlank(deptId)) {
             return y9UserService.findByTenantShortNameAndMobileAndParentId(agentTenantShortName, agentUserName, deptId);
         } else {
-            return y9UserService.findByTenantShortNameAndLoginNameAndOriginal(agentTenantShortName, agentUserName, Boolean.TRUE);
+            return y9UserService.findByTenantShortNameAndLoginNameAndOriginal(agentTenantShortName, agentUserName,
+                Boolean.TRUE);
         }
     }
 
@@ -186,7 +194,8 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
             if (StringUtils.isNotBlank(deptId)) {
                 return y9UserService.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, username, deptId);
             } else {
-                return y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username, Boolean.TRUE);
+                return y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username,
+                    Boolean.TRUE);
             }
         }
 
@@ -210,10 +219,10 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
     protected Map<String, List<Object>> buildAttributes(UsernamePasswordCredential riseCredential, Y9User y9User) {
         String username = riseCredential.getUsername();
         Map<String, Object> customFields = riseCredential.getCustomFields();
-        String tenantShortName = (String) customFields.get("tenantShortName");
-        String deptId = (String) customFields.get("deptId");
-        String positionId = (String) customFields.get("positionId");
-        String loginType = (String) customFields.get("loginType");
+        String tenantShortName = (String)customFields.get("tenantShortName");
+        String deptId = (String)customFields.get("deptId");
+        String positionId = (String)customFields.get("positionId");
+        String loginType = (String)customFields.get("loginType");
 
         val attributes = new HashMap<String, List<Object>>();
         attributes.put("tenantId", toArrayList(y9User.getTenantId()));
@@ -236,9 +245,10 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         attributes.put("personType", toArrayList(y9User.getPersonType()));
 
         attributes.put("password", toArrayList(y9User.getPassword()));
-        attributes.put("original", Lists.newArrayList(y9User.getOriginal() == null ? true : y9User.getOriginal()));
+        attributes.put("original", Lists.newArrayList(y9User.getOriginal() == null || y9User.getOriginal()));
         attributes.put("originalId", toArrayList(y9User.getOriginalId()));
-        attributes.put("globalManager", Lists.newArrayList(y9User.getGlobalManager() == null ? false : y9User.getGlobalManager()));
+        attributes.put("globalManager",
+            Lists.newArrayList(y9User.getGlobalManager() != null && y9User.getGlobalManager()));
         attributes.put("managerLevel", toArrayList(y9User.getManagerLevel()));
         attributes.put("positions", toArrayList(y9User.getPositions()));
 
@@ -268,7 +278,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
     }
 
     private List<Object> toArrayList(Integer num) {
-        return Lists.newArrayList(num == null? 0 : num);
+        return Lists.newArrayList(num == null ? 0 : num);
     }
 
     @Override
