@@ -67,6 +67,14 @@
                 <div class="login_dev login_fields__submit ">
                     <input type="button" value="登录"/>
                 </div>
+                <div class="login_dev login_fields_remember_password ">
+                    <!-- <input class="chk left" id="checkbox1" type="checkbox"/>
+                     <label class="left" for="checkbox1"></label>
+                     <span class="left">记住密码</span>-->
+
+                    <input id="checkbox1" name="my-checkbox" type="checkbox"/>
+                    <label for="checkbox1">记住密码</label>
+                </div>
             </form>
         </div>
         <div></div>
@@ -86,10 +94,8 @@
 </div>
 <!--<div class="bg_top_right"></div>-->
 <script type="text/javascript">
-    var ctx = "sso";
-    var canGetCookie = 1; //是否支持存储Cookie 0 不支持 1 支持
-    var ajaxmockjax = 1; //是否启用虚拟Ajax的请求响 0 不启用  1 启用
-    var inputTimer = null;
+    //var ctx = "[(${contextPath})]";
+    var ctx = "/sso";
 
     document.addEventListener("keydown", function (event) {
         console.log(11111);
@@ -111,6 +117,7 @@
 
     $(function () {
         screenSize();
+        initFormIfRemember();
     });
 
     function screenSize() {
@@ -120,38 +127,19 @@
         } catch (e) {
         }
     }
-    
-    function beep(freq = 660, duration = 90, vol = 50) {
-        var context = new(window.AudioContext || window.webkitAudioContext);
-        const oscillator = context.createOscillator();
-        const gain = context.createGain();
-        gain.gain.setValueAtTime(0, context.currentTime);
-        gain.gain.linearRampToValueAtTime(1, context.currentTime + 0.002);
-        oscillator.connect(gain);
-        oscillator.frequency.value = freq;
-        oscillator.type = "square";
-        gain.connect(context.destination);
-        oscillator.start(context.currentTime);
-        oscillator.stop(context.currentTime + duration * .001);
-        oscillator.onended = () => context.close();
+
+    function initFormIfRemember() {
+        if ($.cookie("username") != null) {
+            var username = $.cookie("username");
+            var password = $.cookie("password");
+            $("#username").val(decode64(username));
+            $("#password").val(decode64(password));
+            $("#checkbox1").attr("checked", "checked");
+        }
     }
 
     function inputOnBlur() {
         $("#username1").val($("#username").val());
-    }
-
-    function mouseClickEvent() {
-        $("#tenantShortName").val(this.id);
-        var userName = this.innerText;
-        $("#username").val(userName);
-        if ($.trim(userName).length > 0 && userName.indexOf("@") != -1) {
-            $("#username1").val(userName.split("@")[0]);
-        }
-        $("#toolTipsUl").empty();
-        $(".toolTips").attr({
-            style: "display: none;"
-        });
-        $("#password").focus();
     }
 
     $(document).keydown(function (e) {
@@ -190,34 +178,6 @@
             }
         }
     });
-
-    function enterEvent() {
-        let shoseEvent = false;
-        $("#toolTipsUl").children().length
-        && $("#toolTipsUl li").each(
-            function (index, element) {
-                if (this.className.includes("active")) {
-                    shoseEvent = true;
-                    $("#tenantShortName").val(this.id);
-                    var userName = this.innerText;
-                    $("#username").val(userName);
-                    if ($.trim(userName).length > 0
-                        && userName.indexOf("@") != -1) {
-                        $("#username1").val(
-                            userName.split("@")[0]);
-                    }
-                    $("#toolTipsUl").empty();
-                    $(".toolTips").attr({
-                        style: "display: none;"
-                    });
-                    $("#password").focus();
-                    return true;
-                }
-            });
-        if (!shoseEvent) {
-            $('input[type="button"]').click();
-        }
-    }
 
     var open = 0;
     layui.use("layer", function () {
@@ -267,6 +227,24 @@
                     var password = $("#password").val();
                     var rsaPublicKey = $('#rsaPublicKey').val();
 
+                    if ($("#checkbox1").prop("checked")) {
+                        $.cookie("username", null);
+                        $.cookie("username", encode64(username), {
+                            expires: 365
+                        });
+                        $.cookie("password", null);
+                        $.cookie("password", encode64(password), {
+                            expires: 365
+                        });
+                    } else {
+                        $.cookie("username", null, {
+                            expires: 365
+                        });
+                        $.cookie("password", null, {
+                            expires: 365
+                        });
+                    }
+
                     //var encodeUsername = encode64(username);
                     //var encodePassword = encode64(password);
                     var encryptedUserName=encrypt(rsaPublicKey,username);
@@ -282,26 +260,12 @@
             }
         });
     });
-    //全屏
-    var fullscreen = function () {
-        elem = document.body;
-        if (elem.webkitRequestFullScreen) {
-            elem.webkitRequestFullScreen();
-        } else if (elem.mozRequestFullScreen) {
-            elem.mozRequestFullScreen();
-        } else if (elem.requestFullScreen) {
-            elem.requestFullscreen();
-        } else {
-            //浏览器不支持全屏API或已被禁用
-        }
-    };
 
     //加密
     function encrypt(publicKey, pwd) {
         var encrypt = new JSEncrypt();
         encrypt.setPublicKey(publicKey);
-        var encrypted = encrypt.encrypt(pwd);
-        return encrypted;
+        return encrypt.encrypt(pwd);
     }
 </script>
 </body>
