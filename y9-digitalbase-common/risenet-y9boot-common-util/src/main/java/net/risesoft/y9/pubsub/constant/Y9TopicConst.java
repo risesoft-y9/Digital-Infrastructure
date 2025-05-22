@@ -17,6 +17,9 @@ public class Y9TopicConst {
 
     public static final String Y9_USERONLINE_MESSAGE = "y9_userOnline_message";
     public static final String Y9_ACCESSLOG_MESSAGE = "y9_accessLog_message";
+
+    public static final String Y9_ACCESSLOG_MESSAGE_FLOWABLE = "y9_accessLog_message_flowable";
+
     public static final String Y9_USERLOGININFO_MESSAGE = "y9_userLoginInfo_message";
 
     public static final String Y9_DATACOPY_MESSAGE = "y9_dataCopy_message";
