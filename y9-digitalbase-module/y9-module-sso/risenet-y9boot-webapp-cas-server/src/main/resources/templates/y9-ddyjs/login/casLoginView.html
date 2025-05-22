@@ -14,8 +14,8 @@
     <link rel="shortcut icon" th:href="@{/y9static/y9-ddyjs/img/logo-1.svg}" type="image/x-icon"/>
     <link rel="stylesheet" th:href="@{/y9static/js/layui/css/layui.css}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/default.css}" type="text/css"/>
-    <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/styles.css?v=1.5}" type="text/css"/>
-    <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/mediaIndex.css?v=1.5}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/styles.css?v=1.1}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/mediaIndex.css}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/loaders.css}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/layerMsg.css}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/verify.css}" type="text/css"/>
@@ -28,40 +28,35 @@
 </head>
 <body>
 <div class="logo">
-    <!--<img th:src="@{/y9static/y9-ddyjs/img/logotitle.png}"/>-->
+    <img th:src="@{/y9static/y9-ddyjs/img/logotitle.png}"/>
 </div>
 <div class="login layui-row">
     <div class="layui-col-xs12 login_form" id="tunnel">
-        <div class="login_title">OA<span class="tilte">办公平台</span></div>
+        <div class="login_title">用&nbsp;户&nbsp;登&nbsp;录</div>
         <div class="login_fields">
             <form id="fm1" method="post" th:object="${credential}">
                 <div class="login_dev login_fields__user ">
                     <div class="form-label">用户名</div>
                     <input autocomplete="off" id="username" onBlur="inputOnBlur();" placeholder=" "
                            tabindex="1" type="text" value=""/>
-                    <input autocomplete="false" htmlescape="true" id="username1" name="username"
-                           style="width: 150px;" type="hidden"/>
-                    <input autocomplete="false" htmlescape="true" id="tenantShortName" name="tenantShortName"
-                           style="width: 150px" type="hidden" value="default"/>
                     <div class="validation">
                         <img alt="" th:src="@{/y9static/y9new/img/tick.png}"/>
                     </div>
                 </div>
                 <div class="login_dev login_fields__password">
                     <div class="form-label">密&nbsp;&nbsp;&nbsp;码</div>
-                    <input autocomplete="off" htmlescape="true" id="password" onfocus="this.type='password'"
+                    <input autocomplete="off" htmlescape="true" id="password"
                            placeholder=" " tabindex="2" type="password"/>
-                    <input autocomplete="off" htmlescape="true" id="password1" name="password" type="hidden"/>
-
                     <div class="validation"><img alt="" th:src="@{/y9static/y9-ddyjs/img/tick.png}"/></div>
                 </div>
                 <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
                     登录失败：<span th:each="err : ${#fields.errors('*')}" th:utext="${err}"/>
                 </div>
                 <!-- 表单隐藏数据块开始 -->
+                <input type="hidden" id="username1" name="username"/>
+                <input type="hidden" id="password1" name="password"/>
+                <input type="hidden" id="tenantShortName" name="tenantShortName" value="default"/>
                 <input id="loginType" name="loginType" type="hidden" value="loginName"/>
-                <input id="captchaKey" name="captchaKey" type="hidden" value=""/>
-                <input id="noLoginScreen" name="noLoginScreen" type="hidden" value="false"/>
                 <input id="screenDimension" name="screenDimension" type="hidden" value=""/>
                 <input id="rsaPublicKey" name="rsaPublicKey" type="hidden" value=""/>
                 <input name="execution" th:value="${flowExecutionKey}" type="hidden"/>
@@ -69,20 +64,17 @@
                 <input name="geolocation" type="hidden"/>
                 <!-- 表单隐藏数据块结束 -->
 
-                <div class="login_dev   ">
-                    <div class="  login_fields_remember_password ">
-                        <!-- <input class="chk left" id="checkbox1" type="checkbox"/>
-                         <label class="left" for="checkbox1"></label>
-                         <span class="left">记住密码</span>-->
-
-                        <input id="checkbox1" name="my-checkbox" type="checkbox"/>
-                        <label for="checkbox1">记住密码</label>
-                    </div>
-                    <div class="  login_fields__submit ">
-                        <input type="button" value="登录"/>
-                    </div>
+                <div class="login_dev login_fields__submit ">
+                    <input type="button" value="登录"/>
                 </div>
+                <div class="login_dev login_fields_remember_password ">
+                    <!-- <input class="chk left" id="checkbox1" type="checkbox"/>
+                     <label class="left" for="checkbox1"></label>
+                     <span class="left">记住密码</span>-->
 
+                    <input id="checkbox1" name="my-checkbox" type="checkbox"/>
+                    <label for="checkbox1">记住密码</label>
+                </div>
             </form>
         </div>
         <div></div>
@@ -102,10 +94,8 @@
 </div>
 <!--<div class="bg_top_right"></div>-->
 <script type="text/javascript">
-    var ctx = "[(${contextPath})]";
-    var canGetCookie = 1; //是否支持存储Cookie 0 不支持 1 支持
-    var ajaxmockjax = 1; //是否启用虚拟Ajax的请求响 0 不启用  1 启用
-    var inputTimer = null;
+    //var ctx = "[(${contextPath})]";
+    var ctx = "/sso";
 
     document.addEventListener("keydown", function (event) {
         console.log(11111);
@@ -126,11 +116,11 @@
     });
 
     $(function () {
-        validateIE();
+        screenSize();
         initFormIfRemember();
     });
 
-    function validateIE() {
+    function screenSize() {
         try {
             $("#screenDimension").val(
                 window.screen.width + "*" + window.screen.height);
@@ -138,22 +128,18 @@
         }
     }
 
-    function inputOnBlur() {
-        $("#username1").val($("#username").val());
+    function initFormIfRemember() {
+        if ($.cookie("username") != null) {
+            var username = $.cookie("username");
+            var password = $.cookie("password");
+            $("#username").val(decode64(username));
+            $("#password").val(decode64(password));
+            $("#checkbox1").attr("checked", "checked");
+        }
     }
 
-    function mouseClickEvent() {
-        $("#tenantShortName").val(this.id);
-        var userName = this.innerText;
-        $("#username").val(userName);
-        if ($.trim(userName).length > 0 && userName.indexOf("@") != -1) {
-            $("#username1").val(userName.split("@")[0]);
-        }
-        $("#toolTipsUl").empty();
-        $(".toolTips").attr({
-            style: "display: none;"
-        });
-        $("#password").focus();
+    function inputOnBlur() {
+        $("#username1").val($("#username").val());
     }
 
     $(document).keydown(function (e) {
@@ -192,46 +178,6 @@
             }
         }
     });
-
-    function enterEvent() {
-        let shoseEvent = false;
-        $("#toolTipsUl").children().length
-        && $("#toolTipsUl li").each(
-            function (index, element) {
-                if (this.className.includes("active")) {
-                    shoseEvent = true;
-                    $("#tenantShortName").val(this.id);
-                    var userName = this.innerText;
-                    $("#username").val(userName);
-                    if ($.trim(userName).length > 0
-                        && userName.indexOf("@") != -1) {
-                        $("#username1").val(
-                            userName.split("@")[0]);
-                    }
-                    $("#toolTipsUl").empty();
-                    $(".toolTips").attr({
-                        style: "display: none;"
-                    });
-                    $("#password").focus();
-                    return true;
-                }
-            });
-        if (!shoseEvent) {
-            $('input[type="button"]').click();
-        }
-    }
-
-    function initFormIfRemember() {
-        if ($.cookie("username") != null) {
-            var username = $.cookie("username");
-            var password = $.cookie("password");
-            $("#username").val(decode64(username));
-            $("#username1").val(username);
-            $("#password").val(decode64(password));
-            $("#password1").val(password);
-            $("#checkbox1").attr("checked", "checked");
-        }
-    }
 
     var open = 0;
     layui.use("layer", function () {
@@ -281,19 +227,13 @@
                     var password = $("#password").val();
                     var rsaPublicKey = $('#rsaPublicKey').val();
 
-                    var encodeUserName = encode64(username);
-                    var encodePassword = encode64(password);
-                    var rsapwd = encrypt(rsaPublicKey, encodePassword);
-                    $("#username1").val(encodeUserName);
-                    $("#password1").val(rsapwd);
-
                     if ($("#checkbox1").prop("checked")) {
                         $.cookie("username", null);
-                        $.cookie("username", encodeUserName, {
+                        $.cookie("username", encode64(username), {
                             expires: 365
                         });
                         $.cookie("password", null);
-                        $.cookie("password", encodePassword, {
+                        $.cookie("password", encode64(password), {
                             expires: 365
                         });
                     } else {
@@ -305,6 +245,12 @@
                         });
                     }
 
+                    //var encodeUsername = encode64(username);
+                    //var encodePassword = encode64(password);
+                    var encryptedUserName=encrypt(rsaPublicKey,username);
+                    var encryptedPassword=encrypt(rsaPublicKey,password);
+                    $("#username1").val(encryptedUserName);
+                    $("#password1").val(encryptedPassword);
                     $("#fm1").submit();
                 }).fail(function () {
                     option.type = "warn";
@@ -314,26 +260,12 @@
             }
         });
     });
-    //全屏
-    var fullscreen = function () {
-        elem = document.body;
-        if (elem.webkitRequestFullScreen) {
-            elem.webkitRequestFullScreen();
-        } else if (elem.mozRequestFullScreen) {
-            elem.mozRequestFullScreen();
-        } else if (elem.requestFullScreen) {
-            elem.requestFullscreen();
-        } else {
-            //浏览器不支持全屏API或已被禁用
-        }
-    };
 
     //加密
     function encrypt(publicKey, pwd) {
         var encrypt = new JSEncrypt();
         encrypt.setPublicKey(publicKey);
-        var encrypted = encrypt.encrypt(pwd);
-        return encrypted;
+        return encrypt.encrypt(pwd);
     }
 </script>
 </body>

@@ -358,9 +358,9 @@ $('#mpanel6').pointsVerify({
 
         var username = $("#username1").val();
         var password = $("#password").val();
-        var rsaPublicKey = $('#rsaPublicKey').val();
-
-        //var encodeUserName = encode64(username);
+        var rsaPublicKey=$('#rsaPublicKey').val();
+        
+        //var encodeUsername = encode64(username);
         //var encodePassword = encode64(password);
         var encryptedUserName=encrypt(rsaPublicKey,username);
         var encryptedPassword=encrypt(rsaPublicKey,password);

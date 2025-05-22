@@ -1,8 +1,10 @@
 package y9.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,5 +54,8 @@ public interface Y9UserRepository extends JpaRepository<Y9User, String> {
     List<Y9User> findByTenantNameAndLoginNameAndOriginal(String tenantName, String loginName, Boolean original);
 
     List<Y9User> findByPersonIdAndOriginal(String personId, Boolean original);
+
+    @Query("select distinct u.tenantShortName as tenantShortName, u.tenantName as tenantName from Y9User u")
+    List<Map<String, String>> listAllTenants();
 
 }
