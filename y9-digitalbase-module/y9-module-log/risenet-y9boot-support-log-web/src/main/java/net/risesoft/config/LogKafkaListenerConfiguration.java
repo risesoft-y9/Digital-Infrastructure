@@ -12,8 +12,10 @@ import org.springframework.kafka.core.ProducerFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.kafka.Y9AccessLogListener;
+import net.risesoft.kafka.Y9FlowableAccessLogListener;
 import net.risesoft.kafka.Y9UserLoginInfoListener;
 import net.risesoft.y9public.service.Y9logAccessLogService;
+import net.risesoft.y9public.service.Y9logFlowableAccessLogService;
 import net.risesoft.y9public.service.Y9logIpDeptMappingService;
 import net.risesoft.y9public.service.Y9logUserHostIpInfoService;
 import net.risesoft.y9public.service.Y9logUserLoginInfoService;
@@ -30,8 +32,15 @@ public class LogKafkaListenerConfiguration {
         return new Y9AccessLogListener(y9logAccessLogService);
     }
 
-    @Bean("y9KafkaTemplate")
+    @Bean
+    public Y9FlowableAccessLogListener
+        y9FlowableAccessLogListener(final Y9logFlowableAccessLogService y9logFlowableAccessLogService) {
+        LOGGER.info("LogKafkaConfiguration y9FlowableAccessLogListener init ......");
+        return new Y9FlowableAccessLogListener(y9logFlowableAccessLogService);
+    }
+
     @Primary
+    @Bean("y9KafkaTemplate")
     @ConditionalOnMissingBean(name = "y9KafkaTemplate")
     public KafkaTemplate<?, ?> y9KafkaTemplate(ProducerFactory<Object, Object> kafkaProducerFactory) {
         LOGGER.info("LogKafkaConfiguration y9KafkaTemplate init ......");

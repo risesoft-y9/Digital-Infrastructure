@@ -9,6 +9,8 @@ package net.risesoft.log.constant;
 public class Y9ESIndexConst {
     public static final String ACCESS_LOG_INDEX = "logindex";
 
+    public static final String FLOWABLE_ACCESS_LOG_INDEX = "flowable_log_index";
+
     public static final String IP_DEPT_MAPPING_INDEX = "ipdeptmapping";
 
     public static final String USERIP_INFO_INDEX = "userhostipinfo";

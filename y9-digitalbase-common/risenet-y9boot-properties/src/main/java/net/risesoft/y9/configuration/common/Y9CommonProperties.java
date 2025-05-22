@@ -21,7 +21,7 @@ public class Y9CommonProperties {
     /**
      * 是否启用 kafka
      */
-    private boolean kafkaEnabled = false;// 是否启用Kafka
+    private boolean kafkaEnabled = false;
 
     /**
      * 默认应用程序图标
