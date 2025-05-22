@@ -5,12 +5,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
+import org.apache.axis2.addressing.EndpointReference;
+import org.apache.axis2.client.Options;
+import org.apache.axis2.rpc.client.RPCServiceClient;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
@@ -42,10 +46,6 @@ import net.risesoft.y9.json.Y9JsonUtil;
 
 import cn.hutool.json.JSONObject;
 
-import javax.xml.namespace.QName;
-import org.apache.axis.client.Call;
-import org.apache.axis.client.Service;
-
 /**
  * 远程调用工具类
  *
@@ -56,27 +56,11 @@ import org.apache.axis.client.Service;
  */
 @Slf4j
 public class RemoteCallUtil {
-    public static ObjectMapper objectMapper = new ObjectMapper();
-
-    private static final Service service = new Service();
-
-    /**
-     * 双杨推送接口
-     * @param endpointURL
-     * @param methodName
-     * @param para
-     * @return
-     * @throws Exception
-     */
-    public static Object invoke(String endpointURL, String methodName, Object[] para) throws Exception {
-        Call call = (Call) service.createCall();
-        URL url = new URL(endpointURL);
-        call.setTargetEndpointAddress(url);
-        call.setTimeout(Integer.valueOf(5000));
-        call.setOperationName(new QName(endpointURL, methodName));
-        Object result = call.invoke(para);
-        return result;
+    enum MethodType {
+        GET, POST
     }
+
+    public static ObjectMapper objectMapper = new ObjectMapper();
 
     static {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -314,6 +298,33 @@ public class RemoteCallUtil {
         return sendRequest(MethodType.GET, url, params, null, javaType);
     }
 
+    /**
+     * 双杨推送接口
+     *
+     * @param endpointURL
+     * @param methodName
+     * @param para
+     * @return
+     * @throws Exception
+     */
+    public static Object invoke(String endpointURL, String methodName, Object[] para) throws Exception {
+        // 使用RPC方式调用WebService
+        RPCServiceClient serviceClient = new RPCServiceClient();
+        Options options = serviceClient.getOptions();
+        // 指定调用WebService的URL
+        EndpointReference targetEPR = new EndpointReference(endpointURL);
+        options.setTo(targetEPR);
+        // 在创建QName对象时，QName类的构造方法的第一个参数表示WSDL文件的命名空间名，也就是<wsdl:definitions>元素的targetNamespace属性值
+        // // 指定要调用的getWorld方法及WSDL文件的命名空间.....
+        QName opAddEntry = new QName(endpointURL, methodName);
+        //
+        // 指定getGreeting方法的参数值，如果有多个，继续往后面增加即可，不用指定参数的名称
+        Class[] classes = new Class[] {Object.class};
+        // 调用getGreeting方法并输出该方法的返回值.......
+        Object result = serviceClient.invokeBlocking(opAddEntry, para, classes)[0];
+        return result;
+    }
+
     public static List<NameValuePair> objectToNameValuePairList(Object object) {
         List<NameValuePair> requestBody = new ArrayList<>();
         Map<String, String> keyValueMap =
@@ -328,47 +339,6 @@ public class RemoteCallUtil {
         return post(url, params, List.of(), clz);
     }
 
-    public static <T> String postXml(String url, String xmlData, Class<T> clz) {
-        HttpClient client = new HttpClient();
-        client.getParams().setParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024 * 1024 * 10);
-        client.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, StandardCharsets.UTF_8.name());
-        PostMethod method = new PostMethod(url);
-        try {
-            StringRequestEntity requestEntity = new StringRequestEntity(xmlData, "application/xml", "UTF-8");
-            method.setRequestEntity(requestEntity);
-            int code = client.executeMethod(method);
-            String response = null;
-            InputStream inputStream = method.getResponseBodyAsStream();
-            if (null != inputStream) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-                StringBuilder stringBuffer = new StringBuilder();
-                String b = "";
-                while ((b = br.readLine()) != null) {
-                    stringBuffer.append(b);
-                }
-                response = stringBuffer.toString();
-            }
-            if (code == HttpStatus.SC_OK) {
-//                JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Y9Result.class, clz);
-//                return objectMapper.readValue(response, javaType);
-                System.out.println(response);
-                return response;
-            } else {
-                LOGGER.info("http status code: {}, response: {}", code, response);
-            }
-        } catch (UnsupportedEncodingException e) {
-            LOGGER.warn(e.getMessage(), e);
-        } catch (HttpException e1) {
-            LOGGER.warn(e1.getMessage(), e1);
-        } catch (IOException ioe) {
-            LOGGER.warn(ioe.getMessage(), ioe);
-        } finally {
-            method.releaseConnection();
-            ((SimpleHttpConnectionManager)client.getHttpConnectionManager()).shutdown();
-        }
-        return null;
-    }
-
     public static <T> Y9Result<T> post(String url, List<NameValuePair> params, List<NameValuePair> bodyParams,
         Class<T> clz) {
         JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Y9Result.class, clz);
@@ -377,10 +347,6 @@ public class RemoteCallUtil {
 
     public static <T> T post(String url, List<NameValuePair> params, String requestBodyJson, Class<T> clz) {
         return sendPostRequest(url, params, requestBodyJson, clz);
-    }
-
-    public static <T> T put(String url, List<NameValuePair> params, String requestBodyJson, Class<T> clz) {
-        return sendPutRequest(url, params, requestBodyJson, clz);
     }
 
     public static <T> T postCallRemoteService(String url, List<NameValuePair> params, Class<T> clz) {
@@ -555,30 +521,14 @@ public class RemoteCallUtil {
         return null;
     }
 
-    private static <T> T sendRequest(MethodType methodType, String url, List<NameValuePair> params,
-        List<NameValuePair> bodyParams, JavaType javaType) {
+    public static <T> String postXml(String url, String xmlData, Class<T> clz) {
         HttpClient client = new HttpClient();
         client.getParams().setParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024 * 1024 * 10);
         client.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, StandardCharsets.UTF_8.name());
-        HttpMethod method = null;
+        PostMethod method = new PostMethod(url);
         try {
-            if (MethodType.GET.equals(methodType)) {
-                method = new GetMethod(url);
-            }
-            if (MethodType.POST.equals(methodType) || (bodyParams != null && !bodyParams.isEmpty())) {
-                method = new PostMethod(url);
-                JSONObject jsonObject = new JSONObject();
-                for (NameValuePair pair : bodyParams) {
-                    jsonObject.putOpt(pair.getName(), pair.getValue());
-                }
-                RequestEntity request = new StringRequestEntity(jsonObject.toString(), MediaType.APPLICATION_JSON_VALUE,
-                    StandardCharsets.UTF_8.name());
-                ((PostMethod)method).setRequestEntity(request);
-            }
-            if (params != null && !params.isEmpty()) {
-                method.setQueryString(params.toArray(new NameValuePair[params.size()]));
-            }
-
+            StringRequestEntity requestEntity = new StringRequestEntity(xmlData, "application/xml", "UTF-8");
+            method.setRequestEntity(requestEntity);
             int code = client.executeMethod(method);
             String response = null;
             InputStream inputStream = method.getResponseBodyAsStream();
@@ -592,7 +542,10 @@ public class RemoteCallUtil {
                 response = stringBuffer.toString();
             }
             if (code == HttpStatus.SC_OK) {
-                return objectMapper.readValue(response, javaType);
+                // JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Y9Result.class, clz);
+                // return objectMapper.readValue(response, javaType);
+                System.out.println(response);
+                return response;
             } else {
                 LOGGER.info("http status code: {}, response: {}", code, response);
             }
@@ -609,8 +562,11 @@ public class RemoteCallUtil {
         return null;
     }
 
-    private static <T> T sendPostRequest(String url, List<NameValuePair> params, String requestBodyJson,
-        Class<T> clz) {
+    public static <T> T put(String url, List<NameValuePair> params, String requestBodyJson, Class<T> clz) {
+        return sendPutRequest(url, params, requestBodyJson, clz);
+    }
+
+    private static <T> T sendPostRequest(String url, List<NameValuePair> params, String requestBodyJson, Class<T> clz) {
         HttpClient client = new HttpClient();
         client.getParams().setParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024 * 1024 * 10);
         client.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, StandardCharsets.UTF_8.name());
@@ -700,7 +656,57 @@ public class RemoteCallUtil {
         return null;
     }
 
-    enum MethodType {
-        GET, POST
+    private static <T> T sendRequest(MethodType methodType, String url, List<NameValuePair> params,
+        List<NameValuePair> bodyParams, JavaType javaType) {
+        HttpClient client = new HttpClient();
+        client.getParams().setParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024 * 1024 * 10);
+        client.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, StandardCharsets.UTF_8.name());
+        HttpMethod method = null;
+        try {
+            if (MethodType.GET.equals(methodType)) {
+                method = new GetMethod(url);
+            }
+            if (MethodType.POST.equals(methodType) || (bodyParams != null && !bodyParams.isEmpty())) {
+                method = new PostMethod(url);
+                JSONObject jsonObject = new JSONObject();
+                for (NameValuePair pair : bodyParams) {
+                    jsonObject.putOpt(pair.getName(), pair.getValue());
+                }
+                RequestEntity request = new StringRequestEntity(jsonObject.toString(), MediaType.APPLICATION_JSON_VALUE,
+                    StandardCharsets.UTF_8.name());
+                ((PostMethod)method).setRequestEntity(request);
+            }
+            if (params != null && !params.isEmpty()) {
+                method.setQueryString(params.toArray(new NameValuePair[params.size()]));
+            }
+
+            int code = client.executeMethod(method);
+            String response = null;
+            InputStream inputStream = method.getResponseBodyAsStream();
+            if (null != inputStream) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                StringBuilder stringBuffer = new StringBuilder();
+                String b = "";
+                while ((b = br.readLine()) != null) {
+                    stringBuffer.append(b);
+                }
+                response = stringBuffer.toString();
+            }
+            if (code == HttpStatus.SC_OK) {
+                return objectMapper.readValue(response, javaType);
+            } else {
+                LOGGER.info("http status code: {}, response: {}", code, response);
+            }
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.warn(e.getMessage(), e);
+        } catch (HttpException e1) {
+            LOGGER.warn(e1.getMessage(), e1);
+        } catch (IOException ioe) {
+            LOGGER.warn(ioe.getMessage(), ioe);
+        } finally {
+            method.releaseConnection();
+            ((SimpleHttpConnectionManager)client.getHttpConnectionManager()).shutdown();
+        }
+        return null;
     }
 }

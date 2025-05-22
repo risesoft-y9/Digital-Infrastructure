@@ -108,6 +108,7 @@
         <antisamy.version>1.6.2</antisamy.version>
         <aspectj.version>1.9.22.1</aspectj.version>
         <axis.version>1.4</axis.version>
+        <axis2.version>2.0.0</axis2.version>
         <bcprov-ext-jdk15to18.version>1.76</bcprov-ext-jdk15to18.version>
         <classgraph.version>4.8.162</classgraph.version>
         <commons-io.version>2.18.0</commons-io.version>
@@ -186,6 +187,29 @@
                 <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2-spring</artifactId>
+                <version>2.0.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2-corba</artifactId>
+                <version>${axis2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2-jaxws</artifactId>
+                <version>${axis2.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2-adb</artifactId>
+                <version>${axis2.version}</version>
             </dependency>
 
             <dependency>

@@ -93,6 +93,7 @@ cn-idev-excel-fastexcel = "1.1.0"
 auth0-jwt = "4.5.0"
 auth0-jwks = "0.22.1"
 axis = "1.4"
+axis2 = "2.0.0"
 commons-discovery = "0.5"
 javax-xml-rpc-api = "1.1.2"
 jaxrpc-api = "1.1"
@@ -199,6 +200,9 @@ auth0-jwt = { module = "com.auth0:java-jwt", version.ref = "auth0-jwt" }
 auth0-jwks = { module = "com.auth0:jwks-rsa", version.ref = "auth0-jwks" }
 
 axis = { group = "org.apache.axis", name = "axis", version.ref = "axis" }
+axis2-corba = { group = "org.apache.axis2", name = "axis2-corba", version.ref = "axis2" }
+axis2-jaxws = { group = "org.apache.axis2", name = "axis2-jaxws", version.ref = "axis2" }
+axis2-spring = { group = "org.apache.axis2", name = "axis2-spring", version.ref = "axis2" }
 commons-discovery = { group = "commons-discovery", name = "commons-discovery", version.ref = "commons-discovery" }
 javax-xml-rpc-api = { group = "javax.xml.rpc", name = "javax.xml.rpc-api", version.ref = "javax-xml-rpc-api" }
 jaxrpc-api = { group = "javax.xml", name = "jaxrpc-api", version.ref = "jaxrpc-api" }
