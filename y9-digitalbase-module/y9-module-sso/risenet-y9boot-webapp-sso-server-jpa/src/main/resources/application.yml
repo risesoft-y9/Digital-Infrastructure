@@ -233,7 +233,8 @@ cas:
         asynchronous: false  
 logging:
     level:
-        "[org.apereo.cas]": info
+        org.apereo.cas: "info"
+        org.apereo.inspektr: "info"
 management:
     metrics:
         enable:
