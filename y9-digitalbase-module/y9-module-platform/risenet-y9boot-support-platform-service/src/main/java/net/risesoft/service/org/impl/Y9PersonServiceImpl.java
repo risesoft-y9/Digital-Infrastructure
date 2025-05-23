@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.InitDataConsts;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
@@ -450,45 +449,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             y9PersonsToPositionsManager.addPositions(person.getId(), newPositionIdList);
         }
         return person;
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Person saveOrUpdate4ImpOrg(Y9Person person, Y9PersonExt personExt) {
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
-        Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(person.getId());
-        if (y9PersonOptional.isPresent()) {
-            // 判断为更新信息
-            Y9Person oldperson = y9PersonOptional.get();
-            person.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, person.getName(), parent.getDn()));
-
-            Y9BeanUtil.copyProperties(person, oldperson);
-            oldperson.setParentId(parent.getId());
-            oldperson = save(oldperson);
-
-            if (personExt != null) {
-                y9PersonExtManager.saveOrUpdate(personExt, oldperson);
-            }
-            return oldperson;
-        } else {
-            // 判断为从xml导入的代码并且数据库中没有相应信息,把密码统一设置为defaultPassword
-            if (null == person.getTabIndex()) {
-                person.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parent.getId()));
-            }
-            person.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, person.getName(), parent.getDn()));
-            person.setVersion(InitDataConsts.Y9_VERSION);
-            person.setParentId(parent.getId());
-
-            if (StringUtils.isBlank(person.getPassword())) {
-                String password = y9SettingService.getTenantSetting().getUserDefaultPassword();
-                person.setPassword(Y9MessageDigest.bcrypt(password));
-            }
-            person = save(person);
-            if (personExt != null) {
-                y9PersonExtManager.saveOrUpdate(personExt, person);
-            }
-            return person;
-        }
     }
 
     @Override
