@@ -3,14 +3,14 @@ package net.risesoft.y9public.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 import org.hibernate.annotations.Comment;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,7 +30,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "Y9_LOG_FLOWABLE_ACCESS_LOG",
     indexes = {@Index(name = "index_flowable_logInfo_userId", columnList = "USER_ID ASC", unique = false)})
-@org.hibernate.annotations.Table(comment = "工作流日志信息表", appliesTo = "Y9_LOG_FLOWABLE_ACCESS_LOG")
+@Comment("工作流日志信息表")
 @NoArgsConstructor
 @Data
 public class Y9logFlowableAccessLog implements Serializable {

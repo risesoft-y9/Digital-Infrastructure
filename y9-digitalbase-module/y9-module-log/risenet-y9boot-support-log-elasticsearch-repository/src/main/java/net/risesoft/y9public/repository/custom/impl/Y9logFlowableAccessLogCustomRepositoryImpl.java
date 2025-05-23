@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -13,18 +12,13 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.bucket.range.ParsedRange;
-import org.elasticsearch.search.aggregations.bucket.range.Range;
-import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregations;
+import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -32,7 +26,6 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Component;
 
@@ -48,11 +41,16 @@ import net.risesoft.pojo.Y9Page;
 import net.risesoft.util.AccessLogModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9Day;
+import net.risesoft.y9public.entity.Y9logAccessLog;
 import net.risesoft.y9public.entity.Y9logFlowableAccessLog;
 import net.risesoft.y9public.repository.Y9logFlowableAccessLogRepository;
 import net.risesoft.y9public.repository.custom.Y9logFlowableAccessLogCustomRepository;
 
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import co.elastic.clients.elasticsearch._types.aggregations.AggregationRange;
+import co.elastic.clients.elasticsearch._types.aggregations.RangeAggregation;
+import co.elastic.clients.elasticsearch._types.aggregations.RangeBucket;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 
 /**
  * @author qinman
@@ -97,12 +95,10 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
 
     @Override
     public List<Long> listOperateTimeCount(String startDay, String endDay, Integer tenantType) {
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.must(QueryBuilders.existsQuery(Y9LogSearchConsts.USER_NAME));
-        String tenantId = Y9LoginUserHolder.getTenantId();
-        if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
-            boolQueryBuilder.must(QueryBuilders.matchQuery(Y9LogSearchConsts.TENANT_ID, tenantId));
-        }
+        List<Long> list = new ArrayList<>();
+        BoolQuery.Builder builder = new BoolQuery.Builder();
+
+        builder.must(m -> m.exists(e -> e.field(Y9LogSearchConsts.USER_NAME)));
         if (StringUtils.isNotBlank(startDay) && StringUtils.isNotBlank(endDay)) {
             String sTime = startDay + " 00:00:00";
             String eTime = endDay + " 23:59:59";
@@ -112,38 +108,41 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                 Date endDate = sdf.parse(eTime);
                 String start = DATETIME_UTC_FORMAT.format(startDate);
                 String end = DATETIME_UTC_FORMAT.format(endDate);
-                LOGGER.info(start + "   " + end);
-                boolQueryBuilder.must(QueryBuilders.rangeQuery(Y9LogSearchConsts.LOG_TIME).from(start).to(end));
+                builder.must(m -> m.range(r -> r.date(
+                    d -> d.field(Y9LogSearchConsts.LOG_TIME).from(start).to(end).format("yyyy-MM-dd'T'HH:mm:ss'Z'"))));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
         }
-        RangeAggregationBuilder ranges =
-            AggregationBuilders.range("range-elapsedtime").field(Y9LogSearchConsts.ELAPSED_TIME).addUnboundedTo(1000000)
-                .addRange(1000000, 10000000).addRange(10000000, 100000000).addRange(100000000, 500000000)
-                .addRange(500000000, 1000000000).addUnboundedFrom(1000000000);
-        NativeSearchQueryBuilder nativebuilder = new NativeSearchQueryBuilder();
-        nativebuilder.withQuery(boolQueryBuilder);
-        nativebuilder.withAggregations(ranges);
+
+        List<AggregationRange> aggregationRanges = new ArrayList<>();
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(0d).to(1000000d)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(1000000d).to(10000000d)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(10000000d).to(100000000d)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(100000000d).to(500000000d)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(500000000d).to(1000000000d)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(1000000000d)));
+
+        NativeQueryBuilder nativebuilder = new NativeQueryBuilder();
+        nativebuilder.withQuery(builder.build()._toQuery());
+        nativebuilder.withAggregation("range-elapsedtime", RangeAggregation
+            .of(r -> r.field(Y9LogSearchConsts.ELAPSED_TIME).ranges(aggregationRanges))._toAggregation());
+        IndexCoordinates indexs = IndexCoordinates.of(createIndexNames(startDay, endDay));
         try {
-            IndexCoordinates index = IndexCoordinates.of(createIndexNames(startDay, endDay));
-            SearchHits<Y9logFlowableAccessLog> searchHits =
-                elasticsearchOperations.search(nativebuilder.build(), Y9logFlowableAccessLog.class, index);
+            SearchHits<Y9logAccessLog> searchHits =
+                elasticsearchOperations.search(nativebuilder.build(), Y9logAccessLog.class, indexs);
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
-            List<Long> list = new ArrayList<>();
-            if (aggregations != null) {
-                ParsedRange terms = aggregations.aggregations().get("range-elapsedtime");
-                List<? extends Range.Bucket> buckets = terms.getBuckets();
-                buckets.forEach(bucket -> {
-                    long count = bucket.getDocCount();
-                    list.add(count);
-                });
-            }
-            return list;
-        } catch (ElasticsearchException e) {
-            LOGGER.error(e.getMessage(), e);
-            return Collections.emptyList();
+            List<? extends RangeBucket> buckets =
+                aggregations.get("range-elapsedtime").aggregation().getAggregate().range().buckets().array();
+
+            buckets.forEach(bucket -> {
+                long count = bucket.docCount();
+                list.add(count);
+            });
+        } catch (ElasticsearchException e1) {
+            LOGGER.error(e1.getMessage(), e1);
         }
+        return list;
     }
 
     @Override

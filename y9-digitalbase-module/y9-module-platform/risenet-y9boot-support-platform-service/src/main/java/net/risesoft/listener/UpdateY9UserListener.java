@@ -230,7 +230,6 @@ public class UpdateY9UserListener {
         y9User.setOriginal(person.getOriginal());
         y9User.setOriginalId(person.getOriginalId());
         y9User.setGlobalManager(false);
-        String roleIds = y9PersonToRoleService.getRoleIdsByPersonId(person.getId());
         String positionIds = y9PersonsToPositionsService.getPositionIdsByPersonId(person.getId());
         y9User.setPositions(positionIds);
         y9UserService.save(y9User);
@@ -314,7 +313,6 @@ public class UpdateY9UserListener {
         y9User.setOriginal(person.getOriginal());
         y9User.setOriginalId(person.getOriginalId());
         y9User.setGlobalManager(false);
-        String roleIds = y9PersonToRoleService.getRoleIdsByPersonId(person.getId());
         String positionIds = y9PersonsToPositionsService.getPositionIdsByPersonId(person.getId());
         y9User.setPositions(positionIds);
         y9UserService.save(y9User);
