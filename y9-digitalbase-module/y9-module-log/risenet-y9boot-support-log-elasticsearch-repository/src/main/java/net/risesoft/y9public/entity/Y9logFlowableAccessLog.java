@@ -47,10 +47,10 @@ public class Y9logFlowableAccessLog implements Serializable {
     private String operateType;
 
     /**
-     * 标题
+     * 描述：主要是标题，表单数据等
      */
     @Field(type = FieldType.Text, store = true)
-    private String title;
+    private String description;
 
     @Field(type = FieldType.Keyword, store = true)
     private String userId;
