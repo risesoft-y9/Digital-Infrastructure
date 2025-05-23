@@ -6,8 +6,10 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 
 import net.risesoft.model.log.AccessLog;
+import net.risesoft.model.log.FlowableAccessLog;
 import net.risesoft.model.userlogininfo.LoginInfo;
 import net.risesoft.y9public.entity.Y9logAccessLog;
+import net.risesoft.y9public.entity.Y9logFlowableAccessLog;
 import net.risesoft.y9public.entity.Y9logUserLoginInfo;
 
 /**
@@ -25,6 +27,16 @@ public class AccessLogModelConvertUtil {
         List<AccessLog> targets = new ArrayList<AccessLog>();
         for (Y9logAccessLog source : sources) {
             AccessLog target = new AccessLog();
+            BeanUtils.copyProperties(source, target);
+            targets.add(target);
+        }
+        return targets;
+    }
+
+    public static List<FlowableAccessLog> flowableLogEsListToModels(List<Y9logFlowableAccessLog> sources) {
+        List<FlowableAccessLog> targets = new ArrayList<>();
+        for (Y9logFlowableAccessLog source : sources) {
+            FlowableAccessLog target = new FlowableAccessLog();
             BeanUtils.copyProperties(source, target);
             targets.add(target);
         }
