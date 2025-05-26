@@ -21,25 +21,25 @@ public class CreateOrgUnitBaseDTO implements Serializable {
     private static final long serialVersionUID = -8361749786841530846L;
 
     /** ID */
-    protected String id;
+    private String id;
 
     /** 是否可用 */
-    protected Boolean disabled = false;
+    private Boolean disabled = false;
 
     /** 描述 */
-    protected String description;
+    private String description;
 
     /** 自定义id */
-    protected String customId;
+    private String customId;
 
     /** 名称 */
     @NotBlank
-    protected String name;
+    private String name;
 
     /** 扩展属性 */
-    protected String properties;
+    private String properties;
 
     /** 排序号 */
-    protected Integer tabIndex = DefaultConsts.TAB_INDEX;
+    private Integer tabIndex = DefaultConsts.TAB_INDEX;
 
 }
