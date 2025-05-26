@@ -19,7 +19,7 @@ import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.enums.platform.PersonTypeEnum;
 import net.risesoft.enums.platform.SexEnum;
 import net.risesoft.persistence.EnumConverter;
-import net.risesoft.validation.Mobile;
+import net.risesoft.y9.validation.Mobile;
 
 /**
  * 人员实体

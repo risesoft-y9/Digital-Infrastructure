@@ -1,4 +1,4 @@
-package net.risesoft.validation;
+package net.risesoft.y9.validation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
