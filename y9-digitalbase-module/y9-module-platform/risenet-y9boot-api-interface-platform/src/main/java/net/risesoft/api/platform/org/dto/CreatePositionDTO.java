@@ -21,13 +21,13 @@ public class CreatePositionDTO implements Serializable {
     private static final long serialVersionUID = -6444031768723849631L;
 
     /** 岗位id */
-    protected String id;
+    private String id;
 
     /** 排序 */
-    protected Integer tabIndex = DefaultConsts.TAB_INDEX;
+    private Integer tabIndex = DefaultConsts.TAB_INDEX;
 
     /** 是否禁用 */
-    protected Boolean disabled = false;
+    private Boolean disabled = false;
 
     /** 父节点id */
     @NotBlank

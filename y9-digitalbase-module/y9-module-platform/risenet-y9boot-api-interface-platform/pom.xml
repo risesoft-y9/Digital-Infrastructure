@@ -30,6 +30,12 @@
         </dependency>
 
         <dependency>
+            <groupId>net.risesoft</groupId>
+            <artifactId>risenet-y9boot-common-util</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
         </dependency>
