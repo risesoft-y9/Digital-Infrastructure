@@ -7,12 +7,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "y9.app.log", ignoreInvalidFields = true, ignoreUnknownFields = true)
+@ConfigurationProperties(prefix = "y9.app.log", ignoreInvalidFields = true)
 public class Y9LogProperties {
-
-    private String accessLogSaveTarget = "console"; // database,console,elastic
-
-    private String accessLogIndex = "logindex";
 
     private String accessLogType = "log";
 

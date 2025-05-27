@@ -134,8 +134,6 @@ y9:
     internalIp: 192.168.x.x,10.0.x.x,172.20.x.x
     app:
         log:
-            accessLogIndex: logindex
-            accessLogSaveTarget: elastic
             #kafkaEnabled=true时才会初始化Kafka的事件监听（注意要将KafkaAutoConfiguration启用）
             kafkaEnabled: false
     service:
