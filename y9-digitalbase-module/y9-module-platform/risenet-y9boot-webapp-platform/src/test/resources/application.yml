@@ -68,6 +68,10 @@ spring:
             time-to-live: PT2H
         type: redis
     data:
+        jpa:
+            repositories:
+                bootstrap-mode: default
+                enabled: false
         redis:
             database: 8
             host: localhost
@@ -114,7 +118,7 @@ spring:
         consumer:
             auto-commit-interval: 1000
             enable-auto-commit: true
-            group-id: 'y9platform-server'
+            group-id: y9platform-server
     main:
         allow-bean-definition-overriding: false
         allow-circular-references: false
@@ -129,7 +133,7 @@ spring:
 y9:
     systemName: riseplatform
     systemCnName: '数字底座'
-    internalIp: 192.168.x.x,10.161.x.x,10.1.x.x,172.20.x.x
+    internalIp: 192.168.x.x,10.0.x.x,172.20.x.x
     app:
         platform:
             systemName: riseplatform
@@ -155,8 +159,8 @@ y9:
         file:
             base64FileName: false
             encryptionFileContent: false
-            #privateKey:
-            #publicKey:
+            #privateKey: 
+            #publicKey: 
             ftp:
                 enabled: false
                 host: localhost
