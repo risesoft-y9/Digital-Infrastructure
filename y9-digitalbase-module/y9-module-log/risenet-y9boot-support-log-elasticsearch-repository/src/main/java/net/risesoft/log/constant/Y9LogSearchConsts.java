@@ -41,6 +41,16 @@ public class Y9LogSearchConsts {
     /** 用时 */
     public static final String ELAPSED_TIME = "elapsedTime";
 
+    /**
+     * 标题
+     */
+    public static final String TITLE = "title";
+
+    /**
+     * 请求参数及值json字符串
+     */
+    public static final String ARGUMENTS = "arguments";
+
     /** 应用点击模块路径 */
     public static final String APP_METHODNAME = "net.risesoft.controller.AppRestController.saveAppCheckCount";
 

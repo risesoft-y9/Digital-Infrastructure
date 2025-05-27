@@ -345,6 +345,9 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
         if (StringUtils.isNotBlank(search.getOperateType())) {
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.OPERATE_TYPE).is(search.getOperateType()));
         }
+        if (StringUtils.isNotEmpty(search.getOperateName())) {
+            criteria.subCriteria(new Criteria(Y9LogSearchConsts.OPERATE_NAME).is(search.getOperateName()));
+        }
         if (StringUtils.isNotBlank(search.getUserName())) {
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.USER_NAME).is(search.getUserName()));
         }
@@ -356,6 +359,12 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
         }
         if (StringUtils.isNotBlank(search.getModularName())) {
             criteria.subCriteria(new Criteria().or(Y9LogSearchConsts.MODULAR_NAME).contains(search.getModularName()));
+        }
+        if (StringUtils.isNotEmpty(search.getTitle())) {
+            criteria.subCriteria(new Criteria(Y9LogSearchConsts.TITLE).is(search.getTitle()));
+        }
+        if (StringUtils.isNotEmpty(search.getArguments())) {
+            criteria.subCriteria(new Criteria(Y9LogSearchConsts.ARGUMENTS).is(search.getArguments()));
         }
         if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
             startTime = startTime + " 00:00:00";

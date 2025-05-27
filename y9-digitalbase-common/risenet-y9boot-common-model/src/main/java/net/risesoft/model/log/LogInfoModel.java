@@ -45,5 +45,9 @@ public class LogInfoModel implements Serializable {
     private String logLevel;
     /** 排序名称 */
     private String sortName;
+    /** 标题 */
+    private String title;
+    /** 请求参数及值json字符串 */
+    private String arguments;
 
 }

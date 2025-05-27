@@ -47,10 +47,16 @@ public class Y9logFlowableAccessLog implements Serializable {
     private String operateType;
 
     /**
-     * 描述：主要是标题，表单数据等
+     * 标题，如果需要保存标题，请在请求头中加入'processSerialNumber':processSerialNumber
      */
     @Field(type = FieldType.Text, store = true)
-    private String description;
+    private String title;
+
+    /**
+     * 请求参数及值json字符串
+     */
+    @Field(type = FieldType.Text, store = true)
+    private String arguments;
 
     @Field(type = FieldType.Keyword, store = true)
     private String userId;
