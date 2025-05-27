@@ -348,15 +348,6 @@ public interface Y9PersonService {
     Y9Person saveOrUpdate(Y9Person person, Y9PersonExt ext, List<String> positionIds, List<String> jobIds);
 
     /**
-     * 保存或者修改此人员的信息(用于导入y9导出的组织机构：密码是什么就导入什么不做处理)
-     *
-     * @param person 人员对象
-     * @param personExt 人员扩展信息
-     * @return {@link Y9Person}
-     */
-    Y9Person saveOrUpdate4ImpOrg(Y9Person person, Y9PersonExt personExt);
-
-    /**
      * 保存或者更新人员扩展信息
      *
      * @param personId 人员id
