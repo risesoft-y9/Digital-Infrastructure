@@ -26,11 +26,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-idgenerator</artifactId>
             <version>${project.version}</version>

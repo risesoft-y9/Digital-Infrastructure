@@ -13,6 +13,8 @@ import lombok.Setter;
 import net.risesoft.enums.platform.MaritalStatusEnum;
 import net.risesoft.enums.platform.PersonTypeEnum;
 import net.risesoft.enums.platform.SexEnum;
+import net.risesoft.y9.validation.IdNumber;
+import net.risesoft.y9.validation.Mobile;
 
 /**
  * @author shidaobang
@@ -55,6 +57,7 @@ public class CreatePersonDTO extends CreateOrgUnitBaseDTO {
      * 手机号码
      */
     @NotBlank
+    @Mobile
     private String mobile;
 
     /**
@@ -130,6 +133,7 @@ public class CreatePersonDTO extends CreateOrgUnitBaseDTO {
     private String homePhone;
 
     /** 证件号码 */
+    @IdNumber
     private String idNum;
 
     /** 证件类型 */

@@ -1,4 +1,4 @@
-package net.risesoft.validation;
+package net.risesoft.y9.validation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
