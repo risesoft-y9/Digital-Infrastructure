@@ -5,7 +5,7 @@ import java.util.*
 plugins {
     signing
     id("version-catalog")
-    id("com.vanniktech.maven.publish") version "0.30.0"
+    id("com.vanniktech.maven.publish") version "0.32.0"
 }
 
 repositories {

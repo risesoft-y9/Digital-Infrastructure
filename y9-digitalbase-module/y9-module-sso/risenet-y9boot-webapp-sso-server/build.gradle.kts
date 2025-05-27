@@ -33,13 +33,16 @@ dependencies {
     implementation("org.apereo.cas:cas-server-support-jpa-service-registry")
     implementation("org.apereo.cas:cas-server-core-authentication-attributes")
     implementation("org.springframework.security:spring-security-config")
-    implementation("org.apereo.cas:cas-server-support-ldap-core")
-    implementation(libs.hibernate.core)
-    implementation("org.apereo.cas:cas-server-support-redis-core")
-    implementation("org.apereo.cas:cas-server-support-redis-modules")
-    implementation("org.apereo.cas:cas-server-support-redis-ticket-registry")
-    implementation("org.apereo.cas:cas-server-support-session-redis")
-    implementation("org.springframework.data:spring-data-redis")
+    //implementation("org.apereo.cas:cas-server-support-ldap-core")
+    //implementation(libs.hibernate.core)
+
+    implementation("org.apereo.cas:cas-server-support-jpa-ticket-registry")
+
+    //implementation("org.apereo.cas:cas-server-support-redis-core")
+    //implementation("org.apereo.cas:cas-server-support-redis-modules")
+    //implementation("org.apereo.cas:cas-server-support-redis-ticket-registry")
+    //implementation("org.apereo.cas:cas-server-support-session-redis")
+    //implementation("org.springframework.data:spring-data-redis")
 
     implementation("org.apereo.cas:cas-server-core-api-logout")
     implementation("org.apereo.cas:cas-server-core-logout")

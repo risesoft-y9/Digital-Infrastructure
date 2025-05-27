@@ -1,9 +1,9 @@
 [versions]
 # spring boot & cloud bom
-spring-bom = "6.2.6"
-spring-boot = "3.4.5"
+spring-bom = "6.2.7"
+spring-boot = "3.5.0"
 spring-cloud = "2024.0.1"
-io-spring-dependency-management = "1.1.6"
+io-spring-dependency-management = "1.1.7"
 # cas server bom
 cas-server-bom = "7.2.2"
 # oracle bom
@@ -25,22 +25,22 @@ org-hibernate-validator-hibernate-validator = "8.0.1.Final"
 # fasterxml
 java-uuid-generator = "5.1.0"
 # google
-com-google-code-gson-gson = "2.10.1"
-com-google-guava-guava = "33.3.1-jre"
-com-google-zxing-core = "3.5.2"
+com-google-code-gson-gson = "2.13.1"
+com-google-guava-guava = "33.4.8-jre"
+com-google-zxing-core = "3.5.3"
 com-googlecode-cqengine-cqengine = "3.6.0"
 # apache common
-commons-beanutils-commons-beanutils = "1.10.0"
-commons-codec-commons-codec = "1.16.1"
+commons-beanutils-commons-beanutils = "1.10.1"
+commons-codec-commons-codec = "1.18.0"
 commons-httpclient-commons-httpclient = "3.1"
-commons-io-commons-io = "2.18.0"
+commons-io-commons-io = "2.19.0"
 commons-net-commons-net = "3.11.1"
-org-apache-commons-commons-lang3 = "3.13.0"
-org-apache-commons-commons-pool2 = "2.12.0"
+org-apache-commons-commons-lang3 = "3.17.0"
+org-apache-commons-commons-pool2 = "2.12.1"
 org-apache-httpcomponents-httpclient = "4.5.14"
 org-apache-httpcomponents-httpmime = "4.5.14"
-org-apache-poi-poi-scratchpad = "5.2.3"
-org-apache-poi-poi-ooxml = "5.2.3"
+org-apache-poi-poi-scratchpad = "5.4.1"
+org-apache-poi-poi-ooxml = "5.4.1"
 # xml
 jaxen-jaxen = "2.0.0"
 org-dom4j-dom4j = "2.1.4"
@@ -51,53 +51,47 @@ com-oceanbase-oceanbase-client = "2.4.12"
 org-mariadb-jdbc-mariadb-java-client = "3.5.0"
 org-postgresql-postgresql = "42.7.3"
 # javers
-org-javers-javers-spring-boot-starter-sql = "7.7.0"
+org-javers-javers-spring-boot-starter-sql = "7.8.0"
 org-jodd-jodd-http = "6.3.0"
 #liquibase
-org-liquibase-liquibase-core = "4.27.0"
+org-liquibase-liquibase-core = "4.32.0"
 # jxls
-org-jxls-jxls = "2.13.0"
+org-jxls-jxls = "3.0.0"
 org-jxls-jxls-jexcel = "1.0.9"
-org-jxls-jxls-poi = "2.13.0"
+org-jxls-jxls-poi = "3.0.0"
 org-jxls-jxls-reader = "2.1.0"
 # 其他
-com-ibm-etcd-etcd-java = "0.0.18"
-com-redis-lettucemod = "3.7.3"
-com-twelvemonkeys-imageio-imageio-jpeg = "3.9.3"
+com-ibm-etcd-etcd-java = "0.0.24"
+com-redis-lettucemod = "4.3.0"
+com-twelvemonkeys-imageio-imageio-jpeg = "3.12.0"
 # 浏览器UA字符串解析
 cz-mallat-uasparser-uasparser = "0.6.2"
 # 类反射
 io-github-bruce0203-reflections = "0.10.3.4"
-io-github-classgraph-classgraph = "4.8.162"
+io-github-classgraph-classgraph = "4.8.179"
 # prometheus
-io-micrometer-micrometer-registry-prometheus = "1.13.3"
+io-micrometer-micrometer-registry-prometheus = "1.15.0"
 # 安全相关
 de-svenkubiak-jbcrypt = "0.4.3"
-net-javacrumbs-shedlock-shedlock-spring = "6.0.2"
+net-javacrumbs-shedlock-shedlock-spring = "6.7.0"
 org-bouncycastle-bcprov-ext-jdk18on = "1.78.1"
 org-imgscalr-imgscalr-lib = "4.2"
-org-owasp-antisamy-antisamy = "1.6.2"
+org-owasp-antisamy-antisamy = "1.7.8"
 com-github-seancfoley-ipaddress = "5.5.1"
 # aspectj
-org-aspectj = "1.9.22.1"
+org-aspectj = "1.9.24"
 # plugin implementation for precompiled script plugin
-com-google-cloud-tools-jib-gradle-plugin = "3.4.4"
-com-ly-smart-doc-smart-doc-gradle-plugin = "3.0.9"
-io-freefair-gradle-aspectj-plugin = "8.11"
-io-freefair-gradle-lombok-plugin = "8.11"
-tech-yanand-gradle-maven-central-publish = "1.3.0"
-com-vanniktech-gradle-maven-publish-plugin = "0.30.0"
-org-jreleaser-jreleaser-gradle-plugin = "1.15.0"
-cn-idev-excel-fastexcel = "1.1.0"
+com-google-cloud-tools-jib-gradle-plugin = "3.4.5"
+com-ly-smart-doc-smart-doc-gradle-plugin = "3.1.0"
+io-freefair-gradle-aspectj-plugin = "8.13.1"
+io-freefair-gradle-lombok-plugin = "8.13.1"
+com-vanniktech-gradle-maven-publish-plugin = "0.32.0"
+org-jreleaser-jreleaser-gradle-plugin = "1.18.0"
+cn-idev-excel-fastexcel = "1.2.0"
 # auth0 jwt
 auth0-jwt = "4.5.0"
 auth0-jwks = "0.22.1"
-axis = "1.4"
 axis2 = "2.0.0"
-commons-discovery = "0.5"
-javax-xml-rpc-api = "1.1.2"
-jaxrpc-api = "1.1"
-jaxws-rt = "4.0.3"
 
 [libraries]
 #spring boot & cloud dependencies
@@ -190,7 +184,7 @@ com-google-cloud-tools-jib-gradle-plugin = { module = "com.google.cloud.tools:ji
 com-ly-smart-doc-smart-doc-gradle-plugin = { module = "com.ly.smart-doc:smart-doc-gradle-plugin", version.ref = "com-ly-smart-doc-smart-doc-gradle-plugin" }
 io-freefair-gradle-aspectj-plugin = { module = "io.freefair.gradle:aspectj-plugin", version.ref = "io-freefair-gradle-aspectj-plugin" }
 io-freefair-gradle-lombok-plugin = { module = "io.freefair.gradle:lombok-plugin", version.ref = "io-freefair-gradle-lombok-plugin" }
-tech-yanand-gradle-maven-central-publish = { module = "tech.yanand.gradle:maven-central-publish", version.ref = "tech-yanand-gradle-maven-central-publish" }
+
 com-vanniktech-gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "com-vanniktech-gradle-maven-publish-plugin" }
 org-jreleaser-jreleaser-gradle-plugin = { module = "org.jreleaser:jreleaser-gradle-plugin", version.ref = "org-jreleaser-jreleaser-gradle-plugin" }
 org-springframework-boot-org-springframework-boot-gradle-plugin = { module = "org.springframework.boot:org.springframework.boot.gradle.plugin", version.ref = "spring-boot" }
@@ -199,14 +193,9 @@ fastexcel = { module = "cn.idev.excel:fastexcel", version.ref = "cn-idev-excel-f
 auth0-jwt = { module = "com.auth0:java-jwt", version.ref = "auth0-jwt" }
 auth0-jwks = { module = "com.auth0:jwks-rsa", version.ref = "auth0-jwks" }
 
-axis = { group = "org.apache.axis", name = "axis", version.ref = "axis" }
 axis2-corba = { group = "org.apache.axis2", name = "axis2-corba", version.ref = "axis2" }
 axis2-jaxws = { group = "org.apache.axis2", name = "axis2-jaxws", version.ref = "axis2" }
 axis2-spring = { group = "org.apache.axis2", name = "axis2-spring", version.ref = "axis2" }
-commons-discovery = { group = "commons-discovery", name = "commons-discovery", version.ref = "commons-discovery" }
-javax-xml-rpc-api = { group = "javax.xml.rpc", name = "javax.xml.rpc-api", version.ref = "javax-xml-rpc-api" }
-jaxrpc-api = { group = "javax.xml", name = "jaxrpc-api", version.ref = "jaxrpc-api" }
-jaxws-rt = { group = "com.sun.xml.ws", name = "jaxws-rt", version.ref = "jaxws-rt" }
 
 [plugins]
 io-spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "io-spring-dependency-management" }

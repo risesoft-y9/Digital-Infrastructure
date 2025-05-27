@@ -1,0 +1,19 @@
+name: y9-ai-ollama
+services:
+  db:
+    image: ollama/ollama
+    container_name: ollama
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - y9-share-net
+    ports:
+      - "11434:11434"
+    volumes:
+      - /Users/dingzhaojun/docker-data/ollama:/root/.ollama
+networks:
+  y9-share-net:
+    external: true
+    
+# docker compose -f compose-ai-ollama.yml up -d

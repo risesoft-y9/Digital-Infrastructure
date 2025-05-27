@@ -58,6 +58,6 @@
     },
     "bypassApprovalPrompt": true,
     "generateRefreshToken": true,
-    "renewRefreshToken": true,
-    "jwtAccessToken": true
+    "renewRefreshToken": false,
+    "jwtAccessToken": false
 }

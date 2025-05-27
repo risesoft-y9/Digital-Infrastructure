@@ -1,0 +1,29 @@
+name: y9-ai-openwebui
+services:
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: openwebui
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - y9-share-net
+    ports:
+      - "3100:8080"
+    environment:
+      - OPENAI_API_BASE_URL=http://model-runner.docker.internal:80/engines/llama.cpp/v1
+      - OPENAI_API_KEY=na
+    volumes:
+      - /Users/dingzhaojun/docker-data/openwebui:/app/backend/data
+    depends_on:
+      - ai-runner
+  ai-runner:
+    provider:
+      type: model # Looks for docker-model plugin or model binary
+      options:
+        model: ai/gemma3:latest
+networks:
+  y9-share-net:
+    external: true
+    
+# docker compose -f compose-ai-openwebui.yml up -d

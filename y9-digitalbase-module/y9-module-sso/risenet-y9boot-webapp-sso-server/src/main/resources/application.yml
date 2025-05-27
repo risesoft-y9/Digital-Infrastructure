@@ -109,7 +109,7 @@ cas:
                     startDelay: PT15S
                     repeatInterval: PT30M
             jpa:
-                enabled: false
+                enabled: true
                 dialect: org.hibernate.dialect.PostgreSQLDialect
                 driver-class: org.postgresql.Driver
                 url: jdbc:postgresql://localhost:5432/postgres
@@ -126,7 +126,7 @@ cas:
                     signing:
                         key: "CzPeT3D2l7C-dwR2LfV9DFHrwmPGXCSsEReZeTn76xiWNU45De8s1CAdPNXovoBpEilbeTY1PkwPQuMxZdN4mQ"
             redis:
-                enabled: true
+                enabled: false
                 useSsl: false
                 host: "localhost"
                 port: 6379
@@ -162,7 +162,7 @@ cas:
             core:
                 maxLength: 50
             rememberMe:
-                enabled: true
+                enabled: false
                 timeToKillInSeconds: 28800
                 #supportedUserAgents:
                 #supportedIpAddresses: 127.0.0.1,0:0:0:0:0:0:0:1

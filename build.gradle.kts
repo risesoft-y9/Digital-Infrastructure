@@ -1,6 +1,6 @@
 plugins {
     java
-    id("com.vanniktech.maven.publish") version "0.30.0" apply false
+    id("com.vanniktech.maven.publish") version "0.32.0" apply false
     id("tech.yanand.maven-central-publish") version "1.3.0" apply false
 }
 

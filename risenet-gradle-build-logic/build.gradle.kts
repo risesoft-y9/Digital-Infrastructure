@@ -7,7 +7,7 @@ plugins {
     `kotlin-dsl`
     `maven-publish`
     signing
-    id("com.vanniktech.maven.publish") version "0.30.0"
+    id("com.vanniktech.maven.publish") version "0.32.0"
 }
 
 repositories {
@@ -20,7 +20,6 @@ dependencies {
     implementation(libs.com.ly.smart.doc.smart.doc.gradle.plugin)
     implementation(libs.io.freefair.gradle.aspectj.plugin)
     implementation(libs.io.freefair.gradle.lombok.plugin)
-    implementation(libs.tech.yanand.gradle.maven.central.publish)
     implementation(libs.com.vanniktech.gradle.maven.publish.plugin)
     implementation(libs.org.jreleaser.jreleaser.gradle.plugin)
     implementation(libs.org.springframework.boot.org.springframework.boot.gradle.plugin)
