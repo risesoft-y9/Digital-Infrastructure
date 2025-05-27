@@ -39,9 +39,14 @@ public class FlowableAccessLog implements Serializable {
     private String operateType;
 
     /**
-     * 描述：主要是标题，表单数据等
+     * 标题，如果需要保存标题，请在请求头中加入'processSerialNumber':processSerialNumber
      */
-    private String description;
+    private String title;
+
+    /**
+     * 请求参数及值json字符串
+     */
+    private String arguments;
 
     /**
      * 用户id
@@ -76,7 +81,7 @@ public class FlowableAccessLog implements Serializable {
     /**
      * 日志记录时间
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date logTime;
 
     /**
