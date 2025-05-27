@@ -125,7 +125,7 @@ spring:
                 max-wait: -1
                 min-idle: 0
             shutdown-timeout: 100ms
-        password: y9i-83204585
+        password: 111111
         port: 6379
         ssl: false
         timeout: 10000
@@ -184,6 +184,7 @@ y9:
                     - http://localhost:8080
                     - http://localhost:8081
                     - http://localhost:7070
+                    - http://localhost:7071
             xss:
                 ignoreParam:
                     - id
