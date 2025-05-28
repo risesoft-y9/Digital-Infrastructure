@@ -57,4 +57,17 @@
             <column name="USER_AGENT" remarks="用户登录浏览器信息" type="VARCHAR(200)"/>
         </createTable>
     </changeSet>
+
+
+    <changeSet author="mengjuhua" id="renameColumn-log-1-1" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_LOG_USER_LOGIN_INFO" columnName="USER_HOST_DISK_ID"/>
+        </preConditions>
+        <renameColumn newColumnName="USER_HOST_DISKID" oldColumnName="USER_HOST_DISK_ID" columnDataType="VARCHAR(255)"
+                      tableName="Y9_LOG_USER_LOGIN_INFO"/>
+        <renameColumn newColumnName="BROWSER_NAME" oldColumnName="BROWSER_NAME" columnDataType="VARCHAR(255)"
+                      tableName="Y9_LOG_USER_LOGIN_INFO"/>
+        <renameColumn newColumnName="BROWSER_VERSION" oldColumnName="BROWSE_VERSION" columnDataType="VARCHAR(255)"
+                      tableName="Y9_LOG_USER_LOGIN_INFO"/>
+    </changeSet>
 </databaseChangeLog>
