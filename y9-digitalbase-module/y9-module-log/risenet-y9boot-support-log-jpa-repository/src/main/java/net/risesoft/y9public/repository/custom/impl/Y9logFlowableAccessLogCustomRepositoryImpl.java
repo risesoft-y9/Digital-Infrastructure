@@ -14,14 +14,12 @@ import jakarta.persistence.criteria.Root;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +36,6 @@ import net.risesoft.y9.util.Y9Day;
 import net.risesoft.y9public.entity.Y9logFlowableAccessLog;
 import net.risesoft.y9public.repository.Y9logFlowableAccessLogRepository;
 import net.risesoft.y9public.repository.custom.Y9logFlowableAccessLogCustomRepository;
-import net.risesoft.y9public.repository.custom.Y9logMappingCustomRepository;
 
 /**
  * @author guoweijun
@@ -54,17 +51,11 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
 
     private static final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd");
 
-    private final Y9logMappingCustomRepository y9logMappingCustomRepository;
     private final Y9logFlowableAccessLogRepository y9logFlowableAccessLogRepository;
 
-    private final JdbcTemplate jdbcTemplate4Public;
-
-    public Y9logFlowableAccessLogCustomRepositoryImpl(Y9logMappingCustomRepository y9logMappingCustomRepository,
-        Y9logFlowableAccessLogRepository y9logFlowableAccessLogRepository,
-        @Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public) {
-        this.y9logMappingCustomRepository = y9logMappingCustomRepository;
+    public Y9logFlowableAccessLogCustomRepositoryImpl(
+        Y9logFlowableAccessLogRepository y9logFlowableAccessLogRepository) {
         this.y9logFlowableAccessLogRepository = y9logFlowableAccessLogRepository;
-        this.jdbcTemplate4Public = jdbcTemplate4Public;
     }
 
     public long getOperateTimeCount(Date startDay, Date endDay, Integer tenantType, boolean betweenAble,
@@ -204,6 +195,14 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                         list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.OPERATE_NAME).as(String.class),
                             searchDto.getOperateName()));
                     }
+                    if (StringUtils.isNotBlank(searchDto.getTitle())) {
+                        list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.TITLE).as(String.class),
+                            "%" + searchDto.getTitle() + "%"));
+                    }
+                    if (StringUtils.isNotBlank(searchDto.getArguments())) {
+                        list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.ARGUMENTS).as(String.class),
+                            "%" + searchDto.getArguments() + "%"));
+                    }
                     if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
                         String sTime = startTime + " 00:00:00";
                         String eTime = endTime + " 23:59:59";
@@ -256,6 +255,14 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                 if (StringUtils.isNotBlank(searchDto.getOperateType())) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.OPERATE_TYPE).as(String.class),
                         searchDto.getOperateType()));
+                }
+                if (StringUtils.isNotBlank(searchDto.getTitle())) {
+                    list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.TITLE).as(String.class),
+                        "%" + searchDto.getTitle() + "%"));
+                }
+                if (StringUtils.isNotBlank(searchDto.getArguments())) {
+                    list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.ARGUMENTS).as(String.class),
+                        "%" + searchDto.getArguments() + "%"));
                 }
                 if (StringUtils.isNotBlank(startDay) && StringUtils.isNotBlank(endDay)) {
                     try {
@@ -325,12 +332,18 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.LOG_LEVEL).as(String.class),
                         searchDto.getLogLevel()));
                 }
-
                 if (StringUtils.isNotBlank(searchDto.getOperateType())) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.OPERATE_TYPE).as(String.class),
                         searchDto.getOperateType()));
                 }
-
+                if (StringUtils.isNotBlank(searchDto.getTitle())) {
+                    list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.TITLE).as(String.class),
+                        "%" + searchDto.getTitle() + "%"));
+                }
+                if (StringUtils.isNotBlank(searchDto.getArguments())) {
+                    list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.ARGUMENTS).as(String.class),
+                        "%" + searchDto.getArguments() + "%"));
+                }
                 if (StringUtils.isNotBlank(date) && StringUtils.isNotBlank(hour)) {
                     int h = Integer.parseInt(hour);
                     Calendar cal = Calendar.getInstance();
@@ -399,6 +412,14 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                 if (StringUtils.isNotBlank(loginInfoModel.getModularName())) {
                     list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.MODULAR_NAME).as(String.class),
                         "%" + loginInfoModel.getModularName() + "%"));
+                }
+                if (StringUtils.isNotBlank(loginInfoModel.getTitle())) {
+                    list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.TITLE).as(String.class),
+                        "%" + loginInfoModel.getTitle() + "%"));
+                }
+                if (StringUtils.isNotBlank(loginInfoModel.getArguments())) {
+                    list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.ARGUMENTS).as(String.class),
+                        "%" + loginInfoModel.getArguments() + "%"));
                 }
 
                 if (StringUtils.isNotBlank(loginInfoModel.getStartTime())

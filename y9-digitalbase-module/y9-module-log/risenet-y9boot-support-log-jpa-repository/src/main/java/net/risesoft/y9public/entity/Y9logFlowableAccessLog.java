@@ -59,11 +59,18 @@ public class Y9logFlowableAccessLog implements Serializable {
     private String operateType;
 
     /**
-     * 描述：主要是标题，表单数据等
+     * 标题
      */
-    @Column(name = "DESCRIPTION")
-    @Comment(value = "描述：主要是标题，表单数据等")
-    private String description;
+    @Column(name = "TITLE", length = 1000)
+    @Comment(value = "标题")
+    private String title;
+
+    /**
+     * 请求参数和值
+     */
+    @Column(name = "ARGUMENTS", length = 5000)
+    @Comment(value = "请求参数和值")
+    private String arguments;
 
     /** 用户id */
     @Column(name = "USER_ID", length = 38)
