@@ -397,9 +397,13 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.OPERATE_TYPE).as(String.class),
                         loginInfoModel.getOperateType()));
                 }
+                if (StringUtils.isNotBlank(loginInfoModel.getOperateName())) {
+                    list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.OPERATE_NAME).as(String.class),
+                        "%" + loginInfoModel.getOperateName() + "%"));
+                }
                 if (StringUtils.isNotBlank(loginInfoModel.getUserName())) {
-                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.USER_NAME).as(String.class),
-                        loginInfoModel.getUserName()));
+                    list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.USER_NAME).as(String.class),
+                        "%" + loginInfoModel.getUserName() + "%"));
                 }
                 if (StringUtils.isNotBlank(loginInfoModel.getUserHostIp())) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.USER_HOST_IP).as(String.class),
