@@ -47,92 +47,6 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         this.y9LoginUserService = y9LoginUserService;
     }
 
-    @Override
-    public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service)
-        throws GeneralSecurityException, PreventedException {
-        UsernamePasswordCredential riseCredential = (UsernamePasswordCredential)credential;
-        // HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext();
-        HttpServletRequest request =
-            ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
-        String loginType = request.getParameter("loginType");
-        String tenantShortName = request.getParameter("tenantShortName");
-        String positionId = request.getParameter("positionId");
-        String deptId = request.getParameter("deptId");
-        String systemName = request.getParameter("systemName");
-        String screenDimension = request.getParameter("screenDimension");
-        // String rsaPublicKey = request.getParameter("rsaPublicKey");
-
-        Map<String, Object> customFields = riseCredential.getCustomFields();
-        customFields.put("tenantShortName", tenantShortName);
-        customFields.put("noLoginScreen", true);
-        customFields.put("deptId", deptId);
-        customFields.put("positionId", positionId);
-        customFields.put("loginType", loginType);
-        customFields.put("screenDimension", screenDimension);
-        customFields.put("systemName", systemName);
-        riseCredential.setCustomFields(customFields);
-
-        String encryptedUsername = riseCredential.getUsername();
-        String encryptedPassword = riseCredential.toPassword();
-        Y9User y9User;
-        try {
-            String rsaPrivateKey = Y9Context.getProperty("y9.rsaPrivateKey");
-            String plainUsername = RSAUtil.privateDecrypt(encryptedUsername, rsaPrivateKey);
-            String plainPassword = RSAUtil.privateDecrypt(encryptedPassword, rsaPrivateKey);
-            if (plainUsername.contains("&")) {
-                String agentUserName = plainUsername.substring(plainUsername.indexOf("&") + 1);
-                String agentTenantShortName = "operation";
-
-                plainUsername = plainUsername.substring(0, plainUsername.indexOf("&"));
-
-                updateCredential(request, riseCredential, plainUsername, plainPassword, tenantShortName);
-
-                List<Y9User> agentUsers = getAgentUsers(deptId, agentTenantShortName, agentUserName);
-                if (agentUsers == null || agentUsers.isEmpty()) {
-                    throw new AccountNotFoundException("没有找到这个代理用户。");
-                } else {
-                    y9User = agentUsers.get(0);
-                    String hashed = y9User.getPassword();
-                    if (!Y9MessageDigest.bcryptMatch(plainPassword, hashed)) {
-                        throw new FailedLoginException("代理用户密码错误。");
-                    }
-                }
-
-            } else {
-                updateCredential(request, riseCredential, plainUsername, plainPassword, tenantShortName);
-
-                List<Y9User> users = getUsers(loginType, deptId, tenantShortName, plainUsername);
-                if (users == null || users.isEmpty()) {
-                    throw new AccountNotFoundException("没有找到这个用户。");
-                } else if ("qrCode".equals(loginType)) {
-                    y9User = users.get(0);
-                    updateCredential(request, riseCredential, y9User.getLoginName(), y9User.getPassword(),
-                        y9User.getTenantShortName());
-                } else {
-                    y9User = users.get(0);
-                    String hashed = y9User.getPassword();
-                    if (!Y9MessageDigest.bcryptMatch(plainPassword, hashed)) {
-                        throw new FailedLoginException("用户密码错误。");
-                    }
-                }
-            }
-
-            y9LoginUserService.save(riseCredential, "true", "登录成功");
-
-            val attributes = buildAttributes(riseCredential, y9User);
-            val principal = this.principalFactory.createPrincipal(plainUsername, attributes);
-            // val principal = this.principalFactory.createPrincipal(plainUsername);
-            return new DefaultAuthenticationHandlerExecutionResult(this, riseCredential, principal);
-        } catch (GeneralSecurityException e) {
-            y9LoginUserService.save(riseCredential, "false", "登录失败");
-            throw e;
-        } catch (Exception e) {
-            y9LoginUserService.save(riseCredential, "false", "登录失败");
-            throw new FailedLoginException(e.getMessage());
-        }
-
-    }
-
     private static void updateCredential(HttpServletRequest request, UsernamePasswordCredential riseCredential,
         String username, String password, String tenantShortName) {
         riseCredential.setUsername(username);
@@ -167,6 +81,97 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         }
         customFields.put("userAgent", request.getHeader("User-Agent"));
         customFields.put("userHostIP", Y9Context.getIpAddr(request));
+
+    }
+
+    @Override
+    public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service)
+        throws GeneralSecurityException, PreventedException {
+        UsernamePasswordCredential riseCredential = (UsernamePasswordCredential)credential;
+        // HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext();
+        HttpServletRequest request =
+            ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+        String loginType = request.getParameter("loginType");
+        String tenantShortName = request.getParameter("tenantShortName");
+        String positionId = request.getParameter("positionId");
+        String deptId = request.getParameter("deptId");
+        String systemName = request.getParameter("systemName");
+        String screenDimension = request.getParameter("screenDimension");
+        // String rsaPublicKey = request.getParameter("rsaPublicKey");
+
+        Map<String, Object> customFields = riseCredential.getCustomFields();
+        customFields.put("tenantShortName", tenantShortName);
+        customFields.put("noLoginScreen", true);
+        customFields.put("deptId", deptId);
+        customFields.put("positionId", positionId);
+        customFields.put("loginType", loginType);
+        customFields.put("screenDimension", screenDimension);
+        customFields.put("systemName", systemName);
+        riseCredential.setCustomFields(customFields);
+
+        String encryptedUsername = riseCredential.getUsername();
+        String encryptedPassword = riseCredential.toPassword();
+        Y9User y9User;
+        String loginMsg = "登录成功";
+        try {
+            String rsaPrivateKey = Y9Context.getProperty("y9.rsaPrivateKey");
+            String plainUsername = RSAUtil.privateDecrypt(encryptedUsername, rsaPrivateKey);
+            String plainPassword = RSAUtil.privateDecrypt(encryptedPassword, rsaPrivateKey);
+            if (plainUsername.contains("&")) {
+                String agentUserName = plainUsername.substring(plainUsername.indexOf("&") + 1);
+                String agentTenantShortName = "operation";
+
+                plainUsername = plainUsername.substring(0, plainUsername.indexOf("&"));
+
+                updateCredential(request, riseCredential, plainUsername, plainPassword, tenantShortName);
+
+                List<Y9User> agentUsers = getAgentUsers(deptId, agentTenantShortName, agentUserName);
+                if (agentUsers == null || agentUsers.isEmpty()) {
+                    loginMsg = "没有找到这个代理用户。";
+                    throw new AccountNotFoundException("没有找到这个代理用户。");
+                } else {
+                    y9User = agentUsers.get(0);
+                    String hashed = y9User.getPassword();
+                    if (!Y9MessageDigest.bcryptMatch(plainPassword, hashed)) {
+                        loginMsg = "代理用户密码错误。";
+                        throw new FailedLoginException("代理用户密码错误。");
+                    }
+                }
+
+            } else {
+                updateCredential(request, riseCredential, plainUsername, plainPassword, tenantShortName);
+
+                List<Y9User> users = getUsers(loginType, deptId, tenantShortName, plainUsername);
+                if (users == null || users.isEmpty()) {
+                    loginMsg = "没有找到这个用户。";
+                    throw new AccountNotFoundException("没有找到这个用户。");
+                } else if ("qrCode".equals(loginType)) {
+                    y9User = users.get(0);
+                    updateCredential(request, riseCredential, y9User.getLoginName(), y9User.getPassword(),
+                        y9User.getTenantShortName());
+                } else {
+                    y9User = users.get(0);
+                    String hashed = y9User.getPassword();
+                    if (!Y9MessageDigest.bcryptMatch(plainPassword, hashed)) {
+                        loginMsg = "用户密码错误。";
+                        throw new FailedLoginException("用户密码错误。");
+                    }
+                }
+            }
+
+            y9LoginUserService.save(riseCredential, "true", loginMsg);
+
+            val attributes = buildAttributes(riseCredential, y9User);
+            val principal = this.principalFactory.createPrincipal(plainUsername, attributes);
+            // val principal = this.principalFactory.createPrincipal(plainUsername);
+            return new DefaultAuthenticationHandlerExecutionResult(this, riseCredential, principal);
+        } catch (GeneralSecurityException e) {
+            y9LoginUserService.save(riseCredential, "false", loginMsg);
+            throw e;
+        } catch (Exception e) {
+            y9LoginUserService.save(riseCredential, "false", "登录失败,错误：" + e.getMessage());
+            throw new FailedLoginException(e.getMessage());
+        }
 
     }
 
@@ -243,10 +248,10 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         attributes.put("personType", toArrayList(y9User.getPersonType()));
 
         attributes.put("password", toArrayList(y9User.getPassword()));
-        attributes.put("original", Lists.newArrayList(y9User.getOriginal() == null ? true : y9User.getOriginal()));
+        attributes.put("original", Lists.newArrayList(y9User.getOriginal() == null || y9User.getOriginal()));
         attributes.put("originalId", toArrayList(y9User.getOriginalId()));
         attributes.put("globalManager",
-            Lists.newArrayList(y9User.getGlobalManager() == null ? false : y9User.getGlobalManager()));
+            Lists.newArrayList(y9User.getGlobalManager() != null && y9User.getGlobalManager()));
         attributes.put("managerLevel", toArrayList(y9User.getManagerLevel()));
         attributes.put("positions", toArrayList(y9User.getPositions()));
 

@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apereo.cas.authentication.credential.UsernamePasswordCredential;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -19,14 +18,12 @@ import y9.repository.Y9UserRepository;
 import y9.service.Y9LoginUserService;
 import y9.util.Y9Context;
 import y9.util.common.UserAgentUtil;
-import y9.util.json.Y9JacksonUtil;
 
 import cz.mallat.uasparser.UserAgentInfo;
 
-@Service("y9LoginUserService")
 @Slf4j
 @RequiredArgsConstructor
-public class Y9LoginUserServiceImpl implements Y9LoginUserService {
+public class Y9LoginUserJpaServiceImpl implements Y9LoginUserService {
 
     private final Y9LoginUserRepository y9LoginUserRepository;
     private final Y9UserRepository y9UserRepository;
@@ -40,7 +37,7 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
             String loginType = (String)customFields.get("loginType");
             String tenantShortName = (String)customFields.get("tenantShortName");
             String userAgent = (String)customFields.get("userAgent");
-            String screenResolution = (String)customFields.get("screenResolution");
+            String screenResolution = (String)customFields.get("screenDimension");
             String userHostIP = (String)customFields.get("userHostIP");
             String userHostMAC = (String)customFields.get("userHostMAC");
             String userHostName = (String)customFields.get("userHostName");
@@ -103,14 +100,8 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
                 user.setScreenResolution(screenResolution);
                 user.setOsName(uaInfo.getOsName());
                 user.setManagerLevel(managerLevel);
-                String loginInfoSaveTarget = Y9Context.getProperty("y9.loginInfoSaveTarget");
-                if ("jpa".equals(loginInfoSaveTarget)) {
-                    y9LoginUserRepository.save(user);
-                } else {
-                    String jsonString = Y9JacksonUtil.writeValueAsString(user);
-                    // kafkaTemplate.send("y9_userLoginInfo_message", jsonString);
-                    LOGGER.info("保存登录日志成功至Kafka成功");
-                }
+                y9LoginUserRepository.save(user);
+
             }
         } catch (Exception e) {
             e.printStackTrace();

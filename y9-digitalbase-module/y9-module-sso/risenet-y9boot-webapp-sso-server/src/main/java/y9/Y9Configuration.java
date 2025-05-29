@@ -6,20 +6,30 @@ import javax.servlet.DispatcherType;
 
 import org.apereo.cas.web.ProtocolEndpointWebSecurityConfigurer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWarDeployment;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.Ordered;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.filter.ForwardedHeaderFilter;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import y9.repository.Y9LoginUserRepository;
+import y9.repository.Y9UserRepository;
 import y9.service.Y9KeyValueService;
+import y9.service.Y9LoginUserService;
+import y9.service.impl.Y9LoginUserJpaServiceImpl;
+import y9.service.impl.Y9LoginUserKafkaServiceImpl;
 import y9.util.Y9Context;
 
 @Lazy(false)
@@ -80,4 +90,35 @@ public class Y9Configuration {
         }
     }
 
+    @Configuration
+    @ConditionalOnProperty(value = "y9.loginInfoSaveTarget", havingValue = "kafka")
+    @Slf4j
+    @EnableConfigurationProperties(KafkaProperties.class)
+    static class Y9UserLoginKafkaConfiguration {
+
+        @Bean("y9KafkaTemplate")
+        @ConditionalOnMissingBean(name = "y9KafkaTemplate")
+        public KafkaTemplate<?, ?> y9KafkaTemplate(ProducerFactory<Object, Object> kafkaProducerFactory) {
+            LOGGER.info("Y9UserLoginKafkaConfiguration y9KafkaTemplate init ......");
+            return new KafkaTemplate<>(kafkaProducerFactory);
+        }
+
+        @Bean
+        public Y9LoginUserService y9LoginUserKafkaServiceImpl(Y9UserRepository y9UserRepository,
+            KafkaTemplate<String, Object> y9KafkaTemplate) {
+            return new Y9LoginUserKafkaServiceImpl(y9UserRepository, y9KafkaTemplate);
+        }
+
+    }
+
+    @Configuration
+    @ConditionalOnProperty(value = "y9.loginInfoSaveTarget", havingValue = "jpa", matchIfMissing = true)
+    static class Y9UserLoginJpaConfiguration {
+        @Bean
+        public Y9LoginUserService y9LoginUserServiceImpl(Y9LoginUserRepository y9LoginUserRepository,
+            Y9UserRepository y9UserRepository) {
+            return new Y9LoginUserJpaServiceImpl(y9LoginUserRepository, y9UserRepository);
+        }
+
+    }
 }
