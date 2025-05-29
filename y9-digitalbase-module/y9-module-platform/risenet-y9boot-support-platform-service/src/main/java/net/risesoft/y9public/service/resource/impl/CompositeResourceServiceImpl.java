@@ -169,6 +169,9 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
             return;
         }
         Y9ResourceBase parent = this.findById(y9ResourceBase.getParentId());
+        if(parent == null) {
+            return;
+        }
         resourceSet.add(parent);
         fillResourcesRecursivelyToRoot(parent, resourceSet);
     }
