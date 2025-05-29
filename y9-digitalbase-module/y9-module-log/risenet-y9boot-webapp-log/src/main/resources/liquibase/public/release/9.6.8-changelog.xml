@@ -81,4 +81,25 @@
             <column name="ARGUMENTS" type="VARCHAR(5000)" remarks="参数"/>
         </addColumn>
     </changeSet>
+
+    <changeSet author="qinman" id="renameColumn-flowable-log-1-2" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_LOG_FLOWABLE_ACCESS_LOG" columnName="DESCRIPTION"/>
+        </preConditions>
+        <addColumn tableName="Y9_LOG_FLOWABLE_ACCESS_LOG">
+            <column name="ARGUMENTS" type="VARCHAR(5000)" remarks="参数"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="qinman" id="renameColumn-flowable-log-1-3" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="Y9_LOG_FLOWABLE_ACCESS_LOG" columnName="OPERATE_TYPE"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="Y9_LOG_FLOWABLE_ACCESS_LOG">
+            <column name="OPERATE_TYPE" type="VARCHAR(38)"
+                    remarks="操作类别： 0=使用，1=登录，2=退出，3=查看，4=增加，5=修改，6=删除，7=发送，8=活动"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
