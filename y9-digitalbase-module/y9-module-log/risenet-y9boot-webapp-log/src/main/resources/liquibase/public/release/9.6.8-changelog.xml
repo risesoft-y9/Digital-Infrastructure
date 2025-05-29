@@ -70,4 +70,15 @@
         <renameColumn newColumnName="BROWSER_VERSION" oldColumnName="BROWSE_VERSION" columnDataType="VARCHAR(255)"
                       tableName="Y9_LOG_USER_LOGIN_INFO"/>
     </changeSet>
+
+    <changeSet author="qinman" id="renameColumn-flowable-log-1-1" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_LOG_FLOWABLE_ACCESS_LOG" columnName="DESCRIPTION"/>
+        </preConditions>
+        <renameColumn newColumnName="TITLE" oldColumnName="DESCRIPTION" columnDataType="VARCHAR(1000)"
+                      tableName="Y9_LOG_FLOWABLE_ACCESS_LOG"/>
+        <addColumn tableName="Y9_LOG_FLOWABLE_ACCESS_LOG">
+            <column name="ARGUMENTS" type="VARCHAR(5000)" remarks="参数"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
