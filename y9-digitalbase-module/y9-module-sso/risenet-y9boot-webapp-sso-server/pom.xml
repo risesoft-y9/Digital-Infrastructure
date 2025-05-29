@@ -236,7 +236,7 @@
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-authentication-attributes</artifactId>
-        </dependency>        
+        </dependency>
 
         <dependency>
             <groupId>org.apereo.cas</groupId>
@@ -266,7 +266,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-jpa-ticket-registry</artifactId>
@@ -317,7 +317,7 @@
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-api</artifactId>
         </dependency>
-        
+
 
         <!--<dependency>
             <groupId>org.apereo.cas</groupId>
@@ -331,7 +331,7 @@
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-redis-modules</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-session-redis</artifactId>
@@ -357,7 +357,7 @@
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-logging</artifactId>
-        </dependency>     
+        </dependency>
 
         <dependency>
             <groupId>org.apereo.cas</groupId>
@@ -368,7 +368,7 @@
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-oauth-webflow</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-oauth-api</artifactId>
@@ -407,7 +407,7 @@
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-pac4j-api</artifactId>
         </dependency>
-        
+
         <!--<dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-palantir</artifactId>
@@ -423,12 +423,12 @@
             <artifactId>npm-registry-client</artifactId>
             <version>7.4.6-1</version>
         </dependency>-->
-        
+
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>oauth2-oidc-sdk</artifactId>
@@ -484,13 +484,13 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-indexer</artifactId>
             <optional>true</optional>
         </dependency>
-        
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -529,7 +529,10 @@
             <artifactId>postgresql</artifactId>
         </dependency>
 
-        
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
