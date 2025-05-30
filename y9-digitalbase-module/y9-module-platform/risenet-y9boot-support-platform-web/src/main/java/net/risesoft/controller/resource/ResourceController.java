@@ -3,6 +3,7 @@ package net.risesoft.controller.resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import jakarta.validation.constraints.NotBlank;
@@ -66,7 +67,7 @@ public class ResourceController {
      */
     @RiseLog(operationName = "查询所有的根资源（App资源）")
     @GetMapping(value = "/allTreeRoot")
-    @Deprecated
+    @Deprecated(since = "9.6.8")
     public Y9Result<List<ResourceBaseVO>> allTreeRoot() {
         List<Y9App> appResourceList = compositeResourceService.listRootResourceList();
         return Y9Result.success(Y9ModelConvertUtil.convert(appResourceList, ResourceBaseVO.class), "查询所有的根资源成功");
@@ -89,9 +90,12 @@ public class ResourceController {
      * 查询所有的根资源（有权限的App资源）
      *
      * @return {@code Y9Result<List<}{@link ResourceTreeNodeVO}{@code >>}
+     *
+     *
      */
     @RiseLog(operationName = "查询所有的根资源（有权限的App资源）")
     @GetMapping(value = "/treeRoot2")
+    @Deprecated(since = "9.6.8")
     public Y9Result<List<ResourceTreeNodeVO>> treeRoot2() {
         List<Y9App> appResourceList = compositeResourceService.listRootResourceList();
         List<Y9App> accessibleAppResourceList;
@@ -192,44 +196,46 @@ public class ResourceController {
     }
 
     /**
-     * 根据系统id查询所有的根资源（有权限的App资源）
+     * 根据系统id，返回系统节点(系统资源树)
      *
      * @param systemId 系统id
-     * @return {@code Y9Result<List<}{@link ResourceBaseVO}{@code >>}
+     * @return {@code Y9Result<List<}{@link ResourceTreeNodeVO}{@code >>}
+     * @since 9.6.8
      */
     @RiseLog(operationName = "根据系统id查询所有的根资源（有权限的App资源）")
-    @GetMapping(value = "/treeRoot/{systemId}")
-    public Y9Result<List<ResourceBaseVO>> treeRootBySystemId(@PathVariable @NotBlank String systemId) {
-        List<Y9ResourceBase> appResourceList = compositeResourceService.listRootResourceBySystemId(systemId);
-        List<String> appIds =
-            y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
-        List<Y9ResourceBase> asscAppResourceList =
-            appResourceList.stream().filter(resource -> appIds.contains(resource.getId())).collect(Collectors.toList());
-        return Y9Result.success(Y9ModelConvertUtil.convert(asscAppResourceList, ResourceBaseVO.class),
-            "根据系统id查询所有的根资源成功");
+    @GetMapping(value = "/systemTreeRoot/{systemId}")
+    public Y9Result<List<ResourceTreeNodeVO>> systemTreeRoot(@PathVariable @NotBlank String systemId) {
+        Optional<Y9System> y9System = y9SystemService.findById(systemId);
+        List<Y9System> y9SystemList = new ArrayList<>();
+        if (y9System.isPresent()) {
+            y9SystemList.add(y9System.get());
+            return Y9Result.success(ResourceTreeNodeVO.convertY9SystemList(y9SystemList), "根据系统id查询所有的根资源成功");
+        }
+        return Y9Result.failure("未找到系统信息！");
     }
 
     /**
-     * 根据名称查询资源树
+     * 根据名称查询资源树 （systemId存在时，返回系统搜索树，appId存在时返回应用搜索资源树）
      *
      * @param name 资源名称
      * @param appId 应用id
+     * @param systemId 系统id
      * @return {@code Y9Result<List<}{@link ResourceTreeNodeVO}{@code >>}
      */
     @RiseLog(operationName = "根据名称查询资源树")
     @GetMapping(value = "/treeSearch2")
-    public Y9Result<List<ResourceTreeNodeVO>> treeSearch2(@RequestParam String name, String appId) {
+    public Y9Result<List<ResourceTreeNodeVO>> treeSearch2(@RequestParam String name, String appId, String systemId) {
         List<ResourceTreeNodeVO> resourceTreeNodeVOList;
         if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
-            resourceTreeNodeVOList = treeSearchByOperationSystemManager(name, appId);
+            resourceTreeNodeVOList = treeSearchByOperationSystemManager(name, appId, systemId);
         } else {
-            resourceTreeNodeVOList = treeSearchBySystemManager(name, appId);
+            resourceTreeNodeVOList = treeSearchBySystemManager(name, appId, systemId);
         }
 
         return Y9Result.success(resourceTreeNodeVOList, "根据名称查询资源树成功");
     }
 
-    private List<ResourceTreeNodeVO> treeSearchByOperationSystemManager(String name, String appId) {
+    private List<ResourceTreeNodeVO> treeSearchByOperationSystemManager(String name, String appId, String systemId) {
         List<ResourceTreeNodeVO> resourceTreeNodeVOList = new ArrayList<>();
 
         List<Y9ResourceBase> appResourceList = compositeResourceService.treeSearch(name);
@@ -239,15 +245,20 @@ public class ResourceController {
                 .collect(Collectors.toList());
         }
         resourceTreeNodeVOList.addAll(ResourceTreeNodeVO.convertY9ResourceBaseList(accessResourceList));
-
-        List<String> systemIdList =
-            accessResourceList.stream().map(Y9ResourceBase::getSystemId).collect(Collectors.toList());
-        List<Y9System> y9SystemList = y9SystemService.listByIds(systemIdList);
+        List<Y9System> y9SystemList = new ArrayList<>();
+        if (StringUtils.isNotBlank(systemId)) {
+            Y9System y9System = y9SystemService.findById(systemId).get();
+            y9SystemList.add(y9System);
+        } else {
+            List<String> systemIdList =
+                accessResourceList.stream().map(Y9ResourceBase::getSystemId).collect(Collectors.toList());
+            y9SystemList = y9SystemService.listByIds(systemIdList);
+        }
         resourceTreeNodeVOList.addAll(ResourceTreeNodeVO.convertY9SystemList(y9SystemList));
         return resourceTreeNodeVOList;
     }
 
-    private List<ResourceTreeNodeVO> treeSearchBySystemManager(String name, String appId) {
+    private List<ResourceTreeNodeVO> treeSearchBySystemManager(String name, String appId, String systemId) {
         List<ResourceTreeNodeVO> resourceTreeNodeVOList = new ArrayList<>();
 
         List<Y9ResourceBase> appResourceList = compositeResourceService.treeSearch(name);
@@ -261,9 +272,15 @@ public class ResourceController {
         }
         resourceTreeNodeVOList.addAll(ResourceTreeNodeVO.convertY9ResourceBaseList(accessAppResourceList));
 
-        List<String> systemIdList =
-            accessAppResourceList.stream().map(Y9ResourceBase::getSystemId).collect(Collectors.toList());
-        List<Y9System> y9SystemList = y9SystemService.listByIds(systemIdList);
+        List<Y9System> y9SystemList = new ArrayList<>();
+        if (StringUtils.isNotBlank(systemId)) {
+            Y9System y9System = y9SystemService.findById(systemId).get();
+            y9SystemList.add(y9System);
+        } else {
+            List<String> systemIdList =
+                accessAppResourceList.stream().map(Y9ResourceBase::getSystemId).collect(Collectors.toList());
+            y9SystemList = y9SystemService.listByIds(systemIdList);
+        }
         resourceTreeNodeVOList.addAll(ResourceTreeNodeVO.convertY9SystemList(y9SystemList));
         return resourceTreeNodeVOList;
     }
