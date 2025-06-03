@@ -1,5 +1,5 @@
 plugins {
-    id("application")
+    application
     id("net.risesoft.y9.java-publish")
 }
 

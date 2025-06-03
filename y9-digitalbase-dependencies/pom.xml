@@ -102,51 +102,50 @@
 
         <revision>9.7.0-SNAPSHOT</revision>
 
-        <spring-boot.version>3.4.4</spring-boot.version>
-        <spring-cloud.version>2024.0.1</spring-cloud.version>
+        <spring-boot.version>3.5.0</spring-boot.version>
+        <spring-cloud.version>2025.0.0</spring-cloud.version>
 
-        <antisamy.version>1.6.2</antisamy.version>
-        <aspectj.version>1.9.22.1</aspectj.version>
-        <axis.version>1.4</axis.version>
+        <antisamy.version>1.7.8</antisamy.version>
+        <aspectj.version>1.9.24</aspectj.version>
         <axis2.version>2.0.0</axis2.version>
-        <bcprov-ext-jdk15to18.version>1.76</bcprov-ext-jdk15to18.version>
-        <classgraph.version>4.8.162</classgraph.version>
-        <commons-io.version>2.18.0</commons-io.version>
+        <bcprov-ext-jdk15to18.version>1.78.1</bcprov-ext-jdk15to18.version>
+        <classgraph.version>4.8.179</classgraph.version>
+        <commons-io.version>2.19.0</commons-io.version>
         <commons-net.version>3.11.1</commons-net.version>
-        <commons-text.version>1.12.0</commons-text.version>
+        <commons-text.version>1.13.1</commons-text.version>
         <commons-httpclient.version>3.1</commons-httpclient.version>
-        <commons-beanutils.version>1.10.1</commons-beanutils.version>
+        <commons-beanutils.version>1.11.0</commons-beanutils.version>
         <commons-discovery.version>0.5</commons-discovery.version>
-        <etcd-java.version>0.0.18</etcd-java.version>
-        <fastjson.version>2.0.53</fastjson.version>
-        <fastexcel.version>1.1.0</fastexcel.version>
-        <guava.version>33.3.1-jre</guava.version>
+        <etcd-java.version>0.0.24</etcd-java.version>
+        <fastjson.version>2.0.57</fastjson.version>
+        <fastexcel.version>1.2.0</fastexcel.version>
+        <guava.version>33.4.8-jre</guava.version>
         <httpcomponents.version>4.5.14</httpcomponents.version>
-        <hutool.version>5.8.34</hutool.version>
+        <hutool.version>5.8.38</hutool.version>
         <ipaddress.version>5.5.1</ipaddress.version>
-        <javers.version>7.7.0</javers.version>
+        <javers.version>7.8.0</javers.version>
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
         <jakarta-json.version>2.0.1</jakarta-json.version>
-        <java-uuid-generator.version>4.0.1</java-uuid-generator.version>
+        <java-uuid-generator.version>5.1.0</java-uuid-generator.version>
         <javax.xml.rpc-api.version>1.1.2</javax.xml.rpc-api.version>
         <jaxrpc-api.version>1.1</jaxrpc-api.version>
         <jaxws-rt.version>4.0.3</jaxws-rt.version>
         <jBCrypt.version>0.4.3</jBCrypt.version>
-        <jxls.version>2.13.0</jxls.version>
+        <jxls.version>3.0.0</jxls.version>
         <jxls-jexcel.version>1.0.9</jxls-jexcel.version>
         <jxls-reader.version>2.1.0</jxls-reader.version>
         <jodd-mail.version>7.1.0</jodd-mail.version>
         <jodd-bean.version>5.1.6</jodd-bean.version>
         <jodd-http.version>6.3.0</jodd-http.version>
         <jodd-lagarto.version>6.0.6</jodd-lagarto.version>
-        <lombok.version>1.18.36</lombok.version>
-        <liquibase.version>4.31.0</liquibase.version>
+        <lombok.version>1.18.38</lombok.version>
+        <liquibase.version>4.32.0</liquibase.version>
         <org-dom4j.version>2.1.4</org-dom4j.version>
-        <oshi.version>6.6.5</oshi.version>
-        <poi-ooxml.version>5.2.3</poi-ooxml.version>
-        <poi-scratchpad.version>5.2.3</poi-scratchpad.version>
+        <oshi.version>6.8.1</oshi.version>
+        <poi-ooxml.version>5.4.1</poi-ooxml.version>
+        <poi-scratchpad.version>5.4.1</poi-scratchpad.version>
         <reflections.version>0.10.3.4</reflections.version>
-        <shedlock.version>6.0.2</shedlock.version>
+        <shedlock.version>6.7.0</shedlock.version>
         <transmittable-thread-local.version>2.14.3</transmittable-thread-local.version>
 
         <!-- auth0 jwt jwks -->
@@ -165,9 +164,9 @@
         <oracle-driver.version>23.6.0.24.10</oracle-driver.version>
 
         <!-- Plugin versions -->
-        <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
+        <flatten-maven-plugin.version>1.7.0</flatten-maven-plugin.version>
         <central-publishing-maven-plugin.version>0.7.0</central-publishing-maven-plugin.version>
-        <maven-gpg-plugin.version>3.2.3</maven-gpg-plugin.version>
+        <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
     </properties>
 
     <dependencyManagement>

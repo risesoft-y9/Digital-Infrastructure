@@ -22,8 +22,8 @@ catalog {
 
 group = "net.risesoft.y9"
 
-val rootProjectProperties = Properties().apply { load(file("../gradle.properties").inputStream()) }
-version = rootProjectProperties.get("Y9PLUGIN_VERSION") as String? ?: "9.7.0-01"
+val props = Properties().apply { load(file("../gradle.properties").inputStream()) }
+version = props.get("Y9PLUGIN_VERSION") as String? ?: "9.7.0-01"
 
 signing {
     //useGpgCmd()
@@ -39,11 +39,11 @@ mavenPublishing {
     configure(VersionCatalog())
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = false)
     signAllPublications()
-    coordinates(project.group.toString(), project.name, project.version.toString())
+    //coordinates(project.group.toString(), project.name, project.version.toString())
     pom {
         name = project.name
-        description = project.name
-        url = "https://github.com/risesoft-y9/Digital-Infrastructure"
+        description = "RiseSoft/Digital Infrastructure " + project.name
+        url = props.get("PROJECT_GIT_URL").toString()
         licenses {
             license {
                 name = "GNU General Public License (GPL) version 3.0"
@@ -69,9 +69,9 @@ mavenPublishing {
             }
         }
         scm {
-            connection = "scm:git:https://github.com/risesoft-y9/Digital-Infrastructure.git"
-            developerConnection = "scm:git:https://github.com/risesoft-y9/Digital-Infrastructure.git"
-            url = "https://github.com/risesoft-y9/Digital-Infrastructure"
+            connection = props.get("PROJECT_SCM_URL").toString()
+            developerConnection = props.get("PROJECT_SCM_URL").toString()
+            url = props.get("PROJECT_GIT_URL").toString()
         }
     }
 }

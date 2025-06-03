@@ -2,11 +2,14 @@ group = "net.risesoft"
 
 repositories {
     mavenLocal()
+    maven {
+        url = uri("https://maven.aliyun.com/repository/public")
+    }
     mavenCentral()
     gradlePluginPortal()
 
     maven {
-        url = uri("https://maven.aliyun.com/repository/public")
+        url = uri("https://central.sonatype.com/repository/maven-snapshots/")
     }
 
     maven {

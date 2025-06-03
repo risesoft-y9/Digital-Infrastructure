@@ -1,7 +1,6 @@
 plugins {
     `java-library`
     id("net.risesoft.y9.java-publish")
-    id("net.risesoft.y9.java-publish-central")
 }
 
 group = "net.risesoft"
@@ -11,13 +10,11 @@ java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(21))
     }
-    withJavadocJar()
-    withSourcesJar()
+    //withJavadocJar() //com.vanniktech.maven.publish自动创建
+    //withSourcesJar() //com.vanniktech.maven.publish自动创建
 }
 
 tasks.withType<JavaCompile> {
-    //sourceCompatibility = JavaVersion.VERSION_21.toString()
-    //targetCompatibility = JavaVersion.VERSION_21.toString()
     options.encoding = "UTF-8"
     val compilerArgs = options.compilerArgs
     compilerArgs.add("-parameters")

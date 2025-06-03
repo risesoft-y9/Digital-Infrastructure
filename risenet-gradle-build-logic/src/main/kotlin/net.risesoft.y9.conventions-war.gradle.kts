@@ -1,5 +1,5 @@
 plugins {
-    id("war")
+    war
     id("net.risesoft.y9.java-publish")
     id("org.springframework.boot")
 }
