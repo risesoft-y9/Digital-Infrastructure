@@ -13,31 +13,24 @@ export const resourceTree = async (params) => {
     });
 };
 
-// 应用树
-export const resourceTreeList = async () => {
+/**
+ * 系统资源树
+ */
+export const systemTreeRoot = async (id) => {
     return await resourceRequest({
-        // url: 'http://127.0.0.1:4523/mock/891645/platform/api/rest/resource/treeRoot',
-        url: '/api/rest/resource/treeRoot2',
+        url: `/api/rest/resource/systemTreeRoot/${id}`,
         method: 'get',
-        cType: false,
-        params: {}
+        cType: false
     });
 };
 
-// 搜索资源树
-export const treeSearch = async (value) => {
-    let params;
-    if (value?.appId) {
-        params = { name: value.key, appId: value.appId };
-    } else {
-        params = { name: value.key };
-    }
+//根据应用id查询资源（App资源树）
+export const appTreeRoot = async (id) => {
     return await resourceRequest({
-        // url: 'http://127.0.0.1:4523/mock/891645/platform/api/rest/resource/treeSearch',
-        url: '/api/rest/resource/treeSearch2',
+        // url: `http://127.0.0.1:4523/mock/891645/platform/api/rest/resource/operation/${id}`,
+        url: `/api/rest/resource/appTreeRoot/${id}`,
         method: 'get',
-        cType: false,
-        params
+        cType: false
     });
 };
 
@@ -51,15 +44,40 @@ export const resourceTreeRoot = async (params) => {
     });
 };
 
-//根据应用id查询资源（App资源树）
-export const appTreeRoot = async (id) => {
+
+// 应用树（废弃）
+export const resourceTreeList = async () => {
     return await resourceRequest({
-        // url: `http://127.0.0.1:4523/mock/891645/platform/api/rest/resource/operation/${id}`,
-        url: `/api/rest/resource/appTreeRoot/${id}`,
+        // url: 'http://127.0.0.1:4523/mock/891645/platform/api/rest/resource/treeRoot',
+        url: '/api/rest/resource/treeRoot2',
         method: 'get',
-        cType: false
+        cType: false,
+        params: {}
     });
 };
+
+// 搜索资源树
+export const treeSearch = async (value) => {
+    let params;
+    console.log(value)
+    if (value?.appId) {
+        params = { name: value.key, appId: value.appId };
+    } if (value?.systemId) {
+        params = { name: value.key, systemId: value.systemId };
+    } else {
+        params = { name: value.key };
+    }
+    return await resourceRequest({
+        // url: 'http://127.0.0.1:4523/mock/891645/platform/api/rest/resource/treeSearch',
+        url: '/api/rest/resource/treeSearch2',
+        method: 'get',
+        cType: false,
+        params
+    });
+};
+
+
+
 
 // 菜单 详情
 export const getMenuInfo = async (id) => {
