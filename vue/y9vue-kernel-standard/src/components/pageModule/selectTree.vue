@@ -276,7 +276,7 @@
                 const childLevelParams = props.treeApiObj?.childLevel?.params || {};
                 if (childLevelParams) {
                     for (let key in childLevelParams) {
-                        if (!childLevelParams[key]) {
+                        if (childLevelParams[key] == undefined) {
                             childLevelParams[key] = node[key];
                         }
                     }
