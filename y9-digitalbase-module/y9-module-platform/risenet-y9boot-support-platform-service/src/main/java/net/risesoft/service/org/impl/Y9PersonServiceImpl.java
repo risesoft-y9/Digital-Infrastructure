@@ -5,12 +5,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -471,6 +477,33 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Transactional(readOnly = false)
     public Y9Person updateTabIndex(String id, int tabIndex) {
         return y9PersonManager.updateTabIndex(id, tabIndex);
+    }
+
+    @Override
+    public Page<Y9Person> page(List<String> orgIdList, Boolean disabled, Y9PageQuery pageQuery) {
+        Pageable pageable =
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.ASC, "createTime"));
+        Specification<Y9Person> spec = new Specification<>() {
+            private static final long serialVersionUID = -6506792884620973450L;
+
+            @Override
+            public Predicate toPredicate(Root<Y9Person> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
+                List<Predicate> orList = new ArrayList<>();
+                for (String id : orgIdList) {
+                    orList.add(cb.like(root.get("guidPath").as(String.class), "%" + id + "%"));
+                }
+                Predicate preOr = cb.or(orList.toArray(new Predicate[orList.size()]));
+
+                List<Predicate> predicates = new ArrayList<>();
+                if (disabled != null) {
+                    predicates.add(cb.equal(root.get("disabled").as(Boolean.class), disabled));
+                }
+                Predicate pre_and = cb.and(predicates.toArray(new Predicate[predicates.size()]));
+
+                return criteriaQuery.where(pre_and, preOr).getRestriction();
+            }
+        };
+        return y9PersonRepository.findAll(spec, pageable);
     }
 
     /**

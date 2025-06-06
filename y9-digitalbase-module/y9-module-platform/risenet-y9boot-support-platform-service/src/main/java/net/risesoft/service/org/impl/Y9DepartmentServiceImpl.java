@@ -6,7 +6,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +32,7 @@ import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9DepartmentManager;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.Y9DepartmentPropRepository;
 import net.risesoft.repository.Y9DepartmentRepository;
 import net.risesoft.service.org.Y9DepartmentService;
@@ -370,4 +381,22 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         return y9DepartmentManager.updateTabIndex(id, tabIndex);
     }
 
+    @Override
+    public Page<Y9Department> page(List<String> orgIdList, Y9PageQuery pageQuery) {
+        Pageable pageable =
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.ASC, "createTime"));
+        Specification<Y9Department> spec = new Specification<>() {
+            private static final long serialVersionUID = -95805766801894738L;
+
+            @Override
+            public Predicate toPredicate(Root<Y9Department> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<>();
+                for (String id : orgIdList) {
+                    predicates.add(cb.like(root.get("guidPath").as(String.class), "%" + id + "%"));
+                }
+                return cb.or(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        return y9DepartmentRepository.findAll(spec, pageable);
+    }
 }
