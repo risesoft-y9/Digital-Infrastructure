@@ -9,6 +9,6 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-data-jpa")
 }
 
-group = "net.risesoft"
-version = providers.gradleProperty("Y9_VERSION").get()
+//group = "net.risesoft"
+//version = providers.gradleProperty("Y9_VERSION").get()
 description = "risenet-y9boot-3rd-jpa"

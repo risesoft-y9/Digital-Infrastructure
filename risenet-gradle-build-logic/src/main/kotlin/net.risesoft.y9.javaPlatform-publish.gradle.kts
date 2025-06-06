@@ -9,6 +9,9 @@ plugins {
     id("com.vanniktech.maven.publish")
 }
 
+group = "net.risesoft"
+val y9bom_version = providers.gradleProperty("Y9BOM_VERSION").get()
+
 publishing {
     publications {
         repositories {
@@ -16,7 +19,7 @@ publishing {
                 name = "y9nexus"
                 val releasesRepoUrl = uri("https://svn.youshengyun.com:9900/nexus/repository/maven-releases/")
                 val snapshotsRepoUrl = uri("https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/")
-                url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+                url = if (y9bom_version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
 
                 credentials {
                     username = findProperty("mavenUsername") as String? ?: ""
@@ -27,20 +30,21 @@ publishing {
     }
 }
 
-signing {
+/*signing {
     //useGpgCmd()
     val signingInMemoryKey: String? by project
     val signingInMemoryKeyId: String? by project
     val signingInMemoryKeyPassword: String? by project
     useInMemoryPgpKeys(signingInMemoryKeyId, signingInMemoryKey, signingInMemoryKeyPassword)
 
-    if (!(version.toString().endsWith("SNAPSHOT"))) sign(publishing.publications)
-}
+    if (!(y9bom_version.toString().endsWith("SNAPSHOT"))) sign(publishing.publications)
+}*/
 
 mavenPublishing {
     configure(JavaPlatform())
+    coordinates(project.group.toString(), project.name, y9bom_version.toString())
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = false)
-    if (!(version.toString().endsWith("SNAPSHOT"))) signAllPublications()
+    if (!(y9bom_version.toString().endsWith("SNAPSHOT"))) signAllPublications()
     pom {
         name = project.name
         description = "RiseSoft/Digital Infrastructure " + project.name

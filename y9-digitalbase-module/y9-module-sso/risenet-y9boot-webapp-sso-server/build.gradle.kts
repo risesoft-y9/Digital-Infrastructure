@@ -5,7 +5,8 @@ plugins {
 }
 
 dependencies {
-    implementation(platform(project(":y9-digitalbase-dependencies")))
+    implementation(platform(libs.cas.server.bom))
+    annotationProcessor(platform(libs.spring.bom))
 
     implementation("org.apereo.cas:cas-server-core")
     implementation("org.apereo.cas:cas-server-core-authentication-api")
@@ -33,16 +34,14 @@ dependencies {
     implementation("org.apereo.cas:cas-server-support-jpa-service-registry")
     implementation("org.apereo.cas:cas-server-core-authentication-attributes")
     implementation("org.springframework.security:spring-security-config")
-    //implementation("org.apereo.cas:cas-server-support-ldap-core")
-    //implementation(libs.hibernate.core)
 
-    implementation("org.apereo.cas:cas-server-support-jpa-ticket-registry")
+    //implementation("org.apereo.cas:cas-server-support-jpa-ticket-registry")
 
-    //implementation("org.apereo.cas:cas-server-support-redis-core")
-    //implementation("org.apereo.cas:cas-server-support-redis-modules")
-    //implementation("org.apereo.cas:cas-server-support-redis-ticket-registry")
-    //implementation("org.apereo.cas:cas-server-support-session-redis")
-    //implementation("org.springframework.data:spring-data-redis")
+    implementation("org.apereo.cas:cas-server-support-redis-core")
+    implementation("org.apereo.cas:cas-server-support-redis-modules")
+    implementation("org.apereo.cas:cas-server-support-redis-ticket-registry")
+    implementation("org.apereo.cas:cas-server-support-session-redis")
+    implementation("org.springframework.data:spring-data-redis")
 
     implementation("org.apereo.cas:cas-server-core-api-logout")
     implementation("org.apereo.cas:cas-server-core-logout")
@@ -91,7 +90,7 @@ dependencies {
     implementation(libs.dameng.dmdialect.hibernate62)
     implementation(libs.dameng.dmjdbcdriver18)
 
-    annotationProcessor("org.springframework:spring-context-indexer:6.2.6")
+    annotationProcessor("org.springframework:spring-context-indexer")
 
     configurations {
         all {

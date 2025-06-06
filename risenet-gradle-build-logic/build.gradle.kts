@@ -29,24 +29,14 @@ group = "net.risesoft.y9"
 val props = Properties().apply { load(file("../gradle.properties").inputStream()) }
 version = props.get("Y9PLUGIN_VERSION").toString()
 
-signing {
-    //useGpgCmd()
-    val signingInMemoryKey: String? by project
-    val signingInMemoryKeyId: String? by project
-    val signingInMemoryKeyPassword: String? by project
-    useInMemoryPgpKeys(signingInMemoryKeyId, signingInMemoryKey, signingInMemoryKeyPassword)
-
-    sign(publishing.publications)
-}
-
 mavenPublishing {
     configure(GradlePlugin(
         javadocJar = JavadocJar.Javadoc(),
         sourcesJar = true
     ))
+    coordinates(project.group.toString(), project.name, project.version.toString())
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = false)
     signAllPublications()
-    //coordinates(project.group.toString(), project.name, project.version.toString())
     pom {
         name = project.name
         description = "RiseSoft/Digital Infrastructure " + project.name

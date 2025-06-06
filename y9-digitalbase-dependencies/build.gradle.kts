@@ -8,8 +8,6 @@ javaPlatform {
 }
 
 description = "y9-digitalbase-dependencies"
-group = "net.risesoft"
-version = findProperty("Y9BOM_VERSION") as String? ?: "9.7.0-01"
 
 dependencies {
     //bom

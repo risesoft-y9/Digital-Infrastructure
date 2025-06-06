@@ -10,6 +10,9 @@ plugins {
     id("com.vanniktech.maven.publish")
 }
 
+group = "net.risesoft"
+version = providers.gradleProperty("Y9_VERSION").get()
+
 publishing {
     publications {
         repositories {
@@ -28,7 +31,7 @@ publishing {
     }
 }
 
-signing {
+/*signing {
     //useGpgCmd()
     val signingInMemoryKey: String? by project
     val signingInMemoryKeyId: String? by project
@@ -36,7 +39,7 @@ signing {
     useInMemoryPgpKeys(signingInMemoryKeyId, signingInMemoryKey, signingInMemoryKeyPassword)
 
     if (!(version.toString().endsWith("SNAPSHOT"))) sign(publishing.publications)
-}
+}*/
 
 mavenPublishing {
     configure(
@@ -45,6 +48,7 @@ mavenPublishing {
             sourcesJar = true
         )
     )
+    coordinates(project.group.toString(), project.name, project.version.toString())
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = false)
     if (!(version.toString().endsWith("SNAPSHOT"))) signAllPublications()
     pom {

@@ -1,7 +1,7 @@
 plugins {
 	java
-	id("io.freefair.lombok") version "8.12.1"
-	id("org.springframework.boot") version "3.4.3"
+	id("io.freefair.lombok") version "8.13.1"
+	id("org.springframework.boot") version "3.5.0"
 	id("io.spring.dependency-management") version "1.1.7"
 }
 

@@ -4,6 +4,7 @@ plugins {
 }
 
 group = "net.risesoft"
+version = providers.gradleProperty("Y9_VERSION").get()
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21

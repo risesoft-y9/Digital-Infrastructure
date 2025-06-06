@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    api(platform(project(":y9-digitalbase-dependencies")))
+    api(platform(libs.spring.boot.bom))
 
     api("org.springframework.boot:spring-boot")
     api("org.springframework.boot:spring-boot-configuration-processor")

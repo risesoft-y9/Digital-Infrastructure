@@ -1,25 +1,6 @@
 pluginManagement {
     includeBuild("risenet-gradle-build-logic")
     includeBuild("risenet-gradle-version-catalog")
-
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
-
-    /*versionCatalogs {
-        create("libs") {
-            from(files("../gradle/libs.versions.toml"))
-            //from("net.risesoft.y9:risenet-gradle-version-catalog:0.0.3")
-        }
-    }*/
 }
 
 rootProject.name = "y9-digitalbase"
