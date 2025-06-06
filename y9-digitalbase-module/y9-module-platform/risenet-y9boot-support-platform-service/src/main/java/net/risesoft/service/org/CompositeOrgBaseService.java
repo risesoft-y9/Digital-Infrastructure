@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-
-import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
@@ -33,16 +30,6 @@ public interface CompositeOrgBaseService {
      * @return long
      */
     long countByGuidPath(String guidPath, OrgTreeTypeEnum orgTreeTypeEnum);
-
-    /**
-     * 分页获取机构下的部门列表
-     *
-     * @param orgId 机构id
-     * @param page 页数
-     * @param rows 条数
-     * @return {@code Page<Y9Department>}
-     */
-    Page<Y9Department> deptPage(String orgId, int page, int rows);
 
     /**
      * 根据指定id获取ORGBase对象(可以是org的任意类型)
@@ -220,17 +207,6 @@ public interface CompositeOrgBaseService {
      * @return {@code List<Y9Position>}
      */
     List<Y9Position> listAllPositionsRecursionDownward(String parentId);
-
-    /**
-     * 分页获取机构下的人员列表
-     *
-     * @param orgId 机构id
-     * @param type 0-查全量，1-查询没被禁用的
-     * @param page 页数
-     * @param rows 条数
-     * @return {@code  Page<Y9Person>}
-     */
-    Page<Y9Person> personPage(String orgId, String type, int page, int rows);
 
     /**
      * 根据父节点id,人员姓名，是否禁用，递归获取其下所有人员

@@ -3,8 +3,11 @@ package net.risesoft.service.org;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9OrgBase;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
@@ -185,4 +188,13 @@ public interface Y9DepartmentService {
     Y9Department updateTabIndex(String id, int tabIndex);
 
     List<Y9OrgBase> listInheritableDepartmentPropOrgUnits(String deptId, Integer category, Boolean disabled);
+
+    /**
+     * 分页获取机构下的部门列表
+     *
+     * @param orgIdList 组织节点 id 列表，不为空则查询指定组织节点下的部门
+     * @param pageQuery 分页查询
+     * @return {@code Page<Y9Department>}
+     */
+    Page<Y9Department> page(List<String> orgIdList, Y9PageQuery pageQuery);
 }
