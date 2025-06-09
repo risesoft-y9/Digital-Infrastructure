@@ -39,13 +39,6 @@
             <organization>risesoft</organization>
             <organizationUrl>https://www.risesoft.net</organizationUrl>
         </developer>
-
-        <developer>
-            <name>mengjuhua</name>
-            <email>mengjuhua@risesoft.net</email>
-            <organization>risesoft</organization>
-            <organizationUrl>https://www.risesoft.net</organizationUrl>
-        </developer>
     </developers>
 
     <properties>
@@ -133,7 +126,7 @@
         <module>y9-digitalbase-example/risenet-y9demo-sso-oauth2/backend-demo</module>
         <!--<module>y9-digitalbase-example/risenet-y9demo-sso-oauth2/frontend-vue3-demo</module>-->
         <module>y9-digitalbase-example/risenet-y9demo-sync-kafka</module>
-		
+
 		<module>y9-digitalbase-example/risenet-y9demo-sso-oidc-client</module>
 		<module>y9-digitalbase-example/risenet-y9demo-sso-oidc-resourceServer</module>
     </modules>
