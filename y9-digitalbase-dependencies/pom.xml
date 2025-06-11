@@ -50,6 +50,16 @@
 
     <repositories>
         <repository>
+			<id>central-snapshots</id>
+			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
+        <repository>
             <id>aliyun-repo</id>
             <url>https://maven.aliyun.com/repository/public</url>
             <releases>

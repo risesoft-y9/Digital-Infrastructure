@@ -138,39 +138,49 @@
 		<module>y9-digitalbase-example/risenet-y9demo-sso-oidc-resourceServer</module>
     </modules>
 
-    <repositories>
-        <repository>
-            <id>spring-snapshots</id>
-            <url>https://repo.spring.io/snapshot</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>spring-milestones</id>
-            <url>https://repo.spring.io/milestone</url>
-        </repository>
-        <repository>
-            <id>aliyun-repo</id>
-            <url>https://maven.aliyun.com/repository/public</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>y9-internet-repo</id>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+	<repositories>
+		<repository>
+			<id>central-snapshots</id>
+			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>spring-snapshots</id>
+			<url>https://repo.spring.io/snapshot</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>spring-milestones</id>
+			<url>https://repo.spring.io/milestone</url>
+		</repository>
+		<repository>
+			<id>aliyun-repo</id>
+			<url>https://maven.aliyun.com/repository/public</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>y9-internet-repo</id>
+			<url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
     <pluginRepositories>
         <pluginRepository>
@@ -194,7 +204,7 @@
     <build>
         <pluginManagement>
             <plugins>
-                <!--This plugin's configuration is used to store Eclipse m2e settings
+				<!--This plugin's configuration is used to store Eclipse m2e settings
                     only. It has no influence on the Maven build itself. -->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
@@ -335,7 +345,7 @@
             </plugins>
         </pluginManagement>
 
-        <!-- 动态编译环境配置 -->
+		<!-- 动态编译环境配置 -->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -352,7 +362,7 @@
 
     <profiles>
         <profile>
-            <!-- 本机个人开发环境 -->
+			<!-- 本机个人开发环境 -->
             <id>env-local</id>
             <properties>
                 <dir>local</dir>
@@ -362,7 +372,7 @@
             </activation>
         </profile>
         <profile>
-            <!-- 本地团队开发环境 -->
+			<!-- 本地团队开发环境 -->
             <id>env-dev</id>
             <properties>
                 <dir>dev</dir>
@@ -372,7 +382,7 @@
             </activation>
         </profile>
         <profile>
-            <!-- 测试环境 -->
+			<!-- 测试环境 -->
             <id>env-test</id>
             <properties>
                 <dir>test</dir>
@@ -382,7 +392,7 @@
             </activation>
         </profile>
         <profile>
-            <!-- 生产环境 -->
+			<!-- 生产环境 -->
             <id>env-prod</id>
             <properties>
                 <dir>prod</dir>
