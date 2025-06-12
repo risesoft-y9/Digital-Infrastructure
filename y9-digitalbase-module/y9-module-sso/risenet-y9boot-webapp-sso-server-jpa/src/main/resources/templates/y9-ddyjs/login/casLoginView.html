@@ -13,26 +13,26 @@
           type="font/woff2">
     <link rel="shortcut icon" th:href="@{/y9static/y9-ddyjs/img/logo-1.svg}" type="image/x-icon"/>
     <link rel="stylesheet" th:href="@{/y9static/js/layui/css/layui.css}" type="text/css"/>
-    <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/default.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/y9static/css/default.css}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/styles.css?v=1.1}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/mediaIndex.css}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/loaders.css}" type="text/css"/>
-    <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/layerMsg.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/y9static/css/layerMsg.css}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/verify.css}" type="text/css"/>
     <script charset="utf-8" th:src="@{/y9static/js/base64.js}" type="text/javascript"></script>
-    <script charset="utf-8" th:src="@{/y9static/js/jquery/jquery-2.1.1.min.js}" type="text/javascript"></script>
+    <script charset="utf-8" th:src="@{/y9static/js/jquery/jquery-3.7.1.min.js}" type="text/javascript"></script>
     <script charset="utf-8" th:src="@{/y9static/js/jquery/jquery.cookie.js}" type="text/javascript"></script>
     <script charset="utf-8" th:src="@{/y9static/js/jsencrypt.min.js}" type="text/javascript"></script>
     <script charset="utf-8" th:src="@{/y9static/js/layui/layui.js}" type="text/javascript"></script>
-    <script charset="utf-8" th:src="@{/y9static/y9-ddyjs/js/layerMsg.js}" type="text/javascript"></script>
+    <script charset="utf-8" th:src="@{/y9static/js/layerMsg.js}" type="text/javascript"></script>
 </head>
 <body>
 <div class="logo">
-    <img th:src="@{/y9static/y9-ddyjs/img/logotitle.png}"/>
+    <!--<img th:src="@{/y9static/y9-ddyjs/img/logotitle.png}"/>-->
 </div>
 <div class="login layui-row">
     <div class="layui-col-xs12 login_form" id="tunnel">
-        <div class="login_title">用&nbsp;户&nbsp;登&nbsp;录</div>
+        <div class="login_title">OA<span class="tilte">办公平台</span></div>
         <div class="login_fields">
             <form id="fm1" method="post" th:object="${credential}">
                 <div class="login_dev login_fields__user ">
@@ -64,17 +64,16 @@
                 <input name="geolocation" type="hidden"/>
                 <!-- 表单隐藏数据块结束 -->
 
-                <div class="login_dev login_fields__submit ">
-                    <input type="button" value="登录"/>
+                <div class="login_dev">
+                    <div class="  login_fields_remember_password ">
+                        <input id="checkbox1" name="my-checkbox" type="checkbox"/>
+                        <label for="checkbox1">记住密码</label>
+                    </div>
+                    <div class="  login_fields__submit ">
+                        <input type="button" value="登录"/>
+                    </div>
                 </div>
-                <div class="login_dev login_fields_remember_password ">
-                    <!-- <input class="chk left" id="checkbox1" type="checkbox"/>
-                     <label class="left" for="checkbox1"></label>
-                     <span class="left">记住密码</span>-->
 
-                    <input id="checkbox1" name="my-checkbox" type="checkbox"/>
-                    <label for="checkbox1">记住密码</label>
-                </div>
             </form>
         </div>
         <div></div>
@@ -98,12 +97,11 @@
     var ctx = "/sso";
 
     document.addEventListener("keydown", function (event) {
-        console.log(11111);
         if (event.keyCode === "9") {
             // 在Tab键按下后执行的代码
             let usernameInput = document.getElementById("username");
             let passwordInput = document.getElementById("password");
-            console.log(2222);
+            console.log(2222,usernameInput,passwordInput);
             if (!usernameInput.value) {
                 event.preventDefault();
                 usernameInput.focus();
@@ -123,7 +121,7 @@
     function screenSize() {
         try {
             $("#screenDimension").val(
-                window.screen.width + "*" + window.screen.height);
+                    window.screen.width + "*" + window.screen.height);
         } catch (e) {
         }
     }
@@ -210,18 +208,18 @@
                 WfMsg(option);
             } else {
                 $.when(
-                    $.ajax({
-                        async: false,
-                        cache: false,
-                        type: "GET",
-                        url: ctx + '/api/getRsaPublicKey',
-                        dataType: "json",
-                        success: function (y9Result) {
-                            if (y9Result.success) {
-                                $('#rsaPublicKey').val(y9Result.data);
+                        $.ajax({
+                            async: false,
+                            cache: false,
+                            type: "GET",
+                            url: ctx + '/api/getRsaPublicKey',
+                            dataType: "json",
+                            success: function (y9Result) {
+                                if (y9Result.success) {
+                                    $('#rsaPublicKey').val(y9Result.data);
+                                }
                             }
-                        }
-                    })
+                        })
                 ).done(function () {
                     var username = $("#username").val();
                     var password = $("#password").val();
@@ -245,10 +243,8 @@
                         });
                     }
 
-                    //var encodeUsername = encode64(username);
-                    //var encodePassword = encode64(password);
-                    var encryptedUserName=encrypt(rsaPublicKey,username);
-                    var encryptedPassword=encrypt(rsaPublicKey,password);
+                    var encryptedUserName = encrypt(rsaPublicKey, username);
+                    var encryptedPassword = encrypt(rsaPublicKey, password);
                     $("#username1").val(encryptedUserName);
                     $("#password1").val(encryptedPassword);
                     $("#fm1").submit();

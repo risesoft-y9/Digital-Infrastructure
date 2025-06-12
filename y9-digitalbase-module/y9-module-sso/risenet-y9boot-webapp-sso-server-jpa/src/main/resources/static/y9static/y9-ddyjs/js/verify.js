@@ -11,7 +11,7 @@
                 defaultNum: 4,	//默认的文字数量
                 checkNum: 3,	//校对的文字数量
                 vSpace: 5,	//间隔
-                imgUrl: '/sso/y9static/y9-ddyjs/images/',
+                imgUrl: '/sso/y9static/y9-ddyjs/img/',
                 imgName: ['5.png'],
                 imgSize: {
                     width: '450px',
@@ -358,9 +358,9 @@ $('#mpanel6').pointsVerify({
 
         var username = $("#username1").val();
         var password = $("#password").val();
-        var rsaPublicKey = $('#rsaPublicKey').val();
-
-        //var encodeUserName = encode64(username);
+        var rsaPublicKey=$('#rsaPublicKey').val();
+        
+        //var encodeUsername = encode64(username);
         //var encodePassword = encode64(password);
         var encryptedUserName=encrypt(rsaPublicKey,username);
         var encryptedPassword=encrypt(rsaPublicKey,password);
