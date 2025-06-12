@@ -148,7 +148,7 @@
             },
             childLevel: {
                 api: getTreeItemById,
-                params: { treeType: 'tree_type_org_person', disabled: true }
+                params: { treeType: 'tree_type_org_person' }
             },
             search: {
                 api: searchByName,

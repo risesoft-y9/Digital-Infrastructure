@@ -2,7 +2,10 @@ package net.risesoft.service.relation;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;
+import net.risesoft.pojo.Y9PageQuery;
 
 /**
  * @author dingzhaojun
@@ -130,4 +133,7 @@ public interface Y9OrgBasesToRolesService {
      */
     void removeOrgBases(String roleId, List<String> orgIds);
 
+    Page<Y9OrgBasesToRoles> page(Y9PageQuery pageQuery, String roleId, String unitName);
+
+    List<String> listOrgUnitIdByRoleId(String roleId, Boolean negative);
 }

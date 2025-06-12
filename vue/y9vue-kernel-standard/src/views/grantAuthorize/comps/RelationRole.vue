@@ -66,6 +66,7 @@
             <!-- tree树 -->
             <selectTree
                 ref="selectTreeRef"
+                :defaultCheckedKeys="selectTreeDefaultCheckedKeys"
                 :selectField="[{ fieldName: 'nodeType', value: 'role' }]"
                 :showHeader="false"
                 :treeApiObj="treeApiObj"
@@ -81,8 +82,7 @@
     import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { getRelationRoleList, removeRole, saveOrUpdateRole } from '@/api/grantAuthorize/index';
-    import { getPublicRoleTree, roleTreeList } from '@/api/role/index';
-    import { appTreeRoot } from '@/api/resource/index';
+    import { appRoleTree, getPublicRoleTree, listPrincipalIdByResourceId, roleTreeList } from '@/api/role/index';
     import { useI18n } from 'vue-i18n';
     import { useSettingStore } from '@/store/modules/settingStore';
 
@@ -110,6 +110,8 @@
 
     //选择tree实例
     const selectTreeRef = ref();
+    let selectTreeDefaultCheckedKeys = ref([]);
+
     // 变量 对象
     const state = reactive({
         // 区域 loading
@@ -264,7 +266,9 @@
             width: '35%',
             onOk: (newConfig) => {
                 return new Promise(async (resolve, reject) => {
-                    let ids = selectTreeRef.value?.y9TreeRef?.getCheckedKeys(true);
+                    let checkedIds = selectTreeRef.value?.y9TreeRef?.getCheckedKeys(true);
+                    const ids = checkedIds.filter((item) => !selectTreeDefaultCheckedKeys.value.includes(item));
+
                     // 保存操作
                     const params = {
                         authority: formline.value.operationType,
@@ -291,13 +295,8 @@
             topLevel: async () => {
                 let data: any = [];
                 if (roleTreeType.value === 'appRole') {
-                    const res = await appTreeRoot(props.appId);
-                    data = res.data;
-                    data.forEach((item) => {
-                        if (item.resourceType === 0) {
-                            item.nodeType = 'APP';
-                        }
-                    });
+                    const res = await appRoleTree(props.appId);
+                    return res.data;
                 } else {
                     const res = await getPublicRoleTree();
                     data = res.data;
@@ -340,7 +339,21 @@
         }
     );
 
-    function handlerRoleAdd(type) {
+    watch(
+        () => formline.value.operationType,
+        (new_, old_) => {
+            getSelectTreeDefaultCheckedKeys();
+        }
+    );
+
+    async function getSelectTreeDefaultCheckedKeys() {
+        let result = await listPrincipalIdByResourceId(props.id, formline.value.operationType);
+        selectTreeDefaultCheckedKeys.value = result.data;
+    }
+
+    async function handlerRoleAdd(type) {
+        await getSelectTreeDefaultCheckedKeys();
+
         if (type === 'app') {
             roleTreeType.value = 'appRole';
         } else if (type === 'public') {

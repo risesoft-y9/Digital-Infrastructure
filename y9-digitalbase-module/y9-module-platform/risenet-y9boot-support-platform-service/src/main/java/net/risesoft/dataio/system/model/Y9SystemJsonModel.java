@@ -19,5 +19,7 @@ public class Y9SystemJsonModel extends Y9System {
 
     private static final long serialVersionUID = -1010121704644942107L;
 
+    private List<Y9RoleJsonModel> subRoleList;
+
     private List<Y9AppJsonModel> appList;
 }

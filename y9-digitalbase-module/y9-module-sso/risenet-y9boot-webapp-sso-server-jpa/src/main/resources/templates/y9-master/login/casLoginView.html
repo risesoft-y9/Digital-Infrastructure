@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
@@ -10,7 +10,7 @@
     <!-- 管局要求保持备案名称和网站使用名称一致 -->
     <title>数智地质基础平台2.0</title>
     <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/default.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/styles.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/styles.css(v=1.0)}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/demo.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/loaders.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/layerMsg.css}"/>
@@ -37,26 +37,32 @@
     </div>
     <div class="login_fields">
         <form method="post" id="fm1" th:object="${credential}">
+            <div class="login_fields__tenant">
+                <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/tenant.png}"/></div>
+                <select id="tenantShortName" name="tenantShortName">
+                </select>
+                <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
+            </div>
             <div class="login_fields__user">
-                <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/user_icon_copy.png}"/></div>
-                <input id="username" tabindex="1" placeholder="用户名" type="text" autocomplete="off" value="" oninput="inputEvent()" onblur="getTenant();"/>
+                <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/username.png}"/></div>
+                <input id="username" tabindex="1" placeholder="用户名" type="text" autocomplete="on" value="" />
+                <input id="username1" name="username" style="width: 150px;" tabindex="1" autocomplete="off" htmlescape="true" type="hidden"/>
+                <!-- <input id="tenantShortName" name="tenantShortName" style="width: 150px;" autocomplete="false" htmlescape="true" type="hidden"/> -->
                 <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
             </div>
             <div class="login_fields__password">
-                <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/lock_icon_copy.png}"/></div>
-                <input id="password" tabindex="2" type="password" htmlescape="true" autocomplete="off" placeholder="请输入您的密码" />
+                <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/password.png}"/></div>
+                <input id="password" tabindex="2" type="password" htmlescape="true" autocomplete="on" placeholder="请输入您的密码"/>
+                <input id="password1" name="password" htmlescape="true" autocomplete="off" type="hidden"/>
                 <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
             </div>
             <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
                 登录失败：<span th:each="err : ${#fields.errors('*')}" th:utext="${err}"/>
             </div>
             <!-- 表单隐藏数据块开始 -->
-            <input type="hidden" id="username1" name="username"/>
-            <input type="hidden" id="password1" name="password"/>
-            <input type="hidden" id="tenantShortName" name="tenantShortName"/>
             <input type="hidden" id="loginType" name="loginType" value="loginName"/>
             <input type="hidden" id="screenDimension" name="screenDimension" value=""/>
-            <input type="hidden" id="rsaPublicKey" name="rsaPublicKey" value=""/>
+            <input type="hidden" id="rsaPublicKey" value=""/>
             <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
             <input type="hidden" name="_eventId" value="submit"/>
             <input type="hidden" name="geolocation"/>
@@ -65,7 +71,7 @@
         <!--点选验证码  -->
         <div id="mpanel6"></div>
         <div class="login_fields__submit">
-            <input type="button" value="登录"/>
+            <input tabindex="3" type="button" value="登录"/>
         </div>
     </div>
     <div></div>
@@ -95,18 +101,43 @@
 </div>
 
 <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/layui/css/layui.css}"/>
-<script type="text/javascript" th:src="@{/y9static/y9new/js/verify.js}"></script>
+<script type="text/javascript" th:src="@{/y9static/y9new/js/verify.js(v=1.0)}"></script>
 <script type="text/javascript" th:src="@{/y9static/y9new/layui/layui.js}"></script>
 <script type="text/javascript" th:src="@{/y9static/y9new/js/layerMsg.js}" charset="utf-8"></script>
 <script type="text/javascript">
-    var ctx = "sso";
-    var canGetCookie = 1; //是否支持存储Cookie 0 不支持 1 支持
-    var ajaxmockjax = 1; //是否启用虚拟Ajax的请求响 0 不启用  1 启用
-    var inputTimer = null;
+    //var ctx = "[(${contextPath})]";
+    var ctx = "/sso";
+
     $(function () {
         changeLoginType($.cookie("loginTip"));
         screenSize();
+        initTenants();
     });
+
+    function initTenants() {
+        $.ajax({
+            url: `${ctx}/api/allTenants`,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $('#tenantShortName').empty();
+
+                $.each(data, function(index, item) {
+                    $('#tenantShortName').append(
+                        $('<option></option>').val(item.tenantShortName).text(item.tenantName)
+                    );
+                });
+
+                var tenantShortName = $.cookie("tenantShortName");
+                if (tenantShortName) {
+                    $("#tenantShortName").val(tenantShortName);
+                }
+            },
+            error: function() {
+                alert('获取数据失败');
+            }
+        });
+    }
 
     function screenSize() {
         try {
@@ -114,178 +145,13 @@
         } catch (e) {
         }
     }
-    
-    function beep(freq = 660, duration = 90, vol = 50) {
-        var context = new(window.AudioContext || window.webkitAudioContext);
-        const oscillator = context.createOscillator();
-        const gain = context.createGain();
-        gain.gain.setValueAtTime(0, context.currentTime);
-        gain.gain.linearRampToValueAtTime(1, context.currentTime + 0.002);
-        oscillator.connect(gain);
-        oscillator.frequency.value = freq;
-        oscillator.type = "square";
-        gain.connect(context.destination);
-        oscillator.start(context.currentTime);
-        oscillator.stop(context.currentTime + duration * .001);
-        oscillator.onended = () => context.close();
-    }
 
-    function inputEvent() {
-        if (inputTimer) {
-            clearTimeout(inputTimer);
-        }
-        let userName = $("#username").val();
-        if (!userName) {
-            $(".toolTips").attr({style: "display: none;"});
-            return null;
-        }
-        inputTimer = setTimeout(() => {
-            beep();
-            fetch(ctx + "/api/loginNameAndTenants?loginName=" + userName, {
-                method: "GET",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
-                }
-            }).then((response) => {
-                return response.json();
-            }).then((data) => {
-                $("#toolTipsUl").empty();
-                $(".toolTips").attr({style: "display: flex;"});
-                data.length && data.map((item) => {
-                    $("<li></li>", {text: item.loginName, id: item.tenantShortName}).appendTo("#toolTipsUl").on("click", mouseClickEvent);
-                });
-            });
-        }, 250);
-    }
-
-    function getTenant() {
-        var userName = $('#username').val();
-        if ($.trim(userName).length > 0 && userName.indexOf("@") != -1) {
-            var tenantName = userName.split("@");
-            userName = tenantName[0].split("&");
-            $("#username1").val(tenantName[0]);
-            $.ajax({
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    loginName: userName[0],
-                    tenantName: tenantName[1]
-                },
-                url: ctx + '/api/getTenants',
-                success: function (res) {
-                    if (res.length <= 0) {
-                        layer.msg("当前用户不存在或者已禁用!");
-                        return;
-                    }
-                    $('#tenantShortName').val(res[0].tenantShortName);
-                }
-            });
-        }
-    }
-
-    function mouseClickEvent() {
-        $('#tenantShortName').val(this.id);
-        var userName = this.innerText;
-        $('#username').val(userName);
-        if ($.trim(userName).length > 0 && userName.indexOf("@") != -1) {
-            $('#username1').val(userName.split("@")[0]);
-        }
-        $("#toolTipsUl").empty();
-        $(".toolTips").attr({style: "display: none;"});
-        $('#password').focus();
-    }
-
-        $(document).keydown(function (e) {
-            // 上下选择事件
-            function shooseItem(value) {
-                let activeIndex = null, listLength = $("#toolTipsUl").children().length, scrollHeight=0, tempArr=[], totalHeight=0;
-                let speed="fast"; // slow \ fast \ normal
-                // 清除所有的active class，并找到下一个高亮的index
-                listLength &&
-                $("#toolTipsUl li").each(function (index, element) {
-                    tempArr.push(element.clientHeight);
-                    totalHeight += element.clientHeight;
-                    if (this.className.includes("active")) {
-                        this.className = "";
-                        activeIndex = index;
-                        return true;
-                    }
-                });
-
-                if (!listLength && activeIndex === null) {
-                    return false;
-                }
-                // 计算滚动条位置
-                for (let i=0; i<activeIndex; i++){
-                    scrollHeight+=tempArr[i];
-                }
-                // UP键 上面找到的index添加active
-                if (value === 38 && activeIndex) {
-                    $("#toolTipsUl").animate({
-                        scrollTop: scrollHeight-90
-                    }, speed);
-                    $("#toolTipsUl").children().eq(activeIndex - 1).addClass("active");
-                    return true;
-                }
-                // UP键，没有任何活动的class情况，给最后一个添加active
-                if (value === 38 && !activeIndex) {
-                    $("#toolTipsUl").animate({
-                        scrollTop: totalHeight
-                    }, speed);
-                    $("#toolTipsUl").children().eq(listLength - 1).addClass("active");
-                    return true;
-                }
-                // DOWN键，没有任何活动的class情况，给第一个添加active
-                if (value === 40 && (activeIndex === null || activeIndex + 1 === listLength)) {
-                    $("#toolTipsUl").animate({
-                        scrollTop: 0
-                    }, speed);
-                    $("#toolTipsUl").children().eq(0).addClass("active");
-                    return true;
-                }
-                // DOWN键 上面找到的index添加active
-                if (value === 40 && activeIndex + 1 <= listLength) {
-                    $("#toolTipsUl").animate({
-                        scrollTop: scrollHeight
-                    }, speed);
-                    $("#toolTipsUl").children().eq(activeIndex + 1).addClass("active");
-                    return true;
-                }
-            }
-
-            // 回车键事件
-            if (e.which === 13) {
-                enterEvent();
-            }
-            // 上下按键
-            if (e.which === 38 || e.which === 40) {
-                e.which === 38 && shooseItem(38);
-                e.which === 40 && shooseItem(40);
-            }
-        });
-
-    function enterEvent() {
-        let shoseEvent = false;
-        $("#toolTipsUl").children().length && $("#toolTipsUl li").each(function (index, element) {
-            if (this.className.includes("active")) {
-                shoseEvent = true;
-                $('#tenantShortName').val(this.id);
-                var userName = this.innerText;
-                $('#username').val(userName);
-                if ($.trim(userName).length > 0 && userName.indexOf("@") != -1) {
-                    $('#username1').val(userName.split("@")[0]);
-                }
-                $("#toolTipsUl").empty();
-                $(".toolTips").attr({style: "display: none;"});
-                $('#password').focus();
-                return true;
-            }
-        });
-        if (!shoseEvent) {
+    $(document).keydown(function (e) {
+        // 回车键事件
+        if (e.which === 13) {
             $('input[type="button"]').click();
         }
-    }
+    });
 
     var open = 0;
     layui.use("layer", function () {
@@ -306,7 +172,6 @@
         //非空验证
         $('input[type="button"]').click(function () {
             var username = $('#username').val();
-            var username1 = $('#username1').val();
             var password = $('#password').val();
             var tenantShortName = $("#tenantShortName").val();
             if (username == "") {
@@ -332,6 +197,9 @@
                         }
                     })
                 ).done(function () {
+                    $.cookie("tenantShortName", tenantShortName, {
+                        expires: 365
+                    });
                     $("#mpanel6").attr({style: "display: block;"});
                 }).fail(function () {
                     option.type = "warn";
@@ -341,19 +209,6 @@
             }
         });
     });
-    //全屏
-    var fullscreen = function () {
-        elem = document.body;
-        if (elem.webkitRequestFullScreen) {
-            elem.webkitRequestFullScreen();
-        } else if (elem.mozRequestFullScreen) {
-            elem.mozRequestFullScreen();
-        } else if (elem.requestFullScreen) {
-            elem.requestFullscreen();
-        } else {
-            //浏览器不支持全屏API或已被禁用
-        }
-    };
 </script>
 <script type="text/javascript" th:src="@{/y9static/y9new/img/ThreeWebGL.js}"></script>
 <script type="text/javascript" th:src="@{/y9static/y9new/img/ThreeExtras.js}"></script>

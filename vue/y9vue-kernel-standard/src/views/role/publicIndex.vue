@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-11-11 09:13:38
+ * @LastEditTime: 2025-05-27 14:04:33
  * @Description: 公共角色管理
 -->
 <template>
@@ -95,121 +95,19 @@
                     v-if="managerLevel === 2 && currData.nodeType === 'role'"
                     :title="`${$t('角色成员')} - ${currData.name ? currData.name : ''}`"
                 >
-                    <y9Table
-                        v-model:selectedVal="tableCurrSelectedVal"
-                        :config="tableConfig"
-                        :filterConfig="filterConfig"
-                    >
-                        <template v-slot:filterBtnSlot>
-                            <el-button
-                                :size="fontSizeObj.buttonSize"
-                                :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                class="global-btn-main"
-                                type="primary"
-                                @click="initList"
-                            >
-                                <i class="ri-search-line"></i>
-                                {{ $t('搜索') }}
-                            </el-button>
-                            <div class="widthBtn">
-                                <el-button
-                                    :size="fontSizeObj.buttonSize"
-                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                    class="global-btn-second"
-                                    @click="handlerClick('positive')"
-                                >
-                                    <i class="ri-add-line"></i>
-                                    {{ $t('正权限成员') }}
-                                </el-button>
-                                <el-button
-                                    :size="fontSizeObj.buttonSize"
-                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                    class="global-btn-second"
-                                    @click="handlerClick('negative')"
-                                >
-                                    <i class="ri-add-line"></i>
-                                    {{ $t('负权限成员') }}
-                                </el-button>
-                            </div>
-                            <el-button
-                                :size="fontSizeObj.buttonSize"
-                                :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                class="global-btn-second"
-                                @click="handlerDeleteClick('roleMember')"
-                            >
-                                <i class="ri-delete-bin-line"></i>
-                                {{ $t('删除') }}
-                            </el-button>
-                        </template>
-                        <template #expandRowSlot="props">
-                            <div class="expand-rows">
-                                <p>名称: {{ props.row.orgUnitNamePath }}</p>
-                                <p>成员类型: {{ props.row.orgTypeStr }}</p>
-                                <p>负权限成员: {{ props.row.negative ? '是' : '否' }}</p>
-                                <p>添加时间: {{ props.row.createTime }}</p>
-                            </div>
-                        </template>
-                        <template #negativeSlot="props">
-                            <boolWarningCell :is-true="props.row.negative"></boolWarningCell>
-                        </template>
-                    </y9Table>
+                    <OrgBasesToRoles :id="currData.id"></OrgBasesToRoles>
                 </y9Card>
 
                 <y9Card
                     v-if="managerLevel === 2 && currData.nodeType === 'role'"
                     :title="`${$t('资源列表')} - ${currData.name ? currData.name : ''}`"
                 >
-                    <y9Table
-                        v-model:selectedVal="resourceTableCurrSelectedVal"
-                        :config="resourceTableConfig"
-                        :filterConfig="resourcefilterConfig"
-                        @on-curr-page-change="onCurrPageChange"
-                        @on-page-size-change="onPageSizeChange"
-                    >
-                        <template v-slot:filterBtnSlot>
-                            <!-- <el-button class="global-btn-main" @click="initList" type="primary">
-					                <i class="ri-search-line"></i>
-					                {{ $t('搜索') }}
-					            </el-button> -->
-                            <div class="widthBtn">
-                                <el-button
-                                    :size="fontSizeObj.buttonSize"
-                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                    class="global-btn-second"
-                                    @click="handlerClickResource"
-                                >
-                                    <i class="ri-add-line"></i>
-                                    {{ $t('资源授权') }}
-                                </el-button>
-                            </div>
-                            <el-button
-                                :size="fontSizeObj.buttonSize"
-                                :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                class="global-btn-second"
-                                @click="handlerDeleteClick('resource')"
-                            >
-                                <i class="ri-close-line"></i>
-                                {{ $t('删除') }}
-                            </el-button>
-                        </template>
-                        <template #expandRowSlot="props">
-                            <div class="expand-rows">
-                                <p>资源名称: {{ props.row.resourceNamePath }}</p>
-                                <p>资源类型: {{ props.row.resourceTypeStr }}</p>
-                                <p>所属系统: {{ props.row.systemCnName }}</p>
-                                <p>权限: {{ props.row.authorityStr }}</p>
-                                <p>授权者: {{ props.row.authorizer }}</p>
-                                <p>授权时间: {{ props.row.authorizeTime }}</p>
-                            </div>
-                        </template>
-                        <template #authoritySlot="props">
-                            <boolWarningCell
-                                :is-true="props.row.authorityStr === '隐藏'"
-                                :true-text="props.row.authorityStr"
-                                :false-text="props.row.authorityStr"
-                            ></boolWarningCell>
-                        </template>
-                    </y9Table>
+                    <Authorization
+                        :id="currData.id"
+                        :appId="currData.appId"
+                        :parentId="currData.parentId"
+                        type="public"
+                    ></Authorization>
                 </y9Card>
             </div>
         </template>
@@ -222,64 +120,7 @@
     <y9Dialog v-model:config="sortDialogConfig">
         <treeSort ref="sortRef" :apiParams="{ parentId: currData.id }" :apiRequest="roleTreeList"></treeSort>
     </y9Dialog>
-    <!-- 正权限 负权限 -->
-    <y9Dialog v-model:config="negativeConfigDialog">
-        <selectTree
-            ref="selectTreeRef"
-            :selectField="selectField"
-            :treeApiObj="negativeTreeApiObj"
-            checkStrictly
-        ></selectTree>
-    </y9Dialog>
 
-    <!-- 资源授权 -->
-    <y9Dialog v-model:config="iconSourceConfigDialog">
-        <y9Filter
-            ref="resourceFilterRef"
-            :filtersValueCallBack="sourceFiltersValueCallBack"
-            :itemList="filtersListSource"
-            showBorder
-        >
-            <template #treeFilter>
-                <div class="custom-select-tree-filter">
-                    <el-button
-                        :size="fontSizeObj.buttonSize"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                        class="global-btn-second refresh-btn"
-                        @click="onRefreshTree"
-                    >
-                        <i class="ri-refresh-line"></i>
-                        <span>{{ $t('刷新') }}</span>
-                    </el-button>
-
-                    <input autocomplete="new-password" hidden type="password" />
-                    <el-input
-                        v-model="searchKey"
-                        :placeholder="$t('请搜索')"
-                        :size="fontSizeObj.buttonSize"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                        autocomplete
-                        class="search-input"
-                        name="select-tree-search"
-                        type="search"
-                        @input="onSearchKeyChange"
-                    >
-                        <template #prefix>
-                            <i class="ri-search-line"></i>
-                        </template>
-                    </el-input>
-                </div>
-            </template>
-        </y9Filter>
-        <!-- tree树 -->
-        <selectTree
-            ref="resourceSelectTree"
-            :selectField="selectResourceField"
-            :showHeader="false"
-            :treeApiObj="sourceTreeApiObj"
-            checkStrictly
-        ></selectTree>
-    </y9Dialog>
     <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
@@ -289,25 +130,18 @@
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { useI18n } from 'vue-i18n';
     import {
-        addOrgUnits,
         deleteRoleById,
         getPublicRoleTree,
-        getRelateResourceList,
         publicTreeSearch,
-        removeAuthPermissionRecord,
-        removeOrgUnits,
         roleTreeList,
         saveOrder,
-        saveOrUpdate,
-        saveOrUpdateRelateResource,
-        searchByUnitNameAndUnitDN
+        saveOrUpdate
     } from '@/api/role/index';
-    import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
-    import { resourceTreeList, resourceTreeRoot, treeSearch } from '@/api/resource/index';
     // 基本信息
     import BasicInfo from './comps/BasicInfo.vue';
+    import OrgBasesToRoles from './comps/OrgBasesToRoles.vue';
+    import Authorization from './comps/Authorization.vue';
     import auditLog from '@/views/y9log/entityAuditLog/index.vue';
-    import boolWarningCell from '@/components/BoolWarningCell/index.vue';
     import { useSettingStore } from '@/store/modules/settingStore';
 
     const settingStore = useSettingStore();
@@ -611,149 +445,6 @@
         }
     });
 
-    // 角色成员  ------
-    // 搜索条件
-    let filterData = ref({ rolePersonName: '', deptName: '' });
-    // 树 ref
-    const selectTreeRef = ref();
-    // 表格 过滤条件
-    const filterConfig = ref({
-        filtersValueCallBack: (filters) => {
-            filterData.value = filters;
-        },
-        showBorder: true,
-        itemList: [
-            {
-                type: 'input',
-                value: '',
-                key: 'rolePersonName',
-                label: computed(() => t('名称')),
-                span: settingStore.device === 'mobile' ? 24 : 5,
-                clearable: true
-            },
-            {
-                type: 'input',
-                value: '',
-                key: 'deptName',
-                label: computed(() => t('部门')),
-                span: settingStore.device === 'mobile' ? 24 : 5,
-                clearable: true
-            },
-            {
-                type: 'slot',
-                slotName: 'filterBtnSlot',
-                span: settingStore.device === 'mobile' ? 24 : 14
-            }
-        ]
-    });
-
-    // 表格 配置属性
-    let tableConfig = ref({
-        columns: [
-            { type: 'selection', fixed: 'left', width: 70 },
-            { type: 'expand', width: 40, slot: 'expandRowSlot' },
-            { title: computed(() => t('序号')), type: 'index', width: 60, showOverflowTooltip: false },
-            { title: computed(() => t('名称')), align: 'left', key: 'orgUnitNamePath' },
-            { title: computed(() => t('成员类型')), width: 100, key: 'orgTypeStr' },
-            {
-                title: computed(() => t('负权限成员')),
-                width: 100,
-                key: 'negative',
-                slot: 'negativeSlot'
-            }
-        ],
-        tableData: [],
-        pageConfig: false
-    });
-    // 表格选中的数据
-    let tableCurrSelectedVal = ref([] as any);
-
-    // 监听 currData.type
-    watch(
-        () => currData.value,
-        (newVal) => {
-            if (newVal.nodeType === 'role') {
-                if (managerLevel === 2) {
-                    initList();
-                    getRelateResourceListFn();
-                }
-            }
-        }
-    );
-
-    //请求某个节点，返回格式化好的数据
-    function postNode(node) {
-        return new Promise((resolve, reject) => {
-            fixedTreeRef.value.onTreeLazyLoad(node, (data) => {
-                resolve(data);
-            });
-        });
-    }
-
-    // 角色成员 请求 列表接口
-    async function initList() {
-        // filterData
-        let result = await searchByUnitNameAndUnitDN(
-            currData.value.id,
-            filterData.value.rolePersonName,
-            filterData.value.deptName
-        );
-        tableConfig.value.tableData = result.data;
-    }
-
-    // 正权限 负权限 弹框
-    let negativeConfigDialog = ref({
-        show: false,
-        title: '',
-        width: '30%',
-        onOk: () => {
-            return new Promise(async (resolve, reject) => {
-                let ids = selectTreeRef.value?.y9TreeRef?.getCheckedKeys();
-
-                if (ids.length === 0) {
-                    ElNotification({
-                        title: t('失败'),
-                        message: t('请选择需要添加权限的节点'),
-                        type: 'error',
-                        duration: 2000,
-                        offset: 80
-                    });
-                    reject();
-                    return;
-                }
-
-                let result;
-                if (negativeConfigDialog.value.title == computed(() => t('添加正权限人员')).value) {
-                    await addOrgUnits(currData.value.id, ids.join(','), false)
-                        .then((res) => {
-                            result = res;
-                        })
-                        .catch(() => {});
-                } else if (negativeConfigDialog.value.title == computed(() => t('添加负权限人员')).value) {
-                    await addOrgUnits(currData.value.id, ids.join(','), true)
-                        .then((res) => {
-                            result = res;
-                        })
-                        .catch(() => {});
-                }
-                ElNotification({
-                    title: result.success ? t('成功') : t('失败'),
-                    message: result.msg,
-                    type: result.success ? 'success' : 'error',
-                    duration: 2000,
-                    offset: 80
-                });
-                // 重新请求接口
-                initList();
-                if (result.success) {
-                    resolve();
-                } else {
-                    reject();
-                }
-            });
-        }
-    });
-
     function onSort(type) {
         if (type === 'sort') {
             Object.assign(sortDialogConfig.value, {
@@ -763,316 +454,19 @@
         }
     }
 
-    // 点击 添加正权限 添加负权限
-    function handlerClick(type) {
-        if (type === 'positive') {
-            negativeConfigDialog.value.title = computed(() => t('添加正权限人员'));
-        } else {
-            negativeConfigDialog.value.title = computed(() => t('添加负权限人员'));
-        }
-        negativeConfigDialog.value.show = true;
-    }
+    // 监听 currData.type
+    watch(
+        () => currData.value,
+        (newVal) => {}
+    );
 
-    // 点击删除 按钮
-    function handlerDeleteClick(type) {
-        if (type === 'roleMember') {
-            if (!tableCurrSelectedVal.value.length) {
-                ElMessage({
-                    type: 'warning',
-                    message: t('请选择需要删除的人员'),
-                    offset: 65
-                });
-                return;
-            }
-        } else if (type === 'resource') {
-            if (!resourceTableCurrSelectedVal.value.length) {
-                ElMessage({
-                    type: 'warning',
-                    message: t('请选择需要删除的资源'),
-                    offset: 65
-                });
-                return;
-            }
-        }
-
-        ElMessageBox.confirm(`${t('是否删除选中的数据')}?`, t('提示'), {
-            confirmButtonText: t('确定'),
-            cancelButtonText: t('取消'),
-            type: 'info'
-        })
-            .then(async () => {
-                loading.value = true;
-                let ids = [] as any;
-                if (type === 'roleMember') {
-                    ids = tableCurrSelectedVal.value.map((item) => {
-                        return item.id;
-                    });
-                    let result = await removeOrgUnits(ids.join(','));
-                    loading.value = false;
-                    ElNotification({
-                        title: result.success ? t('成功') : t('失败'),
-                        message: result.msg,
-                        type: result.success ? 'success' : 'error',
-                        duration: 2000,
-                        offset: 80
-                    });
-                    // 初始化数据
-                    initList();
-                    tableCurrSelectedVal.value = [];
-                } else if (type === 'resource') {
-                    ids = resourceTableCurrSelectedVal.value.map((item) => {
-                        return item.id;
-                    });
-                    let result = await removeAuthPermissionRecord({ ids: ids.join(',') });
-                    loading.value = false;
-                    ElNotification({
-                        title: result.success ? t('成功') : t('失败'),
-                        message: result.msg,
-                        type: result.success ? 'success' : 'error',
-                        duration: 2000,
-                        offset: 80
-                    });
-                    // 初始化数据
-                    getRelateResourceListFn();
-                    resourceTableCurrSelectedVal.value = [];
-                }
-            })
-            .catch(() => {
-                ElMessage({
-                    type: 'info',
-                    message: t('已取消删除'),
-                    offset: 65
-                });
+    //请求某个节点，返回格式化好的数据
+    function postNode(node) {
+        return new Promise((resolve, reject) => {
+            fixedTreeRef.value.onTreeLazyLoad(node, (data) => {
+                resolve(data);
             });
-    }
-
-    // 选择树的选择 框
-    let selectField = [
-        {
-            fieldName: 'nodeType',
-            value: ['Person', 'Position', 'Organization', 'Department']
-        }
-    ];
-    // 正权限  负权限 请求的tree接口
-    let negativeTreeApiObj = ref({
-        topLevel: treeInterface,
-        childLevel: {
-            //子级（二级及二级以上）tree接口
-            api: getTreeItemById,
-            params: {
-                treeType: 'tree_type_org',
-                disabled: false
-            }
-        },
-        search: {
-            //搜索接口及参数
-            api: searchByName,
-            params: {
-                treeType: 'tree_type_org'
-            }
-        }
-    });
-
-    //资源列表选中的数据
-    let resourceTableCurrSelectedVal = ref([]);
-    //资源列表表格配置
-    const resourceTableConfig = ref({
-        columns: [
-            { type: 'selection', fixed: 'left', width: 60 },
-            { type: 'expand', width: 40, slot: 'expandRowSlot' },
-            { title: computed(() => t('序号')), type: 'index', width: 60, showOverflowTooltip: false },
-            { title: computed(() => t('资源名称')), align: 'left', key: 'resourceNamePath' },
-            { title: computed(() => t('资源类型')), width: 120, key: 'resourceTypeStr' },
-            { title: computed(() => t('所属系统')), key: 'systemCnName' },
-            {
-                title: computed(() => t('权限')),
-                width: 80,
-                key: 'authority',
-                slot: 'authoritySlot'
-            }
-        ],
-        tableData: [],
-        pageConfig: {
-            currentPage: 1, //当前页数，支持 v-model 双向绑定
-            pageSize: 10, //每页显示条目个数，支持 v-model 双向绑定
-            total: 10 //总条目数
-        }
-    });
-
-    //资源列表搜索条件
-    const resourceFilterData = ref({});
-    // 资源列表表格 过滤条件
-    const resourcefilterConfig = ref({
-        filtersValueCallBack: (filters) => {
-            resourceFilterData.value = filters;
-        },
-        showBorder: true,
-        itemList: [
-            {
-                type: 'slot',
-                slotName: 'filterBtnSlot',
-                span: settingStore.device === 'mobile' ? 24 : 6
-            }
-        ]
-    });
-
-    async function getRelateResourceListFn() {
-        const result = await getRelateResourceList(
-            currData.value.id,
-            resourceTableConfig.value.pageConfig.currentPage,
-            resourceTableConfig.value.pageConfig.pageSize
-        );
-        resourceTableConfig.value.tableData = result.rows;
-        resourceTableConfig.value.pageConfig.total = result.total;
-    }
-
-    //当前页改变时触发
-    function onCurrPageChange(currPage) {
-        resourceTableConfig.value.pageConfig.currentPage = currPage;
-        getRelateResourceListFn(); //获取列表
-    }
-
-    //每页条数改变时触发
-    function onPageSizeChange(pageSize) {
-        resourceTableConfig.value.pageConfig.pageSize = pageSize;
-        getRelateResourceListFn(); //获取列表
-    }
-
-    // 资源授权 ref
-    const resourceFilterRef = ref(null);
-    // 资源授权的 操作权限
-    let resourceOperationType = ref(1);
-
-    const resourceSelectTree = ref();
-
-    // 资源授权  弹框
-    let iconSourceConfigDialog = ref({
-        show: false,
-        title: computed(() => t('添加资源授权')),
-        width: '45%',
-        onOk: () => {
-            return new Promise(async (resolve, reject) => {
-                let ids = resourceSelectTree.value?.y9TreeRef?.getCheckedKeys();
-                if (ids.length == 0) {
-                    ElNotification({
-                        title: t('失败'),
-                        message: t('请选择需要授权的资源'),
-                        type: 'error',
-                        duration: 2000,
-                        offset: 80
-                    });
-                    reject();
-                    return;
-                }
-
-                // 保存操作
-                const params = {
-                    authority: resourceOperationType.value,
-                    principalId: currData.value.id,
-                    principalType: 0,
-                    resourceIds: ids.toString()
-                };
-
-                await saveOrUpdateRelateResource(params)
-                    .then((result) => {
-                        ElNotification({
-                            title: result.success ? t('成功') : t('失败'),
-                            message: result.msg,
-                            type: result.success ? 'success' : 'error',
-                            duration: 2000,
-                            offset: 80
-                        });
-                        // 重新请求接口
-                        getRelateResourceListFn();
-                        resolve();
-                    })
-                    .catch(() => {
-                        reject();
-                    });
-            });
-        }
-    });
-
-    function handlerClickResource() {
-        iconSourceConfigDialog.value.show = true;
-        iconSourceConfigDialog.value.title = computed(() => t('添加资源授权'));
-    }
-
-    // 资源授权 弹框 选择树过滤
-    let filtersListSource = ref([
-        {
-            type: 'slot',
-            slotName: 'treeFilter',
-            span: settingStore.device === 'mobile' ? 24 : 16
-        },
-        {
-            type: 'select',
-            value: 1,
-            span: settingStore.device === 'mobile' ? 24 : 8,
-            label: computed(() => t('操作权限')),
-            key: 'operationType',
-            props: {
-                clearable: false,
-                options: [
-                    {
-                        label: computed(() => t('隐藏')),
-                        value: 0
-                    },
-                    {
-                        label: computed(() => t('浏览')),
-                        value: 1
-                    },
-                    {
-                        label: computed(() => t('维护')),
-                        value: 2
-                    },
-                    {
-                        label: computed(() => t('管理')),
-                        value: 3
-                    }
-                ]
-            }
-        }
-    ]);
-
-    function sourceFiltersValueCallBack(filters) {
-        resourceOperationType.value = filters.operationType;
-    }
-
-    // 选择树的选择 框
-    let selectResourceField = [
-        {
-            fieldName: 'nodeType',
-            value: ['APP', 'MENU', 'OPERATION']
-        }
-    ];
-    // 资源授权 请求的tree接口
-    let sourceTreeApiObj = ref({
-        topLevel: resourceTreeList,
-        childLevel: {
-            //子级（二级及二级以上）tree接口
-            api: resourceTreeRoot,
-            params: {}
-        },
-        search: {
-            //搜索接口及参数
-            api: treeSearch,
-            params: {}
-        }
-    });
-    const searchKey = ref();
-
-    function onRefreshTree() {
-        resourceSelectTree.value.onRefreshTree();
-    }
-
-    let searchTimer = null;
-
-    function onSearchKeyChange(searchVal) {
-        clearTimeout(searchTimer);
-        searchTimer = setTimeout(() => {
-            sourceTreeApiObj.value.search.params.key = searchVal;
-        }, 500);
+        });
     }
 
     //引入

@@ -421,7 +421,8 @@ l
             search: {
                 api: searchByName,
                 params: {
-                    treeType: 'tree_type_dept'
+                    treeType: 'tree_type_dept',
+                    disabled: false
                 }
             }
         }

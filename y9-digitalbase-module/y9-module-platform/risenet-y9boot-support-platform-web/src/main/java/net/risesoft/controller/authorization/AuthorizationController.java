@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -102,10 +103,14 @@ public class AuthorizationController {
 
     private String buildResourceNamePath(Y9ResourceBase y9ResourceBase) {
         String guidPath = y9ResourceBase.getGuidPath();
-        List<String> resourceIdList = Arrays.asList(guidPath.split(LevelConsts.SEPARATOR));
-        List<Y9ResourceBase> y9ResourceBaseList = compositeResourceService.findByIdIn(resourceIdList);
-        return y9ResourceBaseList.stream().map(Y9ResourceBase::getName)
-            .collect(Collectors.joining(LevelConsts.NAME_SEPARATOR));
+        if (StringUtils.isNotEmpty(guidPath)) {
+            List<String> resourceIdList = Arrays.asList(guidPath.split(LevelConsts.SEPARATOR));
+            List<Y9ResourceBase> y9ResourceBaseList = compositeResourceService.findByIdIn(resourceIdList);
+            return y9ResourceBaseList.stream().map(Y9ResourceBase::getName)
+                .collect(Collectors.joining(LevelConsts.NAME_SEPARATOR));
+        } else {
+            return y9ResourceBase.getName();
+        }
     }
 
     private AuthorizationVO getAuthorizationVOForRole(Y9Authorization y9Authorization) {
@@ -164,6 +169,38 @@ public class AuthorizationController {
 
         return Y9Page.success(pageQuery.getPage4Db(), y9AuthorizationPage.getTotalPages(),
             y9AuthorizationPage.getTotalElements(), authorizationVOList, "获取数据成功");
+    }
+
+    /**
+     * 根据角色 id，返回授权的资源 id 集合（用于添加资源授权的资源树的选择回显）
+     *
+     * @param roleId 角色 id
+     * @param authority 权限类型
+     * @return {@code Y9Result<List<String>> }
+     */
+    @RiseLog(operationName = "根据角色 id，返回授权的资源 id 集合（用于添加资源授权的资源树的选择回显）")
+    @GetMapping(value = "/listResourceIdByRoleId")
+    public Y9Result<List<String>> listResourceIdByRoleId(@RequestParam @NotBlank String roleId,
+        @RequestParam AuthorityEnum authority) {
+        List<String> orgUnitIdList = y9AuthorizationService.listResourceIdByPrincipleId(roleId, authority);
+
+        return Y9Result.success(orgUnitIdList, "获取数据成功");
+    }
+
+    /**
+     * 根据资源 id，返回授权主体的 id 集合（用于添加资源授权的角色或组织架构树的选择回显）
+     *
+     * @param resourceId 资源 id
+     * @param authority 权限类型
+     * @return {@code Y9Result<List<String>> }
+     */
+    @RiseLog(operationName = "根据资源 id，返回授权主体的 id 集合（用于添加资源授权的角色或组织架构树的选择回显）")
+    @GetMapping(value = "/listPrincipalIdByResourceId")
+    public Y9Result<List<String>> listPrincipalIdByResourceId(@RequestParam @NotBlank String resourceId,
+        @RequestParam AuthorityEnum authority) {
+        List<String> orgUnitIdList = y9AuthorizationService.listPrincipalIdByResourceId(resourceId, authority);
+
+        return Y9Result.success(orgUnitIdList, "获取数据成功");
     }
 
     /**

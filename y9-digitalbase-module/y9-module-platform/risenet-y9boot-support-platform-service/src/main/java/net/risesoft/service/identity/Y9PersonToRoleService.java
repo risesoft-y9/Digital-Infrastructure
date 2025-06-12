@@ -57,9 +57,10 @@ public interface Y9PersonToRoleService {
      * 根据角色id查询拥有角色的所有人
      *
      * @param roleId 角色id
+     * @param disabled 人员是否禁用
      * @return {@code List<Y9Person>}
      */
-    List<Y9Person> listPersonsByRoleId(String roleId);
+    List<Y9Person> listPersonsByRoleId(String roleId, Boolean disabled);
 
     /**
      * 根据人员id查询其拥有的所有角色

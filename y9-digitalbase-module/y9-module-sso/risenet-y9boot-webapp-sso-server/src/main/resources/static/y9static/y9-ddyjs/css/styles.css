@@ -233,7 +233,7 @@ input[type="checkbox"] {
 
 input[type="checkbox"]:checked {
     /* background-position: -48px 0; */
-    background: #627BF6 url(../images/checked.png); /*复选框的背景图*/
+    background: #627BF6 url(../img/checked.png); /*复选框的背景图*/
     background-size: contain;
     cursor: pointer;
 }

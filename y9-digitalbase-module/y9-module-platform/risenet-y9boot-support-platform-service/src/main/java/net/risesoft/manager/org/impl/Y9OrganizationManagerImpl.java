@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
+import net.risesoft.consts.DefaultConsts;
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
@@ -111,7 +112,9 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
         organization.setTenantId(Y9LoginUserHolder.getTenantId());
         organization.setVersion(InitDataConsts.Y9_VERSION);
         organization.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.ORGANIZATION, organization.getName(), null));
-        organization.setTabIndex(getNextTabIndex());
+        organization.setTabIndex(
+            (null == organization.getTabIndex() || DefaultConsts.TAB_INDEX.equals(organization.getTabIndex()))
+                ? getNextTabIndex() : organization.getTabIndex());
         organization.setGuidPath(Y9OrgUtil.buildGuidPath(null, organization.getId()));
         final Y9Organization savedOrganization = this.save(organization);
 

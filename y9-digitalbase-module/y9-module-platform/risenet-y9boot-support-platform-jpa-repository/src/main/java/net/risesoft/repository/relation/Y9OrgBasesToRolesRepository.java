@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -38,8 +40,6 @@ public interface Y9OrgBasesToRolesRepository extends JpaRepository<Y9OrgBasesToR
 
     List<Y9OrgBasesToRoles> findByOrgIdAndNegativeOrderByOrgOrderDesc(String orgId, Boolean negative);
 
-    List<Y9OrgBasesToRoles> findByParentId(String parentId);
-
     List<Y9OrgBasesToRoles> findByRoleId(String roleId, Sort sort);
 
     List<Y9OrgBasesToRoles> findByRoleIdAndNegativeOrderByOrgOrderDesc(String roleId, Boolean negative);
@@ -62,4 +62,11 @@ public interface Y9OrgBasesToRolesRepository extends JpaRepository<Y9OrgBasesToR
 
     @Query("select orgId from Y9OrgBasesToRoles where roleId = ?1 order by orgOrder desc")
     List<String> listOrgIdsByRoleId(String roleId);
+
+    @Query("select orgId from Y9OrgBasesToRoles where roleId = ?1 and negative = ?2 order by orgOrder desc")
+    List<String> listOrgIdsByRoleIdAndNegative(String roleId, Boolean negative);
+
+    Page<Y9OrgBasesToRoles> findByRoleIdAndOrgIdIn(String roleId, List<String> orgUnitIdList, Pageable pageRequest);
+
+    Page<Y9OrgBasesToRoles> findByRoleId(String roleId, Pageable pageRequest);
 }

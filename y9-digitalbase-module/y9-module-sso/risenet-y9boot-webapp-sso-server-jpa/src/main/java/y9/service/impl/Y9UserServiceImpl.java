@@ -1,6 +1,7 @@
 package y9.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -117,6 +118,11 @@ public class Y9UserServiceImpl implements Y9UserService {
     @Override
     public List<Y9User> findByPersonIdAndOriginal(String personId, Boolean original) {
         return y9UserRepository.findByPersonIdAndOriginal(personId, original);
+    }
+
+    @Override
+    public List<Map<String, String>> listAllTenants() {
+        return y9UserRepository.listAllTenants();
     }
 
 }

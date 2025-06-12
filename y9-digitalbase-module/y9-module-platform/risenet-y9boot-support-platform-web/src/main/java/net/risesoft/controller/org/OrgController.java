@@ -134,13 +134,13 @@ public class OrgController {
     @GetMapping(value = "/getTree2")
     @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
     public Y9Result<List<OrgTreeNodeVO>> getTree2(@RequestParam @NotBlank String id,
-        @RequestParam OrgTreeTypeEnum treeType) {
+        @RequestParam OrgTreeTypeEnum treeType, @RequestParam(required = false) Boolean disabled) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
         if (userInfo.isGlobalManager() && !ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
-            y9OrgBaseList = compositeOrgBaseService.getTree(id, treeType, null);
+            y9OrgBaseList = compositeOrgBaseService.getTree(id, treeType, disabled);
         } else if (!ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
-            y9OrgBaseList = compositeOrgBaseService.getTree4DeptManager(id, treeType);
+            y9OrgBaseList = compositeOrgBaseService.getTree4DeptManager(id, treeType, disabled);
         }
         return Y9Result.success(
             OrgTreeNodeVO.convertY9OrgBaseList(y9OrgBaseList, treeType, true, compositeOrgBaseService), "获取机构树成功！");
@@ -256,15 +256,15 @@ public class OrgController {
     @RiseLog(operationName = "查询机构主体")
     @GetMapping(value = "/treeSearch2")
     @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
-    public Y9Result<List<OrgTreeNodeVO>> treeSearch2(@RequestParam String name,
-        @RequestParam OrgTreeTypeEnum treeType) {
+    public Y9Result<List<OrgTreeNodeVO>> treeSearch2(@RequestParam String name, @RequestParam OrgTreeTypeEnum treeType,
+        @RequestParam(required = false) Boolean disabled) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
         if (userInfo.isGlobalManager()) {
-            y9OrgBaseList = compositeOrgBaseService.treeSearch(name, treeType, null);
+            y9OrgBaseList = compositeOrgBaseService.treeSearch(name, treeType, disabled);
         } else if (ManagerLevelEnum.SYSTEM_MANAGER.equals(userInfo.getManagerLevel())
             || ManagerLevelEnum.SECURITY_MANAGER.equals(userInfo.getManagerLevel())) {
-            y9OrgBaseList = compositeOrgBaseService.treeSearch4DeptManager(name, treeType);
+            y9OrgBaseList = compositeOrgBaseService.treeSearch4DeptManager(name, treeType, disabled);
         }
         return Y9Result.success(
             OrgTreeNodeVO.convertY9OrgBaseList(y9OrgBaseList, treeType, false, compositeOrgBaseService), "获取机构树成功！");

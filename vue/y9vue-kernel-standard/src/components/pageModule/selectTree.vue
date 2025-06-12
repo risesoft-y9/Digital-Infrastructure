@@ -33,6 +33,7 @@
         ref="y9TreeRef"
         :checkStrictly="checkStrictly"
         :data="alreadyLoadTreeData"
+        :defaultCheckedKeys="defaultCheckedKeys"
         :highlightCurrent="highlightCurrent"
         :lazy="lazy"
         :load="onTreeLazyLoad"
@@ -114,6 +115,10 @@
             //是否高亮当前选中节点
             type: Boolean,
             default: false
+        },
+
+        defaultCheckedKeys: {
+            type: Array //默认勾选的节点的 key 的数组，一维数组
         }
     });
 
@@ -212,6 +217,12 @@
                 default:
                     item.title_icon = '';
             }
+
+            if (props.defaultCheckedKeys?.includes(item.id)) {
+                // 默认勾选的，禁止其操作
+                item.disabled = true;
+            }
+
             // 资源
             // switch (item.resourceType) {
             //     case 0: //应用
@@ -262,10 +273,19 @@
                 //如果没有则取接口数据
                 //整合参数
                 let params = {};
-                const childLevelParams = props.treeApiObj?.childLevel?.params;
+                const childLevelParams = props.treeApiObj?.childLevel?.params || {};
                 if (childLevelParams) {
+                    for (let key in childLevelParams) {
+                        if (childLevelParams[key] == undefined) {
+                            childLevelParams[key] = node[key];
+                        }
+                    }
                     params = childLevelParams;
                 }
+                if (node.nodeType) {
+                    params.parentNodeType = node.nodeType;
+                }
+
                 params.parentId = node.id;
                 //请求接口
                 const res = await props.treeApiObj?.childLevel?.api(params);
@@ -297,6 +317,20 @@
         }
     );
 
+    watch(
+        () => props.defaultCheckedKeys,
+        (newDefaultCheckedKeys, oldDefaultCheckedKeys) => {
+            oldDefaultCheckedKeys?.map((item) => {
+                let node = y9TreeRef.value.getNode(item);
+                node.disabled = false;
+            });
+            newDefaultCheckedKeys?.map((item) => {
+                let node = y9TreeRef.value.getNode(item);
+                node.disabled = true;
+            });
+        }
+    );
+
     //请求搜索api
     async function postSearchApi(searchkey) {
         if (searchkey) {
@@ -315,11 +349,11 @@
             //格式化tree数据
             await formatLazyTreeData(data);
             // nodeType 为APP 的parentId 为空
-            await data?.map((item) => {
-                if (item.nodeType == 'APP') {
-                    item.parentId = '';
-                }
-            });
+            // await data?.map((item) => {
+            //     if (item.nodeType == 'APP') {
+            //         item.parentId = '';
+            //     }
+            // });
             //根据搜索结果转换成tree结构显示出来
             alreadyLoadTreeData.value = transformTreeBySearchResult(data);
 

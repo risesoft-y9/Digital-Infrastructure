@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
+import net.risesoft.consts.DefaultConsts;
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
@@ -179,18 +180,25 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
             person.setEmail(null);
         }
 
+        if (StringUtils.isEmpty(person.getPassword())) {
+            String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
+            person.setPassword(Y9MessageDigest.bcrypt(defaultPassword));
+        } else {
+            if (!Y9MessageDigest.BCRYPT_PATTERN.matcher(person.getPassword()).matches()) {
+                // 避免重复加密（导入的情况直接使用原密文）
+                person.setPassword(Y9MessageDigest.bcrypt(person.getPassword()));
+            }
+        }
+
         person.setTenantId(Y9LoginUserHolder.getTenantId());
         person.setVersion(InitDataConsts.Y9_VERSION);
         person.setOfficial(1);
         person.setParentId(parent.getId());
         person.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, person.getName(), parent.getDn()));
         person.setGuidPath(compositeOrgBaseManager.buildGuidPath(person));
-        person.setTabIndex(null == person.getTabIndex() ? compositeOrgBaseManager.getNextSubTabIndex(parent.getId())
-            : person.getTabIndex());
+        person.setTabIndex((null == person.getTabIndex() || DefaultConsts.TAB_INDEX.equals(person.getTabIndex()))
+            ? compositeOrgBaseManager.getNextSubTabIndex(parent.getId()) : person.getTabIndex());
         person.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(person));
-
-        String password = y9SettingService.getTenantSetting().getUserDefaultPassword();
-        person.setPassword(Y9MessageDigest.bcrypt(password));
 
         final Y9Person savedPerson = save(person);
         if (null != personExt) {

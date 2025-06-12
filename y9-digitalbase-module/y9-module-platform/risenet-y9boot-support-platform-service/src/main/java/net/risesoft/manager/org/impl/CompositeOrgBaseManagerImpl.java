@@ -41,11 +41,12 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 @RequiredArgsConstructor
 public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
 
+    private final Y9OrganizationRepository y9OrganizationRepository;
     private final Y9DepartmentRepository y9DepartmentRepository;
     private final Y9GroupRepository y9GroupRepository;
-    private final Y9OrganizationRepository y9OrganizationRepository;
     private final Y9PersonRepository y9PersonRepository;
     private final Y9PositionRepository y9PositionRepository;
+
     private final Y9ManagerRepository y9ManagerRepository;
 
     private void buildGuidPath(StringBuilder sb, Y9OrgBase y9OrgBase) {
@@ -407,6 +408,17 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
         List<Y9Position> positionList = new ArrayList<>();
         fillPositionsRecursivelyToLeaf(parentId, positionList);
         return positionList;
+    }
+
+    @Override
+    public List<String> listOrgUnitIdByName(String name) {
+        List<String> orgUnitIdList = new ArrayList<>();
+        orgUnitIdList.addAll(y9OrganizationRepository.findIdByDnContaining(name));
+        orgUnitIdList.addAll(y9DepartmentRepository.findIdByDnContaining(name));
+        orgUnitIdList.addAll(y9GroupRepository.findIdByDnContaining(name));
+        orgUnitIdList.addAll(y9PersonRepository.findIdByDnContaining(name));
+        orgUnitIdList.addAll(y9PositionRepository.findIdByDnContaining(name));
+        return orgUnitIdList;
     }
 
 }

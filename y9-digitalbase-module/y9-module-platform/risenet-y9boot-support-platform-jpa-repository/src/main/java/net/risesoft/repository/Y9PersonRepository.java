@@ -81,4 +81,6 @@ public interface Y9PersonRepository extends JpaRepository<Y9Person, String>, Jpa
 
     Optional<Y9Person> findTopByParentIdOrderByTabIndexDesc(String parentId);
 
+    @Query("select o.id from Y9Person o where o.dn like %?1%")
+    List<String> findIdByDnContaining(String name);
 }

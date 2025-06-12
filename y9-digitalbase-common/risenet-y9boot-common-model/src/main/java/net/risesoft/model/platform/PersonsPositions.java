@@ -20,12 +20,16 @@ public class PersonsPositions implements Serializable {
 
     /** 主键 */
     private String id;
+
     /** 岗位ID */
     private String positionId;
+
     /** 人员ID */
     private String personId;
+
     /** 岗位排序号 */
     private Integer positionOrder;
+
     /** 人员排序号 */
     private Integer personOrder;
 

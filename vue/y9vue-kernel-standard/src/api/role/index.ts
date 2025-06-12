@@ -3,6 +3,19 @@ import qs from 'qs';
 
 const roleRequest = Request();
 
+// 应用角色树
+export const appRoleTree = async (appId) => {
+    return await roleRequest({
+        // url: 'http://127.0.0.1:4523/mock/891645/platform/api/rest/role/appRoleTree',
+        url: '/api/rest/role/appRoleTree',
+        method: 'get',
+        cType: false,
+        params: {
+            appId
+        }
+    });
+};
+
 // 角色树
 export const roleTree = async (params) => {
     return await roleRequest({
@@ -95,12 +108,22 @@ export const deleteRoleById = async (id) => {
 };
 
 // 根据 名称和 所属部门 查找角色成员
-export const searchByUnitNameAndUnitDN = async (roleId, unitName, unitDN) => {
+export const searchByUnitName = async (page, size, roleId, unitName) => {
     return await roleRequest({
-        url: '/api/rest/orgBasesToRoles/searchByUnitNameAndUnitDN',
+        url: '/api/rest/orgBasesToRoles/searchByUnitName',
         method: 'GET',
         cType: false,
-        params: { roleId: roleId, unitName: unitName, unitDn: unitDN }
+        params: { page, size, roleId, unitName }
+    });
+};
+
+// 根据角色 id，返回角色关联的机构节点 id 集合（用于添加授权树的选择回显）
+export const listOrgUnitIdByRoleId = async (roleId, negative) => {
+    return await roleRequest({
+        url: '/api/rest/orgBasesToRoles/listOrgUnitIdByRoleId',
+        method: 'GET',
+        cType: false,
+        params: { roleId: roleId, negative: negative }
     });
 };
 
@@ -168,6 +191,26 @@ export const saveOrUpdateRelateResource = async (params) => {
         method: 'POST',
         cType: false,
         data
+    });
+};
+
+// 根据角色id，返回授权的资源 id 集合（用于添加资源授权的资源树的选择回显）
+export const listResourceIdByRoleId = async (roleId, authority) => {
+    return await roleRequest({
+        url: '/api/rest/authorization/listResourceIdByRoleId',
+        method: 'GET',
+        cType: false,
+        params: { roleId: roleId, authority: authority }
+    });
+};
+
+// 根据资源 id，返回授权的角色 id 集合（用于添加资源授权的角色树的选择回显）
+export const listPrincipalIdByResourceId = async (resourceId, authority) => {
+    return await roleRequest({
+        url: '/api/rest/authorization/listPrincipalIdByResourceId',
+        method: 'GET',
+        cType: false,
+        params: { resourceId: resourceId, authority: authority }
     });
 };
 

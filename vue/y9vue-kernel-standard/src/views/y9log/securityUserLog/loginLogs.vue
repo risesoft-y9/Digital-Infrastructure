@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-05-05 09:43:05
- * @LastEditTime: 2024-01-05 10:40:56
+ * @LastEditTime: 2025-05-29 15:55:17
  * @LastEditors: mengjuhua
  * @Description: 安全保密员日志 - 登录日志
 -->
@@ -252,7 +252,7 @@
                 formatter: logTimeFormat,
                 width: settingStore.getDatetimeSpan
             },
-            { title: computed(() => t('错误信息')), key: 'throwable' }
+            { title: computed(() => t('登录信息')), key: 'logMessage' }
         ],
         tableData: [],
         pageConfig: {

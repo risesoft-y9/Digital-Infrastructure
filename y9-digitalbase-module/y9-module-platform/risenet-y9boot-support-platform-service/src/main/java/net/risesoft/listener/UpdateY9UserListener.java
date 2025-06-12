@@ -16,7 +16,6 @@ import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.enums.platform.PersonTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.service.identity.Y9PersonToRoleService;
 import net.risesoft.service.relation.Y9PersonsToPositionsService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
@@ -40,7 +39,6 @@ public class UpdateY9UserListener {
     private final Y9TenantService y9TenantService;
     private final Y9UserService y9UserService;
     private final Y9PersonsToPositionsService y9PersonsToPositionsService;
-    private final Y9PersonToRoleService y9PersonToRoleService;
 
     /**
      * 监听管理员添加事件

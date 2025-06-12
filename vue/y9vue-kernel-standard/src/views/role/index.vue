@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-11-11 14:50:14
+ * @LastEditTime: 2025-05-30 13:52:18
  * @Description: 应用角色关联 + 应用角色管理
 -->
 <template>
@@ -58,8 +58,9 @@
                                         </el-button>
                                     </span>
                                 </span>
-                                <span v-if="currData.nodeType == 'APP' || currData.nodeType == 'folder'">
+                                <span>
                                     <el-button
+                                        v-if="currData.nodeType == 'APP' || currData.nodeType == 'folder'"
                                         :size="fontSizeObj.buttonSize"
                                         :style="{ fontSize: fontSizeObj.baseFontSize }"
                                         class="global-btn-main"
@@ -70,6 +71,7 @@
                                         {{ $t('子节点') }}
                                     </el-button>
                                     <el-button
+                                        v-if="currData.nodeType != 'role'"
                                         :size="fontSizeObj.buttonSize"
                                         :style="{ fontSize: fontSizeObj.baseFontSize }"
                                         class="global-btn-main"
@@ -82,28 +84,29 @@
                                 </span>
                             </div>
                             <div>
-                                <el-button
-                                    v-if="currData.nodeType == 'APP' || currData.nodeType == 'folder'"
-                                    :size="fontSizeObj.buttonSize"
-                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                    class="global-btn-second"
-                                    @click="onSort('sort')"
-                                >
-                                    <i class="ri-order-play-line"></i>
-                                    {{ $t('排序') }}
-                                </el-button>
-                                <!-- v-if="currData.resourceType !== 0" -->
-                                <el-button
-                                    v-if="currData.nodeType == 'role' || currData.nodeType == 'folder'"
-                                    :size="fontSizeObj.buttonSize"
-                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                    class="global-btn-second"
-                                    @click="onSort('move')"
-                                >
-                                    <i class="ri-route-line"></i>
-                                    {{ $t('移动') }}
-                                </el-button>
-                                <!-- <el-button class="global-btn-second" @click="extendFlag = true"  >
+                                <template v-if="currData.appId">
+                                    <el-button
+                                        v-if="currData.nodeType == 'APP' || currData.nodeType == 'folder'"
+                                        :size="fontSizeObj.buttonSize"
+                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                        class="global-btn-second"
+                                        @click="onSort('sort')"
+                                    >
+                                        <i class="ri-order-play-line"></i>
+                                        {{ $t('排序') }}
+                                    </el-button>
+                                    <!-- v-if="currData.resourceType !== 0" -->
+                                    <el-button
+                                        v-if="currData.nodeType == 'role' || currData.nodeType == 'folder'"
+                                        :size="fontSizeObj.buttonSize"
+                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                        class="global-btn-second"
+                                        @click="onSort('move')"
+                                    >
+                                        <i class="ri-route-line"></i>
+                                        {{ $t('移动') }}
+                                    </el-button>
+                                    <!-- <el-button class="global-btn-second" @click="extendFlag = true"  >
                                             <i class="ri-external-link-line"></i>
                                             扩展属性
                                         </el-button>
@@ -117,6 +120,7 @@
                                                 导出角色XML
                                             </el-button>
                                         </span> -->
+                                </template>
                             </div>
                         </div>
                         <BasicInfo
@@ -140,121 +144,20 @@
                     v-if="managerLevel === 2 && currData.nodeType === 'role'"
                     :title="`${$t('角色成员')} - ${currData.name ? currData.name : ''}`"
                 >
-                    <y9Table
-                        v-model:selectedVal="tableCurrSelectedVal"
-                        :config="tableConfig"
-                        :filterConfig="filterConfig"
-                    >
-                        <template v-slot:filterBtnSlot>
-                            <el-button
-                                :size="fontSizeObj.buttonSize"
-                                :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                class="global-btn-main"
-                                type="primary"
-                                @click="initList"
-                            >
-                                <i class="ri-search-line"></i>
-                                {{ $t('搜索') }}
-                            </el-button>
-                            <div class="widthBtn">
-                                <el-button
-                                    :size="fontSizeObj.buttonSize"
-                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                    class="global-btn-second"
-                                    @click="handlerClick('positive')"
-                                >
-                                    <i class="ri-add-line"></i>
-                                    {{ $t('正权限人员') }}
-                                </el-button>
-                                <el-button
-                                    :size="fontSizeObj.buttonSize"
-                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                    class="global-btn-second"
-                                    @click="handlerClick('negative')"
-                                >
-                                    <i class="ri-add-line"></i>
-                                    {{ $t('负权限人员') }}
-                                </el-button>
-                            </div>
-                            <el-button
-                                :size="fontSizeObj.buttonSize"
-                                :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                class="global-btn-second"
-                                @click="handlerDeleteClick('roleMember')"
-                            >
-                                <i class="ri-close-line"></i>
-                                {{ $t('删除') }}
-                            </el-button>
-                        </template>
-                        <template #expandRowSlot="props">
-                            <div class="expand-rows">
-                                <p>名称: {{ props.row.orgUnitNamePath }}</p>
-                                <p>成员类型: {{ props.row.orgTypeStr }}</p>
-                                <p>负权限成员: {{ props.row.negative ? '是' : '否' }}</p>
-                                <p>添加时间: {{ props.row.createTime }}</p>
-                            </div>
-                        </template>
-                        <template #negativeSlot="props">
-                            <boolWarningCell :is-true="props.row.negative"></boolWarningCell>
-                        </template>
-                    </y9Table>
+                    <OrgBasesToRoles :id="currData.id"></OrgBasesToRoles>
                 </y9Card>
 
                 <y9Card
                     v-if="managerLevel === 2 && currData.nodeType === 'role'"
                     :title="`${$t('资源列表')} - ${currData.name ? currData.name : ''}`"
                 >
-                    <y9Table
-                        v-model:selectedVal="resourceTableCurrSelectedVal"
-                        :config="resourceTableConfig"
-                        :filterConfig="resourcefilterConfig"
-                        @on-curr-page-change="onCurrPageChange"
-                        @on-page-size-change="onPageSizeChange"
+                    <Authorization
+                        :id="currData.id"
+                        :appId="currData.appId"
+                        :parentId="currData.parentId"
+                        type="private"
                     >
-                        <template v-slot:filterBtnSlot>
-                            <!-- <el-button class="global-btn-main" @click="initList" type="primary">
-					                <i class="ri-search-line"></i>
-					                {{ $t('搜索') }}
-					            </el-button> -->
-                            <div class="widthBtn">
-                                <el-button
-                                    :size="fontSizeObj.buttonSize"
-                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                    class="global-btn-second"
-                                    @click="onSort('resource')"
-                                >
-                                    <i class="ri-add-line"></i>
-                                    {{ $t('资源授权') }}
-                                </el-button>
-                            </div>
-                            <el-button
-                                :size="fontSizeObj.buttonSize"
-                                :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                class="global-btn-second"
-                                @click="handlerDeleteClick('resource')"
-                            >
-                                <i class="ri-close-line"></i>
-                                {{ $t('删除') }}
-                            </el-button>
-                        </template>
-                        <template #expandRowSlot="props">
-                            <div class="expand-rows">
-                                <p>资源名称: {{ props.row.resourceNamePath }}</p>
-                                <p>资源类型: {{ props.row.resourceTypeStr }}</p>
-                                <p>所属系统: {{ props.row.systemCnName }}</p>
-                                <p>权限: {{ props.row.authorityStr }}</p>
-                                <p>授权者: {{ props.row.authorizer }}</p>
-                                <p>授权时间: {{ props.row.authorizeTime }}</p>
-                            </div>
-                        </template>
-                        <template #authoritySlot="props">
-                            <boolWarningCell
-                                :is-true="props.row.authorityStr === '隐藏'"
-                                :true-text="props.row.authorityStr"
-                                :false-text="props.row.authorityStr"
-                            ></boolWarningCell>
-                        </template>
-                    </y9Table>
+                    </Authorization>
                 </y9Card>
             </div>
         </template>
@@ -276,7 +179,7 @@
     <y9Dialog v-model:config="moveConfigDialog">
         <selectTree
             ref="moveSelectTreeRef"
-            :selectField="[{ fieldName: 'nodeType', value: 'folder' }]"
+            :selectField="[{ fieldName: 'nodeType', value: ['folder', 'APP'] }]"
             :showHeader="false"
             :treeApiObj="treeMoveApiObj"
             checkStrictly
@@ -284,92 +187,29 @@
             @onNodeExpand="onNodeExpand"
         ></selectTree>
     </y9Dialog>
-    <!-- 正权限 负权限 -->
-    <y9Dialog v-model:config="negativeConfigDialog">
-        <selectTree
-            ref="selectTreeRef"
-            :selectField="selectField"
-            :treeApiObj="negativeTreeApiObj"
-            checkStrictly
-        ></selectTree>
-    </y9Dialog>
-    <!-- 资源授权 -->
-    <y9Dialog v-model:config="iconSourceConfigDialog">
-        <y9Filter
-            ref="resourceFilterRef"
-            :filtersValueCallBack="sourceFiltersValueCallBack"
-            :itemList="filtersListSource"
-            showBorder
-        >
-            <template #treeFilter>
-                <div class="custom-select-tree-filter">
-                    <el-button
-                        :size="fontSizeObj.buttonSize"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                        class="global-btn-second refresh-btn"
-                        @click="onRefreshTree"
-                    >
-                        <i class="ri-refresh-line"></i>
-                        <span>{{ $t('刷新') }}</span>
-                    </el-button>
-
-                    <input autocomplete="new-password" hidden type="password" />
-                    <el-input
-                        v-model="searchKey"
-                        :placeholder="$t('请搜索')"
-                        :size="fontSizeObj.buttonSize"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                        autocomplete
-                        class="search-input"
-                        name="select-tree-search"
-                        type="search"
-                        @input="onSearchKeyChange"
-                    >
-                        <template #prefix>
-                            <i class="ri-search-line"></i>
-                        </template>
-                    </el-input>
-                </div>
-            </template>
-        </y9Filter>
-        <!-- tree树 -->
-        <selectTree
-            ref="resourceSelectTree"
-            :selectField="selectResourceField"
-            :showHeader="false"
-            :treeApiObj="sourceTreeApiObj"
-            checkStrictly
-        ></selectTree>
-    </y9Dialog>
     <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>
-    import { computed, inject, ref, watch } from 'vue';
+    import { computed, inject, ref } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import y9_storage from '@/utils/storage';
     import {
-        addOrgUnits,
+        appRoleTree,
         deleteRoleById,
-        getRelateResourceList,
-        removeAuthPermissionRecord,
-        removeOrgUnits,
         roleTree,
         roleTreeList,
         saveMoveRole,
         saveOrder,
         saveOrUpdate,
-        saveOrUpdateRelateResource,
-        searchByUnitNameAndUnitDN,
         treeSelect
     } from '@/api/role/index';
-    import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
-    import { appTreeRoot, resourceTreeRoot, treeSearch } from '@/api/resource/index';
     // 基本信息
     import BasicInfo from './comps/BasicInfo.vue';
     import SystemBasicInfo from '@/views/system/comps/BasicInfo.vue';
     import auditLog from '@/views/y9log/entityAuditLog/index.vue';
-    import boolWarningCell from '@/components/BoolWarningCell/index.vue';
+    import OrgBasesToRoles from './comps/OrgBasesToRoles.vue';
+    import Authorization from './comps/Authorization.vue';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useI18n } from 'vue-i18n';
 
@@ -379,96 +219,11 @@
     const fontSizeObj: any = inject('sizeObjInfo');
     const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
 
-    let sortRef = ref();
-    // 资源排序 弹框的变量配置 控制
-    let sortDialogConfig = ref({
-        show: false,
-        title: computed(() => t('角色排序')),
-        width: '40%',
-        showFooter: true, //是否显示底部
-        columns: [
-            {
-                type: 'radio',
-                title: computed(() => t('请选择')),
-                width: 200
-            },
-            {
-                title: computed(() => t('名称')),
-                key: 'name'
-            },
-            {
-                title: computed(() => t('类型')),
-                key: 'nodeType'
-            }
-        ],
-        onOk: (newConfig) => {
-            return new Promise(async (resolve, reject) => {
-                let tableData = sortRef.value.tableConfig.tableData;
-                const ids = [] as any;
-                tableData.forEach((element) => {
-                    ids.push(element.id);
-                });
-                await saveOrder(ids.toString())
-                    .then(async (result) => {
-                        /**
-                         * 对树进行操作：手动更新当前节点的子节点信息
-                         */
-                        //1.更新当前节点的子节点信息
-                        const treeData = fixedTreeRef.value.getTreeData(); //获取tree数据
-                        const currNode = fixedTreeRef.value.findNode(treeData, currData.value.id); //找到树节点对应的节点信息
-                        const childData = await postNode({ id: currData.value.id }); //重新请求当前节点的子节点，获取格式化后的子节点信息
-                        Object.assign(currNode, { children: childData }); //合并节点信息
-
-                        //2.手动设置重新点击当前节点
-                        fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
-
-                        ElNotification({
-                            title: result.success ? t('成功') : t('失败'),
-                            message: result.msg,
-                            type: result.success ? 'success' : 'error',
-                            duration: 2000,
-                            offset: 80
-                        });
-                        resolve();
-                    })
-                    .catch(() => {
-                        reject();
-                    });
-            });
-        }
-    });
-
-    //排序按钮点击时触发
-    const onSort = (type) => {
-        if (type === 'sort') {
-            Object.assign(sortDialogConfig.value, {
-                show: true,
-                title: computed(() => t('角色排序'))
-            });
-        } else if (type === 'move') {
-            Object.assign(moveConfigDialog.value, {
-                show: true,
-                title: computed(() => t('移动'))
-            });
-        } else if (type === 'resource') {
-            Object.assign(iconSourceConfigDialog.value, {
-                show: true,
-                title: computed(() => t('添加资源授权'))
-            });
-        }
-    };
-
     // 全局 loading
     let loading = ref(false);
 
     // 点击树节点 对应数据的载体
     let currData = ref({} as any);
-
-    // 树节点的 基本信息 获取
-    function handlerTreeClick(data) {
-        // 将拿到的节点信息 储存起来
-        currData.value = data;
-    }
 
     // 树 ref
     const fixedTreeRef = ref();
@@ -485,6 +240,21 @@
             params: {}
         }
     });
+
+    // 树节点的 基本信息 获取
+    function handlerTreeClick(data) {
+        // 将拿到的节点信息 储存起来
+        currData.value = data;
+    }
+
+    //请求某个节点，返回格式化好的数据
+    function postNode(node) {
+        return new Promise((resolve, reject) => {
+            fixedTreeRef.value.onTreeLazyLoad(node, (data) => {
+                resolve(data);
+            });
+        });
+    }
 
     // 删除角色
     function roleRemove(data) {
@@ -644,8 +414,9 @@
                 await y9RoleFormInstance.validate(async (valid) => {
                     if (valid) {
                         const params = {
-                            appId: currData.value.appId,
+                            appId: currData.value.nodeType === 'SYSTEM' ? null : currData.value.appId,
                             parentId: currData.value.id,
+                            systemId: currData.value.nodeType === 'SYSTEM' ? currData.value.id : null,
                             type: roleForm.value.nodeType,
                             ...roleFormRef.value?.model
                         };
@@ -658,7 +429,7 @@
                                     //1.更新当前节点的子节点信息
                                     const treeData = fixedTreeRef.value.getTreeData(); //获取tree数据
                                     const currNode = fixedTreeRef.value.findNode(treeData, currData.value.id); //找到树节点对应的节点信息
-                                    const childData = await postNode({ id: currNode.id }); //重新请求当前节点的子节点，获取格式化后的子节点信息
+                                    const childData = await postNode({ id: currNode.id, nodeType: currNode.nodeType }); //重新请求当前节点的子节点，获取格式化后的子节点信息
                                     Object.assign(currNode, { children: childData }); //合并节点信息
                                     //2.手动设置点击当前节点
                                     fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
@@ -697,14 +468,8 @@
     const treeMoveApiObj = ref({
         topLevel: async () => {
             let data: any = [];
-            const res = await appTreeRoot(currData.value.appId);
-            data = res.data;
-            data.forEach((item) => {
-                if (item.resourceType === 0) {
-                    item.nodeType = 'folder';
-                }
-            });
-            return data;
+            const res = await appRoleTree(currData.value.appId);
+            return res.data;
         },
         childLevel: {
             api: async () => {
@@ -807,387 +572,49 @@
         }
     });
 
-    // 角色成员  ------
-    // 搜索条件
-    let filterData = ref({} as any);
-    // 树 ref
-    const selectTreeRef = ref();
-    // 表格 过滤条件
-    const filterConfig = ref({
-        filtersValueCallBack: (filters) => {
-            filterData.value = filters;
-        },
-        showBorder: true,
-        itemList: [
+    let sortRef = ref();
+    // 资源排序 弹框的变量配置 控制
+    let sortDialogConfig = ref({
+        show: false,
+        title: computed(() => t('角色排序')),
+        width: '40%',
+        showFooter: true, //是否显示底部
+        columns: [
             {
-                type: 'input',
-                value: '',
-                key: 'rolePersonName',
-                label: computed(() => t('名称')),
-                span: settingStore.device === 'mobile' ? 24 : 5,
-                clearable: true
+                type: 'radio',
+                title: computed(() => t('请选择')),
+                width: 200
             },
             {
-                type: 'input',
-                value: '',
-                key: 'deptName',
-                label: computed(() => t('部门')),
-                span: settingStore.device === 'mobile' ? 24 : 5,
-                clearable: true
+                title: computed(() => t('名称')),
+                key: 'name'
             },
             {
-                type: 'slot',
-                slotName: 'filterBtnSlot',
-                span: settingStore.device === 'mobile' ? 24 : 14
-            }
-        ]
-    });
-
-    // 表格 配置属性
-    let tableConfig = ref({
-        columns: [
-            { type: 'selection', fixed: 'left', width: 60 },
-            { type: 'expand', width: 40, slot: 'expandRowSlot' },
-            { title: computed(() => t('序号')), type: 'index', width: 60, showOverflowTooltip: false },
-            { title: computed(() => t('名称')), align: 'left', key: 'orgUnitNamePath' },
-            { title: computed(() => t('成员类型')), width: 100, key: 'orgTypeStr' },
-            {
-                title: computed(() => t('负权限成员')),
-                width: 100,
-                key: 'negative',
-                slot: 'negativeSlot'
+                title: computed(() => t('类型')),
+                key: 'nodeType'
             }
         ],
-        tableData: [],
-        pageConfig: false
-    });
-    // 表格选中的数据
-    let tableCurrSelectedVal = ref([] as any);
-    // 监听 currData.type
-    watch(
-        () => currData.value,
-        (newVal) => {
-            if (newVal.nodeType === 'role') {
-                if (managerLevel === 2) {
-                    initList();
-                    getRelateResourceListFn();
-                }
-            }
-        }
-    );
-
-    // 角色成员 请求 列表接口
-    async function initList() {
-        // filterData
-        let result = await searchByUnitNameAndUnitDN(
-            currData.value.id,
-            filterData.value.rolePersonName,
-            filterData.value.deptName
-        );
-        tableConfig.value.tableData = result.data;
-    }
-
-    //资源列表选中的数据
-    let resourceTableCurrSelectedVal = ref([] as any);
-    //资源列表表格配置
-    const resourceTableConfig = ref({
-        columns: [
-            { type: 'selection', fixed: 'left', width: 60 },
-            { type: 'expand', width: 40, slot: 'expandRowSlot' },
-            { title: computed(() => t('序号')), type: 'index', width: 60, showOverflowTooltip: false },
-            { title: computed(() => t('资源名称')), align: 'left', key: 'resourceNamePath' },
-            { title: computed(() => t('资源类型')), width: 120, key: 'resourceTypeStr' },
-            { title: computed(() => t('所属系统')), key: 'systemCnName' },
-            {
-                title: computed(() => t('权限')),
-                width: 80,
-                key: 'authority',
-                slot: 'authoritySlot'
-            }
-        ],
-        tableData: [],
-        pageConfig: {
-            currentPage: 1, //当前页数，支持 v-model 双向绑定
-            pageSize: 10, //每页显示条目个数，支持 v-model 双向绑定
-            total: 10 //总条目数
-        }
-    });
-
-    //资源列表搜索条件
-    const resourceFilterData = ref({} as any);
-    // 资源列表表格 过滤条件
-    const resourcefilterConfig = ref({
-        filtersValueCallBack: (filters) => {
-            resourceFilterData.value = filters;
-        },
-        showBorder: true,
-        itemList: [
-            // {
-            //     type: 'input',
-            //     value: '',
-            //     key: 'resourceName',
-            //     label: '资源名称',
-            //     span: settingStore.device === 'mobile' ? 24 : 6,
-            //     clearable: true,
-            // },
-            // {
-            //     type: 'input',
-            //     value: '',
-            //     key: 'operationType',
-            //     label: '操作权限',
-            //     span: settingStore.device === 'mobile' ? 24 : 6,
-            //     clearable: true,
-            // },
-            {
-                type: 'slot',
-                slotName: 'filterBtnSlot',
-                span: settingStore.device === 'mobile' ? 24 : 6
-            }
-        ]
-    });
-
-    async function getRelateResourceListFn() {
-        const result = await getRelateResourceList(
-            currData.value.id,
-            resourceTableConfig.value.pageConfig.currentPage,
-            resourceTableConfig.value.pageConfig.pageSize
-        );
-        resourceTableConfig.value.tableData = result.rows;
-        resourceTableConfig.value.pageConfig.total = result.total;
-    }
-
-    //当前页改变时触发
-    function onCurrPageChange(currPage) {
-        resourceTableConfig.value.pageConfig.currentPage = currPage;
-        getRelateResourceListFn(); //获取列表
-    }
-
-    //每页条数改变时触发
-    function onPageSizeChange(pageSize) {
-        resourceTableConfig.value.pageConfig.pageSize = pageSize;
-        getRelateResourceListFn(); //获取列表
-    }
-
-    // 正权限 负权限 弹框
-    let negativeConfigDialog = ref({
-        show: false,
-        title: '',
-        width: '30%',
-        onOk: () => {
+        onOk: (newConfig) => {
             return new Promise(async (resolve, reject) => {
-                let ids = selectTreeRef.value?.y9TreeRef?.getCheckedKeys();
-
-                if (ids.length === 0) {
-                    ElNotification({
-                        title: t('失败'),
-                        message: t('请选择需要添加权限的节点'),
-                        type: 'error',
-                        duration: 2000,
-                        offset: 80
-                    });
-                    reject();
-                    return;
-                }
-
-                let result;
-
-                if (negativeConfigDialog.value.title == computed(() => t('添加正权限人员')).value) {
-                    await addOrgUnits(currData.value.id, ids.join(','), false)
-                        .then((res) => {
-                            result = res;
-                        })
-                        .catch(() => {});
-                } else if (negativeConfigDialog.value.title == computed(() => t('添加负权限人员')).value) {
-                    await addOrgUnits(currData.value.id, ids.join(','), true)
-                        .then((res) => {
-                            result = res;
-                        })
-                        .catch(() => {});
-                }
-                ElNotification({
-                    title: result.success ? t('成功') : t('失败'),
-                    message: result.msg,
-                    type: result.success ? 'success' : 'error',
-                    duration: 2000,
-                    offset: 80
+                let tableData = sortRef.value.tableConfig.tableData;
+                const ids = [] as any;
+                tableData.forEach((element) => {
+                    ids.push(element.id);
                 });
-                // 重新请求接口
-                initList();
-                if (result.success) {
-                    resolve();
-                } else {
-                    reject();
-                }
-            });
-        }
-    });
+                await saveOrder(ids.toString())
+                    .then(async (result) => {
+                        /**
+                         * 对树进行操作：手动更新当前节点的子节点信息
+                         */
+                        //1.更新当前节点的子节点信息
+                        const treeData = fixedTreeRef.value.getTreeData(); //获取tree数据
+                        const currNode = fixedTreeRef.value.findNode(treeData, currData.value.id); //找到树节点对应的节点信息
+                        const childData = await postNode({ id: currData.value.id }); //重新请求当前节点的子节点，获取格式化后的子节点信息
+                        Object.assign(currNode, { children: childData }); //合并节点信息
 
-    // 点击 添加正权限 添加负权限
-    function handlerClick(type) {
-        if (type === 'positive') {
-            negativeConfigDialog.value.title = computed(() => t('添加正权限人员'));
-        } else {
-            negativeConfigDialog.value.title = computed(() => t('添加负权限人员'));
-        }
-        negativeConfigDialog.value.show = true;
-    }
+                        //2.手动设置重新点击当前节点
+                        fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
 
-    // 点击删除 按钮
-    function handlerDeleteClick(type) {
-        if (type === 'roleMember') {
-            if (!tableCurrSelectedVal.value.length) {
-                ElMessage({
-                    type: 'warning',
-                    message: t('请选择需要删除的人员'),
-                    offset: 65
-                });
-                return;
-            }
-        } else if (type === 'resource') {
-            if (!resourceTableCurrSelectedVal.value.length) {
-                ElMessage({
-                    type: 'warning',
-                    message: t('请选择需要删除的资源'),
-                    offset: 65
-                });
-                return;
-            }
-        }
-
-        ElMessageBox.confirm(`${t('是否删除选中的数据')}?`, t('提示'), {
-            confirmButtonText: t('确定'),
-            cancelButtonText: t('取消'),
-            type: 'info'
-        })
-            .then(async () => {
-                loading.value = true;
-                let ids = [];
-                if (type === 'roleMember') {
-                    ids = tableCurrSelectedVal.value.map((item) => {
-                        return item.id;
-                    });
-                    let result = await removeOrgUnits(ids.join(','));
-                    loading.value = false;
-                    ElNotification({
-                        title: result.success ? t('成功') : t('失败'),
-                        message: result.msg,
-                        type: result.success ? 'success' : 'error',
-                        duration: 2000,
-                        offset: 80
-                    });
-                    // 初始化数据
-                    initList();
-                    tableCurrSelectedVal.value = [];
-                } else if (type === 'resource') {
-                    ids = resourceTableCurrSelectedVal.value.map((item) => {
-                        return item.id;
-                    });
-                    let result = await removeAuthPermissionRecord({ ids: ids.join(',') });
-                    loading.value = false;
-                    ElNotification({
-                        title: result.success ? t('成功') : t('失败'),
-                        message: result.msg,
-                        type: result.success ? 'success' : 'error',
-                        duration: 2000,
-                        offset: 80
-                    });
-                    // 初始化数据
-                    getRelateResourceListFn();
-                    resourceTableCurrSelectedVal.value = [];
-                }
-            })
-            .catch(() => {
-                ElMessage({
-                    type: 'info',
-                    message: t('已取消删除'),
-                    offset: 65
-                });
-            });
-    }
-
-    // 弹框 选择树过滤
-    let filtersList = ref([
-        {
-            type: 'input',
-            value: '', //值，真正的值
-            span: settingStore.device === 'mobile' ? 24 : 10,
-            label: '',
-            key: 'searchKey',
-            props: {
-                placeholder: computed(() => t('输入内容按回车键搜索'))
-            }
-        },
-        {
-            type: 'slot',
-            slotName: 'filterRefreshSlot',
-            span: settingStore.device === 'mobile' ? 24 : 6
-        }
-    ]);
-
-    // 选择树的选择 框
-    let selectField = [
-        {
-            fieldName: 'nodeType',
-            value: ['Person', 'Position', 'Organization', 'Department']
-        }
-    ];
-    // 正权限  负权限 请求的tree接口
-    let negativeTreeApiObj = ref({
-        topLevel: treeInterface,
-        childLevel: {
-            //子级（二级及二级以上）tree接口
-            api: getTreeItemById,
-            params: {
-                treeType: 'tree_type_org',
-                disabled: false
-            }
-        },
-        search: {
-            //搜索接口及参数
-            api: searchByName,
-            params: {
-                treeType: 'tree_type_org'
-            }
-        }
-    });
-
-    // 资源授权 ref
-    const resourceFilterRef = ref(null);
-    // 资源授权的 操作权限
-    let resourceOperationType = ref(1);
-
-    const resourceSelectTree = ref();
-
-    // 资源授权  弹框
-    let iconSourceConfigDialog = ref({
-        show: false,
-        title: computed(() => t('添加资源授权')),
-        width: '45%',
-        onOk: () => {
-            return new Promise(async (resolve, reject) => {
-                let ids = resourceSelectTree.value?.y9TreeRef?.getCheckedKeys();
-                if (ids.length == 0) {
-                    ElNotification({
-                        title: t('失败'),
-                        message: t('请选择需要授权的资源'),
-                        type: 'error',
-                        duration: 2000,
-                        offset: 80
-                    });
-                    reject();
-                    return;
-                }
-
-                // 保存操作
-                const params = {
-                    authority: resourceOperationType.value,
-                    principalId: currData.value.id,
-                    principalType: 0,
-                    resourceIds: ids.toString()
-                };
-
-                await saveOrUpdateRelateResource(params)
-                    .then((result) => {
                         ElNotification({
                             title: result.success ? t('成功') : t('失败'),
                             message: result.msg,
@@ -1195,11 +622,7 @@
                             duration: 2000,
                             offset: 80
                         });
-                        if (result.success) {
-                            // 重新请求接口
-                            getRelateResourceListFn();
-                            resolve();
-                        }
+                        resolve();
                     })
                     .catch(() => {
                         reject();
@@ -1207,107 +630,21 @@
             });
         }
     });
-    // 资源授权 弹框 选择树过滤
-    let filtersListSource = ref([
-        {
-            type: 'slot',
-            slotName: 'treeFilter',
-            span: settingStore.device === 'mobile' ? 24 : 16
-        },
-        {
-            type: 'select',
-            value: 1,
-            span: settingStore.device === 'mobile' ? 24 : 8,
-            label: computed(() => t('操作权限')),
-            key: 'operationType',
-            props: {
-                clearable: false,
-                options: [
-                    {
-                        label: computed(() => t('隐藏')),
-                        value: 0
-                    },
-                    {
-                        label: computed(() => t('浏览')),
-                        value: 1
-                    },
-                    {
-                        label: computed(() => t('维护')),
-                        value: 2
-                    },
-                    {
-                        label: computed(() => t('管理')),
-                        value: 3
-                    }
-                ]
-            }
-        }
-    ]);
 
-    //请求某个节点，返回格式化好的数据
-    function postNode(node) {
-        return new Promise((resolve, reject) => {
-            fixedTreeRef.value.onTreeLazyLoad(node, (data) => {
-                resolve(data);
+    //排序按钮点击时触发
+    const onSort = (type) => {
+        if (type === 'sort') {
+            Object.assign(sortDialogConfig.value, {
+                show: true,
+                title: computed(() => t('角色排序'))
             });
-        });
-    }
-
-    function sourceFiltersValueCallBack(filters) {
-        resourceOperationType.value = filters.operationType;
-    }
-
-    // 搜索 刷新
-    async function searchSourceDialog() {
-        resourceFilterRef.value.onReset();
-    }
-
-    // 选择树的选择 框
-    let selectResourceField = [
-        {
-            fieldName: 'nodeType',
-            value: ['APP', 'MENU', 'OPERATION']
-        }
-    ];
-    // 资源授权 请求的tree接口
-    let sourceTreeApiObj = ref({
-        topLevel: async () => {
-            let data = [];
-            const res = await appTreeRoot(currData.value.appId);
-            data = res.data;
-            data.forEach((item) => {
-                if (item.resourceType === 0) {
-                    item.nodeType = 'APP';
-                }
+        } else if (type === 'move') {
+            Object.assign(moveConfigDialog.value, {
+                show: true,
+                title: computed(() => t('移动'))
             });
-            return data;
-        },
-        childLevel: {
-            //子级（二级及二级以上）tree接口
-            api: resourceTreeRoot,
-            params: {}
-        },
-        search: {
-            //搜索接口及参数
-            api: treeSearch,
-            params: {}
         }
-    });
-    const searchKey = ref();
-
-    function onRefreshTree() {
-        resourceSelectTree.value.onRefreshTree();
-    }
-
-    let searchTimer = null;
-
-    function onSearchKeyChange(searchVal) {
-        clearTimeout(searchTimer);
-        searchTimer = setTimeout(() => {
-            sourceTreeApiObj.value.search.params.key = searchVal;
-            sourceTreeApiObj.value.search.params.appId = currData.value.appId;
-        }, 500);
-    }
+    };
 </script>
 <style lang="scss" scoped>
     .basic-btns {

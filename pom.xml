@@ -405,6 +405,7 @@
                             <phase>compile</phase>
                             <goals>
                                 <goal>html</goal>
+                                <goal>markdown</goal>
                             </goals>
                         </execution>
                     </executions>

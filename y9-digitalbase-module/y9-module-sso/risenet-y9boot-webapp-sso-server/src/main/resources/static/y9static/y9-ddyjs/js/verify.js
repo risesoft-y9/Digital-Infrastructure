@@ -11,7 +11,7 @@
                 defaultNum: 4,	//默认的文字数量
                 checkNum: 3,	//校对的文字数量
                 vSpace: 5,	//间隔
-                imgUrl: '/sso/y9static/y9-ddyjs/images/',
+                imgUrl: '/sso/y9static/y9-ddyjs/img/',
                 imgName: ['5.png'],
                 imgSize: {
                     width: '450px',

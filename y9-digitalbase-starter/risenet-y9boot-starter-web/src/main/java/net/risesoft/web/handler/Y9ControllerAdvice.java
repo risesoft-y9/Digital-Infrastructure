@@ -22,6 +22,7 @@ import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.exception.Y9PermissionException;
+import net.risesoft.y9.util.Y9StringUtil;
 
 /**
  * 全局的异常处理器
@@ -111,7 +112,7 @@ public class Y9ControllerAdvice {
         FieldError fieldError = e.getBindingResult().getFieldError();
         if (fieldError != null && StringUtils.isNotBlank(fieldError.getDefaultMessage())) {
             return Y9Result.failure(GlobalErrorCodeEnum.INVALID_ARGUMENT,
-                fieldError.getField() + fieldError.getDefaultMessage());
+                Y9StringUtil.format("[{}]{}", fieldError.getField(), fieldError.getDefaultMessage()));
         }
 
         // 参数类型不匹配检验

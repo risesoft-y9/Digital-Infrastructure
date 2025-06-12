@@ -17,9 +17,6 @@ public class Y9OrgEventTypeConst {
     public static final String DEPARTMENT_DELETE = "RISEORGEVENT_TYPE_DELETE_DEPARTMENT";
     public static final String DEPARTMENT_UPDATE = "RISEORGEVENT_TYPE_UPDATE_DEPARTMENT";
 
-    public static final String JOB_ADD = "RISEORGEVENT_TYPE_ADD_JOB";
-    public static final String JOB_UPDATE = "RISEORGEVENT_TYPE_UPDATE_JOB";
-
     public static final String PERSON_ADD = "RISEORGEVENT_TYPE_ADD_PERSON";
     public static final String PERSON_DELETE = "RISEORGEVENT_TYPE_DELETE_PERSON";
     public static final String PERSON_UPDATE = "RISEORGEVENT_TYPE_UPDATE_PERSON";

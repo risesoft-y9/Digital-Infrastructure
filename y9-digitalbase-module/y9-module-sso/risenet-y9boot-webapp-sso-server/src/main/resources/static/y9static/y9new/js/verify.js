@@ -338,7 +338,7 @@ $('#mpanel6').pointsVerify({
 		  };
 		WfMsg(option);
 		
-		var username = $("#username1").val();
+		var username = $("#username").val();
         var password = $("#password").val();
         var rsaPublicKey=$('#rsaPublicKey').val();
         
@@ -373,6 +373,5 @@ $('#mpanel6').pointsVerify({
 function encrypt(publicKey,pwd){
      var encrypt = new JSEncrypt();
      encrypt.setPublicKey(publicKey);
-     var encrypted = encrypt.encrypt(pwd);
-     return encrypted;
+	return encrypt.encrypt(pwd);
 }

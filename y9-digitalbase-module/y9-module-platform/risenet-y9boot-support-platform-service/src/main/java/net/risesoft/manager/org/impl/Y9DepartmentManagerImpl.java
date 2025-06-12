@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
+import net.risesoft.consts.DefaultConsts;
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9OrgBase;
@@ -105,7 +106,8 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
         } else {
             dept.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
             dept.setDisabled(false);
-            dept.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parent.getId()));
+            dept.setTabIndex((null == dept.getTabIndex() || DefaultConsts.TAB_INDEX.equals(dept.getTabIndex()))
+                ? compositeOrgBaseManager.getNextSubTabIndex(parent.getId()) : dept.getTabIndex());
         }
         dept.setTenantId(Y9LoginUserHolder.getTenantId());
         dept.setVersion(InitDataConsts.Y9_VERSION);

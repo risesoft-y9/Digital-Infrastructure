@@ -86,7 +86,7 @@ public class Y9logUserLoginInfo implements Serializable {
     private String userHostName;
 
     /** 登录机器的硬盘ID */
-    @Column(name = "USER_HOST_DISK_ID", length = 50)
+    @Column(name = "USER_HOST_DISKID", length = 50)
     @Comment(value = "登录机器的硬盘ID")
     private String userHostDiskId;
 
@@ -117,12 +117,12 @@ public class Y9logUserLoginInfo implements Serializable {
     private String logMessage;
 
     /** 浏览器名称 */
-    @Column(name = "BROWSE_NAME", length = 50)
+    @Column(name = "BROWSER_NAME", length = 50)
     @Comment(value = "浏览器名称")
     private String browserName;
 
     /** 浏览器版本 */
-    @Column(name = "BROWSE_VERSION", length = 50)
+    @Column(name = "BROWSER_VERSION", length = 50)
     @Comment(value = "浏览器版本")
     private String browserVersion;
 

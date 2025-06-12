@@ -47,11 +47,24 @@ public class RolePermissionVOBuilder {
 
     private List<RolePermissionVO.App> buildAppList(List<Y9IdentityToRoleBase> y9IdentityToRoleBaseList) {
         List<RolePermissionVO.App> appList = new ArrayList<>();
-        Map<String, List<Y9IdentityToRoleBase>> appIdY9IdentityToRoleBaseListMap =
-            y9IdentityToRoleBaseList.stream().collect(Collectors.groupingBy(Y9IdentityToRoleBase::getAppId));
+
+        // 应用下的角色
+        Map<String,
+            List<Y9IdentityToRoleBase>> appIdY9IdentityToRoleBaseListMap = y9IdentityToRoleBaseList.stream()
+                .filter(y9IdentityToRoleBase -> StringUtils.isNotBlank(y9IdentityToRoleBase.getAppId()))
+                .collect(Collectors.groupingBy(Y9IdentityToRoleBase::getAppId));
         for (Map.Entry<String, List<Y9IdentityToRoleBase>> entry : appIdY9IdentityToRoleBaseListMap.entrySet()) {
             appList.add(buildApp(entry.getKey(), entry.getValue()));
         }
+
+        // 系统下的角色，所有应用公用
+        List<Y9IdentityToRoleBase> y9IdentityToRoleBases = y9IdentityToRoleBaseList.stream()
+            .filter(y9IdentityToRoleBase -> StringUtils.isBlank(y9IdentityToRoleBase.getAppId()))
+            .collect(Collectors.toList());
+        if (!y9IdentityToRoleBases.isEmpty()) {
+            appList.add(buildApp(null, y9IdentityToRoleBases));
+        }
+
         return appList;
     }
 
@@ -100,7 +113,9 @@ public class RolePermissionVOBuilder {
         List<Y9IdentityToRoleBase> identityToPublicRoleList = y9IdentityToRoleBaseList.stream()
             .filter(y9IdentityToRoleBase -> StringUtils.isBlank(y9IdentityToRoleBase.getSystemId()))
             .collect(Collectors.toList());
-        rolePermissionVOList.add(buildRolePermissionVO(null, identityToPublicRoleList));
+        if (!identityToPublicRoleList.isEmpty()) {
+            rolePermissionVOList.add(buildRolePermissionVO(null, identityToPublicRoleList));
+        }
 
         return rolePermissionVOList;
     }

@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
-   <changeSet id="addColumn_ipdeptmapping" author="mengjuhua" runOnChange="true">
+    <changeSet id="addColumn_ipdeptmapping" author="mengjuhua" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <columnExists tableName="Y9_LOG_IP_DEPT_MAPPING" columnName="TENANT_ID"/>
@@ -16,4 +16,90 @@
         </addColumn>
     </changeSet>
 
+
+    <changeSet id="log-creatTable-flowable-1" author="mengjuhua">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_LOG_FLOWABLE_ACCESS_LOG"/>
+            </not>
+        </preConditions>
+        <createTable remarks="工作流日志信息表" tableName="Y9_LOG_FLOWABLE_ACCESS_LOG">
+            <column name="ID" remarks="主键" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRIMARY"/>
+            </column>
+            <column name="PROCESS_SERIAL_NUMBER" remarks="流程序列号" type="VARCHAR(100)"/>
+            <column name="DESCRIPTION" remarks="描述：主要是标题，表单数据等" type="VARCHAR(1000)"/>
+            <column name="USER_ID" remarks="用户id" type="VARCHAR(38)"/>
+            <column name="USER_NAME" remarks="登录名" type="VARCHAR(100)"/>
+            <column name="LOGIN_NAME" remarks="登录名称" type="VARCHAR(50)"/>
+            <column name="TENANT_ID" remarks="租户ID" type="VARCHAR(38)"/>
+            <column name="TENANT_NAME" remarks="租户名称" type="VARCHAR(50)"/>
+            <column name="GUID_PATH" remarks="由ID组成的父子关系列表(正序)，之间用逗号分隔" type="VARCHAR(400)"/>
+            <column name="PERSON_TYPE" remarks="用户类型(涉密等级)" type="VARCHAR(50)"/>
+            <column name="DN" remarks="由name组成的父子关系列表(倒序)，之间用逗号分隔" type="VARCHAR(2000)"/>
+            <column name="LOG_TIME" remarks="日志时间" type="datetime"/>
+            <column name="LOG_LEVEL" remarks="日志级别 0=TRACE 1=DEBUG 2=INFO 3=WARN 4=ERROR" type="VARCHAR(38)"/>
+            <column name="SYSTEM_NAME" remarks="系统名称" type="VARCHAR(50)"/>
+            <column name="OPERATE_NAME" remarks="操作名称" type="VARCHAR(200)"/>
+            <column name="MODULAR_NAME" remarks="模块名称，比如：公文就转-发文-授权管理" type="VARCHAR(200)"/>
+            <column name="METHOD_NAME" remarks="方法类和名称" type="VARCHAR(200)"/>
+            <column name="ELAPSED_TIME" remarks="用时" type="BIGINT"/>
+            <column name="USER_HOST_IP" remarks="登录用户机器IP" type="VARCHAR(50)"/>
+            <column name="SERVER_IP" remarks="访问服务器IP" type="VARCHAR(50)"/>
+            <column name="MAC_ADDRESS" remarks="登录用户机器MAC" type="VARCHAR(100)"/>
+            <column name="SUCCESS" remarks="登录是否成功" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REQUEST_URL" remarks="访问路径" type="VARCHAR(1000)"/>
+            <column name="ERROR_MESSAGE" remarks="错误日志信息" type="CLOB"/>
+            <column name="LOG_MESSAGE" remarks="日志信息" type="CLOB"/>
+            <column name="THROWABLE" remarks="异常信息" type="CLOB"/>
+            <column name="USER_AGENT" remarks="用户登录浏览器信息" type="VARCHAR(200)"/>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet author="mengjuhua" id="renameColumn-log-1-1" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_LOG_USER_LOGIN_INFO" columnName="USER_HOST_DISK_ID"/>
+        </preConditions>
+        <renameColumn newColumnName="USER_HOST_DISKID" oldColumnName="USER_HOST_DISK_ID" columnDataType="VARCHAR(255)"
+                      tableName="Y9_LOG_USER_LOGIN_INFO"/>
+        <renameColumn newColumnName="BROWSER_NAME" oldColumnName="BROWSE_NAME" columnDataType="VARCHAR(255)"
+                      tableName="Y9_LOG_USER_LOGIN_INFO"/>
+        <renameColumn newColumnName="BROWSER_VERSION" oldColumnName="BROWSE_VERSION" columnDataType="VARCHAR(255)"
+                      tableName="Y9_LOG_USER_LOGIN_INFO"/>
+    </changeSet>
+
+    <changeSet author="qinman" id="renameColumn-flowable-log-1-1" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_LOG_FLOWABLE_ACCESS_LOG" columnName="DESCRIPTION"/>
+        </preConditions>
+        <renameColumn newColumnName="TITLE" oldColumnName="DESCRIPTION" columnDataType="VARCHAR(1000)"
+                      tableName="Y9_LOG_FLOWABLE_ACCESS_LOG"/>
+        <addColumn tableName="Y9_LOG_FLOWABLE_ACCESS_LOG">
+            <column name="ARGUMENTS" type="VARCHAR(5000)" remarks="参数"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="qinman" id="renameColumn-flowable-log-1-2" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_LOG_FLOWABLE_ACCESS_LOG" columnName="DESCRIPTION"/>
+        </preConditions>
+        <addColumn tableName="Y9_LOG_FLOWABLE_ACCESS_LOG">
+            <column name="ARGUMENTS" type="VARCHAR(5000)" remarks="参数"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="qinman" id="renameColumn-flowable-log-1-3" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="Y9_LOG_FLOWABLE_ACCESS_LOG" columnName="OPERATE_TYPE"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="Y9_LOG_FLOWABLE_ACCESS_LOG">
+            <column name="OPERATE_TYPE" type="VARCHAR(38)"
+                    remarks="操作类别： 0=使用，1=登录，2=退出，3=查看，4=增加，5=修改，6=删除，7=发送，8=活动"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

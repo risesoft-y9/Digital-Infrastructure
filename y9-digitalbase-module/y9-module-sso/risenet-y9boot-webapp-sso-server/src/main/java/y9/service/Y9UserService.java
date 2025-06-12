@@ -1,6 +1,7 @@
 package y9.service;
 
 import java.util.List;
+import java.util.Map;
 
 import y9.entity.Y9User;
 
@@ -47,4 +48,7 @@ public interface Y9UserService {
     List<Y9User> findByTenantNameAndLoginNameAndOriginal(String tenantName, String loginName, Boolean original);
 
     List<Y9User> findByPersonIdAndOriginal(String personId, Boolean original);
+
+    List<Map<String, String>> listAllTenants();
+
 }

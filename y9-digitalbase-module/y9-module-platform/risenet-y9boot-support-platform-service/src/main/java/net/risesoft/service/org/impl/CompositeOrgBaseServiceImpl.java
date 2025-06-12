@@ -9,17 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -110,26 +100,6 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             return y9PositionRepository.countByDisabledAndGuidPathContaining(Boolean.FALSE, guidPath);
         }
         return 0;
-    }
-
-    @Override
-    public Page<Y9Department> deptPage(String orgId, int page, int rows) {
-        page = (page < 0) ? 0 : page - 1;
-        Pageable pageable = PageRequest.of(page, rows, Sort.by(Sort.Direction.ASC, "guidPath"));
-        Specification<Y9Department> spec = new Specification<Y9Department>() {
-            private static final long serialVersionUID = -95805766801894738L;
-
-            @Override
-            public Predicate toPredicate(Root<Y9Department> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
-                List<Predicate> predicates = new ArrayList<>();
-                String[] ids = orgId.split(",");
-                for (String id : ids) {
-                    predicates.add(cb.like(root.get("guidPath").as(String.class), "%" + id + "%"));
-                }
-                return cb.or(predicates.toArray(new Predicate[predicates.size()]));
-            }
-        };
-        return y9DepartmentRepository.findAll(spec, pageable);
     }
 
     private void fillWithOrgUnitsByUpwardRecursion(String parentId, Set<Y9OrgBase> orgBaseSet) {
@@ -656,7 +626,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
-    public List<Y9OrgBase> getTree4DeptManager(String id, OrgTreeTypeEnum treeType) {
+    public List<Y9OrgBase> getTree4DeptManager(String id, OrgTreeTypeEnum treeType, Boolean disabled) {
         Set<Y9OrgBase> orgBaseSet = new HashSet<>();
         Optional<Y9Department> managerDeptOptional = y9DepartmentManager.findById(Y9LoginUserHolder.getDeptId());
         if (managerDeptOptional.isPresent()) {
@@ -675,7 +645,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
                     orgBaseSet.remove(org);
                 }
             } else {
-                List<Y9Department> deptList = findDepartmentByParentId(id, Boolean.FALSE);
+                List<Y9Department> deptList = findDepartmentByParentId(id, disabled);
                 for (Y9Department dept : deptList) {
                     if (Y9OrgUtil.isSameOf(dept, managerDept) || Y9OrgUtil.isAncestorOf(dept, managerDept)) {
                         // 筛选当前管理员所在部门及祖先部门
@@ -689,23 +659,23 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
                     if (Y9OrgUtil.isSameOf(y9Department, managerDept)
                         || Y9OrgUtil.isDescendantOf(y9Department, managerDept)) {
 
-                        orgBaseSet.addAll(findDepartmentByParentId(id, Boolean.FALSE));
+                        orgBaseSet.addAll(findDepartmentByParentId(id, disabled));
 
                         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG)
                             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_GROUP)
                             || OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON.equals(treeType)) {
-                            orgBaseSet.addAll(findGroupByParentId(id, Boolean.FALSE));
+                            orgBaseSet.addAll(findGroupByParentId(id, disabled));
                         }
 
                         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG)
                             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_POSITION)) {
-                            orgBaseSet.addAll(findPositionByParentId(id, Boolean.FALSE));
+                            orgBaseSet.addAll(findPositionByParentId(id, disabled));
                         }
 
                         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG)
                             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_PERSON)
                             || OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON.equals(treeType)) {
-                            orgBaseSet.addAll(findPersonByParentId(id, Boolean.FALSE));
+                            orgBaseSet.addAll(findPersonByParentId(id, disabled));
                         }
                     }
                 }
@@ -759,34 +729,6 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     @Override
     public List<Y9Position> listAllPositionsRecursionDownward(String parentId) {
         return compositeOrgBaseManager.listAllDescendantPositions(parentId);
-    }
-
-    @Override
-    public Page<Y9Person> personPage(String orgId, String type, int page, int rows) {
-        page = (page < 0) ? 0 : page - 1;
-        Pageable pageable = PageRequest.of(page, rows, Sort.by(Sort.Direction.DESC, "orderedPath"));
-        Specification<Y9Person> spec = new Specification<Y9Person>() {
-            private static final long serialVersionUID = -6506792884620973450L;
-
-            @Override
-            public Predicate toPredicate(Root<Y9Person> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
-                List<Predicate> orList = new ArrayList<>();
-                String[] ids = orgId.split(",");
-                for (String id : ids) {
-                    orList.add(cb.like(root.get("guidPath").as(String.class), "%" + id + "%"));
-                }
-                Predicate preOr = cb.or(orList.toArray(new Predicate[orList.size()]));
-
-                List<Predicate> predicates = new ArrayList<>();
-                if (type != null && type.equals("1")) {
-                    predicates.add(cb.equal(root.get("disabled").as(Boolean.class), false));
-                }
-                Predicate pre_and = cb.and(predicates.toArray(new Predicate[predicates.size()]));
-
-                return criteriaQuery.where(pre_and, preOr).getRestriction();
-            }
-        };
-        return y9PersonRepository.findAll(spec, pageable);
     }
 
     /**
@@ -1035,9 +977,9 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
-    public List<Y9OrgBase> treeSearch4DeptManager(String name, OrgTreeTypeEnum treeType) {
+    public List<Y9OrgBase> treeSearch4DeptManager(String name, OrgTreeTypeEnum treeType, Boolean disabled) {
         Y9Department y9Department = y9DepartmentManager.getById(Y9LoginUserHolder.getDeptId());
-        return treeSearch(name, treeType, y9Department.getDn(), Boolean.FALSE);
+        return treeSearch(name, treeType, y9Department.getDn(), disabled);
     }
 
     @Override

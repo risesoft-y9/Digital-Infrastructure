@@ -31,6 +31,11 @@ public interface CompositeOrgBaseManager {
      */
     String buildOrderedPath(Y9OrgBase y9OrgBase);
 
+    /**
+     * 检查所有后代组织节点是否都已禁用
+     *
+     * @param orgUnitId 组织节点id
+     */
     void checkAllDescendantsDisabled(String orgUnitId);
 
     /**
@@ -140,4 +145,11 @@ public interface CompositeOrgBaseManager {
      */
     List<Y9Position> listAllDescendantPositions(String parentId);
 
+    /**
+     * 根据组织节点名称列出所有有关的（利用 dn 找）组织节点 id
+     *
+     * @param name 组织节点名称
+     * @return {@code List<String> }
+     */
+    List<String> listOrgUnitIdByName(String name);
 }

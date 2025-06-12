@@ -37,7 +37,7 @@ import net.risesoft.y9public.entity.role.Y9Role;
  */
 public class ModelConvertUtil extends Y9ModelConvertUtil {
 
-    public static List<OrgUnit> orgBaseToOrgUnit(List<Y9OrgBase> y9OrgBaseList) {
+    public static List<OrgUnit> orgBaseToOrgUnit(List<? extends Y9OrgBase> y9OrgBaseList) {
         List<OrgUnit> orgUnitList = new ArrayList<>();
         for (Y9OrgBase y9OrgBase : y9OrgBaseList) {
             orgUnitList.add(orgBaseToOrgUnit(y9OrgBase));
@@ -52,7 +52,7 @@ public class ModelConvertUtil extends Y9ModelConvertUtil {
         OrgUnit orgUnit;
         if (OrgTypeEnum.PERSON.equals(base.getOrgType())) {
             Y9Person person = (Y9Person)base;
-            orgUnit = convert(person, Person.class);
+            orgUnit = orgPersonToPerson(person);
         } else if (OrgTypeEnum.MANAGER.equals(base.getOrgType())) {
             Y9Manager manager = (Y9Manager)base;
             orgUnit = convert(manager, Manager.class);

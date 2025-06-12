@@ -13,9 +13,11 @@ import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,7 +34,10 @@ import lombok.extern.slf4j.Slf4j;
 public class AesUtil {
     private static final String ALGORITHM = "AES";
 
-    private static final String AES_ECB_PADDING = "AES/ECB/PKCS5Padding";
+    // 不使用有填充的模式，填充模式有可能会导致解密后数据跟加密前数据不一致
+    private static final String AES_CTR_NOPADDING = "AES/CTR/NoPadding";
+    // 128位 初始化向量
+    private static final String IV = "3f7e2c9b8d4e6a1f432b5c7d8e9a0b1c";
 
     private static final int KEY_SIZE = 128;
     private static final int CACHE_SIZE = 1024;
@@ -55,8 +60,8 @@ public class AesUtil {
         Key k = toKey(Base64.decodeBase64(key));
         byte[] raw = k.getEncoded();
         SecretKeySpec secretKeySpec = new SecretKeySpec(raw, ALGORITHM);
-        Cipher cipher = Cipher.getInstance(AES_ECB_PADDING);
-        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
+        Cipher cipher = Cipher.getInstance(AES_CTR_NOPADDING);
+        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(Hex.decodeHex(IV.toCharArray())));
         return cipher.doFinal(data);
     }
 
@@ -85,8 +90,8 @@ public class AesUtil {
                 Key k = toKey(Base64.decodeBase64(key));
                 byte[] raw = k.getEncoded();
                 SecretKeySpec secretKeySpec = new SecretKeySpec(raw, ALGORITHM);
-                Cipher cipher = Cipher.getInstance(AES_ECB_PADDING);
-                cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
+                Cipher cipher = Cipher.getInstance(AES_CTR_NOPADDING);
+                cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(Hex.decodeHex(IV.toCharArray())));
                 cout = new CipherOutputStream(out, cipher);
                 byte[] cache = new byte[CACHE_SIZE];
                 int nRead = 0;
@@ -123,8 +128,8 @@ public class AesUtil {
         Key k = toKey(Base64.decodeBase64(key));
         byte[] raw = k.getEncoded();
         SecretKeySpec secretKeySpec = new SecretKeySpec(raw, ALGORITHM);
-        Cipher cipher = Cipher.getInstance(AES_ECB_PADDING);
-        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
+        Cipher cipher = Cipher.getInstance(AES_CTR_NOPADDING);
+        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(Hex.decodeHex(IV.toCharArray())));
         return new CipherOutputStream(out, cipher);
     }
 
@@ -142,8 +147,8 @@ public class AesUtil {
         Key k = toKey(Base64.decodeBase64(key));
         byte[] raw = k.getEncoded();
         SecretKeySpec secretKeySpec = new SecretKeySpec(raw, ALGORITHM);
-        Cipher cipher = Cipher.getInstance(AES_ECB_PADDING);
-        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+        Cipher cipher = Cipher.getInstance(AES_CTR_NOPADDING);
+        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(Hex.decodeHex(IV.toCharArray())));
         return cipher.doFinal(data);
     }
 
@@ -172,8 +177,8 @@ public class AesUtil {
                 Key k = toKey(Base64.decodeBase64(key));
                 byte[] raw = k.getEncoded();
                 SecretKeySpec secretKeySpec = new SecretKeySpec(raw, ALGORITHM);
-                Cipher cipher = Cipher.getInstance(AES_ECB_PADDING);
-                cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+                Cipher cipher = Cipher.getInstance(AES_CTR_NOPADDING);
+                cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(Hex.decodeHex(IV.toCharArray())));
                 cin = new CipherInputStream(in, cipher);
                 byte[] cache = new byte[CACHE_SIZE];
                 int nRead = 0;
@@ -212,8 +217,8 @@ public class AesUtil {
         Key k = toKey(Base64.decodeBase64(key));
         byte[] raw = k.getEncoded();
         SecretKeySpec secretKeySpec = new SecretKeySpec(raw, ALGORITHM);
-        Cipher cipher = Cipher.getInstance(AES_ECB_PADDING);
-        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+        Cipher cipher = Cipher.getInstance(AES_CTR_NOPADDING);
+        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(Hex.decodeHex(IV.toCharArray())));
         return new CipherInputStream(in, cipher);
     }
 

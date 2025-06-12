@@ -125,7 +125,7 @@ spring:
                 max-wait: -1
                 min-idle: 0
             shutdown-timeout: 100ms
-        password: y9i-83204585
+        password: 111111
         port: 6379
         ssl: false
         timeout: 10000
@@ -134,8 +134,6 @@ y9:
     internalIp: 192.168.x.x,10.0.x.x,172.20.x.x
     app:
         log:
-            accessLogIndex: logindex
-            accessLogSaveTarget: elastic
             #kafkaEnabled=true时才会初始化Kafka的事件监听（注意要将KafkaAutoConfiguration启用）
             kafkaEnabled: false
     service:
@@ -184,6 +182,7 @@ y9:
                     - http://localhost:8080
                     - http://localhost:8081
                     - http://localhost:7070
+                    - http://localhost:7071
             xss:
                 ignoreParam:
                     - id
@@ -198,5 +197,5 @@ y9:
                 opaque:
                     client-id: clientid_oidc
                     client-secret: secret_oidc
-                    introspection-uri: https://test.youshengyun.com/sso/oidc/introspect
-                    profile-uri: https://test.youshengyun.com/sso/oidc/profile
+                    introspection-uri: http://localhost:7055/sso/oidc/introspect
+                    profile-uri: http://localhost:7055/sso/oidc/profile

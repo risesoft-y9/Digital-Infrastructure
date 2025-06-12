@@ -2,6 +2,7 @@ package net.risesoft.y9.util.signing;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.regex.Pattern;
 
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -17,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class Y9MessageDigest {
+
+    public static final Pattern BCRYPT_PATTERN = Pattern.compile("^\\$2[abxy]?\\$\\d{2}\\$[./A-Za-z0-9]{53}$");
 
     private static String byte2hexSplitWithColon(byte[] bytes) {
         String hs = "";

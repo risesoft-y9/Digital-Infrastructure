@@ -5,19 +5,24 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.InitDataConsts;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
@@ -454,45 +459,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Person saveOrUpdate4ImpOrg(Y9Person person, Y9PersonExt personExt) {
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
-        Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(person.getId());
-        if (y9PersonOptional.isPresent()) {
-            // 判断为更新信息
-            Y9Person oldperson = y9PersonOptional.get();
-            person.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, person.getName(), parent.getDn()));
-
-            Y9BeanUtil.copyProperties(person, oldperson);
-            oldperson.setParentId(parent.getId());
-            oldperson = save(oldperson);
-
-            if (personExt != null) {
-                y9PersonExtManager.saveOrUpdate(personExt, oldperson);
-            }
-            return oldperson;
-        } else {
-            // 判断为从xml导入的代码并且数据库中没有相应信息,把密码统一设置为defaultPassword
-            if (null == person.getTabIndex()) {
-                person.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parent.getId()));
-            }
-            person.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, person.getName(), parent.getDn()));
-            person.setVersion(InitDataConsts.Y9_VERSION);
-            person.setParentId(parent.getId());
-
-            if (StringUtils.isBlank(person.getPassword())) {
-                String password = y9SettingService.getTenantSetting().getUserDefaultPassword();
-                person.setPassword(Y9MessageDigest.bcrypt(password));
-            }
-            person = save(person);
-            if (personExt != null) {
-                y9PersonExtManager.saveOrUpdate(personExt, person);
-            }
-            return person;
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
     public Y9Person saveProperties(String personId, String properties) {
         return y9PersonManager.saveProperties(personId, properties);
     }
@@ -511,6 +477,33 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Transactional(readOnly = false)
     public Y9Person updateTabIndex(String id, int tabIndex) {
         return y9PersonManager.updateTabIndex(id, tabIndex);
+    }
+
+    @Override
+    public Page<Y9Person> page(List<String> orgIdList, Boolean disabled, Y9PageQuery pageQuery) {
+        Pageable pageable =
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.ASC, "createTime"));
+        Specification<Y9Person> spec = new Specification<>() {
+            private static final long serialVersionUID = -6506792884620973450L;
+
+            @Override
+            public Predicate toPredicate(Root<Y9Person> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
+                List<Predicate> orList = new ArrayList<>();
+                for (String id : orgIdList) {
+                    orList.add(cb.like(root.get("guidPath").as(String.class), "%" + id + "%"));
+                }
+                Predicate preOr = cb.or(orList.toArray(new Predicate[orList.size()]));
+
+                List<Predicate> predicates = new ArrayList<>();
+                if (disabled != null) {
+                    predicates.add(cb.equal(root.get("disabled").as(Boolean.class), disabled));
+                }
+                Predicate pre_and = cb.and(predicates.toArray(new Predicate[predicates.size()]));
+
+                return criteriaQuery.where(pre_and, preOr).getRestriction();
+            }
+        };
+        return y9PersonRepository.findAll(spec, pageable);
     }
 
     /**

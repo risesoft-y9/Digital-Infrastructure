@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import net.risesoft.base.BaseEntity;
+import net.risesoft.consts.DefaultConsts;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.persistence.EnumConverter;
 
@@ -101,7 +102,7 @@ public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBa
     /** 排序号 */
     @Column(name = "TAB_INDEX", nullable = false)
     @Comment("排序号")
-    protected Integer tabIndex = 0;
+    protected Integer tabIndex = DefaultConsts.TAB_INDEX;
 
     /** 由ID组成的父子关系列表(正序)，之间用逗号分隔 */
     @Column(name = "GUID_PATH", unique = true, length = 400)

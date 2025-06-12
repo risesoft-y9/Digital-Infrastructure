@@ -89,28 +89,48 @@
         <revision>v9.6.8-SNAPSHOT</revision>
 
         <aspectj.version>1.9.20.1</aspectj.version>
+        <antisamy.version>1.6.2</antisamy.version>
+        <axis.version>1.4</axis.version>
+        <bcprov-ext-jdk15to18.version>1.76</bcprov-ext-jdk15to18.version>
         <commons-fileupload.version>1.5</commons-fileupload.version>
         <commons-io.version>2.15.1</commons-io.version>
         <commons-net.version>3.10.0</commons-net.version>
         <commons-text.version>1.12.0</commons-text.version>
+        <commons-discovery.version>0.5</commons-discovery.version>
+        <commons-beanutils.version>1.10.0</commons-beanutils.version>
+        <commons-httpclient.version>3.1</commons-httpclient.version>
+        <classgraph.version>4.8.109</classgraph.version>
         <druid.version>1.2.19</druid.version>
         <druid-starter.version>1.2.19</druid-starter.version>
+        <etcd-java.version>0.0.18</etcd-java.version>
         <fastjson.version>2.0.49</fastjson.version>
+        <fastexcel.version>1.1.0</fastexcel.version>
         <guava.version>32.1.2-jre</guava.version>
         <hutool.version>5.8.21</hutool.version>
+        <httpcomponents.version>4.5.14</httpcomponents.version>
+        <ipaddress.version>5.5.1</ipaddress.version>
         <javers.version>6.14.0</javers.version>
         <jodd-bean.version>5.1.6</jodd-bean.version>
         <jodd-http.version>6.2.1</jodd-http.version>
         <jodd-lagarto.version>6.0.6</jodd-lagarto.version>
         <jodd-mail.version>6.0.5</jodd-mail.version>
+        <jBCrypt.version>0.4.3</jBCrypt.version>
+        <java-uuid-generator.version>4.0.1</java-uuid-generator.version>
+        <jakarta-json.version>2.0.1</jakarta-json.version>
+        <javax-xml-rpc-api.version>1.1.2</javax-xml-rpc-api.version>
+        <jaxrpc-api.version>1.1</jaxrpc-api.version>
+        <jaxws-rt.version>2.3.3</jaxws-rt.version>
         <lombok.version>1.18.28</lombok.version>
         <liquibase.version>4.26.0</liquibase.version>
         <org-dom4j.version>2.1.4</org-dom4j.version>
         <oshi.version>6.6.0</oshi.version>
+        <poi-ooxml.version>5.2.3</poi-ooxml.version>
+        <poi-scratchpad.version>5.2.3</poi-scratchpad.version>
         <rs-api.version>2.1.1</rs-api.version>
+        <reflections.version>0.10.2</reflections.version>
         <shedlock.version>4.47.0</shedlock.version>
-        <fastexcel.version>1.1.0</fastexcel.version>
-        
+        <transmittable-thread-local.version>2.13.0</transmittable-thread-local.version>
+
         <!-- auth0 jwt jwks -->
         <auth0-jwt.version>4.5.0</auth0-jwt.version>
         <auth0-jwks.version>0.22.1</auth0-jwks.version>
@@ -646,7 +666,7 @@
                 <artifactId>dom4j</artifactId>
                 <version>${org-dom4j.version}</version>
             </dependency>
-            
+
             <!-- jwt -->
             <dependency>
                 <groupId>com.auth0</groupId>
@@ -771,6 +791,125 @@
                 <groupId>cn.idev.excel</groupId>
                 <artifactId>fastexcel</artifactId>
                 <version>${fastexcel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${commons-beanutils.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-httpclient</groupId>
+                <artifactId>commons-httpclient</artifactId>
+                <version>${commons-httpclient.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>transmittable-thread-local</artifactId>
+                <version>${transmittable-thread-local.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-discovery</groupId>
+                <artifactId>commons-discovery</artifactId>
+                <version>${commons-discovery.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.sun.xml.ws</groupId>
+                <artifactId>jaxws-rt</artifactId>
+                <version>${jaxws-rt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ibm.etcd</groupId>
+                <artifactId>etcd-java</artifactId>
+                <version>${etcd-java.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.uuid</groupId>
+                <artifactId>java-uuid-generator</artifactId>
+                <version>${java-uuid-generator.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>de.svenkubiak</groupId>
+                <artifactId>jBCrypt</artifactId>
+                <version>${jBCrypt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.classgraph</groupId>
+                <artifactId>classgraph</artifactId>
+                <version>${classgraph.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.xml.rpc</groupId>
+                <artifactId>javax.xml.rpc-api</artifactId>
+                <version>${javax-xml-rpc-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.xml</groupId>
+                <artifactId>jaxrpc-api</artifactId>
+                <version>${jaxrpc-api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.axis</groupId>
+                <artifactId>axis</artifactId>
+                <version>${axis.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-ext-jdk15to18</artifactId>
+                <version>${bcprov-ext-jdk15to18.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi-ooxml.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-scratchpad</artifactId>
+                <version>${poi-scratchpad.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpcomponents.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.glassfish</groupId>
+                <artifactId>jakarta.json</artifactId>
+                <version>${jakarta-json.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.owasp.antisamy</groupId>
+                <artifactId>antisamy</artifactId>
+                <version>${antisamy.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.seancfoley</groupId>
+                <artifactId>ipaddress</artifactId>
+                <version>${ipaddress.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>${reflections.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
