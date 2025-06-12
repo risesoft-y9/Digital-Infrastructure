@@ -58,25 +58,25 @@
         <spring-cloud.version>2021.0.8</spring-cloud.version>
 
         <aspectj.version>1.9.20.1</aspectj.version>
-        <lombok.version>1.18.28</lombok.version>
+        <lombok.version>1.18.38</lombok.version>
 
         <central-publishing-maven-plugin.version>0.7.0</central-publishing-maven-plugin.version>
-        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-        <jib-maven-plugin.version>3.4.0</jib-maven-plugin.version>
-        <smart-doc-maven-plugin.version>3.0.9</smart-doc-maven-plugin.version>
-        <maven-release-plugin.version>3.0.0</maven-release-plugin.version>
-        <aspectj-maven-plugin.version>1.13.1</aspectj-maven-plugin.version>
-        <maven-dependency-plugin.version>3.5.0</maven-dependency-plugin.version>
-        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
+        <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
+        <jib-maven-plugin.version>3.4.5</jib-maven-plugin.version>
+        <smart-doc-maven-plugin.version>3.1.0</smart-doc-maven-plugin.version>
+        <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
+        <aspectj-maven-plugin.version>1.14.1</aspectj-maven-plugin.version>
+        <maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-        <maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
+        <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
-        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-        <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
-        <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
-        <git-commit-id-maven-plugin.version>7.0.0</git-commit-id-maven-plugin.version>
-        <maven-enforcer-plugin.version>3.0.0</maven-enforcer-plugin.version>
+        <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
+        <flatten-maven-plugin.version>1.7.0</flatten-maven-plugin.version>
+        <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
+        <git-commit-id-maven-plugin.version>9.0.2</git-commit-id-maven-plugin.version>
+        <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
     </properties>
 
     <scm>
