@@ -8,7 +8,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.model.platform.Tenant;
 import net.risesoft.pojo.Y9Result;
 
@@ -62,15 +61,5 @@ public interface TenantApi {
      */
     @GetMapping("/listAllTenants")
     Y9Result<List<Tenant>> listAllTenants();
-
-    /**
-     * 获取指定租户类型的所有租户对象
-     *
-     * @param tenantType 租户类型： 0=用户，2=开发商，1=运维团队，3=普通租户
-     * @return {@code Y9Result<List<Tenant>>} 通用请求返回对象 - data是租户对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/listByTenantType")
-    Y9Result<List<Tenant>> listByTenantType(@RequestParam("tenantType") TenantTypeEnum tenantType);
 
 }

@@ -26,11 +26,11 @@ public interface Y9logAccessLogCustomRepository {
 
     Map<String, Object> getModuleNameCount(String tenantId, String guidPath, String startDay, String endDay);
 
-    Map<String, Object> getOperateStatusCount(String selectedDate, Integer tenantType);
+    Map<String, Object> getOperateStatusCount(String selectedDate);
 
     List<String> listAccessLog(String tenantId, String loginName, String startTime, String endTime);
 
-    List<Long> listOperateTimeCount(String startDay, String endDay, Integer tenantType);
+    List<Long> listOperateTimeCount(String startDay, String endDay);
 
     Page<Y9logAccessLog> page(int page, int rows, String sort);
 
@@ -46,13 +46,13 @@ public interface Y9logAccessLogCustomRepository {
         Integer page, Integer rows, String sort);
 
     Page<Y9logAccessLog> pageElapsedTimeByCondition(LogInfoModel search, String startDay, String endDay,
-        String startTime, String endTime, Integer tenantType, Integer page, Integer rows) throws ParseException;
+        String startTime, String endTime, Integer page, Integer rows) throws ParseException;
 
     Page<Y9logAccessLog> pageOperateStatusByOperateStatus(LogInfoModel search, String operateStatus, String date,
-        String hour, Integer tenantType, Integer page, Integer rows) throws ParseException;
+        String hour, Integer page, Integer rows) throws ParseException;
 
-    Page<Y9logAccessLog> pageSearchByCondition(LogInfoModel search, String startTime, String endTime,
-        Integer tenantType, Integer page, Integer rows);
+    Page<Y9logAccessLog> pageSearchByCondition(LogInfoModel search, String startTime, String endTime, Integer page,
+        Integer rows);
 
     void save(Y9logAccessLog y9logAccessLog);
 

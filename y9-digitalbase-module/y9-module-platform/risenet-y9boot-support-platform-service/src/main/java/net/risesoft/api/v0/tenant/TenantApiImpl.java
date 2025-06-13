@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.v0.tenant.TenantApi;
-import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.model.platform.Tenant;
-import net.risesoft.y9.util.Y9EnumUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
@@ -94,14 +92,12 @@ public class TenantApiImpl implements TenantApi {
     /**
      * 获取指定租户类型的所有租户对象
      *
-     * @param tenantType 租户类型 {@link TenantTypeEnum}
      * @return {@code List<Tenant>} 所有租户对象的集合
      * @since 9.6.0
      */
     @Override
-    public List<Tenant> listByTenantType(@RequestParam("tenantType") Integer tenantType) {
-        List<Y9Tenant> y9TenantList =
-            y9TenantService.listByTenantType(Y9EnumUtil.valueOf(TenantTypeEnum.class, tenantType));
+    public List<Tenant> listByTenantType() {
+        List<Y9Tenant> y9TenantList = y9TenantService.listAll();
         return Y9ModelConvertUtil.convert(y9TenantList, Tenant.class);
     }
 

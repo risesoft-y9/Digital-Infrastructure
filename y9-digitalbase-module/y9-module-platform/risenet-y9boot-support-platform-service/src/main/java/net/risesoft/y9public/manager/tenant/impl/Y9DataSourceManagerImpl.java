@@ -17,7 +17,6 @@ import com.alibaba.druid.pool.DruidDataSource;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.enums.platform.DataSourceTypeEnum;
-import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.exception.DataSourceErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
@@ -74,10 +73,10 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
     }
 
     @Override
-    public String buildDataSourceName(String shortName, TenantTypeEnum tenantType, String systemName) {
-        String dataSourceName = shortName;
-        if (Objects.equals(tenantType, TenantTypeEnum.TENANT) && !"default".equals(shortName)) {
-            dataSourceName = "yt_" + shortName + "_" + RandomUtil.randomStringUpper(4);
+    public String buildDataSourceName(String tenantShortName, String systemName) {
+        String dataSourceName = tenantShortName;
+        if (!"default".equals(tenantShortName)) {
+            dataSourceName = "yt_" + tenantShortName + "_" + RandomUtil.randomStringUpper(4);
         }
         if (StringUtils.isNotBlank(systemName)) {
             dataSourceName = dataSourceName + "_" + systemName;
@@ -87,20 +86,20 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9DataSource createTenantDefaultDataSource(String shortName, TenantTypeEnum tenantType, String systemName) {
-        String dataSourceName = this.buildDataSourceName(shortName, tenantType, systemName);
-        return this.createTenantDefaultDataSource(dataSourceName, null);
+    public Y9DataSource createTenantDefaultDataSource(String shortName, String systemName) {
+        String dataSourceName = this.buildDataSourceName(shortName, systemName);
+        return this.createTenantDefaultDataSourceWithId(dataSourceName, null);
     }
 
     @Override
     @Transactional(readOnly = false)
     public Y9DataSource createTenantDefaultDataSource(String dbName) {
-        return this.createTenantDefaultDataSource(dbName, null);
+        return this.createTenantDefaultDataSourceWithId(dbName, null);
     }
 
     @Override
     @Transactional(readOnly = false)
-    public Y9DataSource createTenantDefaultDataSource(String dbName, String specifyId) {
+    public Y9DataSource createTenantDefaultDataSourceWithId(String dbName, String specifyId) {
         if (StringUtils.isNotBlank(specifyId)) {
             Optional<Y9DataSource> y9DataSourceOptional = datasourceRepository.findById(specifyId);
             if (y9DataSourceOptional.isPresent()) {
@@ -185,8 +184,8 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
                     tableSpace, dataFile);
             // 创建用户
             String sql2 = Y9StringUtil.format(
-                "create user {} identified by \"{}\" password_policy 15 PROFILE \"DEFAULT\" default tablespace \"{}\"", username,
-                password, tableSpace);
+                "create user {} identified by \"{}\" password_policy 15 PROFILE \"DEFAULT\" default tablespace \"{}\"",
+                username, password, tableSpace);
 
             // 给用户授权
             String sql3 = Y9StringUtil.format("grant \"DBA\" to {}", username);

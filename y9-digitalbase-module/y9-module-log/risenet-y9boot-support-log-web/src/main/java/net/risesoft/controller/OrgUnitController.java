@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.enums.platform.OrgTreeTypeEnum;
-import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.platform.OrgUnit;
@@ -19,7 +18,6 @@ import net.risesoft.model.platform.Organization;
 import net.risesoft.model.platform.Tenant;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9EnumUtil;
 
 import y9.client.rest.platform.org.OrgUnitApiClient;
 import y9.client.rest.platform.org.OrganizationApiClient;
@@ -59,22 +57,18 @@ public class OrgUnitController {
     /**
      * 根据租户类型获取所有租户信息
      *
-     * @param tenantType 租户类型
      * @return {@code Y9Result<List<Organization>>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "根据租户类型获取所有租户信息", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/getTenantTreeByTenantType")
-    public Y9Result<List<Organization>> getTenantTreeByTenantType(@RequestParam Integer tenantType) {
-        List<Tenant> tenants =
-            tenantApiClient.listByTenantType(Y9EnumUtil.valueOf(TenantTypeEnum.class, tenantType)).getData();
+    public Y9Result<List<Organization>> getTenantTreeByTenantType() {
+        List<Tenant> tenants = tenantApiClient.listAllTenants().getData();
         List<Organization> organizationList = new ArrayList<>();
         if (!tenants.isEmpty()) {
             for (Tenant tenant : tenants) {
-                if (tenant.getTenantType().equals(tenantType)) {
-                    Y9LoginUserHolder.setTenantId(tenant.getId());
-                    List<Organization> list = organizationManager.list(tenant.getId()).getData();
-                    organizationList.addAll(list);
-                }
+                Y9LoginUserHolder.setTenantId(tenant.getId());
+                List<Organization> list = organizationManager.list(tenant.getId()).getData();
+                organizationList.addAll(list);
             }
         }
         return Y9Result.success(organizationList);

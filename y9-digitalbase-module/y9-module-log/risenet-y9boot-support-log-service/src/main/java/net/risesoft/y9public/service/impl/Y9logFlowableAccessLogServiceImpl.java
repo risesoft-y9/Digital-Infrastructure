@@ -10,9 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.model.log.FlowableAccessLog;
 import net.risesoft.model.log.LogInfoModel;
-import net.risesoft.model.platform.Tenant;
 import net.risesoft.pojo.Y9Page;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.Y9logFlowableAccessLog;
 import net.risesoft.y9public.repository.custom.Y9logFlowableAccessLogCustomRepository;
 import net.risesoft.y9public.service.Y9logFlowableAccessLogService;
@@ -30,19 +28,9 @@ public class Y9logFlowableAccessLogServiceImpl implements Y9logFlowableAccessLog
 
     private final Y9logFlowableAccessLogCustomRepository y9logFlowableAccessLogCustomRepository;
 
-    private Integer getTenantType(String tenantId) {
-        Integer num = 0;
-        Tenant tenant = tenantManager.getById(tenantId).getData();
-        if (null != tenant) {
-            num = tenant.getTenantType().getValue();
-        }
-        return num;
-    }
-
     @Override
     public List<Long> listOperateTimeCount(String startDay, String endDay) {
-        return y9logFlowableAccessLogCustomRepository.listOperateTimeCount(startDay, endDay,
-            getTenantType(Y9LoginUserHolder.getTenantId()));
+        return y9logFlowableAccessLogCustomRepository.listOperateTimeCount(startDay, endDay);
     }
 
     @Override
@@ -60,21 +48,20 @@ public class Y9logFlowableAccessLogServiceImpl implements Y9logFlowableAccessLog
     public Page<Y9logFlowableAccessLog> pageElapsedTimeByCondition(LogInfoModel searchDto, String startDay,
         String endDay, String sTime, String lTime, Integer page, Integer rows) throws ParseException {
         return y9logFlowableAccessLogCustomRepository.pageElapsedTimeByCondition(searchDto, startDay, endDay, sTime,
-            lTime, getTenantType(Y9LoginUserHolder.getTenantId()), page, rows);
+            lTime, page, rows);
     }
 
     @Override
     public Page<Y9logFlowableAccessLog> pageOperateStatusByOperateStatus(LogInfoModel searchDto, String operateStatus,
         String date, String hour, Integer page, Integer rows) throws ParseException {
         return y9logFlowableAccessLogCustomRepository.pageOperateStatusByOperateStatus(searchDto, operateStatus, date,
-            hour, getTenantType(Y9LoginUserHolder.getTenantId()), page, rows);
+            hour, page, rows);
     }
 
     @Override
     public Page<Y9logFlowableAccessLog> pageSearchByCondition(LogInfoModel searchDto, String startTime, String endTime,
         Integer page, Integer rows) {
-        return y9logFlowableAccessLogCustomRepository.pageSearchByCondition(searchDto, startTime, endTime,
-            getTenantType(Y9LoginUserHolder.getTenantId()), page, rows);
+        return y9logFlowableAccessLogCustomRepository.pageSearchByCondition(searchDto, startTime, endTime, page, rows);
     }
 
     @Override

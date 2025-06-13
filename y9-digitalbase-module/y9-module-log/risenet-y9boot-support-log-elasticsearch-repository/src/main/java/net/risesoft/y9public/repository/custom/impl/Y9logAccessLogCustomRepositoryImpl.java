@@ -233,7 +233,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public Map<String, Object> getOperateStatusCount(String selectedDate, Integer tenantType) {
+    public Map<String, Object> getOperateStatusCount(String selectedDate) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         String success = "成功";
         String error = "出错";
@@ -366,7 +366,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public List<Long> listOperateTimeCount(String startDay, String endDay, Integer tenantType) {
+    public List<Long> listOperateTimeCount(String startDay, String endDay) {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.must(QueryBuilders.existsQuery(Y9LogSearchConsts.USER_NAME));
         String tenantId = Y9LoginUserHolder.getTenantId();
@@ -514,8 +514,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 CriteriaQuery criteriaQuery =
                     new CriteriaQuery(new Criteria().and(new Criteria(Y9LogSearchConsts.OPERATE_TYPE).is(operateType))
                         .and(new Criteria(Y9LogSearchConsts.USER_ID).in(personIds)))
-                            .setPageable(PageRequest.of((page < 1) ? 0 : page - 1, rows))
-                            .addSort(Sort.by(Order.desc(Y9LogSearchConsts.LOG_TIME)));
+                        .setPageable(PageRequest.of((page < 1) ? 0 : page - 1, rows))
+                        .addSort(Sort.by(Order.desc(Y9LogSearchConsts.LOG_TIME)));
 
                 SearchHits<Y9logAccessLog> searchHits =
                     elasticsearchOperations.search(criteriaQuery, Y9logAccessLog.class, index);
@@ -563,7 +563,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
     @Override
     public Page<Y9logAccessLog> pageElapsedTimeByCondition(LogInfoModel search, String startDay, String endDay,
-        String startTime, String endTime, Integer tenantType, Integer page, Integer rows) throws ParseException {
+        String startTime, String endTime, Integer page, Integer rows) throws ParseException {
         String tenantId = Y9LoginUserHolder.getTenantId();
         Criteria criteria = new Criteria(Y9LogSearchConsts.USER_NAME).exists();
         if (StringUtils.isNotBlank(startDay) && StringUtils.isNotBlank(endDay)) {
@@ -606,7 +606,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
     @Override
     public Page<Y9logAccessLog> pageOperateStatusByOperateStatus(LogInfoModel search, String operateStatus, String date,
-        String hour, Integer tenantType, Integer page, Integer rows) throws ParseException {
+        String hour, Integer page, Integer rows) throws ParseException {
         String tenantId = Y9LoginUserHolder.getTenantId();
         Criteria criteria = new Criteria(Y9LogSearchConsts.USER_NAME).exists();
 
@@ -668,7 +668,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
     @Override
     public Page<Y9logAccessLog> pageSearchByCondition(LogInfoModel search, String startTime, String endTime,
-        Integer tenantType, Integer page, Integer rows) {
+        Integer page, Integer rows) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         Criteria criteria = new Criteria(Y9LogSearchConsts.USER_NAME).exists();
 

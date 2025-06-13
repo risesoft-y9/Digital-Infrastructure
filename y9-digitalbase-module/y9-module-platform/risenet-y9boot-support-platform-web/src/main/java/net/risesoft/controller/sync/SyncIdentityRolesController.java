@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.entity.Y9Organization;
-import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.identity.IdentityRoleCalculator;
@@ -52,7 +51,7 @@ public class SyncIdentityRolesController {
         double start = System.currentTimeMillis();
         LOGGER.info("更新人员/岗位角色开始时间：{}", fdf.format(new Date()));
 
-        List<Y9Tenant> y9TenantList = y9TenantService.listByTenantType(TenantTypeEnum.TENANT);
+        List<Y9Tenant> y9TenantList = y9TenantService.listAll();
         for (Y9Tenant y9Tenant : y9TenantList) {
             Y9LoginUserHolder.setTenantId(y9Tenant.getId());
             LOGGER.debug("同步租户[{}]人员/岗位角色", y9Tenant.getId());

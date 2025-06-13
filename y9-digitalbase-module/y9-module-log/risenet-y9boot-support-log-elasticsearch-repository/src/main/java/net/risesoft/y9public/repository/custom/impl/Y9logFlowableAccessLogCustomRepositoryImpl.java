@@ -96,7 +96,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
     }
 
     @Override
-    public List<Long> listOperateTimeCount(String startDay, String endDay, Integer tenantType) {
+    public List<Long> listOperateTimeCount(String startDay, String endDay) {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.must(QueryBuilders.existsQuery(Y9LogSearchConsts.USER_NAME));
         String tenantId = Y9LoginUserHolder.getTenantId();
@@ -223,7 +223,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
 
     @Override
     public Page<Y9logFlowableAccessLog> pageElapsedTimeByCondition(LogInfoModel search, String startDay, String endDay,
-        String startTime, String endTime, Integer tenantType, Integer page, Integer rows) throws ParseException {
+        String startTime, String endTime, Integer page, Integer rows) throws ParseException {
         String tenantId = Y9LoginUserHolder.getTenantId();
         Criteria criteria = new Criteria(Y9LogSearchConsts.USER_NAME).exists();
         if (StringUtils.isNotBlank(startDay) && StringUtils.isNotBlank(endDay)) {
@@ -267,7 +267,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
 
     @Override
     public Page<Y9logFlowableAccessLog> pageOperateStatusByOperateStatus(LogInfoModel search, String operateStatus,
-        String date, String hour, Integer tenantType, Integer page, Integer rows) throws ParseException {
+        String date, String hour, Integer page, Integer rows) throws ParseException {
         String tenantId = Y9LoginUserHolder.getTenantId();
         Criteria criteria = new Criteria(Y9LogSearchConsts.USER_NAME).exists();
 
@@ -330,7 +330,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
 
     @Override
     public Page<Y9logFlowableAccessLog> pageSearchByCondition(LogInfoModel search, String startTime, String endTime,
-        Integer tenantType, Integer page, Integer rows) {
+        Integer page, Integer rows) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         Criteria criteria = new Criteria(Y9LogSearchConsts.USER_NAME).exists();
 

@@ -3,7 +3,6 @@ package net.risesoft.y9public.service.tenant;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
 
@@ -125,27 +124,9 @@ public interface Y9TenantService {
      * 根据父节点id和租户类型，获取租户列表
      *
      * @param parentId 父节点id
-     * @param tenantType 租户类型 {@link TenantTypeEnum}
      * @return {@code List<}{@link Y9Tenant}{@code >}
      */
-    List<Y9Tenant> listByParentIdAndTenantType(String parentId, TenantTypeEnum tenantType);
-
-    /**
-     * 根据租户类型(TenantType)获取租户
-     *
-     * @param tenantType 租户类型： 0=用户，2=开发商，1=运维团队，3=普通租户
-     * @return {@code List<}{@link Y9Tenant}{@code >}
-     */
-    List<Y9Tenant> listByTenantType(TenantTypeEnum tenantType);
-
-    /**
-     * 根据租户名称和类型获取租户数
-     *
-     * @param name 租户名称
-     * @param tenantType 租户类型： 0=用户，2=开发商，1=运维团队，3=普通租户
-     * @return {@code List<}{@link Y9Tenant}{@code >}
-     */
-    List<Y9Tenant> listByTenantType(String name, Integer tenantType);
+    List<Y9Tenant> listByParentIdAndTenantType(String parentId);
 
     /**
      * 移动租户
@@ -167,10 +148,9 @@ public interface Y9TenantService {
      * 保存租户信息
      *
      * @param y9Tenant 实体类
-     * @param tenantType 租户类型： 0=用户，2=开发商，1=运维团队，3=普通租户
      * @return Tenant
      */
-    Y9Tenant saveOrUpdate(Y9Tenant y9Tenant, TenantTypeEnum tenantType);
+    Y9Tenant saveOrUpdate(Y9Tenant y9Tenant);
 
     /**
      * 保存租户排序信息

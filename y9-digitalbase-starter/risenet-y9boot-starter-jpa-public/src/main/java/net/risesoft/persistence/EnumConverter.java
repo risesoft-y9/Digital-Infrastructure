@@ -18,7 +18,6 @@ import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.enums.platform.SexEnum;
 import net.risesoft.enums.platform.SqlFileTypeEnum;
-import net.risesoft.enums.platform.TenantTypeEnum;
 
 /**
  * @author shidaobang
@@ -47,12 +46,6 @@ public class EnumConverter {
     public static class SexEnumConverter extends AbstractEnumConverter<SexEnum, Integer> {
         public SexEnumConverter() {
             super(SexEnum.class);
-        }
-    }
-
-    public static class TenantTypeConverter extends AbstractEnumConverter<TenantTypeEnum, Integer> {
-        public TenantTypeConverter() {
-            super(TenantTypeEnum.class);
         }
     }
 

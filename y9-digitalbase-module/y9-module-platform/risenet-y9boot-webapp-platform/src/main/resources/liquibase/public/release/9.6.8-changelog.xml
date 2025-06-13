@@ -172,4 +172,15 @@
         </dropColumn>
     </changeSet>
 
+    <changeSet id="1749797321047-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_COMMON_TENANT"
+                          columnName="TENANT_TYPE"/>
+        </preConditions>
+        <dropColumn
+                tableName="Y9_COMMON_TENANT"
+                columnName="TENANT_TYPE">
+        </dropColumn>
+    </changeSet>
+
 </databaseChangeLog>

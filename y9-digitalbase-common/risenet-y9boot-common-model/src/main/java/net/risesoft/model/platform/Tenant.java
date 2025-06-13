@@ -5,8 +5,6 @@ import java.util.Date;
 
 import lombok.Data;
 
-import net.risesoft.enums.platform.TenantTypeEnum;
-
 /**
  * 租户
  *
@@ -46,9 +44,6 @@ public class Tenant implements Serializable {
 
     /** 是否启用 */
     private boolean enabled;
-
-    /** 租户类型： 3=普通租户 */
-    private TenantTypeEnum tenantType;
 
     /** 排序号 */
     private Integer tabIndex;
