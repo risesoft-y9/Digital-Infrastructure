@@ -58,8 +58,8 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
         this.y9logFlowableAccessLogRepository = y9logFlowableAccessLogRepository;
     }
 
-    public long getOperateTimeCount(Date startDay, Date endDay, Integer tenantType, boolean betweenAble,
-        long elapsedTimeStart, Long elapsedTimeEnd) {
+    public long getOperateTimeCount(Date startDay, Date endDay, boolean betweenAble, long elapsedTimeStart,
+        Long elapsedTimeEnd) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         return y9logFlowableAccessLogRepository.count(new Specification<Y9logFlowableAccessLog>() {
             private static final long serialVersionUID = -2210269486911993525L;
@@ -91,7 +91,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
     }
 
     @Override
-    public List<Long> listOperateTimeCount(String startDay, String endDay, Integer tenantType) {
+    public List<Long> listOperateTimeCount(String startDay, String endDay) {
         Date sDay = null;
         Date eDay = null;
         List<Long> list = new ArrayList<>();
@@ -116,9 +116,9 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
         for (int i = 0; i < longArray.length; i++) {
 
             if (i < longArray.length - 1) {
-                list.add(this.getOperateTimeCount(sDay, eDay, tenantType, true, longArray[i], longArray[i + 1]));
+                list.add(this.getOperateTimeCount(sDay, eDay, true, longArray[i], longArray[i + 1]));
             } else {
-                list.add(this.getOperateTimeCount(sDay, eDay, tenantType, false, longArray[i], null));
+                list.add(this.getOperateTimeCount(sDay, eDay, false, longArray[i], null));
             }
         }
         return list;
@@ -226,8 +226,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
 
     @Override
     public Page<Y9logFlowableAccessLog> pageElapsedTimeByCondition(LogInfoModel searchDto, String startDay,
-        String endDay, String sTime, String lTime, Integer tenantType, Integer page, Integer rows)
-        throws ParseException {
+        String endDay, String sTime, String lTime, Integer page, Integer rows) throws ParseException {
         String tenantId = Y9LoginUserHolder.getTenantId();
 
         PageRequest pageable =
@@ -295,7 +294,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
 
     @Override
     public Page<Y9logFlowableAccessLog> pageOperateStatusByOperateStatus(LogInfoModel searchDto, String operateStatus,
-        String date, String hour, Integer tenantType, Integer page, Integer rows) throws ParseException {
+        String date, String hour, Integer page, Integer rows) throws ParseException {
         String tenantId = Y9LoginUserHolder.getTenantId();
 
         PageRequest pageable =
@@ -370,7 +369,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
 
     @Override
     public Page<Y9logFlowableAccessLog> pageSearchByCondition(LogInfoModel loginInfoModel, String startTime,
-        String endTime, Integer tenantType, Integer page, Integer rows) {
+        String endTime, Integer page, Integer rows) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         PageRequest pageable =
             PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);

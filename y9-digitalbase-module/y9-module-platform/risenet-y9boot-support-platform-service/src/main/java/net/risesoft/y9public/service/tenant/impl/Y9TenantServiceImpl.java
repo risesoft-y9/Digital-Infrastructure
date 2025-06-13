@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.OrgLevelConsts;
-import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.exception.TenantErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
@@ -28,7 +27,6 @@ import net.risesoft.y9public.manager.tenant.Y9TenantManager;
 import net.risesoft.y9public.repository.tenant.Y9TenantRepository;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
 import net.risesoft.y9public.service.user.Y9UserService;
-import net.risesoft.y9public.specification.Y9TenantSpecification;
 
 /**
  * @author dingzhaojun
@@ -81,7 +79,6 @@ public class Y9TenantServiceImpl implements Y9TenantService {
         y9Tenant.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         y9Tenant.setName(tenantName);
         y9Tenant.setShortName(tenantShortName);
-        y9Tenant.setTenantType(TenantTypeEnum.TENANT);
         y9Tenant.setEnabled(Boolean.TRUE);
         y9Tenant.setDefaultDataSourceId(dataSourceId);
         Integer maxTabIndex = getMaxTableIndex();
@@ -119,7 +116,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
 
     @Override
     public List<Y9Tenant> listAll() {
-        return y9TenantRepository.findAll(Sort.by(Direction.DESC, "tenantType"));
+        return y9TenantRepository.findAll(Sort.by(Direction.ASC, "createTime"));
     }
 
     @Override
@@ -128,9 +125,9 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     }
 
     @Override
-    public List<Y9Tenant> listByParentIdAndTenantType(String parentId, TenantTypeEnum tenantType) {
+    public List<Y9Tenant> listByParentIdAndTenantType(String parentId) {
         if (StringUtils.isBlank(parentId)) {
-            return y9TenantRepository.findByTenantTypeAndParentIdIsNullOrderByTabIndexAsc(tenantType);
+            return y9TenantRepository.findByParentIdIsNullOrderByTabIndexAsc();
         }
         return y9TenantRepository.findByParentIdOrderByTabIndexAsc(parentId);
     }
@@ -138,17 +135,6 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     @Override
     public Optional<Y9Tenant> findByTenantName(String tenantName) {
         return y9TenantRepository.findByName(tenantName);
-    }
-
-    @Override
-    public List<Y9Tenant> listByTenantType(TenantTypeEnum tenantType) {
-        return y9TenantRepository.findByTenantTypeOrderByTabIndexAsc(tenantType);
-    }
-
-    @Override
-    public List<Y9Tenant> listByTenantType(String name, Integer tenantType) {
-        Y9TenantSpecification<Y9Tenant> spec = new Y9TenantSpecification<>(name, null, tenantType);
-        return y9TenantRepository.findAll(spec, Sort.by(Direction.ASC, "tabIndex"));
     }
 
     @Override
@@ -193,7 +179,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Tenant saveOrUpdate(Y9Tenant y9Tenant, TenantTypeEnum tenantType) {
+    public Y9Tenant saveOrUpdate(Y9Tenant y9Tenant) {
         Y9Assert.isTrue(isNameAvailable(y9Tenant.getName(), y9Tenant.getId()), TenantErrorCodeEnum.NAME_HAS_BEEN_USED,
             y9Tenant.getName());
         Y9Assert.isTrue(isShortNameAvailable(y9Tenant.getShortName(), y9Tenant.getId()),
@@ -206,10 +192,9 @@ public class Y9TenantServiceImpl implements Y9TenantService {
                 return save(oldTenant);
             }
         }
-        y9Tenant.setTenantType(tenantType);
         Y9DataSource y9DataSource = null;
         try {
-            y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(y9Tenant.getShortName(), tenantType, null);
+            y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(y9Tenant.getShortName(), null);
             y9Tenant.setDefaultDataSourceId(y9DataSource.getId());
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);

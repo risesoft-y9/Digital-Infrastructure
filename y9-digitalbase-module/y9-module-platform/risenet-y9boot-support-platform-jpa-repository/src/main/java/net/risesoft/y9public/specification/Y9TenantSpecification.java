@@ -17,17 +17,14 @@ public class Y9TenantSpecification<Y9Tenant> implements Specification<Y9Tenant> 
     private String name;
     private Integer enabled;
 
-    private Integer tenantType;
-
     public Y9TenantSpecification() {
         super();
     }
 
-    public Y9TenantSpecification(String name, Integer enabled, Integer tenantType) {
+    public Y9TenantSpecification(String name, Integer enabled) {
         super();
         this.name = name;
         this.enabled = enabled;
-        this.tenantType = tenantType;
     }
 
     public Integer getEnabled() {
@@ -46,14 +43,6 @@ public class Y9TenantSpecification<Y9Tenant> implements Specification<Y9Tenant> 
         this.name = name;
     }
 
-    public Integer getTenantType() {
-        return tenantType;
-    }
-
-    public void setTenantType(Integer tenantType) {
-        this.tenantType = tenantType;
-    }
-
     @Override
     public Predicate toPredicate(Root<Y9Tenant> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
         Predicate predicate = cb.conjunction();
@@ -63,9 +52,6 @@ public class Y9TenantSpecification<Y9Tenant> implements Specification<Y9Tenant> 
         }
         if (null != enabled) {
             expressions.add(cb.equal(root.get("enabled").as(Integer.class), enabled));
-        }
-        if (null != tenantType) {
-            expressions.add(cb.equal(root.get("tenantType").as(Integer.class), tenantType));
         }
         return predicate;
     }

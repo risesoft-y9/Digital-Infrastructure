@@ -65,11 +65,10 @@ public interface TenantApi {
     /**
      * 获取指定租户类型的所有租户对象
      *
-     * @param tenantType 租户类型： 0=用户，2=开发商，1=运维团队，3=普通租户
      * @return List&lt;Tenant&gt; 所有租户对象的集合
      * @since 9.6.0
      */
     @GetMapping("/listByTenantType")
-    List<Tenant> listByTenantType(@RequestParam("tenantType") Integer tenantType);
+    List<Tenant> listByTenantType();
 
 }

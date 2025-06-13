@@ -15,8 +15,6 @@ import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
 import net.risesoft.consts.DefaultConsts;
-import net.risesoft.enums.platform.TenantTypeEnum;
-import net.risesoft.persistence.EnumConverter;
 
 /**
  * 租户信息表
@@ -68,12 +66,6 @@ public class Y9Tenant extends BaseEntity {
     @Column(name = "ENABLED", nullable = false)
     @Comment("是否启用")
     private Boolean enabled = Boolean.TRUE;
-
-    /** 租户类型： 3=普通租户 */
-    @Column(name = "TENANT_TYPE", nullable = false)
-    @Convert(converter = EnumConverter.TenantTypeConverter.class)
-    @Comment("租户类型：3=普通租户")
-    private TenantTypeEnum tenantType;
 
     /** 排序号 */
     @Column(name = "TAB_INDEX", nullable = false)

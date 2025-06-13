@@ -82,7 +82,7 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
                         syncDataSourceEvent.setEventObject(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
                         syncDataSourceEvent.setEventType(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
                         Y9PublishServiceUtil.publishMessageCommon(syncDataSourceEvent);
-                        
+
                         LOGGER.debug("移除租户系统后发送租户数据源同步事件：{}", syncDataSourceEvent);
                     }
                 }
@@ -164,8 +164,8 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
         if (Boolean.TRUE.equals(y9System.getSingleDatasource())) {
             String datasoureId = tenant.getDefaultDataSourceId();
             try {
-                Y9DataSource y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(tenant.getShortName(),
-                    tenant.getTenantType(), y9System.getName());
+                Y9DataSource y9DataSource =
+                    y9DataSourceManager.createTenantDefaultDataSource(tenant.getShortName(), y9System.getName());
                 datasoureId = y9DataSource.getId();
             } catch (Exception e) {
                 LOGGER.warn(e.getMessage(), e);

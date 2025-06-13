@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.RoleTypeEnum;
-import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.y9.configuration.Y9Properties;
@@ -71,7 +70,7 @@ public class PlatformApplicationReadyListener implements ApplicationListener<App
         }
     }
 
-    private Y9DataSource createDataSource(String datasourceId, String dbName) {
+    private Y9DataSource createDataSource(String dbName, String datasourceId) {
         return y9DataSourceService.createTenantDefaultDataSource(dbName, datasourceId);
     }
 
@@ -112,7 +111,6 @@ public class PlatformApplicationReadyListener implements ApplicationListener<App
             y9Tenant.setShortName(y9PlatformProperties.getInitTenantName());
             y9Tenant.setName(y9PlatformProperties.getInitTenantName());
             y9Tenant.setEnabled(true);
-            y9Tenant.setTenantType(TenantTypeEnum.TENANT);
             y9Tenant.setTabIndex(10000);
             y9TenantService.save(y9Tenant);
         }
@@ -140,7 +138,7 @@ public class PlatformApplicationReadyListener implements ApplicationListener<App
     public void onApplicationEvent(ApplicationReadyEvent event) {
         LOGGER.info("platform ApplicationReady...");
 
-        createDataSource(InitDataConsts.DATASOURCE_ID, y9PlatformProperties.getInitTenantSchema());
+        createDataSource(y9PlatformProperties.getInitTenantSchema(), InitDataConsts.DATASOURCE_ID);
         createTenant(InitDataConsts.TENANT_ID, InitDataConsts.DATASOURCE_ID);
         createSystem(InitDataConsts.SYSTEM_ID);
         // 租用系统会发送 租户租用系统事件 系统做监听做数据初始化

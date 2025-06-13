@@ -15,7 +15,6 @@ import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import net.risesoft.api.log.UserLoginInfoApi;
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.entity.Y9Organization;
-import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
@@ -184,7 +183,7 @@ public class ScheduledTask {
     @Scheduled(cron = "0 0 2 * * ?")
     @SchedulerLock(name = "syncIdentityResourceLock", lockAtLeastFor = "PT30M")
     public void syncIdentityResource() {
-        List<Y9Tenant> y9TenantList = y9TenantService.listByTenantType(TenantTypeEnum.TENANT);
+        List<Y9Tenant> y9TenantList = y9TenantService.listAll();
         for (Y9Tenant y9Tenant : y9TenantList) {
             Y9LoginUserHolder.setTenantId(y9Tenant.getId());
             LOGGER.debug("同步租户[{}]授权主体的资源权限", y9Tenant.getId());
@@ -203,7 +202,7 @@ public class ScheduledTask {
     @Scheduled(cron = "0 0 4 * * ?")
     @SchedulerLock(name = "syncIdentityRoleLock", lockAtLeastFor = "PT30M")
     public void syncIdentityRole() {
-        List<Y9Tenant> y9TenantList = y9TenantService.listByTenantType(TenantTypeEnum.TENANT);
+        List<Y9Tenant> y9TenantList = y9TenantService.listAll();
         for (Y9Tenant y9Tenant : y9TenantList) {
             Y9LoginUserHolder.setTenantId(y9Tenant.getId());
             LOGGER.debug("同步租户[{}]授权主体的角色", y9Tenant.getId());
