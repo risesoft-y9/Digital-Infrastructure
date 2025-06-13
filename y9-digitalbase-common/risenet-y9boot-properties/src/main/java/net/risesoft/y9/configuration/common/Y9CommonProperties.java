@@ -44,11 +44,6 @@ public class Y9CommonProperties {
     private String orgBaseUrl = "https://vue.youshengyun.com/platform";
 
     /**
-     * 企业版数字底座
-     */
-    private String y9DigitalBaseUrl = "https://vue.youshengyun.com/y9DigitalBase";
-
-    /**
      * 内容管理
      */
     private String cmsBaseUrl = "https://vue.youshengyun.com/cms";
