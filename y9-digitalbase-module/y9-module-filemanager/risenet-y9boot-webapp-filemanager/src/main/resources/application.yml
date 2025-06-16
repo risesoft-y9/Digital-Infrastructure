@@ -53,27 +53,6 @@ spring:
         name: y9PublicDS
         type: com.alibaba.druid.pool.DruidDataSource
         druid:
-            y9-public:
-                driver-class-name: com.mysql.cj.jdbc.Driver
-                url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false
-                username: root
-                #driver-class-name: oracle.jdbc.OracleDriver
-                #url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
-                #username: Y9_PUBLIC
-                password: 111111
-                initialSize: 1
-                maxActive: 20
-                maxPoolPreparedStatementPerConnectionSize: 100
-                maxWait: 60000
-                minEvictableIdleTimeMillis: 300000
-                minIdle: 1
-                poolPreparedStatements: true
-                testOnBorrow: false
-                testOnReturn: false
-                testWhileIdle: true
-                timeBetweenEvictionRunsMillis: 60000
-                useGlobalDataSourceStat: true
-                validationQuery: SELECT 1 FROM DUAL
             filter:
                 stat:
                     log-slow-sql: true
@@ -92,6 +71,27 @@ spring:
                 enabled: true
                 exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*,/static/*'
                 url-pattern: /*
+            y9-public:
+                #driver-class-name: oracle.jdbc.OracleDriver
+                #url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
+                #username: Y9_PUBLIC
+                driver-class-name: com.mysql.cj.jdbc.Driver
+                url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false
+                username: root
+                password: 111111
+                initialSize: 1
+                maxActive: 20
+                maxPoolPreparedStatementPerConnectionSize: 100
+                maxWait: 60000
+                minEvictableIdleTimeMillis: 300000
+                minIdle: 1
+                poolPreparedStatements: true
+                testOnBorrow: false
+                testOnReturn: false
+                testWhileIdle: true
+                timeBetweenEvictionRunsMillis: 60000
+                useGlobalDataSourceStat: true
+                validationQuery: SELECT 1 FROM DUAL
     jpa:
         hibernate:
             naming:
@@ -114,6 +114,8 @@ spring:
     redis:
         database: 8
         host: localhost
+        password: 111111
+        port: 6379
         lettuce:
             pool:
                 max-active: 8
@@ -121,15 +123,13 @@ spring:
                 max-wait: -1
                 min-idle: 0
             shutdown-timeout: 100ms
-        password: 111111
-        port: 6379
         ssl: false
         timeout: 10000
     web:
         resources:
             static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:///d:/y9config/
 y9:
-    internalIp: 192.168.x.x,10.0.x.x,172.20.x.x
+    internalIp: 192.168.x.x,10.x.x.x,172.20.x.x
     app:
         fileManager:
             fileRoot: d:/y9config/y9filestore
