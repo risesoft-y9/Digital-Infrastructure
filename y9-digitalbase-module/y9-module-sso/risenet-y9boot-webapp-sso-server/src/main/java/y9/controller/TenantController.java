@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Lazy;
@@ -23,9 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import y9.controller.dto.Tenant;
 import y9.entity.Y9User;
+import y9.service.Y9TenantService;
 import y9.service.Y9UserService;
 import y9.util.MobileUtil;
 import y9.util.common.XSSCheckUtil;
+import y9.util.json.Y9JacksonUtil;
 
 @Lazy(false)
 @Controller
@@ -36,8 +39,10 @@ public class TenantController {
 
     private final Y9UserService y9UserService;
 
+    private final Y9TenantService y9TenantService;
+
     @GetMapping(value = "/allTenants")
-    public final ResponseEntity<String> allTenants() {
+    public ResponseEntity<String> allTenants() {
         try {
             List<Map<String, String>> tenants = y9UserService.listAllTenants();
             List<Tenant> tenants1 = convertAndSort(tenants);
@@ -93,6 +98,23 @@ public class TenantController {
             final HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             return new ResponseEntity<>(jsonStr, headers, HttpStatus.OK);
+        } catch (final Throwable e) {
+            LOGGER.error(e.getMessage(), e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "/singleTenant")
+    public ResponseEntity<String> singleTenant() {
+        try {
+            List<Map<String, String>> tenants = y9UserService.listAllTenants();
+            List<Tenant> tenants1 = convertAndSort(tenants);
+
+            Optional<Tenant> tenantOptional = tenants1.stream().findFirst();
+
+            final HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            return new ResponseEntity<>(Y9JacksonUtil.writeValueAsString(tenantOptional.get()), headers, HttpStatus.OK);
         } catch (final Throwable e) {
             LOGGER.error(e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
