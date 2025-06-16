@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import y9.controller.dto.Tenant;
+import y9.entity.Y9Tenant;
 import y9.entity.Y9User;
 import y9.service.Y9TenantService;
 import y9.service.Y9UserService;
@@ -41,10 +41,15 @@ public class TenantController {
 
     private final Y9TenantService y9TenantService;
 
+    /**
+     * 获取全部租户信息（租户名称，租户登录名称）
+     * 
+     * @return
+     */
     @GetMapping(value = "/allTenants")
     public ResponseEntity<String> allTenants() {
         try {
-            List<Map<String, String>> tenants = y9UserService.listAllTenants();
+            List<Y9Tenant> tenants = y9TenantService.listByEnabled(Boolean.TRUE);
             List<Tenant> tenants1 = convertAndSort(tenants);
 
             ObjectMapper mapper = new ObjectMapper();
@@ -107,11 +112,8 @@ public class TenantController {
     @GetMapping(value = "/singleTenant")
     public ResponseEntity<String> singleTenant() {
         try {
-            List<Map<String, String>> tenants = y9UserService.listAllTenants();
-            List<Tenant> tenants1 = convertAndSort(tenants);
-
-            Optional<Tenant> tenantOptional = tenants1.stream().findFirst();
-
+            List<Y9Tenant> tenants = y9TenantService.listByEnabled(Boolean.TRUE);
+            Optional<Y9Tenant> tenantOptional = tenants.stream().findFirst();
             final HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             return new ResponseEntity<>(Y9JacksonUtil.writeValueAsString(tenantOptional.get()), headers, HttpStatus.OK);
@@ -121,26 +123,13 @@ public class TenantController {
         }
     }
 
-    private List<Tenant> convertAndSort(List<Map<String, String>> tenantMapList) {
-        List<Tenant> originalTenantList = tenantMapList.stream()
-            .map(map -> new Tenant(map.get("tenantName"), map.get("tenantShortName"))).collect(Collectors.toList());
-
-        boolean isOperationTenantExist = false;
+    private List<Tenant> convertAndSort(List<Y9Tenant> tenantList) {
         List<Tenant> newTenantList = new ArrayList<>();
-
-        for (Tenant tenant : originalTenantList) {
-            if (Tenant.OPERATION_TENANT.equals(tenant)) {
-                isOperationTenantExist = true;
-            } else {
-                newTenantList.add(tenant);
-            }
+        for (Y9Tenant tenant : tenantList) {
+            newTenantList.add(new Tenant(tenant.getName(), tenant.getShortName()));
         }
-
         // 运维租户总是放在最后
-        if (isOperationTenantExist) {
-            newTenantList.add(Tenant.OPERATION_TENANT);
-        }
-
+        newTenantList.add(Tenant.OPERATION_TENANT);
         return newTenantList;
     }
 }
