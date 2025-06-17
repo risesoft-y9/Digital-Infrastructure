@@ -77,7 +77,7 @@ spring:
             host: localhost
             port: 6379
             username: default
-            password: 'y9i-83204585'
+            password: '111111'
             ssl:
                 enabled: false
             lettuce:

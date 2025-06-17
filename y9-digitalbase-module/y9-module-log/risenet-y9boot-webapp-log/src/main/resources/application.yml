@@ -55,9 +55,9 @@ spring:
         redis:
             database: 8
             host: localhost
-            port: 7379
+            port: 6379
             username: default
-            password: y9i-83204585
+            password: 111111
             lettuce:
                 pool:
                     max-active: 8

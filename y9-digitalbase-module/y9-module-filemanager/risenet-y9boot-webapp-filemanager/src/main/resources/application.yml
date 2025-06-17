@@ -49,7 +49,7 @@ spring:
             host: localhost
             port: 6379
             username: default
-            password: '12345678'
+            password: '111111'
             ssl:
                 enabled: false
             lettuce:
@@ -67,7 +67,7 @@ spring:
                 driverClassName: com.mysql.cj.jdbc.Driver
                 jdbcUrl: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
                 username: root
-                password: '12345678'
+                password: '111111'
                 maximumPoolSize: 20
                 minimumIdle: 1
     jpa:
