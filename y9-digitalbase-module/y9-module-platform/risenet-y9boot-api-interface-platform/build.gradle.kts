@@ -5,8 +5,9 @@ plugins {
 
 dependencies {
     api(project(":y9-digitalbase-common:risenet-y9boot-common-model"))
+    api(project(":y9-digitalbase-common:risenet-y9boot-common-util"))
     api(platform(libs.spring.boot.bom))
-    
+
     api("org.springframework:spring-web")
     api("org.springframework.boot:spring-boot-starter-validation")
 }
