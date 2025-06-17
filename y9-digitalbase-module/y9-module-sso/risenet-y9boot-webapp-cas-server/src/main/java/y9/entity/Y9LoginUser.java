@@ -23,7 +23,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 @Entity(name = Y9LoginUser.ENTITY_NAME)
-@Table(name = "Y9_LOGIN_USER")
+@Table(name = "Y9_LOG_USER_LOGIN_INFO")
 @Comment("用户登录历史表")
 @Getter
 @Setter

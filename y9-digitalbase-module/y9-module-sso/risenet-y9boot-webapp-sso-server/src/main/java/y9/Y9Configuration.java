@@ -1,10 +1,10 @@
 package y9;
 
+import java.util.List;
+
 import jakarta.servlet.DispatcherType;
-import lombok.RequiredArgsConstructor;
+
 import org.apereo.cas.web.CasWebSecurityConfigurer;
-import y9.service.Y9KeyValueService;
-import y9.util.Y9Context;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWarDeployment;
@@ -20,8 +20,6 @@ import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.filter.ForwardedHeaderFilter;
-
-import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,8 +47,8 @@ public class Y9Configuration {
      * 此过滤器更多是为了减少外部 servlet 容器的配置 <br/>
      *
      * @return {@code FilterRegistrationBean<ForwardedHeaderFilter> }
-     * @see <a href="https://docs.spring.io/spring-security/reference/servlet/appendix/proxy-server.html">Proxy
-     * Server Configuration</a>
+     * @see <a href="https://docs.spring.io/spring-security/reference/servlet/appendix/proxy-server.html">Proxy Server
+     *      Configuration</a>
      */
     @Bean
     @ConditionalOnWarDeployment
@@ -83,11 +81,9 @@ public class Y9Configuration {
         private final Y9KeyValueService y9KeyValueService;
 
         @Override
-        @Scheduled(
-                cron = "0 * * * * *"
-        )
+        @Scheduled(cron = "0 * * * * *")
         public void run() {
-            //Y9KeyValueService y9KeyValueService = Y9Context.getBean(Y9KeyValueService.class);
+            // Y9KeyValueService y9KeyValueService = Y9Context.getBean(Y9KeyValueService.class);
             y9KeyValueService.cleanUpExpiredKeyValue();
         }
     }
@@ -107,7 +103,7 @@ public class Y9Configuration {
 
         @Bean
         public Y9LoginUserService y9LoginUserKafkaServiceImpl(Y9UserRepository y9UserRepository,
-                                                              KafkaTemplate<String, Object> y9KafkaTemplate) {
+            KafkaTemplate<String, Object> y9KafkaTemplate) {
             return new Y9LoginUserKafkaServiceImpl(y9UserRepository, y9KafkaTemplate);
         }
 
@@ -118,7 +114,7 @@ public class Y9Configuration {
     static class Y9UserLoginJpaConfiguration {
         @Bean
         public Y9LoginUserService y9LoginUserServiceImpl(Y9LoginUserRepository y9LoginUserRepository,
-                                                         Y9UserRepository y9UserRepository) {
+            Y9UserRepository y9UserRepository) {
             return new Y9LoginUserJpaServiceImpl(y9LoginUserRepository, y9UserRepository);
         }
 

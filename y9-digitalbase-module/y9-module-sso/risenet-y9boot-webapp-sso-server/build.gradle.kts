@@ -89,6 +89,7 @@ dependencies {
     implementation(libs.kingbase.kesdialect.hibernate4)
     implementation(libs.dameng.dmdialect.hibernate62)
     implementation(libs.dameng.dmjdbcdriver18)
+    implementation("org.springframework.kafka:spring-kafka")
 
     annotationProcessor("org.springframework:spring-context-indexer")
 
