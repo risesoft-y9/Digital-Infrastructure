@@ -627,7 +627,7 @@
                             </goals>
                             <configuration>
                                 <name>buildDate</name>
-                                <pattern>yyyyMMddHHmm</pattern>
+                                <pattern>yyyyMMdd</pattern>
                                 <timeZone>GMT+8</timeZone>
                             </configuration>
                         </execution>
