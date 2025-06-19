@@ -11,8 +11,13 @@
     <artifactId>risenet-y9boot-starter-jpa-dedicated</artifactId>
     <version>${revision}</version>
     <packaging>jar</packaging>
+    <name>risenet-y9boot-starter-jpa-dedicated</name>
+    <description>RiseSoft/Digital Infrastructure jpa starter</description>
 
     <properties>
+        <url>${gitee.url}</url>
+        <connection>${gitee.connection}</connection>
+        <developerConnection>${gitee.developerConnection}</developerConnection>
     </properties>
 
     <dependencies>
