@@ -16,13 +16,14 @@
     <name>y9-digitalbase-parent</name>
     <description>RiseSoft/Digital Infrastructure dependencies parent</description>
     <url>https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-parent</url>
-    
+
     <properties>
         <gitee.url>https://gitee.com/risesoft-y9/y9-core</gitee.url>
         <gitee.connection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.connection>
         <gitee.developerConnection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
 
         <revision>9.7.0-SNAPSHOT</revision>
+        <dockerBuildNumber>${maven.build.timestamp}</dockerBuildNumber>
 
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -30,7 +31,7 @@
         <resource.delimiter>@</resource.delimiter>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+        <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
         <!-- Plugin versions -->
@@ -96,15 +97,15 @@
 
     <repositories>
         <repository>
-			<id>central-snapshots</id>
-			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
+            <id>central-snapshots</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
         <repository>
             <id>aliyun-repo</id>
             <url>https://maven.aliyun.com/repository/public</url>
@@ -470,7 +471,7 @@
                             <tags>
                                 <tag>${project.version}</tag>
                                 <tag>v9.7.x</tag>
-                                <tag>${project.version}-${buildDate}</tag>
+                                <tag>${project.version}-${dockerBuildNumber}</tag>
                             </tags>
                         </to>
                     </configuration>
