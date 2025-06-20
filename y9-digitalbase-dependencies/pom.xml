@@ -94,6 +94,7 @@
         <bcprov-ext-jdk15to18.version>1.78.1</bcprov-ext-jdk15to18.version>
         <commons-fileupload.version>1.5</commons-fileupload.version>
         <commons-io.version>2.15.1</commons-io.version>
+        <commons-lang3.version>3.17.0</commons-lang3.version>
         <commons-net.version>3.10.0</commons-net.version>
         <commons-text.version>1.12.0</commons-text.version>
         <commons-discovery.version>0.5</commons-discovery.version>
@@ -109,7 +110,7 @@
         <hutool.version>5.8.38</hutool.version>
         <httpcomponents.version>4.5.14</httpcomponents.version>
         <ipaddress.version>5.5.1</ipaddress.version>
-        <javers.version>7.8.0</javers.version>
+        <javers.version>6.14.0</javers.version>
         <jodd-bean.version>5.1.6</jodd-bean.version>
         <jodd-http.version>6.2.1</jodd-http.version>
         <jodd-lagarto.version>6.0.6</jodd-lagarto.version>
@@ -128,7 +129,7 @@
         <poi-scratchpad.version>5.2.3</poi-scratchpad.version>
         <rs-api.version>2.1.1</rs-api.version>
         <reflections.version>0.10.2</reflections.version>
-        <shedlock.version>6.9.0</shedlock.version>
+        <shedlock.version>4.48.0</shedlock.version>
         <transmittable-thread-local.version>2.13.0</transmittable-thread-local.version>
 
         <!-- auth0 jwt jwks -->
@@ -599,6 +600,11 @@
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-net</groupId>
