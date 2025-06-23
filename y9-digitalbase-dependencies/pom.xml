@@ -50,15 +50,15 @@
 
     <repositories>
         <repository>
-			<id>central-snapshots</id>
-			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
+            <id>central-snapshots</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
         <repository>
             <id>aliyun-repo</id>
             <url>https://maven.aliyun.com/repository/public</url>
@@ -114,6 +114,8 @@
 
         <spring-boot.version>3.5.0</spring-boot.version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
+        <alibaba-cloud.version>2023.0.3.3</alibaba-cloud.version>
+        <alibaba-nacos.version>2.4.2</alibaba-nacos.version>
 
         <antisamy.version>1.7.8</antisamy.version>
         <aspectj.version>1.9.24</aspectj.version>
@@ -171,7 +173,7 @@
         <kingbase-hibernate-dialect.version>5.4.6.Finaldialect</kingbase-hibernate-dialect.version>
         <kingbase-hibernate-jpa-api.version>2.1.0.Final</kingbase-hibernate-jpa-api.version>
         <oceanbase-client.version>2.4.0</oceanbase-client.version>
-        <oracle-driver.version>23.6.0.24.10</oracle-driver.version>
+        <oracle-driver.version>23.8.0.25.04</oracle-driver.version>
 
         <!-- Plugin versions -->
         <flatten-maven-plugin.version>1.7.0</flatten-maven-plugin.version>
@@ -199,9 +201,27 @@
             </dependency>
 
             <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+                <version>${alibaba-cloud.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <version>${alibaba-cloud.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.nacos</groupId>
+                <artifactId>nacos-client</artifactId>
+                <version>${alibaba-nacos.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.apache.axis2</groupId>
                 <artifactId>axis2-spring</artifactId>
-                <version>2.0.0</version>
+                <version>${axis2.version}</version>
             </dependency>
 
             <dependency>
@@ -609,6 +629,8 @@
                 <artifactId>jaxws-rt</artifactId>
                 <version>${jaxws-rt.version}</version>
             </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 

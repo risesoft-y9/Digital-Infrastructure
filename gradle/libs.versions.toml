@@ -2,16 +2,16 @@
 # spring boot & cloud bom
 spring-bom = "6.2.7"
 spring-boot = "3.5.0"
-spring-cloud = "2024.0.1"
+spring-cloud = "2025.0.0"
 io-spring-dependency-management = "1.1.7"
 # cas server bom
 cas-server-bom = "7.2.2"
 # oracle bom
-ojdbc-bom = "23.6.0.24.10"
+ojdbc-bom = "23.8.0.25.04"
 # hutool
-cn-hutool-hutool-all = "5.8.34"
+cn-hutool-hutool-all = "5.8.38"
 # alibaba
-spring-cloud-alibaba = "2023.0.3.2"
+spring-cloud-alibaba = "2023.0.3.3"
 alibaba-transmittable-thread-local = "2.14.5"
 # 人大金仓
 cn-com-kingbase-kesdialect-for-hibernate4 = "1.0.0"

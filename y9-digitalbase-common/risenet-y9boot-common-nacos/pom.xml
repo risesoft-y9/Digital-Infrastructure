@@ -15,8 +15,6 @@
     <description>RiseSoft/Digital Infrastructure extend for nacos</description>
 
     <properties>
-        <alibaba-nacos.version>2.4.2</alibaba-nacos.version>
-        <alibaba-cloud.version>2023.0.3.2</alibaba-cloud.version>
     </properties>
 
     <scm>
@@ -35,7 +33,6 @@
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-            <version>${alibaba-cloud.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.alibaba.nacos</groupId>
@@ -47,7 +44,6 @@
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-            <version>${alibaba-cloud.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.alibaba.nacos</groupId>
@@ -59,7 +55,6 @@
         <dependency>
             <groupId>com.alibaba.nacos</groupId>
             <artifactId>nacos-client</artifactId>
-            <version>${alibaba-nacos.version}</version>
         </dependency>
 
         <dependency>
