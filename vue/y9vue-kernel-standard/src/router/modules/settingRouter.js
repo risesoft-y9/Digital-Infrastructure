@@ -11,6 +11,7 @@ const settingRouter = {
     name: 'setting',
     meta: {
         title: '系统设置',
+        icon: 'ri-settings-line',
         roles: ['systemAdmin']
     },
     children: [
@@ -21,6 +22,16 @@ const settingRouter = {
             meta: {
                 title: '系统设置',
                 icon: 'ri-settings-line',
+                roles: ['systemAdmin']
+            }
+        },
+        {
+            path: '/y9TenantInfo',
+            component: () => import('@/views/tenant/index.vue'),
+            name: 'y9TenantInfo',
+            meta: {
+                title: '个性化设置',
+                icon: 'ri-contacts-line',
                 roles: ['systemAdmin']
             }
         }
