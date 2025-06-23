@@ -1,11 +1,11 @@
 [versions]
 # spring boot & cloud bom
-spring-bom = "6.2.7"
-spring-boot = "3.5.0"
+spring-bom = "6.2.8"
+spring-boot = "3.5.3"
 spring-cloud = "2025.0.0"
 io-spring-dependency-management = "1.1.7"
 # cas server bom
-cas-server-bom = "7.2.2"
+cas-server-bom = "7.2.3"
 # oracle bom
 ojdbc-bom = "23.8.0.25.04"
 # hutool
@@ -83,8 +83,8 @@ org-aspectj = "1.9.24"
 # plugin implementation for precompiled script plugin
 com-google-cloud-tools-jib-gradle-plugin = "3.4.5"
 com-ly-smart-doc-smart-doc-gradle-plugin = "3.1.0"
-io-freefair-gradle-aspectj-plugin = "8.13.1"
-io-freefair-gradle-lombok-plugin = "8.13.1"
+io-freefair-gradle-aspectj-plugin = "8.14"
+io-freefair-gradle-lombok-plugin = "8.14"
 com-vanniktech-gradle-maven-publish-plugin = "0.32.0"
 org-jreleaser-jreleaser-gradle-plugin = "1.18.0"
 cn-idev-excel-fastexcel = "1.2.0"
