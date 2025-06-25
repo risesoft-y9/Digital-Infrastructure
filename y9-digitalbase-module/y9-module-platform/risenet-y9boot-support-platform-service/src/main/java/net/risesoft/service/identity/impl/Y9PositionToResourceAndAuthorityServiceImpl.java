@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,7 @@ import net.risesoft.enums.platform.AuthorityEnum;
 import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.manager.identity.Y9PositionToResourceAndAuthorityManager;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorityRepository;
 import net.risesoft.service.identity.Y9PositionToResourceAndAuthorityService;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -155,6 +159,13 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
     public void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Position y9Position, Y9Authorization y9Authorization,
         Boolean inherit) {
         y9PositionToResourceAndAuthorityManager.saveOrUpdate(y9ResourceBase, y9Position, y9Authorization, inherit);
+    }
+
+    @Override
+    public Page<String> pageAppIdByAuthority(String positionId, AuthorityEnum authority, Y9PageQuery pageQuery) {
+        return y9PositionToResourceAndAuthorityRepository.findResourceIdByPositionIdAndAuthorityAndResourceType(
+            positionId, authority, ResourceTypeEnum.APP,
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by("resourceId")));
     }
 
     @Override

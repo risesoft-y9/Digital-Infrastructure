@@ -2,11 +2,14 @@ package net.risesoft.service.identity;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.identity.person.Y9PersonToResourceAndAuthority;
 import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.enums.platform.AuthorityEnum;
 import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
@@ -132,4 +135,14 @@ public interface Y9PersonToResourceAndAuthorityService {
      * @param inherit 是否为继承上级节点的权限
      */
     void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Person person, Y9Authorization y9Authorization, Boolean inherit);
+
+    /**
+     * 分页获取人员有权限的应用列表
+     *
+     * @param personId 人员 id
+     * @param authority 权限类型
+     * @param pageQuery 分页查询参数
+     * @return
+     */
+    Page<String> pageAppIdByAuthority(String personId, AuthorityEnum authority, Y9PageQuery pageQuery);
 }
