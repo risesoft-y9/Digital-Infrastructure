@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,4 +72,8 @@ public interface Y9PositionToResourceAndAuthorityRepository
 
     Optional<Y9PositionToResourceAndAuthority> findByPositionIdAndResourceIdAndAuthorizationIdAndAuthority(
         String positionId, String resourceId, String authorizationId, AuthorityEnum authority);
+
+    @Query("select distinct p.resourceId from Y9PositionToResourceAndAuthority p where p.positionId = ?1 and p.authority = ?2 and p.resourceType = ?3")
+    Page<String> findResourceIdByPositionIdAndAuthorityAndResourceType(String positionId, AuthorityEnum authority,
+        ResourceTypeEnum resourceTypeEnum, Pageable pageable);
 }

@@ -32,6 +32,8 @@ public class BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 7442864321155282821L;
 
+    public static final String PROPERTY_CREATE_TIME = "createTime";
+
     /**
      * 创建时间
      */

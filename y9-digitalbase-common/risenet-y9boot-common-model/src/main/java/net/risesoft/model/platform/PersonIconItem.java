@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import lombok.Data;
 
+import net.risesoft.enums.platform.AppOpenTypeEnum;
+
 /**
  * 个人图标缓存
  *
@@ -15,14 +17,11 @@ public class PersonIconItem implements Serializable {
 
     private static final long serialVersionUID = -6172641522877416578L;
 
-    /** UUID字段 */
-    private String id;
+    /** 应用所属分类（资源）id */
+    private String resourceId;
 
-    /** 系统Id */
-    private String systemId;
-
-    /** 系统名称 */
-    private String systemName;
+    /** 应用所属分类（资源）名称 */
+    private String resourceName;
 
     /** 应用编号 */
     private String appId;
@@ -31,10 +30,7 @@ public class PersonIconItem implements Serializable {
     private String appName;
 
     /** 图标类别 1:普通的 2:常用图标 */
-    private Integer iconType = 1;
-
-    /** 是否显示，0代表不显示，1代表显示 */
-    private Boolean showAble = true;
+    private Integer iconType;
 
     /** 访问地址 */
     private String url;
@@ -52,7 +48,7 @@ public class PersonIconItem implements Serializable {
     private String numberUrl;
 
     /** 打开方式 */
-    private String opentype;
+    private AppOpenTypeEnum opentype;
 
     /** 应用排序 */
     private Integer tabIndex;
