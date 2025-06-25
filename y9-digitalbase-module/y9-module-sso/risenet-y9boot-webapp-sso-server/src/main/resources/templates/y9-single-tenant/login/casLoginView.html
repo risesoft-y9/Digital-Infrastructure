@@ -8,7 +8,7 @@
     <meta content="no-cache" http-equiv="cache-control"/>
     <meta content="0" http-equiv="expires"/>
     <!-- 管局要求保持备案名称和网站使用名称一致 -->
-    <title>北京有生博大软件股份有限公司</title>
+    <title></title>
     <link rel="stylesheet" th:href="@{/y9static/css/default.css}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/y9static/y9-single-tenant/css/styles.css(v=1.0)}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/y9static/y9-single-tenant/css/demo.css}" type="text/css"/>
@@ -106,10 +106,10 @@
                     image.src = data.logoIcon;
                 }
                 if (data.description && data.description != null) {
-                    // 获取图片元素
                     document.getElementById('logo-name').innerHTML = data.description;
-
-
+                }
+                if (data.footer && data.footer != null) {
+                    document.title = data.footer;
                 }
             },
             error: function () {
