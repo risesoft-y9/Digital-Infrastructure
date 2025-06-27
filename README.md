@@ -4,7 +4,7 @@
 <p align="center">基于SpringBoot+Vue前后端分离的Java快速开发框架</p>
 <p align="center">
  <a href='https://gitee.com/risesoft-y9/y9-core/stargazers'><img src='https://gitee.com/risesoft-y9/y9-core/badge/star.svg?theme=dark' alt='star'></img></a>
-    <img src="https://img.shields.io/badge/version-v9.6.8-yellow.svg">
+    <img src="https://img.shields.io/badge/version-v9.6.9-yellow.svg">
     <img src="https://img.shields.io/badge/Spring%20Boot-2.7-blue.svg">
     <img alt="logo" src="https://img.shields.io/badge/Vue-3.3-red.svg">
     <img alt="" src="https://img.shields.io/badge/JDK-11-green.svg">
@@ -357,7 +357,7 @@ webapp -- 系统公共模块
 | 25 | <a href="https://vue.youshengyun.com/files/Kingbase数据库适配文档.pdf" target="_blank">Kingbase数据库适配文档</a>       |
 | 26 | <a href="https://vue.youshengyun.com/files/Mariadb数据库适配文档.pdf" target="_blank">Mariadb数据库适配文档</a>         |
 | 27 | <a href="https://vue.youshengyun.com/files/OceanBase数据库适配文档.pdf" target="_blank">OceanBase数据库适配文档</a>     |
-| 28 | <a href="https://vue.youshengyun.com/files/接口安全控制使用文档.pdf" target="_blank">接口安全控制使用文档</a>                     |
+| 28 | <a href="https://vue.youshengyun.com/files/接口安全控制使用文档.pdf" target="_blank">接口安全控制使用文档</a>                 |
 
 ## 数字底座截图
 
@@ -494,14 +494,14 @@ webapp -- 系统公共模块
 
 ## 生态开源项目
 
-| 序&nbsp;号 | 项&nbsp;目&nbsp;名&nbsp;称&nbsp; | 项目介绍                                                                                                                               | 地&nbsp;址                                                                                                 |
-|:---------|------------------------------|------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
-| 1        | 工作流引擎                        | 工作流引擎对内提供单位/机关流程管理规则和内部业务流程的数字化落地实践；对外提供自动化地第三方业务驱动、接口接入和算法单元驱动能力；工作流引擎在提供底层驱动引擎的同时对全局透明监控、安全防御和国产化特色功能进行充分考虑，是内部流程管理和业务算法驱动的不二之选。 | [码云](https://gitee.com/risesoft-y9/y9-flowable) [GitHub](https://github.com/risesoft-y9/WorkFlow-Engine) |
-| 2        | 数据流引擎                        | 数据流引擎是一款面向数据集成、数据同步、数据交换、数据共享、任务配置、任务调度的底层数据驱动引擎。数据流引擎采用管执分离、多流层、插件库等体系应对大规模数据任务、数据高频上报、数据高频采集、异构数据兼容的实际数据问题。                      | [码云](https://gitee.com/risesoft-y9/y9-dataflow) [GitHub](https://github.com/risesoft-y9/DataFlow-Engine)      |
-| 3        | 网络硬盘                         | 网络硬盘是通过存储、分类、检索、分享、协作、下发、回收等方式管理文档、文件、图片、音频、视频等资料的工具。网络硬盘擅长在国产的私有化环境中，管控文档权限、分配存储空间、安全加密、分享共享，同时可以完成一定轻量级的文件任务收发。网络硬盘是一个完全开源的项目，无商业版，但是需要依赖开源的数字底座进行人员岗位管控。  | [码云](https://gitee.com/risesoft-y9/y9-storage) [GitHub](https://github.com/risesoft-y9/Network-Drive)      |
-| 4        | 电子邮件                         | 电子邮件是一款简化的具备邮件服务器的企业邮箱，支持在将其他主流邮箱的邮件进行导入后自主控制邮件数据安全。电子邮件以其简洁精确的功能和小巧安全的架构方便根据企业和政府机构的业务要求进行二次开发。电子邮件是一个完全开源的项目，无商业版，但是需要依赖开源的数字底座进行人员岗位管控。 | [码云](https://gitee.com/risesoft-y9/y9-email) [GitHub](https://github.com/risesoft-y9/Email)      |
-| 5        | 数据标注                         | 数据标注是一款专门对文本数据进行处理和标注的工具，通过简化快捷的文本标注流程和动态的算法反馈，支持用户快速标注关键词并能通过算法持续减少人工标注的成本和时间。数据标注的过程先由人工标注构筑基础，再由自动标注反哺人工标注，最后由人工标注进行纠偏，从而大幅度提高标注的精准度和高效性。数据标注是一个完全开源的项目，无商业版，但是需要依赖开源的数字底座进行人员岗位管控。数据标注的各类词库结果会定期在本平台中公开。  | [码云](https://gitee.com/risesoft-y9/y9-label) [GitHub](https://github.com/risesoft-y9/Data-Labeling)      |
-| 6        | 接口管理                         | 接口管理通过接口的注册、审批、集市和日志等方式对接口共享进行全生命周期的管理。接口管理注重流程化的接口共享模式和支持大规模接口转发的部署模式，从而面向多接口来源、高流量交互和复杂组织结构的场景。接口管理同时是一个轻量化的内核，支持各种面向特定场景的定制化业务改造。接口管理是一个完全开源的项目，无商业版，但是需要依赖开源的数字底座进行相关目录权限的管控。  | [码云](https://gitee.com/risesoft-y9/y9-interface-platform) [GitHub](https://github.com/risesoft-y9/Interface-Platform)      |
+| 序&nbsp;号 | 项&nbsp;目&nbsp;名&nbsp;称&nbsp; | 项目介绍                                                                                                                                                                                                         | 地&nbsp;址                                                                                                              |
+|:---------|------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| 1        | 工作流引擎                        | 工作流引擎对内提供单位/机关流程管理规则和内部业务流程的数字化落地实践；对外提供自动化地第三方业务驱动、接口接入和算法单元驱动能力；工作流引擎在提供底层驱动引擎的同时对全局透明监控、安全防御和国产化特色功能进行充分考虑，是内部流程管理和业务算法驱动的不二之选。                                                                           | [码云](https://gitee.com/risesoft-y9/y9-flowable) [GitHub](https://github.com/risesoft-y9/WorkFlow-Engine)              |
+| 2        | 数据流引擎                        | 数据流引擎是一款面向数据集成、数据同步、数据交换、数据共享、任务配置、任务调度的底层数据驱动引擎。数据流引擎采用管执分离、多流层、插件库等体系应对大规模数据任务、数据高频上报、数据高频采集、异构数据兼容的实际数据问题。                                                                                                | [码云](https://gitee.com/risesoft-y9/y9-dataflow) [GitHub](https://github.com/risesoft-y9/DataFlow-Engine)              |
+| 3        | 网络硬盘                         | 网络硬盘是通过存储、分类、检索、分享、协作、下发、回收等方式管理文档、文件、图片、音频、视频等资料的工具。网络硬盘擅长在国产的私有化环境中，管控文档权限、分配存储空间、安全加密、分享共享，同时可以完成一定轻量级的文件任务收发。网络硬盘是一个完全开源的项目，无商业版，但是需要依赖开源的数字底座进行人员岗位管控。                                                  | [码云](https://gitee.com/risesoft-y9/y9-storage) [GitHub](https://github.com/risesoft-y9/Network-Drive)                 |
+| 4        | 电子邮件                         | 电子邮件是一款简化的具备邮件服务器的企业邮箱，支持在将其他主流邮箱的邮件进行导入后自主控制邮件数据安全。电子邮件以其简洁精确的功能和小巧安全的架构方便根据企业和政府机构的业务要求进行二次开发。电子邮件是一个完全开源的项目，无商业版，但是需要依赖开源的数字底座进行人员岗位管控。                                                                   | [码云](https://gitee.com/risesoft-y9/y9-email) [GitHub](https://github.com/risesoft-y9/Email)                           |
+| 5        | 数据标注                         | 数据标注是一款专门对文本数据进行处理和标注的工具，通过简化快捷的文本标注流程和动态的算法反馈，支持用户快速标注关键词并能通过算法持续减少人工标注的成本和时间。数据标注的过程先由人工标注构筑基础，再由自动标注反哺人工标注，最后由人工标注进行纠偏，从而大幅度提高标注的精准度和高效性。数据标注是一个完全开源的项目，无商业版，但是需要依赖开源的数字底座进行人员岗位管控。数据标注的各类词库结果会定期在本平台中公开。 | [码云](https://gitee.com/risesoft-y9/y9-label) [GitHub](https://github.com/risesoft-y9/Data-Labeling)                   |
+| 6        | 接口管理                         | 接口管理通过接口的注册、审批、集市和日志等方式对接口共享进行全生命周期的管理。接口管理注重流程化的接口共享模式和支持大规模接口转发的部署模式，从而面向多接口来源、高流量交互和复杂组织结构的场景。接口管理同时是一个轻量化的内核，支持各种面向特定场景的定制化业务改造。接口管理是一个完全开源的项目，无商业版，但是需要依赖开源的数字底座进行相关目录权限的管控。                            | [码云](https://gitee.com/risesoft-y9/y9-interface-platform) [GitHub](https://github.com/risesoft-y9/Interface-Platform) |
 
 ## 赞助与支持
 

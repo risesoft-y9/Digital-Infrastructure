@@ -86,7 +86,7 @@
         <gitee.connection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.connection>
         <gitee.developerConnection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
 
-        <revision>v9.6.8</revision>
+        <revision>v9.6.9-SNAPSHOT</revision>
 
         <aspectj.version>1.9.20.1</aspectj.version>
         <antisamy.version>1.7.8</antisamy.version>
