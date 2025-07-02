@@ -17,7 +17,7 @@ server:
             force: true
             force-request: true
             force-response: true
-        context-path: /platform
+        context-path: /server-platform
 javers:
     newObjectSnapshot: true
     sqlSchemaManagementEnabled: false
@@ -72,8 +72,8 @@ spring:
                     slow-sql-millis: 3000
                 wall:
                     config:
-                        drop-table-allow: true
-                    enabled: true
+                        drop-table-allow: false
+                    enabled: false
             stat-view-servlet:
                 enabled: false
                 url-pattern: /druid/*
@@ -90,10 +90,10 @@ spring:
                 #url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
                 #username: Y9_PUBLIC
                 #password: '111111'
-                driver-class-name: com.mysql.cj.jdbc.Driver
-                url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
-                username: root
-                password: 111111
+                driver-class-name: org.h2.Driver
+                url: jdbc:h2:mem:y9_public
+                username: sa
+                password:
                 initialSize: 1
                 maxActive: 20
                 maxPoolPreparedStatementPerConnectionSize: 100
@@ -109,7 +109,7 @@ spring:
                 validationQuery: SELECT 1 FROM DUAL
     jpa:
         generate-ddl: true
-        database-platform: org.hibernate.dialect.MySQL8Dialect
+        database-platform: org.hibernate.dialect.H2Dialect
         hibernate:
             ddl-auto: none
             naming:
@@ -120,7 +120,7 @@ spring:
             hibernate:
                 hbm2ddl:
                     auto: none
-                dialect: org.hibernate.dialect.MySQL8Dialect
+                dialect: org.hibernate.dialect.H2Dialect
                 jdbc:
                     batch_size: 100
                 show_sql: true
@@ -136,8 +136,6 @@ spring:
     redis:
         database: 8
         host: localhost
-        password: 111111
-        port: 6379
         lettuce:
             pool:
                 max-active: 8
@@ -145,6 +143,8 @@ spring:
                 max-wait: -1
                 min-idle: 0
             shutdown-timeout: 100ms
+        password: 111111
+        port: 6379
         ssl: false
         timeout: 10000
     servlet:
@@ -154,7 +154,7 @@ spring:
 y9:
     systemName: riseplatform
     systemCnName: '数字底座'
-    internalIp: 192.168.x.x,10.x.x.x,172.20.x.x
+    internalIp: 192.168.x.x,10.0.x.x,172.20.x.x
     app:
         platform:
             systemName: riseplatform
@@ -167,8 +167,8 @@ y9:
     common:
         cacheEnabled: false
         kafkaEnabled: false
-        logBaseUrl: http://localhost:7055/log
-        orgBaseUrl: http://localhost:7055/platform
+        logBaseUrl: http://localhost:7055/server-log
+        orgBaseUrl: http://localhost:7055/server-platform
     feature:
         apisix:
             enabled: false
@@ -267,8 +267,6 @@ y9:
                     - whereClause
                     - url
                     - positionNameTemplate
-                    - iconUrl
-                    - url2
         oauth2:
             resource:
                 enabled: true

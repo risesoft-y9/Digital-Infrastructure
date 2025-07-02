@@ -15,7 +15,7 @@ import net.risesoft.api.platform.org.JobApi;
  * @since 9.6.8
  */
 @FeignClient(contextId = "JobApiClient", name = "${y9.service.org.name:platform}", url = "${y9.service.org.directUrl:}",
-    path = "/${y9.service.org.name:platform}/services/rest/v1/job", primary = false)
+    path = "/${y9.service.org.name:server-platform}/services/rest/v1/job", primary = false)
 public interface JobApiClient extends JobApi {
 
 }

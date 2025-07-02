@@ -14,8 +14,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>risenet-y9boot-webapp-sso-server</module>
-        <module>risenet-y9boot-webapp-sso-server-jpa</module>
+        <module>risenet-y9boot-webapp-sso</module>
+        <module>risenet-y9boot-webapp-sso-jpa</module>
     </modules>
 
 </project>

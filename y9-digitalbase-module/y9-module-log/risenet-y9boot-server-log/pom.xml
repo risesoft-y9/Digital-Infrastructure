@@ -3,7 +3,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.risesoft</groupId>
-    <artifactId>risenet-y9boot-webapp-log</artifactId>
+    <artifactId>risenet-y9boot-server-log</artifactId>
     <version>${revision}</version>
     <packaging>war</packaging>
 
@@ -63,7 +63,7 @@
     </dependencies>
 
     <build>
-        <finalName>log</finalName>
+        <finalName>server-log</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

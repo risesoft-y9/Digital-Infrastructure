@@ -32,7 +32,7 @@
     </dependencies>
 
     <build>
-        <finalName>y9demo-oauth2</finalName>
+        <finalName>y9demo-sso-oauth2</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

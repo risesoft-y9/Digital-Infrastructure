@@ -14,7 +14,7 @@ import net.risesoft.api.platform.id.IdApi;
  * @since 9.6.0
  */
 @FeignClient(contextId = "IdApiClient", name = "${y9.service.org.name:platform}", url = "${y9.service.org.directUrl:}",
-    path = "/${y9.service.org.name:platform}/services/rest/v1/id", primary = false)
+    path = "/${y9.service.org.name:server-platform}/services/rest/v1/id", primary = false)
 public interface IdApiClient extends IdApi {
 
 }

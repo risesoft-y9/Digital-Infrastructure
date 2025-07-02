@@ -14,7 +14,7 @@ import net.risesoft.api.platform.org.AuthenticateApi;
  * @since 9.6.0
  */
 @FeignClient(contextId = "AuthenticateApiClient", name = "${y9.service.org.name:platform}",
-    url = "${y9.service.org.directUrl:}", path = "/${y9.service.org.name:platform}/services/rest/v1/auth",
+    url = "${y9.service.org.directUrl:}", path = "/${y9.service.org.name:server-platform}/services/rest/v1/auth",
     primary = false)
 public interface AuthenticateApiClient extends AuthenticateApi {
 

@@ -4,7 +4,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <!-- <groupId>net.risesoft</groupId> -->
-    <artifactId>risenet-y9boot-webapp-platform</artifactId>
+    <artifactId>risenet-y9boot-server-platform</artifactId>
     <packaging>war</packaging>
     <version>${revision}</version>
 
@@ -107,7 +107,7 @@
     </dependencies>
 
     <build>
-        <finalName>platform</finalName>
+        <finalName>server-platform</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

@@ -20,7 +20,7 @@ import net.risesoft.pojo.Y9PageQuery;
  * @since 9.6.0
  */
 @FeignClient(contextId = "PersonIconApiClient", name = "${y9.service.org.name:platform}",
-    url = "${y9.service.org.directUrl:}", path = "/${y9.service.org.name:platform}/services/rest/v1/personIcon")
+    url = "${y9.service.org.directUrl:}", path = "/${y9.service.org.name:server-platform}/services/rest/v1/personIcon")
 public interface PersonIconApiClient extends PersonIconApi {
 
     @Override

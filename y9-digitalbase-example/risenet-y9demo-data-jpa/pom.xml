@@ -86,7 +86,7 @@
     </dependencies>
 
     <build>
-        <finalName>y9demo-dataJpa</finalName>
+        <finalName>y9demo-data-jpa</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
