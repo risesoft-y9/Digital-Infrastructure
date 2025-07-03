@@ -90,7 +90,6 @@
 
         <aspectj.version>1.9.20.1</aspectj.version>
         <antisamy.version>1.7.8</antisamy.version>
-        <axis.version>1.4</axis.version>
         <bcprov-ext-jdk15to18.version>1.78.1</bcprov-ext-jdk15to18.version>
         <commons-fileupload.version>1.5</commons-fileupload.version>
         <commons-io.version>2.19.0</commons-io.version>
@@ -118,9 +117,6 @@
         <jBCrypt.version>0.4.3</jBCrypt.version>
         <java-uuid-generator.version>5.1.0</java-uuid-generator.version>
         <jakarta-json.version>2.0.1</jakarta-json.version>
-        <javax-xml-rpc-api.version>1.1.2</javax-xml-rpc-api.version>
-        <jaxrpc-api.version>1.1</jaxrpc-api.version>
-        <jaxws-rt.version>2.3.7</jaxws-rt.version>
         <lombok.version>1.18.38</lombok.version>
         <liquibase.version>4.32.0</liquibase.version>
         <org-dom4j.version>2.1.4</org-dom4j.version>
@@ -823,11 +819,6 @@
                 <version>${commons-discovery.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.sun.xml.ws</groupId>
-                <artifactId>jaxws-rt</artifactId>
-                <version>${jaxws-rt.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>com.ibm.etcd</groupId>
@@ -853,22 +844,6 @@
                 <version>${classgraph.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>javax.xml.rpc</groupId>
-                <artifactId>javax.xml.rpc-api</artifactId>
-                <version>${javax-xml-rpc-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.xml</groupId>
-                <artifactId>jaxrpc-api</artifactId>
-                <version>${jaxrpc-api.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.axis</groupId>
-                <artifactId>axis</artifactId>
-                <version>${axis.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>org.bouncycastle</groupId>
