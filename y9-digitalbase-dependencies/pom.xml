@@ -93,12 +93,12 @@
         <axis.version>1.4</axis.version>
         <bcprov-ext-jdk15to18.version>1.78.1</bcprov-ext-jdk15to18.version>
         <commons-fileupload.version>1.5</commons-fileupload.version>
-        <commons-io.version>2.15.1</commons-io.version>
+        <commons-io.version>2.19.0</commons-io.version>
         <commons-lang3.version>3.17.0</commons-lang3.version>
         <commons-net.version>3.10.0</commons-net.version>
         <commons-text.version>1.12.0</commons-text.version>
         <commons-discovery.version>0.5</commons-discovery.version>
-        <commons-beanutils.version>1.10.0</commons-beanutils.version>
+        <commons-beanutils.version>1.11.0</commons-beanutils.version>
         <commons-httpclient.version>3.1</commons-httpclient.version>
         <classgraph.version>4.8.179</classgraph.version>
         <druid.version>1.2.25</druid.version>
@@ -120,7 +120,7 @@
         <jakarta-json.version>2.0.1</jakarta-json.version>
         <javax-xml-rpc-api.version>1.1.2</javax-xml-rpc-api.version>
         <jaxrpc-api.version>1.1</jaxrpc-api.version>
-        <jaxws-rt.version>2.3.3</jaxws-rt.version>
+        <jaxws-rt.version>2.3.7</jaxws-rt.version>
         <lombok.version>1.18.38</lombok.version>
         <liquibase.version>4.32.0</liquibase.version>
         <org-dom4j.version>2.1.4</org-dom4j.version>
