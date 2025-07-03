@@ -16,7 +16,7 @@ import jakarta.servlet.ServletRequest;
  */
 public class Y9CmsUtil {
     public static boolean contains(String str, String[] strs) {
-        if (strs == null || strs.length == 0) {
+        if (strs == null) {
             return false;
         }
         for (String s : strs) {

@@ -2,6 +2,7 @@ package net.risesoft.y9.util.mime;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,6 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ContentDispositionUtil {
 
+    private ContentDispositionUtil() {
+        throw new IllegalStateException("ContentDispositionUtil Utility class");
+    }
+
     public static String standardizeAttachment(String fileName) {
         return standardize(fileName, "attachment");
     }
@@ -27,18 +32,10 @@ public class ContentDispositionUtil {
     private static String standardize(String fileName, String value) {
         StringBuilder sb = new StringBuilder();
         String name = "";
-        try {
-            name = URLEncoder.encode(fileName, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
+        name = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
         name = name.replace("+", "%20");
         sb.append(value).append("; filename=").append(name).append(";filename*=utf-8'zh_cn'").append(name);
         return sb.toString();
-    }
-
-    private ContentDispositionUtil() {
-        throw new IllegalStateException("ContentDispositionUtil Utility class");
     }
 
 }

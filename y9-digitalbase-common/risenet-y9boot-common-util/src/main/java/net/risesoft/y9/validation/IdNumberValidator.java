@@ -40,9 +40,6 @@ public class IdNumberValidator implements ConstraintValidator<IdNumber, String> 
         if (IdcardUtil.isValidCard(idNumber)) {
             return true;
         }
-        if (isValidHKCard(idNumber)) {
-            return true;
-        }
-        return false;
+        return isValidHKCard(idNumber);
     }
 }
