@@ -12,6 +12,9 @@
     <artifactId>y9-digitalbase-idcode</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
+    <name>y9-digitalbase-idcode</name>
+    <description>RiseSoft/Digital Infrastructure idcode</description>
+    <url>https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-idcode</url>
 
     <modules>
         <module>risenet-y9boot-idcode</module>
