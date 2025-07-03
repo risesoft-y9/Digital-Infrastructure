@@ -1,7 +1,7 @@
 server:
     port: 8080
     servlet:
-        context-path: /demo-elk
+        context-path: /y9demo-elasticsearch
 spring:
     application:
         name: demo-elk

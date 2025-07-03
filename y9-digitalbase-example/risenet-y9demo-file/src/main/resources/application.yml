@@ -1,7 +1,7 @@
 server:
     port: 8080
     servlet:
-          context-path: /demo-file
+          context-path: /y9demo-file
 y9:
     #系统名称，用于记录文件是哪个系统上传的
     systemName: demo-file
