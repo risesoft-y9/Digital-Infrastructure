@@ -1,7 +1,7 @@
 server:
     port: 7057
     servlet:
-        context-path: /demo-api
+        context-path: /y9demo-kernel-api
 y9:
     #当前业务系统在数字底座中的系统英文名称，需要与注册到数字底座时的系统名称保持一致
     systemName: y9demo_kernel_api

@@ -7,7 +7,7 @@ server:
             force: true
         session:
             tracking-modes: COOKIE
-        context-path: /fileManager
+        context-path: /filemanager
 spring:
     application:
         name: fileManager

@@ -7,7 +7,7 @@ server:
             force: true
             force-request: true
             force-response: true
-        context-path: /y9demo-dataJpa
+        context-path: /y9demo-data-jpa
 spring:
     application:
         name: y9demo-dataJpa

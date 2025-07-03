@@ -1,7 +1,7 @@
 server:
     port: 8080
     servlet:
-          context-path: /demo-elk
+        context-path: /y9demo-elasticsearch
 spring:
     application:
         name: demo-elk
@@ -13,10 +13,12 @@ spring:
             repositories:
                 enabled: true
     elasticsearch:
-        rest:
-            uris: localhost:9200
-            username: elastic
-            password: 'risesoft'
+        uris: localhost:9200
+        username: elastic
+        password: 'risesoft'
+        connectionTimeout: 5
+    main:
+        allow-bean-definition-overriding: true
 y9:
     feature:
         elasticsearch:
