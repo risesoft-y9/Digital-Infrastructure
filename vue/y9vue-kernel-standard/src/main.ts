@@ -17,9 +17,10 @@ import App from './App.vue';
 import './theme/global.scss';
 import i18n from './language';
 //有生云公共组件库
-import y9pluginComponents from 'y9plugin-components';
-import y9_zhCn from 'y9plugin-components/src/language/zh-cn'; //默认的y9组件插件中文包
-import y9_en from 'y9plugin-components/src/language/en'; //默认的y9组件插件英文包
+import y9pluginComponents from 'y9plugin-components-auto';
+import 'y9plugin-components-auto/dist/style.css';
+import y9_zhCn from 'y9plugin-components-auto/dist/locale/zh-cn.mjs'; //默认的y9组件插件中文包
+import y9_en from 'y9plugin-components-auto/dist/locale/en.mjs'; //默认的y9组件插件英文包
 import { useSettingStore } from '@/store/modules/settingStore';
 import customDirective from '@/utils/directive'; //自定义指令
 
