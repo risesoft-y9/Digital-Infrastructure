@@ -1,6 +1,6 @@
 {
     "name": "y9vue-kernel-standard",
-    "version": "9.6.7",
+    "version": "9.6.8",
     "scripts": {
         "serve": "vite  --mode development --host 0.0.0.0",
         "serve-local": "vite  --mode localEnv",
@@ -39,7 +39,7 @@
         "vue-router": "^4.0.13",
         "vxe-table": "^4.3.5",
         "xe-utils": "^3.5.7",
-        "y9plugin-components": "^3.0.3",
+        "y9plugin-components-auto": "^3.0.23",
         "y9plugin-sso": "^4.2.9",
         "y9plugin-watermark": "^1.2.0"
     },
