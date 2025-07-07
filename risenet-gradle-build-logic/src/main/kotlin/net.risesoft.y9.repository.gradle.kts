@@ -2,9 +2,9 @@ group = "net.risesoft"
 
 repositories {
     mavenLocal()
-    maven {
+    /*maven {
         url = uri("https://maven.aliyun.com/repository/public")
-    }
+    }*/
     mavenCentral()
     gradlePluginPortal()
 
