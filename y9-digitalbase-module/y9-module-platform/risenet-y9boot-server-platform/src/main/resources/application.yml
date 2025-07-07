@@ -27,7 +27,7 @@ server:
             force: true
             force-request: true
             force-response: true
-        context-path: /platform
+        context-path: /server-platform
 javers:
     newObjectSnapshot: true
     sqlSchemaManagementEnabled: false
@@ -146,8 +146,8 @@ y9:
     common:
         cacheEnabled: false
         kafkaEnabled: false
-        logBaseUrl: http://localhost:7055/log
-        orgBaseUrl: http://localhost:7055/platform
+        logBaseUrl: http://localhost:7055/server-log
+        orgBaseUrl: http://localhost:7055/server-platform
     feature:
         apisix:
             enabled: false

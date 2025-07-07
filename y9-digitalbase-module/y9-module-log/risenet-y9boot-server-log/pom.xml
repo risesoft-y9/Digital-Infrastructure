@@ -1,12 +1,11 @@
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <!-- <groupId>net.risesoft</groupId> -->
-    <artifactId>risenet-y9boot-webapp-platform</artifactId>
-    <packaging>war</packaging>
+    <groupId>net.risesoft</groupId>
+    <artifactId>risenet-y9boot-server-log</artifactId>
     <version>${revision}</version>
+    <packaging>war</packaging>
 
     <parent>
         <groupId>net.risesoft</groupId>
@@ -17,18 +16,18 @@
 
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
-        <maven.test.skip>true</maven.test.skip>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-support-platform-web</artifactId>
+            <artifactId>risenet-y9boot-support-log-web</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-starter-sso-oauth2-resource</artifactId>
+            <artifactId>risenet-y9boot-api-interface-log</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -40,25 +39,25 @@
 
         <dependency>
             <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-starter-log</artifactId>
-            <version>${project.version}</version>
+            <artifactId>risenet-y9boot-starter-sso-oauth2-resource</artifactId>
+            <version>${revision}</version>
         </dependency>
 
-        <!--<dependency>
+        <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-apisix</artifactId>
             <version>${project.version}</version>
-        </dependency>-->
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-docker-compose</artifactId>
         </dependency>
 
         <dependency>
             <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-starter-cache-redis</artifactId>
+            <artifactId>risenet-y9boot-starter-web</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
         </dependency>
 
         <dependency>
@@ -68,28 +67,30 @@
         </dependency>
 
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
+        <!-- JXLS -->
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-pool2</artifactId>
+            <groupId>org.jxls</groupId>
+            <artifactId>jxls</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>jaxen</groupId>
-            <artifactId>jaxen</artifactId>
+            <groupId>org.jxls</groupId>
+            <artifactId>jxls-poi</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
+            <groupId>org.jxls</groupId>
+            <artifactId>jxls-jexcel</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jxls</groupId>
+            <artifactId>jxls-reader</artifactId>
         </dependency>
 
         <dependency>
@@ -108,29 +109,10 @@
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <build>
-        <finalName>platform</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
+        <finalName>server-log</finalName>
     </build>
 
     <profiles>
@@ -155,7 +137,7 @@
                         <artifactId>central-publishing-maven-plugin</artifactId>
                         <configuration>
                             <excludeArtifacts>
-                                <artifact>risenet-y9boot-webapp-platform</artifact>
+                                <artifact>risenet-y9boot-webapp-log</artifact>
                             </excludeArtifacts>
                         </configuration>
                     </plugin>

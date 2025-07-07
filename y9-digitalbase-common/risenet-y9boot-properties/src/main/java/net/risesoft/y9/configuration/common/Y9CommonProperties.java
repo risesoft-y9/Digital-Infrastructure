@@ -41,77 +41,77 @@ public class Y9CommonProperties {
     /**
      * 数字底座
      */
-    private String orgBaseUrl = "https://vue.youshengyun.com/platform";
+    private String orgBaseUrl = "https://vue.youshengyun.com/server-platform";
 
     /**
      * 内容管理
      */
-    private String cmsBaseUrl = "https://vue.youshengyun.com/cms";
+    private String cmsBaseUrl = "https://vue.youshengyun.com/server-cms";
 
     /**
      * 统一待办
      */
-    private String todoBaseUrl = "https://vue.youshengyun.com/todo";
+    private String todoBaseUrl = "https://vue.youshengyun.com/server-todo";
 
     /**
      * 日志管理
      */
-    private String logBaseUrl = "https://vue.youshengyun.com/log";
+    private String logBaseUrl = "https://vue.youshengyun.com/server-log";
 
     /**
      * 用户在线
      */
-    private String userOnlineBaseUrl = "https://vue.youshengyun.com/userOnline";
+    private String userOnlineBaseUrl = "https://vue.youshengyun.com/server-useronline";
 
     /**
      * 日程安排
      */
-    private String calendarBaseUrl = "https://vue.youshengyun.com/calendar";
+    private String calendarBaseUrl = "https://vue.youshengyun.com/server-calendar";
 
     /**
      * y9门户
      */
-    private String homeBaseUrl = "https://vue.youshengyun.com/y9home";
+    private String homeBaseUrl = "https://vue.youshengyun.com/server-home";
 
     /**
      * 消息中心
      */
-    private String msgRemindBaseUrl = "https://vue.youshengyun.com/msgRemind";
+    private String msgRemindBaseUrl = "https://vue.youshengyun.com/server-msgremind";
 
     /**
      * 公务邮件
      */
-    private String emailBaseUrl = "https://vue.youshengyun.com/email";
+    private String emailBaseUrl = "https://vue.youshengyun.com/server-email";
 
     /**
      * 电子邮件
      */
-    private String webmailBaseUrl = "https://vue.youshengyun.com/webmail";
+    private String webmailBaseUrl = "https://vue.youshengyun.com/server-webmail";
 
     /**
      * 网络硬盘
      */
-    private String storageBaseUrl = "https://vue.youshengyun.com/storage";
+    private String storageBaseUrl = "https://vue.youshengyun.com/server-storage";
 
     /**
      * 通讯录
      */
-    private String addressBookBaseUrl = "https://vue.youshengyun.com/addressBook";
+    private String addressBookBaseUrl = "https://vue.youshengyun.com/server-addressbook";
 
     /**
      * 数据中心
      */
-    private String datacenterBaseUrl = "https://vue.youshengyun.com/datacenter";
+    private String datacenterBaseUrl = "https://vue.youshengyun.com/server-datacenter";
 
     /**
      * 流程管理
      */
-    private String processAdminBaseUrl = "https://vue.youshengyun.com/processAdmin";
+    private String processAdminBaseUrl = "https://vue.youshengyun.com/server-processadmin";
 
     /**
      * 事项管理
      */
-    private String itemAdminBaseUrl = "https://vue.youshengyun.com/itemAdmin";
+    private String itemAdminBaseUrl = "https://vue.youshengyun.com/server-itemadmin";
 
     /**
      * 即时数据
@@ -126,18 +126,18 @@ public class Y9CommonProperties {
     /**
      * y9门户
      */
-    private String y9homeBaseUrl = "https://vue.youshengyun.com/y9home";
+    private String y9homeBaseUrl = "https://vue.youshengyun.com/server-home";
 
     /**
      * 办件
      */
-    private String flowableBaseUrl = "https://vue.youshengyun.com/flowableUI";
+    private String flowableBaseUrl = "https://vue.youshengyun.com/server-flowableui";
 
     /**
      * 待办
      */
     private String todoTaskUrlPrefix = "https://dev.youshengyun.com/flowableUI/todoIndex";
-    
+
     /**
      * 文件预览
      */
@@ -161,11 +161,11 @@ public class Y9CommonProperties {
     /**
      * 考勤管理
      */
-    private String attendanceBaseUrl = "https://vue.youshengyun.com/attendance";
+    private String attendanceBaseUrl = "https://vue.youshengyun.com/server-attendance";
 
     /**
      * 文件服务
      */
-    private String fileManagerBaseUrl = "https://vue.youshengyun.com/fileManager";
+    private String fileManagerBaseUrl = "https://vue.youshengyun.com/filemanager";
 
 }

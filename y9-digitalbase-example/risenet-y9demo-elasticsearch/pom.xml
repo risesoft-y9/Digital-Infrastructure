@@ -58,7 +58,7 @@
     </dependencies>
 
     <build>
-        <finalName>demo-elasticsearch</finalName>
+        <finalName>y9demo-elasticsearch</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

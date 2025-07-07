@@ -20,7 +20,7 @@ import net.risesoft.pojo.Y9PageQuery;
  * @since 9.6.0
  */
 @FeignClient(contextId = "PersonApiClient", name = "${y9.service.org.name:platform}",
-    url = "${y9.service.org.directUrl:}", path = "/${y9.service.org.name:platform}/services/rest/v1/person",
+    url = "${y9.service.org.directUrl:}", path = "/${y9.service.org.name:server-platform}/services/rest/v1/person",
     primary = false)
 public interface PersonApiClient extends PersonApi {
 

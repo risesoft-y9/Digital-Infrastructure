@@ -14,8 +14,8 @@ import net.risesoft.api.platform.org.OrganizationApi;
  * @since 9.6.0
  */
 @FeignClient(contextId = "OrganizationApiClient", name = "${y9.service.org.name:platform}",
-    url = "${y9.service.org.directUrl:}", path = "/${y9.service.org.name:platform}/services/rest/v1/organization",
-    primary = false)
+    url = "${y9.service.org.directUrl:}",
+    path = "/${y9.service.org.name:server-platform}/services/rest/v1/organization", primary = false)
 public interface OrganizationApiClient extends OrganizationApi {
 
 }

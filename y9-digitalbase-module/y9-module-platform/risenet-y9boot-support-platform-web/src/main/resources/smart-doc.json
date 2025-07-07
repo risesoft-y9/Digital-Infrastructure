@@ -1,7 +1,7 @@
 {
     "serverUrl": "https://vue.youshengyun.com",
     //设置服务器地址,非必须
-    "pathPrefix": "/platform",
+    "pathPrefix": "/server-platform",
     //设置path前缀,非必须。如配置Servlet ContextPath 。@since 2.2.3
     "isStrict": false,
     //是否开启严格模式

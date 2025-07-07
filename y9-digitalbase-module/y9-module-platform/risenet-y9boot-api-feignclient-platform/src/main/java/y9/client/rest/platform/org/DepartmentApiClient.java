@@ -14,7 +14,7 @@ import net.risesoft.api.platform.org.DepartmentApi;
  * @since 9.6.0
  */
 @FeignClient(contextId = "DepartmentApiClient", name = "${y9.service.org.name:platform}",
-    url = "${y9.service.org.directUrl:}", path = "/${y9.service.org.name:platform}/services/rest/v1/department",
+    url = "${y9.service.org.directUrl:}", path = "/${y9.service.org.name:server-platform}/services/rest/v1/department",
     primary = false)
 public interface DepartmentApiClient extends DepartmentApi {
 

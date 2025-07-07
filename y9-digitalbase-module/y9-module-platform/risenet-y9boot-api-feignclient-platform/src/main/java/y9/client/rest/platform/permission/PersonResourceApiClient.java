@@ -14,8 +14,8 @@ import net.risesoft.api.platform.permission.PersonResourceApi;
  * @since 9.6.0
  */
 @FeignClient(contextId = "PersonResourceApiClient", name = "${y9.service.org.name:platform}",
-    url = "${y9.service.org.directUrl:}", path = "/${y9.service.org.name:platform}/services/rest/v1/personResource",
-    primary = false)
+    url = "${y9.service.org.directUrl:}",
+    path = "/${y9.service.org.name:server-platform}/services/rest/v1/personResource", primary = false)
 public interface PersonResourceApiClient extends PersonResourceApi {
 
 }

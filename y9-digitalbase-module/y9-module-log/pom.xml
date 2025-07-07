@@ -23,7 +23,7 @@
         <module>risenet-y9boot-support-log-jpa-repository</module>
         <module>risenet-y9boot-support-log-service</module>
         <module>risenet-y9boot-support-log-web</module>
-        <module>risenet-y9boot-webapp-log</module>
+        <module>risenet-y9boot-server-log</module>
     </modules>
 
 </project>

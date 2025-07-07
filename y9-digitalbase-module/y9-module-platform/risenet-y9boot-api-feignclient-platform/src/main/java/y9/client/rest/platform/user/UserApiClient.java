@@ -11,6 +11,6 @@ import net.risesoft.api.platform.user.UserApi;
  * @date 2025/06/16
  */
 @FeignClient(contextId = "UserApiClient", name = "${y9.service.org.name:platform}",
-    url = "${y9.service.org.directUrl:}", path = "/${y9.service.org.name:platform}/services/rest/v1/user",
+    url = "${y9.service.org.directUrl:}", path = "/${y9.service.org.name:server-platform}/services/rest/v1/user",
     primary = false)
 public interface UserApiClient extends UserApi {}

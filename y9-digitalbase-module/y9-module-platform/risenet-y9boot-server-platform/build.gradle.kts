@@ -16,7 +16,7 @@ dependencies {
     implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-cache-redis"))
     implementation(project(":y9-digitalbase-common:risenet-y9boot-common-nacos"))
     implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-multi-tenant"))
-    
+
     implementation("org.apache.commons:commons-pool2")
     implementation("org.springframework.boot:spring-boot-docker-compose")
     implementation(libs.dom4j)
@@ -31,9 +31,9 @@ dependencies {
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 }
 
-description = "risenet-y9boot-webapp-platform"
+description = "risenet-y9boot-server-platform"
 
-val finalName = "platform"
+val finalName = "server-platform"
 
 y9Docker {
     appName = finalName

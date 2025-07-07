@@ -1,6 +1,6 @@
 {
   "serverUrl": "https://vue.youshengyun.com",
-  "pathPrefix": "/log",
+  "pathPrefix": "/server-log",
   "isStrict": false,
   "allInOne": true,
   "outPath": "../../../../y9-digitalbase-pro/docs/smart-docs/log/api",

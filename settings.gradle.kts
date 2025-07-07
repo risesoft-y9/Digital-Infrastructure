@@ -51,15 +51,15 @@ include(":y9-digitalbase-module:y9-module-log:risenet-y9boot-support-log-elastic
 include(":y9-digitalbase-module:y9-module-log:risenet-y9boot-support-log-jpa-repository")
 include(":y9-digitalbase-module:y9-module-log:risenet-y9boot-support-log-service")
 include(":y9-digitalbase-module:y9-module-log:risenet-y9boot-support-log-web")
-include(":y9-digitalbase-module:y9-module-log:risenet-y9boot-webapp-log")
+include(":y9-digitalbase-module:y9-module-log:risenet-y9boot-server-log")
 
 include(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-api-interface-platform")
 include(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-api-feignclient-platform")
 include(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-support-platform-jpa-repository")
 include(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-support-platform-service")
 include(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-support-platform-web")
-include(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-webapp-platform")
+include(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-server-platform")
 
 //include(":y9-digitalbase-module:y9-module-sso:risenet-y9boot-webapp-cas-server")
 include(":y9-digitalbase-module:y9-module-sso:risenet-y9boot-webapp-spring-authorization-server")
-include(":y9-digitalbase-module:y9-module-sso:risenet-y9boot-webapp-sso-server")
+include(":y9-digitalbase-module:y9-module-sso:risenet-y9boot-webapp-sso")

@@ -27,9 +27,9 @@ dependencies {
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 }
 
-description = "risenet-y9boot-webapp-log"
+description = "risenet-y9boot-server-log"
 
-val finalName = "log"
+val finalName = "server-log"
 
 y9Docker {
     appName = finalName

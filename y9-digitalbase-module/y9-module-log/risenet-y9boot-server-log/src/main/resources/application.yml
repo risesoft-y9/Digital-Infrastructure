@@ -19,7 +19,7 @@ server:
             force: true
         session:
             tracking-modes: COOKIE
-        context-path: /log
+        context-path: /server-log
 spring:
     application:
         name: log
@@ -112,11 +112,11 @@ y9:
             kafkaEnabled: false
     service:
         org:
-            directUrl: http://localhost:7055
+            directUrl: https://test-api.youshengyun.com
     common:
         kafkaEnabled: false
-        logBaseUrl: http://localhost:7056/log
-        orgBaseUrl: http://localhost:7055/platform
+        logBaseUrl: https://test-api.youshengyun.com/server-log
+        orgBaseUrl: https://test-api.youshengyun.com/server-platform
     feature:
         apisix:
             enabled: false

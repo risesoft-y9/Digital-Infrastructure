@@ -14,7 +14,7 @@ import net.risesoft.api.platform.org.GroupApi;
  * @since 9.6.0
  */
 @FeignClient(contextId = "GroupApiClient", name = "${y9.service.org.name:platform}",
-    url = "${y9.service.org.directUrl:}", path = "/${y9.service.org.name:platform}/services/rest/v1/group",
+    url = "${y9.service.org.directUrl:}", path = "/${y9.service.org.name:server-platform}/services/rest/v1/group",
     primary = false)
 public interface GroupApiClient extends GroupApi {
 

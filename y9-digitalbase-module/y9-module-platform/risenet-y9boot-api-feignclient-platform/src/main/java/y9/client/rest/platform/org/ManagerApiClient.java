@@ -14,7 +14,7 @@ import net.risesoft.api.platform.org.ManagerApi;
  * @since 9.6.0
  */
 @FeignClient(contextId = "ManagerApiClient", name = "${y9.service.org.name:platform}",
-    url = "${y9.service.org.directUrl:}", path = "/${y9.service.org.name:platform}/services/rest/v1/manager",
+    url = "${y9.service.org.directUrl:}", path = "/${y9.service.org.name:server-platform}/services/rest/v1/manager",
     primary = false)
 public interface ManagerApiClient extends ManagerApi {
 
