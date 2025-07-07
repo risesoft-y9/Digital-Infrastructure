@@ -1,3 +1,71 @@
+## v9.6.8 2025-06-27
+
+### Added
+
+- sso 增加 password 认证方式，资源服务器使用 oidc 协议
+- 单点登录的登录日志保存增加对 kafka 的支持
+- 整理单点登录页面，登录页面介绍和图标可以动态配置
+- 数据目录管理以及添加获取数据目录详情的接口
+- 添加岗位角色相关接口
+- 添加职位接口
+- 使用 SpringEL 以支持更灵活的岗位名称模板
+- JaVers 通过导入 sql 和 指定方言支持达梦数据库
+- 增加对部门属性可继承的支持
+- 图标上传增加颜色类别和所属分类
+
+
+### Changed
+
+- 登录页手动选择租户，不使用输入用户名弹出候选的方式
+- 添加防抖函数
+- 处理运维显示应用系统角色的时候未获取系统角色的问题
+- ConstraintValidator 的实现移至 risenet-y9boot-common-util 中，方便其他模块调用
+- 角色成员列表分页
+- 组织节点列表禁用的高亮
+- 对称加密 AES 使用无填充模式，避免字节填充导致加密前后数据不一致
+- 移除禁用节点在某些组织架构树中的展示
+- 移除不需要调用的接口
+- 修改以支持有条件开启 JaVers
+- JWT Access Token 的解析支持，不再调用 profile 接口获取用户信息
+- 使用 fastexcel 替换 jxls 实现 excel 的导入导出
+- build-helper-maven 替换 buildnumber-maven
+- 继承的权限内容块仅资源继承上级节点的权限时展示
+- 新建的租户数据源名规则修改 y9_{tenantShortName}_{randomStr}
+- 密码修改周期从后台返回数据中获取
+- 登录页输入框移除蜂鸣声
+- InetAddressUtil 对 y9.internalIp 配置的依赖通过属性注入，移除配置文件的直接依赖以便支持远程配置
+- 添加 xss.ignoreParam
+- 移除 Y9User 的 roles 字段
+- 移除 Y9Oauth2ResourceFilter 的 saveOnlineMessage 配置
+- 移除 risenet-y9boot-starter-useronline
+
+
+### Fixed
+
+- 处理系统、资源和角色树顶节点获取异常
+- 处理应用资源管理里面的应用出现删除和修改的问题
+- 新增组织节点时有 tabIndex 则使用，否则计算 tabIndex （针对导入的情况）
+- 登录日志用户 IP 没有记录的问题
+- 授权树中对已添加的授权回显
+- 邮箱不能修改的问题
+- 后台查询不到禁用的组织节点的问题
+- 优化授权相关记录的展示
+- 登陆岗位默认返回排序靠前的岗位id
+- 多个租户切换的位置增加打印日志输出租户 id，方便定位错误发生的租户
+- 资源负权限继承的完善
+- 升级前端 y9plugin-components 的版本，解决表格分页样式异常的问题
+
+### Documentation
+
+- 修改 README.md
+- 添加接口安全控制使用文档
+
+### Dependency Upgrades
+
+- 升级了一些依赖包的版本
+- 升级 vue 和 vite 的版本
+
+
 ## v9.6.7 2024-10-12
 
 ### Added
