@@ -17,7 +17,8 @@ public class Y9PlatformProperties {
     public static final int SECURITY_MANAGER_REVIEW_LOG_CYCLE_DEFAULT = 7;
     public static final int AUDIT_MANAGER_REVIEW_LOG_CYCLE_DEFAULT = 7;
     public static final String USER_PASSWORD_DEFAULT = "Risesoft@2022";
-    public static final String POSITION_NAME_TEMPLATE_DEFAULT = "{{jobName}}（{{personNames}}）";
+    public static final String POSITION_NAME_TEMPLATE_DEFAULT =
+        "#jobName.equals('无') ? #personNames : #personNames+ '（' + #jobName  + '）'";
 
     /**
      * 系统名称
