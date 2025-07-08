@@ -346,7 +346,7 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     private void initOrg() {
         boolean organizationNotExists = y9OrganizationService.list(false, false).isEmpty();
         if (organizationNotExists) {
-            Y9Job y9Job = y9JobService.create("普通职位", "001");
+            Y9Job y9Job = y9JobService.create("无", "001");
 
             Y9Organization y9Organization = y9OrganizationService.create("组织", Boolean.FALSE);
 

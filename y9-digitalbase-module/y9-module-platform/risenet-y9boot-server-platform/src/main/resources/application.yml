@@ -158,7 +158,7 @@ y9:
     app:
         platform:
             systemName: riseplatform
-            positionNameTemplate: "#jobName + '（' + #personNames + '）'"
+            positionNameTemplate: "#jobName.equals('无') ? #personNames : #personNames+ '（' + #jobName  + '）'"
             managerModifyPasswordCycle: 7
             userDefaultPassword: Risesoft@2022
     service:
