@@ -27,12 +27,6 @@
 
         <dependency>
             <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-api-interface-log</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-security</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -56,41 +50,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-common-nacos</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- JXLS -->
-        <dependency>
-            <groupId>org.jxls</groupId>
-            <artifactId>jxls</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jxls</groupId>
-            <artifactId>jxls-poi</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jxls</groupId>
-            <artifactId>jxls-jexcel</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jxls</groupId>
-            <artifactId>jxls-reader</artifactId>
         </dependency>
 
         <dependency>
@@ -113,6 +75,12 @@
 
     <build>
         <finalName>server-log</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
     </build>
 
     <profiles>

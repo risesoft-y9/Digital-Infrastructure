@@ -139,13 +139,7 @@
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
         <jakarta-json.version>2.0.1</jakarta-json.version>
         <java-uuid-generator.version>5.1.0</java-uuid-generator.version>
-        <javax.xml.rpc-api.version>1.1.2</javax.xml.rpc-api.version>
-        <jaxrpc-api.version>1.1</jaxrpc-api.version>
-        <jaxws-rt.version>4.0.3</jaxws-rt.version>
         <jBCrypt.version>0.4.3</jBCrypt.version>
-        <jxls.version>3.0.0</jxls.version>
-        <jxls-jexcel.version>1.0.9</jxls-jexcel.version>
-        <jxls-reader.version>2.1.0</jxls-reader.version>
         <jodd-mail.version>7.1.0</jodd-mail.version>
         <jodd-bean.version>5.1.6</jodd-bean.version>
         <jodd-http.version>6.3.0</jodd-http.version>
@@ -491,30 +485,6 @@
                 <version>${jBCrypt.version}</version>
             </dependency>
 
-            <!-- JXLS -->
-            <dependency>
-                <groupId>org.jxls</groupId>
-                <artifactId>jxls</artifactId>
-                <version>${jxls.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jxls</groupId>
-                <artifactId>jxls-poi</artifactId>
-                <version>${jxls.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jxls</groupId>
-                <artifactId>jxls-jexcel</artifactId>
-                <version>${jxls-jexcel.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jxls</groupId>
-                <artifactId>jxls-reader</artifactId>
-                <version>${jxls-reader.version}</version>
-            </dependency>
-            <!-- JXLS end -->
 
             <dependency>
                 <groupId>org.apache.poi</groupId>
@@ -601,36 +571,10 @@
             </dependency>
 
             <dependency>
-                <groupId>org.apache.axis</groupId>
-                <artifactId>axis</artifactId>
-                <version>${axis.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>commons-discovery</groupId>
                 <artifactId>commons-discovery</artifactId>
                 <version>${commons-discovery.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>javax.xml.rpc</groupId>
-                <artifactId>javax.xml.rpc-api</artifactId>
-                <version>${javax.xml.rpc-api.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>javax.xml</groupId>
-                <artifactId>jaxrpc-api</artifactId>
-                <version>${jaxrpc-api.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.sun.xml.ws</groupId>
-                <artifactId>jaxws-rt</artifactId>
-                <version>${jaxws-rt.version}</version>
-            </dependency>
-
-
         </dependencies>
     </dependencyManagement>
 

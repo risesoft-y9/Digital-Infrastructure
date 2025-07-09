@@ -25,13 +25,6 @@ dependencies {
     api(libs.poi.ooxml)
     api(libs.hutool.all)
     api(libs.bcprov.ext.jdk18on)
-//    api(libs.axis)
-//    api(libs.commons.discovery)
-//    api(libs.javax.xml.rpc.api)
-//    api(libs.jaxrpc.api)
-//    api(libs.jaxws.rt) {
-//        exclude(group = "com.sun.xml.bind", module = "jaxb-core")
-//    }
     api(libs.axis2.spring)
     api(libs.axis2.corba) {
         exclude(group = "com.sun.xml.bind", module = "jaxb-core")

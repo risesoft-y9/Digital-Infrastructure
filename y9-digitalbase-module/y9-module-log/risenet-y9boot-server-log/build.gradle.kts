@@ -15,12 +15,7 @@ dependencies {
     implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-web"))
     implementation(project(":y9-digitalbase-common:risenet-y9boot-common-nacos"))
 
-    implementation(libs.jxls)
-    implementation(libs.jxls.poi)
-    implementation(libs.jxls.jexcel)
-    implementation(libs.jxls.reader)
     implementation(libs.micrometer.registry.prometheus)
-    implementation("org.springframework.kafka:spring-kafka")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-web")
 

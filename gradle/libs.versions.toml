@@ -55,11 +55,6 @@ org-javers-javers-spring-boot-starter-sql = "7.8.0"
 org-jodd-jodd-http = "6.3.0"
 #liquibase
 org-liquibase-liquibase-core = "4.32.0"
-# jxls
-org-jxls-jxls = "3.0.0"
-org-jxls-jxls-jexcel = "1.0.9"
-org-jxls-jxls-poi = "3.0.0"
-org-jxls-jxls-reader = "2.1.0"
 # 其他
 com-ibm-etcd-etcd-java = "0.0.24"
 com-redis-lettucemod = "4.3.0"
@@ -120,10 +115,6 @@ httpcomponents-httpmime = { module = "org.apache.httpcomponents:httpmime", versi
 jbcrypt = { module = "de.svenkubiak:jBCrypt", version.ref = "de-svenkubiak-jbcrypt" }
 bcprov-ext-jdk18on = { module = "org.bouncycastle:bcprov-ext-jdk18on", version.ref = "org-bouncycastle-bcprov-ext-jdk18on" }
 
-jxls = { module = "org.jxls:jxls", version.ref = "org-jxls-jxls" }
-jxls-jexcel = { module = "org.jxls:jxls-jexcel", version.ref = "org-jxls-jxls-jexcel" }
-jxls-poi = { module = "org.jxls:jxls-poi", version.ref = "org-jxls-jxls-poi" }
-jxls-reader = { module = "org.jxls:jxls-reader", version.ref = "org-jxls-jxls-reader" }
 
 poi-scratchpad = { module = "org.apache.poi:poi-scratchpad", version.ref = "org-apache-poi-poi-scratchpad" }
 poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "org-apache-poi-poi-ooxml" }
