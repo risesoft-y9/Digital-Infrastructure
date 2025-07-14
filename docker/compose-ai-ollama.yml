@@ -1,7 +1,7 @@
 name: y9-ai-ollama
 services:
-  db:
-    image: ollama/ollama
+  ollama:
+    image: ghcr.nju.edu.cn/open-webui/open-webui:ollama
     container_name: ollama
     restart: always
     extra_hosts:
@@ -9,9 +9,16 @@ services:
     networks:
       - y9-share-net
     ports:
-      - "11434:11434"
+      - "11432:11434"
+      - "3100:8080"
+    environment:
+        - USE_OLLAMA_DOCKER=true
+        - OLLAMA_BASE_URL=http://localhost:11434 #http://host.docker.internal:11434
+        - OPENAI_API_BASE_URL=http://model-runner.docker.internal:80/engines/llama.cpp/v1
+        - OPENAI_API_KEY=na
     volumes:
-      - /Users/dingzhaojun/docker-data/ollama:/root/.ollama
+      - d:/docker-data/ollama:/root/.ollama
+      - d:/docker-data/openwebui:/app/backend/data
 networks:
   y9-share-net:
     external: true
