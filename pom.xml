@@ -420,7 +420,7 @@
                         <skip>false</skip>
                         <from>
                             <!--<image>eclipse-temurin:11-jre</image>-->
-                            <image>docker-internal.youshengyun.com/tomcat:9.0.96-jre11-temurin</image>
+                            <image>docker-internal.youshengyun.com/tomcat:9.0.107-jdk11-temurin</image>
                             <platforms>
                                 <platform>
                                     <architecture>amd64</architecture>
