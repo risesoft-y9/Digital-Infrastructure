@@ -11,6 +11,8 @@ services:
     ports:
       - "3100:8080"
     environment:
+      - USE_OLLAMA_DOCKER=false
+      - OLLAMA_BASE_URL=http://host.docker.internal:11435
       - OPENAI_API_BASE_URL=http://model-runner.docker.internal:80/engines/llama.cpp/v1
       - OPENAI_API_KEY=na
     volumes:

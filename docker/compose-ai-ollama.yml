@@ -1,7 +1,7 @@
 name: y9-ai-ollama
 services:
   ollama:
-    image: ghcr.nju.edu.cn/ollama/ollama
+    image: ollama/ollama
     container_name: ollama
     restart: always
     extra_hosts:

@@ -23,4 +23,4 @@ networks:
   y9-share-net:
     external: true
     
-# docker compose -f compose-ai-ollama.yml up -d
+# docker compose -f compose-ai-openwebui-ollama.yml up -d
