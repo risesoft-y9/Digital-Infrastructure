@@ -1,6 +1,6 @@
 name: y9-dev-postgres-keycloak
 services:
-  db:
+  mysql:
     image: mysql:latest
     container_name: mysql01
     restart: always
@@ -19,7 +19,8 @@ services:
     labels:
       org.springframework.boot.readiness-check.tcp.disable: true
   postgresql:
-    image: postgres:latest
+    #image: postgres:latest
+    image: pgvector/pgvector:pg17
     container_name: pg01
     restart: always
     extra_hosts:

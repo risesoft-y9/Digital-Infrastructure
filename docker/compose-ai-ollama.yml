@@ -11,7 +11,7 @@ services:
     ports:
       - "11435:11434"
     volumes:
-      - /Users/dingzhaojun/docker-data/ollama:/root/.ollama
+      - d:/docker-data/ollama:/root/.ollama
 networks:
   y9-share-net:
     external: true
