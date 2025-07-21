@@ -25,6 +25,8 @@ public enum GlobalErrorCodeEnum implements ErrorCode {
     INVALID_ARGUMENT(NONE_MODULE_CODE, 2, "参数校验失败"),
     /** 实体类不存在 */
     ENTITY_NOT_FOUND(NONE_MODULE_CODE, 3, "对象[{}]不存在"),
+    /** 不允许重复提交 */
+    REPEAT_REQUEST_DENIED(NONE_MODULE_CODE, 4, "不允许重复提交"),
 
     /** 令牌未传入 */
     ACCESS_TOKEN_NOT_FOUND(AUTH_MODULE_CODE, 0, "令牌未传入"),
