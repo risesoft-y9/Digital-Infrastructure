@@ -299,6 +299,12 @@
                 <version>${revision}</version>
             </dependency>
 
+            <dependency>
+                <groupId>net.risesoft</groupId>
+                <artifactId>risenet-y9boot-starter-repeatsubmit</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
             <!-- net.risesoft support-->
             <dependency>
                 <groupId>net.risesoft</groupId>
