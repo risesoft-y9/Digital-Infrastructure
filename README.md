@@ -25,7 +25,7 @@
 ## 源码目录
 
 ```
-common -- 系统公共模块
+y9-digitalbase-common -- 系统公共模块
  ├── risenet-y9boot-3rd-jpa -- SpringDataJPA相关配置
  ├── risenet-y9boot-common-model -- 公共对象模型
  ├── risenet-y9boot-common-nacos -- nacos加解密包
@@ -33,7 +33,7 @@ common -- 系统公共模块
  ├── risenet-y9boot-common-tenant-datasource -- 租户动态数据源包
  ├── risenet-y9boot-common-util -- 公共工具包
  ├── risenet-y9boot-properties -- 公共配置文件包
-example -- 基于数字底座的示例工程
+y9-digitalbase-example -- 基于数字底座的示例工程
  ├── risenet-y9demo-cache -- Redis 缓存使用示例
  ├── risenet-y9demo-data-jpa -- SpringDataJPA 使用示例
  ├── risenet-y9demo-elasticsearch -- SpringDataElasticsearch 使用示例
@@ -43,13 +43,14 @@ example -- 基于数字底座的示例工程
  ├── risenet-y9demo-log -- 日志上报示例
  ├── risenet-y9demo-sso-oauth2 -- 数字底座 OAuth2 认证示例
  ├── risenet-y9demo-sync-kafka -- 数字底座组织信息同步( kafka 消息机制)示例
-starter -- 快速配置模块
+y9-digitalbase-starter -- 快速配置模块
  ├── risenet-y9boot-starter-apisix -- apisix 网关接口注册组件
  ├── risenet-y9boot-starter-cache-redis -- 数据缓存组件
  ├── risenet-y9boot-starter-elasticsearch -- 全文检索基本依赖封装
  ├── risenet-y9boot-starter-idgenerator -- 唯一标示生成组件
- ├── risenet-y9boot-starter-jpa-public -- 公共库组件
- ├── risenet-y9boot-starter-jpa-tenant -- 多租户相关组件
+ ├── risenet-y9boot-starter-jpa-dedicated -- 指定库 jpa 组件
+ ├── risenet-y9boot-starter-jpa-public -- 公共库 jpa 组件
+ ├── risenet-y9boot-starter-jpa-tenant -- 多租户库 jpa 组件
  ├── risenet-y9boot-starter-kafka -- kafka通用消息监听组件(y9_common_event队列)
  ├── risenet-y9boot-starter-liquibase -- 数据表结构版本化控制组件
  ├── risenet-y9boot-starter-listener-kafka -- kafka组织信息消息监听组件(y9_org_event队列)
@@ -58,10 +59,11 @@ starter -- 快速配置模块
  ├── risenet-y9boot-starter-openfeign -- 远程调用组件
  ├── risenet-y9boot-starter-permission -- 权限组件
  ├── risenet-y9boot-starter-publish-kafka -- kafka发布消息组件
+ ├── risenet-y9boot-starter-repeatsubmit -- 防重复请求组件
  ├── risenet-y9boot-starter-security -- 安全模块组件
  ├── risenet-y9boot-starter-sso-oauth2-resource -- OAuth2.0认证组件
- ├── risenet-y9boot-starter-web -- SpirngMVC 相关配置组件
-support -- 业务支撑模块
+ ├── risenet-y9boot-starter-web -- SpringMVC 相关配置组件
+y9-digitalbase-support -- 业务支撑模块
  ├── risenet-y9boot-support-file-jpa-repository -- 文件信息存储模块
  ├── risenet-y9boot-support-file-service-ftp -- ftp文件服务器支持
  ├── risenet-y9boot-support-file-service-local -- 本地文件存储支持
@@ -69,7 +71,7 @@ support -- 业务支撑模块
  ├── risenet-y9boot-support-history -- 实体审计日志组件
 vue -- 前端工程
  ├── y9vue-kernel-standard -- 数字底座前端工程
-webapp -- 系统公共模块
+y9-digitalbase-module -- 系统公共模块
  ├── y9-module-log -- 日志后端工程
  ├── y9-module-platform -- 数字底座后端工程
  ├── y9-module-sso -- 单点认证服务端，支持 OAuth2.0、CAS 等协议
