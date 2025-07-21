@@ -4,10 +4,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import org.aopalliance.aop.Advice;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
 import org.springframework.core.annotation.AnnotationUtils;
+
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.permission.annotation.RepeatSubmit;
 
@@ -17,19 +17,18 @@ import net.risesoft.permission.annotation.RepeatSubmit;
  * @author shidaobang
  * @date 2025/07/21
  */
+@Slf4j
 public class RepeatSubmitAdvisor extends StaticMethodMatcherPointcutAdvisor {
     private static final long serialVersionUID = 1790605582584464487L;
 
-    private static final Logger log = LoggerFactory.getLogger(RepeatSubmitAdvisor.class);
-
     public RepeatSubmitAdvisor() {
-        log.debug("RepeatSubmitAdvisor creating............");
+        LOGGER.debug("RepeatSubmitAdvisor creating............");
     }
 
     private boolean isAnnotationPresent(Method method) {
         Annotation a = AnnotationUtils.findAnnotation(method, RepeatSubmit.class);
         if (a != null) {
-            log.info("findAnnotation RepeatSubmit: " + method.getName());
+            LOGGER.trace("findAnnotation RepeatSubmit: " + method.getName());
             return true;
         }
         return false;

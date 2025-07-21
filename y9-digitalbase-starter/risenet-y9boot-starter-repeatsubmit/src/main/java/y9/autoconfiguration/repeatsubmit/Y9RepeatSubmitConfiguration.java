@@ -68,7 +68,7 @@ public class Y9RepeatSubmitConfiguration {
     @Bean
     @Primary
     @ConditionalOnClass(RedisTemplate.class)
-    @ConditionalOnProperty(prefix = "y9.feature.repeat-submit", name = "type", havingValue = "REDIS")
+    @ConditionalOnProperty(prefix = "y9.feature.repeat-submit", name = "cache-type", havingValue = "REDIS")
     public SubmitCache redisKeyCache(StringRedisTemplate redisTemplate) {
         return new RedisSubmitCache(redisTemplate);
     }

@@ -21,7 +21,7 @@ public class Y9RepeatSubmitProperties {
      */
     private boolean enabled = true;
 
-    private CacheType type = CacheType.LOCAL;
+    private CacheType cacheType = CacheType.LOCAL;
 
     public enum CacheType {
         LOCAL, REDIS
