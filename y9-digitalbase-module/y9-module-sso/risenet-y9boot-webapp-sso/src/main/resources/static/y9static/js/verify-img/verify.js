@@ -8,16 +8,16 @@
       (this.defaults = {
         mode: "fixed", //弹出式pop，固定fixed
         defaultNum: 4, //默认的文字数量
-        checkNum: 3, //校对的文字数量
+        checkNum: 2, //校对的文字数量
         vSpace: 5, //间隔
         imgUrl: "/sso/y9static/js/verify-img/images/",
         imgName: ["3.jpg", "2.jpg", "1.jpg", "4.jpg"],
         imgSize: {
-          width: "400px",
-          height: "200px",
+          width: "288px",
+          height: "150px",
         },
         barSize: {
-          width: "400px",
+          width: "288px",
           height: "40px",
         },
         ready: function () {},
@@ -138,7 +138,7 @@
         msg: this.$element.find(".verify-msg"),
       };
 
-      this.$element.css("position", "relative");
+      this.$element.css("display", "block", "position", "relative", );
       if (this.options.mode == "pop") {
         this.htmlDoms.out_panel.css({
           display: "none",
@@ -360,74 +360,3 @@
     points.init();
   };
 })(jQuery, window, document);
-
-// 点选验证码
-$("#mpanel6").pointsVerify({
-  defaultNum: 4, //默认的文字数量
-  checkNum: 2, //校对的文字数量
-  vSpace: 5, //间隔
-  imgName: ["3.jpg", "2.jpg", "1.jpg", "4.jpg"],
-  imgSize: {
-    width: "288px",
-    height: "150px",
-  },
-  barSize: {
-    width: "288px",
-    height: "40px",
-  },
-  ready: function () {},
-  success: function () {
-    let option = {
-      type: "success",
-      position: "top-center",
-      showicon: true,
-      time: 2000,
-      title: "",
-      content: "登录中···",
-      shadow: false,
-      shadowclickclose: true,
-      autoclose: true,
-      callback: function (data, obj) {
-        obj.ele.close(0);
-      },
-    };
-    WfMsg(option);
-
-    var username = $("#username").val();
-    var password = $("#password").val();
-    var rsaPublicKey = $("#rsaPublicKey").val();
-
-    //var encodeUsername = encode64(username);
-    //var encodePassword = encode64(password);
-    var encryptedUserName = encrypt(rsaPublicKey, username);
-    var encryptedPassword = encrypt(rsaPublicKey, password);
-    $("#username1").val(encryptedUserName);
-    $("#password1").val(encryptedPassword);
-    $("#fm1").submit();
-  },
-  error: function () {
-    let option = {
-      type: "err",
-      position: "top-center",
-      showicon: true,
-      time: 2000,
-      title: "",
-      content: "请按照顺序点击文字",
-      shadow: false,
-      shadowclickclose: true,
-      autoclose: true,
-      callback: function (data, obj) {
-        obj.ele.close(0);
-      },
-    };
-    WfMsg(option);
-    $(".verify-refresh").click();
-  },
-});
-
-//加密
-function encrypt(publicKey, pwd) {
-  var encrypt = new JSEncrypt();
-  encrypt.setPublicKey(publicKey);
-  return encrypt.encrypt(pwd);
-}
