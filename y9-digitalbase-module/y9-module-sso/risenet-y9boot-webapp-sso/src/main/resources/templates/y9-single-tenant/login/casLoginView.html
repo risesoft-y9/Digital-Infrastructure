@@ -185,6 +185,10 @@
                 ).done(function () {
                     // 点选验证码
                     $("#mpanel6").pointsVerify({
+                        imgSize: {
+                            width: "288px",
+                            height: "170px",
+                        },
                         success: function () {
                             option.type = "success";
                             option.content = "登录中···";
