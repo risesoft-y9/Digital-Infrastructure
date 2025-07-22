@@ -14,7 +14,7 @@
         imgName: ["3.jpg", "2.jpg", "1.jpg", "4.jpg"],
         imgSize: {
           width: "288px",
-          height: "150px",
+          height: "220px",
         },
         barSize: {
           width: "288px",
@@ -138,7 +138,12 @@
         msg: this.$element.find(".verify-msg"),
       };
 
-      this.$element.css("display", "block", "position", "relative", );
+      this.$element.css({
+        "display": "block",
+        "position": "absolute",
+        "top": "70px",
+        "z-index": 1
+      });
       if (this.options.mode == "pop") {
         this.htmlDoms.out_panel.css({
           display: "none",
