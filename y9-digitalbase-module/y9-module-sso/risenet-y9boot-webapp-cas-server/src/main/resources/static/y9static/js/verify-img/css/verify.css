@@ -144,13 +144,6 @@
     z-index: 3;
 }
 
-#mpanel6 {
-    position: absolute;
-    top: 100px;
-    z-index: 1;
-    display: none;
-}
-
 /*字体图标的css*/
 @font-face {
     font-family: "iconfont";
