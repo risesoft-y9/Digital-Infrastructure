@@ -104,7 +104,7 @@
     <span>建议您使用1920x1080分辨率，IE9.0或以上版本浏览器访问本站，以获得最佳用户体验。 技术支持：0755-821072292</span>
 </div>
 
-<script charset="utf-8" th:src="@{/y9static/js/verify-img/verify.js(v=1.2)}" type="text/javascript"></script>
+<script charset="utf-8" th:src="@{/y9static/js/verify-img/verify.js(v=1.3)}" type="text/javascript"></script>
 <script type="text/javascript">
     //var ctx = "[(${contextPath})]";
     var ctx = "/sso";
@@ -153,6 +153,13 @@
             $('input[type="button"]').click();
         }
     });
+    
+    //加密
+    function rsaEncrypt(publicKey, pwd) {
+        var encrypt = new JSEncrypt();
+        encrypt.setPublicKey(publicKey);
+        return encrypt.encrypt(pwd);
+    }
 
     var open = 0;
     layui.use("layer", function () {
@@ -198,10 +205,38 @@
                             }
                         })
                 ).done(function () {
+                    // 下拉框选择的租户存储到 cookie 中
                     $.cookie("tenantShortName", tenantShortName, {
                         expires: 365
                     });
-                    $("#mpanel6").attr({style: "display: block;"});
+                    
+                    // 点选验证码
+                    $("#mpanel6").pointsVerify({
+                        success: function () {
+                            option.type = "success";
+                            option.content = "登录中···";
+                            WfMsg(option);
+
+                            var username = $("#username").val();
+                            var password = $("#password").val();
+                            var rsaPublicKey = $("#rsaPublicKey").val();
+
+                            //var encodeUsername = encode64(username);
+                            //var encodePassword = encode64(password);
+                            var encryptedUserName = rsaEncrypt(rsaPublicKey, username);
+                            var encryptedPassword = rsaEncrypt(rsaPublicKey, password);
+                            $("#username1").val(encryptedUserName);
+                            $("#password1").val(encryptedPassword);
+                            $("#fm1").submit();
+                        },
+                        error: function () {
+                            option.type = "err";
+                            option.content = "请按照顺序点击文字";
+                            WfMsg(option);
+                            // $(".verify-refresh").click();
+                        },
+                    });
+
                 }).fail(function () {
                     option.type = "warn";
                     option.content = "获取随机数失败。";
