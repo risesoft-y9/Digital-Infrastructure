@@ -103,6 +103,7 @@
             <artifactId>poi-scratchpad</artifactId>
         </dependency>
 
+        <!-- 国密 -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
@@ -112,6 +113,7 @@
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-ext-jdk15to18</artifactId>
         </dependency>
+        <!-- 国密 end-->
 
         <dependency>
             <groupId>org.projectlombok</groupId>
