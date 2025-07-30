@@ -53,12 +53,7 @@
             <artifactId>risenet-y9boot-common-util</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-        </dependency>
-
+ 
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
