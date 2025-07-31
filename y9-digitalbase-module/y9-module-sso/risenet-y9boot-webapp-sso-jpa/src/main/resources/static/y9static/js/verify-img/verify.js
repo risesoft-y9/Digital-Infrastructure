@@ -9,12 +9,12 @@
         mode: "fixed", //弹出式pop，固定fixed
         defaultNum: 4, //默认的文字数量
         checkNum: 2, //校对的文字数量
-        vSpace: 5, //间隔
+        vSpace: 2, //间隔
         imgUrl: "/sso/y9static/js/verify-img/images/",
         imgName: ["3.jpg", "2.jpg", "1.jpg", "4.jpg"],
         imgSize: {
           width: "288px",
-          height: "220px",
+          height: "222px",
         },
         barSize: {
           width: "288px",
@@ -355,7 +355,7 @@
       _this.$element
         .find(".verify-bar-area")
         .css({ color: "#224e7d", "border-color": "#ddd" });
-      _this.$element.find(".verify-msg").text("验证失败");
+      _this.$element.find(".verify-msg").text("");
       _this.$element.find(".verify-refresh").show();
     },
   };
