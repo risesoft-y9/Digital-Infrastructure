@@ -1,309 +1,3 @@
-<script lang="ts" setup>
-    import echarts from '@/utils/echarts'; // echarts图表插件
-    import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-    import { useI18n } from 'vue-i18n';
-    import { useSettingStore } from '@/store/modules/settingStore';
-
-    const settingStore = useSettingStore();
-    const { t } = useI18n();
-
-    // col变量
-    const spanValue = ref(12);
-    // echarts 对象 定义
-    // 左边下角圆形
-    let leftBottom = ref(null);
-    // 右上角 两个图形之一
-    let RightOne = ref(null);
-    // 右上角两个图形 之二
-    let RightTwo = ref(null);
-    // 右下角两个图形之一
-    let BottomOne = ref(null);
-    // 右下角两个图形之二
-    let BottomTwo = ref(null);
-
-    let loading = ref(false);
-
-    // 注入 字体对象
-    const fontSizeObj: any = inject('sizeObjInfo');
-
-    // 收缩左侧
-    const menuCollapsed = computed<Boolean>(() => settingStore.getMenuCollapsed);
-
-    onMounted(() => {
-        initChart();
-        // 所有图案响应容器的大小变化
-        window.onresize = function () {
-            chartInit();
-        };
-    });
-
-    let themeType = {
-        'theme-green': '#4e9876',
-        'theme-blue': '#1e5896',
-        'theme-default': '#586cb1'
-    };
-    // echarts 的颜色随主题颜色的变化而变化
-    let echartsColor = ref(themeType[settingStore.getThemeName]);
-    watch(
-        () => settingStore.getThemeName,
-        (newVal) => {
-            echartsColor.value = themeType[newVal];
-            initChart();
-        }
-    );
-
-    // 初始化echarts 图
-    function initChart() {
-        // 左边下角的圆形
-        const gaugeData = [
-            {
-                value: 60,
-                detail: {
-                    valueAnimation: true,
-                    offsetCenter: ['0%', '0%']
-                }
-            }
-        ];
-        const homeLeftBottom = {
-            color: [echartsColor.value],
-            series: [
-                {
-                    type: 'gauge',
-                    startAngle: 90,
-                    endAngle: -270,
-                    pointer: {
-                        show: false
-                    },
-                    progress: {
-                        show: true,
-                        overlap: false,
-                        roundCap: true,
-                        clip: false,
-                        itemStyle: {
-                            borderWidth: 1,
-                            borderColor: '#464646'
-                        }
-                    },
-                    axisLine: {
-                        lineStyle: {
-                            width: 40
-                        }
-                    },
-                    splitLine: {
-                        show: false,
-                        distance: 0,
-                        length: 10
-                    },
-                    axisTick: {
-                        show: false
-                    },
-                    axisLabel: {
-                        show: false,
-                        distance: 50
-                    },
-                    data: gaugeData,
-                    title: {
-                        fontSize: fontSizeObj.baseFontSize
-                    },
-                    detail: {
-                        width: 50,
-                        height: 14,
-                        fontSize: 24,
-                        formatter: '{value}%'
-                    }
-                }
-            ]
-        };
-        leftBottom.value = echarts.init(document.getElementById('home-left-circle'));
-        leftBottom.value.setOption(homeLeftBottom);
-
-        // 右上角 两个图形之一
-        const rightTopOne = {
-            xAxis: {
-                show: false,
-                type: 'category',
-                boundaryGap: false,
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-            },
-            yAxis: {
-                show: false,
-                type: 'value'
-            },
-            tooltip: {
-                trigger: 'axis'
-            },
-            color: [echartsColor.value],
-            series: [
-                {
-                    data: [730, 832, 1320, 900, 800, 1330, 801],
-                    type: 'line',
-                    areaStyle: {},
-                    smooth: true
-                }
-            ]
-        };
-        RightOne.value = echarts.init(document.getElementById('right-top-one'));
-        RightOne.value.setOption(rightTopOne);
-
-        // 右上角两个图形 之二
-        const rightTopTwo = {
-            tooltip: {
-                trigger: 'item'
-            },
-            legend: {
-                top: '30%',
-                left: '-8%',
-                orient: 'vertical',
-                itemGap: 20
-            },
-            color: [echartsColor.value, '#dceae4'],
-            series: [
-                {
-                    type: 'pie',
-                    radius: ['40%', '70%'],
-                    avoidLabelOverlap: false,
-                    label: {
-                        show: false,
-                        position: 'center'
-                    },
-                    labelLine: {
-                        show: false
-                    },
-                    data: [
-                        { value: 1048, name: t('活跃') },
-                        { value: 735, name: t('不活跃') }
-                    ]
-                }
-            ]
-        };
-        RightTwo.value = echarts.init(document.getElementById('right-top-two'));
-
-        RightTwo.value.setOption(rightTopTwo);
-
-        // 右下角两个图形之一
-        const rightBottomOne = {
-            xAxis: {
-                show: false,
-                type: 'category',
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-            },
-            yAxis: {
-                show: false,
-                type: 'value'
-            },
-            color: ['#333'],
-            series: [
-                {
-                    data: [
-                        80,
-                        70,
-                        {
-                            value: 200,
-                            itemStyle: {
-                                color: echartsColor.value
-                            }
-                        },
-                        90,
-                        110,
-                        130
-                    ],
-                    type: 'bar'
-                }
-            ]
-        };
-        BottomOne.value = echarts.init(document.getElementById('right-bottom-one'));
-        BottomOne.value.setOption(rightBottomOne);
-
-        // 右下角两个图形之二
-        const rightBottomTwo = {
-            angleAxis: {
-                max: 2,
-                startAngle: 30,
-                splitLine: {
-                    show: false
-                }
-            },
-            radiusAxis: {
-                type: 'category',
-                data: ['v', 'w', 'x', 'y', 'z'],
-                z: 10
-            },
-            polar: {},
-            color: [echartsColor.value, '#95d475'],
-            series: [
-                {
-                    type: 'bar',
-                    data: [4, 3, 2, 1, 0],
-                    coordinateSystem: 'polar',
-                    name: 'Finished'
-                },
-                {
-                    type: 'bar',
-                    data: [4, 3, 2, 1, 0],
-                    coordinateSystem: 'polar',
-                    name: 'Rejected',
-                    roundCap: true
-                }
-            ]
-        };
-        BottomTwo.value = echarts.init(document.getElementById('right-bottom-two'));
-        BottomTwo.value.setOption(rightBottomTwo);
-
-        // 所有echart图表 - 响应容器大小的变化
-        // window.onresize = function () {
-        //     leftBottom.value.resize();
-        //     RightOne.value.resize();
-        //     RightTwo.value.resize();
-        //     BottomOne.value.resize();
-        //     BottomTwo.value.resize();
-        // }
-        // if(settingStore.device === 'mobile') {
-        //     spanValue.value = 24;
-        // }else {
-        //     spanValue.value = 12;
-        // }
-    }
-
-    function chartInit() {
-        loading.value = true;
-        setTimeout(() => {
-            leftBottom.value.resize();
-            RightOne.value.resize();
-            RightTwo.value.resize();
-            BottomOne.value.resize();
-            BottomTwo.value.resize();
-        }, 300);
-        setTimeout(() => {
-            initChart();
-            loading.value = false;
-        }, 300);
-    }
-
-    watch(
-        () => menuCollapsed.value,
-        () => {
-            chartInit();
-        }
-    );
-
-    onBeforeUnmount(() => {
-        if (!leftBottom.value || !RightOne.value || !RightTwo.value || !BottomOne.value || !BottomTwo.value) {
-            return;
-        }
-        // 对资源进行释放
-        leftBottom.value.dispose();
-        leftBottom.value = null;
-        RightOne.value.dispose();
-        RightOne.value = null;
-        RightTwo.value.dispose();
-        RightTwo.value = null;
-        BottomOne.value.dispose();
-        BottomOne.value = null;
-        BottomTwo.value.dispose();
-        BottomTwo.value = null;
-    });
-</script>
-
 <template>
     <div style="height: 100%; overflow-y: auto; overflow-x: hidden; scrollbar-width: none">
         <el-row :gutter="20" style="height: 100%">
@@ -518,7 +212,297 @@
         </div> -->
     </div>
 </template>
+<script lang="ts" setup>
+    import echarts from '@/utils/echarts'; // echarts图表插件
+    import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+    import { useI18n } from 'vue-i18n';
+    import { useSettingStore } from '@/store/modules/settingStore';
 
+    const settingStore = useSettingStore();
+    const { t } = useI18n();
+
+    // col变量
+    const spanValue = ref(12);
+    // echarts 对象 定义
+    // 左边下角圆形
+    let leftBottom = ref();
+    // 右上角 两个图形之一
+    let RightOne = ref();
+    // 右上角两个图形 之二
+    let RightTwo = ref();
+    // 右下角两个图形之一
+    let BottomOne = ref();
+    // 右下角两个图形之二
+    let BottomTwo = ref();
+
+    let loading = ref(false);
+
+    // 注入 字体对象
+    const fontSizeObj: any = inject('sizeObjInfo');
+
+    // 收缩左侧
+    const menuCollapsed = computed<Boolean>(() => settingStore.getMenuCollapsed);
+    let themeType = {
+        'theme-green': '#4e9876',
+        'theme-blue': '#1e5896',
+        'theme-default': '#586cb1'
+    };
+    // echarts 的颜色随主题颜色的变化而变化
+    let echartsColor = ref(themeType[settingStore.getThemeName]);
+
+    onMounted(() => {
+        initChart();
+        // 所有图案响应容器的大小变化
+        window.onresize = function () {
+            reloadChart();
+        };
+    });
+
+    watch(
+        () => settingStore.getThemeName,
+        (newVal) => {
+            echartsColor.value = themeType[newVal];
+            initChart();
+        }
+    );
+
+    watch(
+        () => menuCollapsed.value,
+        () => {
+            reloadChart();
+        }
+    );
+
+    onBeforeUnmount(() => {
+        if (!leftBottom.value || !RightOne.value || !RightTwo.value || !BottomOne.value || !BottomTwo.value) {
+            return;
+        }
+        // 对资源进行释放
+        leftBottom.value.dispose();
+        leftBottom.value = null;
+        RightOne.value.dispose();
+        RightOne.value = null;
+        RightTwo.value.dispose();
+        RightTwo.value = null;
+        BottomOne.value.dispose();
+        BottomOne.value = null;
+        BottomTwo.value.dispose();
+        BottomTwo.value = null;
+    });
+
+    // 初始化echarts 图
+    function initChart() {
+        // 左边下角的圆形
+        const gaugeData = [
+            {
+                value: 60,
+                detail: {
+                    valueAnimation: true,
+                    offsetCenter: ['0%', '0%']
+                }
+            }
+        ];
+        const homeLeftBottom = {
+            color: [echartsColor.value],
+            series: [
+                {
+                    type: 'gauge',
+                    startAngle: 90,
+                    endAngle: -270,
+                    pointer: {
+                        show: false
+                    },
+                    progress: {
+                        show: true,
+                        overlap: false,
+                        roundCap: true,
+                        clip: false,
+                        itemStyle: {
+                            borderWidth: 1,
+                            borderColor: '#464646'
+                        }
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            width: 40
+                        }
+                    },
+                    splitLine: {
+                        show: false,
+                        distance: 0,
+                        length: 10
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    axisLabel: {
+                        show: false,
+                        distance: 50
+                    },
+                    data: gaugeData,
+                    title: {
+                        fontSize: fontSizeObj.baseFontSize
+                    },
+                    detail: {
+                        width: 50,
+                        height: 14,
+                        fontSize: 24,
+                        formatter: '{value}%'
+                    }
+                }
+            ]
+        };
+        leftBottom.value = echarts.init(document.getElementById('home-left-circle'));
+        leftBottom.value.setOption(homeLeftBottom);
+
+        // 右上角 两个图形之一
+        const rightTopOne = {
+            color: [echartsColor.value],
+            xAxis: {
+                show: false,
+                type: 'category',
+                boundaryGap: false,
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            },
+            yAxis: {
+                show: false,
+                type: 'value'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            series: [
+                {
+                    data: [730, 832, 1320, 900, 800, 1330, 801],
+                    type: 'line',
+                    areaStyle: {},
+                    smooth: true
+                }
+            ]
+        };
+        RightOne.value = echarts.init(document.getElementById('right-top-one'));
+        RightOne.value.setOption(rightTopOne);
+
+        // 右上角两个图形 之二
+        const rightTopTwo = {
+            color: [echartsColor.value, '#dceae4'],
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                top: '30%',
+                left: '-8%',
+                orient: 'vertical',
+                itemGap: 20
+            },
+            series: [
+                {
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: [
+                        { value: 1048, name: t('活跃') },
+                        { value: 735, name: t('不活跃') }
+                    ]
+                }
+            ]
+        };
+        RightTwo.value = echarts.init(document.getElementById('right-top-two'));
+
+        RightTwo.value.setOption(rightTopTwo);
+
+        // 右下角两个图形之一
+        const rightBottomOne = {
+            color: ['#333'],
+            xAxis: {
+                show: false,
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+            },
+            yAxis: {
+                show: false,
+                type: 'value'
+            },
+            series: [
+                {
+                    data: [
+                        80,
+                        70,
+                        {
+                            value: 200,
+                            itemStyle: {
+                                color: echartsColor.value
+                            }
+                        },
+                        90,
+                        110,
+                        130
+                    ],
+                    type: 'bar'
+                }
+            ]
+        };
+        BottomOne.value = echarts.init(document.getElementById('right-bottom-one'));
+        BottomOne.value.setOption(rightBottomOne);
+
+        // 右下角两个图形之二
+        const rightBottomTwo = {
+            color: [echartsColor.value, '#95d475'],
+            angleAxis: {
+                max: 2,
+                startAngle: 30,
+                splitLine: {
+                    show: false
+                }
+            },
+            radiusAxis: {
+                type: 'category',
+                data: ['v', 'w', 'x', 'y', 'z'],
+                z: 10
+            },
+            polar: {},
+            series: [
+                {
+                    type: 'bar',
+                    data: [4, 3, 2, 1, 0],
+                    coordinateSystem: 'polar',
+                    name: 'Finished'
+                },
+                {
+                    type: 'bar',
+                    data: [4, 3, 2, 1, 0],
+                    coordinateSystem: 'polar',
+                    name: 'Rejected',
+                    roundCap: true
+                }
+            ]
+        };
+        BottomTwo.value = echarts.init(document.getElementById('right-bottom-two'));
+        BottomTwo.value.setOption(rightBottomTwo);
+    }
+
+    function reloadChart() {
+        loading.value = true;
+        setTimeout(() => {
+            leftBottom.value.resize();
+            RightOne.value.resize();
+            RightTwo.value.resize();
+            BottomOne.value.resize();
+            BottomTwo.value.resize();
+        }, 300);
+        setTimeout(() => {
+            initChart();
+            loading.value = false;
+        }, 300);
+    }
+</script>
 <style lang="scss" scoped>
     .left {
         display: flex;

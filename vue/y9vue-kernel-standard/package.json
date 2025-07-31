@@ -20,7 +20,7 @@
         "axios": "^0.24.0",
         "core-js": "^3.20.1",
         "dom-zindex": "^0.4.0",
-        "echarts": "^5.3.2",
+        "echarts": "^5.6.0",
         "element-plus": "^2.7.7",
         "js-cookie": "^3.0.1",
         "lodash": "^4.17.21",
@@ -39,7 +39,7 @@
         "vue-router": "^4.0.13",
         "vxe-table": "^4.3.5",
         "xe-utils": "^3.5.7",
-        "y9plugin-components-auto": "^3.0.23",
+        "y9plugin-components-auto": "^3.0.30",
         "y9plugin-sso": "^4.2.9",
         "y9plugin-watermark": "^1.2.0"
     },
