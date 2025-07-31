@@ -1,6 +1,7 @@
 package net.risesoft.y9public.service.resource.impl;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,8 +29,6 @@ import net.risesoft.y9public.entity.resource.Y9AppIcon;
 import net.risesoft.y9public.repository.resource.Y9AppIconRepository;
 import net.risesoft.y9public.service.Y9FileStoreService;
 import net.risesoft.y9public.service.resource.Y9AppIconService;
-
-import jodd.util.Base64;
 
 @Service(value = "appIconService")
 @Slf4j
@@ -97,7 +96,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
         for (Y9AppIcon appicon : apps) {
             try {
                 byte[] b = y9FileStoreService.downloadFileToBytes(appicon.getPath());
-                String iconData = Base64.encodeToString(b);
+                String iconData = Base64.getEncoder().encodeToString(b);
                 appicon.setIconData(iconData);
                 appIconRepository.save(appicon);
             } catch (Exception e) {
@@ -138,7 +137,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
         String fullPath = Y9FileStore.buildPath("riseplatform", "public", "appIcon");
         try {
             appIcon.setPath(y9FileStoreService.uploadFile(iconFile, fullPath, imgName).getId());
-            appIcon.setIconData(Base64.encodeToString(iconData));
+            appIcon.setIconData(Base64.getEncoder().encodeToString(iconData));
             return appIconRepository.save(appIcon);
         } catch (Exception e) {
             LOGGER.warn("上传文件异常", e);
@@ -181,7 +180,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
         String fullPath = Y9FileStore.buildPath("riseplatform", "public", "appIcon", category, colorType);
         try {
             appIcon.setPath(y9FileStoreService.uploadFile(iconFile, fullPath, name).getId());
-            appIcon.setIconData(Base64.encodeToString(iconData));
+            appIcon.setIconData(Base64.getEncoder().encodeToString(iconData));
             return appIconRepository.save(appIcon);
         } catch (Exception e) {
             LOGGER.warn("上传文件异常", e);

@@ -1,5 +1,6 @@
 package net.risesoft.controller.resource;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,8 +32,6 @@ import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9public.entity.resource.Y9AppIcon;
 import net.risesoft.y9public.service.Y9FileStoreService;
 import net.risesoft.y9public.service.resource.Y9AppIconService;
-
-import jodd.util.Base64;
 
 /**
  * 图标管理
@@ -148,7 +147,7 @@ public class AppIconController {
         if (appIcon.getIconData() == null) {
             try {
                 byte[] b = y9FileStoreService.downloadFileToBytes(appIcon.getPath());
-                String iconData = Base64.encodeToString(b);
+                String iconData = Base64.getEncoder().encodeToString(b);
                 appIcon.setIconData(iconData);
             } catch (Exception e1) {
                 LOGGER.warn(e1.getMessage(), e1);
