@@ -1,5 +1,6 @@
 package net.risesoft.service.org.impl;
 
+import java.util.Base64;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,8 +17,6 @@ import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.repository.Y9PersonExtRepository;
 import net.risesoft.service.org.Y9PersonExtService;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
-
-import jodd.util.Base64;
 
 /**
  * @author dingzhaojun
@@ -55,7 +54,7 @@ public class Y9PersonExtServiceImpl implements Y9PersonExtService {
     @Override
     public String getEncodePhotoByPersonId(String personId) {
         Optional<Y9PersonExt> ext = y9PersonExtRepository.findByPersonId(personId);
-        return ext.map(y9PersonExt -> Base64.encodeToString(y9PersonExt.getPhoto())).orElse("");
+        return ext.map(y9PersonExt -> Base64.getEncoder().encodeToString(y9PersonExt.getPhoto())).orElse("");
     }
 
     @Override
@@ -97,7 +96,7 @@ public class Y9PersonExtServiceImpl implements Y9PersonExtService {
     public Y9PersonExt savePersonPhoto(Y9Person person, String photo) {
         byte[] p = new byte[0];
         if (StringUtils.isNotBlank(photo)) {
-            p = Base64.decode(photo);
+            p = Base64.getDecoder().decode(photo);
         }
         Y9PersonExt ext;
         Optional<Y9PersonExt> optionalY9PersonExt = y9PersonExtRepository.findByPersonId(person.getId());
@@ -135,7 +134,7 @@ public class Y9PersonExtServiceImpl implements Y9PersonExtService {
     public Y9PersonExt savePersonSign(Y9Person person, String sign) {
         byte[] s = new byte[0];
         if (StringUtils.isNotBlank(sign)) {
-            s = Base64.decode(sign);
+            s = Base64.getDecoder().decode(sign);
         }
         Y9PersonExt ext;
         Optional<Y9PersonExt> optionalY9PersonExt = y9PersonExtRepository.findByPersonId(person.getId());

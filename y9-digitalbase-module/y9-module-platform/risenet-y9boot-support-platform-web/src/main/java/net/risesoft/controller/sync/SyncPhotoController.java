@@ -2,6 +2,7 @@ package net.risesoft.controller.sync;
 
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,8 +20,6 @@ import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9PersonExtService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.y9.Y9LoginUserHolder;
-
-import jodd.util.Base64;
 
 /**
  * 同步照片
@@ -56,13 +55,13 @@ public class SyncPhotoController {
         if (!photoList.isEmpty() && null != photoList.get(0)) {
             Blob p = photoList.get(0);
             try {
-                return Base64.encodeToString(p.getBytes(1, (int)p.length()));
+                return Base64.getEncoder().encodeToString(p.getBytes(1, (int)p.length()));
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage(), e);
-                return Base64.encodeToString(new byte[0]);
+                return Base64.getEncoder().encodeToString(new byte[0]);
             }
         }
-        return Base64.encodeToString(new byte[0]);
+        return Base64.getEncoder().encodeToString(new byte[0]);
     }
 
     /**
