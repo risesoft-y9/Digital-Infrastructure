@@ -87,6 +87,7 @@ cn-idev-excel-fastexcel = "1.2.0"
 auth0-jwt = "4.5.0"
 auth0-jwks = "0.22.1"
 axis2 = "2.0.0"
+checker-qual="3.49.5"
 
 [libraries]
 #spring boot & cloud dependencies
@@ -187,6 +188,7 @@ auth0-jwks = { module = "com.auth0:jwks-rsa", version.ref = "auth0-jwks" }
 axis2-corba = { group = "org.apache.axis2", name = "axis2-corba", version.ref = "axis2" }
 axis2-jaxws = { group = "org.apache.axis2", name = "axis2-jaxws", version.ref = "axis2" }
 axis2-spring = { group = "org.apache.axis2", name = "axis2-spring", version.ref = "axis2" }
+checker-qual = { module = "org.checkerframework:checker-qual",version.ref = "checker-qual" }
 
 [plugins]
 io-spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "io-spring-dependency-management" }

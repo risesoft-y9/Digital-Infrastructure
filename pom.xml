@@ -79,6 +79,7 @@
 
         <module>y9-digitalbase-starter/risenet-y9boot-starter-apisix</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-cache-redis</module>
+        <module>y9-digitalbase-starter/risenet-y9boot-starter-elasticsearch</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-idgenerator</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-jpa-public</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-jpa-tenant</module>
@@ -87,14 +88,15 @@
         <module>y9-digitalbase-starter/risenet-y9boot-starter-liquibase</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-publish-kafka</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-listener-kafka</module>
-        <module>y9-digitalbase-starter/risenet-y9boot-starter-multi-tenant</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-log</module>
+        <module>y9-digitalbase-starter/risenet-y9boot-starter-multi-tenant</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-openfeign</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-permission</module>
+        <module>y9-digitalbase-starter/risenet-y9boot-starter-repeatsubmit</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-security</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-sso-oauth2-resource</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-web</module>
-        <module>y9-digitalbase-starter/risenet-y9boot-starter-elasticsearch</module>
+
 
         <module>y9-digitalbase-idcode/risenet-y9boot-idcode</module>
 

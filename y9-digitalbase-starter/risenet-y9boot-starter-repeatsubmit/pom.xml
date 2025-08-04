@@ -3,9 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase-starter</artifactId>
+        <artifactId>y9-digitalbase-parent</artifactId>
         <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../y9-digitalbase-parent/pom.xml</relativePath>
     </parent>
     <!-- <groupId>net.risesoft</groupId> -->
     <artifactId>risenet-y9boot-starter-repeatsubmit</artifactId>
@@ -60,8 +60,13 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
