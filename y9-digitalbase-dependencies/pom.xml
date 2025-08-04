@@ -136,7 +136,7 @@
         <hutool.version>5.8.38</hutool.version>
         <ipaddress.version>5.5.1</ipaddress.version>
         <javers.version>7.8.0</javers.version>
-        <jakarta.mail.version>2.0.1</jakarta.mail.version>
+        <jakarta.mail.version>2.0.2</jakarta.mail.version>
         <jakarta-json.version>2.0.1</jakarta-json.version>
         <java-uuid-generator.version>5.1.0</java-uuid-generator.version>
         <jBCrypt.version>0.4.3</jBCrypt.version>
@@ -147,12 +147,12 @@
         <lombok.version>1.18.38</lombok.version>
         <liquibase.version>4.32.0</liquibase.version>
         <org-dom4j.version>2.1.4</org-dom4j.version>
-        <oshi.version>6.8.1</oshi.version>
+        <oshi.version>6.8.2</oshi.version>
         <poi-ooxml.version>5.4.1</poi-ooxml.version>
         <poi-scratchpad.version>5.4.1</poi-scratchpad.version>
         <reflections.version>0.10.3.4</reflections.version>
-        <shedlock.version>6.7.0</shedlock.version>
-        <transmittable-thread-local.version>2.14.3</transmittable-thread-local.version>
+        <shedlock.version>6.9.2</shedlock.version>
+        <transmittable-thread-local.version>2.14.5</transmittable-thread-local.version>
 
         <!-- auth0 jwt jwks -->
         <auth0-jwt.version>4.5.0</auth0-jwt.version>

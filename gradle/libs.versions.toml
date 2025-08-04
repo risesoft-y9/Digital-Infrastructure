@@ -68,7 +68,7 @@ io-github-classgraph-classgraph = "4.8.179"
 io-micrometer-micrometer-registry-prometheus = "1.15.0"
 # 安全相关
 de-svenkubiak-jbcrypt = "0.4.3"
-net-javacrumbs-shedlock-shedlock-spring = "6.7.0"
+net-javacrumbs-shedlock-shedlock-spring = "6.9.2"
 org-bouncycastle-bcprov-ext-jdk18on = "1.78.1"
 org-imgscalr-imgscalr-lib = "4.2"
 org-owasp-antisamy-antisamy = "1.7.8"
