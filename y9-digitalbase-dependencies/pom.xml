@@ -128,6 +128,7 @@
         <commons-httpclient.version>3.1</commons-httpclient.version>
         <commons-beanutils.version>1.11.0</commons-beanutils.version>
         <commons-discovery.version>0.5</commons-discovery.version>
+        <checker-qual.version>3.49.5</checker-qual.version>
         <etcd-java.version>0.0.24</etcd-java.version>
         <fastjson.version>2.0.57</fastjson.version>
         <fastexcel.version>1.2.0</fastexcel.version>
@@ -574,6 +575,12 @@
                 <groupId>commons-discovery</groupId>
                 <artifactId>commons-discovery</artifactId>
                 <version>${commons-discovery.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.checkerframework</groupId>
+                <artifactId>checker-qual</artifactId>
+                <version>${checker-qual.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
