@@ -12,11 +12,9 @@ dependencies {
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-web"))
     api(project(":y9-digitalbase-idcode:risenet-y9boot-idcode"))
 
-    api(libs.jodd.http)
     api("org.apache.commons:commons-lang3")
     api(libs.hibernate.validator)
     api(libs.google.guava)
-    api(libs.dom4j)
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 }

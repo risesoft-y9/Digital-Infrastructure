@@ -20,11 +20,8 @@ dependencies {
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-permission"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-web"))
 
-    api(libs.dom4j)
-    api(libs.jodd.http)
     api(libs.shedlock.spring)
     api(libs.shedlock.provider.jdbc.template)
-    api(libs.google.guava)
     api(libs.ipaddress)
     api(libs.fastexcel)
     testImplementation("org.springframework.boot:spring-boot-starter-test")

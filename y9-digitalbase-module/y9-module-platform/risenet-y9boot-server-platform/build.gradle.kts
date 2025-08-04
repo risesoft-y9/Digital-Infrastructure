@@ -19,9 +19,6 @@ dependencies {
 
     implementation("org.apache.commons:commons-pool2")
     implementation("org.springframework.boot:spring-boot-docker-compose")
-    implementation(libs.dom4j)
-    implementation(libs.jaxen)
-    implementation(libs.google.guava)
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus")
 
