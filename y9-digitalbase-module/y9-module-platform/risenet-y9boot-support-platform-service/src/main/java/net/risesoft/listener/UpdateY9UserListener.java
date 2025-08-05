@@ -1,5 +1,6 @@
 package net.risesoft.listener;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.context.event.EventListener;
@@ -369,5 +370,25 @@ public class UpdateY9UserListener {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("人员-岗位关联删除触发的更新用户拥有的岗位id完成");
         }
+    }
+
+    /**
+     * 监听租户更新事件
+     *
+     * @param event 租户更新事件
+     */
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onY9TenantUpdated(Y9EntityUpdatedEvent<Y9Tenant> event) {
+        Y9Tenant originEntity = event.getOriginEntity();
+        Y9Tenant updatedEntity = event.getUpdatedEntity();
+        LOGGER.info("租户[{}]更新触发的更新用户开始", updatedEntity.getId());
+
+        if (!Objects.equals(originEntity.getName(), updatedEntity.getName())) {
+            y9UserService.updateByTenantId(updatedEntity.getId(), updatedEntity.getName(),
+                updatedEntity.getShortName());
+        }
+
+        LOGGER.info("租户[{}]更新触发的更新用户结束", updatedEntity.getId());
     }
 }

@@ -23,7 +23,6 @@ import net.risesoft.y9public.entity.Y9FileStore;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.service.Y9FileStoreService;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
-import net.risesoft.y9public.service.user.Y9UserService;
 
 /**
  * 租户管理
@@ -37,8 +36,6 @@ public class Y9TenantController {
     private final Y9FileStoreService y9FileStoreService;
 
     private final Y9TenantService y9TenantService;
-
-    private final Y9UserService orgUserService;
 
     private final Y9Properties y9Properties;
 
@@ -83,15 +80,7 @@ public class Y9TenantController {
     @RiseLog(operationType = OperationTypeEnum.ADD, operationName = "保存租户编辑的信息")
     @PostMapping(value = "/saveTenant")
     public Y9Result<String> saveTenant(Y9Tenant tenant) {
-        boolean updateable = true;
-        Y9Tenant tenantold = y9TenantService.getById(tenant.getId());
-        if (null != tenantold && tenantold.getName().equals(tenant.getName())) {
-            updateable = false;
-        }
-        y9TenantService.saveOrUpdate(tenant);
-        if (updateable) {
-            orgUserService.updateByTenantId(tenant.getId(), tenant.getName(), tenant.getShortName());
-        }
+        y9TenantService.saveAndInitDataSource(tenant);
         return Y9Result.successMsg("保存成功！");
     }
 
