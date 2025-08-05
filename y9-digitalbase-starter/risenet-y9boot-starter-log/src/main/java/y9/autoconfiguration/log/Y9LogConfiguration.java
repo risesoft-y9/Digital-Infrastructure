@@ -32,6 +32,7 @@ import net.risesoft.log.aop.RiseLogAdvice;
 import net.risesoft.log.aop.RiseLogAdvisor;
 import net.risesoft.log.service.AccessLogReporter;
 import net.risesoft.log.service.impl.AccessLogApiReporter;
+import net.risesoft.log.service.impl.AccessLogConsoleReporter;
 import net.risesoft.log.service.impl.AccessLogKafkaReporter;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.configuration.Y9Properties;
@@ -112,6 +113,17 @@ public class Y9LogConfiguration {
         @Bean
         public AccessLogReporter accessLogApiReporter(Y9Properties y9Properties) {
             return new AccessLogApiReporter(y9Properties);
+        }
+
+    }
+
+    @Configuration
+    @ConditionalOnProperty(value = "y9.feature.log.reportMethod", havingValue = "console")
+    static class Y9LogConsoleConfiguration {
+
+        @Bean
+        public AccessLogReporter accessLogApiPusher() {
+            return new AccessLogConsoleReporter();
         }
 
     }
