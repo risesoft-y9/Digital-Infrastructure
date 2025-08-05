@@ -150,7 +150,7 @@ public interface Y9TenantService {
      * @param y9Tenant 实体类
      * @return Tenant
      */
-    Y9Tenant saveOrUpdate(Y9Tenant y9Tenant);
+    Y9Tenant saveAndInitDataSource(Y9Tenant y9Tenant);
 
     /**
      * 保存租户排序信息
