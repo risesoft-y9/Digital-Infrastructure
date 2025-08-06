@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Organization;
-import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9OrganizationManager;
 import net.risesoft.repository.Y9OrganizationRepository;
@@ -69,12 +68,6 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     public void delete(String id) {
 
         Y9Organization org = this.getById(id);
-
-        // 删除组织关联数据
-        y9OrgBasesToRolesRepository.deleteByOrgId(org.getId());
-        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(org.getId(),
-            AuthorizationPrincipalTypeEnum.DEPARTMENT);
-
         y9OrganizationManager.delete(org);
 
         // 发布事件，程序内部监听处理相关业务

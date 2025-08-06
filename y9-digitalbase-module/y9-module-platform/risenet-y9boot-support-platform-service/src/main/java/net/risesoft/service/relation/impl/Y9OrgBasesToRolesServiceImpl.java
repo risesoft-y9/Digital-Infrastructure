@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9OrgBase;
+import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;
@@ -172,6 +173,13 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
             mappingList.add(saveOrUpdate(roleId, orgId, negative));
         }
         return mappingList;
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onOrganizationDeleted(Y9EntityDeletedEvent<Y9Organization> event) {
+        Y9Organization organization = event.getEntity();
+        y9OrgBasesToRolesRepository.deleteByOrgId(organization.getId());
     }
 
     @EventListener
