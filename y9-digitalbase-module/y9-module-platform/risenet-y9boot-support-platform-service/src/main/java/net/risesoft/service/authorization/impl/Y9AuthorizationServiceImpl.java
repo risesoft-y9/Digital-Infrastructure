@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9OrgBase;
+import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.permission.Y9Authorization;
@@ -307,6 +308,14 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     private Y9Authorization getById(String id) {
         return y9AuthorizationRepository.findById(id).orElseThrow(
             () -> Y9ExceptionUtil.notFoundException(AuthorizationErrorCodeEnum.AUTHORIZATION_NOT_FOUND, id));
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onOrganizationDeleted(Y9EntityDeletedEvent<Y9Organization> event) {
+        Y9Organization organization = event.getEntity();
+        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(organization.getId(),
+            AuthorizationPrincipalTypeEnum.ORGANIZATION);
     }
 
     @EventListener
