@@ -30,13 +30,6 @@ public interface Y9OptionValueService {
     void delete(String[] ids);
 
     /**
-     * 根据type，删除字典数据
-     *
-     * @param type 字典类型
-     */
-    void deleteByType(String type);
-
-    /**
      * 根据字典类型，获取字典属性值列表
      *
      * @param type 字典类型

@@ -13,24 +13,20 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.id.IdType;
-import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.enums.AuditLogEnum;
+import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.identity.person.Y9PersonToResourceAndAuthorityRepository;
 import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorityRepository;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
-import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
-import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
-import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9Operation;
-import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
-import net.risesoft.y9public.manager.resource.CompositeResourceManager;
 import net.risesoft.y9public.manager.resource.Y9OperationManager;
 import net.risesoft.y9public.repository.resource.Y9OperationRepository;
 import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
@@ -55,7 +51,6 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
 
     private final Y9OperationManager y9OperationManager;
-    private final CompositeResourceManager compositeResourceManager;
 
     @Override
     @Transactional(readOnly = false)
@@ -68,8 +63,17 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     @Override
     @Transactional(readOnly = false)
     public void delete(String id) {
-        Y9Operation y9Operation = this.getById(id);
+        Y9Operation y9Operation = y9OperationManager.getById(id);
         y9OperationManager.delete(y9Operation);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.OPERATION_DELETE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.OPERATION_DELETE.getDescription(), y9Operation.getName()))
+            .objectId(id)
+            .oldObject(y9Operation)
+            .currentObject(null)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
 
         // 删除租户与按钮资源关联的数据
         List<Y9TenantApp> y9TenantAppList =
@@ -96,9 +100,23 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     @Override
     @Transactional(readOnly = false)
     public Y9Operation disable(String id) {
-        Y9Operation y9Operation = this.getById(id);
-        y9Operation.setEnabled(Boolean.FALSE);
-        return this.saveOrUpdate(y9Operation);
+        Y9Operation currentOperation = this.getById(id);
+        Y9Operation originalOperation = Y9ModelConvertUtil.convert(currentOperation, Y9Operation.class);
+
+        currentOperation.setEnabled(Boolean.FALSE);
+        Y9Operation savedOperation = y9OperationManager.update(currentOperation);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.OPERATION_UPDATE_ENABLE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.OPERATION_UPDATE_ENABLE.getDescription(),
+                savedOperation.getName(), "禁用"))
+            .objectId(id)
+            .oldObject(originalOperation)
+            .currentObject(savedOperation)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedOperation;
     }
 
     @Override
@@ -114,9 +132,23 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     @Override
     @Transactional(readOnly = false)
     public Y9Operation enable(String id) {
-        Y9Operation y9Operation = this.getById(id);
-        y9Operation.setEnabled(Boolean.TRUE);
-        return this.saveOrUpdate(y9Operation);
+        Y9Operation currentOperation = this.getById(id);
+        Y9Operation originalOperation = Y9ModelConvertUtil.convert(currentOperation, Y9Operation.class);
+
+        currentOperation.setEnabled(Boolean.TRUE);
+        Y9Operation savedOperation = y9OperationManager.update(currentOperation);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.OPERATION_UPDATE_ENABLE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.OPERATION_UPDATE_ENABLE.getDescription(),
+                savedOperation.getName(), "启用"))
+            .objectId(id)
+            .oldObject(originalOperation)
+            .currentObject(savedOperation)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedOperation;
     }
 
     @Override
@@ -142,34 +174,38 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     @Override
     @Transactional(readOnly = false)
     public Y9Operation saveOrUpdate(Y9Operation y9Operation) {
-        Y9ResourceBase parent = compositeResourceManager.getResourceAsParent(y9Operation.getParentId());
-
         if (StringUtils.isNotBlank(y9Operation.getId())) {
             Optional<Y9Operation> y9OperationOptional = y9OperationManager.findById(y9Operation.getId());
             if (y9OperationOptional.isPresent()) {
-                Y9Operation originOperation = y9OperationOptional.get();
-                Y9Operation updatedOperation = new Y9Operation();
-                Y9BeanUtil.copyProperties(originOperation, updatedOperation);
-                Y9BeanUtil.copyProperties(y9Operation, updatedOperation);
+                Y9Operation originOperation = Y9ModelConvertUtil.convert(y9OperationOptional.get(), Y9Operation.class);
+                Y9Operation savedOperation = y9OperationManager.update(y9Operation);
 
-                updatedOperation.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), updatedOperation.getId()));
+                AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+                    .action(AuditLogEnum.OPERATION_UPDATE.getAction())
+                    .description(
+                        Y9StringUtil.format(AuditLogEnum.OPERATION_UPDATE.getDescription(), savedOperation.getName()))
+                    .objectId(savedOperation.getId())
+                    .oldObject(originOperation)
+                    .currentObject(savedOperation)
+                    .build();
+                Y9Context.publishEvent(auditLogEvent);
 
-                updatedOperation = y9OperationManager.save(updatedOperation);
-
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originOperation, updatedOperation));
-
-                return updatedOperation;
+                return savedOperation;
             }
-        } else {
-            y9Operation.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-            y9Operation.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), y9Operation.getId()));
-            Integer maxTabIndex = getMaxIndexByParentId(y9Operation.getParentId());
-            y9Operation.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
         }
 
-        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9Operation));
+        Y9Operation savedOperation = y9OperationManager.insert(y9Operation);
 
-        return y9OperationManager.save(y9Operation);
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.OPERATION_CREATE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.OPERATION_CREATE.getDescription(), savedOperation.getName()))
+            .objectId(savedOperation.getId())
+            .oldObject(null)
+            .currentObject(savedOperation)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedOperation;
     }
 
     @Override
@@ -201,12 +237,6 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     @Override
     public List<Y9Operation> findByParentId(String parentId) {
         return y9OperationRepository.findByParentIdOrderByTabIndex(parentId);
-    }
-
-    @Override
-    public Integer getMaxIndexByParentId(String parentId) {
-        return y9OperationRepository.findTopByParentIdOrderByTabIndexDesc(parentId).map(Y9Operation::getTabIndex)
-            .orElse(0);
     }
 
     @EventListener

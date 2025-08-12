@@ -34,14 +34,6 @@ public interface Y9DepartmentService {
     void delete(String id);
 
     /**
-     * 根据id判断部门是否存在
-     *
-     * @param id 部门id
-     * @return boolean
-     */
-    boolean existsById(String id);
-
-    /**
      * 根据id查找部门
      *
      * @param id 部门id
@@ -136,21 +128,13 @@ public interface Y9DepartmentService {
     /**
      * 移动部门到新的节点
      *
-     * @param deptId 部门id
+     * @param id 部门id
      * @param parentId 新父节点id
      * @return {@link Y9Department}
      */
-    Y9Department move(String deptId, String parentId);
+    Y9Department move(String id, String parentId);
 
     void removeDepartmentProp(String deptId, Integer category, String orgBaseId);
-
-    /**
-     * 保存新的部门排序
-     *
-     * @param deptIds 部门id数组
-     * @return {@code List<Y9Department>}
-     */
-    List<Y9Department> saveOrder(List<String> deptIds);
 
     /**
      * 保存或更新 新增或修改此部门实例的信息

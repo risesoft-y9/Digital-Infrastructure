@@ -99,13 +99,6 @@ public interface Y9TenantService {
     Y9Tenant getById(String id);
 
     /**
-     * 返回最大的排序号
-     *
-     * @return Integer
-     */
-    Integer getMaxTableIndex();
-
-    /**
      * 获取所有租户列表
      *
      * @return {@code List<}{@link Y9Tenant}{@code >}
@@ -142,7 +135,7 @@ public interface Y9TenantService {
      * @param entity 租户实体
      * @return {@link Y9Tenant}
      */
-    Y9Tenant save(Y9Tenant entity);
+    Y9Tenant saveOrUpdate(Y9Tenant entity);
 
     /**
      * 保存租户信息

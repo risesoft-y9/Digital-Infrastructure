@@ -51,16 +51,16 @@ public class Y9PersonsToPositions extends BaseEntity {
     @Comment("人员ID")
     private String personId;
 
-    /** 岗位排序号 */
+    /** 同一个人员的岗位排序号 */
     @ColumnDefault("0")
     @Column(name = "POSITION_ORDER", nullable = false)
-    @Comment("岗位排序号")
+    @Comment("同一个人员的岗位排序号")
     private Integer positionOrder = 0;
 
-    /** 人员排序号 */
+    /** 同一个岗位的人员排序号 */
     @ColumnDefault("0")
     @Column(name = "PERSON_ORDER", nullable = false)
-    @Comment("人员排序号")
+    @Comment("同一个岗位的人员排序号")
     private Integer personOrder = 0;
 
 }

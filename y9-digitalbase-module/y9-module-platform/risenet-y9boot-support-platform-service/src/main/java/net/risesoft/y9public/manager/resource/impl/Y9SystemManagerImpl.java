@@ -2,6 +2,7 @@ package net.risesoft.y9public.manager.resource.impl;
 
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.exception.SystemErrorCodeEnum;
+import net.risesoft.id.IdType;
+import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.manager.resource.Y9SystemManager;
@@ -30,10 +33,19 @@ public class Y9SystemManagerImpl implements Y9SystemManager {
         return y9SystemRepository.findByName(systemName);
     }
 
+    @Transactional(readOnly = false)
+    @Override
+    public Y9System insert(Y9System y9System) {
+        if (StringUtils.isBlank(y9System.getId())) {
+            y9System.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+        }
+        return y9SystemRepository.save(y9System);
+    }
+
     @Override
     @Transactional(readOnly = false)
     @CacheEvict(key = "#y9System.id", condition = "#y9System.id!=null")
-    public Y9System save(Y9System y9System) {
+    public Y9System update(Y9System y9System) {
         return y9SystemRepository.save(y9System);
     }
 

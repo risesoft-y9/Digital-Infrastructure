@@ -86,7 +86,7 @@ public class GroupApiImpl implements GroupApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Group y9Group = Y9JsonUtil.readValue(groupJson, Y9Group.class);
-        y9Group = y9GroupService.createGroup(y9Group);
+        y9Group = y9GroupService.saveOrUpdate(y9Group);
         return Y9ModelConvertUtil.convert(y9Group, Group.class);
     }
 

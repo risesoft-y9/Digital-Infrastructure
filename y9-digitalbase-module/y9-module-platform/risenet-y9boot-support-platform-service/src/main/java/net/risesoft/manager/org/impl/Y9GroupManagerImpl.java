@@ -27,6 +27,7 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
+import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
@@ -46,6 +47,8 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
     @Transactional(readOnly = false)
     public void delete(Y9Group y9Group) {
         y9GroupRepository.delete(y9Group);
+
+        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Group));
     }
 
     @Override
@@ -118,15 +121,46 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
         return savedGroup;
     }
 
-    @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#id")
-    public Y9Group saveProperties(String id, String properties) {
-        final Y9Group group = this.getById(id);
+    @Override
+    public Y9Group insert(Y9Group group) {
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(group.getParentId());
 
-        Y9Group updatedGroup = Y9ModelConvertUtil.convert(group, Y9Group.class);
-        updatedGroup.setProperties(properties);
-        return this.saveOrUpdate(updatedGroup);
+        if (StringUtils.isBlank(group.getId())) {
+            group.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+        }
+
+        group.setTenantId(Y9LoginUserHolder.getTenantId());
+        group.setDisabled(false);
+        group.setParentId(parent.getId());
+        group.setTabIndex((null == group.getTabIndex() || DefaultConsts.TAB_INDEX.equals(group.getTabIndex()))
+            ? compositeOrgBaseManager.getNextSubTabIndex(parent.getId()) : group.getTabIndex());
+        group.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.GROUP, group.getName(), parent.getDn()));
+        group.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), group.getId()));
+
+        final Y9Group savedGroup = this.save(group);
+
+        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedGroup));
+
+        return savedGroup;
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public Y9Group update(Y9Group group) {
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(group.getParentId());
+
+        Y9Group originalGroup = new Y9Group();
+        Y9Group updatedGroup = this.getById(group.getId());
+        Y9BeanUtil.copyProperties(updatedGroup, originalGroup);
+        Y9BeanUtil.copyProperties(group, updatedGroup);
+
+        updatedGroup.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.GROUP, group.getName(), parent.getDn()));
+        updatedGroup.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), group.getId()));
+        final Y9Group savedGroup = this.save(updatedGroup);
+
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalGroup, savedGroup));
+        return savedGroup;
     }
 
     @Override

@@ -14,15 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.OrgLevelConsts;
+import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.TenantErrorCodeEnum;
-import net.risesoft.id.IdType;
-import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
-import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9Assert;
-import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.manager.tenant.Y9DataSourceManager;
@@ -46,6 +44,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     private final Y9TenantRepository y9TenantRepository;
 
     private final Y9UserService y9UserService;
+
     private final Y9DataSourceManager y9DataSourceManager;
     private final Y9TenantManager y9TenantManager;
 
@@ -79,20 +78,16 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     @Transactional(readOnly = false)
     public Y9Tenant createTenant(String tenantName, String tenantShortName, String dataSourceId) {
         Y9Tenant y9Tenant = new Y9Tenant();
-        y9Tenant.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         y9Tenant.setName(tenantName);
         y9Tenant.setShortName(tenantShortName);
         y9Tenant.setEnabled(Boolean.TRUE);
         y9Tenant.setDefaultDataSourceId(dataSourceId);
-        Integer maxTabIndex = getMaxTableIndex();
-        y9Tenant.setTabIndex(maxTabIndex);
-        return save(y9Tenant);
+        return this.saveOrUpdate(y9Tenant);
     }
 
     @Override
     @Transactional(readOnly = false)
     public void delete(String id) {
-        // TODO 删除关联数据 deleteToResourceAndRoleNode(id);
         y9UserService.deleteByTenantId(id);
         y9TenantRepository.deleteById(id);
     }
@@ -110,11 +105,6 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     @Override
     public Y9Tenant getById(String id) {
         return y9TenantManager.getById(id);
-    }
-
-    @Override
-    public Integer getMaxTableIndex() {
-        return y9TenantRepository.findTopByOrderByTabIndexDesc().map(y9Tenant -> y9Tenant.getTabIndex() + 1).orElse(0);
     }
 
     @Override
@@ -154,52 +144,47 @@ public class Y9TenantServiceImpl implements Y9TenantService {
         }
 
         y9Tenant.setParentId(parentId);
-        this.save(y9Tenant);
+        this.saveOrUpdate(y9Tenant);
     }
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Tenant save(Y9Tenant y9Tenant) {
+    public Y9Tenant saveOrUpdate(Y9Tenant y9Tenant) {
         Y9Assert.isTrue(isNameAvailable(y9Tenant.getName(), y9Tenant.getId()), TenantErrorCodeEnum.NAME_HAS_BEEN_USED,
             y9Tenant.getName());
         Y9Assert.isTrue(isShortNameAvailable(y9Tenant.getShortName(), y9Tenant.getId()),
             TenantErrorCodeEnum.SHORT_NAME_HAS_BEEN_USED, y9Tenant.getShortName());
 
-        String parentId = y9Tenant.getParentId();
-        if (StringUtils.isNotBlank(parentId)) {
-            Y9Tenant parent = this.getById(parentId);
-            if (parent != null) {
-                y9Tenant.setParentId(parentId);
-                y9Tenant.setNamePath(parent.getNamePath() + OrgLevelConsts.SEPARATOR + y9Tenant.getShortName());
-                y9Tenant.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + y9Tenant.getId());
-            }
-        } else {
-            y9Tenant.setParentId(null);
-            y9Tenant.setNamePath(y9Tenant.getShortName());
-            y9Tenant.setGuidPath(y9Tenant.getId());
-        }
-
         if (StringUtils.isNotBlank(y9Tenant.getId())) {
             Optional<Y9Tenant> y9TenantOptional = y9TenantRepository.findById(y9Tenant.getId());
             if (y9TenantOptional.isPresent()) {
-                Y9Tenant originY9Tenant = y9TenantOptional.get();
-                Y9Tenant updatedY9Tenant = new Y9Tenant();
-                Y9BeanUtil.copyProperties(originY9Tenant, updatedY9Tenant);
-                Y9BeanUtil.copyProperties(y9Tenant, updatedY9Tenant);
+                Y9Tenant originTenant = Y9ModelConvertUtil.convert(y9TenantOptional.get(), Y9Tenant.class);
+                Y9Tenant savedTenant = y9TenantManager.update(y9Tenant);
 
-                updatedY9Tenant = y9TenantRepository.save(y9Tenant);
+                AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+                    .action(AuditLogEnum.TENANT_UPDATE.getAction())
+                    .description(
+                        Y9StringUtil.format(AuditLogEnum.TENANT_UPDATE.getDescription(), savedTenant.getName()))
+                    .objectId(savedTenant.getId())
+                    .oldObject(originTenant)
+                    .currentObject(savedTenant)
+                    .build();
+                Y9Context.publishEvent(auditLogEvent);
 
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Tenant, updatedY9Tenant));
-
-                return updatedY9Tenant;
+                return savedTenant;
             }
-        } else {
-            y9Tenant.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
-        y9Tenant.setTabIndex(getMaxTableIndex());
-        Y9Tenant savedY9Tenant = y9TenantRepository.save(y9Tenant);
 
-        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedY9Tenant));
+        Y9Tenant savedY9Tenant = y9TenantManager.insert(y9Tenant);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.TENANT_CREATE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.TENANT_CREATE.getDescription(), savedY9Tenant.getName()))
+            .objectId(savedY9Tenant.getId())
+            .oldObject(null)
+            .currentObject(savedY9Tenant)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
 
         return savedY9Tenant;
     }
@@ -207,7 +192,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     @Override
     @Transactional(readOnly = false)
     public Y9Tenant saveAndInitDataSource(Y9Tenant y9Tenant) {
-        Y9Tenant savedY9Tenant = save(y9Tenant);
+        Y9Tenant savedY9Tenant = this.saveOrUpdate(y9Tenant);
 
         if (StringUtils.isBlank(savedY9Tenant.getDefaultDataSourceId())) {
             Y9DataSource y9DataSource = null;
@@ -220,7 +205,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
                     y9DataSourceManager.dropTenantDefaultDataSource(y9DataSource.getId(), y9Tenant.getShortName());
                 }
             }
-            return save(y9Tenant);
+            return this.saveOrUpdate(y9Tenant);
         }
         return savedY9Tenant;
     }

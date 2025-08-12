@@ -45,14 +45,6 @@ public interface Y9PersonService {
     long countByGuidPathLikeAndDisabledAndDeletedFalse(String guidPath);
 
     /**
-     * 根据父节点部门id，获取子节点的人员数量
-     *
-     * @param parentId 父节点id
-     * @return long
-     */
-    long countByParentId(String parentId);
-
-    /**
      * 根据必须字段创建人员
      *
      * @param parentId 父ID
@@ -184,14 +176,6 @@ public interface Y9PersonService {
     List<Y9Person> listAll();
 
     /**
-     * 根据guidPath（模糊查询），获取人员列表
-     *
-     * @param guidPath guid路径
-     * @return {@code List<Y9Person>}
-     */
-    List<Y9Person> listByDisabledAndDeletedAndGuidPathLike(String guidPath);
-
-    /**
      * 根据用户组节点id,获取本组的人员列表
      *
      * @param groupId 用户组id
@@ -249,21 +233,21 @@ public interface Y9PersonService {
     /**
      * 修改人员密码
      *
-     * @param personId 人员id
+     * @param id 人员id
      * @param oldPassword 旧密码
      * @param newPassword 新密码
      * @return {@link Y9Person}
      */
-    Y9Person modifyPassword(String personId, String oldPassword, String newPassword);
+    Y9Person modifyPassword(String id, String oldPassword, String newPassword);
 
     /**
      * 移动
      *
-     * @param personId 人员id
+     * @param id 人员id
      * @param parentId 父节点id
      * @return {@link Y9Person}
      */
-    Y9Person move(String personId, String parentId);
+    Y9Person move(String id, String parentId);
 
     /**
      * 按照tabindexs的顺序重新排序人员列表
@@ -306,26 +290,18 @@ public interface Y9PersonService {
     /**
      * 重置默认密码
      *
-     * @param personId 人员id
+     * @param id 人员id
      */
-    void resetDefaultPassword(String personId);
-
-    /**
-     * 保存人员
-     *
-     * @param person 人员对象
-     * @return {@link Y9Person}
-     */
-    Y9Person save(Y9Person person);
+    void resetDefaultPassword(String id);
 
     /**
      * 保存人员头像
      *
-     * @param personId 人员id
+     * @param id 人员id
      * @param avatorUrl 头像路径
      * @return {@link Y9Person}
      */
-    Y9Person saveAvator(String personId, String avatorUrl);
+    Y9Person saveAvator(String id, String avatorUrl);
 
     /**
      * 保存或者修改此岗位的信息
@@ -350,20 +326,20 @@ public interface Y9PersonService {
     /**
      * 保存或者更新人员扩展信息
      *
-     * @param personId 人员id
+     * @param id 人员id
      * @param properties 扩展属性
      * @return {@link Y9Person}
      */
-    Y9Person saveProperties(String personId, String properties);
+    Y9Person saveProperties(String id, String properties);
 
     /**
      * 修改微信 id
      *
-     * @param personId 人员 id
+     * @param id 人员 id
      * @param weixinId 微信 id
      * @return {@link Y9Person}
      */
-    Y9Person saveWeixinId(String personId, String weixinId);
+    Y9Person saveWeixinId(String id, String weixinId);
 
     /**
      * 更新排序序列号

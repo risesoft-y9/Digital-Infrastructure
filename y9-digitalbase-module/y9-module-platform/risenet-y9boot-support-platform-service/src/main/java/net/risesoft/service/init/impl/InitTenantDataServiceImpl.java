@@ -33,7 +33,7 @@ import net.risesoft.service.relation.Y9PersonsToPositionsService;
  * @date 2023/10/08
  * @since 9.6.3
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
+@Transactional(value = "rsTenantTransactionManager")
 @Service
 @RequiredArgsConstructor
 public class InitTenantDataServiceImpl implements InitTenantDataService {
@@ -319,7 +319,6 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void initManagers() {
         // 新建租户三员及他们所在的虚拟组织
         boolean virtualOrganizationNotExists = y9OrganizationService.list(true, false).isEmpty();
@@ -332,7 +331,6 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void initOptionClass() {
         createOptionClass("职务", OptionClassConsts.DUTY);
         createOptionClass("职级", OptionClassConsts.DUTY_LEVEL);

@@ -23,6 +23,8 @@ public interface Y9SystemManager {
 
     Y9System getByName(String systemName);
 
-    Y9System save(Y9System y9System);
+    Y9System insert(Y9System y9System);
+
+    Y9System update(Y9System y9System);
 
 }

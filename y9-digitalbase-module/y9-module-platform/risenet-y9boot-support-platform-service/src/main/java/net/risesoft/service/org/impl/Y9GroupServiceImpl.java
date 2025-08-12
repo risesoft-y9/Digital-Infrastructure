@@ -16,12 +16,11 @@ import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
-import net.risesoft.enums.platform.OrgTypeEnum;
-import net.risesoft.id.IdType;
-import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9GroupManager;
 import net.risesoft.manager.relation.Y9PersonsToGroupsManager;
+import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.Y9GroupRepository;
 import net.risesoft.repository.relation.Y9PersonsToGroupsRepository;
 import net.risesoft.service.org.Y9GroupService;
@@ -30,6 +29,7 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9.util.Y9StringUtil;
 
 /**
  * @author dingzhaojun
@@ -52,34 +52,24 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     @Override
     @Transactional(readOnly = false)
     public Y9Group changeDisabled(String id) {
-        final Y9Group y9Group = this.getById(id);
+        Y9Group currentGroup = this.getById(id);
+        Y9Group originalGroup = Y9ModelConvertUtil.convert(currentGroup, Y9Group.class);
+        boolean disableStatusToUpdate = !currentGroup.getDisabled();
 
-        Y9Group updatedGroup = Y9ModelConvertUtil.convert(y9Group, Y9Group.class);
-        updatedGroup.setDisabled(!y9Group.getDisabled());
-        return y9GroupManager.saveOrUpdate(updatedGroup);
-    }
+        currentGroup.setDisabled(disableStatusToUpdate);
+        Y9Group savedGroup = y9GroupManager.update(currentGroup);
 
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Group createGroup(Y9Group y9Group) {
-        if (y9Group == null) {
-            return null;
-        }
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(y9Group.getParentId());
-        if (parent == null) {
-            return null;
-        }
-        if (StringUtils.isBlank(y9Group.getId())) {
-            y9Group.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        }
-        if (null == y9Group.getTabIndex()) {
-            y9Group.setTabIndex(Integer.MAX_VALUE);
-        }
-        y9Group.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.GROUP, y9Group.getName(), parent.getDn()));
-        y9Group.setDisabled(false);
-        y9Group.setParentId(parent.getId());
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.GROUP_UPDATE_DISABLED.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.GROUP_UPDATE_DISABLED.getDescription(), savedGroup.getName(),
+                disableStatusToUpdate ? "禁用" : "启用"))
+            .objectId(id)
+            .oldObject(originalGroup)
+            .currentObject(savedGroup)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
 
-        return y9GroupManager.save(y9Group);
+        return savedGroup;
     }
 
     @Override
@@ -91,7 +81,14 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         y9PersonsToGroupsManager.deleteByGroupId(groupId);
         y9GroupManager.delete(y9Group);
 
-        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Group));
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.GROUP_DELETE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.GROUP_DELETE.getDescription(), y9Group.getName()))
+            .objectId(groupId)
+            .oldObject(y9Group)
+            .currentObject(null)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
     }
 
     @Override
@@ -138,11 +135,6 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     }
 
     @Override
-    public List<Y9Group> listByNameLikeAndDn(String name, String dn) {
-        return y9GroupRepository.findByNameContainingAndDnContainingOrderByTabIndex(name, dn);
-    }
-
-    @Override
     public List<Y9Group> listByParentId(String parentId, Boolean disabled) {
         if (disabled == null) {
             return y9GroupRepository.findByParentIdOrderByTabIndexAsc(parentId);
@@ -170,13 +162,26 @@ public class Y9GroupServiceImpl implements Y9GroupService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Group move(String groupId, String parentId) {
-        final Y9Group y9Group = this.getById(groupId);
+    public Y9Group move(String id, String parentId) {
+        Y9Group currentGroup = this.getById(id);
+        Y9OrgBase parentToMove = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
+        Y9Group originalGroup = Y9ModelConvertUtil.convert(currentGroup, Y9Group.class);
 
-        Y9Group updatedGroup = Y9ModelConvertUtil.convert(y9Group, Y9Group.class);
-        updatedGroup.setParentId(parentId);
-        updatedGroup.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parentId));
-        return y9GroupManager.saveOrUpdate(updatedGroup);
+        currentGroup.setParentId(parentId);
+        currentGroup.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parentId));
+        Y9Group savedGroup = y9GroupManager.update(currentGroup);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.GROUP_UPDATE_PARENTID.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.GROUP_UPDATE_PARENTID.getDescription(), savedGroup.getName(),
+                parentToMove.getName()))
+            .objectId(id)
+            .oldObject(originalGroup)
+            .currentObject(savedGroup)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedGroup;
     }
 
     @Override
@@ -193,20 +198,59 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     @Override
     @Transactional(readOnly = false)
     public Y9Group saveOrUpdate(Y9Group group) {
-        return y9GroupManager.saveOrUpdate(group);
+        if (StringUtils.isNotBlank(group.getId())) {
+            Optional<Y9Group> groupOptional = y9GroupManager.findByIdNotCache(group.getId());
+            if (groupOptional.isPresent()) {
+                Y9Group originalGroup = Y9ModelConvertUtil.convert(groupOptional.get(), Y9Group.class);
+                Y9Group savedGroup = y9GroupManager.update(group);
+
+                AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+                    .action(AuditLogEnum.GROUP_UPDATE.getAction())
+                    .description(Y9StringUtil.format(AuditLogEnum.GROUP_UPDATE.getDescription(), savedGroup.getName()))
+                    .objectId(savedGroup.getId())
+                    .oldObject(originalGroup)
+                    .currentObject(savedGroup)
+                    .build();
+                Y9Context.publishEvent(auditLogEvent);
+
+                return savedGroup;
+            }
+        }
+
+        Y9Group savedGroup = y9GroupManager.insert(group);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.GROUP_CREATE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.GROUP_CREATE.getDescription(), savedGroup.getName()))
+            .objectId(savedGroup.getId())
+            .oldObject(null)
+            .currentObject(savedGroup)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedGroup;
     }
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Group saveProperties(String groupId, String properties) {
+    public Y9Group saveProperties(String id, String properties) {
+        Y9Group currentGroup = this.getById(id);
+        Y9Group originalGroup = Y9ModelConvertUtil.convert(currentGroup, Y9Group.class);
 
-        return y9GroupManager.saveProperties(groupId, properties);
-    }
+        currentGroup.setProperties(properties);
+        Y9Group savedGroup = y9GroupManager.update(currentGroup);
 
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Group updateTabIndex(String id, int tabIndex) {
-        return y9GroupManager.updateTabIndex(id, tabIndex);
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.GROUP_UPDATE_PROPERTIES.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.GROUP_UPDATE_PROPERTIES.getDescription(),
+                savedGroup.getName(), savedGroup.getProperties()))
+            .objectId(id)
+            .oldObject(originalGroup)
+            .currentObject(savedGroup)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedGroup;
     }
 
     @EventListener

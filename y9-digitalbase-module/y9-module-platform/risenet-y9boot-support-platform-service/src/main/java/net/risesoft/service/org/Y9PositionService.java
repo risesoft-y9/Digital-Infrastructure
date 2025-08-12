@@ -43,14 +43,6 @@ public interface Y9PositionService {
     Y9Position create(String parentId, String jobId);
 
     /**
-     * 创建岗位
-     *
-     * @param y9Position 岗位对象
-     * @return {@link Y9Position}
-     */
-    Y9Position create(Y9Position y9Position);
-
-    /**
      * 根据id数组删除岗位
      *
      * @param ids id数组
@@ -174,11 +166,11 @@ public interface Y9PositionService {
     /**
      * 移动
      *
-     * @param positionId 岗位id
+     * @param id 岗位id
      * @param parentId 父节点id
      * @return {@link Y9Position}
      */
-    Y9Position move(String positionId, String parentId);
+    Y9Position move(String id, String parentId);
 
     /**
      * 保存岗位
@@ -207,11 +199,11 @@ public interface Y9PositionService {
     /**
      * 保存或者更新岗位扩展信息
      *
-     * @param positionId 岗位id
+     * @param id 岗位id
      * @param properties 扩展属性
      * @return {@link Y9Position}
      */
-    Y9Position saveProperties(String positionId, String properties);
+    Y9Position saveProperties(String id, String properties);
 
     /**
      * 针对岗位树，根据岗位名字查找

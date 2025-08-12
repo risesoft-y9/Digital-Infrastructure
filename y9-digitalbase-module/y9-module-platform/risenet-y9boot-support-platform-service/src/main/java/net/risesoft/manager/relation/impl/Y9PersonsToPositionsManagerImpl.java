@@ -10,13 +10,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
+import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
+import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.Y9NotFoundException;
@@ -24,6 +27,7 @@ import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.util.Y9Assert;
 import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9.util.Y9StringUtil;
 
 /**
  * 人员岗位关联 Manager 实现类
@@ -58,10 +62,24 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
     @Override
     @Transactional(readOnly = false)
     public void delete(String positionId, String personId) {
+        Y9Position y9Position = y9PositionManager.getById(positionId);
+        Y9Person y9Person = y9PersonManager.getById(personId);
+
         Optional<Y9PersonsToPositions> optionalY9PersonsToPositions =
             y9PersonsToPositionsRepository.findByPositionIdAndPersonId(positionId, personId);
         if (optionalY9PersonsToPositions.isPresent()) {
-            delete(optionalY9PersonsToPositions.get());
+            Y9PersonsToPositions y9PersonsToPositions = optionalY9PersonsToPositions.get();
+            delete(y9PersonsToPositions);
+
+            AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+                .action(AuditLogEnum.POSITION_REMOVE_PERSON.getAction())
+                .description(Y9StringUtil.format(AuditLogEnum.POSITION_REMOVE_PERSON.getDescription(),
+                    y9Position.getName(), y9Person.getName()))
+                .objectId(y9PersonsToPositions.getId())
+                .oldObject(y9PersonsToPositions)
+                .currentObject(null)
+                .build();
+            Y9Context.publishEvent(auditLogEvent);
         }
     }
 
@@ -94,20 +112,24 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
     @Override
     public Integer getNextPersonOrderByPositionId(String positionId) {
         return y9PersonsToPositionsRepository.findTopByPositionIdOrderByPersonOrderDesc(positionId)
-            .map(Y9PersonsToPositions::getPersonOrder).orElse(-1) + 1;
+            .map(Y9PersonsToPositions::getPersonOrder)
+            .orElse(-1) + 1;
     }
 
     @Override
     public Integer getNextPositionOrderByPersonId(String personId) {
         return y9PersonsToPositionsRepository.findTopByPersonIdOrderByPositionOrderDesc(personId)
-            .map(Y9PersonsToPositions::getPositionOrder).orElse(-1) + 1;
+            .map(Y9PersonsToPositions::getPositionOrder)
+            .orElse(-1) + 1;
     }
 
     @Override
     @Transactional(readOnly = false)
     public Y9PersonsToPositions save(String personId, String positionId) {
-        // 校验岗位容量是否已满
         Y9Position y9Position = y9PositionManager.getById(positionId);
+        Y9Person y9Person = y9PersonManager.getById(personId);
+
+        // 校验岗位容量是否已满
         Y9Assert.lessThanOrEqualTo(countByPositionId(positionId) + 1, y9Position.getCapacity(),
             OrgUnitErrorCodeEnum.POSITION_IS_FULL);
 
@@ -118,6 +140,16 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
         y9PersonsToPositions.setPositionOrder(getNextPositionOrderByPersonId(personId));
         y9PersonsToPositions.setPersonOrder(getNextPersonOrderByPositionId(positionId));
         Y9PersonsToPositions savedPersonToPositions = y9PersonsToPositionsRepository.save(y9PersonsToPositions);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.POSITION_ADD_PERSON.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.POSITION_ADD_PERSON.getDescription(), y9Position.getName(),
+                y9Person.getName()))
+            .objectId(savedPersonToPositions.getId())
+            .oldObject(null)
+            .currentObject(savedPersonToPositions)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedPersonToPositions));
 

@@ -18,7 +18,9 @@ public interface Y9OperationManager {
 
     Y9Operation getById(String id);
 
-    Y9Operation save(Y9Operation y9Operation);
+    Y9Operation insert(Y9Operation y9Operation);
+
+    Y9Operation update(Y9Operation y9Operation);
 
     Y9Operation updateTabIndex(String id, int index);
 }

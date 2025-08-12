@@ -32,10 +32,10 @@ import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
+import net.risesoft.y9public.manager.resource.CompositeResourceManager;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.resource.Y9MenuManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
-import net.risesoft.y9public.service.resource.CompositeResourceService;
 
 /**
  * @author dingzhaojun
@@ -51,8 +51,9 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
     private final Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository;
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
+    private final CompositeResourceManager compositeResourceManager;
+
     private final Y9PersonToResourceAndAuthorityManager y9PersonToResourceAndAuthorityManager;
-    private final CompositeResourceService compositeResourceService;
     private final Y9AppManager y9AppManager;
     private final Y9MenuManager y9MenuManager;
     private final Y9TenantAppManager y9TenantAppManager;
@@ -89,12 +90,13 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
     @Override
     public boolean hasPermission(String personId, String resourceId, AuthorityEnum authority) {
         return !y9PersonToResourceAndAuthorityRepository
-            .findByPersonIdAndResourceIdAndAuthority(personId, resourceId, authority).isEmpty();
+            .findByPersonIdAndResourceIdAndAuthority(personId, resourceId, authority)
+            .isEmpty();
     }
 
     @Override
     public boolean hasPermissionByCustomId(String personId, String resourceCustomId, AuthorityEnum authority) {
-        List<Y9ResourceBase> y9ResourceBaseList = compositeResourceService.findByCustomId(resourceCustomId);
+        List<Y9ResourceBase> y9ResourceBaseList = compositeResourceManager.findByCustomId(resourceCustomId);
         return y9ResourceBaseList.stream()
             .anyMatch(y9ResourceBase -> hasPermission(personId, y9ResourceBase.getId(), authority));
     }
@@ -157,7 +159,7 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
             this.list(personId, resourceId, authority);
 
         for (Y9PersonToResourceAndAuthority personResource : y9PersonToResourceAndAuthorityList) {
-            Y9ResourceBase y9ResourceBase = compositeResourceService
+            Y9ResourceBase y9ResourceBase = compositeResourceManager
                 .findByIdAndResourceType(personResource.getResourceId(), personResource.getResourceType());
             if (y9ResourceBase != null && y9ResourceBase.getEnabled()) {
                 returnResourceSet.add(y9ResourceBase);
@@ -171,7 +173,9 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
         List<Y9PersonToResourceAndAuthority> y9PersonToResourceAndAuthorityList =
             this.list(personId, resourceId, ResourceTypeEnum.MENU, authority);
         List<String> menuIdList = y9PersonToResourceAndAuthorityList.stream()
-            .map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct().collect(Collectors.toList());
+            .map(Y9IdentityToResourceAndAuthorityBase::getResourceId)
+            .distinct()
+            .collect(Collectors.toList());
         Set<Y9Menu> menuSet = new HashSet<>();
         for (String menuId : menuIdList) {
             Y9Menu y9Menu = y9MenuManager.getById(menuId);

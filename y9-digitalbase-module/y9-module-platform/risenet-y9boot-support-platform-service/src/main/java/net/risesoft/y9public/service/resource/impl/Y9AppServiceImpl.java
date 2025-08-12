@@ -15,16 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.id.IdType;
-import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.enums.AuditLogEnum;
+import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9PageQuery;
-import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
-import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
-import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
@@ -67,7 +65,7 @@ public class Y9AppServiceImpl implements Y9AppService {
             boolean appEnabled = y9App.getEnabled();
             if (appEnabled) {
                 y9App.setEnabled(false);
-                y9AppManager.save(y9App);
+                y9AppManager.update(y9App);
             }
         }
     }
@@ -80,7 +78,7 @@ public class Y9AppServiceImpl implements Y9AppService {
             boolean appEnabled = y9App.getEnabled();
             if (!appEnabled) {
                 y9App.setEnabled(true);
-                y9AppManager.save(y9App);
+                y9AppManager.update(y9App);
             }
         }
     }
@@ -210,7 +208,7 @@ public class Y9AppServiceImpl implements Y9AppService {
             for (int i = 0, len = appIds.length; i < len; i++) {
                 Y9App app = getById(appIds[i]);
                 app.setTabIndex(i + 1);
-                y9AppManager.save(app);
+                y9AppManager.update(app);
             }
         }
     }
@@ -221,7 +219,7 @@ public class Y9AppServiceImpl implements Y9AppService {
         Y9App y9App = this.getById(id);
         y9App.setChecked(checked);
         y9App.setVerifyUserName(verifyUserName);
-        return y9AppManager.save(y9App);
+        return y9AppManager.update(y9App);
     }
 
     @Override
@@ -235,7 +233,17 @@ public class Y9AppServiceImpl implements Y9AppService {
     @Override
     @Transactional(readOnly = false)
     public void delete(String id) {
+        Y9App y9App = y9AppManager.getById(id);
         y9AppManager.delete(id);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.APP_DELETE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.APP_DELETE.getDescription(), y9App.getName()))
+            .objectId(id)
+            .oldObject(y9App)
+            .currentObject(null)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
     }
 
     @Override
@@ -251,9 +259,22 @@ public class Y9AppServiceImpl implements Y9AppService {
     @Override
     @Transactional(readOnly = false)
     public Y9App disable(String id) {
-        Y9App y9App = this.getById(id);
-        y9App.setEnabled(Boolean.FALSE);
-        return this.saveOrUpdate(y9App);
+        Y9App currentApp = y9AppManager.getById(id);
+        Y9App originalApp = Y9ModelConvertUtil.convert(currentApp, Y9App.class);
+
+        currentApp.setEnabled(Boolean.FALSE);
+        Y9App savedApp = y9AppManager.update(currentApp);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.APP_UPDATE_ENABLE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.APP_UPDATE_ENABLE.getDescription(), savedApp.getName(), "禁用"))
+            .objectId(id)
+            .oldObject(originalApp)
+            .currentObject(savedApp)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedApp;
     }
 
     @Override
@@ -269,9 +290,22 @@ public class Y9AppServiceImpl implements Y9AppService {
     @Override
     @Transactional(readOnly = false)
     public Y9App enable(String id) {
-        Y9App y9App = this.getById(id);
-        y9App.setEnabled(Boolean.TRUE);
-        return this.saveOrUpdate(y9App);
+        Y9App currentApp = y9AppManager.getById(id);
+        Y9App originalApp = Y9ModelConvertUtil.convert(currentApp, Y9App.class);
+
+        currentApp.setEnabled(Boolean.TRUE);
+        Y9App savedApp = y9AppManager.update(currentApp);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.APP_UPDATE_ENABLE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.APP_UPDATE_ENABLE.getDescription(), savedApp.getName(), "启用"))
+            .objectId(id)
+            .oldObject(originalApp)
+            .currentObject(savedApp)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedApp;
     }
 
     @Override
@@ -299,31 +333,38 @@ public class Y9AppServiceImpl implements Y9AppService {
     public Y9App saveOrUpdate(Y9App y9App) {
         // 每次保存都更改审核状态为未审核
         y9App.setChecked(false);
+
         if (StringUtils.isNotBlank(y9App.getId())) {
             Optional<Y9App> y9AppOptional = y9AppManager.findById(y9App.getId());
             if (y9AppOptional.isPresent()) {
-                Y9App originY9AppResource = y9AppOptional.get();
-                Y9App updatedY9AppResource = new Y9App();
-                Y9BeanUtil.copyProperties(originY9AppResource, updatedY9AppResource);
-                Y9BeanUtil.copyProperties(y9App, updatedY9AppResource);
+                Y9App originApp = Y9ModelConvertUtil.convert(y9AppOptional.get(), Y9App.class);
+                Y9App savedApp = y9AppManager.update(y9App);
 
-                updatedY9AppResource.setGuidPath(Y9OrgUtil.buildGuidPath(null, updatedY9AppResource.getId()));
+                AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+                    .action(AuditLogEnum.APP_UPDATE.getAction())
+                    .description(Y9StringUtil.format(AuditLogEnum.APP_UPDATE.getDescription(), savedApp.getName()))
+                    .objectId(savedApp.getId())
+                    .oldObject(originApp)
+                    .currentObject(savedApp)
+                    .build();
+                Y9Context.publishEvent(auditLogEvent);
 
-                updatedY9AppResource = y9AppManager.save(updatedY9AppResource);
-
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9AppResource, updatedY9AppResource));
-
-                return updatedY9AppResource;
+                return savedApp;
             }
-        } else {
-            y9App.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-            y9App.setGuidPath(Y9OrgUtil.buildGuidPath(null, y9App.getId()));
         }
-        y9App = y9AppManager.save(y9App);
 
-        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9App));
+        Y9App savedApp = y9AppManager.insert(y9App);
 
-        return y9App;
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.APP_CREATE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.APP_CREATE.getDescription(), savedApp.getName()))
+            .objectId(savedApp.getId())
+            .oldObject(null)
+            .currentObject(savedApp)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedApp;
     }
 
     @Override

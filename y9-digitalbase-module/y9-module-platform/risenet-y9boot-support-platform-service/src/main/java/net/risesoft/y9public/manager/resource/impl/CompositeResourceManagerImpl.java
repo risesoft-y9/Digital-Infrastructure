@@ -1,5 +1,7 @@
 package net.risesoft.y9public.manager.resource.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.cache.annotation.Cacheable;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
+import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.exception.ResourceErrorCodeEnum;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
@@ -66,9 +69,16 @@ public class CompositeResourceManagerImpl implements CompositeResourceManager {
     }
 
     @Override
+    public Y9ResourceBase getById(String id) {
+        return this.findResource(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.RESOURCE_NOT_FOUND, id));
+    }
+
+    @Override
     public Y9ResourceBase getResourceAsParent(String resourceId) {
-        return this.findResource(resourceId).orElseThrow(
-            () -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.RESOURCE_PARENT_NOT_FOUND, resourceId));
+        return this.findResource(resourceId)
+            .orElseThrow(
+                () -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.RESOURCE_PARENT_NOT_FOUND, resourceId));
     }
 
     @Override
@@ -91,6 +101,37 @@ public class CompositeResourceManagerImpl implements CompositeResourceManager {
             return Optional.of(y9DataCatalog);
         }
         return Optional.empty();
+    }
+
+    @Override
+    public List<Y9ResourceBase> findByCustomId(String customId) {
+        List<Y9ResourceBase> y9ResourceBaseList = new ArrayList<>();
+        y9ResourceBaseList.addAll(y9AppRepository.findByCustomId(customId));
+        y9ResourceBaseList.addAll(y9MenuRepository.findByCustomId(customId));
+        y9ResourceBaseList.addAll(y9OperationRepository.findByCustomId(customId));
+        return y9ResourceBaseList;
+    }
+
+    @Override
+    public Y9ResourceBase findByIdAndResourceType(String resourceId, ResourceTypeEnum resourceType) {
+        if (ResourceTypeEnum.APP.equals(resourceType)) {
+            return this.findAppById(resourceId);
+        } else if (ResourceTypeEnum.MENU.equals(resourceType)) {
+            return this.findMenuById(resourceId);
+        } else if (ResourceTypeEnum.OPERATION.equals(resourceType)) {
+            return this.findOperationById(resourceId);
+        } else {
+            return this.findDataCatalogById(resourceId);
+        }
+    }
+
+    @Override
+    public List<Y9ResourceBase> listByParentId(String parentId) {
+        List<Y9ResourceBase> y9ResourceBaseList = new ArrayList<>();
+        y9ResourceBaseList.addAll(y9MenuRepository.findByParentIdOrderByTabIndex(parentId));
+        y9ResourceBaseList.addAll(y9OperationRepository.findByParentIdOrderByTabIndex(parentId));
+        y9ResourceBaseList.addAll(y9DataCatalogRepository.findByParentIdOrderByTabIndex(parentId));
+        return y9ResourceBaseList;
     }
 
 }

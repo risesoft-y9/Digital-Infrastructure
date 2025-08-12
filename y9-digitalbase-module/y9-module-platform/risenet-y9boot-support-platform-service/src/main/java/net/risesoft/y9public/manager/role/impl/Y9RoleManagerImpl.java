@@ -19,6 +19,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.CacheNameConsts;
+import net.risesoft.consts.DefaultConsts;
+import net.risesoft.consts.InitDataConsts;
+import net.risesoft.consts.RoleLevelConsts;
 import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Position;
@@ -27,6 +30,8 @@ import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.exception.RoleErrorCodeEnum;
+import net.risesoft.id.IdType;
+import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.repository.identity.person.Y9PersonToResourceAndAuthorityRepository;
 import net.risesoft.repository.identity.person.Y9PersonToRoleRepository;
@@ -39,7 +44,10 @@ import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
+import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
 import net.risesoft.y9public.repository.role.Y9RoleRepository;
 
@@ -59,7 +67,6 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
 
     private final Y9RoleRepository y9RoleRepository;
     private final Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository;
-    private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9PersonsToGroupsRepository y9PersonsToGroupsRepository;
     private final Y9PersonsToPositionsRepository y9PersonsToPositionsRepository;
     private final Y9AuthorizationRepository y9AuthorizationRepository;
@@ -67,6 +74,9 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
     private final Y9PositionToRoleRepository y9PositionToRoleRepository;
     private final Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository;
     private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
+
+    private final CompositeOrgBaseManager compositeOrgBaseManager;
+    private final Y9AppManager y9AppManager;
 
     @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
@@ -149,11 +159,72 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
         return calculatedRoleIdSet.stream().map(this::getById).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = false)
+    @Override
+    public Y9Role insert(Y9Role y9Role) {
+        Y9Role parent = null;
+        if (StringUtils.isNotEmpty(y9Role.getParentId())) {
+            parent = this.findById(y9Role.getParentId()).orElse(null);
+        }
+
+        if (StringUtils.isBlank(y9Role.getId())) {
+            y9Role.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+        }
+
+        y9Role.setTabIndex(
+            DefaultConsts.TAB_INDEX.equals(y9Role.getTabIndex()) ? getNextTabIndex() : y9Role.getTabIndex());
+        if (parent != null) {
+            y9Role.setParentId(parent.getId());
+            y9Role.setDn(RoleLevelConsts.CN + y9Role.getName() + RoleLevelConsts.SEPARATOR + parent.getDn());
+            y9Role.setGuidPath(parent.getGuidPath() + RoleLevelConsts.SEPARATOR + y9Role.getId());
+        } else {
+            y9Role.setParentId(y9Role.getParentId());
+            y9Role.setDn(RoleLevelConsts.CN + y9Role.getName());
+            y9Role.setGuidPath(y9Role.getId());
+        }
+        if (StringUtils.isNotBlank(y9Role.getAppId())) {
+            Y9App y9App = y9AppManager.getById(y9Role.getAppId());
+            y9Role.setSystemId(y9App.getSystemId());
+        } else {
+            y9Role.setAppId(null);
+            y9Role.setSystemId(null);
+        }
+
+        if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(y9Role.getParentId())) {
+            y9Role.setTenantId(Y9LoginUserHolder.getTenantId());
+        }
+        if (InitDataConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
+            y9Role.setTenantId(null);
+        }
+        return y9RoleRepository.save(y9Role);
+    }
+
     @Override
     @CacheEvict(key = "#y9Role.id", condition = "#y9Role.id!=null")
     @Transactional(readOnly = false)
-    public Y9Role save(Y9Role y9Role) {
-        return y9RoleRepository.save(y9Role);
+    public Y9Role update(Y9Role y9Role) {
+        Y9Role parent = null;
+        if (StringUtils.isNotEmpty(y9Role.getParentId())) {
+            parent = this.findById(y9Role.getParentId()).orElse(null);
+        }
+
+        Y9Role currentRole = this.getById(y9Role.getId());
+        Y9BeanUtil.copyProperties(y9Role, currentRole);
+
+        if (parent != null) {
+            currentRole.setParentId(parent.getId());
+            currentRole.setDn(RoleLevelConsts.CN + y9Role.getName() + RoleLevelConsts.SEPARATOR + parent.getDn());
+            currentRole.setGuidPath(parent.getGuidPath() + RoleLevelConsts.SEPARATOR + y9Role.getId());
+        } else {
+            currentRole.setParentId(y9Role.getParentId());
+            currentRole.setDn(RoleLevelConsts.CN + y9Role.getName());
+            currentRole.setGuidPath(y9Role.getId());
+        }
+        if (StringUtils.isBlank(currentRole.getAppId())) {
+            currentRole.setAppId(null);
+            currentRole.setSystemId(null);
+        }
+        return y9RoleRepository.save(currentRole);
     }
 
     /**
@@ -205,5 +276,9 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
                 getOrgUnitIdsByUpwardRecursion(orgUnitIds, y9OrgBase.getParentId());
             }
         }
+    }
+
+    private Integer getNextTabIndex() {
+        return y9RoleRepository.findTopByOrderByTabIndexDesc().map(Y9Role::getTabIndex).orElse(-1) + 1;
     }
 }

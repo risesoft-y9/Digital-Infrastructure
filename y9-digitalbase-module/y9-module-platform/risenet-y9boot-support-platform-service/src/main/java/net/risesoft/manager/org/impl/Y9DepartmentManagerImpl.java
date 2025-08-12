@@ -28,6 +28,7 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
+import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
@@ -47,6 +48,9 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
     @Transactional(readOnly = false)
     public void delete(Y9Department y9Department) {
         y9DepartmentRepository.delete(y9Department);
+
+        // 发布事件，程序内部监听处理相关业务
+        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Department));
     }
 
     @Override
@@ -73,37 +77,18 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.DEPARTMENT_NOT_FOUND, id));
     }
 
-    @Override
     @CacheEvict(key = "#y9Department.id")
     @Transactional(readOnly = false)
     public Y9Department save(Y9Department y9Department) {
         return y9DepartmentRepository.save(y9Department);
     }
 
-    @Override
     @Transactional(readOnly = false)
-    public Y9Department saveOrUpdate(Y9Department dept) {
+    @Override
+    public Y9Department insert(Y9Department dept) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(dept.getParentId());
 
-        if (StringUtils.isNotEmpty(dept.getId())) {
-            Optional<Y9Department> y9DepartmentOptional = this.findByIdNotCache(dept.getId());
-            if (y9DepartmentOptional.isPresent()) {
-                Y9Department originDepartment = new Y9Department();
-                Y9Department updatedDepartment = y9DepartmentOptional.get();
-                Y9BeanUtil.copyProperties(updatedDepartment, originDepartment);
-
-                Y9BeanUtil.copyProperties(dept, updatedDepartment);
-
-                updatedDepartment.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.DEPARTMENT, dept.getName(), parent.getDn()));
-                updatedDepartment.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), dept.getId()));
-
-                final Y9Department savedDepartment = this.save(updatedDepartment);
-
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originDepartment, savedDepartment));
-
-                return savedDepartment;
-            }
-        } else {
+        if (StringUtils.isBlank(dept.getId())) {
             dept.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
             dept.setDisabled(false);
             dept.setTabIndex((null == dept.getTabIndex() || DefaultConsts.TAB_INDEX.equals(dept.getTabIndex()))
@@ -122,15 +107,25 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
         return savedDepartment;
     }
 
-    @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#id")
-    public Y9Department saveProperties(String id, String properties) {
-        final Y9Department department = this.getById(id);
+    @Override
+    public Y9Department update(Y9Department dept) {
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(dept.getParentId());
 
-        Y9Department updateDepartment = Y9ModelConvertUtil.convert(department, Y9Department.class);
-        updateDepartment.setProperties(properties);
-        return saveOrUpdate(updateDepartment);
+        Y9Department currentDepartment = this.getById(dept.getId());
+        Y9Department originalDepartment = new Y9Department();
+        Y9BeanUtil.copyProperties(currentDepartment, originalDepartment);
+
+        Y9BeanUtil.copyProperties(dept, currentDepartment);
+
+        currentDepartment.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.DEPARTMENT, dept.getName(), parent.getDn()));
+        currentDepartment.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), dept.getId()));
+
+        final Y9Department savedDepartment = this.save(currentDepartment);
+
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalDepartment, savedDepartment));
+
+        return savedDepartment;
     }
 
     @Override
@@ -141,6 +136,6 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
 
         Y9Department updatedDepartment = Y9ModelConvertUtil.convert(department, Y9Department.class);
         updatedDepartment.setTabIndex(tabIndex);
-        return this.saveOrUpdate(updatedDepartment);
+        return this.update(updatedDepartment);
     }
 }

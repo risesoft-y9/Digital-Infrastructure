@@ -4,21 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Organization;
+import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9OrganizationManager;
+import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.Y9OrganizationRepository;
-import net.risesoft.repository.permission.Y9AuthorizationRepository;
-import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
 import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9.util.Y9StringUtil;
 
 /**
  * @author dingzhaojun
@@ -32,8 +34,6 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 public class Y9OrganizationServiceImpl implements Y9OrganizationService {
 
     private final Y9OrganizationRepository y9OrganizationRepository;
-    private final Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository;
-    private final Y9AuthorizationRepository y9AuthorizationRepository;
 
     private final Y9OrganizationManager y9OrganizationManager;
     private final CompositeOrgBaseManager compositeOrgBaseManager;
@@ -41,17 +41,29 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     @Override
     @Transactional(readOnly = false)
     public Y9Organization changeDisabled(String id) {
-        Y9Organization y9Organization = y9OrganizationManager.getByIdNotCache(id);
-        Boolean isDisabled = !y9Organization.getDisabled();
+        Y9Organization currentOrganization = y9OrganizationManager.getByIdNotCache(id);
+        Y9Organization originalOrganization = Y9ModelConvertUtil.convert(currentOrganization, Y9Organization.class);
+        Boolean disableStatusToUpdate = !currentOrganization.getDisabled();
 
-        if (isDisabled) {
+        if (disableStatusToUpdate) {
             // 禁用时检查所有子节点是否都禁用了，只有所有子节点都禁用了，当前组织才能禁用
             compositeOrgBaseManager.checkAllDescendantsDisabled(id);
         }
 
-        Y9Organization updatedOrganization = Y9ModelConvertUtil.convert(y9Organization, Y9Organization.class);
-        updatedOrganization.setDisabled(isDisabled);
-        return y9OrganizationManager.saveOrUpdate(updatedOrganization);
+        currentOrganization.setDisabled(disableStatusToUpdate);
+        Y9Organization savedOrganization = y9OrganizationManager.update(currentOrganization);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.ORGANIZATION_UPDATE_DISABLED.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.ORGANIZATION_UPDATE_DISABLED.getDescription(),
+                savedOrganization.getName(), disableStatusToUpdate ? "禁用" : "启用"))
+            .objectId(id)
+            .oldObject(originalOrganization)
+            .currentObject(savedOrganization)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedOrganization;
     }
 
     @Override
@@ -66,12 +78,21 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     @Override
     @Transactional(readOnly = false)
     public void delete(String id) {
+        Y9Organization y9Organization = this.getById(id);
+        y9OrganizationManager.delete(y9Organization);
 
-        Y9Organization org = this.getById(id);
-        y9OrganizationManager.delete(org);
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.ORGANIZATION_DELETE.getAction())
+            .description(
+                Y9StringUtil.format(AuditLogEnum.ORGANIZATION_DELETE.getDescription(), y9Organization.getName()))
+            .objectId(id)
+            .oldObject(y9Organization)
+            .currentObject(null)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
 
         // 发布事件，程序内部监听处理相关业务
-        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(org));
+        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Organization));
     }
 
     @Override
@@ -119,7 +140,41 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     @Override
     @Transactional(readOnly = false)
     public Y9Organization saveOrUpdate(Y9Organization organization) {
-        return y9OrganizationManager.saveOrUpdate(organization);
+        if (StringUtils.isNotBlank(organization.getId())) {
+            Optional<Y9Organization> organizationOptional =
+                y9OrganizationManager.findByIdNotCache(organization.getId());
+            if (organizationOptional.isPresent()) {
+                Y9Organization originalOrganization =
+                    Y9ModelConvertUtil.convert(organizationOptional.get(), Y9Organization.class);
+                Y9Organization savedOrganization = y9OrganizationManager.update(organization);
+
+                AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+                    .action(AuditLogEnum.ORGANIZATION_UPDATE.getAction())
+                    .description(
+                        Y9StringUtil.format(AuditLogEnum.ORGANIZATION_UPDATE.getDescription(), organization.getName()))
+                    .objectId(savedOrganization.getId())
+                    .oldObject(originalOrganization)
+                    .currentObject(savedOrganization)
+                    .build();
+                Y9Context.publishEvent(auditLogEvent);
+
+                return savedOrganization;
+            }
+        }
+
+        Y9Organization savedOrganization = y9OrganizationManager.insert(organization);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.ORGANIZATION_CREATE.getAction())
+            .description(
+                Y9StringUtil.format(AuditLogEnum.ORGANIZATION_CREATE.getDescription(), savedOrganization.getName()))
+            .objectId(savedOrganization.getId())
+            .oldObject(null)
+            .currentObject(savedOrganization)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedOrganization;
     }
 
     @Override
@@ -137,7 +192,23 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     @Override
     @Transactional(readOnly = false)
     public Y9Organization saveProperties(String orgId, String properties) {
-        return y9OrganizationManager.saveProperties(orgId, properties);
+        Y9Organization currentOrganization = y9OrganizationManager.getById(orgId);
+        Y9Organization originalOrganization = Y9ModelConvertUtil.convert(currentOrganization, Y9Organization.class);
+
+        currentOrganization.setProperties(properties);
+        Y9Organization savedOrganization = y9OrganizationManager.update(currentOrganization);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.ORGANIZATION_UPDATE_PROPERTIES.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.ORGANIZATION_UPDATE_PROPERTIES.getDescription(),
+                savedOrganization.getName(), savedOrganization.getProperties()))
+            .objectId(orgId)
+            .oldObject(originalOrganization)
+            .currentObject(savedOrganization)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedOrganization;
     }
 
     private List<Y9Organization> list(Boolean disabled) {

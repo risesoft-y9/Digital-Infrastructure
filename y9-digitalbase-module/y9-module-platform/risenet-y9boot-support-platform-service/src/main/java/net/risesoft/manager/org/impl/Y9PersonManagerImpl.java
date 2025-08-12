@@ -130,48 +130,17 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
         return personList;
     }
 
-    @Override
     @CacheEvict(key = "#y9Person.id")
     @Transactional(readOnly = false)
     public Y9Person save(Y9Person y9Person) {
         return y9PersonRepository.save(y9Person);
     }
 
-    @Override
     @Transactional(readOnly = false)
-    public Y9Person saveOrUpdate(Y9Person person, Y9PersonExt personExt) {
+    @Override
+    public Y9Person insert(Y9Person person) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
-        if (StringUtils.isNotEmpty(person.getId())) {
-            Optional<Y9Person> y9PersonOptional = this.findByIdNotCache(person.getId());
-            if (y9PersonOptional.isPresent()) {
-                // 判断为更新信息
-                Y9Person originPerson = new Y9Person();
-                Y9Person updatedPerson = y9PersonOptional.get();
-                Y9BeanUtil.copyProperties(updatedPerson, originPerson);
-                Y9BeanUtil.copyProperties(person, updatedPerson, "tenantId");
-
-                updatedPerson.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), updatedPerson.getId()));
-                updatedPerson.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, updatedPerson.getName(), parent.getDn()));
-                updatedPerson.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(updatedPerson));
-
-                if (StringUtils.isBlank(updatedPerson.getEmail())) {
-                    updatedPerson.setEmail(null);
-                }
-
-                if (Boolean.TRUE.equals(updatedPerson.getOriginal()) && null != personExt) {
-                    updatePersonByOriginalId(updatedPerson, personExt);
-                }
-                final Y9Person savedPerson = save(updatedPerson);
-
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPerson, savedPerson));
-
-                if (personExt != null) {
-                    y9PersonExtManager.saveOrUpdate(personExt, savedPerson);
-                }
-
-                return savedPerson;
-            }
-        } else {
+        if (StringUtils.isBlank(person.getId())) {
             person.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
             person.setDisabled(false);
         }
@@ -201,24 +170,36 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
         person.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(person));
 
         final Y9Person savedPerson = save(person);
-        if (null != personExt) {
-            y9PersonExtManager.saveOrUpdate(personExt, savedPerson);
-        }
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedPerson));
 
         return savedPerson;
     }
 
-    @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#id")
-    public Y9Person saveProperties(String id, String properties) {
-        final Y9Person person = this.getById(id);
+    @Override
+    public Y9Person update(Y9Person person) {
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
 
-        Y9Person updatedPerson = Y9ModelConvertUtil.convert(person, Y9Person.class);
-        updatedPerson.setProperties(properties);
-        return saveOrUpdate(updatedPerson, null);
+        Y9Person originPerson = new Y9Person();
+        Y9Person updatedPerson = this.getByIdNotCache(person.getId());
+        Y9BeanUtil.copyProperties(updatedPerson, originPerson);
+        Y9BeanUtil.copyProperties(person, updatedPerson);
+
+        updatedPerson.setTenantId(Y9LoginUserHolder.getTenantId());
+        updatedPerson.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), updatedPerson.getId()));
+        updatedPerson.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, updatedPerson.getName(), parent.getDn()));
+        updatedPerson.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(updatedPerson));
+
+        if (StringUtils.isBlank(updatedPerson.getEmail())) {
+            updatedPerson.setEmail(null);
+        }
+
+        final Y9Person savedPerson = save(updatedPerson);
+
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPerson, savedPerson));
+
+        return savedPerson;
     }
 
     @Override
@@ -230,20 +211,21 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
         Y9Person updatedPerson = Y9ModelConvertUtil.convert(person, Y9Person.class);
         updatedPerson.setTabIndex(tabIndex);
         updatedPerson.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(person));
-        return this.saveOrUpdate(updatedPerson, null);
+        return this.update(updatedPerson);
     }
 
     @Transactional(readOnly = false)
+    @Override
     public void updatePersonByOriginalId(Y9Person originalPerson, Y9PersonExt originalExt) {
         List<Y9Person> persons = y9PersonRepository.findByOriginalId(originalPerson.getId());
         for (Y9Person person : persons) {
+            Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
+
             person.setName(originalPerson.getName());
             person.setLoginName(originalPerson.getLoginName());
             person.setEmail(originalPerson.getEmail());
             person.setMobile(originalPerson.getMobile());
             person.setPassword(originalPerson.getPassword());
-
-            Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
             person.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, person.getName(), parent.getDn()));
 
             this.save(person);

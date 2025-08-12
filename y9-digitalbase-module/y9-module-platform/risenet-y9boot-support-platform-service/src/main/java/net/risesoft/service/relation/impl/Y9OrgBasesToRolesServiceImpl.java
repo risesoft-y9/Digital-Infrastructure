@@ -24,9 +24,11 @@ import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;
+import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.RoleErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
+import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
@@ -34,6 +36,9 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
+import net.risesoft.y9.util.Y9StringUtil;
+import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.manager.role.Y9RoleManager;
 
 /**
  * @author dingzhaojun
@@ -46,9 +51,10 @@ import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 @RequiredArgsConstructor
 public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
-    private final CompositeOrgBaseManager compositeOrgBaseManager;
-
     private final Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository;
+
+    private final CompositeOrgBaseManager compositeOrgBaseManager;
+    private final Y9RoleManager y9RoleManager;
 
     @Override
     @Transactional(readOnly = false)
@@ -220,43 +226,78 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     @Transactional(readOnly = false)
     public void remove(Y9OrgBasesToRoles y9OrgBasesToRoles) {
+        Y9Role y9Role = y9RoleManager.getById(y9OrgBasesToRoles.getRoleId());
+        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(y9OrgBasesToRoles.getOrgId());
         y9OrgBasesToRolesRepository.delete(y9OrgBasesToRoles);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.ROLE_REMOVE_REMEMBER.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.ROLE_REMOVE_REMEMBER.getDescription(), y9Role.getName(),
+                y9OrgBase.getName()))
+            .objectId(y9OrgBasesToRoles.getId())
+            .oldObject(y9OrgBasesToRoles)
+            .currentObject(null)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
 
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9OrgBasesToRoles));
     }
 
     @Transactional(readOnly = false)
     public Y9OrgBasesToRoles saveOrUpdate(String roleId, String orgId, Boolean negative) {
-        Y9OrgBase orgBase = compositeOrgBaseManager.getOrgUnit(orgId);
-        checkOrgUnitIncludedInRoleRelatedMapping(roleId, negative, orgBase);
+        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(orgId);
+        Y9Role y9Role = y9RoleManager.getById(roleId);
+
+        checkOrgUnitIncludedInRoleRelatedMapping(roleId, negative, y9OrgBase);
 
         Optional<Y9OrgBasesToRoles> optionalY9OrgBasesToRoles =
             y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative);
         if (optionalY9OrgBasesToRoles.isEmpty()) {
-            Integer maxOrgUnitsOrder = y9OrgBasesToRolesRepository.getMaxOrgOrderByRoleId(roleId);
-            Integer nextOrgUnitsOrder = maxOrgUnitsOrder == null ? 0 : maxOrgUnitsOrder + 1;
-            Y9OrgBasesToRoles y9OrgBasesToRoles = new Y9OrgBasesToRoles();
-            y9OrgBasesToRoles.setId(Y9IdGenerator.genId());
-            y9OrgBasesToRoles.setRoleId(roleId);
-            y9OrgBasesToRoles.setOrgId(orgId);
-            y9OrgBasesToRoles.setOrgOrder(nextOrgUnitsOrder);
-            y9OrgBasesToRoles.setNegative(negative);
-            y9OrgBasesToRoles.setParentId(orgBase.getParentId());
-            y9OrgBasesToRoles.setOrgType(orgBase.getOrgType());
+            Y9OrgBasesToRoles orgBasesToRoles = this.insert(roleId, orgId, negative, y9OrgBase);
 
-            Y9OrgBasesToRoles savedOrgBasesToRoles = y9OrgBasesToRolesRepository.save(y9OrgBasesToRoles);
+            AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+                .action(AuditLogEnum.ROLE_ADD_MEMBER.getAction())
+                .description(Y9StringUtil.format(AuditLogEnum.ROLE_ADD_MEMBER.getDescription(), y9Role.getName(),
+                    y9OrgBase.getName()))
+                .objectId(orgBasesToRoles.getId())
+                .oldObject(null)
+                .currentObject(orgBasesToRoles)
+                .build();
+            Y9Context.publishEvent(auditLogEvent);
 
-            Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedOrgBasesToRoles));
-
-            return savedOrgBasesToRoles;
+            return orgBasesToRoles;
         }
         return optionalY9OrgBasesToRoles.get();
+    }
+
+    @Transactional(readOnly = false)
+    public Y9OrgBasesToRoles insert(String roleId, String orgId, Boolean negative, Y9OrgBase orgBase) {
+        Y9OrgBasesToRoles y9OrgBasesToRoles = new Y9OrgBasesToRoles();
+        y9OrgBasesToRoles.setId(Y9IdGenerator.genId());
+        y9OrgBasesToRoles.setRoleId(roleId);
+        y9OrgBasesToRoles.setOrgId(orgId);
+        y9OrgBasesToRoles.setOrgOrder(this.getNextOrgOrder(roleId));
+        y9OrgBasesToRoles.setNegative(negative);
+        y9OrgBasesToRoles.setParentId(orgBase.getParentId());
+        y9OrgBasesToRoles.setOrgType(orgBase.getOrgType());
+
+        Y9OrgBasesToRoles savedOrgBasesToRoles = y9OrgBasesToRolesRepository.save(y9OrgBasesToRoles);
+
+        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedOrgBasesToRoles));
+
+        return savedOrgBasesToRoles;
+    }
+
+    private Integer getNextOrgOrder(String roleId) {
+        Integer maxOrgUnitsOrder = y9OrgBasesToRolesRepository.getMaxOrgOrderByRoleId(roleId);
+        return maxOrgUnitsOrder == null ? 0 : maxOrgUnitsOrder + 1;
     }
 
     private void checkOrgUnitIncludedInRoleRelatedMapping(String roleId, Boolean negative, Y9OrgBase orgBase) {
         List<Y9OrgBasesToRoles> y9OrgBasesToRolesList =
             y9OrgBasesToRolesRepository.findByRoleIdAndNegativeOrderByOrgOrderDesc(roleId, negative);
-        boolean orgUnitIncluded = y9OrgBasesToRolesList.stream().map(Y9OrgBasesToRoles::getOrgId)
+        boolean orgUnitIncluded = y9OrgBasesToRolesList.stream()
+            .map(Y9OrgBasesToRoles::getOrgId)
             .anyMatch(orgUnitId -> orgBase.getGuidPath().contains(orgUnitId));
         if (orgUnitIncluded) {
             throw Y9ExceptionUtil.businessException(RoleErrorCodeEnum.ORG_UNIT_INCLUDED, orgBase.getId());

@@ -14,14 +14,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.SystemErrorCodeEnum;
-import net.risesoft.id.IdType;
-import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.util.Y9Assert;
-import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.resource.Y9SystemManager;
@@ -49,29 +51,67 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     @Override
     @Transactional(readOnly = false)
     public void delete(String id) {
+        Y9System y9System = y9SystemManager.getById(id);
         y9AppManager.deleteBySystemId(id);
         y9TenantSystemManager.deleteBySystemId(id);
         y9SystemManager.delete(id);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.SYSTEM_DELETE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.SYSTEM_DELETE.getDescription(), y9System.getName()))
+            .objectId(id)
+            .oldObject(y9System)
+            .currentObject(null)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
     }
 
     @Override
     @Transactional(readOnly = false)
     public Y9System disable(String id) {
-        Y9System y9System = this.getById(id);
-        y9System.setEnabled(Boolean.FALSE);
+        Y9System currentSystem = y9SystemManager.getById(id);
+        Y9System originalSystem = Y9ModelConvertUtil.convert(currentSystem, Y9System.class);
+
+        currentSystem.setEnabled(Boolean.FALSE);
         // TODO 禁用系统同时禁用应用
         // appService.disableAppBySystemId(id);
-        return this.saveOrUpdate(y9System);
+        Y9System savedSystem = y9SystemManager.update(currentSystem);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.SYSTEM_UPDATE_ENABLE.getAction())
+            .description(
+                Y9StringUtil.format(AuditLogEnum.SYSTEM_UPDATE_ENABLE.getDescription(), savedSystem.getName(), "禁用"))
+            .objectId(id)
+            .oldObject(originalSystem)
+            .currentObject(savedSystem)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedSystem;
     }
 
     @Override
     @Transactional(readOnly = false)
     public Y9System enable(String id) {
-        Y9System systemEntity = this.getById(id);
-        systemEntity.setEnabled(Boolean.TRUE);
+        Y9System currentSystem = y9SystemManager.getById(id);
+        Y9System originalSystem = Y9ModelConvertUtil.convert(currentSystem, Y9System.class);
+
+        currentSystem.setEnabled(Boolean.TRUE);
         // TODO 启用系统同时启用应用？
         // appService.enableAppBySystemId(id);
-        return y9SystemManager.save(systemEntity);
+        Y9System savedSystem = y9SystemManager.update(currentSystem);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.SYSTEM_UPDATE_ENABLE.getAction())
+            .description(
+                Y9StringUtil.format(AuditLogEnum.SYSTEM_UPDATE_ENABLE.getDescription(), savedSystem.getName(), "启用"))
+            .objectId(id)
+            .oldObject(originalSystem)
+            .currentObject(savedSystem)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedSystem;
     }
 
     @Override
@@ -154,7 +194,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
             for (int i = 0, len = systemIds.length; i < len; i++) {
                 Y9System system = getById(systemIds[i]);
                 system.setTabIndex(i + 1);
-                y9SystemManager.save(system);
+                y9SystemManager.update(system);
             }
         }
     }
@@ -168,23 +208,43 @@ public class Y9SystemServiceImpl implements Y9SystemService {
         if (StringUtils.isNotBlank(y9System.getId())) {
             Optional<Y9System> y9SystemOptional = y9SystemManager.findById(y9System.getId());
             if (y9SystemOptional.isPresent()) {
-                Y9System oldY9System = y9SystemOptional.get();
-                Y9BeanUtil.copyProperties(y9System, oldY9System);
-                return y9SystemManager.save(oldY9System);
-            }
-        } else {
-            y9System.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-            if (y9System.getTabIndex() == null) {
-                Integer maxIndex =
-                    y9SystemRepository.findTopByOrderByTabIndexDesc().map(system -> system.getTabIndex() + 1).orElse(0);
-                y9System.setTabIndex(maxIndex);
+                Y9System originalSystem = Y9ModelConvertUtil.convert(y9SystemOptional.get(), Y9System.class);
+                Y9System savedSystem = y9SystemManager.update(y9System);
+
+                AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+                    .action(AuditLogEnum.SYSTEM_UPDATE.getAction())
+                    .description(
+                        Y9StringUtil.format(AuditLogEnum.SYSTEM_UPDATE.getDescription(), savedSystem.getName()))
+                    .objectId(savedSystem.getId())
+                    .oldObject(originalSystem)
+                    .currentObject(savedSystem)
+                    .build();
+                Y9Context.publishEvent(auditLogEvent);
+
+                return savedSystem;
             }
         }
-        return y9SystemManager.save(y9System);
+
+        if (y9System.getTabIndex() == null) {
+            Integer maxIndex =
+                y9SystemRepository.findTopByOrderByTabIndexDesc().map(system -> system.getTabIndex() + 1).orElse(0);
+            y9System.setTabIndex(maxIndex);
+        }
+        Y9System savedSystem = y9SystemManager.insert(y9System);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.SYSTEM_CREATE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.SYSTEM_CREATE.getDescription(), savedSystem.getName()))
+            .objectId(savedSystem.getId())
+            .oldObject(null)
+            .currentObject(savedSystem)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedSystem;
     }
 
-    @Override
-    public boolean isNameAvailable(String id, String name) {
+    private boolean isNameAvailable(String id, String name) {
         Optional<Y9System> y9SystemOptional = y9SystemRepository.findByName(name);
         if (y9SystemOptional.isEmpty()) {
             return true;
