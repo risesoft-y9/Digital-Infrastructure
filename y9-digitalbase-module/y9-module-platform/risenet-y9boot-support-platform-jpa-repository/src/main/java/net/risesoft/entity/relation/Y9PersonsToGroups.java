@@ -50,14 +50,14 @@ public class Y9PersonsToGroups extends BaseEntity {
     @Comment("人员ID")
     private String personId;
 
-    /** 用户组排序号 */
+    /** 同一个人员的用户组排序号 */
     @Column(name = "GROUP_ORDER", nullable = false)
-    @Comment("用户组排序号")
+    @Comment("同一个人员的用户组排序号")
     private Integer groupOrder = 0;
 
-    /** 人员排序号 */
+    /** 同一个用户组的人员排序号 */
     @Column(name = "PERSON_ORDER", nullable = false)
-    @Comment("人员排序号")
+    @Comment("同一个用户组的人员排序号")
     private Integer personOrder = 0;
 
 }

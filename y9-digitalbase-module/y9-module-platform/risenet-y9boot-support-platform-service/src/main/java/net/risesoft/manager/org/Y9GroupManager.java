@@ -46,14 +46,9 @@ public interface Y9GroupManager {
 
     Y9Group saveOrUpdate(Y9Group group);
 
-    /**
-     * 保存或者更新用户组扩展信息
-     *
-     * @param id 用户组id
-     * @param properties 扩展信息
-     * @return {@link Y9Group}
-     */
-    Y9Group saveProperties(String id, String properties);
+    Y9Group insert(Y9Group group);
+
+    Y9Group update(Y9Group group);
 
     Y9Group updateTabIndex(String id, int tabIndex);
 }

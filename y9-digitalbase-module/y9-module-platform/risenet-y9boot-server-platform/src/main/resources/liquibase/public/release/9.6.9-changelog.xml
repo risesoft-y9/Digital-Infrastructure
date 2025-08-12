@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="1754533021663-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_AUDIT_LOG"/>
+            </not>
+        </preConditions>
+        <createTable remarks="审计日志" tableName="Y9_AUDIT_LOG">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="TENANT_ID" remarks="租户 id" type="VARCHAR(38)"/>
+            <column name="USER_ID" remarks="用户 id" type="VARCHAR(38)"/>
+            <column name="USER_NAME" remarks="用户名" type="VARCHAR(100)"/>
+            <column name="USER_IP" remarks="用户IP" type="VARCHAR(50)"/>
+            <column name="USER_AGENT" remarks="用户浏览器或客户端信息" type="VARCHAR(200)"/>
+            <column name="ACTION" remarks="操作类型" type="VARCHAR(50)"/>
+            <column name="DESCRIPTION" remarks="操作简要描述" type="VARCHAR(200)"/>
+            <column name="OBJECT_ID" remarks="操作对象 id" type="VARCHAR(38)"/>
+            <column name="OLD_OBJECT_JSON" remarks="旧对象 JSON" type="LONGTEXT"/>
+            <column name="CURRENT_OBJECT_JSON" remarks="当前对象 JSON" type="LONGTEXT"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

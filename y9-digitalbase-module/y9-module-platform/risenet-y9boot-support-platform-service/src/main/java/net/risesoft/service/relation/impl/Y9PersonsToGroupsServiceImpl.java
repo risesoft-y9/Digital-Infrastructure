@@ -12,12 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
+import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9GroupManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.relation.Y9PersonsToGroupsManager;
+import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.relation.Y9PersonsToGroupsRepository;
 import net.risesoft.service.relation.Y9PersonsToGroupsService;
 import net.risesoft.y9.Y9Context;
@@ -26,6 +29,7 @@ import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9.util.Y9StringUtil;
 
 /**
  * @author dingzhaojun
@@ -52,9 +56,10 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
             if (y9PersonsToGroupsRepository.findByGroupIdAndPersonId(groupId, personId).isPresent()) {
                 continue;
             }
-            Integer maxGroupsOrder = getNextGroupOrderByPersonId(personId);
-            Integer maxPersonsOrder = getNextPersonOrderByGroupId(groupId);
-            addY9PersonsToGroups(personId, groupId, maxGroupsOrder + i, maxPersonsOrder);
+            Integer nextGroupsOrder = getNextGroupOrderByPersonId(personId);
+            Integer nextPersonsOrder = getNextPersonOrderByGroupId(groupId);
+
+            this.addY9PersonsToGroups(personId, groupId, nextGroupsOrder + i, nextPersonsOrder);
         }
     }
 
@@ -66,16 +71,11 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
             if (y9PersonsToGroupsRepository.findByGroupIdAndPersonId(groupId, personId).isPresent()) {
                 continue;
             }
-            Integer maxPersonsOrder = getNextPersonOrderByGroupId(groupId);
-            Integer maxGroupsOrder = getNextGroupOrderByPersonId(personId);
-            addY9PersonsToGroups(personId, groupId, maxGroupsOrder, maxPersonsOrder + i);
-        }
-    }
+            Integer nextPersonsOrder = getNextPersonOrderByGroupId(groupId);
+            Integer nextGroupsOrder = getNextGroupOrderByPersonId(personId);
 
-    @Override
-    @Transactional(readOnly = false)
-    public void deleteByGroupId(String groupId) {
-        y9PersonsToGroupsRepository.deleteByGroupId(groupId);
+            this.addY9PersonsToGroups(personId, groupId, nextGroupsOrder, nextPersonsOrder + i);
+        }
     }
 
     @Override
@@ -92,13 +92,15 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     @Override
     public Integer getNextGroupOrderByPersonId(String personId) {
         return y9PersonsToGroupsRepository.findTopByPersonIdOrderByGroupOrderDesc(personId)
-            .map(Y9PersonsToGroups::getGroupOrder).orElse(-1) + 1;
+            .map(Y9PersonsToGroups::getGroupOrder)
+            .orElse(-1) + 1;
     }
 
     @Override
     public Integer getNextPersonOrderByGroupId(String groupId) {
         return y9PersonsToGroupsRepository.findTopByGroupIdOrderByPersonOrderDesc(groupId)
-            .map(Y9PersonsToGroups::getPersonOrder).orElse(-1) + 1;
+            .map(Y9PersonsToGroups::getPersonOrder)
+            .orElse(-1) + 1;
     }
 
     @Override
@@ -108,8 +110,10 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
 
     @Override
     public List<String> listGroupIdsByPersonId(String personId) {
-        return y9PersonsToGroupsRepository.findByPersonIdOrderByGroupOrder(personId).stream()
-            .map(Y9PersonsToGroups::getGroupId).collect(Collectors.toList());
+        return y9PersonsToGroupsRepository.findByPersonIdOrderByGroupOrder(personId)
+            .stream()
+            .map(Y9PersonsToGroups::getGroupId)
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -229,12 +233,27 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     @Transactional(readOnly = false)
     public Y9PersonsToGroups addY9PersonsToGroups(String personId, String groupId, Integer maxGroupsOrder,
         Integer maxPersonsOrder) {
+        Y9Person person = y9PersonManager.getById(personId);
+        Y9Group group = y9GroupManager.getById(groupId);
+
         Y9PersonsToGroups y9PersonsToGroups = new Y9PersonsToGroups();
         y9PersonsToGroups.setGroupId(groupId);
         y9PersonsToGroups.setPersonId(personId);
         y9PersonsToGroups.setGroupOrder(maxGroupsOrder);
         y9PersonsToGroups.setPersonOrder(maxPersonsOrder);
-        return this.saveOrUpdate(y9PersonsToGroups);
+        Y9PersonsToGroups savedPersonsToGroups = this.saveOrUpdate(y9PersonsToGroups);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.GROUP_ADD_PERSON.getAction())
+            .description(
+                Y9StringUtil.format(AuditLogEnum.GROUP_ADD_PERSON.getDescription(), group.getName(), person.getName()))
+            .objectId(y9PersonsToGroups.getId())
+            .oldObject(null)
+            .currentObject(y9PersonsToGroups)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedPersonsToGroups;
     }
 
     @EventListener
@@ -246,12 +265,24 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
 
     @Transactional(readOnly = false)
     public void remove(String personId, String groupId) {
+        Y9Person person = y9PersonManager.getById(personId);
+        Y9Group group = y9GroupManager.getById(groupId);
+
         Optional<Y9PersonsToGroups> optionalY9PersonsToGroups =
             y9PersonsToGroupsRepository.findByGroupIdAndPersonId(groupId, personId);
         if (optionalY9PersonsToGroups.isPresent()) {
             Y9PersonsToGroups y9PersonsToGroups = optionalY9PersonsToGroups.get();
-
             y9PersonsToGroupsManager.delete(y9PersonsToGroups);
+
+            AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+                .action(AuditLogEnum.GROUP_REMOVE_PERSON.getAction())
+                .description(Y9StringUtil.format(AuditLogEnum.GROUP_REMOVE_PERSON.getDescription(), group.getName(),
+                    person.getName()))
+                .objectId(y9PersonsToGroups.getId())
+                .oldObject(y9PersonsToGroups)
+                .currentObject(null)
+                .build();
+            Y9Context.publishEvent(auditLogEvent);
         }
     }
 }

@@ -35,6 +35,7 @@ public interface CompositeOrgBaseManager {
      * 检查所有后代组织节点是否都已禁用
      *
      * @param orgUnitId 组织节点id
+     * @throws net.risesoft.y9.exception.Y9BusinessException 如果有后代组织节点未禁用，则抛出异常
      */
     void checkAllDescendantsDisabled(String orgUnitId);
 

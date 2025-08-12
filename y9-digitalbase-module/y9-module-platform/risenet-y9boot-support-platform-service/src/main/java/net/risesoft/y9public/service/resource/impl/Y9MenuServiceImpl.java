@@ -13,23 +13,19 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.id.IdType;
-import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.enums.AuditLogEnum;
+import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.identity.person.Y9PersonToResourceAndAuthorityRepository;
 import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorityRepository;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
-import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
-import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
-import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
-import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
-import net.risesoft.y9public.manager.resource.CompositeResourceManager;
 import net.risesoft.y9public.manager.resource.Y9MenuManager;
 import net.risesoft.y9public.repository.resource.Y9MenuRepository;
 import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
@@ -54,7 +50,6 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
 
     private final Y9MenuManager y9MenuManager;
-    private final CompositeResourceManager compositeResourceManager;
 
     @Override
     @Transactional(readOnly = false)
@@ -67,8 +62,17 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     @Override
     @Transactional(readOnly = false)
     public void delete(String id) {
-        Y9Menu y9Menu = this.getById(id);
+        Y9Menu y9Menu = y9MenuManager.getById(id);
         y9MenuManager.delete(y9Menu);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.MENU_DELETE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.MENU_DELETE.getDescription(), y9Menu.getName()))
+            .objectId(id)
+            .oldObject(y9Menu)
+            .currentObject(null)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
 
         // 删除租户与菜单资源关联的数据
         List<Y9TenantApp> y9TenantAppList =
@@ -95,9 +99,23 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     @Override
     @Transactional(readOnly = false)
     public Y9Menu disable(String id) {
-        Y9Menu y9Menu = this.getById(id);
-        y9Menu.setEnabled(Boolean.FALSE);
-        return this.saveOrUpdate(y9Menu);
+        Y9Menu currentMenu = this.getById(id);
+        Y9Menu originalMenu = Y9ModelConvertUtil.convert(currentMenu, Y9Menu.class);
+
+        currentMenu.setEnabled(Boolean.FALSE);
+        Y9Menu savedMenu = y9MenuManager.update(currentMenu);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.MENU_UPDATE_ENABLE.getAction())
+            .description(
+                Y9StringUtil.format(AuditLogEnum.MENU_UPDATE_ENABLE.getDescription(), savedMenu.getName(), "禁用"))
+            .objectId(id)
+            .oldObject(originalMenu)
+            .currentObject(savedMenu)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedMenu;
     }
 
     @Override
@@ -113,9 +131,23 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     @Override
     @Transactional(readOnly = false)
     public Y9Menu enable(String id) {
-        Y9Menu y9Menu = this.getById(id);
-        y9Menu.setEnabled(Boolean.TRUE);
-        return this.saveOrUpdate(y9Menu);
+        Y9Menu currentMenu = this.getById(id);
+        Y9Menu originalMenu = Y9ModelConvertUtil.convert(currentMenu, Y9Menu.class);
+
+        currentMenu.setEnabled(Boolean.TRUE);
+        Y9Menu savedMenu = y9MenuManager.update(currentMenu);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.MENU_UPDATE_ENABLE.getAction())
+            .description(
+                Y9StringUtil.format(AuditLogEnum.MENU_UPDATE_ENABLE.getDescription(), savedMenu.getName(), "启用"))
+            .objectId(id)
+            .oldObject(originalMenu)
+            .currentObject(savedMenu)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedMenu;
     }
 
     @Override
@@ -141,37 +173,37 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     @Override
     @Transactional(readOnly = false)
     public Y9Menu saveOrUpdate(Y9Menu y9Menu) {
-        Y9ResourceBase parent = compositeResourceManager.getResourceAsParent(y9Menu.getParentId());
-
         if (StringUtils.isNotBlank(y9Menu.getId())) {
             Optional<Y9Menu> y9MenuOptional = y9MenuManager.findById(y9Menu.getId());
             if (y9MenuOptional.isPresent()) {
-                Y9Menu originMenuResource = y9MenuOptional.get();
-                Y9Menu updatedMenuResource = new Y9Menu();
-                Y9BeanUtil.copyProperties(originMenuResource, updatedMenuResource);
-                Y9BeanUtil.copyProperties(y9Menu, updatedMenuResource);
+                Y9Menu originMenu = Y9ModelConvertUtil.convert(y9MenuOptional.get(), Y9Menu.class);
+                Y9Menu savedMenu = y9MenuManager.update(y9Menu);
 
-                updatedMenuResource
-                    .setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), updatedMenuResource.getId()));
+                AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+                    .action(AuditLogEnum.MENU_UPDATE.getAction())
+                    .description(Y9StringUtil.format(AuditLogEnum.MENU_UPDATE.getDescription(), savedMenu.getName()))
+                    .objectId(savedMenu.getId())
+                    .oldObject(originMenu)
+                    .currentObject(savedMenu)
+                    .build();
+                Y9Context.publishEvent(auditLogEvent);
 
-                updatedMenuResource = y9MenuManager.save(updatedMenuResource);
-
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originMenuResource, updatedMenuResource));
-
-                return updatedMenuResource;
+                return savedMenu;
             }
-        } else {
-            y9Menu.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-            y9Menu.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), y9Menu.getId()));
-
-            Integer maxTabIndex = getMaxIndexByParentId(y9Menu.getParentId());
-            y9Menu.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
         }
-        y9Menu = y9MenuManager.save(y9Menu);
 
-        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9Menu));
+        Y9Menu savedMenu = y9MenuManager.insert(y9Menu);
 
-        return y9Menu;
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.MENU_CREATE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.MENU_CREATE.getDescription(), savedMenu.getName()))
+            .objectId(savedMenu.getId())
+            .oldObject(null)
+            .currentObject(savedMenu)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedMenu;
     }
 
     @Override
@@ -203,11 +235,6 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     @Override
     public List<Y9Menu> findByParentId(String parentId) {
         return y9MenuRepository.findByParentIdOrderByTabIndex(parentId);
-    }
-
-    @Override
-    public Integer getMaxIndexByParentId(String parentId) {
-        return y9MenuRepository.findTopByParentIdOrderByTabIndexDesc(parentId).map(Y9Menu::getTabIndex).orElse(0);
     }
 
     @EventListener

@@ -18,12 +18,12 @@ import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
-import net.risesoft.enums.platform.OrgTypeEnum;
-import net.risesoft.id.IdType;
-import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.enums.AuditLogEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
+import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.Y9PositionRepository;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.service.org.Y9PositionService;
@@ -31,7 +31,9 @@ import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
+import net.risesoft.y9.util.Y9Assert;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9.util.Y9StringUtil;
 
 /**
  * @author dingzhaojun
@@ -59,11 +61,24 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Override
     @Transactional(readOnly = false)
     public Y9Position changeDisabled(String id) {
-        final Y9Position position = y9PositionManager.getByIdNotCache(id);
+        Y9Position currentPosition = y9PositionManager.getByIdNotCache(id);
+        Y9Position originalPosition = Y9ModelConvertUtil.convert(currentPosition, Y9Position.class);
+        boolean disableStatusToUpdate = !currentPosition.getDisabled();
 
-        Y9Position updatedPosition = Y9ModelConvertUtil.convert(position, Y9Position.class);
-        updatedPosition.setDisabled(!updatedPosition.getDisabled());
-        return y9PositionManager.saveOrUpdate(updatedPosition);
+        currentPosition.setDisabled(disableStatusToUpdate);
+        Y9Position savedPosition = y9PositionManager.update(currentPosition);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.POSITION_UPDATE_DISABLED.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.POSITION_UPDATE_DISABLED.getDescription(),
+                savedPosition.getName(), disableStatusToUpdate ? "禁用" : "启用"))
+            .objectId(id)
+            .oldObject(originalPosition)
+            .currentObject(savedPosition)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedPosition;
     }
 
     @Override
@@ -76,22 +91,6 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Position create(Y9Position y9Position) {
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(y9Position.getParentId());
-
-        if (StringUtils.isBlank(y9Position.getId())) {
-            y9Position.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        }
-        y9Position.setTabIndex(Integer.MAX_VALUE);
-        y9Position.setParentId(parent.getId());
-        y9Position.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.POSITION, y9Position.getName(), parent.getDn()));
-        y9Position.setDisabled(false);
-
-        return save(y9Position);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
     public void delete(List<String> ids) {
         for (String id : ids) {
             this.deleteById(id);
@@ -100,16 +99,20 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     @Override
     @Transactional(readOnly = false)
-    public void deleteById(String positionId) {
-        final Y9Position y9Position = this.getById(positionId);
+    public void deleteById(String id) {
+        final Y9Position y9Position = this.getById(id);
 
-        // 删除岗位关联数据
-        y9PersonsToPositionsManager.deleteByPositionId(positionId);
-
+        y9PersonsToPositionsManager.deleteByPositionId(id);
         y9PositionManager.delete(y9Position);
 
-        // 发布事件，程序内部监听处理相关业务
-        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Position));
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.POSITION_DELETE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.POSITION_DELETE.getDescription(), y9Position.getName()))
+            .objectId(id)
+            .oldObject(y9Position)
+            .currentObject(null)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
     }
 
     @Override
@@ -208,13 +211,26 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Position move(String positionId, String parentId) {
-        final Y9Position position = y9PositionManager.getByIdNotCache(positionId);
+    public Y9Position move(String id, String parentId) {
+        Y9OrgBase parentToMove = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
+        Y9Position currentPosition = y9PositionManager.getByIdNotCache(id);
+        Y9Position originalPosition = Y9ModelConvertUtil.convert(currentPosition, Y9Position.class);
 
-        Y9Position updatedPosition = Y9ModelConvertUtil.convert(position, Y9Position.class);
-        updatedPosition.setParentId(parentId);
-        updatedPosition.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parentId));
-        return y9PositionManager.saveOrUpdate(updatedPosition);
+        currentPosition.setParentId(parentId);
+        currentPosition.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parentId));
+        Y9Position savedPosition = y9PositionManager.update(currentPosition);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.POSITION_UPDATE_PARENTID.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.POSITION_UPDATE_PARENTID.getDescription(),
+                currentPosition.getName(), parentToMove.getName()))
+            .objectId(id)
+            .oldObject(originalPosition)
+            .currentObject(currentPosition)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedPosition;
     }
 
     @Override
@@ -239,13 +255,63 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Override
     @Transactional(readOnly = false)
     public Y9Position saveOrUpdate(Y9Position position) {
-        return y9PositionManager.saveOrUpdate(position);
+        if (StringUtils.isNotEmpty(position.getId())) {
+            Optional<Y9Position> positionOptional = y9PositionManager.findByIdNotCache(position.getId());
+            if (positionOptional.isPresent()) {
+                Y9Position originalPosition = Y9ModelConvertUtil.convert(positionOptional.get(), Y9Position.class);
+
+                // 修改的岗位容量不能小于当前岗位人数
+                checkHeadCountAvailability(position);
+                Y9Position savedPosition = y9PositionManager.update(position);
+
+                AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+                    .action(AuditLogEnum.POSITION_UPDATE.getAction())
+                    .description(
+                        Y9StringUtil.format(AuditLogEnum.POSITION_UPDATE.getDescription(), savedPosition.getName()))
+                    .objectId(savedPosition.getId())
+                    .oldObject(originalPosition)
+                    .currentObject(savedPosition)
+                    .build();
+                Y9Context.publishEvent(auditLogEvent);
+
+                return savedPosition;
+            }
+        }
+
+        Y9Position savedPosition = y9PositionManager.insert(position);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.POSITION_CREATE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.POSITION_CREATE.getDescription(), savedPosition.getName()))
+            .objectId(savedPosition.getId())
+            .oldObject(null)
+            .currentObject(savedPosition)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedPosition;
     }
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Position saveProperties(String positionId, String properties) {
-        return y9PositionManager.saveProperties(positionId, properties);
+    public Y9Position saveProperties(String id, String properties) {
+        Y9Position currentPosition = y9PositionManager.getById(id);
+        Y9Position originalPosition = Y9ModelConvertUtil.convert(currentPosition, Y9Position.class);
+
+        currentPosition.setProperties(properties);
+        Y9Position savedPosition = y9PositionManager.update(currentPosition);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.POSITION_UPDATE_PROPERTIES.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.POSITION_UPDATE_PROPERTIES.getDescription(),
+                savedPosition.getName(), savedPosition.getProperties()))
+            .objectId(id)
+            .oldObject(originalPosition)
+            .currentObject(savedPosition)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedPosition;
     }
 
     @Override
@@ -305,4 +371,9 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         recursionUpPosition(positionList, position.getParentId());
     }
 
+    private void checkHeadCountAvailability(Y9Position position) {
+        Integer personCount = y9PersonsToPositionsRepository.countByPositionId(position.getId());
+        Y9Assert.lessThanOrEqualTo(personCount, position.getCapacity(), OrgUnitErrorCodeEnum.POSITION_IS_FULL,
+            position.getName());
+    }
 }

@@ -246,6 +246,10 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
         applicationContext.publishEvent(event);
     }
 
+    public static void publishEvent(Object event) {
+        applicationContext.publishEvent(event);
+    }
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         Y9Context.applicationContext = applicationContext;

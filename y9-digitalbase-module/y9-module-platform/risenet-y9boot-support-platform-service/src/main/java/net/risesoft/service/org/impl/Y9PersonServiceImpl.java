@@ -29,7 +29,7 @@ import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9PersonExt;
 import net.risesoft.entity.Y9Position;
-import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
@@ -38,19 +38,20 @@ import net.risesoft.manager.org.Y9PersonExtManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
+import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.Y9PersonRepository;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.setting.Y9SettingService;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9Assert;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9.util.signing.Y9MessageDigest;
 
 /**
@@ -79,7 +80,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Transactional(readOnly = false)
     public List<Y9Person> addPersons(String parentId, List<String> personIds) {
         List<Y9Person> personList = new ArrayList<>();
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
         for (String originalId : personIds) {
             Y9Person originalPerson = getById(originalId);
             if (StringUtils.isNotBlank(originalPerson.getOriginalId())) {
@@ -88,16 +88,15 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             }
             Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByOriginalIdAndParentId(originalId, parentId);
             if (y9PersonOptional.isPresent()) {
-                Y9Person oldperson = y9PersonOptional.get();
-                oldperson.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, oldperson.getName(), parent.getDn()));
-                oldperson.setDisabled(Boolean.FALSE);
-                oldperson.setName(originalPerson.getName());
-                oldperson.setLoginName(originalPerson.getLoginName());
-                oldperson.setEmail(originalPerson.getEmail());
-                oldperson.setMobile(originalPerson.getMobile());
-                oldperson.setDescription(originalPerson.getDescription());
-                oldperson = save(oldperson);
-                personList.add(oldperson);
+                Y9Person currentPerson = y9PersonOptional.get();
+                currentPerson.setDisabled(Boolean.FALSE);
+                currentPerson.setName(originalPerson.getName());
+                currentPerson.setLoginName(originalPerson.getLoginName());
+                currentPerson.setEmail(originalPerson.getEmail());
+                currentPerson.setMobile(originalPerson.getMobile());
+                currentPerson.setDescription(originalPerson.getDescription());
+                final Y9Person savedPerson = y9PersonManager.update(currentPerson);
+                personList.add(savedPerson);
                 continue;
             }
             Y9Person person = new Y9Person();
@@ -106,10 +105,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             person.setOriginal(Boolean.FALSE);
             person.setOriginalId(originalId);
             person.setParentId(parentId);
-            person.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parentId));
-            person.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, person.getName(), parent.getDn()));
-
-            final Y9Person savedPerson = save(person);
+            final Y9Person savedPerson = y9PersonManager.insert(person);
 
             Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedPerson));
 
@@ -121,22 +117,29 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional(readOnly = false)
     public Y9Person changeDisabled(String id) {
-        final Y9Person person = this.getById(id);
+        Y9Person currentPerson = this.getById(id);
+        Y9Person originalPerson = Y9ModelConvertUtil.convert(currentPerson, Y9Person.class);
 
-        Y9Person updatedPerson = Y9ModelConvertUtil.convert(person, Y9Person.class);
-        boolean disabled = !updatedPerson.getDisabled();
-        updatedPerson.setDisabled(disabled);
-        return y9PersonManager.saveOrUpdate(updatedPerson, null);
+        boolean disableStatusToUpdate = !originalPerson.getDisabled();
+        currentPerson.setDisabled(disableStatusToUpdate);
+        Y9Person savedPerson = y9PersonManager.update(currentPerson);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.PERSON_UPDATE_DISABLED.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.PERSON_UPDATE_DISABLED.getDescription(),
+                savedPerson.getName(), disableStatusToUpdate ? "禁用" : "启用"))
+            .objectId(id)
+            .oldObject(originalPerson)
+            .currentObject(savedPerson)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedPerson;
     }
 
     @Override
     public long countByGuidPathLikeAndDisabledAndDeletedFalse(String guidPath) {
         return y9PersonRepository.countByDisabledAndGuidPathContaining(Boolean.FALSE, guidPath);
-    }
-
-    @Override
-    public long countByParentId(String parentId) {
-        return y9PersonRepository.countByParentId(parentId);
     }
 
     @Override
@@ -167,6 +170,15 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         // 删除人员关联数据
         y9PersonsToPositionsManager.deleteByPersonId(id);
         y9PersonManager.delete(y9Person);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.PERSON_DELETE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.PERSON_DELETE.getDescription(), y9Person.getName()))
+            .objectId(id)
+            .oldObject(y9Person)
+            .currentObject(null)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
 
         // 发布事件，程序内部监听处理相关业务
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Person));
@@ -275,11 +287,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    public List<Y9Person> listByDisabledAndDeletedAndGuidPathLike(String guidPath) {
-        return y9PersonRepository.findByDisabledAndGuidPathContaining(Boolean.FALSE, guidPath);
-    }
-
-    @Override
     public List<Y9Person> listByGroupId(String groupId, Boolean disabled) {
         return y9PersonManager.listByGroupId(groupId, disabled);
     }
@@ -332,29 +339,54 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Person modifyPassword(String personId, String oldPassword, String newPassword) {
-        Y9Person person = this.getById(personId);
+    public Y9Person modifyPassword(String id, String oldPassword, String newPassword) {
+        Y9Person currentPerson = this.getById(id);
 
         if (StringUtils.isNotBlank(oldPassword)) {
             // 兼容旧接口，无 oldPassword
-            Y9Assert.isTrue(Y9MessageDigest.bcryptMatch(oldPassword, person.getPassword()),
+            Y9Assert.isTrue(Y9MessageDigest.bcryptMatch(oldPassword, currentPerson.getPassword()),
                 OrgUnitErrorCodeEnum.OLD_PASSWORD_IS_INCORRECT);
         }
 
-        Y9Person updatedPerson = Y9ModelConvertUtil.convert(person, Y9Person.class);
-        updatedPerson.setPassword(Y9MessageDigest.bcrypt(newPassword));
-        return y9PersonManager.saveOrUpdate(updatedPerson, null);
+        Y9Person originalPerson = Y9ModelConvertUtil.convert(currentPerson, Y9Person.class);
+        currentPerson.setPassword(Y9MessageDigest.bcrypt(newPassword));
+        Y9Person savedPerson = y9PersonManager.update(currentPerson);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.PERSON_UPDATE_PASSWORD.getAction())
+            .description(
+                Y9StringUtil.format(AuditLogEnum.PERSON_UPDATE_PASSWORD.getDescription(), currentPerson.getName()))
+            .objectId(id)
+            .oldObject(originalPerson)
+            .currentObject(savedPerson)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedPerson;
     }
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Person move(String personId, String parentId) {
-        final Y9Person person = this.getById(personId);
+    public Y9Person move(String id, String parentId) {
+        Y9Person currentPerson = this.getById(id);
+        Y9OrgBase parentToMove = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
+        Y9Person originalPerson = Y9ModelConvertUtil.convert(currentPerson, Y9Person.class);
 
-        Y9Person updatedPerson = Y9ModelConvertUtil.convert(person, Y9Person.class);
-        updatedPerson.setParentId(parentId);
-        updatedPerson.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parentId));
-        return this.saveOrUpdate(updatedPerson, null);
+        currentPerson.setParentId(parentId);
+        currentPerson.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parentId));
+        Y9Person savedPerson = y9PersonManager.update(currentPerson);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.PERSON_UPDATE_PARENTID.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.PERSON_UPDATE_PARENTID.getDescription(),
+                savedPerson.getName(), parentToMove.getName()))
+            .objectId(id)
+            .oldObject(originalPerson)
+            .currentObject(savedPerson)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedPerson;
     }
 
     @Override
@@ -364,7 +396,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
         int tabIndex = 0;
         for (String personId : personIds) {
-            personList.add(y9PersonManager.updateTabIndex(personId, tabIndex++));
+            personList.add(this.updateTabIndex(personId, tabIndex++));
         }
         return personList;
     }
@@ -392,33 +424,29 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    public void resetDefaultPassword(String personId) {
-        final Y9Person person = this.getById(personId);
+    public void resetDefaultPassword(String id) {
+        Y9Person currentPerson = this.getById(id);
+        Y9Person originalPerson = Y9ModelConvertUtil.convert(currentPerson, Y9Person.class);
 
-        Y9Person updatedPerson = Y9ModelConvertUtil.convert(person, Y9Person.class);
         String password = y9SettingService.getTenantSetting().getUserDefaultPassword();
-        updatedPerson.setPassword(Y9MessageDigest.bcrypt(password));
-        y9PersonManager.saveOrUpdate(updatedPerson, null);
+        currentPerson.setPassword(Y9MessageDigest.bcrypt(password));
+        Y9Person savedPerson = y9PersonManager.update(currentPerson);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.PERSON_RESET_PASSWORD.getAction())
+            .description(
+                Y9StringUtil.format(AuditLogEnum.PERSON_RESET_PASSWORD.getDescription(), currentPerson.getName()))
+            .objectId(id)
+            .oldObject(originalPerson)
+            .currentObject(savedPerson)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
     }
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Person save(Y9Person person) {
-        String tenantId = Y9LoginUserHolder.getTenantId();
-        person.setTenantId(tenantId);
-        person.setGuidPath(compositeOrgBaseManager.buildGuidPath(person));
-        person.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(person));
-
-        if (person.getOriginal() == null) {
-            person.setOriginal(Boolean.TRUE);
-        }
-        return y9PersonManager.save(person);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Person saveAvator(String personId, String avatorUrl) {
-        final Y9Person person = this.getById(personId);
+    public Y9Person saveAvator(String id, String avatorUrl) {
+        final Y9Person person = this.getById(id);
 
         Y9Person updatedPerson = Y9ModelConvertUtil.convert(person, Y9Person.class);
         updatedPerson.setAvator(avatorUrl);
@@ -428,7 +456,42 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional(readOnly = false)
     public Y9Person saveOrUpdate(Y9Person person, Y9PersonExt personExt) {
-        return y9PersonManager.saveOrUpdate(person, personExt);
+        if (StringUtils.isNotBlank(person.getId())) {
+            Optional<Y9Person> personOptional = y9PersonManager.findByIdNotCache(person.getId());
+            if (personOptional.isPresent()) {
+                Y9Person originalPerson = Y9ModelConvertUtil.convert(personOptional.get(), Y9Person.class);
+
+                Y9Person savedPerson = y9PersonManager.update(person);
+                y9PersonExtManager.saveOrUpdate(personExt, savedPerson);
+                y9PersonManager.updatePersonByOriginalId(savedPerson, personExt);
+
+                AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+                    .action(AuditLogEnum.PERSON_UPDATE.getAction())
+                    .description(
+                        Y9StringUtil.format(AuditLogEnum.PERSON_UPDATE.getDescription(), savedPerson.getName()))
+                    .objectId(savedPerson.getId())
+                    .oldObject(originalPerson)
+                    .currentObject(savedPerson)
+                    .build();
+                Y9Context.publishEvent(auditLogEvent);
+
+                return savedPerson;
+            }
+        }
+
+        Y9Person savedPerson = y9PersonManager.insert(person);
+        y9PersonExtManager.saveOrUpdate(personExt, savedPerson);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.PERSON_CREATE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.PERSON_CREATE.getDescription(), savedPerson.getName()))
+            .objectId(savedPerson.getId())
+            .oldObject(null)
+            .currentObject(savedPerson)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedPerson;
     }
 
     @Override
@@ -449,7 +512,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
                 y9Position.setJobId(jobId);
                 y9Position.setParentId(person.getParentId());
 
-                Y9Position newPosition = y9PositionManager.saveOrUpdate(y9Position);
+                Y9Position newPosition = y9PositionManager.insert(y9Position);
                 newPositionIdList.add(newPosition.getId());
             }
             y9PersonsToPositionsManager.addPositions(person.getId(), newPositionIdList);
@@ -459,24 +522,57 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Person saveProperties(String personId, String properties) {
-        return y9PersonManager.saveProperties(personId, properties);
+    public Y9Person saveProperties(String id, String properties) {
+        Y9Person currentPerson = this.getById(id);
+        Y9Person originalPerson = Y9ModelConvertUtil.convert(currentPerson, Y9Person.class);
+
+        currentPerson.setProperties(properties);
+        Y9Person savedPerson = y9PersonManager.update(currentPerson);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.PERSON_UPDATE_PROPERTIES.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.PERSON_UPDATE_PROPERTIES.getDescription(),
+                savedPerson.getName(), savedPerson.getProperties()))
+            .objectId(id)
+            .oldObject(originalPerson)
+            .currentObject(savedPerson)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedPerson;
     }
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Person saveWeixinId(String personId, String weixinId) {
-        Y9Person person = this.getById(personId);
+    public Y9Person saveWeixinId(String id, String weixinId) {
+        Y9Person person = this.getById(id);
 
         Y9Person updatedPerson = Y9ModelConvertUtil.convert(person, Y9Person.class);
         updatedPerson.setWeixinId(weixinId);
-        return y9PersonManager.saveOrUpdate(updatedPerson, null);
+        return y9PersonManager.update(updatedPerson);
     }
 
     @Override
     @Transactional(readOnly = false)
     public Y9Person updateTabIndex(String id, int tabIndex) {
-        return y9PersonManager.updateTabIndex(id, tabIndex);
+        Y9Person currentPerson = y9PersonManager.getById(id);
+        Y9Person originalPerson = Y9ModelConvertUtil.convert(currentPerson, Y9Person.class);
+
+        currentPerson.setTabIndex(tabIndex);
+        currentPerson.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(currentPerson));
+        Y9Person savedPerson = y9PersonManager.update(currentPerson);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.PERSON_UPDATE_TABINDEX.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.PERSON_UPDATE_TABINDEX.getDescription(),
+                savedPerson.getName(), savedPerson.getTabIndex()))
+            .objectId(id)
+            .oldObject(originalPerson)
+            .currentObject(savedPerson)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedPerson;
     }
 
     @Override

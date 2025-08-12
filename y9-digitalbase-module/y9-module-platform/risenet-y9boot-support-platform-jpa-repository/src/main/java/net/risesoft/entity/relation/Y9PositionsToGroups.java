@@ -52,12 +52,12 @@ public class Y9PositionsToGroups extends BaseEntity {
 
     /** 用户组排序号 */
     @Column(name = "GROUP_ORDER", nullable = false)
-    @Comment("用户组排序号")
+    @Comment("同一个岗位的用户组排序号")
     private Integer groupOrder = 0;
 
-    /** 人员排序号 */
+    /** 同一个用户组的岗位排序号 */
     @Column(name = "POSITION_ORDER", nullable = false)
-    @Comment("人员排序号")
+    @Comment("同一个用户组的岗位排序号")
     private Integer positionOrder = 0;
 
 }

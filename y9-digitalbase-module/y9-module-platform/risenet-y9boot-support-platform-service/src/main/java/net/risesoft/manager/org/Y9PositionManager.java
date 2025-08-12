@@ -43,16 +43,9 @@ public interface Y9PositionManager {
 
     Y9Position save(Y9Position position);
 
-    Y9Position saveOrUpdate(Y9Position position);
+    Y9Position insert(Y9Position position);
 
-    /**
-     * 保存或者更新岗位扩展信息
-     *
-     * @param id 岗位id
-     * @param properties 扩展属性
-     * @return {@link Y9Position}
-     */
-    Y9Position saveProperties(String id, String properties);
+    Y9Position update(Y9Position position);
 
     Y9Position updateTabIndex(String id, int tabIndex);
 }

@@ -93,7 +93,8 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
     @Override
     public String getDataSourceIdByTenantIdAndSystemId(String tenantId, String systemId) {
         return y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId)
-            .map(Y9TenantSystem::getTenantDataSource).orElse(null);
+            .map(Y9TenantSystem::getTenantDataSource)
+            .orElse(null);
     }
 
     @Override
@@ -118,9 +119,9 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
         if (Objects.equals(Y9Context.getSystemName(), y9System.getName())) {
             // 对于租用数字底座的，立即发送租用事件，用于集成测试
             Y9EventCommon tenantSystemRegisteredEvent = new Y9EventCommon();
-            tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_SYSTEM_REGISTERED);
             tenantSystemRegisteredEvent.setEventObject(tenantSystem);
             tenantSystemRegisteredEvent.setTarget(y9System.getName());
+            tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_SYSTEM_REGISTERED);
             Y9Context.publishEvent(tenantSystemRegisteredEvent);
         }
 

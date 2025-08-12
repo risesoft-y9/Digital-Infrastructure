@@ -83,7 +83,7 @@ public class PlatformApplicationReadyListener implements ApplicationListener<App
             publicRole.setType(RoleTypeEnum.FOLDER);
             publicRole.setDynamic(false);
             publicRole.setTabIndex(0);
-            y9RoleService.createRole(publicRole);
+            y9RoleService.saveOrUpdate(publicRole);
         }
     }
 
@@ -112,7 +112,7 @@ public class PlatformApplicationReadyListener implements ApplicationListener<App
             y9Tenant.setName(y9PlatformProperties.getInitTenantName());
             y9Tenant.setEnabled(true);
             y9Tenant.setTabIndex(10000);
-            y9TenantService.save(y9Tenant);
+            y9TenantService.saveOrUpdate(y9Tenant);
         }
     }
 

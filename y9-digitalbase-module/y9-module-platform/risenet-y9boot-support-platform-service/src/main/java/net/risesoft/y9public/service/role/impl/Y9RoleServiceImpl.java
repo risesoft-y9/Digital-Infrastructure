@@ -14,18 +14,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.DefaultConsts;
-import net.risesoft.consts.InitDataConsts;
-import net.risesoft.consts.RoleLevelConsts;
-import net.risesoft.id.IdType;
-import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.enums.AuditLogEnum;
+import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
-import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.role.Y9Role;
-import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
 import net.risesoft.y9public.repository.role.Y9RoleRepository;
 import net.risesoft.y9public.service.role.Y9RoleService;
@@ -45,38 +42,22 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     private final Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository;
 
     private final Y9RoleManager y9RoleManager;
-    private final Y9AppManager y9AppManager;
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Role createRole(Y9Role y9Role) {
-        if (StringUtils.isBlank(y9Role.getId())) {
-            y9Role.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        }
-        if (y9Role.getTabIndex() == null) {
-            y9Role.setTabIndex(getNextTabIndex());
-        }
-        Optional<Y9Role> parentRoleOptional = Optional.empty();
-        if (StringUtils.isNotEmpty(y9Role.getParentId())) {
-            parentRoleOptional = this.findById(y9Role.getParentId());
-        }
-        if (parentRoleOptional.isPresent()) {
-            Y9Role parent = parentRoleOptional.get();
-            y9Role.setParentId(parent.getId());
-            y9Role.setDn(RoleLevelConsts.CN + y9Role.getName() + RoleLevelConsts.SEPARATOR + parent.getDn());
-            y9Role.setGuidPath(parent.getGuidPath() + RoleLevelConsts.SEPARATOR + y9Role.getId());
-        } else {
-            y9Role.setParentId(y9Role.getParentId());
-            y9Role.setDn(RoleLevelConsts.CN + y9Role.getName());
-            y9Role.setGuidPath(y9Role.getId());
-        }
-        return y9RoleManager.save(y9Role);
-    }
 
     @Transactional(readOnly = false)
     @Override
     public void delete(String id) {
+        Y9Role y9Role = y9RoleManager.getById(id);
+
         y9RoleManager.delete(id);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.ROLE_DELETE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.ROLE_DELETE.getDescription(), y9Role.getName()))
+            .objectId(id)
+            .oldObject(y9Role)
+            .currentObject(null)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
     }
 
     @Override
@@ -102,10 +83,6 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     @Override
     public Y9Role getById(String roleId) {
         return y9RoleManager.getById(roleId);
-    }
-
-    private Integer getNextTabIndex() {
-        return y9RoleRepository.findTopByOrderByTabIndexDesc().map(Y9Role::getTabIndex).orElse(-1) + 1;
     }
 
     @Override
@@ -174,74 +151,60 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     @Override
     @Transactional(readOnly = false)
     public void move(String id, String newParentId) {
-        Y9Role roleNode = y9RoleManager.getById(id);
-        roleNode.setParentId(newParentId);
-        saveOrUpdate(roleNode);
-        recursiveUpdateByDn(roleNode);
+        Y9Role currentRole = y9RoleManager.getById(id);
+        Y9Role parentToMove = y9RoleManager.getById(newParentId);
+        Y9Role originalRole = Y9ModelConvertUtil.convert(currentRole, Y9Role.class);
+
+        currentRole.setParentId(newParentId);
+        Y9Role savedRole = y9RoleManager.update(currentRole);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.ROLE_UPDATE_PARENTID.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.ROLE_UPDATE_PARENTID.getDescription(), savedRole.getName(),
+                parentToMove.getName()))
+            .objectId(id)
+            .oldObject(originalRole)
+            .currentObject(savedRole)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        recursiveUpdateByDn(savedRole);
     }
 
     @Override
     @Transactional(readOnly = false)
     public Y9Role saveOrUpdate(Y9Role y9Role) {
-        Y9Role parent = null;
-        if (StringUtils.isNotEmpty(y9Role.getParentId())) {
-            parent = this.findById(y9Role.getParentId()).orElse(null);
-        }
         if (StringUtils.isNotEmpty(y9Role.getId())) {
             Optional<Y9Role> y9RoleOptional = this.findById(y9Role.getId());
             if (y9RoleOptional.isPresent()) {
-                Y9Role originRole = y9RoleOptional.get();
+                Y9Role originRole = Y9ModelConvertUtil.convert(y9RoleOptional.get(), Y9Role.class);
+                Y9Role savedRole = y9RoleManager.update(originRole);
 
-                Y9BeanUtil.copyProperties(y9Role, originRole);
-                if (parent != null) {
-                    originRole.setParentId(parent.getId());
-                    originRole
-                        .setDn(RoleLevelConsts.CN + y9Role.getName() + RoleLevelConsts.SEPARATOR + parent.getDn());
-                    originRole.setGuidPath(parent.getGuidPath() + RoleLevelConsts.SEPARATOR + y9Role.getId());
-                } else {
-                    originRole.setParentId(y9Role.getParentId());
-                    originRole.setDn(RoleLevelConsts.CN + y9Role.getName());
-                    originRole.setGuidPath(y9Role.getId());
-                }
-                if (StringUtils.isBlank(originRole.getAppId())) {
-                    originRole.setAppId(null);
-                }
-                if (StringUtils.isBlank(originRole.getSystemId())) {
-                    originRole.setSystemId(null);
-                }
-                return y9RoleManager.save(originRole);
+                AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+                    .action(AuditLogEnum.ROLE_UPDATE.getAction())
+                    .description(Y9StringUtil.format(AuditLogEnum.ROLE_UPDATE.getDescription(), savedRole.getName()))
+                    .objectId(savedRole.getId())
+                    .oldObject(originRole)
+                    .currentObject(savedRole)
+                    .build();
+                Y9Context.publishEvent(auditLogEvent);
+
+                return savedRole;
             }
-        } else {
-            y9Role.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        }
-        y9Role.setTabIndex(
-            DefaultConsts.TAB_INDEX.equals(y9Role.getTabIndex()) ? getNextTabIndex() : y9Role.getTabIndex());
-        if (parent != null) {
-            y9Role.setParentId(parent.getId());
-            y9Role.setDn(RoleLevelConsts.CN + y9Role.getName() + RoleLevelConsts.SEPARATOR + parent.getDn());
-            y9Role.setGuidPath(parent.getGuidPath() + RoleLevelConsts.SEPARATOR + y9Role.getId());
-        } else {
-            y9Role.setParentId(y9Role.getParentId());
-            y9Role.setDn(RoleLevelConsts.CN + y9Role.getName());
-            y9Role.setGuidPath(y9Role.getId());
-        }
-        if (StringUtils.isNotBlank(y9Role.getAppId())) {
-            Y9App y9App = y9AppManager.getById(y9Role.getAppId());
-            y9Role.setSystemId(y9App.getSystemId());
-        } else {
-            y9Role.setAppId(null);
-        }
-        if (StringUtils.isBlank(y9Role.getSystemId())) {
-            y9Role.setSystemId(null);
         }
 
-        if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(y9Role.getParentId())) {
-            y9Role.setTenantId(Y9LoginUserHolder.getTenantId());
-        }
-        if (InitDataConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
-            y9Role.setTenantId(null);
-        }
-        return y9RoleManager.save(y9Role);
+        Y9Role savedRole = y9RoleManager.insert(y9Role);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.ROLE_CREATE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.ROLE_CREATE.getDescription(), savedRole.getName()))
+            .objectId(savedRole.getId())
+            .oldObject(null)
+            .currentObject(savedRole)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedRole;
     }
 
     @Override
@@ -251,16 +214,30 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         for (String id : ids) {
             Y9Role roleNode = y9RoleManager.getById(id);
             roleNode.setTabIndex(index++);
-            y9RoleManager.save(roleNode);
+            y9RoleManager.update(roleNode);
         }
     }
 
     @Override
     @Transactional(readOnly = false)
     public Y9Role saveProperties(String id, String properties) {
-        Y9Role roleNode = y9RoleManager.getById(id);
-        roleNode.setProperties(properties);
-        return y9RoleManager.save(roleNode);
+        Y9Role currentRole = y9RoleManager.getById(id);
+        Y9Role originalRole = Y9ModelConvertUtil.convert(currentRole, Y9Role.class);
+
+        currentRole.setProperties(properties);
+        Y9Role savedRole = y9RoleManager.update(currentRole);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.ROLE_UPDATE_PROPERTIES.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.ROLE_UPDATE_PROPERTIES.getDescription(), savedRole.getName(),
+                savedRole.getProperties()))
+            .objectId(id)
+            .oldObject(originalRole)
+            .currentObject(savedRole)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedRole;
     }
 
     @Override

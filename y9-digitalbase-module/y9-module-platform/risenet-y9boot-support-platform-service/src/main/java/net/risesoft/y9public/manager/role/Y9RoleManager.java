@@ -48,5 +48,7 @@ public interface Y9RoleManager {
      */
     List<Y9Role> listOrgUnitRelatedWithoutNegative(String orgUnitId);
 
-    Y9Role save(Y9Role y9Role);
+    Y9Role insert(Y9Role y9Role);
+
+    Y9Role update(Y9Role y9Role);
 }

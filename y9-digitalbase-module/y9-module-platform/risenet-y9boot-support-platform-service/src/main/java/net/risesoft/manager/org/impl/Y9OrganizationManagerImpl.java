@@ -18,7 +18,6 @@ import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
-import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9OrganizationManager;
 import net.risesoft.repository.Y9OrganizationRepository;
@@ -77,36 +76,17 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.ORGANIZATION_NOT_FOUND, id));
     }
 
-    @Override
     @Transactional(readOnly = false)
     @CacheEvict(key = "#y9Organization.id", condition = "#y9Organization.id!=null")
     public Y9Organization save(Y9Organization y9Organization) {
         return y9OrganizationRepository.save(y9Organization);
     }
 
-    @Override
     @Transactional(readOnly = false)
-    public Y9Organization saveOrUpdate(Y9Organization organization) {
-        if (StringUtils.isNotEmpty(organization.getId())) {
-            Optional<Y9Organization> y9OrganizationOptional = this.findByIdNotCache(organization.getId());
-            if (y9OrganizationOptional.isPresent()) {
-                Y9Organization originY9Organization = new Y9Organization();
-                Y9Organization updatedY9Organization = y9OrganizationOptional.get();
-                Y9BeanUtil.copyProperties(updatedY9Organization, originY9Organization);
-
-                Y9BeanUtil.copyProperties(organization, updatedY9Organization);
-
-                updatedY9Organization
-                    .setDn(Y9OrgUtil.buildDn(OrgTypeEnum.ORGANIZATION, updatedY9Organization.getName(), null));
-                updatedY9Organization.setGuidPath(Y9OrgUtil.buildGuidPath(null, updatedY9Organization.getId()));
-                final Y9Organization savedOrganization = this.save(updatedY9Organization);
-
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Organization, savedOrganization));
-
-                return originY9Organization;
-            }
-        } else {
-            organization.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+    @Override
+    public Y9Organization insert(Y9Organization organization) {
+        if (StringUtils.isBlank(organization.getId())) {
+            organization.setId(Y9IdGenerator.genId());
         }
 
         organization.setTenantId(Y9LoginUserHolder.getTenantId());
@@ -123,15 +103,22 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
         return savedOrganization;
     }
 
-    @Override
-    @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
-    public Y9Organization saveProperties(String id, String properties) {
-        final Y9Organization organization = this.getById(id);
+    @Override
+    public Y9Organization update(Y9Organization organization) {
+        Y9Organization originY9Organization = new Y9Organization();
+        Y9Organization updatedY9Organization = this.getById(organization.getId());
+        Y9BeanUtil.copyProperties(updatedY9Organization, originY9Organization);
 
-        Y9Organization updatedOrganization = Y9ModelConvertUtil.convert(organization, Y9Organization.class);
-        updatedOrganization.setProperties(properties);
-        return this.saveOrUpdate(updatedOrganization);
+        Y9BeanUtil.copyProperties(organization, updatedY9Organization);
+
+        updatedY9Organization.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.ORGANIZATION, updatedY9Organization.getName(), null));
+        updatedY9Organization.setGuidPath(Y9OrgUtil.buildGuidPath(null, updatedY9Organization.getId()));
+        final Y9Organization savedOrganization = this.save(updatedY9Organization);
+
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Organization, savedOrganization));
+
+        return savedOrganization;
     }
 
     @Override
@@ -142,7 +129,7 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
 
         Y9Organization updatedOrganization = Y9ModelConvertUtil.convert(organization, Y9Organization.class);
         updatedOrganization.setTabIndex(tabIndex);
-        return this.saveOrUpdate(updatedOrganization);
+        return this.update(updatedOrganization);
     }
 
     private Integer getNextTabIndex() {

@@ -43,18 +43,9 @@ public interface Y9OrganizationManager {
      */
     Y9Organization getByIdNotCache(String id);
 
-    Y9Organization save(Y9Organization y9Organization);
+    Y9Organization insert(Y9Organization organization);
 
-    Y9Organization saveOrUpdate(Y9Organization organization);
-
-    /**
-     * 保存或者更新组织机构扩展信息
-     *
-     * @param id 组织机构id
-     * @param properties 扩展属性
-     * @return {@link Y9Organization}
-     */
-    Y9Organization saveProperties(String id, String properties);
+    Y9Organization update(Y9Organization organization);
 
     /**
      * 更新组织机构排序

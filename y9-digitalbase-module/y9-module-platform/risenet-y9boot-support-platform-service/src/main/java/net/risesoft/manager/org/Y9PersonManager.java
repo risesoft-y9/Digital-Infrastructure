@@ -38,18 +38,11 @@ public interface Y9PersonManager {
 
     List<Y9Person> listByPositionId(String positionId, Boolean disabled);
 
-    Y9Person save(Y9Person y9Person);
+    Y9Person insert(Y9Person person);
 
-    Y9Person saveOrUpdate(Y9Person person, Y9PersonExt personExt);
-
-    /**
-     * 保存或者更新人员扩展信息
-     *
-     * @param id 人员id
-     * @param properties 扩展属性
-     * @return {@link Y9Person}
-     */
-    Y9Person saveProperties(String id, String properties);
+    Y9Person update(Y9Person person);
 
     Y9Person updateTabIndex(String id, int tabIndex);
+
+    void updatePersonByOriginalId(Y9Person originalPerson, Y9PersonExt originalExt);
 }

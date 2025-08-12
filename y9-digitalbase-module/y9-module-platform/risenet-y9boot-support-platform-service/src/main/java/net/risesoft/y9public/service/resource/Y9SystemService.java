@@ -75,15 +75,6 @@ public interface Y9SystemService {
     Y9System getByName(String systemName);
 
     /**
-     * 检查系统名称可用性
-     *
-     * @param id id
-     * @param name 系统名
-     * @return boolean
-     */
-    boolean isNameAvailable(String id, String name);
-
-    /**
      * 查询所有Y9System
      *
      * @return {@code List<Y9System>}

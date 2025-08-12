@@ -23,14 +23,6 @@ public interface Y9GroupService {
     Y9Group changeDisabled(String id);
 
     /**
-     * 创建用户组
-     *
-     * @param y9Group 用户组对象
-     * @return {@link Y9Group}
-     */
-    Y9Group createGroup(Y9Group y9Group);
-
-    /**
      * 根据主键id移除用户组实例(并且移除组内的人员)
      *
      * @param id 唯一标识
@@ -94,15 +86,6 @@ public interface Y9GroupService {
     List<Y9Group> listByNameLike(String name);
 
     /**
-     * 根据名称查询
-     *
-     * @param name 用户组名称
-     * @param dn dn
-     * @return {@code List<Y9Group>}
-     */
-    List<Y9Group> listByNameLikeAndDn(String name, String dn);
-
-    /**
      * 根据父节点id,获取本层级的用户组列表
      *
      * @param parentId 父节点id
@@ -120,7 +103,7 @@ public interface Y9GroupService {
      */
     List<Y9Group> listByPersonId(String personId, Boolean disabled);
 
-    Y9Group move(String groupId, String parentId);
+    Y9Group move(String id, String parentId);
 
     /**
      * 修改此用户组实例的信息
@@ -141,18 +124,10 @@ public interface Y9GroupService {
     /**
      * 保存或者更新用户组扩展信息
      *
-     * @param groupId 用户组id
+     * @param id 用户组id
      * @param properties 扩展信息
      * @return {@link Y9Group}
      */
-    Y9Group saveProperties(String groupId, String properties);
+    Y9Group saveProperties(String id, String properties);
 
-    /**
-     * 更新用户组排列序号
-     *
-     * @param id 用户组唯一标识
-     * @param tabIndex 排列序号
-     * @return {@link Y9Group}
-     */
-    Y9Group updateTabIndex(String id, int tabIndex);
 }

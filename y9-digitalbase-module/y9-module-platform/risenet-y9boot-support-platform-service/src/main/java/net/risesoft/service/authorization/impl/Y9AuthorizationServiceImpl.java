@@ -2,6 +2,7 @@ package net.risesoft.service.authorization.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,28 +22,27 @@ import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.permission.Y9Authorization;
+import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.enums.platform.AuthorityEnum;
 import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
 import net.risesoft.exception.AuthorizationErrorCodeEnum;
-import net.risesoft.id.IdType;
-import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.manager.authorization.Y9AuthorizationManager;
 import net.risesoft.manager.identity.Y9PersonToResourceAndAuthorityManager;
 import net.risesoft.manager.identity.Y9PositionToResourceAndAuthorityManager;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
-import net.risesoft.model.user.UserInfo;
+import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.service.authorization.Y9AuthorizationService;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
-import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.manager.resource.CompositeResourceManager;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
-import net.risesoft.y9public.service.resource.CompositeResourceService;
 
 /**
  * @author dingzhaojun
@@ -58,7 +58,9 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     private final Y9AuthorizationRepository y9AuthorizationRepository;
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
-    private final CompositeResourceService compositeResourceService;
+    private final CompositeResourceManager compositeResourceManager;
+
+    private final Y9AuthorizationManager y9AuthorizationManager;
     private final Y9RoleManager y9RoleManager;
     private final Y9PersonToResourceAndAuthorityManager y9PersonToResourceAndAuthorityManager;
     private final Y9PositionToResourceAndAuthorityManager y9PositionToResourceAndAuthorityManager;
@@ -71,6 +73,22 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
         y9AuthorizationRepository.delete(y9Authorization);
         y9PersonToResourceAndAuthorityManager.deleteByAuthorizationId(id);
         y9PositionToResourceAndAuthorityManager.deleteByAuthorizationId(id);
+
+        String resourceName = compositeResourceManager
+            .findByIdAndResourceType(y9Authorization.getResourceId(), y9Authorization.getResourceType())
+            .getName();
+        String principalName = Objects.equals(AuthorizationPrincipalTypeEnum.ROLE, y9Authorization.getPrincipalType())
+            ? y9RoleManager.getById(y9Authorization.getPrincipalId()).getName()
+            : compositeOrgBaseManager.getOrgUnit(y9Authorization.getPrincipalId()).getName();
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.AUTHORIZATION_DELETE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.AUTHORIZATION_DELETE.getDescription(), principalName,
+                y9Authorization.getAuthority().getName(), resourceName))
+            .objectId(id)
+            .oldObject(y9Authorization)
+            .currentObject(null)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
 
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Authorization));
     }
@@ -196,22 +214,25 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
             return y9AuthorizationRepository.save(originY9Authorization);
         }
 
-        // 新增
-        if (StringUtils.isBlank(y9Authorization.getId())) {
-            y9Authorization.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        }
+        Y9Authorization savedAuthorization = y9AuthorizationManager.insert(y9Authorization);
 
-        Y9ResourceBase y9ResourceBase = compositeResourceService.findById(y9Authorization.getResourceId());
-        y9Authorization.setResourceName(y9ResourceBase.getName());
-        y9Authorization.setResourceType(y9ResourceBase.getResourceType());
-        y9Authorization.setTenantId(Y9LoginUserHolder.getTenantId());
-        y9Authorization
-            .setAuthorizer(Optional.ofNullable(Y9LoginUserHolder.getUserInfo()).map(UserInfo::getName).orElse(null));
-        Y9Authorization savedY9Authorization = y9AuthorizationRepository.save(y9Authorization);
+        String resourceName = compositeResourceManager
+            .findByIdAndResourceType(y9Authorization.getResourceId(), y9Authorization.getResourceType())
+            .getName();
+        String principalName = Objects.equals(AuthorizationPrincipalTypeEnum.ROLE, y9Authorization.getPrincipalType())
+            ? y9RoleManager.getById(y9Authorization.getPrincipalId()).getName()
+            : compositeOrgBaseManager.getOrgUnit(y9Authorization.getPrincipalId()).getName();
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.AUTHORIZATION_CREATE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.AUTHORIZATION_CREATE.getDescription(), principalName,
+                y9Authorization.getAuthority().getName(), resourceName))
+            .objectId(savedAuthorization.getId())
+            .oldObject(null)
+            .currentObject(savedAuthorization)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
 
-        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedY9Authorization));
-
-        return savedY9Authorization;
+        return savedAuthorization;
     }
 
     @Override
@@ -239,7 +260,8 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
         Y9OrgBase y9OrgBase) {
         List<Y9Authorization> y9AuthorizationList =
             y9AuthorizationRepository.findByResourceIdAndAuthority(resourceId, authority);
-        boolean included = y9AuthorizationList.stream().map(Y9Authorization::getPrincipalId)
+        boolean included = y9AuthorizationList.stream()
+            .map(Y9Authorization::getPrincipalId)
             .anyMatch(principalId -> y9OrgBase.getGuidPath().contains(principalId));
         if (included) {
             throw Y9ExceptionUtil.businessException(AuthorizationErrorCodeEnum.ORG_UNIT_INCLUDED, y9OrgBase.getId());
@@ -263,7 +285,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
 
         String currentResourceId = resourceId;
         while (true) {
-            Y9ResourceBase y9ResourceBase = compositeResourceService.getById(currentResourceId);
+            Y9ResourceBase y9ResourceBase = compositeResourceManager.getById(currentResourceId);
             String parentResourceId = y9ResourceBase.getParentId();
             if (Boolean.FALSE.equals(y9ResourceBase.getInherit()) || StringUtils.isBlank(parentResourceId)) {
                 break;
@@ -282,7 +304,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
 
         String currentResourceId = resourceId;
         while (true) {
-            Y9ResourceBase y9ResourceBase = compositeResourceService.getById(currentResourceId);
+            Y9ResourceBase y9ResourceBase = compositeResourceManager.getById(currentResourceId);
             String parentResourceId = y9ResourceBase.getParentId();
             if (Boolean.FALSE.equals(y9ResourceBase.getInherit()) || StringUtils.isBlank(parentResourceId)) {
                 break;
@@ -306,8 +328,9 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     private Y9Authorization getById(String id) {
-        return y9AuthorizationRepository.findById(id).orElseThrow(
-            () -> Y9ExceptionUtil.notFoundException(AuthorizationErrorCodeEnum.AUTHORIZATION_NOT_FOUND, id));
+        return y9AuthorizationRepository.findById(id)
+            .orElseThrow(
+                () -> Y9ExceptionUtil.notFoundException(AuthorizationErrorCodeEnum.AUTHORIZATION_NOT_FOUND, id));
     }
 
     @EventListener

@@ -15,14 +15,6 @@ import net.risesoft.y9public.entity.role.Y9Role;
 public interface Y9RoleService {
 
     /**
-     * 新建角色
-     *
-     * @param y9Role 角色对象
-     * @return {@link Y9Role}
-     */
-    Y9Role createRole(Y9Role y9Role);
-
-    /**
      * 根据主键id移除角色节点实例(如果是角色，移除角色内的/机构/部门/用户组/岗位/人员)
      *
      * @param id 唯一标识

@@ -18,19 +18,19 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.entity.Y9Job;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
+import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
-import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9JobManager;
 import net.risesoft.manager.org.Y9PositionManager;
+import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.Y9JobRepository;
 import net.risesoft.repository.Y9PositionRepository;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.service.org.Y9JobService;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
-import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9Assert;
-import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9.util.Y9StringUtil;
 
 /**
  * @author sdb
@@ -86,6 +86,16 @@ public class Y9JobServiceImpl implements Y9JobService {
         checkIfRelatedPositionExists(id);
 
         Y9Job y9Job = y9JobManager.getById(id);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.JOB_DELETE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.JOB_DELETE.getDescription(), y9Job.getName()))
+            .objectId(id)
+            .oldObject(y9Job)
+            .currentObject(null)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
         y9JobManager.delete(y9Job);
     }
 
@@ -145,52 +155,41 @@ public class Y9JobServiceImpl implements Y9JobService {
     @Transactional(readOnly = false)
     public Y9Job saveOrUpdate(Y9Job job) {
         // 检查名称是否可用
-        Y9Assert.isTrue(isNameAvailable(job.getName(), job.getId()), OrgUnitErrorCodeEnum.JOB_EXISTS, job.getName());
+        Y9Assert.isTrue(y9JobManager.isNameAvailable(job.getName(), job.getId()), OrgUnitErrorCodeEnum.JOB_EXISTS,
+            job.getName());
 
         if (StringUtils.isNotBlank(job.getId())) {
             // 修改职位
             Optional<Y9Job> y9JobOptional = y9JobManager.findByIdNotCache(job.getId());
             if (y9JobOptional.isPresent()) {
-                Y9Job originY9Job = new Y9Job();
-                Y9Job updatedY9Job = y9JobOptional.get();
-                Y9BeanUtil.copyProperties(updatedY9Job, originY9Job);
-                Y9BeanUtil.copyProperties(job, updatedY9Job);
-                final Y9Job savedJob = y9JobManager.save(updatedY9Job);
+                Y9Job originalJob = Y9ModelConvertUtil.convert(y9JobOptional.get(), Y9Job.class);
+                Y9Job savedJob = y9JobManager.update(job);
 
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Job, savedJob));
+                AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+                    .action(AuditLogEnum.JOB_UPDATE.getAction())
+                    .description(Y9StringUtil.format(AuditLogEnum.JOB_UPDATE.getDescription(), job.getName()))
+                    .objectId(savedJob.getId())
+                    .oldObject(originalJob)
+                    .currentObject(savedJob)
+                    .build();
+                Y9Context.publishEvent(auditLogEvent);
 
                 return savedJob;
             }
         }
 
-        // 新增职位
-        if (StringUtils.isBlank(job.getId())) {
-            job.setId(Y9IdGenerator.genId());
-        }
-        job.setCode(job.getCode());
-        job.setName(job.getName());
-        job.setTabIndex(getMaxTabIndex() + 1);
-        final Y9Job savedJob = y9JobManager.save(job);
+        Y9Job savedJob = y9JobManager.insert(job);
 
-        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedJob));
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.JOB_CREATE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.JOB_CREATE.getDescription(), savedJob.getName()))
+            .objectId(savedJob.getId())
+            .oldObject(null)
+            .currentObject(savedJob)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
 
         return savedJob;
-    }
-
-    private Integer getMaxTabIndex() {
-        return y9JobRepository.findTopByOrderByTabIndexDesc().map(Y9Job::getTabIndex).orElse(0);
-    }
-
-    private boolean isNameAvailable(String name, String id) {
-        Optional<Y9Job> y9JobOptional = y9JobRepository.findByName(name);
-
-        if (y9JobOptional.isEmpty()) {
-            // 不存在同名的职位肯定可用
-            return true;
-        }
-
-        // 编辑职位时没修改名称同样认为可用
-        return y9JobOptional.get().getId().equals(id);
     }
 
 }

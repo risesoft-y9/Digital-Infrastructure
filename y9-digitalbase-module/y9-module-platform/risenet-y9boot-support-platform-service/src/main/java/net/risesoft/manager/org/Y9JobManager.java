@@ -28,7 +28,7 @@ public interface Y9JobManager {
 
     /**
      * 根据id，获取职位信息
-     * 
+     *
      * @param id 职位id
      * @return {@link Y9Job} 职位对象
      * @throws Y9NotFoundException id 对应的记录不存在的情况
@@ -46,4 +46,12 @@ public interface Y9JobManager {
     Y9Job save(Y9Job y9Job);
 
     Y9Job updateTabIndex(String id, int tabIndex);
+
+    Y9Job update(Y9Job job);
+
+    Y9Job insert(Y9Job job);
+
+    Integer getMaxTabIndex();
+
+    boolean isNameAvailable(String name, String id);
 }

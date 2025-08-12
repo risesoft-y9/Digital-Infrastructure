@@ -43,18 +43,9 @@ public interface Y9DepartmentManager {
      */
     Y9Department getByIdNotCache(String id);
 
-    Y9Department save(Y9Department y9Department);
+    Y9Department insert(Y9Department dept);
 
-    Y9Department saveOrUpdate(Y9Department dept);
-
-    /**
-     * 保存或者更新部门扩展信息
-     *
-     * @param id 部门唯一标识
-     * @param properties 扩展属性
-     * @return {@link Y9Department}
-     */
-    Y9Department saveProperties(String id, String properties);
+    Y9Department update(Y9Department dept);
 
     /**
      * 保存或者更新部门扩展信息

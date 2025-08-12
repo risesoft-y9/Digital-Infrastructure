@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.entity.Y9OrgBase;
+import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
@@ -22,6 +23,7 @@ import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9DepartmentManager;
+import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.Y9ManagerRepository;
 import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.service.setting.Y9SettingService;
@@ -34,6 +36,8 @@ import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9.util.signing.Y9MessageDigest;
 
 import cn.hutool.core.date.DateUnit;
@@ -51,29 +55,55 @@ import cn.hutool.core.date.DateUtil;
 public class Y9ManagerServiceImpl implements Y9ManagerService {
 
     private final Y9ManagerRepository y9ManagerRepository;
+
     private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9DepartmentManager y9DepartmentManager;
     private final Y9SettingService y9SettingService;
+
     private final Y9PlatformProperties y9PlatformProperties;
 
     @Override
     @Transactional(readOnly = false)
     public Y9Manager changeDisabled(String id) {
-        Y9Manager y9Manager = this.getById(id);
-        y9Manager.setDisabled(!y9Manager.getDisabled());
-        y9Manager = saveOrUpdate(y9Manager);
-        return y9Manager;
+        Y9Manager currentManager = this.getById(id);
+        Y9Manager originalManager = Y9ModelConvertUtil.convert(currentManager, Y9Manager.class);
+        boolean disableStatusToUpdate = !currentManager.getDisabled();
+
+        currentManager.setDisabled(disableStatusToUpdate);
+        Y9Manager savedManager = this.update(currentManager);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.MANAGER_UPDATE_DISABLED.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.MANAGER_UPDATE_DISABLED.getDescription(),
+                savedManager.getManagerLevel().getName(), savedManager.getName(), disableStatusToUpdate ? "禁用" : "启用"))
+            .objectId(id)
+            .oldObject(originalManager)
+            .currentObject(savedManager)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedManager;
     }
 
     @Override
     @Transactional(readOnly = false)
     public void changePassword(String id, String newPassword) {
-        Y9Manager manager = this.getById(id);
-        manager.setPassword(Y9MessageDigest.bcrypt(newPassword));
-        manager.setLastModifyPasswordTime(new Date());
-        Y9Manager y9Manager = y9ManagerRepository.save(manager);
+        Y9Manager currentManager = this.getById(id);
+        Y9Manager originalManager = Y9ModelConvertUtil.convert(currentManager, Y9Manager.class);
 
-        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(manager, y9Manager));
+        currentManager.setPassword(Y9MessageDigest.bcrypt(newPassword));
+        currentManager.setLastModifyPasswordTime(new Date());
+        Y9Manager savedManager = this.update(currentManager);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.MANAGER_UPDATE_PASSWORD.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.MANAGER_UPDATE_PASSWORD.getDescription(),
+                savedManager.getManagerLevel().getName(), savedManager.getName()))
+            .objectId(id)
+            .oldObject(originalManager)
+            .currentObject(savedManager)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
     }
 
     @Override
@@ -95,6 +125,16 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     public void delete(String id) {
         Y9Manager y9Manager = this.getById(id);
         y9ManagerRepository.delete(y9Manager);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.MANAGER_DELETE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.MANAGER_DELETE.getDescription(),
+                y9Manager.getManagerLevel().getName(), y9Manager.getName()))
+            .objectId(id)
+            .oldObject(y9Manager)
+            .currentObject(null)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
 
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Manager));
     }
@@ -201,33 +241,34 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     @Override
     @Transactional(readOnly = false)
     public Y9Manager resetDefaultPassword(String id) {
-        Y9Manager y9Manager = this.getById(id);
+        Y9Manager currentManager = this.getById(id);
+        Y9Manager originalManager = Y9ModelConvertUtil.convert(currentManager, Y9Manager.class);
         String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
-        y9Manager.setPassword(Y9MessageDigest.bcrypt(defaultPassword));
-        y9Manager = y9ManagerRepository.save(y9Manager);
 
-        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Manager, y9Manager));
-        return y9Manager;
+        currentManager.setPassword(Y9MessageDigest.bcrypt(defaultPassword));
+        Y9Manager savedManager = this.update(currentManager);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.MANAGER_RESET_PASSWORD.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.MANAGER_RESET_PASSWORD.getDescription(),
+                savedManager.getManagerLevel().getName(), savedManager.getName()))
+            .objectId(id)
+            .oldObject(originalManager)
+            .currentObject(savedManager)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedManager;
     }
 
-    @Override
     @Transactional(readOnly = false)
-    public Y9Manager saveOrUpdate(Y9Manager y9Manager) {
+    public Y9Manager insert(Y9Manager y9Manager) {
         String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(y9Manager.getParentId());
-        if (StringUtils.isNotBlank(y9Manager.getId())) {
-            Y9Manager oldManager = y9ManagerRepository.findById(y9Manager.getId()).orElse(null);
-            if (oldManager != null) {
-                Y9BeanUtil.copyProperties(y9Manager, oldManager);
-                oldManager = y9ManagerRepository.save(oldManager);
 
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Manager, oldManager));
-                return oldManager;
-            }
-        } else {
+        if (StringUtils.isBlank(y9Manager.getId())) {
             y9Manager.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
-
         y9Manager.setTenantId(Y9LoginUserHolder.getTenantId());
         y9Manager.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(y9Manager.getParentId()));
         // 系统管理员新建的子域三员默认禁用 需安全管理员启用
@@ -240,6 +281,55 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9Manager));
         return y9Manager;
+    }
+
+    @Transactional(readOnly = false)
+    public Y9Manager update(Y9Manager y9Manager) {
+        Y9Manager currentManager = this.getById(y9Manager.getId());
+        Y9Manager originalManager = Y9ModelConvertUtil.convert(currentManager, Y9Manager.class);
+        Y9BeanUtil.copyProperties(y9Manager, currentManager);
+        Y9Manager savedManager = y9ManagerRepository.save(currentManager);
+
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalManager, savedManager));
+
+        return savedManager;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Manager saveOrUpdate(Y9Manager y9Manager) {
+        if (StringUtils.isNotBlank(y9Manager.getId())) {
+            Y9Manager oldManager = y9ManagerRepository.findById(y9Manager.getId()).orElse(null);
+            if (oldManager != null) {
+                Y9Manager originalManager = Y9ModelConvertUtil.convert(oldManager, Y9Manager.class);
+                Y9Manager savedManager = this.update(y9Manager);
+
+                AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+                    .action(AuditLogEnum.MANAGER_UPDATE.getAction())
+                    .description(
+                        Y9StringUtil.format(AuditLogEnum.MANAGER_UPDATE.getDescription(), savedManager.getName()))
+                    .objectId(savedManager.getId())
+                    .oldObject(originalManager)
+                    .currentObject(savedManager)
+                    .build();
+                Y9Context.publishEvent(auditLogEvent);
+
+                return savedManager;
+            }
+        }
+
+        Y9Manager savedManager = this.insert(y9Manager);
+
+        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+            .action(AuditLogEnum.MANAGER_CREATE.getAction())
+            .description(Y9StringUtil.format(AuditLogEnum.MANAGER_CREATE.getDescription(), savedManager.getName()))
+            .objectId(savedManager.getId())
+            .oldObject(null)
+            .currentObject(savedManager)
+            .build();
+        Y9Context.publishEvent(auditLogEvent);
+
+        return savedManager;
     }
 
     @Override
