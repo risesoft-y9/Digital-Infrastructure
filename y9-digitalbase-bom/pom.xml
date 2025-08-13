@@ -75,15 +75,15 @@
 
     <repositories>
         <repository>
-			<id>central-snapshots</id>
-			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
+            <id>central-snapshots</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
         <repository>
             <id>aliyun-repo</id>
             <url>https://maven.aliyun.com/repository/public</url>
@@ -149,6 +149,11 @@
             <dependency>
                 <groupId>net.risesoft</groupId>
                 <artifactId>risenet-y9boot-properties</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.risesoft</groupId>
+                <artifactId>risenet-y9boot-3rd-jpa</artifactId>
                 <version>${revision}</version>
             </dependency>
 
@@ -233,6 +238,11 @@
             <dependency>
                 <groupId>net.risesoft</groupId>
                 <artifactId>risenet-y9boot-starter-publish-kafka</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.risesoft</groupId>
+                <artifactId>risenet-y9boot-starter-repeatsubmit</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
