@@ -144,7 +144,7 @@
                                 },
                                 class: 'global-btn-second',
                                 onClick: async () => {
-                                    ElMessageBox.confirm(`${t('是否移除')}【${row.orgName}】?`, t('提示'), {
+                                    ElMessageBox.confirm(`${t('是否移除')}【${row.orgUnitName}】?`, t('提示'), {
                                         confirmButtonText: t('确定'),
                                         cancelButtonText: t('取消'),
                                         type: 'info'
