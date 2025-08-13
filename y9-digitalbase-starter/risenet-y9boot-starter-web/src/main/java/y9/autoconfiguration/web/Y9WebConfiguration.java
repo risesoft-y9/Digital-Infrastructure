@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.format.datetime.DateFormatter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import net.risesoft.web.Y9LaxStringToEnumConverterFactory;
@@ -27,5 +28,6 @@ public class Y9WebConfiguration implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverterFactory(new Y9LaxStringToEnumConverterFactory());
+        registry.addFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
     }
 }
