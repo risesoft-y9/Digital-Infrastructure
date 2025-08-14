@@ -1,4 +1,4 @@
-package net.risesoft.y9public.entity;
+package net.risesoft.y9public.entity.auditlog;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
