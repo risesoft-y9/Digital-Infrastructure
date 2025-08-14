@@ -111,13 +111,10 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
     @Override
     public Y9Department update(Y9Department dept) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(dept.getParentId());
-
         Y9Department currentDepartment = this.getById(dept.getId());
-        Y9Department originalDepartment = new Y9Department();
-        Y9BeanUtil.copyProperties(currentDepartment, originalDepartment);
+        Y9Department originalDepartment = Y9ModelConvertUtil.convert(currentDepartment, Y9Department.class);
 
-        Y9BeanUtil.copyProperties(dept, currentDepartment);
-
+        Y9BeanUtil.copyProperties(dept, currentDepartment, "tenantId");
         currentDepartment.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.DEPARTMENT, dept.getName(), parent.getDn()));
         currentDepartment.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), dept.getId()));
 

@@ -75,50 +75,10 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.GROUP_NOT_FOUND, id));
     }
 
-    @Override
     @CacheEvict(key = "#y9Group.id")
     @Transactional(readOnly = false)
     public Y9Group save(Y9Group y9Group) {
         return y9GroupRepository.save(y9Group);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Group saveOrUpdate(Y9Group group) {
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(group.getParentId());
-
-        if (StringUtils.isNotEmpty(group.getId())) {
-            Optional<Y9Group> optionalY9Group = this.findByIdNotCache(group.getId());
-            if (optionalY9Group.isPresent()) {
-                Y9Group originGroup = new Y9Group();
-                Y9Group updatedGroup = optionalY9Group.get();
-                Y9BeanUtil.copyProperties(updatedGroup, originGroup);
-                Y9BeanUtil.copyProperties(group, updatedGroup);
-
-                updatedGroup.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.GROUP, group.getName(), parent.getDn()));
-                updatedGroup.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), group.getId()));
-                final Y9Group savedGroup = this.save(updatedGroup);
-
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originGroup, savedGroup));
-                return savedGroup;
-            }
-        } else {
-            group.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        }
-
-        group.setTenantId(Y9LoginUserHolder.getTenantId());
-        group.setDisabled(false);
-        group.setParentId(parent.getId());
-        group.setTabIndex((null == group.getTabIndex() || DefaultConsts.TAB_INDEX.equals(group.getTabIndex()))
-            ? compositeOrgBaseManager.getNextSubTabIndex(parent.getId()) : group.getTabIndex());
-        group.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.GROUP, group.getName(), parent.getDn()));
-        group.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), group.getId()));
-
-        final Y9Group savedGroup = this.save(group);
-
-        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedGroup));
-
-        return savedGroup;
     }
 
     @Transactional(readOnly = false)
@@ -138,7 +98,7 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
         group.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.GROUP, group.getName(), parent.getDn()));
         group.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), group.getId()));
 
-        final Y9Group savedGroup = this.save(group);
+        Y9Group savedGroup = this.save(group);
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedGroup));
 
@@ -149,15 +109,13 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
     @Override
     public Y9Group update(Y9Group group) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(group.getParentId());
+        Y9Group currentGroup = this.getById(group.getId());
+        Y9Group originalGroup = Y9ModelConvertUtil.convert(currentGroup, Y9Group.class);
 
-        Y9Group originalGroup = new Y9Group();
-        Y9Group updatedGroup = this.getById(group.getId());
-        Y9BeanUtil.copyProperties(updatedGroup, originalGroup);
-        Y9BeanUtil.copyProperties(group, updatedGroup);
-
-        updatedGroup.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.GROUP, group.getName(), parent.getDn()));
-        updatedGroup.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), group.getId()));
-        final Y9Group savedGroup = this.save(updatedGroup);
+        Y9BeanUtil.copyProperties(group, currentGroup, "tenantId");
+        currentGroup.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.GROUP, group.getName(), parent.getDn()));
+        currentGroup.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), group.getId()));
+        Y9Group savedGroup = this.save(currentGroup);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalGroup, savedGroup));
         return savedGroup;
@@ -171,6 +129,6 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
 
         Y9Group updatedGroup = Y9ModelConvertUtil.convert(group, Y9Group.class);
         updatedGroup.setTabIndex(tabIndex);
-        return this.saveOrUpdate(updatedGroup);
+        return this.update(updatedGroup);
     }
 }

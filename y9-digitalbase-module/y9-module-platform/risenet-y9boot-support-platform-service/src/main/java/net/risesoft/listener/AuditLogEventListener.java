@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.pojo.AuditLogEvent;
-import net.risesoft.y9public.manager.Y9AuditLogManager;
+import net.risesoft.y9public.manager.auditlog.Y9AuditLogManager;
 
 /**
  * 审计日志事件监听器

@@ -82,8 +82,9 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
             : compositeOrgBaseManager.getOrgUnit(y9Authorization.getPrincipalId()).getName();
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.AUTHORIZATION_DELETE.getAction())
-            .description(Y9StringUtil.format(AuditLogEnum.AUTHORIZATION_DELETE.getDescription(), principalName,
-                y9Authorization.getAuthority().getName(), resourceName))
+            .description(Y9StringUtil.format(AuditLogEnum.AUTHORIZATION_DELETE.getDescription(),
+                y9Authorization.getPrincipalType().getName(), principalName, y9Authorization.getAuthority().getName(),
+                y9Authorization.getResourceType().getName(), resourceName))
             .objectId(id)
             .oldObject(y9Authorization)
             .currentObject(null)
@@ -224,8 +225,9 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
             : compositeOrgBaseManager.getOrgUnit(y9Authorization.getPrincipalId()).getName();
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.AUTHORIZATION_CREATE.getAction())
-            .description(Y9StringUtil.format(AuditLogEnum.AUTHORIZATION_CREATE.getDescription(), principalName,
-                y9Authorization.getAuthority().getName(), resourceName))
+            .description(Y9StringUtil.format(AuditLogEnum.AUTHORIZATION_CREATE.getDescription(),
+                savedAuthorization.getPrincipalType().getName(), principalName,
+                y9Authorization.getAuthority().getName(), savedAuthorization.getResourceType().getName(), resourceName))
             .objectId(savedAuthorization.getId())
             .oldObject(null)
             .currentObject(savedAuthorization)

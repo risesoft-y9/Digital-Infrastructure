@@ -106,15 +106,13 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
     @Transactional(readOnly = false)
     @Override
     public Y9Organization update(Y9Organization organization) {
-        Y9Organization originY9Organization = new Y9Organization();
-        Y9Organization updatedY9Organization = this.getById(organization.getId());
-        Y9BeanUtil.copyProperties(updatedY9Organization, originY9Organization);
+        Y9Organization currentOrganization = this.getById(organization.getId());
+        Y9Organization originY9Organization = Y9ModelConvertUtil.convert(currentOrganization, Y9Organization.class);
 
-        Y9BeanUtil.copyProperties(organization, updatedY9Organization);
-
-        updatedY9Organization.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.ORGANIZATION, updatedY9Organization.getName(), null));
-        updatedY9Organization.setGuidPath(Y9OrgUtil.buildGuidPath(null, updatedY9Organization.getId()));
-        final Y9Organization savedOrganization = this.save(updatedY9Organization);
+        Y9BeanUtil.copyProperties(organization, currentOrganization, "tenantId");
+        currentOrganization.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.ORGANIZATION, currentOrganization.getName(), null));
+        currentOrganization.setGuidPath(Y9OrgUtil.buildGuidPath(null, currentOrganization.getId()));
+        final Y9Organization savedOrganization = this.save(currentOrganization);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Organization, savedOrganization));
 

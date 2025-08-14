@@ -1,4 +1,4 @@
-package net.risesoft.y9public.manager;
+package net.risesoft.y9public.manager.auditlog.impl;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,8 +16,9 @@ import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
-import net.risesoft.y9public.entity.Y9AuditLog;
-import net.risesoft.y9public.repository.Y9AuditLogRepository;
+import net.risesoft.y9public.entity.auditlog.Y9AuditLog;
+import net.risesoft.y9public.manager.auditlog.Y9AuditLogManager;
+import net.risesoft.y9public.repository.auditlog.Y9AuditLogRepository;
 
 /**
  * 审核日志 Manager 实现类

@@ -22,6 +22,7 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
  * 职位 manager 实现类
@@ -90,8 +91,8 @@ public class Y9JobManagerImpl implements Y9JobManager {
     @Transactional(readOnly = false)
     public Y9Job update(Y9Job job) {
         Y9Job currentJob = this.getById(job.getId());
-        Y9Job originY9Job = new Y9Job();
-        Y9BeanUtil.copyProperties(currentJob, originY9Job);
+        Y9Job originY9Job = Y9ModelConvertUtil.convert(currentJob, Y9Job.class);
+
         Y9BeanUtil.copyProperties(job, currentJob);
         Y9Job savedJob = y9JobRepository.save(currentJob);
 

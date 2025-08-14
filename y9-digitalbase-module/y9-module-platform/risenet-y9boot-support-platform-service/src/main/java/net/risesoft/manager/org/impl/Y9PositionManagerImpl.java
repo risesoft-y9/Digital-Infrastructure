@@ -178,11 +178,9 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
     public Y9Position update(Y9Position position) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(position.getParentId());
         Y9Position currentPosition = this.getById(position.getId());
+        Y9Position originY9Position = Y9ModelConvertUtil.convert(currentPosition, Y9Position.class);
 
-        Y9Position originY9Position = new Y9Position();
-        Y9BeanUtil.copyProperties(currentPosition, originY9Position);
-        Y9BeanUtil.copyProperties(position, currentPosition);
-
+        Y9BeanUtil.copyProperties(position, currentPosition, "tenantId");
         currentPosition.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(currentPosition));
         currentPosition.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), currentPosition.getId()));
         currentPosition.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.POSITION, currentPosition.getName(), parent.getDn()));

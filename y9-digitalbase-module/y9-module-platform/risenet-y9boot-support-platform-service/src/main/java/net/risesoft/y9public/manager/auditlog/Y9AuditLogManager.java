@@ -1,4 +1,4 @@
-package net.risesoft.y9public.manager;
+package net.risesoft.y9public.manager.auditlog;
 
 import net.risesoft.pojo.AuditLogEvent;
 
