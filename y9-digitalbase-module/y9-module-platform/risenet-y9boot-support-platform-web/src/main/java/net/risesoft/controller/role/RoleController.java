@@ -200,12 +200,14 @@ public class RoleController {
             List<Y9System> y9SystemList = y9SystemService.listAll();
             roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9SystemList(y9SystemList));
         } else if (TreeNodeType.SYSTEM.equals(parentNodeType)) {
+            // 系统下的角色
+            List<Y9Role> y9RoleList = y9RoleService.listByParentId(parentId);
+            roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9RoleList(y9RoleList));
+
             // 系统节点下为应用
             List<Y9App> appList = y9AppService.listBySystemId(parentId);
             roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9AppList(appList));
 
-            List<Y9Role> y9RoleList = y9RoleService.listByParentId(parentId);
-            roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9RoleList(y9RoleList));
         } else {
             // 应用节点下为角色文件夹或角色节点
             List<Y9Role> roleList = y9RoleService.listByParentId(parentId);
@@ -221,14 +223,16 @@ public class RoleController {
             List<Y9System> y9SystemList = y9TenantSystemService.listSystemByTenantId(Y9LoginUserHolder.getTenantId());
             roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9SystemList(y9SystemList));
         } else if (TreeNodeType.SYSTEM.equals(parentNodeType)) {
+            // 系统下的角色
+            List<Y9Role> y9RoleList = y9RoleService.listByParentId(parentId);
+            roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9RoleList(y9RoleList));
+
             // 系统节点下为应用及系统下所有应用共用的角色
             List<String> appIdList = y9TenantAppService.listAppIdBySystemIdAndTenantId(parentId,
                 Y9LoginUserHolder.getTenantId(), true, true);
             List<Y9App> appList = y9AppService.listByIds(appIdList);
             roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9AppList(appList));
 
-            List<Y9Role> y9RoleList = y9RoleService.listByParentId(parentId);
-            roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9RoleList(y9RoleList));
         } else {
             // 应用节点下为角色文件夹或角色节点
             List<Y9Role> roleList = y9RoleService.listByParentId4Tenant(parentId, Y9LoginUserHolder.getTenantId());
