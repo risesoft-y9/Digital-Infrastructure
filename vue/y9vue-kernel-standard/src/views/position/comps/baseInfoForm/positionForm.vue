@@ -59,11 +59,38 @@
             name: '自动生成格式：职位名（人名）',
             jobId: '',
             description: '',
-            tabIndex: null // 排序
+            tabIndex: null,
+            tenantId: ''
         },
         rules: {}, //表单验证规则
         itemList: [
             //表单显示列表
+            {
+                type: 'text',
+                type1: 'text', //自定义字段-编辑时显示的类型
+                type2: 'text', //自定义字段-非编辑状态显示文本类型
+                prop: 'id',
+                label: computed(() => t('唯一标识')),
+                props: {
+                    render: () => {
+                        //text类型渲染的内容
+                        return h('span', props.currInfo?.id);
+                    }
+                }
+            },
+            {
+                type: 'text',
+                type1: 'text', //自定义字段-编辑时显示的类型
+                type2: 'text', //自定义字段-非编辑状态显示文本类型
+                prop: 'tenantId',
+                label: computed(() => t('租户唯一标识')),
+                props: {
+                    render: () => {
+                        //text类型渲染的内容
+                        return h('span', props.currInfo?.tenantId);
+                    }
+                }
+            },
             {
                 type: 'text',
                 type1: 'input', //自定义字段-编辑时显示的类型
@@ -80,14 +107,14 @@
             },
             {
                 type: 'text',
-                type1: 'text', //自定义字段-编辑时显示的类型
+                type1: 'input', //自定义字段-编辑时显示的类型
                 type2: 'text', //自定义字段-非编辑状态显示文本类型
-                prop: 'id',
-                label: computed(() => t('唯一标识')),
+                prop: 'customId',
+                label: computed(() => t('自定义ID')),
                 props: {
                     render: () => {
                         //text类型渲染的内容
-                        return h('span', props.currInfo?.id);
+                        return h('span', props.currInfo?.customId);
                     }
                 }
             },
@@ -170,7 +197,9 @@
     //如果是添加模式
     if (props.isAdd) {
         //过滤掉某些字段不显示
-        y9FormConfig.value.itemList = y9FormConfig.value.itemList.filter((item) => item.prop !== 'id');
+        y9FormConfig.value.itemList = y9FormConfig.value.itemList.filter(
+            (item) => item.prop !== 'id' && item.prop !== 'tenantId'
+        );
         changeY9FormType(true); //显示编辑表单
     }
 

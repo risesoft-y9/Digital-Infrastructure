@@ -86,6 +86,19 @@
             },
             {
                 type: 'text',
+                type1: 'text', //自定义字段-编辑时显示的类型
+                type2: 'text', //自定义字段-非编辑状态显示文本类型
+                prop: 'id',
+                label: computed(() => t('唯一标识')),
+                props: {
+                    render: () => {
+                        //text类型渲染的内容
+                        return h('span', systemInfo.value?.id);
+                    }
+                }
+            },
+            {
+                type: 'text',
                 type1: 'input', //自定义字段-编辑时显示的类型
                 type2: 'text', //自定义字段-非编辑状态显示文本类型
                 prop: 'cnName',
@@ -94,6 +107,19 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', systemInfo.value?.cnName);
+                    }
+                }
+            },
+            {
+                type: 'text',
+                type1: 'input', //自定义字段-编辑时显示的类型
+                type2: 'text', //自定义字段-非编辑状态显示文本类型
+                prop: 'contextPath',
+                label: computed(() => t('系统上下文')),
+                props: {
+                    render: () => {
+                        //text类型渲染的内容
+                        return h('span', systemInfo.value?.contextPath);
                     }
                 }
             },
@@ -124,19 +150,6 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', systemInfo.value?.singleDatasource ? t('是') : t('否'));
-                    }
-                }
-            },
-            {
-                type: 'text',
-                type1: 'input', //自定义字段-编辑时显示的类型
-                type2: 'text', //自定义字段-非编辑状态显示文本类型
-                prop: 'contextPath',
-                label: computed(() => t('应用上下文')),
-                props: {
-                    render: () => {
-                        //text类型渲染的内容
-                        return h('span', systemInfo.value?.contextPath);
                     }
                 }
             },

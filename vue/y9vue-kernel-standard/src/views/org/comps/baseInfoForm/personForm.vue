@@ -166,19 +166,6 @@
             //表单显示列表
             {
                 type: 'text',
-                type1: 'input', //自定义字段-编辑时显示的类型
-                type2: 'text', //自定义字段-非编辑状态显示文本类型
-                prop: 'name',
-                label: computed(() => t('人员名称')),
-                props: {
-                    render: () => {
-                        //text类型渲染的内容
-                        return h('span', props.currInfo?.name);
-                    }
-                }
-            },
-            {
-                type: 'text',
                 type1: 'text', //自定义字段-编辑时显示的类型
                 type2: 'text', //自定义字段-非编辑状态显示文本类型
                 prop: 'id',
@@ -207,12 +194,12 @@
                 type: 'text',
                 type1: 'input', //自定义字段-编辑时显示的类型
                 type2: 'text', //自定义字段-非编辑状态显示文本类型
-                prop: 'loginName',
-                label: computed(() => t('登录名称')),
+                prop: 'customId',
+                label: computed(() => t('自定义ID')),
                 props: {
                     render: () => {
                         //text类型渲染的内容
-                        return h('span', props.currInfo?.loginName);
+                        return h('span', props.currInfo?.customId);
                     }
                 }
             },
@@ -220,12 +207,25 @@
                 type: 'text',
                 type1: 'input', //自定义字段-编辑时显示的类型
                 type2: 'text', //自定义字段-非编辑状态显示文本类型
-                prop: 'customId',
-                label: computed(() => t('自定义ID')),
+                prop: 'name',
+                label: computed(() => t('人员名称')),
                 props: {
                     render: () => {
                         //text类型渲染的内容
-                        return h('span', props.currInfo?.customId);
+                        return h('span', props.currInfo?.name);
+                    }
+                }
+            },
+            {
+                type: 'text',
+                type1: 'input', //自定义字段-编辑时显示的类型
+                type2: 'text', //自定义字段-非编辑状态显示文本类型
+                prop: 'loginName',
+                label: computed(() => t('登录名称')),
+                props: {
+                    render: () => {
+                        //text类型渲染的内容
+                        return h('span', props.currInfo?.loginName);
                     }
                 }
             },
