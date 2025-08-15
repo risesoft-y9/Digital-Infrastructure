@@ -180,22 +180,20 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
     @Override
     public Y9Person update(Y9Person person) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
+        Y9Person currentPerson = this.getByIdNotCache(person.getId());
+        Y9Person originPerson = Y9ModelConvertUtil.convert(currentPerson, Y9Person.class);
 
-        Y9Person originPerson = new Y9Person();
-        Y9Person updatedPerson = this.getByIdNotCache(person.getId());
-        Y9BeanUtil.copyProperties(updatedPerson, originPerson);
-        Y9BeanUtil.copyProperties(person, updatedPerson);
+        Y9BeanUtil.copyProperties(person, currentPerson, "tenantId");
+        currentPerson.setTenantId(Y9LoginUserHolder.getTenantId());
+        currentPerson.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), currentPerson.getId()));
+        currentPerson.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, currentPerson.getName(), parent.getDn()));
+        currentPerson.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(currentPerson));
 
-        updatedPerson.setTenantId(Y9LoginUserHolder.getTenantId());
-        updatedPerson.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), updatedPerson.getId()));
-        updatedPerson.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, updatedPerson.getName(), parent.getDn()));
-        updatedPerson.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(updatedPerson));
-
-        if (StringUtils.isBlank(updatedPerson.getEmail())) {
-            updatedPerson.setEmail(null);
+        if (StringUtils.isBlank(currentPerson.getEmail())) {
+            currentPerson.setEmail(null);
         }
 
-        final Y9Person savedPerson = save(updatedPerson);
+        final Y9Person savedPerson = save(currentPerson);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPerson, savedPerson));
 

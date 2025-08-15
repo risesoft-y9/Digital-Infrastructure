@@ -36,16 +36,6 @@ public interface Y9GroupManager {
 
     Y9Group getByIdNotCache(String id);
 
-    /**
-     * 保存用户组信息
-     *
-     * @param y9Group 用户组信息
-     * @return {@link Y9Group}
-     */
-    Y9Group save(Y9Group y9Group);
-
-    Y9Group saveOrUpdate(Y9Group group);
-
     Y9Group insert(Y9Group group);
 
     Y9Group update(Y9Group group);

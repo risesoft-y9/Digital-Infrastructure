@@ -25,6 +25,7 @@ import personalRouter from './modules/personalRouter';
 import positionRouter from './modules/positionRouter';
 import securityAuditorLogRouter from './modules/securityAuditorLogRouter';
 import securityUserLogRouter from './modules/securityUserLogRouter';
+import auditLogRouter from './modules/auditLogRouter';
 import subDomainRouter from './modules/subDomainRouter';
 import sysManagerLogRouter from './modules/sysManagerLogRouter';
 import userLogRouter from './modules/userLogRouter';
@@ -92,6 +93,7 @@ export const asyncRoutes = [
     sysManagerLogRouter,
     securityUserLogRouter,
     securityAuditorLogRouter,
+    auditLogRouter,
     passwordRouter
     // 引入其他模块路由
 ];
