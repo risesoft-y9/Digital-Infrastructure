@@ -657,14 +657,18 @@
         },
         {
             type: 'text',
-            type1: 'input', //自定义字段-编辑时显示的类型
+            type1: 'radio', //自定义字段-编辑时显示的类型
             type2: 'text', //自定义字段-非编辑状态显示文本类型
-            prop: 'aliasName',
-            label: computed(() => t('应用别名')),
+            prop: 'enabled',
+            label: computed(() => t('是否启用')),
             props: {
+                options: [
+                    { label: computed(() => t('是')), value: true },
+                    { label: computed(() => t('否')), value: false }
+                ],
                 render: () => {
                     //text类型渲染的内容
-                    return h('span', basicInfo.value?.aliasName);
+                    return h('span', basicInfo.value?.enabled ? t('是') : t('否'));
                 }
             }
         },
@@ -678,23 +682,6 @@
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.customId);
-                }
-            }
-        },
-        {
-            type: 'text',
-            type1: 'radio', //自定义字段-编辑时显示的类型
-            type2: 'text', //自定义字段-非编辑状态显示文本类型
-            prop: 'enabled',
-            label: computed(() => t('是否启用')),
-            props: {
-                options: [
-                    { label: computed(() => t('是')), value: true },
-                    { label: computed(() => t('否')), value: false }
-                ],
-                render: () => {
-                    //text类型渲染的内容
-                    return h('span', basicInfo.value?.enabled ? t('是') : t('否'));
                 }
             }
         },
@@ -982,7 +969,6 @@
                 (item) =>
                     item.prop !== 'displayType' &&
                     item.prop !== 'eventName' &&
-                    item.prop !== 'aliasName' &&
                     item.prop !== 'hidden' &&
                     item.prop !== 'showNumber' &&
                     item.prop !== 'numberUrl' &&
@@ -1001,7 +987,6 @@
             y9FormConfig.value.itemList = formList.filter(
                 (item) =>
                     item.prop !== 'meta' &&
-                    item.prop !== 'aliasName' &&
                     item.prop !== 'hidden' &&
                     item.prop !== 'showNumber' &&
                     item.prop !== 'numberUrl' &&

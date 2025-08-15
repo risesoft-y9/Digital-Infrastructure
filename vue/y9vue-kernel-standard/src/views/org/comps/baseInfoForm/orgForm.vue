@@ -67,24 +67,13 @@
             name: '',
             organizationCode: '',
             organizationType: '',
-            tabIndex: ''
+            tabIndex: '',
+            customId: '',
+            tenantId: ''
         },
         rules: {}, //表单验证规则
         itemList: [
             //表单显示列表
-            {
-                type: 'text',
-                type1: 'input', //自定义字段-编辑时显示的类型
-                type2: 'text', //自定义字段-非编辑状态显示文本类型
-                prop: 'name',
-                label: computed(() => t('机构名称')),
-                props: {
-                    render: () => {
-                        //text类型渲染的内容
-                        return h('span', props.currInfo?.name);
-                    }
-                }
-            },
             {
                 type: 'text',
                 type1: 'text', //自定义字段-编辑时显示的类型
@@ -102,25 +91,38 @@
                 type: 'text',
                 type1: 'text', //自定义字段-编辑时显示的类型
                 type2: 'text', //自定义字段-非编辑状态显示文本类型
-                prop: 'customId',
-                label: computed(() => t('自定义ID')),
-                props: {
-                    render: () => {
-                        //text类型渲染的内容
-                        return h('span', props.currInfo?.customId);
-                    }
-                }
-            },
-            {
-                type: 'text',
-                type1: 'text', //自定义字段-编辑时显示的类型
-                type2: 'text', //自定义字段-非编辑状态显示文本类型
                 prop: 'tenantId',
                 label: computed(() => t('租户唯一标识')),
                 props: {
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.tenantId);
+                    }
+                }
+            },
+            {
+                type: 'text',
+                type1: 'input', //自定义字段-编辑时显示的类型
+                type2: 'text', //自定义字段-非编辑状态显示文本类型
+                prop: 'name',
+                label: computed(() => t('机构名称')),
+                props: {
+                    render: () => {
+                        //text类型渲染的内容
+                        return h('span', props.currInfo?.name);
+                    }
+                }
+            },
+            {
+                type: 'text',
+                type1: 'input', //自定义字段-编辑时显示的类型
+                type2: 'text', //自定义字段-非编辑状态显示文本类型
+                prop: 'customId',
+                label: computed(() => t('自定义ID')),
+                props: {
+                    render: () => {
+                        //text类型渲染的内容
+                        return h('span', props.currInfo?.customId);
                     }
                 }
             },
@@ -185,7 +187,7 @@
     if (props.isAdd) {
         //过滤掉某些字段不显示
         y9FormConfig.value.itemList = y9FormConfig.value.itemList.filter(
-            (item) => item.prop !== 'id' && item.prop !== 'customId' && item.prop !== 'tenantId'
+            (item) => item.prop !== 'id' && item.prop !== 'tenantId'
         );
     }
 

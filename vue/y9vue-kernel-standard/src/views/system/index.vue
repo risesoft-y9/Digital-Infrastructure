@@ -337,6 +337,14 @@
                 required: true
             },
             {
+                type: 'input',
+                props: {
+                    type: 'text'
+                },
+                label: t('系统上下文'),
+                prop: 'contextPath'
+            },
+            {
                 type: 'radio',
                 props: {
                     radioType: 'radio',
@@ -347,14 +355,6 @@
                 },
                 label: t('是否启用'),
                 prop: 'enabled'
-            },
-            {
-                type: 'input',
-                props: {
-                    type: 'text'
-                },
-                label: t('应用上下文'),
-                prop: 'contextPath'
             },
             {
                 type: 'input',
