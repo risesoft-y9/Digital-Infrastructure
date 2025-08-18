@@ -12,19 +12,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9Department;
-import net.risesoft.entity.Y9Manager;
-import net.risesoft.entity.Y9OrgBase;
+import net.risesoft.entity.org.Y9Department;
+import net.risesoft.entity.org.Y9Manager;
+import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.enums.AuditLogEnum;
-import net.risesoft.enums.platform.ManagerLevelEnum;
-import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9DepartmentManager;
 import net.risesoft.pojo.AuditLogEvent;
-import net.risesoft.repository.Y9ManagerRepository;
+import net.risesoft.repository.org.Y9ManagerRepository;
 import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.service.setting.Y9SettingService;
 import net.risesoft.util.Y9OrgUtil;

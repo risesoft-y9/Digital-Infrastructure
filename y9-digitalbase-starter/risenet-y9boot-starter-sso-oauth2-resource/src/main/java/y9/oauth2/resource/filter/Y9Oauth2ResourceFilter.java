@@ -46,8 +46,9 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import lombok.extern.slf4j.Slf4j;
-import net.risesoft.enums.platform.ManagerLevelEnum;
-import net.risesoft.enums.platform.SexEnum;
+
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
+import net.risesoft.enums.platform.org.SexEnum;
 import net.risesoft.exception.ErrorCode;
 import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.model.user.UserInfo;
@@ -58,6 +59,7 @@ import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.Y9EnumUtil;
 
 /**
+ *
  * @author dingzhaojun
  */
 @Slf4j
@@ -304,15 +306,15 @@ public class Y9Oauth2ResourceFilter implements Filter {
         userInfo.setLoginType(jwt.getClaim("loginType").asString());
         userInfo.setMobile(jwt.getClaim("mobile").asString());
         userInfo.setOriginal(jwt.getClaim("original").asBoolean());
-        userInfo.setOriginal(jwt.getClaim("original").asBoolean() != null && jwt.getClaim("original").asBoolean());
         userInfo.setOriginalId(jwt.getClaim("originalId").asString());
         userInfo.setParentId(jwt.getClaim("parentId").asString());
         userInfo.setPersonId(jwt.getClaim("personId").asString());
-        userInfo.setPositionId(jwt.getClaim("positionId").asString());
         userInfo.setSex(Y9EnumUtil.valueOf(SexEnum.class, jwt.getClaim("sex").asInt()));
         userInfo.setTenantId(jwt.getClaim("tenantId").asString());
         userInfo.setTenantShortName(jwt.getClaim("tenantShortName").asString());
         userInfo.setTenantName(jwt.getClaim("tenantName").asString());
+        userInfo.setPositions(jwt.getClaim("positions").asString());
+        userInfo.setPositionId(jwt.getClaim("positionId").asString());
         userInfo.setIdNum(jwt.getClaim("idNum").asString());
         userInfo.setAvator(jwt.getClaim("avator").asString());
         userInfo.setPersonType(jwt.getClaim("personType").asString());

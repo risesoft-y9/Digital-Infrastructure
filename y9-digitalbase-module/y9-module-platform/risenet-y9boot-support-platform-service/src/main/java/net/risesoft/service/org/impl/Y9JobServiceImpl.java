@@ -15,16 +15,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9Job;
-import net.risesoft.entity.Y9Position;
+import net.risesoft.entity.org.Y9Job;
+import net.risesoft.entity.org.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.Y9JobManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.pojo.AuditLogEvent;
-import net.risesoft.repository.Y9JobRepository;
-import net.risesoft.repository.Y9PositionRepository;
+import net.risesoft.repository.org.Y9JobRepository;
+import net.risesoft.repository.org.Y9PositionRepository;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.service.org.Y9JobService;
 import net.risesoft.y9.Y9Context;

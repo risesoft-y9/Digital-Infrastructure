@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.model.platform.CustomGroup;
-import net.risesoft.model.platform.CustomGroupMember;
-import net.risesoft.model.platform.Person;
+import net.risesoft.model.platform.org.CustomGroup;
+import net.risesoft.model.platform.org.CustomGroupMember;
+import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Page;
 
 /**

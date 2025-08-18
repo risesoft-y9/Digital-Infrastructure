@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.enums.platform.RoleTypeEnum;
-import net.risesoft.model.platform.OrgUnit;
-import net.risesoft.model.platform.Person;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.model.platform.Role;
+import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Result;
 
 /**

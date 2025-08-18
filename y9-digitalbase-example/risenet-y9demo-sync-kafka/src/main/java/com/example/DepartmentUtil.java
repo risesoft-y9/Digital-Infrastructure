@@ -3,11 +3,11 @@ package com.example;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.risesoft.model.platform.Department;
-import net.risesoft.model.platform.Group;
-import net.risesoft.model.platform.Person;
-import net.risesoft.model.platform.Position;
 import net.risesoft.model.platform.SyncOrgUnits;
+import net.risesoft.model.platform.org.Department;
+import net.risesoft.model.platform.org.Group;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.Position;
 
 /**
  * 部门同步
@@ -50,7 +50,9 @@ public class DepartmentUtil {
         }
 
         // 部门下岗位
-        List<Position> positionList = syncOrgUnits.getPositions().stream().filter(p -> p.getParentId().equals(syncId))
+        List<Position> positionList = syncOrgUnits.getPositions()
+            .stream()
+            .filter(p -> p.getParentId().equals(syncId))
             .collect(Collectors.toList());
         for (Position position : positionList) {
             PositionUtil.recursion(syncOrgUnits, position, position.getId());
@@ -64,8 +66,10 @@ public class DepartmentUtil {
         }
 
         // 子部门
-        List<Department> childDeptList = syncOrgUnits.getDepartments().stream()
-            .filter(d -> d.getParentId().equals(syncId)).collect(Collectors.toList());
+        List<Department> childDeptList = syncOrgUnits.getDepartments()
+            .stream()
+            .filter(d -> d.getParentId().equals(syncId))
+            .collect(Collectors.toList());
         for (Department d : childDeptList) {
             recursion(syncOrgUnits, d, d.getId());
         }

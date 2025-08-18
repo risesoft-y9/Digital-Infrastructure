@@ -7,7 +7,7 @@ import org.springframework.beans.BeanUtils;
 
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.log.FlowableAccessLog;
-import net.risesoft.model.userlogininfo.LoginInfo;
+import net.risesoft.model.log.LoginInfo;
 import net.risesoft.y9public.entity.Y9logAccessLog;
 import net.risesoft.y9public.entity.Y9logFlowableAccessLog;
 import net.risesoft.y9public.entity.Y9logUserLoginInfo;

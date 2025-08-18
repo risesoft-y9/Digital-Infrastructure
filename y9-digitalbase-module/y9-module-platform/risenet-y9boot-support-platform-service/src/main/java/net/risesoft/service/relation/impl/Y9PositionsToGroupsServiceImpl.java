@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9Position;
+import net.risesoft.entity.org.Y9Position;
 import net.risesoft.entity.relation.Y9PositionsToGroups;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9PositionManager;
@@ -61,13 +61,15 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
     @Override
     public Integer getMaxGroupIdOrderByPositionId(String positionId) {
         return y9PositionsToGroupsRepository.findTopByPositionIdOrderByGroupOrderDesc(positionId)
-            .map(Y9PositionsToGroups::getGroupOrder).orElse(0);
+            .map(Y9PositionsToGroups::getGroupOrder)
+            .orElse(0);
     }
 
     @Override
     public Integer getMaxPositionOrderByGroupId(String groupId) {
         return y9PositionsToGroupsRepository.findTopByGroupIdOrderByPositionOrderDesc(groupId)
-            .map(Y9PositionsToGroups::getPositionOrder).orElse(0);
+            .map(Y9PositionsToGroups::getPositionOrder)
+            .orElse(0);
     }
 
     @Override

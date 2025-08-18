@@ -15,8 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.api.platform.resource.DataCatalogApi;
-import net.risesoft.enums.platform.AuthorityEnum;
-import net.risesoft.model.platform.DataCatalog;
+import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.model.platform.resource.DataCatalog;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.service.resource.Y9DataCatalogService;

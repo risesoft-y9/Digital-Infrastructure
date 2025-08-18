@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.entity.Y9OptionClass;
+import net.risesoft.entity.dictionary.Y9OptionClass;
 
 /**
  * Y9OptionClass 导出 JSON 模型

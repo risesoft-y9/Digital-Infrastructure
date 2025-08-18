@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.idcode.Y9IdCode;
-import net.risesoft.model.platform.Person;
+import net.risesoft.entity.org.Y9Person;
+import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.idcode.Y9IdCodeService;
 import net.risesoft.service.org.Y9PersonService;

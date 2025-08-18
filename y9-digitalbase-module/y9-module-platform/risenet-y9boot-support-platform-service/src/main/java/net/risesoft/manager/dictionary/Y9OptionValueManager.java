@@ -1,6 +1,6 @@
 package net.risesoft.manager.dictionary;
 
-import net.risesoft.entity.Y9OptionValue;
+import net.risesoft.entity.dictionary.Y9OptionValue;
 
 /**
  * 字典数据 Manager

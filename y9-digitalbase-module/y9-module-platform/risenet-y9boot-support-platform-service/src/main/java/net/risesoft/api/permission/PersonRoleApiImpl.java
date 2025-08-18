@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.api.platform.permission.PersonRoleApi;
-import net.risesoft.entity.Y9Person;
-import net.risesoft.model.platform.Person;
+import net.risesoft.api.platform.permission.cache.PersonRoleApi;
+import net.risesoft.entity.org.Y9Person;
 import net.risesoft.model.platform.Role;
+import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.identity.Y9PersonToRoleService;
+import net.risesoft.service.permission.cache.Y9PersonToRoleService;
 import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;

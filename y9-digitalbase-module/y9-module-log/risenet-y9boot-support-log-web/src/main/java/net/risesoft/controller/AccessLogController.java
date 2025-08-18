@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.InitDataConsts;
-import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.log.LogInfoModel;

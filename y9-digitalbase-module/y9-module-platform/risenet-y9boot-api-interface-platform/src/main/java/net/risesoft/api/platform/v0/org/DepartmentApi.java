@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.enums.platform.DepartmentPropCategoryEnum;
-import net.risesoft.model.platform.Department;
-import net.risesoft.model.platform.DepartmentProp;
-import net.risesoft.model.platform.Group;
-import net.risesoft.model.platform.OrgUnit;
-import net.risesoft.model.platform.Person;
-import net.risesoft.model.platform.Position;
+import net.risesoft.enums.platform.org.DepartmentPropCategoryEnum;
+import net.risesoft.model.platform.org.Department;
+import net.risesoft.model.platform.org.DepartmentProp;
+import net.risesoft.model.platform.org.Group;
+import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.Position;
 
 /**
  * 部门服务组件

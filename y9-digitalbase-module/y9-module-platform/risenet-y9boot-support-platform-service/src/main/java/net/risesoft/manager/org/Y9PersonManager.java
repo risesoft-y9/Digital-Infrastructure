@@ -3,8 +3,8 @@ package net.risesoft.manager.org;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9PersonExt;
+import net.risesoft.entity.org.Y9Person;
+import net.risesoft.entity.org.Y9PersonExt;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
 public interface Y9PersonManager {

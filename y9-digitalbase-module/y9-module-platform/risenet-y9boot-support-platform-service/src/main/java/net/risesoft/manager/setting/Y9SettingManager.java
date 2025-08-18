@@ -3,7 +3,7 @@ package net.risesoft.manager.setting;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.entity.Y9Setting;
+import net.risesoft.entity.setting.Y9Setting;
 
 /**
  * 设置 Manager

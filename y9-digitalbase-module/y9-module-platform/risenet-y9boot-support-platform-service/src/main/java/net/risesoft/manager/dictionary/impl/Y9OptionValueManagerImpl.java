@@ -7,10 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9OptionValue;
+import net.risesoft.entity.dictionary.Y9OptionValue;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.dictionary.Y9OptionValueManager;
-import net.risesoft.repository.Y9OptionValueRepository;
+import net.risesoft.repository.dictionary.Y9OptionValueRepository;
 
 /**
  * 字典数据 Manager 实现类

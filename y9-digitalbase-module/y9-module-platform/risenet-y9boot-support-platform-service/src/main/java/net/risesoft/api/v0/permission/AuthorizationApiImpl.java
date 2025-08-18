@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.v0.permission.AuthorizationApi;
-import net.risesoft.entity.Y9Person;
+import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.permission.Y9Authorization;
-import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.service.authorization.Y9AuthorizationService;
 import net.risesoft.service.org.Y9PersonService;
+import net.risesoft.service.permission.Y9AuthorizationService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9EnumUtil;
 

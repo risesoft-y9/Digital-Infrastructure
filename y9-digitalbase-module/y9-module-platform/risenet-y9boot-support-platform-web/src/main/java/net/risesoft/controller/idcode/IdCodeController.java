@@ -16,11 +16,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.IdCode;
-import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.idcode.Y9IdCode;
+import net.risesoft.entity.org.Y9Person;
 import net.risesoft.enums.CodePayTypeEnum;
 import net.risesoft.enums.CodeTypeEnum;
-import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.interfaces.Four;
 import net.risesoft.interfaces.Six;
 import net.risesoft.log.OperationTypeEnum;

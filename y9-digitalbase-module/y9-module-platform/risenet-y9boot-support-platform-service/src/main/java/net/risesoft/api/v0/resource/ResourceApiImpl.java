@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.v0.resource.ResourceApi;
-import net.risesoft.enums.platform.ResourceTypeEnum;
-import net.risesoft.model.platform.Resource;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
+import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.util.Y9EnumUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;

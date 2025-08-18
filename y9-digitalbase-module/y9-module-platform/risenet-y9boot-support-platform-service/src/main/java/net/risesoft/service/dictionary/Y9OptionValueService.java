@@ -2,7 +2,7 @@ package net.risesoft.service.dictionary;
 
 import java.util.List;
 
-import net.risesoft.entity.Y9OptionValue;
+import net.risesoft.entity.dictionary.Y9OptionValue;
 
 /**
  * @author dingzhaojun

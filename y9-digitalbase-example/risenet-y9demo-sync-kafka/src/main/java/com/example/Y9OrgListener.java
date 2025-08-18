@@ -5,15 +5,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import net.risesoft.enums.platform.OrgTypeEnum;
-import net.risesoft.model.platform.Department;
-import net.risesoft.model.platform.Group;
-import net.risesoft.model.platform.Organization;
-import net.risesoft.model.platform.Person;
-import net.risesoft.model.platform.PersonsGroups;
-import net.risesoft.model.platform.PersonsPositions;
-import net.risesoft.model.platform.Position;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.model.platform.SyncOrgUnits;
+import net.risesoft.model.platform.org.Department;
+import net.risesoft.model.platform.org.Group;
+import net.risesoft.model.platform.org.Organization;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.PersonsGroups;
+import net.risesoft.model.platform.org.PersonsPositions;
+import net.risesoft.model.platform.org.Position;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.event.Y9EventOrg;
 

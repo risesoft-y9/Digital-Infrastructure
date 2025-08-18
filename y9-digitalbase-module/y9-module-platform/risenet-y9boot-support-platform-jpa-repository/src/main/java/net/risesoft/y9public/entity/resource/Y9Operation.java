@@ -12,8 +12,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
-import net.risesoft.enums.platform.OperationDisplayTypeEnum;
-import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.enums.platform.resource.OperationDisplayTypeEnum;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.persistence.EnumConverter;
 
 /**

@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
 
 /**
  * 日志信息

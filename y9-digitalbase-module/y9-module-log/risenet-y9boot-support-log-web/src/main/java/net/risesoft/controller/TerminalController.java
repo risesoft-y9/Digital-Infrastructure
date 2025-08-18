@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.model.platform.Person;
+import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;

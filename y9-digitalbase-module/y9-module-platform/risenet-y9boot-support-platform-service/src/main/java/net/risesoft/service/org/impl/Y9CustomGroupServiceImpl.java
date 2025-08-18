@@ -12,13 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9CustomGroup;
+import net.risesoft.entity.org.Y9CustomGroup;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.relation.Y9CustomGroupMembersManager;
 import net.risesoft.pojo.Y9PageQuery;
-import net.risesoft.repository.Y9CustomGroupRepository;
+import net.risesoft.repository.org.Y9CustomGroupRepository;
 import net.risesoft.repository.relation.Y9CustomGroupMembersRepository;
 import net.risesoft.service.org.Y9CustomGroupService;
 import net.risesoft.y9.Y9LoginUserHolder;

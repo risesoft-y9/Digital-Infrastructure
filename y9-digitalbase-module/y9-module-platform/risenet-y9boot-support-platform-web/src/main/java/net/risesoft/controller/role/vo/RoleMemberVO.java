@@ -8,8 +8,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.relation.Y9OrgBasesToRoles;
+import net.risesoft.entity.org.Y9OrgBase;
+import net.risesoft.entity.permission.Y9OrgBasesToRoles;
 import net.risesoft.util.Y9OrgUtil;
 
 /**

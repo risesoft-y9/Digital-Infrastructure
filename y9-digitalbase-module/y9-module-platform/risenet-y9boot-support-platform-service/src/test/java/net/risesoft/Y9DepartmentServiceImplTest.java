@@ -7,8 +7,8 @@ import org.mockito.MockitoAnnotations;
 
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9DepartmentManager;
-import net.risesoft.repository.Y9DepartmentPropRepository;
-import net.risesoft.repository.Y9DepartmentRepository;
+import net.risesoft.repository.org.Y9DepartmentPropRepository;
+import net.risesoft.repository.org.Y9DepartmentRepository;
 import net.risesoft.service.org.impl.Y9DepartmentServiceImpl;
 
 public class Y9DepartmentServiceImplTest {

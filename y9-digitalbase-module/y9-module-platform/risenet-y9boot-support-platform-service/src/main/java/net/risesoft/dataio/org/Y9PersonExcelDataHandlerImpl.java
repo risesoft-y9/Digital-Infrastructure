@@ -15,12 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.dataio.ExcelImportError;
-import net.risesoft.entity.Y9Department;
-import net.risesoft.entity.Y9Job;
-import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.Y9Person;
-import net.risesoft.enums.platform.OrgTypeEnum;
-import net.risesoft.enums.platform.SexEnum;
+import net.risesoft.entity.org.Y9Department;
+import net.risesoft.entity.org.Y9Job;
+import net.risesoft.entity.org.Y9OrgBase;
+import net.risesoft.entity.org.Y9Person;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
+import net.risesoft.enums.platform.org.SexEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.pojo.PersonInformation;

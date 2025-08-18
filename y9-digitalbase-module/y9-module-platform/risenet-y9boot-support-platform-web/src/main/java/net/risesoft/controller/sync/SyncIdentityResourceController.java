@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.entity.Y9Organization;
+import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.identity.IdentityResourceCalculator;
 import net.risesoft.service.org.Y9OrganizationService;
+import net.risesoft.service.permission.cache.IdentityResourceCalculator;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 

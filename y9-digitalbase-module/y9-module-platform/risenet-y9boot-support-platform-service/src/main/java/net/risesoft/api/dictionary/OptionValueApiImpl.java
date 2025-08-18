@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.dictionary.OptionValueApi;
-import net.risesoft.entity.Y9OptionValue;
-import net.risesoft.model.platform.OptionValue;
+import net.risesoft.entity.dictionary.Y9OptionValue;
+import net.risesoft.model.platform.dictionary.OptionValue;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.dictionary.Y9OptionValueService;
 import net.risesoft.y9.Y9LoginUserHolder;

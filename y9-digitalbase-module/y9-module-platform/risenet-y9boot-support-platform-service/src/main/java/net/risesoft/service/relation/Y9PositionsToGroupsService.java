@@ -2,7 +2,7 @@ package net.risesoft.service.relation;
 
 import java.util.List;
 
-import net.risesoft.entity.Y9Position;
+import net.risesoft.entity.org.Y9Position;
 import net.risesoft.entity.relation.Y9PositionsToGroups;
 
 /**

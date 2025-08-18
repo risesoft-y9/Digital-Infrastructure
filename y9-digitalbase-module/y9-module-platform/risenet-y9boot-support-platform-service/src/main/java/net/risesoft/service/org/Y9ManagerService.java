@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.entity.Y9Manager;
-import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.entity.org.Y9Manager;
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**

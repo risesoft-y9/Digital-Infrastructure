@@ -22,10 +22,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import net.risesoft.controller.org.OrgController;
-import net.risesoft.entity.Y9Department;
-import net.risesoft.entity.Y9Organization;
-import net.risesoft.enums.platform.ManagerLevelEnum;
-import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.entity.org.Y9Department;
+import net.risesoft.entity.org.Y9Organization;
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;

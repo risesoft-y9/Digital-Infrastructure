@@ -8,9 +8,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.enums.platform.OrgTreeTypeEnum;
-import net.risesoft.model.platform.OrgUnit;
-import net.risesoft.model.platform.Organization;
+import net.risesoft.enums.platform.org.OrgTreeTypeEnum;
+import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.org.Organization;
 import net.risesoft.pojo.Y9Result;
 
 /**

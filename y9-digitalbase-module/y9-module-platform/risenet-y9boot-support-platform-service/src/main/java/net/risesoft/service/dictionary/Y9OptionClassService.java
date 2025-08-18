@@ -3,7 +3,7 @@ package net.risesoft.service.dictionary;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.entity.Y9OptionClass;
+import net.risesoft.entity.dictionary.Y9OptionClass;
 
 /**
  * @author dingzhaojun

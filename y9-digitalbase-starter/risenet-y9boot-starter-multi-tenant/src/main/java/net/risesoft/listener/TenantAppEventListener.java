@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.dao.MultiTenantDao;
 import net.risesoft.init.TenantAppInitializer;
-import net.risesoft.model.platform.TenantApp;
+import net.risesoft.model.platform.tenant.TenantApp;
 import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
 import net.risesoft.y9.pubsub.event.Y9EventCommon;
 

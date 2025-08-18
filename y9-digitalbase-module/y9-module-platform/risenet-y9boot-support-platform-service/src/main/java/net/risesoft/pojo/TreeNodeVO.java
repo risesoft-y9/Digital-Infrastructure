@@ -4,7 +4,10 @@ import java.io.Serializable;
 
 import lombok.Getter;
 import lombok.Setter;
+
 import net.risesoft.enums.TreeTypeEnum;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 
 @Getter
 @Setter
@@ -25,9 +28,9 @@ public abstract class TreeNodeVO implements Serializable {
 
     /**
      * 节点类型，包括所有树的节点类型 <br>
-     * 组织树的所有节点类型 {@link net.risesoft.enums.platform.OrgTypeEnum} <br>
+     * 组织树的所有节点类型 {@link OrgTypeEnum} <br>
      * 角色树的所有节点类型 {@link net.risesoft.enums.platform.RoleTypeEnum} <br>
-     * 资源树的所有节点类型 {@link net.risesoft.enums.platform.ResourceTypeEnum} <br>
+     * 资源树的所有节点类型 {@link ResourceTypeEnum} <br>
      * 系统树的所有节点类型
      **/
     public String nodeType;

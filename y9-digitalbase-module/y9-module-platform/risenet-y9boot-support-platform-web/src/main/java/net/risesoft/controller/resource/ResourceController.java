@@ -22,8 +22,8 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.controller.resource.vo.ResourceBaseVO;
 import net.risesoft.controller.resource.vo.ResourceTreeNodeVO;
-import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.enums.platform.TreeNodeType;
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.user.UserInfo;
@@ -106,7 +106,8 @@ public class ResourceController {
         } else {
             List<String> appIds =
                 y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
-            accessibleAppResourceList = appResourceList.stream().filter(resource -> appIds.contains(resource.getId()))
+            accessibleAppResourceList = appResourceList.stream()
+                .filter(resource -> appIds.contains(resource.getId()))
                 .collect(Collectors.toList());
         }
         return Y9Result.success(ResourceTreeNodeVO.convertY9ResourceBaseList(accessibleAppResourceList), "查询所有的根资源成功");
@@ -241,7 +242,8 @@ public class ResourceController {
         List<Y9ResourceBase> appResourceList = compositeResourceService.treeSearch(name);
         List<Y9ResourceBase> accessResourceList = appResourceList;
         if (StringUtils.isNotBlank(appId)) {
-            accessResourceList = appResourceList.stream().filter(resource -> appId.equals(resource.getAppId()))
+            accessResourceList = appResourceList.stream()
+                .filter(resource -> appId.equals(resource.getAppId()))
                 .collect(Collectors.toList());
         }
         resourceTreeNodeVOList.addAll(ResourceTreeNodeVO.convertY9ResourceBaseList(accessResourceList));
@@ -265,9 +267,11 @@ public class ResourceController {
         List<String> appIds =
             y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
         List<Y9ResourceBase> accessAppResourceList = appResourceList.stream()
-            .filter(resource -> appIds.contains(resource.getAppId())).collect(Collectors.toList());
+            .filter(resource -> appIds.contains(resource.getAppId()))
+            .collect(Collectors.toList());
         if (StringUtils.isNotBlank(appId)) {
-            accessAppResourceList = accessAppResourceList.stream().filter(resource -> appId.equals(resource.getAppId()))
+            accessAppResourceList = accessAppResourceList.stream()
+                .filter(resource -> appId.equals(resource.getAppId()))
                 .collect(Collectors.toList());
         }
         resourceTreeNodeVOList.addAll(ResourceTreeNodeVO.convertY9ResourceBaseList(accessAppResourceList));

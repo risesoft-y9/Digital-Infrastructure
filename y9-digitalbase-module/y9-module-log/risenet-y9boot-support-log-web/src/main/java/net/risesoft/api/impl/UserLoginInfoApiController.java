@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.api.log.UserLoginInfoApi;
-import net.risesoft.model.userlogininfo.LoginInfo;
+import net.risesoft.model.log.LoginInfo;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;

@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9Group;
-import net.risesoft.entity.Y9Person;
+import net.risesoft.entity.org.Y9Group;
+import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.id.Y9IdGenerator;

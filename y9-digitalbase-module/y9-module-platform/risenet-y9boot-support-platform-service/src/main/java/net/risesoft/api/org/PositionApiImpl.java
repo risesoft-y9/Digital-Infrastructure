@@ -16,10 +16,10 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.org.PositionApi;
 import net.risesoft.api.platform.org.dto.CreatePositionDTO;
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9Position;
-import net.risesoft.model.platform.Person;
-import net.risesoft.model.platform.Position;
+import net.risesoft.entity.org.Y9Person;
+import net.risesoft.entity.org.Y9Position;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.Position;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;

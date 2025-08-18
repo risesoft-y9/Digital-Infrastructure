@@ -6,9 +6,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 
-import net.risesoft.model.platform.OrgUnit;
-import net.risesoft.model.platform.Person;
-import net.risesoft.model.platform.Position;
+import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.Position;
 import net.risesoft.model.user.UserInfo;
 
 /**

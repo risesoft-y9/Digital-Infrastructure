@@ -3,9 +3,9 @@ package net.risesoft.manager.org;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9Position;
+import net.risesoft.entity.org.Y9OrgBase;
+import net.risesoft.entity.org.Y9Person;
+import net.risesoft.entity.org.Y9Position;
 
 /**
  * @author dingzhaojun

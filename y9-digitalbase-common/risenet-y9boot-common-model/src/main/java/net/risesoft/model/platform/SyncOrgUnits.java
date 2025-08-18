@@ -7,7 +7,14 @@ import java.util.List;
 
 import lombok.Data;
 
-import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
+import net.risesoft.model.platform.org.Department;
+import net.risesoft.model.platform.org.Group;
+import net.risesoft.model.platform.org.Organization;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.PersonsGroups;
+import net.risesoft.model.platform.org.PersonsPositions;
+import net.risesoft.model.platform.org.Position;
 
 /**
  * 同步组织架构返回的数据结构

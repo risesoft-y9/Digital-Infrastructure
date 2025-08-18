@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import net.risesoft.entity.Y9Department;
-import net.risesoft.entity.Y9Person;
+import net.risesoft.entity.org.Y9Department;
+import net.risesoft.entity.org.Y9Person;
 import net.risesoft.util.Y9OrgUtil;
 
 public class Y9OrgUtilTest {

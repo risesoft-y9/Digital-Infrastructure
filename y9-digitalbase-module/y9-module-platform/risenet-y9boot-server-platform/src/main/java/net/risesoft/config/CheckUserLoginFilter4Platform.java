@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpSession;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.entity.Y9Manager;
+import net.risesoft.entity.org.Y9Manager;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.y9.Y9Context;

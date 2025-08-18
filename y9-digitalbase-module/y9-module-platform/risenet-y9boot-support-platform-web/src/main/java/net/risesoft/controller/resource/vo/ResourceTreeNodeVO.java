@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import net.risesoft.enums.TreeTypeEnum;
-import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.enums.platform.TreeNodeType;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.pojo.TreeNodeVO;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.resource.Y9System;

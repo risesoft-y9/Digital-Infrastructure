@@ -10,7 +10,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
-import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 
 /**
  * 应用的菜单表

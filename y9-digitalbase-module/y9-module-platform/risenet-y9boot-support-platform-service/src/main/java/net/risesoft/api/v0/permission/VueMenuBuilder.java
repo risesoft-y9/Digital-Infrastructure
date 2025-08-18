@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.identity.Y9IdentityToResourceAndAuthorityBase;
-import net.risesoft.entity.identity.person.Y9PersonToResourceAndAuthority;
-import net.risesoft.enums.platform.AuthorityEnum;
-import net.risesoft.enums.platform.ResourceTypeEnum;
-import net.risesoft.model.platform.VueButton;
-import net.risesoft.model.platform.VueMenu;
-import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
+import net.risesoft.entity.permission.cache.Y9IdentityToResourceAndAuthorityBase;
+import net.risesoft.entity.permission.cache.person.Y9PersonToResourceAndAuthority;
+import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
+import net.risesoft.model.platform.resource.VueButton;
+import net.risesoft.model.platform.resource.VueMenu;
+import net.risesoft.service.permission.cache.Y9PersonToResourceAndAuthorityService;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9Operation;
 import net.risesoft.y9public.service.resource.Y9MenuService;
@@ -51,9 +51,12 @@ public class VueMenuBuilder {
         List<VueButton> buttonList = new ArrayList<>();
         List<Y9PersonToResourceAndAuthority> authorizedButtonList =
             y9PersonToResourceAndAuthorityService.list(personId, menuId, ResourceTypeEnum.OPERATION, authority);
-        List<Y9Operation> y9OperationList =
-            authorizedButtonList.stream().map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct()
-                .map(y9OperationService::getById).sorted().collect(Collectors.toList());
+        List<Y9Operation> y9OperationList = authorizedButtonList.stream()
+            .map(Y9IdentityToResourceAndAuthorityBase::getResourceId)
+            .distinct()
+            .map(y9OperationService::getById)
+            .sorted()
+            .collect(Collectors.toList());
         for (Y9Operation y9Operation : y9OperationList) {
             if (y9Operation.getEnabled()) {
                 buttonList.add(buildVueButton(y9Operation));
@@ -83,8 +86,12 @@ public class VueMenuBuilder {
     public void buildVueMenus(String personId, AuthorityEnum authority, String resourceId, List<VueMenu> vueMenuList) {
         List<Y9PersonToResourceAndAuthority> authorizedMenuList =
             y9PersonToResourceAndAuthorityService.list(personId, resourceId, ResourceTypeEnum.MENU, authority);
-        List<Y9Menu> menuList = authorizedMenuList.stream().map(Y9IdentityToResourceAndAuthorityBase::getResourceId)
-            .distinct().map(y9MenuService::getById).sorted().collect(Collectors.toList());
+        List<Y9Menu> menuList = authorizedMenuList.stream()
+            .map(Y9IdentityToResourceAndAuthorityBase::getResourceId)
+            .distinct()
+            .map(y9MenuService::getById)
+            .sorted()
+            .collect(Collectors.toList());
         for (Y9Menu y9Menu : menuList) {
             if (y9Menu.getEnabled()) {
                 VueMenu vueMenu = buildVueMenu(personId, authority, y9Menu.getId(), y9Menu);

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.api.platform.org.dto.CreateOrganizationDTO;
-import net.risesoft.model.platform.Department;
-import net.risesoft.model.platform.Organization;
+import net.risesoft.model.platform.org.Department;
+import net.risesoft.model.platform.org.Organization;
 import net.risesoft.pojo.Y9Result;
 
 /**

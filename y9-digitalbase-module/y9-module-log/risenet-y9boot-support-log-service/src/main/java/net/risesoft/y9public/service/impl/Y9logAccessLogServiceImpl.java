@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.log.LogInfoModel;
-import net.risesoft.model.platform.Person;
+import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.y9public.entity.Y9logAccessLog;
 import net.risesoft.y9public.repository.custom.Y9logAccessLogCustomRepository;

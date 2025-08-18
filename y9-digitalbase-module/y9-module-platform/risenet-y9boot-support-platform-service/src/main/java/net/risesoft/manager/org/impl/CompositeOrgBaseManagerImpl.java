@@ -12,22 +12,22 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
-import net.risesoft.entity.Y9Department;
-import net.risesoft.entity.Y9Group;
-import net.risesoft.entity.Y9Manager;
-import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.Y9Organization;
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9Position;
-import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.entity.org.Y9Department;
+import net.risesoft.entity.org.Y9Group;
+import net.risesoft.entity.org.Y9Manager;
+import net.risesoft.entity.org.Y9OrgBase;
+import net.risesoft.entity.org.Y9Organization;
+import net.risesoft.entity.org.Y9Person;
+import net.risesoft.entity.org.Y9Position;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
-import net.risesoft.repository.Y9DepartmentRepository;
-import net.risesoft.repository.Y9GroupRepository;
-import net.risesoft.repository.Y9ManagerRepository;
-import net.risesoft.repository.Y9OrganizationRepository;
-import net.risesoft.repository.Y9PersonRepository;
-import net.risesoft.repository.Y9PositionRepository;
+import net.risesoft.repository.org.Y9DepartmentRepository;
+import net.risesoft.repository.org.Y9GroupRepository;
+import net.risesoft.repository.org.Y9ManagerRepository;
+import net.risesoft.repository.org.Y9OrganizationRepository;
+import net.risesoft.repository.org.Y9PersonRepository;
+import net.risesoft.repository.org.Y9PositionRepository;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 
 /**
@@ -373,20 +373,23 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
 
     @Override
     public Y9OrgBase getOrgUnitAsParent(String orgUnitId) {
-        return this.findOrgUnitAsParent(orgUnitId).orElseThrow(
-            () -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.ORG_UNIT_AS_PARENT_NOT_FOUND, orgUnitId));
+        return this.findOrgUnitAsParent(orgUnitId)
+            .orElseThrow(
+                () -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.ORG_UNIT_AS_PARENT_NOT_FOUND, orgUnitId));
     }
 
     @Override
     public Y9OrgBase getOrgUnitBureau(String orgUnitId) {
-        return this.findOrgUnitBureau(orgUnitId).orElseThrow(
-            () -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.ORG_UNIT_BUREAU_NOT_FOUND, orgUnitId));
+        return this.findOrgUnitBureau(orgUnitId)
+            .orElseThrow(
+                () -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.ORG_UNIT_BUREAU_NOT_FOUND, orgUnitId));
     }
 
     @Override
     public Y9OrgBase getOrgUnitParent(String orgUnitId) {
-        return this.findOrgUnitParent(orgUnitId).orElseThrow(
-            () -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.ORG_UNIT_PARENT_NOT_FOUND, orgUnitId));
+        return this.findOrgUnitParent(orgUnitId)
+            .orElseThrow(
+                () -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.ORG_UNIT_PARENT_NOT_FOUND, orgUnitId));
     }
 
     @Override

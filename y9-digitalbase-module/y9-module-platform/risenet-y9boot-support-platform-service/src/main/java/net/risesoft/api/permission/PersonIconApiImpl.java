@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.api.platform.permission.PersonIconApi;
-import net.risesoft.model.platform.PersonIconItem;
+import net.risesoft.api.platform.permission.cache.PersonIconApi;
+import net.risesoft.model.platform.permission.PersonIconItem;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;

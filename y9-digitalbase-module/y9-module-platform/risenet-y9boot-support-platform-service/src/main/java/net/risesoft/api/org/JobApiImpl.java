@@ -16,8 +16,8 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.org.JobApi;
 import net.risesoft.api.platform.org.dto.CreateJobDTO;
-import net.risesoft.entity.Y9Job;
-import net.risesoft.model.platform.Job;
+import net.risesoft.entity.org.Y9Job;
+import net.risesoft.model.platform.org.Job;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9JobService;
 import net.risesoft.y9.Y9LoginUserHolder;

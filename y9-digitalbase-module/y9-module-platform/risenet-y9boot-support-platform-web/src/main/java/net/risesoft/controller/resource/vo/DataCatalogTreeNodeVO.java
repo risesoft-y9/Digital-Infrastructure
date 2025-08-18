@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import net.risesoft.enums.TreeTypeEnum;
-import net.risesoft.model.platform.DataCatalog;
+import net.risesoft.model.platform.resource.DataCatalog;
 import net.risesoft.pojo.TreeNodeVO;
 import net.risesoft.y9.util.Y9BeanUtil;
 

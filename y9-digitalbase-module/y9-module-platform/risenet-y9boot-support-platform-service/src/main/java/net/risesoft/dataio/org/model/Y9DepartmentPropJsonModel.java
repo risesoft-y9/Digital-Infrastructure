@@ -3,7 +3,7 @@ package net.risesoft.dataio.org.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.entity.Y9DepartmentProp;
+import net.risesoft.entity.org.Y9DepartmentProp;
 
 /**
  * Y9DepartmentProp 导出 JSON 模型

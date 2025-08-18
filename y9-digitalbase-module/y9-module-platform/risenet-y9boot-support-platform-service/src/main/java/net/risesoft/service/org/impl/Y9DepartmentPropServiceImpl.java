@@ -10,14 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9Department;
-import net.risesoft.entity.Y9DepartmentProp;
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9Position;
-import net.risesoft.enums.platform.DepartmentPropCategoryEnum;
+import net.risesoft.entity.org.Y9Department;
+import net.risesoft.entity.org.Y9DepartmentProp;
+import net.risesoft.entity.org.Y9Person;
+import net.risesoft.entity.org.Y9Position;
+import net.risesoft.enums.platform.org.DepartmentPropCategoryEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.repository.Y9DepartmentPropRepository;
+import net.risesoft.repository.org.Y9DepartmentPropRepository;
 import net.risesoft.service.org.Y9DepartmentPropService;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 
@@ -93,8 +93,9 @@ public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
         prop.setDeptId(y9DepartmentProp.getDeptId());
         prop.setOrgBaseId(y9DepartmentProp.getOrgBaseId());
         prop.setCategory(y9DepartmentProp.getCategory());
-        Integer tabIndex = y9DepartmentPropRepository
-            .getMaxTabIndex(y9DepartmentProp.getDeptId(), y9DepartmentProp.getCategory()).orElse(1);
+        Integer tabIndex =
+            y9DepartmentPropRepository.getMaxTabIndex(y9DepartmentProp.getDeptId(), y9DepartmentProp.getCategory())
+                .orElse(1);
         prop.setTabIndex(++tabIndex);
         y9DepartmentPropRepository.save(prop);
     }

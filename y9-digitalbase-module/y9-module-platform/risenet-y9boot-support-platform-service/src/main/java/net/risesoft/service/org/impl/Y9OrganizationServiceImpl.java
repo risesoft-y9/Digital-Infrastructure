@@ -10,12 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9Organization;
+import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9OrganizationManager;
 import net.risesoft.pojo.AuditLogEvent;
-import net.risesoft.repository.Y9OrganizationRepository;
+import net.risesoft.repository.org.Y9OrganizationRepository;
 import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;

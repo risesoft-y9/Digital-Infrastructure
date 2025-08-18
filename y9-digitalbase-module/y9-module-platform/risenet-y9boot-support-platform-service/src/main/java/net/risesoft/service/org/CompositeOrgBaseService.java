@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.Y9Organization;
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9Position;
-import net.risesoft.enums.platform.OrgTreeTypeEnum;
-import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.entity.org.Y9OrgBase;
+import net.risesoft.entity.org.Y9Organization;
+import net.risesoft.entity.org.Y9Person;
+import net.risesoft.entity.org.Y9Position;
+import net.risesoft.enums.platform.org.OrgTreeTypeEnum;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.model.platform.SyncOrgUnits;
 
 /**

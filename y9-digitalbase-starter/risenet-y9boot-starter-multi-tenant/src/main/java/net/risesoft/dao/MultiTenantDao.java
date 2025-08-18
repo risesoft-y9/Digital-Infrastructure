@@ -9,8 +9,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.model.platform.TenantApp;
-import net.risesoft.model.platform.TenantSystem;
+import net.risesoft.model.platform.tenant.TenantApp;
+import net.risesoft.model.platform.tenant.TenantSystem;
 
 /**
  * 多租户数据库操作

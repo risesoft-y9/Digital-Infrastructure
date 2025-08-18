@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.OptionClassConsts;
-import net.risesoft.entity.Y9OptionValue;
-import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.entity.dictionary.Y9OptionValue;
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.permission.annotation.IsAnyManager;

@@ -15,9 +15,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
-import net.risesoft.enums.platform.AuthorityEnum;
-import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
-import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.enums.platform.permission.AuthorizationPrincipalTypeEnum;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.persistence.EnumConverter;
 
 /**

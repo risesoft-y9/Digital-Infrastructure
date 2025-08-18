@@ -1,6 +1,6 @@
 package com.example;
 
-import net.risesoft.model.platform.PersonsPositions;
+import net.risesoft.model.platform.org.PersonsPositions;
 
 /**
  * 岗位人员同步

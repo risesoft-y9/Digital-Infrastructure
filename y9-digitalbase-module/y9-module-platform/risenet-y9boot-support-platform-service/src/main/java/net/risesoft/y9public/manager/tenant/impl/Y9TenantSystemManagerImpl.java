@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.exception.TenantErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.model.platform.TenantSystem;
+import net.risesoft.model.platform.tenant.TenantSystem;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;

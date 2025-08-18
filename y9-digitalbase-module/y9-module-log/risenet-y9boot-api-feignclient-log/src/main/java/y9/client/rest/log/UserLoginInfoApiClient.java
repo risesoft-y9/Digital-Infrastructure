@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.api.log.UserLoginInfoApi;
-import net.risesoft.model.userlogininfo.LoginInfo;
+import net.risesoft.model.log.LoginInfo;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 

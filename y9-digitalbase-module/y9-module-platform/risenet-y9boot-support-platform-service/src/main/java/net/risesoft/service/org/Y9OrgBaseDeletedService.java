@@ -1,8 +1,8 @@
 package net.risesoft.service.org;
 
 import net.risesoft.base.BaseService;
-import net.risesoft.entity.Y9OrgBaseDeleted;
-import net.risesoft.repository.Y9OrgBaseDeletedRepository;
+import net.risesoft.entity.org.Y9OrgBaseDeleted;
+import net.risesoft.repository.org.Y9OrgBaseDeletedRepository;
 
 /**
  * @author dingzhaojun

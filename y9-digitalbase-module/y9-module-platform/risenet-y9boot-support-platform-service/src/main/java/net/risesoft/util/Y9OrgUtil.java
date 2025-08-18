@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 import net.risesoft.consts.OrgLevelConsts;
-import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.entity.org.Y9OrgBase;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
 
 /**
  * 组织工具类

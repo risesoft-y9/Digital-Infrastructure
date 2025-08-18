@@ -2,8 +2,8 @@ package net.risesoft.service.org;
 
 import java.util.Optional;
 
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9PersonExt;
+import net.risesoft.entity.org.Y9Person;
+import net.risesoft.entity.org.Y9PersonExt;
 
 /**
  * @author dingzhaojun

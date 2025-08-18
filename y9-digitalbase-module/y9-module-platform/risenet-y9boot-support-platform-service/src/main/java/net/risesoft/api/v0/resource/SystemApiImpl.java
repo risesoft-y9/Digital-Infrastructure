@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.v0.resource.SystemApi;
 import net.risesoft.consts.InitDataConsts;
-import net.risesoft.model.platform.System;
+import net.risesoft.model.platform.resource.System;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;

@@ -1,6 +1,6 @@
 package net.risesoft.service.setting;
 
-import net.risesoft.entity.Y9Setting;
+import net.risesoft.entity.setting.Y9Setting;
 import net.risesoft.service.setting.impl.TenantSetting;
 
 /**

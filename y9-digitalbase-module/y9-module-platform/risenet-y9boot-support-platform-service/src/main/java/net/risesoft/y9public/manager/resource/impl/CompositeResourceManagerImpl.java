@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
-import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.exception.ResourceErrorCodeEnum;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9public.entity.resource.Y9App;

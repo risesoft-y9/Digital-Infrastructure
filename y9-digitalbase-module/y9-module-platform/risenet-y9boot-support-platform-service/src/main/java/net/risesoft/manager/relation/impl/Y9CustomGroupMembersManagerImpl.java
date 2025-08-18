@@ -8,13 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9Department;
-import net.risesoft.entity.Y9Group;
-import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9Position;
+import net.risesoft.entity.org.Y9Department;
+import net.risesoft.entity.org.Y9Group;
+import net.risesoft.entity.org.Y9OrgBase;
+import net.risesoft.entity.org.Y9Person;
+import net.risesoft.entity.org.Y9Position;
 import net.risesoft.entity.relation.Y9CustomGroupMember;
-import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;

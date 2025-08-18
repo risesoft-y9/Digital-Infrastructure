@@ -12,11 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
-import net.risesoft.entity.Y9Job;
+import net.risesoft.entity.org.Y9Job;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9JobManager;
-import net.risesoft.repository.Y9JobRepository;
+import net.risesoft.repository.org.Y9JobRepository;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;

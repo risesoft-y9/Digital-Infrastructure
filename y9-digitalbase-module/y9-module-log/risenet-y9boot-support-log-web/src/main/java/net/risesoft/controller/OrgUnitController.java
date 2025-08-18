@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.enums.platform.OrgTreeTypeEnum;
+import net.risesoft.enums.platform.org.OrgTreeTypeEnum;
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.model.platform.OrgUnit;
-import net.risesoft.model.platform.Organization;
-import net.risesoft.model.platform.Tenant;
+import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.org.Organization;
+import net.risesoft.model.platform.tenant.Tenant;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
 

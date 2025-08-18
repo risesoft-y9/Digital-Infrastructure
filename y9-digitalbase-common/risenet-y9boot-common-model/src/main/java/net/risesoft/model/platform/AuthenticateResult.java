@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import net.risesoft.model.platform.org.Person;
+
 /**
  * 认证结果
  * 

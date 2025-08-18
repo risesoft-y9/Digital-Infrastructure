@@ -3,8 +3,8 @@ package net.risesoft.manager.org;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.entity.Y9Job;
-import net.risesoft.entity.Y9Position;
+import net.risesoft.entity.org.Y9Job;
+import net.risesoft.entity.org.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.y9.exception.Y9NotFoundException;
 

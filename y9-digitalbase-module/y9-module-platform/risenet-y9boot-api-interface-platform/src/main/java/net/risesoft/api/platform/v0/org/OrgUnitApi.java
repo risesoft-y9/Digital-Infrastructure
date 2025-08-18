@@ -8,9 +8,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.model.platform.Department;
-import net.risesoft.model.platform.OrgUnit;
-import net.risesoft.model.platform.Organization;
+import net.risesoft.model.platform.org.Department;
+import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.org.Organization;
 
 /**
  * 组织节点组件

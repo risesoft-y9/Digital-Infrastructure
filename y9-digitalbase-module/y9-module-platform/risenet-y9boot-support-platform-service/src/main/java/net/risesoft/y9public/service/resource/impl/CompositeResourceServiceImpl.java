@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.manager.resource.CompositeResourceManager;

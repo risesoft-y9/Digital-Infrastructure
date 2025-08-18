@@ -2,7 +2,7 @@ package net.risesoft.manager.org;
 
 import java.util.Optional;
 
-import net.risesoft.entity.Y9Organization;
+import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**

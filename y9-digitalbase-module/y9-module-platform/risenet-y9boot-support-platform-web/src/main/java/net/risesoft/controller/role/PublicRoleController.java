@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.controller.role.vo.RoleTreeNodeVO;
-import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;

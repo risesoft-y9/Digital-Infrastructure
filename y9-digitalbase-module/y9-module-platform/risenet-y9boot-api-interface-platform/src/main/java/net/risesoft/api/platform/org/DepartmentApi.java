@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.api.platform.org.dto.CreateDepartmentDTO;
-import net.risesoft.enums.platform.DepartmentPropCategoryEnum;
-import net.risesoft.model.platform.Department;
-import net.risesoft.model.platform.DepartmentProp;
-import net.risesoft.model.platform.OrgUnit;
+import net.risesoft.enums.platform.org.DepartmentPropCategoryEnum;
+import net.risesoft.model.platform.org.Department;
+import net.risesoft.model.platform.org.DepartmentProp;
+import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.pojo.Y9Result;
 
 /**

@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9Position;
+import net.risesoft.entity.org.Y9Person;
+import net.risesoft.entity.org.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
