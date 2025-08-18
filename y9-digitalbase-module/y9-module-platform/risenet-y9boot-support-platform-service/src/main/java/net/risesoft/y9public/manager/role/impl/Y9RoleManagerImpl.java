@@ -182,10 +182,16 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
             y9Role.setDn(RoleLevelConsts.CN + y9Role.getName());
             y9Role.setGuidPath(y9Role.getId());
         }
+
         if (StringUtils.isNotBlank(y9Role.getAppId())) {
+            // 应用角色
             Y9App y9App = y9AppManager.getById(y9Role.getAppId());
             y9Role.setSystemId(y9App.getSystemId());
+        } else if (StringUtils.isNotBlank(y9Role.getSystemId())) {
+            // 系统角色
+            y9Role.setAppId(null);
         } else {
+            // 公共角色
             y9Role.setAppId(null);
             y9Role.setSystemId(null);
         }
@@ -220,10 +226,20 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
             currentRole.setDn(RoleLevelConsts.CN + y9Role.getName());
             currentRole.setGuidPath(y9Role.getId());
         }
-        if (StringUtils.isBlank(currentRole.getAppId())) {
-            currentRole.setAppId(null);
-            currentRole.setSystemId(null);
+
+        if (StringUtils.isNotBlank(y9Role.getAppId())) {
+            // 应用角色
+            Y9App y9App = y9AppManager.getById(y9Role.getAppId());
+            y9Role.setSystemId(y9App.getSystemId());
+        } else if (StringUtils.isNotBlank(y9Role.getSystemId())) {
+            // 系统角色
+            y9Role.setAppId(null);
+        } else {
+            // 公共角色
+            y9Role.setAppId(null);
+            y9Role.setSystemId(null);
         }
+
         return y9RoleRepository.save(currentRole);
     }
 
