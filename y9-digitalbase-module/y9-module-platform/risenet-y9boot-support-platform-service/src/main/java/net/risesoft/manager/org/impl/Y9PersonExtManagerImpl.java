@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9PersonExt;
-import net.risesoft.enums.platform.MaritalStatusEnum;
 import net.risesoft.manager.org.Y9PersonExtManager;
 import net.risesoft.repository.Y9PersonExtRepository;
 import net.risesoft.y9.util.Y9BeanUtil;
@@ -35,18 +34,18 @@ public class Y9PersonExtManagerImpl implements Y9PersonExtManager {
     @Override
     @Transactional(readOnly = false)
     public Y9PersonExt saveOrUpdate(Y9PersonExt y9PersonExt, Y9Person person) {
+        if (y9PersonExt == null) {
+            y9PersonExt = new Y9PersonExt();
+        }
         Optional<Y9PersonExt> optionalY9PersonExt = y9PersonExtRepository.findByPersonId(person.getId());
         if (optionalY9PersonExt.isPresent()) {
-            Y9PersonExt oldext = optionalY9PersonExt.get();
-            Y9BeanUtil.copyProperties(y9PersonExt, oldext, "photo");
-            return y9PersonExtRepository.save(oldext);
+            Y9PersonExt originalPersonExt = optionalY9PersonExt.get();
+            Y9BeanUtil.copyProperties(y9PersonExt, originalPersonExt, "photo");
+            return y9PersonExtRepository.save(originalPersonExt);
         }
-        if (y9PersonExt.getMaritalStatus() == null) {
-            y9PersonExt.setMaritalStatus(MaritalStatusEnum.SECRET);
-        }
+
         y9PersonExt.setName(person.getName());
         y9PersonExt.setPersonId(person.getId());
-
         return y9PersonExtRepository.save(y9PersonExt);
     }
 
