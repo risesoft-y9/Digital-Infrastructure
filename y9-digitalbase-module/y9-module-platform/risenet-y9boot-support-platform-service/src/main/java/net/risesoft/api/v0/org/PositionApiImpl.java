@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.v0.org.PositionApi;
-import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9Position;
-import net.risesoft.model.platform.OrgUnit;
-import net.risesoft.model.platform.Person;
-import net.risesoft.model.platform.Position;
+import net.risesoft.entity.org.Y9OrgBase;
+import net.risesoft.entity.org.Y9Person;
+import net.risesoft.entity.org.Y9Position;
+import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.Position;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;

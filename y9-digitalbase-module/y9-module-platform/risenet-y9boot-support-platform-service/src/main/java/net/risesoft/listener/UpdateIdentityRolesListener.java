@@ -7,12 +7,12 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.relation.Y9OrgBasesToRoles;
+import net.risesoft.entity.org.Y9OrgBase;
+import net.risesoft.entity.permission.Y9OrgBasesToRoles;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
-import net.risesoft.enums.platform.OrgTypeEnum;
-import net.risesoft.service.identity.IdentityRoleCalculator;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
+import net.risesoft.service.permission.cache.IdentityRoleCalculator;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;

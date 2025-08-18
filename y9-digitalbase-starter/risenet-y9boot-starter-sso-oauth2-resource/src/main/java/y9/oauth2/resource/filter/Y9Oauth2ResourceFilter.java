@@ -47,8 +47,8 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.enums.platform.ManagerLevelEnum;
-import net.risesoft.enums.platform.SexEnum;
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
+import net.risesoft.enums.platform.org.SexEnum;
 import net.risesoft.exception.ErrorCode;
 import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.model.user.UserInfo;

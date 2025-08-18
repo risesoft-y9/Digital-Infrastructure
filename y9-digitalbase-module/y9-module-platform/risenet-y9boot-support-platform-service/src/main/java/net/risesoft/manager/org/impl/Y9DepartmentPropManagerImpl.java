@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.manager.org.Y9DepartmentPropManager;
-import net.risesoft.repository.Y9DepartmentPropRepository;
+import net.risesoft.repository.org.Y9DepartmentPropRepository;
 
 /**
  * 部门属性 Manager 实现类

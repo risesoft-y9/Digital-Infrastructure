@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 import lombok.Data;
 
-import net.risesoft.enums.platform.ManagerLevelEnum;
-import net.risesoft.enums.platform.SexEnum;
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
+import net.risesoft.enums.platform.org.SexEnum;
 
 /***
  * 登录人员信息

@@ -15,10 +15,10 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.org.OrganizationApi;
 import net.risesoft.api.platform.org.dto.CreateOrganizationDTO;
-import net.risesoft.entity.Y9Department;
-import net.risesoft.entity.Y9Organization;
-import net.risesoft.model.platform.Department;
-import net.risesoft.model.platform.Organization;
+import net.risesoft.entity.org.Y9Department;
+import net.risesoft.entity.org.Y9Organization;
+import net.risesoft.model.platform.org.Department;
+import net.risesoft.model.platform.org.Organization;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9DepartmentService;
 import net.risesoft.service.org.Y9OrganizationService;

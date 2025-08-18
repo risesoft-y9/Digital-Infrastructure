@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
-import net.risesoft.entity.Y9Setting;
+import net.risesoft.entity.setting.Y9Setting;
 import net.risesoft.manager.setting.Y9SettingManager;
-import net.risesoft.repository.Y9SettingRepository;
+import net.risesoft.repository.setting.Y9SettingRepository;
 
 /**
  * 设置 Manager 实现类

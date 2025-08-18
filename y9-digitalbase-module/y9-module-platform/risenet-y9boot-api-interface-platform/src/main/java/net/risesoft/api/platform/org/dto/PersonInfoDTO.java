@@ -6,8 +6,8 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.model.platform.Person;
-import net.risesoft.model.platform.Position;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.Position;
 
 /**
  * @author shidaobang

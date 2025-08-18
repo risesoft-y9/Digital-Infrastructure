@@ -3,7 +3,7 @@ package net.risesoft.api.platform.org.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.enums.platform.GroupTypeEnum;
+import net.risesoft.enums.platform.org.GroupTypeEnum;
 
 /**
  * @author shidaobang

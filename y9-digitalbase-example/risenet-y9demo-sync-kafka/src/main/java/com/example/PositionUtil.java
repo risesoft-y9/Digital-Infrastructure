@@ -3,9 +3,9 @@ package com.example;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.risesoft.model.platform.PersonsPositions;
-import net.risesoft.model.platform.Position;
 import net.risesoft.model.platform.SyncOrgUnits;
+import net.risesoft.model.platform.org.PersonsPositions;
+import net.risesoft.model.platform.org.Position;
 
 /**
  * 岗位同步
@@ -56,8 +56,10 @@ public class PositionUtil {
         }
 
         // 递归，获取岗位中的人员，保存岗位人员绑定关系
-        List<PersonsPositions> ppList = syncOrgUnits.getPersonsPositions().stream()
-            .filter(pp -> pp.getPositionId().equals(syncId)).collect(Collectors.toList());
+        List<PersonsPositions> ppList = syncOrgUnits.getPersonsPositions()
+            .stream()
+            .filter(pp -> pp.getPositionId().equals(syncId))
+            .collect(Collectors.toList());
         for (PersonsPositions pp : ppList) {
             PersonsPositionsUtil.addPersonsPositions(pp);
         }

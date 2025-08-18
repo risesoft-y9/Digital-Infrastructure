@@ -15,9 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.pojo.AuditLogEvent;
-import net.risesoft.repository.identity.person.Y9PersonToResourceAndAuthorityRepository;
-import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorityRepository;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
+import net.risesoft.repository.permission.cache.person.Y9PersonToResourceAndAuthorityRepository;
+import net.risesoft.repository.permission.cache.position.Y9PositionToResourceAndAuthorityRepository;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;

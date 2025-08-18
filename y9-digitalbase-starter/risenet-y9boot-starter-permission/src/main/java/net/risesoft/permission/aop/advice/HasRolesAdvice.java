@@ -6,10 +6,10 @@ import java.util.Arrays;
 import org.springframework.aop.MethodBeforeAdvice;
 import org.springframework.core.annotation.AnnotationUtils;
 
-import net.risesoft.api.platform.permission.PersonRoleApi;
-import net.risesoft.api.platform.permission.PositionRoleApi;
+import net.risesoft.api.platform.permission.cache.PersonRoleApi;
+import net.risesoft.api.platform.permission.cache.PositionRoleApi;
 import net.risesoft.enums.LogicalEnum;
-import net.risesoft.enums.platform.IdentityTypeEnum;
+import net.risesoft.enums.platform.org.IdentityTypeEnum;
 import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.permission.annotation.HasRoles;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -75,7 +75,8 @@ public class HasRolesAdvice implements MethodBeforeAdvice {
 
     private boolean hasPositionRole(String customId) {
         return positionRoleApi
-            .hasRoleByCustomId(Y9LoginUserHolder.getTenantId(), Y9LoginUserHolder.getPositionId(), customId).getData();
+            .hasRoleByCustomId(Y9LoginUserHolder.getTenantId(), Y9LoginUserHolder.getPositionId(), customId)
+            .getData();
     }
 
     private void checkAllPositionRoles(String[] customIds) {
@@ -109,7 +110,8 @@ public class HasRolesAdvice implements MethodBeforeAdvice {
 
     private boolean hasPersonRole(String customId) {
         return personRoleApi
-            .hasRoleByCustomId(Y9LoginUserHolder.getTenantId(), Y9LoginUserHolder.getPersonId(), customId).getData();
+            .hasRoleByCustomId(Y9LoginUserHolder.getTenantId(), Y9LoginUserHolder.getPersonId(), customId)
+            .getData();
     }
 
 }

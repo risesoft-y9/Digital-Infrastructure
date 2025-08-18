@@ -2,7 +2,7 @@ package net.risesoft.service.permission;
 
 import java.util.List;
 
-import net.risesoft.model.platform.PersonIconItem;
+import net.risesoft.model.platform.permission.PersonIconItem;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 

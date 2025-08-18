@@ -15,9 +15,9 @@ import org.hibernate.annotations.Type;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
-import net.risesoft.enums.platform.AppOpenTypeEnum;
-import net.risesoft.enums.platform.AppTypeEnum;
-import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.enums.platform.resource.AppOpenTypeEnum;
+import net.risesoft.enums.platform.resource.AppTypeEnum;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.persistence.EnumConverter;
 
 /**

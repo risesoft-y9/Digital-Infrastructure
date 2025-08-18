@@ -14,8 +14,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.risesoft.entity.permission.Y9Authorization;
-import net.risesoft.enums.platform.AuthorityEnum;
-import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
+import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.enums.platform.permission.AuthorizationPrincipalTypeEnum;
 
 /**
  * @author dingzhaojun

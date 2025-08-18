@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.api.platform.org.dto.CreatePersonDTO;
 import net.risesoft.api.platform.org.dto.PersonInfoDTO;
-import net.risesoft.model.platform.Group;
-import net.risesoft.model.platform.OrgUnit;
-import net.risesoft.model.platform.Person;
-import net.risesoft.model.platform.PersonExt;
-import net.risesoft.model.platform.Position;
 import net.risesoft.model.platform.Role;
+import net.risesoft.model.platform.org.Group;
+import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.PersonExt;
+import net.risesoft.model.platform.org.Position;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;

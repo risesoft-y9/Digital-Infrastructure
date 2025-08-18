@@ -6,7 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.permission.AuthorityEnum;
 
 /**
  * 权限管理组件

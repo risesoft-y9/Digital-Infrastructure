@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
 import net.risesoft.consts.DefaultConsts;
-import net.risesoft.enums.platform.OrgTypeEnum;
-import net.risesoft.enums.platform.SexEnum;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
+import net.risesoft.enums.platform.org.SexEnum;
 import net.risesoft.persistence.EnumConverter;
 
 /**

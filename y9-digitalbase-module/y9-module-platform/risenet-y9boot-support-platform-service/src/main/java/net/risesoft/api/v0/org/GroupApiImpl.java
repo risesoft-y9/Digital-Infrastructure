@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.v0.org.GroupApi;
-import net.risesoft.entity.Y9Group;
-import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.Y9Person;
-import net.risesoft.model.platform.Group;
-import net.risesoft.model.platform.OrgUnit;
-import net.risesoft.model.platform.Person;
+import net.risesoft.entity.org.Y9Group;
+import net.risesoft.entity.org.Y9OrgBase;
+import net.risesoft.entity.org.Y9Person;
+import net.risesoft.model.platform.org.Group;
+import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.org.Person;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9GroupService;
 import net.risesoft.service.org.Y9PersonService;

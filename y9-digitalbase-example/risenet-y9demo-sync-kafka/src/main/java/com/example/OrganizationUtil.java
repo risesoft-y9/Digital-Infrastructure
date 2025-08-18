@@ -3,12 +3,12 @@ package com.example;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.risesoft.model.platform.Department;
-import net.risesoft.model.platform.Group;
-import net.risesoft.model.platform.Organization;
-import net.risesoft.model.platform.Person;
-import net.risesoft.model.platform.Position;
 import net.risesoft.model.platform.SyncOrgUnits;
+import net.risesoft.model.platform.org.Department;
+import net.risesoft.model.platform.org.Group;
+import net.risesoft.model.platform.org.Organization;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.Position;
 
 /**
  * 组织机构同步
@@ -48,29 +48,37 @@ public class OrganizationUtil {
 
         if (needRecursion) {
             // 机构下的人员
-            List<Person> personList = syncOrgUnits.getPersons().stream().filter(p -> p.getParentId().equals(syncId))
+            List<Person> personList = syncOrgUnits.getPersons()
+                .stream()
+                .filter(p -> p.getParentId().equals(syncId))
                 .collect(Collectors.toList());
             for (Person p : personList) {
                 PersonUtil.syncPerson(p);
             }
 
             // 机构下岗位
-            List<Position> positionList = syncOrgUnits.getPositions().stream()
-                .filter(p -> p.getParentId().equals(syncId)).collect(Collectors.toList());
+            List<Position> positionList = syncOrgUnits.getPositions()
+                .stream()
+                .filter(p -> p.getParentId().equals(syncId))
+                .collect(Collectors.toList());
             for (Position position : positionList) {
                 PositionUtil.recursion(syncOrgUnits, position, position.getId());
             }
 
             // 机构下用户组
-            List<Group> groupList = syncOrgUnits.getGroups().stream().filter(g -> g.getParentId().equals(syncId))
+            List<Group> groupList = syncOrgUnits.getGroups()
+                .stream()
+                .filter(g -> g.getParentId().equals(syncId))
                 .collect(Collectors.toList());
             for (Group group : groupList) {
                 GroupUtil.recursion(syncOrgUnits, group, group.getId());
             }
 
             // 机构下的部门
-            List<Department> childDeptList = syncOrgUnits.getDepartments().stream()
-                .filter(d -> d.getParentId().equals(syncId)).collect(Collectors.toList());
+            List<Department> childDeptList = syncOrgUnits.getDepartments()
+                .stream()
+                .filter(d -> d.getParentId().equals(syncId))
+                .collect(Collectors.toList());
             for (Department d : childDeptList) {
                 DepartmentUtil.recursion(syncOrgUnits, d, d.getId());
             }

@@ -2,9 +2,9 @@ package net.risesoft.y9public.service.resource;
 
 import java.util.List;
 
-import net.risesoft.entity.Y9OptionValue;
-import net.risesoft.enums.platform.AuthorityEnum;
-import net.risesoft.model.platform.DataCatalog;
+import net.risesoft.entity.dictionary.Y9OptionValue;
+import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.model.platform.resource.DataCatalog;
 import net.risesoft.y9public.entity.resource.Y9DataCatalog;
 
 /**
@@ -27,12 +27,12 @@ public interface Y9DataCatalogService {
     List<DataCatalog> getTree(String tenantId, String parentId, String treeType);
 
     List<DataCatalog> getTree(String tenantId, String parentId, String treeType, Boolean enabled,
-                              boolean includeAllDescendant, AuthorityEnum authority, String personId);
+        boolean includeAllDescendant, AuthorityEnum authority, String personId);
 
     List<DataCatalog> treeSearch(String tenantId, String name, String treeType);
 
     List<DataCatalog> treeSearch(String tenantId, String name, String treeType, AuthorityEnum authority,
-                                 String personId);
+        String personId);
 
     List<Y9OptionValue> getTreeTypeList();
 

@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.model.platform.Tenant;
+import net.risesoft.model.platform.tenant.Tenant;
 
 /**
  * 租户管理组件

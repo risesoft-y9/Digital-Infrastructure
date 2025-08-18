@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.pojo.AuditLogEvent;
-import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
+import net.risesoft.repository.permission.Y9OrgBasesToRolesRepository;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.util.Y9ModelConvertUtil;

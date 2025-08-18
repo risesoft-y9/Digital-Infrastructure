@@ -13,8 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.dao.MultiTenantDao;
-import net.risesoft.model.platform.TenantApp;
-import net.risesoft.model.platform.TenantSystem;
+import net.risesoft.model.platform.tenant.TenantApp;
+import net.risesoft.model.platform.tenant.TenantSystem;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
 import net.risesoft.y9.pubsub.event.Y9EventCommon;
@@ -92,7 +92,8 @@ public class DbScanner {
 
         // 获取新的系统租用发送事件
         Set<TenantSystem> uninitializedTenantSystems = tenantSystemList.stream()
-            .filter(tenantSystem -> Boolean.FALSE.equals(tenantSystem.getInitialized())).collect(Collectors.toSet());
+            .filter(tenantSystem -> Boolean.FALSE.equals(tenantSystem.getInitialized()))
+            .collect(Collectors.toSet());
         for (TenantSystem tenantSystem : uninitializedTenantSystems) {
             Y9EventCommon tenantSystemRegisteredEvent = new Y9EventCommon();
             tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_SYSTEM_REGISTERED);

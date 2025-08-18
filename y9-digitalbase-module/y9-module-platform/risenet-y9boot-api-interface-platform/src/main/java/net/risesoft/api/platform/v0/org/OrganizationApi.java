@@ -8,11 +8,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.model.platform.Department;
-import net.risesoft.model.platform.Group;
-import net.risesoft.model.platform.Organization;
-import net.risesoft.model.platform.Person;
-import net.risesoft.model.platform.Position;
+import net.risesoft.model.platform.org.Department;
+import net.risesoft.model.platform.org.Group;
+import net.risesoft.model.platform.org.Organization;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.Position;
 
 /**
  * 机构服务组件

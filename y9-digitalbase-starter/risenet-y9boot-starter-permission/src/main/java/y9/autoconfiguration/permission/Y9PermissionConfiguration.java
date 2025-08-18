@@ -8,10 +8,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import net.risesoft.api.platform.permission.PersonResourceApi;
-import net.risesoft.api.platform.permission.PersonRoleApi;
-import net.risesoft.api.platform.permission.PositionResourceApi;
-import net.risesoft.api.platform.permission.PositionRoleApi;
+import net.risesoft.api.platform.permission.cache.PersonResourceApi;
+import net.risesoft.api.platform.permission.cache.PersonRoleApi;
+import net.risesoft.api.platform.permission.cache.PositionResourceApi;
+import net.risesoft.api.platform.permission.cache.PositionRoleApi;
 import net.risesoft.permission.aop.advice.HasAuthoritiesAdvice;
 import net.risesoft.permission.aop.advice.HasPositionsAdvice;
 import net.risesoft.permission.aop.advice.HasRolesAdvice;

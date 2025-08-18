@@ -3,7 +3,7 @@ package net.risesoft.controller.resource.vo;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 
 /**
  * 资源

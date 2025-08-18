@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.entity.Y9Setting;
+import net.risesoft.entity.setting.Y9Setting;
 import net.risesoft.manager.setting.Y9SettingManager;
 import net.risesoft.service.setting.Y9SettingService;
 

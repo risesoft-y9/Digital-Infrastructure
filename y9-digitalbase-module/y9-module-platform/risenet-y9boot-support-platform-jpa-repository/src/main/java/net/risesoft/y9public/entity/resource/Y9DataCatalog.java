@@ -12,8 +12,8 @@ import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
 import net.risesoft.consts.InitDataConsts;
-import net.risesoft.enums.platform.DataCatalogTypeEnum;
-import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.enums.platform.resource.DataCatalogTypeEnum;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.persistence.EnumConverter;
 
 /**

@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.api.platform.permission.PersonResourceApi;
-import net.risesoft.enums.platform.AuthorityEnum;
-import net.risesoft.enums.platform.IdentityTypeEnum;
-import net.risesoft.model.platform.Menu;
-import net.risesoft.model.platform.Resource;
-import net.risesoft.model.platform.VueMenu;
+import net.risesoft.api.platform.permission.cache.PersonResourceApi;
+import net.risesoft.enums.platform.org.IdentityTypeEnum;
+import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.model.platform.resource.Menu;
+import net.risesoft.model.platform.resource.Resource;
+import net.risesoft.model.platform.resource.VueMenu;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
+import net.risesoft.service.permission.cache.Y9PersonToResourceAndAuthorityService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9Menu;

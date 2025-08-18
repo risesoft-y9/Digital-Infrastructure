@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.model.platform.OptionValue;
+import net.risesoft.model.platform.dictionary.OptionValue;
 
 /**
  * 字典表管理组件

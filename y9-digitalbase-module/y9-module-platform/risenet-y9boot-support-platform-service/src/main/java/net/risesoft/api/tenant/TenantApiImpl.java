@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.tenant.TenantApi;
-import net.risesoft.model.platform.Tenant;
+import net.risesoft.model.platform.tenant.Tenant;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;

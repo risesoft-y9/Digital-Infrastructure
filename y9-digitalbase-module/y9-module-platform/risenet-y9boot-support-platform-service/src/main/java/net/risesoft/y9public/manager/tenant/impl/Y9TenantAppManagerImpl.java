@@ -13,10 +13,10 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.model.platform.TenantApp;
+import net.risesoft.model.platform.tenant.TenantApp;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
@@ -106,7 +106,8 @@ public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
         ta.setAppId(appId);
         ta.setSystemId(y9App.getSystemId());
         ta.setAppName(y9App.getName());
-        ta.setApplyName(Optional.ofNullable(Y9LoginUserHolder.getUserInfo()).map(UserInfo::getName)
+        ta.setApplyName(Optional.ofNullable(Y9LoginUserHolder.getUserInfo())
+            .map(UserInfo::getName)
             .orElse(ManagerLevelEnum.SYSTEM_MANAGER.getName()));
         ta.setApplyId(Y9LoginUserHolder.getPersonId());
         ta.setApplyReason(applyReason);
@@ -114,7 +115,8 @@ public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
         // 审核状态
         if (StringUtils.isNotBlank(tenantDataSource)) {
             ta.setVerify(Boolean.TRUE);
-            ta.setVerifyUserName(Optional.ofNullable(Y9LoginUserHolder.getUserInfo()).map(UserInfo::getName)
+            ta.setVerifyUserName(Optional.ofNullable(Y9LoginUserHolder.getUserInfo())
+                .map(UserInfo::getName)
                 .orElse(ManagerLevelEnum.SYSTEM_MANAGER.getName()));
             ta.setVerifyTime(time);
             ta.setReason("同意申请");

@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.risesoft.enums.platform.OrgTypeEnum;
-import net.risesoft.model.platform.OrgUnit;
-import net.risesoft.model.platform.Organization;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
+import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.org.Organization;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.Y9PublishService;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;

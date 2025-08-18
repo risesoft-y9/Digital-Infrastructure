@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
-import net.risesoft.entity.Y9CustomGroup;
+import net.risesoft.entity.org.Y9CustomGroup;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.exception.Y9NotFoundException;
 

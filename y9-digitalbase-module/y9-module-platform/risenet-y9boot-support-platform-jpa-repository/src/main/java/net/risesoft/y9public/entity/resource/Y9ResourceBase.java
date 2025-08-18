@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 
 import net.risesoft.base.BaseEntity;
 import net.risesoft.consts.DefaultConsts;
-import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.persistence.EnumConverter;
 
 /**
@@ -123,7 +123,8 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
         // 排序时能保证同系统中同一层级（parentId 相同）的资源能按 tabIndex 升序排列
         return Comparator.comparing(Y9ResourceBase::getSystemId)
             .thenComparing(Y9ResourceBase::getParentId, Comparator.nullsFirst(String::compareTo))
-            .thenComparing(Y9ResourceBase::getTabIndex).compare(this, y9ResourceBase);
+            .thenComparing(Y9ResourceBase::getTabIndex)
+            .compare(this, y9ResourceBase);
     }
 
     public abstract String getAppId();

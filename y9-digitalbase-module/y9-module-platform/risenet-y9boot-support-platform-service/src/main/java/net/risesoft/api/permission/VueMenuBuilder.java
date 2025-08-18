@@ -8,14 +8,14 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.identity.Y9IdentityToResourceAndAuthorityBase;
-import net.risesoft.enums.platform.AuthorityEnum;
-import net.risesoft.enums.platform.IdentityTypeEnum;
-import net.risesoft.enums.platform.ResourceTypeEnum;
-import net.risesoft.model.platform.VueButton;
-import net.risesoft.model.platform.VueMenu;
-import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
-import net.risesoft.service.identity.Y9PositionToResourceAndAuthorityService;
+import net.risesoft.entity.permission.cache.Y9IdentityToResourceAndAuthorityBase;
+import net.risesoft.enums.platform.org.IdentityTypeEnum;
+import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
+import net.risesoft.model.platform.resource.VueButton;
+import net.risesoft.model.platform.resource.VueMenu;
+import net.risesoft.service.permission.cache.Y9PersonToResourceAndAuthorityService;
+import net.risesoft.service.permission.cache.Y9PositionToResourceAndAuthorityService;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9Operation;
 import net.risesoft.y9public.service.resource.Y9MenuService;
@@ -55,13 +55,21 @@ public class VueMenuBuilder {
         if (IdentityTypeEnum.PERSON.equals(identityType)) {
             y9OperationList =
                 y9PersonToResourceAndAuthorityService.list(personId, menuId, ResourceTypeEnum.OPERATION, authority)
-                    .stream().map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct()
-                    .map(y9OperationService::getById).sorted().collect(Collectors.toList());
+                    .stream()
+                    .map(Y9IdentityToResourceAndAuthorityBase::getResourceId)
+                    .distinct()
+                    .map(y9OperationService::getById)
+                    .sorted()
+                    .collect(Collectors.toList());
         } else {
             y9OperationList =
                 y9PositionToResourceAndAuthorityService.list(personId, menuId, ResourceTypeEnum.OPERATION, authority)
-                    .stream().map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct()
-                    .map(y9OperationService::getById).sorted().collect(Collectors.toList());
+                    .stream()
+                    .map(Y9IdentityToResourceAndAuthorityBase::getResourceId)
+                    .distinct()
+                    .map(y9OperationService::getById)
+                    .sorted()
+                    .collect(Collectors.toList());
         }
 
         List<VueButton> buttonList = new ArrayList<>();
@@ -98,13 +106,21 @@ public class VueMenuBuilder {
         if (IdentityTypeEnum.PERSON.equals(identityType)) {
             menuList =
                 y9PersonToResourceAndAuthorityService.list(personId, resourceId, ResourceTypeEnum.MENU, authority)
-                    .stream().map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct()
-                    .map(y9MenuService::getById).sorted().collect(Collectors.toList());
+                    .stream()
+                    .map(Y9IdentityToResourceAndAuthorityBase::getResourceId)
+                    .distinct()
+                    .map(y9MenuService::getById)
+                    .sorted()
+                    .collect(Collectors.toList());
         } else {
             menuList =
                 y9PositionToResourceAndAuthorityService.list(personId, resourceId, ResourceTypeEnum.MENU, authority)
-                    .stream().map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct()
-                    .map(y9MenuService::getById).sorted().collect(Collectors.toList());
+                    .stream()
+                    .map(Y9IdentityToResourceAndAuthorityBase::getResourceId)
+                    .distinct()
+                    .map(y9MenuService::getById)
+                    .sorted()
+                    .collect(Collectors.toList());
         }
         for (Y9Menu y9Menu : menuList) {
             if (y9Menu.getEnabled()) {

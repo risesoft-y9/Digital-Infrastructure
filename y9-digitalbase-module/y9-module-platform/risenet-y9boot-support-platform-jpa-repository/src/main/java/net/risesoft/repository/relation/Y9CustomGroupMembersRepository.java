@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.risesoft.entity.relation.Y9CustomGroupMember;
-import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
 
 /**
  * @author dingzhaojun

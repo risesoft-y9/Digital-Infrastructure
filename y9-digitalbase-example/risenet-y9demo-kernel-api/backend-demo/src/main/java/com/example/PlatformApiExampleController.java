@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import net.risesoft.api.platform.org.OrgUnitApi;
 import net.risesoft.api.platform.org.OrganizationApi;
-import net.risesoft.api.platform.permission.PersonResourceApi;
+import net.risesoft.api.platform.permission.cache.PersonResourceApi;
 import net.risesoft.api.platform.resource.AppApi;
-import net.risesoft.enums.platform.AuthorityEnum;
-import net.risesoft.enums.platform.OrgTreeTypeEnum;
+import net.risesoft.enums.platform.org.OrgTreeTypeEnum;
+import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.model.platform.App;
-import net.risesoft.model.platform.Menu;
-import net.risesoft.model.platform.OrgUnit;
-import net.risesoft.model.platform.Organization;
+import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.org.Organization;
+import net.risesoft.model.platform.resource.App;
+import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9Context;
@@ -30,8 +30,11 @@ public class PlatformApiExampleController {
     private final AppApi appApi;
     private final PersonResourceApi personResourceApi;
 
-    public PlatformApiExampleController(OrgUnitApi orgUnitApi, OrganizationApi organizationApi, AppApi appApi,
-                                        PersonResourceApi personResourceApi) {
+    public PlatformApiExampleController(
+        OrgUnitApi orgUnitApi,
+        OrganizationApi organizationApi,
+        AppApi appApi,
+        PersonResourceApi personResourceApi) {
         this.orgUnitApi = orgUnitApi;
         this.organizationApi = organizationApi;
         this.appApi = appApi;

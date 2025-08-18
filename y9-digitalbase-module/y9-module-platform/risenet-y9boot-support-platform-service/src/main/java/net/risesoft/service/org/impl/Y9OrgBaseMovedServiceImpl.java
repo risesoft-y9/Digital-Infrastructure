@@ -6,11 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.Y9OrgBaseMoved;
+import net.risesoft.entity.org.Y9OrgBase;
+import net.risesoft.entity.org.Y9OrgBaseMoved;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.repository.Y9OrgBaseMovedRepository;
+import net.risesoft.repository.org.Y9OrgBaseMovedRepository;
 import net.risesoft.service.org.Y9OrgBaseMovedService;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9LoginUserHolder;

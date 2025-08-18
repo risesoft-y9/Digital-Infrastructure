@@ -18,22 +18,22 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.consts.OptionClassConsts;
-import net.risesoft.entity.Y9Department;
-import net.risesoft.entity.Y9OptionValue;
-import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.Y9Organization;
-import net.risesoft.enums.platform.AuthorityEnum;
-import net.risesoft.enums.platform.DataCatalogTypeEnum;
+import net.risesoft.entity.dictionary.Y9OptionValue;
+import net.risesoft.entity.org.Y9Department;
+import net.risesoft.entity.org.Y9OrgBase;
+import net.risesoft.entity.org.Y9Organization;
+import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.enums.platform.resource.DataCatalogTypeEnum;
 import net.risesoft.exception.ResourceErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.model.platform.DataCatalog;
-import net.risesoft.repository.identity.person.Y9PersonToResourceAndAuthorityRepository;
-import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorityRepository;
+import net.risesoft.model.platform.resource.DataCatalog;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
+import net.risesoft.repository.permission.cache.person.Y9PersonToResourceAndAuthorityRepository;
+import net.risesoft.repository.permission.cache.position.Y9PositionToResourceAndAuthorityRepository;
 import net.risesoft.service.dictionary.Y9OptionValueService;
-import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
-import net.risesoft.service.identity.Y9PositionToResourceAndAuthorityService;
 import net.risesoft.service.org.CompositeOrgBaseService;
+import net.risesoft.service.permission.cache.Y9PersonToResourceAndAuthorityService;
+import net.risesoft.service.permission.cache.Y9PositionToResourceAndAuthorityService;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -209,8 +209,10 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
         }
 
         if (authority != null) {
-            y9DataCatalogList = y9DataCatalogList.stream().filter(y9DataCatalog -> y9PersonToResourceAndAuthorityService
-                .hasPermission(personId, y9DataCatalog.getId(), authority)).collect(Collectors.toList());
+            y9DataCatalogList = y9DataCatalogList.stream()
+                .filter(y9DataCatalog -> y9PersonToResourceAndAuthorityService.hasPermission(personId,
+                    y9DataCatalog.getId(), authority))
+                .collect(Collectors.toList());
         }
 
         resultList.addAll(y9DataCatalogList);
@@ -233,8 +235,10 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
         List<Y9DataCatalog> y9DataCatalogList =
             y9DataCatalogRepository.findByTenantIdAndNameContainingAndTreeTypeOrderByTabIndex(tenantId, name, treeType);
         if (authority != null) {
-            y9DataCatalogList = y9DataCatalogList.stream().filter(y9DataCatalog -> y9PersonToResourceAndAuthorityService
-                .hasPermission(personId, y9DataCatalog.getId(), authority)).collect(Collectors.toList());
+            y9DataCatalogList = y9DataCatalogList.stream()
+                .filter(y9DataCatalog -> y9PersonToResourceAndAuthorityService.hasPermission(personId,
+                    y9DataCatalog.getId(), authority))
+                .collect(Collectors.toList());
         }
 
         dataCatalogList.addAll(this.convertY9DataCatalogToDataCatalog(y9DataCatalogList));
@@ -419,7 +423,8 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     private Integer getNextTabIndex(String parentId) {
         return y9DataCatalogRepository
             .findTopByTenantIdAndParentIdOrderByTabIndexDesc(Y9LoginUserHolder.getTenantId(), parentId)
-            .map(Y9ResourceBase::getTabIndex).orElse(-1) + 1;
+            .map(Y9ResourceBase::getTabIndex)
+            .orElse(-1) + 1;
     }
 
     private DataCatalog convertY9DataCatalogToDataCatalog(Y9DataCatalog y9DataCatalog) {

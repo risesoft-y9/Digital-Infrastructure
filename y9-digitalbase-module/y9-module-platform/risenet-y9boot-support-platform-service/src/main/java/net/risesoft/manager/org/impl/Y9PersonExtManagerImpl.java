@@ -8,10 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9PersonExt;
+import net.risesoft.entity.org.Y9Person;
+import net.risesoft.entity.org.Y9PersonExt;
 import net.risesoft.manager.org.Y9PersonExtManager;
-import net.risesoft.repository.Y9PersonExtRepository;
+import net.risesoft.repository.org.Y9PersonExtRepository;
 import net.risesoft.y9.util.Y9BeanUtil;
 
 /**

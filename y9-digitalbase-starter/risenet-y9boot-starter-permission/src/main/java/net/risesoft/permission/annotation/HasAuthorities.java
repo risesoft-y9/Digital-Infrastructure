@@ -7,8 +7,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import net.risesoft.enums.LogicalEnum;
-import net.risesoft.enums.platform.AuthorityEnum;
-import net.risesoft.enums.platform.IdentityTypeEnum;
+import net.risesoft.enums.platform.org.IdentityTypeEnum;
+import net.risesoft.enums.platform.permission.AuthorityEnum;
 
 /**
  * 是否拥有相应的资源权限 只有拥有相应权限，方法才能继续调用

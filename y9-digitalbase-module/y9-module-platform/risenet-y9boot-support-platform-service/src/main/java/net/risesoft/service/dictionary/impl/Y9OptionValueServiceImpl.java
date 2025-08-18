@@ -9,13 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9OptionValue;
+import net.risesoft.entity.dictionary.Y9OptionValue;
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.DictionaryErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.dictionary.Y9OptionValueManager;
 import net.risesoft.pojo.AuditLogEvent;
-import net.risesoft.repository.Y9OptionValueRepository;
+import net.risesoft.repository.dictionary.Y9OptionValueRepository;
 import net.risesoft.service.dictionary.Y9OptionValueService;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;

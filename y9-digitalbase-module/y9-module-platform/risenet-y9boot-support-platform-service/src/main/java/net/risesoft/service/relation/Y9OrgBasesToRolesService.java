@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
-import net.risesoft.entity.relation.Y9OrgBasesToRoles;
+import net.risesoft.entity.permission.Y9OrgBasesToRoles;
 import net.risesoft.pojo.Y9PageQuery;
 
 /**

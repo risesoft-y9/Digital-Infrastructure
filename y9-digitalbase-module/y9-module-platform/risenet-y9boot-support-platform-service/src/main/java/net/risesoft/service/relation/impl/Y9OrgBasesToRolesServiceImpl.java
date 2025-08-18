@@ -17,20 +17,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9Department;
-import net.risesoft.entity.Y9Group;
-import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.Y9Organization;
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9Position;
-import net.risesoft.entity.relation.Y9OrgBasesToRoles;
+import net.risesoft.entity.org.Y9Department;
+import net.risesoft.entity.org.Y9Group;
+import net.risesoft.entity.org.Y9OrgBase;
+import net.risesoft.entity.org.Y9Organization;
+import net.risesoft.entity.org.Y9Person;
+import net.risesoft.entity.org.Y9Position;
+import net.risesoft.entity.permission.Y9OrgBasesToRoles;
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.RoleErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9PageQuery;
-import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
+import net.risesoft.repository.permission.Y9OrgBasesToRolesRepository;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;

@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.org.OrgUnitApi;
-import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.Y9Organization;
-import net.risesoft.enums.platform.OrgTreeTypeEnum;
-import net.risesoft.model.platform.OrgUnit;
-import net.risesoft.model.platform.Organization;
+import net.risesoft.entity.org.Y9OrgBase;
+import net.risesoft.entity.org.Y9Organization;
+import net.risesoft.enums.platform.org.OrgTreeTypeEnum;
+import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.org.Organization;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9OrganizationService;

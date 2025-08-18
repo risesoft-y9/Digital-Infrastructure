@@ -10,9 +10,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.enums.platform.MaritalStatusEnum;
-import net.risesoft.enums.platform.PersonTypeEnum;
-import net.risesoft.enums.platform.SexEnum;
+import net.risesoft.enums.platform.org.MaritalStatusEnum;
+import net.risesoft.enums.platform.org.PersonTypeEnum;
+import net.risesoft.enums.platform.org.SexEnum;
 import net.risesoft.y9.validation.IdNumber;
 import net.risesoft.y9.validation.Mobile;
 

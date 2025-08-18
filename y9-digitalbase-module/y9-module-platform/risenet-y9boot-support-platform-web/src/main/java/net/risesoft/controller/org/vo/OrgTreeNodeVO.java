@@ -8,13 +8,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.pojo.TreeNodeVO;
+import net.risesoft.entity.org.Y9OrgBase;
+import net.risesoft.entity.org.Y9Person;
 import net.risesoft.enums.TreeTypeEnum;
-import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.Y9Person;
-import net.risesoft.enums.platform.OrgTreeTypeEnum;
-import net.risesoft.enums.platform.OrgTypeEnum;
-import net.risesoft.enums.platform.SexEnum;
+import net.risesoft.enums.platform.org.OrgTreeTypeEnum;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
+import net.risesoft.enums.platform.org.SexEnum;
+import net.risesoft.pojo.TreeNodeVO;
 import net.risesoft.service.org.CompositeOrgBaseService;
 
 /**
@@ -48,7 +48,7 @@ public class OrgTreeNodeVO extends TreeNodeVO {
     private Boolean original;
 
     public static OrgTreeNodeVO convertY9OrgBase(Y9OrgBase y9OrgBase, OrgTreeTypeEnum treeType, boolean countMember,
-                                                 CompositeOrgBaseService compositeOrgBaseService) {
+        CompositeOrgBaseService compositeOrgBaseService) {
         OrgTreeNodeVO orgTreeNodeVO = new OrgTreeNodeVO();
         orgTreeNodeVO.setId(y9OrgBase.getId());
         orgTreeNodeVO.setGuidPath(y9OrgBase.getGuidPath());
@@ -64,14 +64,14 @@ public class OrgTreeNodeVO extends TreeNodeVO {
             orgTreeNodeVO.setOriginal(((Y9Person)y9OrgBase).getOriginal());
         }
         if (countMember && (OrgTypeEnum.DEPARTMENT.equals(y9OrgBase.getOrgType())
-                || OrgTypeEnum.ORGANIZATION.equals(y9OrgBase.getOrgType()))) {
+            || OrgTypeEnum.ORGANIZATION.equals(y9OrgBase.getOrgType()))) {
             orgTreeNodeVO.setMemberCount(compositeOrgBaseService.countByGuidPath(y9OrgBase.getGuidPath(), treeType));
         }
         return orgTreeNodeVO;
     }
 
     public static List<OrgTreeNodeVO> convertY9OrgBaseList(List<? extends Y9OrgBase> y9ResourceBaseList,
-                                                           OrgTreeTypeEnum treeType, boolean countMember, CompositeOrgBaseService compositeOrgBaseService) {
+        OrgTreeTypeEnum treeType, boolean countMember, CompositeOrgBaseService compositeOrgBaseService) {
         List<OrgTreeNodeVO> roleTreeNodeVOList = new ArrayList<>();
         for (Y9OrgBase y9OrgBase : y9ResourceBaseList) {
             roleTreeNodeVOList.add(convertY9OrgBase(y9OrgBase, treeType, countMember, compositeOrgBaseService));

@@ -1,6 +1,6 @@
 package net.risesoft.init;
 
-import net.risesoft.model.platform.TenantApp;
+import net.risesoft.model.platform.tenant.TenantApp;
 
 /**
  * 租户应用初始化器

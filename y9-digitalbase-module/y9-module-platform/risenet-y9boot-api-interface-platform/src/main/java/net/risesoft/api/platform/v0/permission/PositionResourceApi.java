@@ -8,8 +8,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.enums.platform.AuthorityEnum;
-import net.risesoft.model.platform.Resource;
+import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.model.platform.resource.Resource;
 
 /**
  * 岗位资源权限组件

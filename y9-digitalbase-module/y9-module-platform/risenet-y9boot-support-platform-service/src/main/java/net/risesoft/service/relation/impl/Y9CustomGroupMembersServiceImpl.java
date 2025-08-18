@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9Person;
+import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.relation.Y9CustomGroupMember;
-import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.relation.Y9CustomGroupMembersManager;

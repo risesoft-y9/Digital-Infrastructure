@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.entity.Y9Position;
+import net.risesoft.entity.org.Y9Position;
 
 /**
  * Y9Position 导出 JSON 模型

@@ -8,11 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.Y9OrgBaseDeleted;
+import net.risesoft.entity.org.Y9OrgBase;
+import net.risesoft.entity.org.Y9OrgBaseDeleted;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.model.user.UserInfo;
-import net.risesoft.repository.Y9OrgBaseDeletedRepository;
+import net.risesoft.repository.org.Y9OrgBaseDeletedRepository;
 import net.risesoft.service.org.Y9OrgBaseDeletedService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;

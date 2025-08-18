@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
-import net.risesoft.entity.Y9Job;
+import net.risesoft.entity.org.Y9Job;
 
 /**
  * @author sdb

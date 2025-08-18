@@ -1,23 +1,23 @@
 package net.risesoft.persistence;
 
 import net.risesoft.enums.FileStoreTypeEnum;
-import net.risesoft.enums.platform.AppOpenTypeEnum;
-import net.risesoft.enums.platform.AppTypeEnum;
-import net.risesoft.enums.platform.AuthorityEnum;
-import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
-import net.risesoft.enums.platform.DataCatalogTypeEnum;
 import net.risesoft.enums.platform.DataSourceTypeEnum;
-import net.risesoft.enums.platform.DepartmentPropCategoryEnum;
-import net.risesoft.enums.platform.GroupTypeEnum;
-import net.risesoft.enums.platform.ManagerLevelEnum;
-import net.risesoft.enums.platform.MaritalStatusEnum;
-import net.risesoft.enums.platform.OperationDisplayTypeEnum;
-import net.risesoft.enums.platform.OrgTypeEnum;
-import net.risesoft.enums.platform.PersonTypeEnum;
-import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.enums.platform.RoleTypeEnum;
-import net.risesoft.enums.platform.SexEnum;
 import net.risesoft.enums.platform.SqlFileTypeEnum;
+import net.risesoft.enums.platform.org.DepartmentPropCategoryEnum;
+import net.risesoft.enums.platform.org.GroupTypeEnum;
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
+import net.risesoft.enums.platform.org.MaritalStatusEnum;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
+import net.risesoft.enums.platform.org.PersonTypeEnum;
+import net.risesoft.enums.platform.org.SexEnum;
+import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.enums.platform.permission.AuthorizationPrincipalTypeEnum;
+import net.risesoft.enums.platform.resource.AppOpenTypeEnum;
+import net.risesoft.enums.platform.resource.AppTypeEnum;
+import net.risesoft.enums.platform.resource.DataCatalogTypeEnum;
+import net.risesoft.enums.platform.resource.OperationDisplayTypeEnum;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 
 /**
  * @author shidaobang

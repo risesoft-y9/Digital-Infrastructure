@@ -9,18 +9,18 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9Position;
-import net.risesoft.enums.platform.AuthorityEnum;
-import net.risesoft.model.platform.PersonIconItem;
+import net.risesoft.entity.org.Y9OrgBase;
+import net.risesoft.entity.org.Y9Person;
+import net.risesoft.entity.org.Y9Position;
+import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.model.platform.permission.PersonIconItem;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
-import net.risesoft.service.identity.IdentityResourceCalculator;
-import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
-import net.risesoft.service.identity.Y9PositionToResourceAndAuthorityService;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.permission.PersonIconService;
+import net.risesoft.service.permission.cache.IdentityResourceCalculator;
+import net.risesoft.service.permission.cache.Y9PersonToResourceAndAuthorityService;
+import net.risesoft.service.permission.cache.Y9PositionToResourceAndAuthorityService;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.service.resource.Y9AppService;
 

@@ -3,7 +3,7 @@ package net.risesoft.y9public.manager.resource;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9DataCatalog;
 import net.risesoft.y9public.entity.resource.Y9Menu;

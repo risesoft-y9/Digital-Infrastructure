@@ -3,7 +3,7 @@ package net.risesoft.service.org;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.entity.Y9Group;
+import net.risesoft.entity.org.Y9Group;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**

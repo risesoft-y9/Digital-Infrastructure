@@ -10,12 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.entity.Y9Job;
-import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9Position;
+import net.risesoft.entity.org.Y9Job;
+import net.risesoft.entity.org.Y9OrgBase;
+import net.risesoft.entity.org.Y9Person;
+import net.risesoft.entity.org.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
-import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9JobService;
 import net.risesoft.service.org.Y9PositionService;

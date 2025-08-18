@@ -6,11 +6,11 @@ import java.util.Arrays;
 import org.springframework.aop.MethodBeforeAdvice;
 import org.springframework.core.annotation.AnnotationUtils;
 
-import net.risesoft.api.platform.permission.PersonResourceApi;
-import net.risesoft.api.platform.permission.PositionResourceApi;
+import net.risesoft.api.platform.permission.cache.PersonResourceApi;
+import net.risesoft.api.platform.permission.cache.PositionResourceApi;
 import net.risesoft.enums.LogicalEnum;
-import net.risesoft.enums.platform.AuthorityEnum;
-import net.risesoft.enums.platform.IdentityTypeEnum;
+import net.risesoft.enums.platform.org.IdentityTypeEnum;
+import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.permission.annotation.HasAuthorities;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -101,13 +101,17 @@ public class HasAuthoritiesAdvice implements MethodBeforeAdvice {
     }
 
     private boolean hasPersonPermission(String customId, AuthorityEnum authority) {
-        return personResourceApi.hasPermissionByCustomId(Y9LoginUserHolder.getTenantId(),
-            Y9LoginUserHolder.getPersonId(), customId, authority).getData();
+        return personResourceApi
+            .hasPermissionByCustomId(Y9LoginUserHolder.getTenantId(), Y9LoginUserHolder.getPersonId(), customId,
+                authority)
+            .getData();
     }
 
     private boolean hasPositionPermission(String customId, AuthorityEnum authority) {
-        return positionResourceApi.hasPermissionByCustomId(Y9LoginUserHolder.getTenantId(),
-            Y9LoginUserHolder.getPositionId(), customId, authority).getData();
+        return positionResourceApi
+            .hasPermissionByCustomId(Y9LoginUserHolder.getTenantId(), Y9LoginUserHolder.getPositionId(), customId,
+                authority)
+            .getData();
     }
 
 }

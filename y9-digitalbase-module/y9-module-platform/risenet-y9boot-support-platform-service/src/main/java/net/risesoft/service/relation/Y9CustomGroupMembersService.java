@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
-import net.risesoft.entity.Y9Person;
+import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.relation.Y9CustomGroupMember;
-import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.pojo.Y9PageQuery;
 
 /**

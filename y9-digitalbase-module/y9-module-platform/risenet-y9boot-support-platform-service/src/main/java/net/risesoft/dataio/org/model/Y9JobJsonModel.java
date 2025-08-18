@@ -3,7 +3,7 @@ package net.risesoft.dataio.org.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.entity.Y9Job;
+import net.risesoft.entity.org.Y9Job;
 
 /**
  * Y9Job 导出 JSON 模型

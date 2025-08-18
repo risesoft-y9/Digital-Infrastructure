@@ -3,9 +3,9 @@ package com.example;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.risesoft.model.platform.Group;
-import net.risesoft.model.platform.PersonsGroups;
 import net.risesoft.model.platform.SyncOrgUnits;
+import net.risesoft.model.platform.org.Group;
+import net.risesoft.model.platform.org.PersonsGroups;
 
 /**
  * 用户组同步
@@ -57,8 +57,10 @@ public class GroupUtil {
         }
 
         // 递归，获取用户组中的人员，保存用户组人员绑定关系
-        List<PersonsGroups> pgList = syncOrgUnits.getPersonsGroups().stream()
-            .filter(pg -> pg.getGroupId().equals(syncId)).collect(Collectors.toList());
+        List<PersonsGroups> pgList = syncOrgUnits.getPersonsGroups()
+            .stream()
+            .filter(pg -> pg.getGroupId().equals(syncId))
+            .collect(Collectors.toList());
         for (PersonsGroups pg : pgList) {
             PersonsGroupsUtil.addPersonsGroup(pg);
         }

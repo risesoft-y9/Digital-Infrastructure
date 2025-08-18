@@ -3,8 +3,8 @@ package net.risesoft.service.org;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.entity.Y9DepartmentProp;
-import net.risesoft.enums.platform.DepartmentPropCategoryEnum;
+import net.risesoft.entity.org.Y9DepartmentProp;
+import net.risesoft.enums.platform.org.DepartmentPropCategoryEnum;
 
 /**
  * @author dingzhaojun

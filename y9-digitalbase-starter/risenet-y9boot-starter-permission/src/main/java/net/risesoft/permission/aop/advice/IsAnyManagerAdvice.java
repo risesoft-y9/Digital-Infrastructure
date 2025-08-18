@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.aop.MethodBeforeAdvice;
 import org.springframework.core.annotation.AnnotationUtils;
 
-import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.y9.Y9LoginUserHolder;
