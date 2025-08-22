@@ -420,7 +420,7 @@
                         <skip>false</skip>
                         <from>
                             <!--<image>eclipse-temurin:11-jre</image>-->
-                            <image>docker-internal.youshengyun.com/tomcat:9.0.107-jdk11-temurin</image>
+                            <image>docker-internal.youshengyun.com/proxy/tomcat:9.0.107-jdk11-temurin</image>
                             <platforms>
                                 <platform>
                                     <architecture>amd64</architecture>
@@ -436,7 +436,7 @@
                             <appRoot>/usr/local/tomcat/webapps/${project.build.finalName}</appRoot>
                         </container>
                         <to>
-                            <image>docker-registry-internal.youshengyun.com/${project.artifactId}</image>
+                            <image>docker-internal.youshengyun.com/main/${project.artifactId}</image>
                             <tags>
                                 <tag>${project.version}</tag>
                                 <tag>v9.6.x</tag>
