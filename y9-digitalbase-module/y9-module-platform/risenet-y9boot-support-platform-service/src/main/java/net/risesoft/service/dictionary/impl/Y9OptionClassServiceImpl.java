@@ -17,6 +17,8 @@ import net.risesoft.repository.dictionary.Y9OptionClassRepository;
 import net.risesoft.service.dictionary.Y9OptionClassService;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
+import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 
 /**
@@ -78,6 +80,27 @@ public class Y9OptionClassServiceImpl implements Y9OptionClassService {
     @Override
     @Transactional(readOnly = false)
     public Y9OptionClass saveOptionClass(Y9OptionClass optionClass) {
+        Optional<Y9OptionClass> y9OptionClassOptional = y9OptionClassRepository.findById(optionClass.getType());
+        if (y9OptionClassOptional.isPresent()) {
+            Y9OptionClass currentOptionClass = y9OptionClassOptional.get();
+            Y9OptionClass originalOptionClass = Y9ModelConvertUtil.convert(currentOptionClass, Y9OptionClass.class);
+            Y9BeanUtil.copyProperties(optionClass, currentOptionClass);
+
+            Y9OptionClass savedOptionClass = y9OptionClassRepository.save(currentOptionClass);
+
+            AuditLogEvent auditLogEvent = AuditLogEvent.builder()
+                .action(AuditLogEnum.DICTIONARY_TYPE_UPDATE.getAction())
+                .description(Y9StringUtil.format(AuditLogEnum.DICTIONARY_TYPE_UPDATE.getDescription(),
+                    savedOptionClass.getName()))
+                .objectId(savedOptionClass.getType())
+                .oldObject(originalOptionClass)
+                .currentObject(savedOptionClass)
+                .build();
+            Y9Context.publishEvent(auditLogEvent);
+
+            return savedOptionClass;
+        }
+
         Y9OptionClass savedOptionClass = y9OptionClassRepository.save(optionClass);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()

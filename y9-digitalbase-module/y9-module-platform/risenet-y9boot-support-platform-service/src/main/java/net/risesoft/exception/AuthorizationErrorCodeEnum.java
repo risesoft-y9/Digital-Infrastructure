@@ -13,9 +13,7 @@ import net.risesoft.consts.ErrorCodeConsts;
  */
 @RequiredArgsConstructor
 public enum AuthorizationErrorCodeEnum implements ErrorCode {
-    /** authorization not found */
     AUTHORIZATION_NOT_FOUND(0, "授权[{}]不存在"),
-    /** 当前资源的授权列表已包含要添加的组织节点 */
     ORG_UNIT_INCLUDED(1, "当前资源的授权列表已包含要添加的组织节点[{}]");
 
     private final int moduleErrorCode;

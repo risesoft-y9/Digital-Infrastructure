@@ -53,7 +53,7 @@
     const data = reactive({
         tableCurrSelectedVal: [], //表格选择的数据
         formData: {
-            // id:"",
+            id: '',
             name: '',
             code: '',
             // tabIndex:"",
