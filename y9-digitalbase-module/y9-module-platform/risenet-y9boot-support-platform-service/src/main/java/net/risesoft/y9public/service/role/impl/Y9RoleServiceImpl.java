@@ -15,14 +15,19 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.enums.AuditLogEnum;
+import net.risesoft.exception.RoleErrorCodeEnum;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.permission.Y9OrgBasesToRolesRepository;
 import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
+import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.manager.resource.Y9AppManager;
+import net.risesoft.y9public.manager.resource.Y9SystemManager;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
 import net.risesoft.y9public.repository.role.Y9RoleRepository;
 import net.risesoft.y9public.service.role.Y9RoleService;
@@ -42,6 +47,8 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     private final Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository;
 
     private final Y9RoleManager y9RoleManager;
+    private final Y9AppManager y9AppManager;
+    private final Y9SystemManager y9SystemManager;
 
     @Transactional(readOnly = false)
     @Override
@@ -152,7 +159,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     @Transactional(readOnly = false)
     public void move(String id, String newParentId) {
         Y9Role currentRole = y9RoleManager.getById(id);
-        Y9Role parentToMove = y9RoleManager.getById(newParentId);
+        String parentName = this.getRoleParent(newParentId);
         Y9Role originalRole = Y9ModelConvertUtil.convert(currentRole, Y9Role.class);
 
         currentRole.setParentId(newParentId);
@@ -161,7 +168,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.ROLE_UPDATE_PARENTID.getAction())
             .description(Y9StringUtil.format(AuditLogEnum.ROLE_UPDATE_PARENTID.getDescription(), savedRole.getName(),
-                parentToMove.getName()))
+                parentName))
             .objectId(id)
             .oldObject(originalRole)
             .currentObject(savedRole)
@@ -169,6 +176,25 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         Y9Context.publishEvent(auditLogEvent);
 
         recursiveUpdateByDn(savedRole);
+    }
+
+    private String getRoleParent(String newParentId) {
+        Optional<Y9Role> y9RoleOptional = y9RoleManager.findById(newParentId);
+        if (y9RoleOptional.isPresent()) {
+            return y9RoleOptional.get().getName();
+        }
+
+        Optional<Y9App> y9AppOptional = y9AppManager.findById(newParentId);
+        if (y9AppOptional.isPresent()) {
+            return y9AppOptional.get().getName();
+        }
+
+        Optional<Y9System> y9SystemOptional = y9SystemManager.findById(newParentId);
+        if (y9SystemOptional.isPresent()) {
+            return y9SystemOptional.get().getName();
+        }
+
+        throw Y9ExceptionUtil.notFoundException(RoleErrorCodeEnum.ROLE_PARENT_NOT_FOUND, newParentId);
     }
 
     @Override

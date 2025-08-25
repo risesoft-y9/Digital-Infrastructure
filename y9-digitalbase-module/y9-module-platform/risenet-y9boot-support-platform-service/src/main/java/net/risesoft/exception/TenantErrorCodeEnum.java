@@ -13,19 +13,12 @@ import net.risesoft.consts.ErrorCodeConsts;
  */
 @RequiredArgsConstructor
 public enum TenantErrorCodeEnum implements ErrorCode {
-    /** 租户不存在 */
     TENANT_NOT_FOUND(0, "租户[{}]不存在"),
-    /** 租户已租用系统 */
     TENANT_SYSTEM_EXISTS(1, "租户[{}]已租用系统[{}]"),
-    /** 租户应用不存在 */
     TENANT_APP_NOT_FOUND(2, "租户应用[{}]不存在"),
-    /** 不能将租户移动到本身或子租户中 */
     MOVE_TO_SUB_TENANT_NOT_PERMITTED(3, "不能将租户移动到本身或子租户中"),
-    /** 名称已被使用 */
     NAME_HAS_BEEN_USED(4, "租户名[{}]已经被使用"),
-    /** 英文名称已被使用 */
     SHORT_NAME_HAS_BEEN_USED(5, "租户英文名[{}]已被使用"),
-    /** 租户系统不存在 */
     TENANT_SYSTEM_NOT_EXISTS(6, "租户系统[{}]不存在"),;
 
     private final int moduleErrorCode;

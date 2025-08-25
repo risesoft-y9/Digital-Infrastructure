@@ -13,9 +13,7 @@ import net.risesoft.consts.ErrorCodeConsts;
  */
 @RequiredArgsConstructor
 public enum SystemErrorCodeEnum implements ErrorCode {
-    /** 系统不存在 */
     SYSTEM_NOT_FOUND(0, "系统[{}]不存在"),
-    /** 系统已存在 */
     SYSTEM_WITH_SPECIFIC_NAME_EXISTS(1, "已存在名称为[{}]的系统");
 
     private final int moduleErrorCode;
