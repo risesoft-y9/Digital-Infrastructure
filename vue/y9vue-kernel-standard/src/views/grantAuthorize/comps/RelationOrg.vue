@@ -55,7 +55,7 @@
 
                         <input autocomplete="new-password" hidden type="password" />
                         <el-input
-                            v-model="currFilters.searchKey"
+                            v-model="searchKey"
                             :placeholder="$t('请搜索')"
                             :size="fontSizeObj.buttonSize"
                             :style="{ fontSize: fontSizeObj.baseFontSize }"
@@ -117,6 +117,9 @@
     //选择tree实例
     const selectTreeRef = ref();
     let selectTreeDefaultCheckedKeys = ref([]);
+
+    const searchKey = ref();
+    let authorityRef = ref(1);
 
     // 变量 对象
     const state = reactive({
@@ -199,7 +202,7 @@
 
                     // 保存操作
                     const params = {
-                        authority: currFilters.value.operationType,
+                        authority: authorityRef.value,
                         resourceId: props.id
                     };
 
@@ -221,11 +224,9 @@
             }
         },
 
-        currFilters: {} as any, //当前过滤值
-
         filtersValueCallBack: (filters) => {
             //过滤回调值
-            currFilters.value = filters;
+            authorityRef.value = filters.authority;
         },
 
         //过滤列表
@@ -240,7 +241,7 @@
                 value: 1,
                 span: settingStore.device === 'mobile' ? 24 : 8,
                 label: computed(() => t('操作权限')),
-                key: 'operationType',
+                key: 'authority',
                 props: {
                     options: [
                         {
@@ -283,8 +284,7 @@
         }
     });
 
-    let { loading, tableOrgConfig, personConfigDialog, treeApiObj, filtersList, currFilters, filtersValueCallBack } =
-        toRefs(state);
+    let { loading, tableOrgConfig, personConfigDialog, treeApiObj, filtersList, filtersValueCallBack } = toRefs(state);
 
     function onRefreshTree() {
         selectTreeRef.value.onRefreshTree();
@@ -313,14 +313,14 @@
     );
 
     watch(
-        () => currFilters.value.operationType,
+        () => authorityRef.value,
         (new_, old_) => {
             getSelectTreeDefaultCheckedKeys();
         }
     );
 
     async function getSelectTreeDefaultCheckedKeys() {
-        let result = await listPrincipalIdByResourceId(props.id, currFilters.value.operationType);
+        let result = await listPrincipalIdByResourceId(props.id, authorityRef.value);
         selectTreeDefaultCheckedKeys.value = result.data;
     }
 

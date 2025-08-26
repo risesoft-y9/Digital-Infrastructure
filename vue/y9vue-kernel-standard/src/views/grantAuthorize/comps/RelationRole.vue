@@ -121,7 +121,7 @@
         // 角色关联 表格 行内表单的 变量
         roleFormLine: {
             roleNodeName: '',
-            operationType: 1
+            authority: 1
         },
         // 角色关联 表格的 配置信息
         tableRoleConfig: {
@@ -191,7 +191,7 @@
                 {
                     type: 'select',
                     value: 1,
-                    key: 'operationType',
+                    key: 'authority',
                     label: computed(() => t('操作权限')),
                     labelWidth: '60px',
                     span: settingStore.device === 'mobile' ? 24 : 5,
@@ -222,7 +222,7 @@
         },
         // 权限 授权 弹框 搜索条件
         formline: {
-            operationType: 1
+            authority: 1
         },
         //选择树过滤
         filtersList: [
@@ -231,7 +231,7 @@
                 value: 1,
                 span: settingStore.device === 'mobile' ? 24 : 12,
                 label: computed(() => t('操作权限')),
-                key: 'operationType',
+                key: 'authority',
                 props: {
                     options: [
                         {
@@ -271,7 +271,7 @@
 
                     // 保存操作
                     const params = {
-                        authority: formline.value.operationType,
+                        authority: formline.value.authority,
                         resourceId: props.id
                     };
                     let result = { success: false, msg: '' };
@@ -332,7 +332,7 @@
             if (new_ && new_ !== old_) {
                 roleFormLine.value = {
                     roleNodeName: '',
-                    operationType: 1
+                    authority: 1
                 };
                 initList();
             }
@@ -340,14 +340,14 @@
     );
 
     watch(
-        () => formline.value.operationType,
+        () => formline.value.authority,
         (new_, old_) => {
             getSelectTreeDefaultCheckedKeys();
         }
     );
 
     async function getSelectTreeDefaultCheckedKeys() {
-        let result = await listPrincipalIdByResourceId(props.id, formline.value.operationType);
+        let result = await listPrincipalIdByResourceId(props.id, formline.value.authority);
         selectTreeDefaultCheckedKeys.value = result.data;
     }
 
@@ -368,7 +368,7 @@
         let result = await getRelationRoleList(
             props.id,
             roleFormLine.value.roleNodeName,
-            roleFormLine.value.operationType
+            roleFormLine.value.authority
         );
         tableRoleConfig.value.tableData = result.data;
     }
