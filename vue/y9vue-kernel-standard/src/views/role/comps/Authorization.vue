@@ -146,7 +146,7 @@
     });
 
     async function getResourceTreeDefaultCheckedKeys() {
-        let result = await listResourceIdByRoleId(props.id, resourceOperationType.value);
+        let result = await listResourceIdByRoleId(props.id, authorityRef.value);
         resourceTreeDefaultCheckedKeys.value = result.data;
     }
 
@@ -294,9 +294,9 @@
     // 资源授权 ref
     const resourceFilterRef = ref(null);
     // 资源授权的 操作权限
-    let resourceOperationType = ref(1);
+    let authorityRef = ref(1);
 
-    watch(resourceOperationType, (current, prev) => {
+    watch(authorityRef, (current, prev) => {
         getResourceTreeDefaultCheckedKeys();
     });
 
@@ -336,7 +336,7 @@
 
                 // 保存操作
                 const params = {
-                    authority: resourceOperationType.value,
+                    authority: authorityRef.value,
                     principalId: props.id,
                     principalType: 0,
                     resourceIds: ids.toString()
@@ -375,7 +375,7 @@
             value: 1,
             span: settingStore.device === 'mobile' ? 24 : 8,
             label: computed(() => t('操作权限')),
-            key: 'operationType',
+            key: 'authority',
             props: {
                 clearable: false,
                 options: [
@@ -401,7 +401,7 @@
     ]);
 
     function sourceFiltersValueCallBack(filters) {
-        resourceOperationType.value = filters.operationType;
+        authorityRef.value = filters.authority;
     }
 
     // 选择树的选择 框
