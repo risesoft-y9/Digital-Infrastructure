@@ -144,14 +144,6 @@ public interface Y9PersonService {
     Y9Person getPersonByLoginNameAndTenantId(String loginName, String tenantId);
 
     /**
-     * 根据手机号码获取人员
-     *
-     * @param mobile 手机号码
-     * @return {@link Y9Person}
-     */
-    Y9Person getPersonByMobile(String mobile);
-
-    /**
      * 判断用户名是否可用
      *
      * @param personId 人员id

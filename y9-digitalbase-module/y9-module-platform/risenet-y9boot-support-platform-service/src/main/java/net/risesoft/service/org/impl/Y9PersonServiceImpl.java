@@ -245,21 +245,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    public Y9Person getPersonByMobile(String mobile) {
-        List<Y9Person> personList = new ArrayList<>();
-        try {
-            personList = y9PersonRepository.findByMobileAndOriginal(mobile, Boolean.TRUE);
-        } catch (Exception e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-
-        if (personList.isEmpty()) {
-            return null;
-        }
-        return personList.get(0);
-    }
-
-    @Override
     public boolean isLoginNameAvailable(String personId, final String loginName) {
         Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByLoginNameAndOriginalTrue(loginName);
 
@@ -648,7 +633,12 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         if (Y9OrgUtil.isCurrentOrAncestorChanged(originOrgBase, updatedOrgBase)) {
             List<Y9Person> personList = y9PersonRepository.findByParentIdOrderByTabIndex(updatedOrgBase.getId());
             for (Y9Person person : personList) {
-                this.saveOrUpdate(person, null);
+                y9PersonManager.update(person);
+            }
+        } else if (Y9OrgUtil.isTabIndexChanged(originOrgBase, updatedOrgBase)) {
+            List<Y9Person> personList = compositeOrgBaseManager.listAllDescendantPersons(updatedOrgBase.getId());
+            for (Y9Person y9Person : personList) {
+                y9PersonManager.update(y9Person);
             }
         }
     }
