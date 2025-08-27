@@ -55,6 +55,17 @@ public class Y9OrgUtil {
     }
 
     /**
+     * 判断组织节点排序字段是否有修改
+     *
+     * @param originOrgBase 原始组织节点对象
+     * @param updateOrgBase 更新后组织节点对象
+     * @return boolean
+     */
+    public static boolean isTabIndexChanged(Y9OrgBase originOrgBase, Y9OrgBase updateOrgBase) {
+        return !Objects.equals(originOrgBase.getTabIndex(), updateOrgBase.getTabIndex());
+    }
+
+    /**
      * 组织节点a是否为组织节点b的祖先节点
      *
      * @param a 组织节点a
@@ -133,8 +144,11 @@ public class Y9OrgUtil {
             return null;
         }
 
-        List<String> nameList = Arrays.asList(dn.split(OrgLevelConsts.SEPARATOR)).stream().map(s -> s
-            .replace(OrgLevelConsts.ORGANIZATION, "").replace(OrgLevelConsts.UNIT, "").replace(OrgLevelConsts.CN, ""))
+        List<String> nameList = Arrays.asList(dn.split(OrgLevelConsts.SEPARATOR))
+            .stream()
+            .map(s -> s.replace(OrgLevelConsts.ORGANIZATION, "")
+                .replace(OrgLevelConsts.UNIT, "")
+                .replace(OrgLevelConsts.CN, ""))
             .collect(Collectors.toList());
 
         Collections.reverse(nameList);

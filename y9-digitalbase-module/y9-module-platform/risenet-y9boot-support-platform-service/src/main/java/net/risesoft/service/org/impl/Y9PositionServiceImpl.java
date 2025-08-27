@@ -357,7 +357,12 @@ public class Y9PositionServiceImpl implements Y9PositionService {
             List<Y9Position> positionList =
                 y9PositionRepository.findByParentIdOrderByTabIndexAsc(updatedOrgBase.getId());
             for (Y9Position position : positionList) {
-                this.saveOrUpdate(position);
+                y9PositionManager.update(position);
+            }
+        } else if (Y9OrgUtil.isTabIndexChanged(originOrgBase, updatedOrgBase)) {
+            List<Y9Position> positionList = compositeOrgBaseManager.listAllDescendantPositions(updatedOrgBase.getId());
+            for (Y9Position position : positionList) {
+                y9PositionManager.update(position);
             }
         }
     }

@@ -278,7 +278,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         if (Y9OrgUtil.isCurrentOrAncestorChanged(originOrgBase, updatedOrgBase)) {
             List<Y9Group> groupList = y9GroupRepository.findByParentIdOrderByTabIndexAsc(updatedOrgBase.getId());
             for (Y9Group group : groupList) {
-                this.saveOrUpdate(group);
+                y9GroupManager.update(group);
             }
         }
     }
