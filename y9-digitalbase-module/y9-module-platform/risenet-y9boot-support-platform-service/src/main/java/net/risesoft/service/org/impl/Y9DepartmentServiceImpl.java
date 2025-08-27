@@ -299,28 +299,6 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
     @EventListener
     @Transactional(readOnly = false)
-    public void onParentDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
-        Y9Department parentDepartment = event.getEntity();
-        // 删除部门时其下部门也要删除
-        removeByParentId(parentDepartment.getId());
-    }
-
-    @EventListener
-    @Transactional(readOnly = false)
-    public void onParentDepartmentUpdated(Y9EntityUpdatedEvent<Y9Department> event) {
-        Y9Department originDepartment = event.getOriginEntity();
-        Y9Department updatedDepartment = event.getUpdatedEntity();
-
-        if (Y9OrgUtil.isCurrentOrAncestorChanged(originDepartment, updatedDepartment)) {
-            List<Y9Department> deptList = y9DepartmentRepository.findByParentId(updatedDepartment.getId());
-            for (Y9Department dept : deptList) {
-                this.saveOrUpdate(dept);
-            }
-        }
-    }
-
-    @EventListener
-    @Transactional(readOnly = false)
     public void onParentOrganizationDeleted(Y9EntityDeletedEvent<Y9Organization> event) {
         Y9Organization y9Organization = event.getEntity();
         // 删除组织时其下部门也要删除
@@ -329,14 +307,22 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
     @EventListener
     @Transactional(readOnly = false)
-    public void onParentOrganizationUpdated(Y9EntityUpdatedEvent<Y9Organization> event) {
-        Y9Organization originOrganization = event.getOriginEntity();
-        Y9Organization updatedOrganization = event.getUpdatedEntity();
+    public void onParentDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
+        Y9Department parentDepartment = event.getEntity();
+        // 删除部门时其下部门也要删除
+        removeByParentId(parentDepartment.getId());
+    }
 
-        if (Y9OrgUtil.isRenamed(originOrganization, updatedOrganization)) {
-            List<Y9Department> deptList = y9DepartmentRepository.findByParentId(updatedOrganization.getId());
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onParentUpdated(Y9EntityUpdatedEvent<? extends Y9OrgBase> event) {
+        Y9OrgBase originOrgBase = event.getOriginEntity();
+        Y9OrgBase updatedOrgBase = event.getUpdatedEntity();
+
+        if (Y9OrgUtil.isCurrentOrAncestorChanged(originOrgBase, updatedOrgBase)) {
+            List<Y9Department> deptList = y9DepartmentRepository.findByParentId(updatedOrgBase.getId());
             for (Y9Department dept : deptList) {
-                this.saveOrUpdate(dept);
+                y9DepartmentManager.update(dept);
             }
         }
     }
