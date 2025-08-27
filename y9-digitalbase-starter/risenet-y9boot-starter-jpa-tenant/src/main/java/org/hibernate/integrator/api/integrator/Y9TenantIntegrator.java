@@ -16,7 +16,7 @@ public class Y9TenantIntegrator implements org.hibernate.integrator.spi.Integrat
     public void integrate(Metadata metadata, SessionFactoryImplementor sessionFactory,
         SessionFactoryServiceRegistry serviceRegistry) {
         Collection<PersistentClass> classes = metadata.getEntityBindings();
-        if (classes.size() > 0) {
+        if (!classes.isEmpty()) {
             String name = (String)sessionFactory.getProperties().get("hibernate.persistenceUnitName");
             if ("y9Tenant".equals(name)) {
                 Y9TenantHibernateInfoHolder.setMetadata(metadata);
