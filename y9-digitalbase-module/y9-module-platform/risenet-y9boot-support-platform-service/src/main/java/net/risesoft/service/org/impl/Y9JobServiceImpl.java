@@ -101,7 +101,7 @@ public class Y9JobServiceImpl implements Y9JobService {
 
     @Override
     public Optional<Y9Job> findById(String id) {
-        return y9JobManager.findById(id);
+        return y9JobManager.findByIdFromCache(id);
     }
 
     @Override
@@ -112,7 +112,7 @@ public class Y9JobServiceImpl implements Y9JobService {
             y9PersonsToPositionsList.stream().map(Y9PersonsToPositions::getPositionId).collect(Collectors.toList());
         List<Y9Job> y9JobList = new ArrayList<>();
         for (String positionId : positionIdList) {
-            Y9Position y9Position = y9PositionManager.getById(positionId);
+            Y9Position y9Position = y9PositionManager.getByIdFromCache(positionId);
             y9JobList.add(this.getById(y9Position.getJobId()));
         }
         return y9JobList;
@@ -120,7 +120,7 @@ public class Y9JobServiceImpl implements Y9JobService {
 
     @Override
     public Y9Job getById(String id) {
-        return y9JobManager.getById(id);
+        return y9JobManager.getByIdFromCache(id);
     }
 
     @Override
@@ -160,7 +160,7 @@ public class Y9JobServiceImpl implements Y9JobService {
 
         if (StringUtils.isNotBlank(job.getId())) {
             // 修改职位
-            Optional<Y9Job> y9JobOptional = y9JobManager.findByIdNotCache(job.getId());
+            Optional<Y9Job> y9JobOptional = y9JobManager.findById(job.getId());
             if (y9JobOptional.isPresent()) {
                 Y9Job originalJob = Y9ModelConvertUtil.convert(y9JobOptional.get(), Y9Job.class);
                 Y9Job savedJob = y9JobManager.update(job);

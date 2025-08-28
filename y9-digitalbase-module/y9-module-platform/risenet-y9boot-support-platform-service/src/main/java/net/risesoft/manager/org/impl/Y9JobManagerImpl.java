@@ -48,26 +48,25 @@ public class Y9JobManagerImpl implements Y9JobManager {
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Optional<Y9Job> findByIdFromCache(String id) {
+        return y9JobRepository.findById(id);
+    }
+
+    @Override
     public Optional<Y9Job> findById(String id) {
         return y9JobRepository.findById(id);
     }
 
     @Override
-    public Optional<Y9Job> findByIdNotCache(String id) {
-        return y9JobRepository.findById(id);
-    }
-
-    @Override
-    public Y9Job getByIdNotCache(String id) {
+    public Y9Job getById(String id) {
         return y9JobRepository.findById(id)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.JOB_NOT_FOUND, id));
     }
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Job getById(String id) {
-        return y9JobRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.JOB_NOT_FOUND, id));
+    public Y9Job getByIdFromCache(String id) {
+        return this.getById(id);
     }
 
     @Override

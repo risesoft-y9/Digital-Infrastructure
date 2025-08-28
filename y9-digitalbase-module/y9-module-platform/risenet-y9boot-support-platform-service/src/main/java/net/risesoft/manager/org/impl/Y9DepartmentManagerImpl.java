@@ -55,32 +55,25 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Optional<Y9Department> findByIdFromCache(String id) {
+        return y9DepartmentRepository.findById(id);
+    }
+
+    @Override
     public Optional<Y9Department> findById(String id) {
         return y9DepartmentRepository.findById(id);
     }
 
     @Override
-    public Optional<Y9Department> findByIdNotCache(String id) {
-        return y9DepartmentRepository.findById(id);
-    }
-
-    @Override
-    public Y9Department getByIdNotCache(String id) {
+    public Y9Department getById(String id) {
         return y9DepartmentRepository.findById(id)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.DEPARTMENT_NOT_FOUND, id));
     }
 
     @Override
     @Cacheable(key = "#id", condition = "#id != null", unless = "#result == null")
-    public Y9Department getById(String id) {
-        return y9DepartmentRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.DEPARTMENT_NOT_FOUND, id));
-    }
-
-    @CacheEvict(key = "#y9Department.id")
-    @Transactional(readOnly = false)
-    public Y9Department save(Y9Department y9Department) {
-        return y9DepartmentRepository.save(y9Department);
+    public Y9Department getByIdFromCache(String id) {
+        return this.getById(id);
     }
 
     @Transactional(readOnly = false)
@@ -100,7 +93,7 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
         dept.setParentId(parent.getId());
         dept.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), dept.getId()));
 
-        final Y9Department savedDepartment = this.save(dept);
+        final Y9Department savedDepartment = y9DepartmentRepository.save(dept);
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedDepartment));
 
@@ -109,6 +102,7 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
 
     @Transactional(readOnly = false)
     @Override
+    @CacheEvict(key = "#dept.id")
     public Y9Department update(Y9Department dept) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(dept.getParentId());
         Y9Department currentDepartment = this.getById(dept.getId());
@@ -118,7 +112,7 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
         currentDepartment.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.DEPARTMENT, dept.getName(), parent.getDn()));
         currentDepartment.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), dept.getId()));
 
-        final Y9Department savedDepartment = this.save(currentDepartment);
+        final Y9Department savedDepartment = y9DepartmentRepository.save(currentDepartment);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalDepartment, savedDepartment));
 

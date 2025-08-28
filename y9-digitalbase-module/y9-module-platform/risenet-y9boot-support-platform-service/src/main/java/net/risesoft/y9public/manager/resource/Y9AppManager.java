@@ -26,7 +26,11 @@ public interface Y9AppManager {
 
     Optional<Y9App> findById(String id);
 
+    Optional<Y9App> findByIdFromCache(String id);
+
     Y9App getById(String id);
+
+    Y9App getByIdFromCache(String id);
 
     Y9App insert(Y9App y9App);
 

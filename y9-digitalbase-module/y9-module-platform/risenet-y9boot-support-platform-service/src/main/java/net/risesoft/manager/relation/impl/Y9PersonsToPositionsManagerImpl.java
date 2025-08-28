@@ -62,8 +62,8 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
     @Override
     @Transactional(readOnly = false)
     public void delete(String positionId, String personId) {
-        Y9Position y9Position = y9PositionManager.getById(positionId);
-        Y9Person y9Person = y9PersonManager.getById(personId);
+        Y9Position y9Position = y9PositionManager.getByIdFromCache(positionId);
+        Y9Person y9Person = y9PersonManager.getByIdFromCache(personId);
 
         Optional<Y9PersonsToPositions> optionalY9PersonsToPositions =
             y9PersonsToPositionsRepository.findByPositionIdAndPersonId(positionId, personId);
@@ -126,8 +126,8 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
     @Override
     @Transactional(readOnly = false)
     public Y9PersonsToPositions save(String personId, String positionId) {
-        Y9Position y9Position = y9PositionManager.getById(positionId);
-        Y9Person y9Person = y9PersonManager.getById(personId);
+        Y9Position y9Position = y9PositionManager.getByIdFromCache(positionId);
+        Y9Person y9Person = y9PersonManager.getByIdFromCache(personId);
 
         // 校验岗位容量是否已满
         Y9Assert.lessThanOrEqualTo(countByPositionId(positionId) + 1, y9Position.getCapacity(),
@@ -188,7 +188,7 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     private void checkPositionExist(String positionId) {
-        y9PositionManager.getById(positionId);
+        y9PositionManager.getByIdFromCache(positionId);
     }
 
     /**
@@ -198,7 +198,7 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     private void checkPersonExist(String personId) {
-        y9PersonManager.getById(personId);
+        y9PersonManager.getByIdFromCache(personId);
     }
 
     public Integer countByPositionId(String positionId) {

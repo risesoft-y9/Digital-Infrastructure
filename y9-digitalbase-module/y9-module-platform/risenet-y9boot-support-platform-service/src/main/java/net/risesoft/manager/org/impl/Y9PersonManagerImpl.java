@@ -67,26 +67,25 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Optional<Y9Person> findByIdFromCache(String id) {
+        return y9PersonRepository.findById(id);
+    }
+
+    @Override
     public Optional<Y9Person> findById(String id) {
         return y9PersonRepository.findById(id);
     }
 
     @Override
-    public Optional<Y9Person> findByIdNotCache(String id) {
-        return y9PersonRepository.findById(id);
-    }
-
-    @Override
-    public Y9Person getByIdNotCache(String id) {
+    public Y9Person getById(String id) {
         return y9PersonRepository.findById(id)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.PERSON_NOT_FOUND, id));
     }
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Person getById(String id) {
-        return y9PersonRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.PERSON_NOT_FOUND, id));
+    public Y9Person getByIdFromCache(String id) {
+        return this.getById(id);
     }
 
     @Override
@@ -95,7 +94,7 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
         List<String> personIdList = pgs.stream().map(Y9PersonsToGroups::getPersonId).collect(Collectors.toList());
         List<Y9Person> personList = new ArrayList<>();
         for (String personId : personIdList) {
-            Y9Person y9Person = getById(personId);
+            Y9Person y9Person = getByIdFromCache(personId);
             if (disabled == null) {
                 personList.add(y9Person);
             } else if (disabled.equals(y9Person.getDisabled())) {
@@ -120,7 +119,7 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
         List<String> personIdList = pps.stream().map(Y9PersonsToPositions::getPersonId).collect(Collectors.toList());
         List<Y9Person> personList = new ArrayList<>();
         for (String personId : personIdList) {
-            Y9Person y9Person = getById(personId);
+            Y9Person y9Person = getByIdFromCache(personId);
             if (disabled == null) {
                 personList.add(y9Person);
             } else if (disabled.equals(y9Person.getDisabled())) {
@@ -180,7 +179,7 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
     @Override
     public Y9Person update(Y9Person person) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
-        Y9Person currentPerson = this.getByIdNotCache(person.getId());
+        Y9Person currentPerson = this.getById(person.getId());
         Y9Person originPerson = Y9ModelConvertUtil.convert(currentPerson, Y9Person.class);
 
         Y9BeanUtil.copyProperties(person, currentPerson, "tenantId");

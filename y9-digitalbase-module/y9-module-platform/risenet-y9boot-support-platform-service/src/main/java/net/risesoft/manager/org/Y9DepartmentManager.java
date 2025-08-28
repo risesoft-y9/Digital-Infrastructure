@@ -16,7 +16,7 @@ public interface Y9DepartmentManager {
 
     void delete(Y9Department y9Department);
 
-    Optional<Y9Department> findById(String id);
+    Optional<Y9Department> findByIdFromCache(String id);
 
     /**
      * 根据id，获取部门信息（直接读取数据库）
@@ -24,7 +24,7 @@ public interface Y9DepartmentManager {
      * @param id 部门id
      * @return {@code Optional<Y9Department>}
      */
-    Optional<Y9Department> findByIdNotCache(String id);
+    Optional<Y9Department> findById(String id);
 
     /**
      * 根据id，获取部门信息
@@ -33,7 +33,7 @@ public interface Y9DepartmentManager {
      * @return {@link Y9Department }
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
-    Y9Department getById(String id);
+    Y9Department getByIdFromCache(String id);
 
     /**
      * 根据id，获取部门信息（直接读取数据库）
@@ -41,7 +41,7 @@ public interface Y9DepartmentManager {
      * @param id 部门id
      * @return {@link Y9Department }
      */
-    Y9Department getByIdNotCache(String id);
+    Y9Department getById(String id);
 
     Y9Department insert(Y9Department dept);
 

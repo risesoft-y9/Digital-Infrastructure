@@ -84,7 +84,7 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
                         .addAll(y9PersonManager.listByGroupId(y9CustomGroupMember.getMemberId(), Boolean.FALSE));
                     break;
                 case PERSON:
-                    orgPersonList.add(y9PersonManager.getById(y9CustomGroupMember.getMemberId()));
+                    orgPersonList.add(y9PersonManager.getByIdFromCache(y9CustomGroupMember.getMemberId()));
                     break;
                 default:
             }

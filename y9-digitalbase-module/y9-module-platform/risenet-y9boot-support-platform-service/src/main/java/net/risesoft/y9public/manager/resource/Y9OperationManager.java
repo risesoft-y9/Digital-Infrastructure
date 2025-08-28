@@ -16,7 +16,11 @@ public interface Y9OperationManager {
 
     Optional<Y9Operation> findById(String id);
 
+    Optional<Y9Operation> findByIdFromCache(String id);
+
     Y9Operation getById(String id);
+
+    Y9Operation getByIdFromCache(String id);
 
     Y9Operation insert(Y9Operation y9Operation);
 

@@ -53,26 +53,25 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null")
+    public Optional<Y9Group> findByIdFromCache(String id) {
+        return y9GroupRepository.findById(id);
+    }
+
+    @Override
     public Optional<Y9Group> findById(String id) {
         return y9GroupRepository.findById(id);
     }
 
     @Override
-    public Optional<Y9Group> findByIdNotCache(String id) {
-        return y9GroupRepository.findById(id);
-    }
-
-    @Override
-    public Y9Group getByIdNotCache(String id) {
+    public Y9Group getById(String id) {
         return y9GroupRepository.findById(id)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.GROUP_NOT_FOUND, id));
     }
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Group getById(String id) {
-        return y9GroupRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.GROUP_NOT_FOUND, id));
+    public Y9Group getByIdFromCache(String id) {
+        return this.getById(id);
     }
 
     @CacheEvict(key = "#y9Group.id")

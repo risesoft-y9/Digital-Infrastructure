@@ -68,7 +68,7 @@ public class Y9AppManagerImpl implements Y9AppManager {
     @Transactional(readOnly = false)
     @CacheEvict(key = "#id")
     public void delete(String id) {
-        Y9App y9App = this.getById(id);
+        Y9App y9App = this.getByIdFromCache(id);
         y9AppRepository.delete(y9App);
 
         // 删除租户与应用资源关联的数据
@@ -98,7 +98,17 @@ public class Y9AppManagerImpl implements Y9AppManager {
     }
 
     @Override
+    public Optional<Y9App> findById(String id) {
+        return y9AppRepository.findById(id);
+    }
+
+    @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Optional<Y9App> findByIdFromCache(String id) {
+        return y9AppRepository.findById(id);
+    }
+
+    @Override
     public Y9App getById(String id) {
         return y9AppRepository.findById(id)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.APP_NOT_FOUND, id));
@@ -106,8 +116,8 @@ public class Y9AppManagerImpl implements Y9AppManager {
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Optional<Y9App> findById(String id) {
-        return y9AppRepository.findById(id);
+    public Y9App getByIdFromCache(String id) {
+        return this.getById(id);
     }
 
     @Transactional(readOnly = false)

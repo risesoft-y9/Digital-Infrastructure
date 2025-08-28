@@ -187,8 +187,8 @@ public class OrgEventListener {
     @TransactionalEventListener
     public void onY9PersonsToGroupsCreated(Y9EntityCreatedEvent<Y9PersonsToGroups> event) {
         Y9PersonsToGroups y9PersonsToGroups = event.getEntity();
-        Y9Person person = y9PersonManager.getById(y9PersonsToGroups.getPersonId());
-        Y9Group group = y9GroupManager.getById(y9PersonsToGroups.getGroupId());
+        Y9Person person = y9PersonManager.getByIdFromCache(y9PersonsToGroups.getPersonId());
+        Y9Group group = y9GroupManager.getByIdFromCache(y9PersonsToGroups.getGroupId());
         String eventName = "用户组添加人员";
         String eventDescription = Y9StringUtil.format("用户组[{}]添加人员[{}]", group.getName(), person.getName());
         String eventType = Y9OrgEventTypeConst.GROUP_ADD_PERSON;
@@ -207,8 +207,8 @@ public class OrgEventListener {
     public void onY9PersonsToGroupsDeleted(Y9EntityDeletedEvent<Y9PersonsToGroups> event) {
         Y9PersonsToGroups y9PersonsToGroups = event.getEntity();
 
-        Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(y9PersonsToGroups.getPersonId());
-        Optional<Y9Group> y9GroupOptional = y9GroupManager.findById(y9PersonsToGroups.getGroupId());
+        Optional<Y9Person> y9PersonOptional = y9PersonManager.findByIdFromCache(y9PersonsToGroups.getPersonId());
+        Optional<Y9Group> y9GroupOptional = y9GroupManager.findByIdFromCache(y9PersonsToGroups.getGroupId());
         if (y9GroupOptional.isPresent() && y9PersonOptional.isPresent()) {
             Y9Person person = y9PersonOptional.get();
             Y9Group group = y9GroupOptional.get();
@@ -231,8 +231,8 @@ public class OrgEventListener {
         Y9PersonsToGroups originPersonToGroups = event.getOriginEntity();
         Y9PersonsToGroups updatedPersonToGroups = event.getUpdatedEntity();
 
-        Y9Person person = y9PersonManager.getById(updatedPersonToGroups.getPersonId());
-        Y9Group group = y9GroupManager.getById(updatedPersonToGroups.getGroupId());
+        Y9Person person = y9PersonManager.getByIdFromCache(updatedPersonToGroups.getPersonId());
+        Y9Group group = y9GroupManager.getByIdFromCache(updatedPersonToGroups.getGroupId());
 
         String eventName;
         String eventDescription;
@@ -260,8 +260,8 @@ public class OrgEventListener {
     public void onY9PersonsToPositionsCreated(Y9EntityCreatedEvent<Y9PersonsToPositions> event) {
         Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
 
-        Y9Person person = y9PersonManager.getById(y9PersonsToPositions.getPersonId());
-        Y9Position position = y9PositionManager.getById(y9PersonsToPositions.getPositionId());
+        Y9Person person = y9PersonManager.getByIdFromCache(y9PersonsToPositions.getPersonId());
+        Y9Position position = y9PositionManager.getByIdFromCache(y9PersonsToPositions.getPositionId());
         String eventName = "岗位添加人员";
         String eventDescription = Y9StringUtil.format("岗位[{}]添加人员[{}]", position.getName(), person.getName());
         String eventType = Y9OrgEventTypeConst.POSITION_ADD_PERSON;
@@ -280,8 +280,9 @@ public class OrgEventListener {
     public void onY9PersonsToPositionsDeleted(Y9EntityDeletedEvent<Y9PersonsToPositions> event) {
         Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
 
-        Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(y9PersonsToPositions.getPersonId());
-        Optional<Y9Position> y9PositionOptional = y9PositionManager.findById(y9PersonsToPositions.getPositionId());
+        Optional<Y9Person> y9PersonOptional = y9PersonManager.findByIdFromCache(y9PersonsToPositions.getPersonId());
+        Optional<Y9Position> y9PositionOptional =
+            y9PositionManager.findByIdFromCache(y9PersonsToPositions.getPositionId());
         if (y9PersonOptional.isPresent() && y9PositionOptional.isPresent()) {
             Y9Person person = y9PersonOptional.get();
             Y9Position position = y9PositionOptional.get();
@@ -304,8 +305,8 @@ public class OrgEventListener {
         Y9PersonsToPositions originPersonsToPositions = event.getOriginEntity();
         Y9PersonsToPositions updatedPersonsToPositions = event.getUpdatedEntity();
 
-        Y9Person person = y9PersonManager.getById(updatedPersonsToPositions.getPersonId());
-        Y9Position position = y9PositionManager.getById(updatedPersonsToPositions.getPositionId());
+        Y9Person person = y9PersonManager.getByIdFromCache(updatedPersonsToPositions.getPersonId());
+        Y9Position position = y9PositionManager.getByIdFromCache(updatedPersonsToPositions.getPositionId());
 
         String eventName;
         String eventDescription;

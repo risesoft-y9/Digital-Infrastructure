@@ -423,7 +423,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
         dataMap.put(Y9OrgEventConst.SYNC_ID, syncId);
         dataMap.put(Y9OrgEventConst.SYNC_RECURSION, needRecursion);
         if (OrgTypeEnum.ORGANIZATION.equals(orgType)) {
-            Optional<Y9Organization> y9OrganizationOptional = y9OrganizationManager.findById(syncId);
+            Optional<Y9Organization> y9OrganizationOptional = y9OrganizationManager.findByIdFromCache(syncId);
             if (y9OrganizationOptional.isPresent()) {
                 Y9Organization y9Organization = y9OrganizationOptional.get();
                 dataMap.put(syncId, ModelConvertUtil.convert(y9Organization, Organization.class));
@@ -432,7 +432,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
                 }
             }
         } else if (OrgTypeEnum.DEPARTMENT.equals(orgType)) {
-            Optional<Y9Department> y9DepartmentOptional = y9DepartmentManager.findById(syncId);
+            Optional<Y9Department> y9DepartmentOptional = y9DepartmentManager.findByIdFromCache(syncId);
             if (y9DepartmentOptional.isPresent()) {
                 Y9Department y9Department = y9DepartmentOptional.get();
                 dataMap.put(syncId, ModelConvertUtil.convert(y9Department, Department.class));
@@ -441,7 +441,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
                 }
             }
         } else if (OrgTypeEnum.GROUP.equals(orgType)) {
-            Optional<Y9Group> y9GroupOptional = y9GroupManager.findById(syncId);
+            Optional<Y9Group> y9GroupOptional = y9GroupManager.findByIdFromCache(syncId);
             if (y9GroupOptional.isPresent()) {
                 Y9Group y9Group = y9GroupOptional.get();
                 dataMap.put(syncId, ModelConvertUtil.convert(y9Group, Group.class));
@@ -450,7 +450,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
                 }
             }
         } else if (OrgTypeEnum.POSITION.equals(orgType)) {
-            Optional<Y9Position> y9PositionOptional = y9PositionManager.findById(syncId);
+            Optional<Y9Position> y9PositionOptional = y9PositionManager.findByIdFromCache(syncId);
             if (y9PositionOptional.isPresent()) {
                 Y9Position y9Position = y9PositionOptional.get();
                 dataMap.put(syncId, ModelConvertUtil.convert(y9Position, Position.class));
@@ -459,7 +459,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
                 }
             }
         } else if (OrgTypeEnum.PERSON.equals(orgType)) {
-            Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(syncId);
+            Optional<Y9Person> y9PersonOptional = y9PersonManager.findByIdFromCache(syncId);
             if (y9PersonOptional.isPresent()) {
                 Y9Person y9Person = y9PersonOptional.get();
                 y9Person.setPassword(null);
@@ -477,7 +477,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
         syncOrgUnits.setNeedRecursion(recursionRequired);
 
         if (OrgTypeEnum.ORGANIZATION.equals(orgType)) {
-            Optional<Y9Organization> y9OrganizationOptional = y9OrganizationManager.findById(syncId);
+            Optional<Y9Organization> y9OrganizationOptional = y9OrganizationManager.findByIdFromCache(syncId);
             if (y9OrganizationOptional.isPresent()) {
                 Y9Organization y9Organization = y9OrganizationOptional.get();
                 Organization organization = ModelConvertUtil.convert(y9Organization, Organization.class);
@@ -487,7 +487,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
                 }
             }
         } else if (OrgTypeEnum.DEPARTMENT.equals(orgType)) {
-            Optional<Y9Department> y9DepartmentOptional = y9DepartmentManager.findById(syncId);
+            Optional<Y9Department> y9DepartmentOptional = y9DepartmentManager.findByIdFromCache(syncId);
             if (y9DepartmentOptional.isPresent()) {
                 Y9Department y9Department = y9DepartmentOptional.get();
                 Department department = ModelConvertUtil.convert(y9Department, Department.class);
@@ -497,7 +497,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
                 }
             }
         } else if (OrgTypeEnum.GROUP.equals(orgType)) {
-            Optional<Y9Group> y9GroupOptional = y9GroupManager.findById(syncId);
+            Optional<Y9Group> y9GroupOptional = y9GroupManager.findByIdFromCache(syncId);
             if (y9GroupOptional.isPresent()) {
                 Y9Group y9Group = y9GroupOptional.get();
                 Group group = ModelConvertUtil.convert(y9Group, Group.class);
@@ -507,7 +507,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
                 }
             }
         } else if (OrgTypeEnum.POSITION.equals(orgType)) {
-            Optional<Y9Position> y9PositionOptional = y9PositionManager.findById(syncId);
+            Optional<Y9Position> y9PositionOptional = y9PositionManager.findByIdFromCache(syncId);
             if (y9PositionOptional.isPresent()) {
                 Y9Position y9Position = y9PositionOptional.get();
                 Position position = ModelConvertUtil.convert(y9Position, Position.class);
@@ -517,7 +517,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
                 }
             }
         } else if (OrgTypeEnum.PERSON.equals(orgType)) {
-            Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(syncId);
+            Optional<Y9Person> y9PersonOptional = y9PersonManager.findByIdFromCache(syncId);
             if (y9PersonOptional.isPresent()) {
                 Y9Person y9Person = y9PersonOptional.get();
                 y9Person.setPassword(null);
@@ -597,7 +597,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     public List<Y9OrgBase> getTree(String id, OrgTreeTypeEnum treeType, Boolean disabled) {
         Set<Y9OrgBase> orgBaseSet = new HashSet<>();
         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_BUREAU)) {
-            Y9Organization org = y9OrganizationManager.getById(id);
+            Y9Organization org = y9OrganizationManager.getByIdFromCache(id);
             List<Y9Department> bureauList = findBureauOfOrganization(id, disabled);
             orgBaseSet.addAll(bureauList);
             for (Y9Department bureau : bureauList) {
@@ -628,12 +628,13 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     @Override
     public List<Y9OrgBase> getTree4DeptManager(String id, OrgTreeTypeEnum treeType, Boolean disabled) {
         Set<Y9OrgBase> orgBaseSet = new HashSet<>();
-        Optional<Y9Department> managerDeptOptional = y9DepartmentManager.findById(Y9LoginUserHolder.getDeptId());
+        Optional<Y9Department> managerDeptOptional =
+            y9DepartmentManager.findByIdFromCache(Y9LoginUserHolder.getDeptId());
         if (managerDeptOptional.isPresent()) {
             Y9Department managerDept = managerDeptOptional.get();
 
             if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_BUREAU)) {
-                Optional<Y9Organization> y9OrganizationOptional = y9OrganizationManager.findById(id);
+                Optional<Y9Organization> y9OrganizationOptional = y9OrganizationManager.findByIdFromCache(id);
                 if (y9OrganizationOptional.isPresent()) {
                     Y9OrgBase org = y9OrganizationOptional.get();
                     List<Y9Department> bureauList =
@@ -653,7 +654,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
                         break;
                     }
                 }
-                Optional<Y9Department> targetY9DepartmentOptional = y9DepartmentManager.findById(id);
+                Optional<Y9Department> targetY9DepartmentOptional = y9DepartmentManager.findByIdFromCache(id);
                 if (targetY9DepartmentOptional.isPresent()) {
                     Y9Department y9Department = targetY9DepartmentOptional.get();
                     if (Y9OrgUtil.isSameOf(y9Department, managerDept)
@@ -978,7 +979,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
 
     @Override
     public List<Y9OrgBase> treeSearch4DeptManager(String name, OrgTreeTypeEnum treeType, Boolean disabled) {
-        Y9Department y9Department = y9DepartmentManager.getById(Y9LoginUserHolder.getDeptId());
+        Y9Department y9Department = y9DepartmentManager.getByIdFromCache(Y9LoginUserHolder.getDeptId());
         return treeSearch(name, treeType, y9Department.getDn(), disabled);
     }
 

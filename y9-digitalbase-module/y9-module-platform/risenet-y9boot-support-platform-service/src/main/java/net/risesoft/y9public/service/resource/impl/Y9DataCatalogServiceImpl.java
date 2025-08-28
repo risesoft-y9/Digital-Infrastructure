@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.InitDataConsts;
 import net.risesoft.consts.OptionClassConsts;
 import net.risesoft.entity.dictionary.Y9OptionValue;
 import net.risesoft.entity.org.Y9Department;
@@ -24,8 +23,6 @@ import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.enums.platform.resource.DataCatalogTypeEnum;
-import net.risesoft.exception.ResourceErrorCodeEnum;
-import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.model.platform.resource.DataCatalog;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.repository.permission.cache.person.Y9PersonToResourceAndAuthorityRepository;
@@ -34,19 +31,16 @@ import net.risesoft.service.dictionary.Y9OptionValueService;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.permission.cache.Y9PersonToResourceAndAuthorityService;
 import net.risesoft.service.permission.cache.Y9PositionToResourceAndAuthorityService;
-import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
-import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9public.entity.resource.Y9DataCatalog;
-import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
-import net.risesoft.y9public.manager.resource.CompositeResourceManager;
+import net.risesoft.y9public.manager.resource.Y9DataCatalogManager;
 import net.risesoft.y9public.repository.resource.Y9DataCatalogRepository;
 import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
 import net.risesoft.y9public.service.resource.Y9DataCatalogService;
@@ -67,8 +61,9 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     private final Y9PlatformProperties y9PlatformProperties;
 
     private final Y9DataCatalogRepository y9DataCatalogRepository;
-    private final CompositeOrgBaseService compositeOrgBaseService;
+    private final Y9DataCatalogManager y9DataCatalogManager;
 
+    private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9PositionToResourceAndAuthorityService y9PositionToResourceAndAuthorityService;
     private final Y9PersonToResourceAndAuthorityService y9PersonToResourceAndAuthorityService;
     private final Y9OptionValueService y9OptionValueService;
@@ -78,8 +73,6 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     private final Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository;
     private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
 
-    private final CompositeResourceManager compositeResourceManager;
-
     @Override
     public List<DataCatalog> getTree(String tenantId, String parentId, String treeType) {
         return this.getTree(tenantId, parentId, treeType, null, false, null, null);
@@ -87,60 +80,27 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
 
     @Override
     public DataCatalog getDataCatalogById(String id) {
-        Y9DataCatalog y9DataCatalog = getById(id);
+        Y9DataCatalog y9DataCatalog = y9DataCatalogManager.getById(id);
         return this.convertY9DataCatalogToDataCatalog(y9DataCatalog);
-    }
-
-    private Y9DataCatalog getById(String id) {
-        return y9DataCatalogRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.DATA_CATALOG_NOT_FOUND, id));
     }
 
     @Override
     @Transactional(readOnly = false)
     public Y9DataCatalog saveOrUpdate(Y9DataCatalog y9DataCatalog) {
         if (StringUtils.isNotBlank(y9DataCatalog.getId())) {
-            Optional<Y9DataCatalog> y9DataCatalogOptional = y9DataCatalogRepository.findById(y9DataCatalog.getId());
+            Optional<Y9DataCatalog> y9DataCatalogOptional = y9DataCatalogManager.findById(y9DataCatalog.getId());
             if (y9DataCatalogOptional.isPresent()) {
-                Y9DataCatalog originY9DataCatalog = y9DataCatalogOptional.get();
-                Y9BeanUtil.copyProperties(y9DataCatalog, originY9DataCatalog);
-
-                if (StringUtils.isEmpty(originY9DataCatalog.getParentId())) {
-                    originY9DataCatalog.setParentId(null);
-                    originY9DataCatalog.setGuidPath(Y9OrgUtil.buildGuidPath(null, originY9DataCatalog.getId()));
-                } else {
-                    Y9DataCatalog parent = getById(y9DataCatalog.getParentId());
-                    originY9DataCatalog
-                        .setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), originY9DataCatalog.getId()));
-                }
-
-                return y9DataCatalogRepository.save(originY9DataCatalog);
+                return y9DataCatalogManager.update(y9DataCatalog);
             }
         }
 
-        if (StringUtils.isBlank(y9DataCatalog.getId())) {
-            y9DataCatalog.setId(Y9IdGenerator.genId());
-        }
-
-        y9DataCatalog.setTenantId(Y9LoginUserHolder.getTenantId());
-        y9DataCatalog.setSystemId(InitDataConsts.SYSTEM_ID);
-        y9DataCatalog.setInherit(Boolean.TRUE);
-        y9DataCatalog.setTabIndex(this.getNextTabIndex(y9DataCatalog.getParentId()));
-
-        if (StringUtils.isNotBlank(y9DataCatalog.getParentId())) {
-            Y9DataCatalog parent = getById(y9DataCatalog.getParentId());
-            y9DataCatalog.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), y9DataCatalog.getId()));
-        } else {
-            y9DataCatalog.setGuidPath(Y9OrgUtil.buildGuidPath(null, y9DataCatalog.getId()));
-        }
-
-        return y9DataCatalogRepository.save(y9DataCatalog);
+        return y9DataCatalogManager.insert(y9DataCatalog);
     }
 
     @Override
     @Transactional(readOnly = false)
     public void delete(String id) {
-        Y9DataCatalog y9DataCatalog = getById(id);
+        Y9DataCatalog y9DataCatalog = y9DataCatalogManager.getById(id);
         y9DataCatalogRepository.deleteById(id);
 
         // 删除租户与数据目录资源关联的数据
@@ -418,13 +378,6 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
             y9DataCatalog.setEnabled(Boolean.FALSE);
             this.saveOrUpdate(y9DataCatalog);
         }
-    }
-
-    private Integer getNextTabIndex(String parentId) {
-        return y9DataCatalogRepository
-            .findTopByTenantIdAndParentIdOrderByTabIndexDesc(Y9LoginUserHolder.getTenantId(), parentId)
-            .map(Y9ResourceBase::getTabIndex)
-            .orElse(-1) + 1;
     }
 
     private DataCatalog convertY9DataCatalogToDataCatalog(Y9DataCatalog y9DataCatalog) {

@@ -37,7 +37,6 @@ import net.risesoft.manager.org.Y9JobManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.repository.org.Y9PositionRepository;
-import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.service.setting.Y9SettingService;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
@@ -55,7 +54,6 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 @RequiredArgsConstructor
 public class Y9PositionManagerImpl implements Y9PositionManager {
 
-    private final Y9PersonsToPositionsRepository y9PersonsToPositionsRepository;
     private final Y9PositionRepository y9PositionRepository;
 
     private final Y9JobManager y9JobManager;
@@ -74,7 +72,7 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
         } else {
             List<Y9Person> personList = new ArrayList<>();
             for (Y9PersonsToPositions y9PersonsToPositions : personsToPositionsList) {
-                Y9Person person = y9PersonManager.getById(y9PersonsToPositions.getPersonId());
+                Y9Person person = y9PersonManager.getByIdFromCache(y9PersonsToPositions.getPersonId());
                 personList.add(person);
             }
             personNames = personList.stream()
@@ -116,26 +114,25 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Optional<Y9Position> findByIdFromCache(String id) {
+        return y9PositionRepository.findById(id);
+    }
+
+    @Override
     public Optional<Y9Position> findById(String id) {
         return y9PositionRepository.findById(id);
     }
 
     @Override
-    public Optional<Y9Position> findByIdNotCache(String id) {
-        return y9PositionRepository.findById(id);
-    }
-
-    @Override
-    public Y9Position getByIdNotCache(String id) {
+    public Y9Position getById(String id) {
         return y9PositionRepository.findById(id)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.POSITION_NOT_FOUND, id));
     }
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Position getById(String id) {
-        return y9PositionRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.POSITION_NOT_FOUND, id));
+    public Y9Position getByIdFromCache(String id) {
+        return this.getById(id);
     }
 
     @Override

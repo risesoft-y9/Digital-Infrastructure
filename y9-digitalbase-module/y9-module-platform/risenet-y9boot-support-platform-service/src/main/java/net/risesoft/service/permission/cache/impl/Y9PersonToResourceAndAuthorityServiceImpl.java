@@ -129,7 +129,7 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
             Optional<Y9TenantApp> y9TenantAppOptional = y9TenantAppManager
                 .getByTenantIdAndAppIdAndTenancy(Y9LoginUserHolder.getTenantId(), r.getResourceId(), true);
             if (y9TenantAppOptional.isPresent()) {
-                Y9App y9App = y9AppManager.getById(r.getResourceId());
+                Y9App y9App = y9AppManager.getByIdFromCache(r.getResourceId());
                 if (y9App.getEnabled()) {
                     appSet.add(y9App);
                 }
@@ -178,7 +178,7 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
             .collect(Collectors.toList());
         Set<Y9Menu> menuSet = new HashSet<>();
         for (String menuId : menuIdList) {
-            Y9Menu y9Menu = y9MenuManager.getById(menuId);
+            Y9Menu y9Menu = y9MenuManager.getByIdFromCache(menuId);
             if (y9Menu.getEnabled()) {
                 menuSet.add(y9Menu);
             }

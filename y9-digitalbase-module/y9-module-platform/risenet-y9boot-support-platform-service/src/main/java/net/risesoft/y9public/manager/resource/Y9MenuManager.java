@@ -16,7 +16,11 @@ public interface Y9MenuManager {
 
     Optional<Y9Menu> findById(String id);
 
+    Optional<Y9Menu> findByIdFromCache(String id);
+
     Y9Menu getById(String id);
+
+    Y9Menu getByIdFromCache(String id);
 
     Y9Menu insert(Y9Menu y9Menu);
 

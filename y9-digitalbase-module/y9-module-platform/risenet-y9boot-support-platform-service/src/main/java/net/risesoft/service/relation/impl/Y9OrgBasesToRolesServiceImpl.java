@@ -226,7 +226,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     @Transactional(readOnly = false)
     public void remove(Y9OrgBasesToRoles y9OrgBasesToRoles) {
-        Y9Role y9Role = y9RoleManager.getById(y9OrgBasesToRoles.getRoleId());
+        Y9Role y9Role = y9RoleManager.getByIdFromCache(y9OrgBasesToRoles.getRoleId());
         Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(y9OrgBasesToRoles.getOrgId());
         y9OrgBasesToRolesRepository.delete(y9OrgBasesToRoles);
 
@@ -246,7 +246,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
     @Transactional(readOnly = false)
     public Y9OrgBasesToRoles saveOrUpdate(String roleId, String orgId, Boolean negative) {
         Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(orgId);
-        Y9Role y9Role = y9RoleManager.getById(roleId);
+        Y9Role y9Role = y9RoleManager.getByIdFromCache(roleId);
 
         checkOrgUnitIncludedInRoleRelatedMapping(roleId, negative, y9OrgBase);
 

@@ -83,7 +83,7 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
             y9PositionsToGroupsRepository.findByGroupIdOrderByPositionOrder(groupId);
         List<Y9Position> orgPositions = new ArrayList<>();
         for (Y9PositionsToGroups group : orgGroupPositions) {
-            orgPositions.add(y9PositionManager.getById(group.getPositionId()));
+            orgPositions.add(y9PositionManager.getByIdFromCache(group.getPositionId()));
         }
         return orgPositions;
     }

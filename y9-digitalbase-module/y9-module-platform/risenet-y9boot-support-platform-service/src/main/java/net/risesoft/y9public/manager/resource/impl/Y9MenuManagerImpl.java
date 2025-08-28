@@ -45,9 +45,26 @@ public class Y9MenuManagerImpl implements Y9MenuManager {
     private final CompositeResourceManager compositeResourceManager;
 
     @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Optional<Y9Menu> findById(String id) {
         return y9MenuRepository.findById(id);
+    }
+
+    @Override
+    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Optional<Y9Menu> findByIdFromCache(String id) {
+        return y9MenuRepository.findById(id);
+    }
+
+    @Override
+    public Y9Menu getById(String id) {
+        return y9MenuRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.MENU_NOT_FOUND, id));
+    }
+
+    @Override
+    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Y9Menu getByIdFromCache(String id) {
+        return this.getById(id);
     }
 
     @Transactional(readOnly = false)
@@ -88,13 +105,6 @@ public class Y9MenuManagerImpl implements Y9MenuManager {
     }
 
     @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Menu getById(String id) {
-        return y9MenuRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.MENU_NOT_FOUND, id));
-    }
-
-    @Override
     @Transactional(readOnly = false)
     @CacheEvict(key = "#y9Menu.id")
     public void delete(Y9Menu y9Menu) {
@@ -105,6 +115,7 @@ public class Y9MenuManagerImpl implements Y9MenuManager {
     @Transactional(readOnly = false)
     public Y9Menu updateTabIndex(String id, int index) {
         Y9Menu y9Menu = this.getById(id);
+
         y9Menu.setTabIndex(index);
         return this.update(y9Menu);
     }

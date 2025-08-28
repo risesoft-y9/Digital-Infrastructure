@@ -53,7 +53,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     @Transactional(readOnly = false)
     @Override
     public void delete(String id) {
-        Y9Role y9Role = y9RoleManager.getById(id);
+        Y9Role y9Role = y9RoleManager.getByIdFromCache(id);
 
         y9RoleManager.delete(id);
 
@@ -74,12 +74,12 @@ public class Y9RoleServiceImpl implements Y9RoleService {
 
     @Override
     public Optional<Y9Role> findById(String id) {
-        return y9RoleManager.findById(id);
+        return y9RoleManager.findByIdFromCache(id);
     }
 
     @Override
     public Y9Role findTopByRoleId(String id) {
-        Y9Role role = y9RoleManager.getById(id);
+        Y9Role role = y9RoleManager.getByIdFromCache(id);
         String parentId = role.getParentId();
         if (parentId != null) {
             role = findTopByRoleId(parentId);
@@ -89,7 +89,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
 
     @Override
     public Y9Role getById(String roleId) {
-        return y9RoleManager.getById(roleId);
+        return y9RoleManager.getByIdFromCache(roleId);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         List<String> roleIdList = y9OrgBasesToRolesRepository.findDistinctRoleIdByOrgId(orgUnitId);
         List<Y9Role> roleList = new ArrayList<>();
         for (String roleId : roleIdList) {
-            Y9Role role = y9RoleManager.getById(roleId);
+            Y9Role role = y9RoleManager.getByIdFromCache(roleId);
             roleList.add(role);
         }
         return roleList;
@@ -118,7 +118,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         List<String> roleIdList = y9OrgBasesToRolesRepository.findRoleIdsByOrgIdAndNegative(orgUnitId, Boolean.FALSE);
         List<Y9Role> roleList = new ArrayList<>();
         for (String roleId : roleIdList) {
-            Y9Role role = y9RoleManager.getById(roleId);
+            Y9Role role = y9RoleManager.getByIdFromCache(roleId);
             roleList.add(role);
         }
         return roleList;
@@ -158,7 +158,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     @Override
     @Transactional(readOnly = false)
     public void move(String id, String newParentId) {
-        Y9Role currentRole = y9RoleManager.getById(id);
+        Y9Role currentRole = y9RoleManager.getByIdFromCache(id);
         String parentName = this.getRoleParent(newParentId);
         Y9Role originalRole = Y9ModelConvertUtil.convert(currentRole, Y9Role.class);
 
@@ -179,17 +179,17 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     }
 
     private String getRoleParent(String newParentId) {
-        Optional<Y9Role> y9RoleOptional = y9RoleManager.findById(newParentId);
+        Optional<Y9Role> y9RoleOptional = y9RoleManager.findByIdFromCache(newParentId);
         if (y9RoleOptional.isPresent()) {
             return y9RoleOptional.get().getName();
         }
 
-        Optional<Y9App> y9AppOptional = y9AppManager.findById(newParentId);
+        Optional<Y9App> y9AppOptional = y9AppManager.findByIdFromCache(newParentId);
         if (y9AppOptional.isPresent()) {
             return y9AppOptional.get().getName();
         }
 
-        Optional<Y9System> y9SystemOptional = y9SystemManager.findById(newParentId);
+        Optional<Y9System> y9SystemOptional = y9SystemManager.findByIdFromCache(newParentId);
         if (y9SystemOptional.isPresent()) {
             return y9SystemOptional.get().getName();
         }
@@ -238,7 +238,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     public void saveOrder(List<String> ids) {
         int index = 0;
         for (String id : ids) {
-            Y9Role roleNode = y9RoleManager.getById(id);
+            Y9Role roleNode = y9RoleManager.getByIdFromCache(id);
             roleNode.setTabIndex(index++);
             y9RoleManager.update(roleNode);
         }
@@ -247,7 +247,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     @Override
     @Transactional(readOnly = false)
     public Y9Role saveProperties(String id, String properties) {
-        Y9Role currentRole = y9RoleManager.getById(id);
+        Y9Role currentRole = y9RoleManager.getByIdFromCache(id);
         Y9Role originalRole = Y9ModelConvertUtil.convert(currentRole, Y9Role.class);
 
         currentRole.setProperties(properties);

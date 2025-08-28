@@ -110,16 +110,26 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
     }
 
     @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Optional<Y9Role> findById(String id) {
         return y9RoleRepository.findById(id);
     }
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Optional<Y9Role> findByIdFromCache(String id) {
+        return y9RoleRepository.findById(id);
+    }
+
+    @Override
     public Y9Role getById(String id) {
         return y9RoleRepository.findById(id)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(RoleErrorCodeEnum.ROLE_NOT_FOUND, id));
+    }
+
+    @Override
+    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Y9Role getByIdFromCache(String id) {
+        return this.getById(id);
     }
 
     @Override
@@ -156,7 +166,7 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
             }
         }
 
-        return calculatedRoleIdSet.stream().map(this::getById).collect(Collectors.toList());
+        return calculatedRoleIdSet.stream().map(this::getByIdFromCache).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = false)
@@ -185,7 +195,7 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
 
         if (StringUtils.isNotBlank(y9Role.getAppId())) {
             // 应用角色
-            Y9App y9App = y9AppManager.getById(y9Role.getAppId());
+            Y9App y9App = y9AppManager.getByIdFromCache(y9Role.getAppId());
             y9Role.setSystemId(y9App.getSystemId());
         } else if (StringUtils.isNotBlank(y9Role.getSystemId())) {
             // 系统角色
@@ -229,7 +239,7 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
 
         if (StringUtils.isNotBlank(y9Role.getAppId())) {
             // 应用角色
-            Y9App y9App = y9AppManager.getById(y9Role.getAppId());
+            Y9App y9App = y9AppManager.getByIdFromCache(y9Role.getAppId());
             y9Role.setSystemId(y9App.getSystemId());
         } else if (StringUtils.isNotBlank(y9Role.getSystemId())) {
             // 系统角色

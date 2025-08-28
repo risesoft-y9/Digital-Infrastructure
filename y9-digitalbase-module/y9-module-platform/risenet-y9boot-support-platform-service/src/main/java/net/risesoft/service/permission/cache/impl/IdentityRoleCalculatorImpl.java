@@ -124,7 +124,7 @@ public class IdentityRoleCalculatorImpl implements IdentityRoleCalculator {
     @Override
     public void recalculateByPersonId(String personId) {
         try {
-            Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(personId);
+            Optional<Y9Person> y9PersonOptional = y9PersonManager.findByIdFromCache(personId);
             if (y9PersonOptional.isPresent()) {
                 Y9Person y9Person = y9PersonOptional.get();
                 List<Y9Role> personRelatedY9RoleList =
@@ -139,7 +139,7 @@ public class IdentityRoleCalculatorImpl implements IdentityRoleCalculator {
     private void recalculateByPositionId(String positionId) {
         try {
             List<Y9Role> positionRelatedY9RoleList = y9RoleManager.listOrgUnitRelatedWithoutNegative(positionId);
-            Y9Position y9Position = y9PositionManager.getById(positionId);
+            Y9Position y9Position = y9PositionManager.getByIdFromCache(positionId);
             this.recalculate(y9Position, positionRelatedY9RoleList);
         } catch (Exception e) {
             LOGGER.warn("计算岗位[{}]角色发生异常", positionId, e);

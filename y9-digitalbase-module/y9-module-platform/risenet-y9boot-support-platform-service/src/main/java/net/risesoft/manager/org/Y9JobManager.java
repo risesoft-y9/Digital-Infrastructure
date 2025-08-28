@@ -16,7 +16,7 @@ public interface Y9JobManager {
 
     void delete(Y9Job y9Job);
 
-    Optional<Y9Job> findById(String id);
+    Optional<Y9Job> findByIdFromCache(String id);
 
     /**
      * 根据id，获取职位信息（直接读取数据库）
@@ -24,7 +24,7 @@ public interface Y9JobManager {
      * @param id 职位id
      * @return {@link Y9Job} 职位对象
      */
-    Optional<Y9Job> findByIdNotCache(String id);
+    Optional<Y9Job> findById(String id);
 
     /**
      * 根据id，获取职位信息
@@ -33,7 +33,7 @@ public interface Y9JobManager {
      * @return {@link Y9Job} 职位对象
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
-    Y9Job getById(String id);
+    Y9Job getByIdFromCache(String id);
 
     /**
      * 根据id，获取职位信息（直接读取数据库）
@@ -41,7 +41,7 @@ public interface Y9JobManager {
      * @param id 职位id
      * @return {@link Y9Job} 职位对象
      */
-    Y9Job getByIdNotCache(String id);
+    Y9Job getById(String id);
 
     Y9Job save(Y9Job y9Job);
 

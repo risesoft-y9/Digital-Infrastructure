@@ -21,6 +21,10 @@ public interface Y9RoleManager {
 
     Optional<Y9Role> findById(String id);
 
+    Optional<Y9Role> findByIdFromCache(String id);
+
+    Y9Role getById(String id);
+
     /**
      * 根据主键获取角色节点对象
      *
@@ -28,7 +32,7 @@ public interface Y9RoleManager {
      * @return {@link Y9Role}角色对象
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
-    Y9Role getById(String id);
+    Y9Role getByIdFromCache(String id);
 
     List<Y9Role> listByAppIdAndParentId(String appId, String parentId);
 

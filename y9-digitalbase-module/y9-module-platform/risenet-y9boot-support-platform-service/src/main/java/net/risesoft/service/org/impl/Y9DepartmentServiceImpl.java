@@ -69,7 +69,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional(readOnly = false)
     public Y9Department changeDisable(String id) {
-        Y9Department currentDepartment = y9DepartmentManager.getByIdNotCache(id);
+        Y9Department currentDepartment = y9DepartmentManager.getById(id);
         Y9Department originalDepartment = Y9ModelConvertUtil.convert(currentDepartment, Y9Department.class);
 
         Boolean disableStatusToUpdate = !currentDepartment.getDisabled();
@@ -128,12 +128,12 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
     @Override
     public Optional<Y9Department> findById(String id) {
-        return y9DepartmentManager.findById(id);
+        return y9DepartmentManager.findByIdFromCache(id);
     }
 
     @Override
     public Y9Department getById(String id) {
-        return y9DepartmentManager.getById(id);
+        return y9DepartmentManager.getByIdFromCache(id);
     }
 
     private void getDeptTrees(String orgBaseId, List<Y9Department> deptList, Boolean disabled) {
@@ -248,7 +248,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
         String currentDeptId = deptId;
         while (true) {
-            Optional<Y9Department> currentDepartmentOptional = y9DepartmentManager.findById(currentDeptId);
+            Optional<Y9Department> currentDepartmentOptional = y9DepartmentManager.findByIdFromCache(currentDeptId);
             if (currentDepartmentOptional.isEmpty()) {
                 break;
             }
@@ -275,7 +275,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Transactional(readOnly = false)
     public Y9Department move(String id, String parentId) {
         Y9OrgBase parentToMove = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
-        Y9Department currentDepartment = y9DepartmentManager.getByIdNotCache(id);
+        Y9Department currentDepartment = y9DepartmentManager.getById(id);
         Y9Department originalDepartment = Y9ModelConvertUtil.convert(currentDepartment, Y9Department.class);
 
         checkMoveTarget(currentDepartment, parentId);
@@ -354,7 +354,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Transactional(readOnly = false)
     public Y9Department saveOrUpdate(Y9Department dept) {
         if (StringUtils.isNotBlank(dept.getId())) {
-            Optional<Y9Department> departmentOptional = y9DepartmentManager.findByIdNotCache(dept.getId());
+            Optional<Y9Department> departmentOptional = y9DepartmentManager.findById(dept.getId());
             if (departmentOptional.isPresent()) {
                 Y9Department originalDepartment =
                     Y9ModelConvertUtil.convert(departmentOptional.get(), Y9Department.class);

@@ -54,26 +54,25 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Optional<Y9Organization> findByIdFromCache(String id) {
+        return y9OrganizationRepository.findById(id);
+    }
+
+    @Override
     public Optional<Y9Organization> findById(String id) {
         return y9OrganizationRepository.findById(id);
     }
 
     @Override
-    public Optional<Y9Organization> findByIdNotCache(String id) {
-        return y9OrganizationRepository.findById(id);
-    }
-
-    @Override
-    public Y9Organization getByIdNotCache(String id) {
+    public Y9Organization getById(String id) {
         return y9OrganizationRepository.findById(id)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.ORGANIZATION_NOT_FOUND, id));
     }
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Organization getById(String id) {
-        return y9OrganizationRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.ORGANIZATION_NOT_FOUND, id));
+    public Y9Organization getByIdFromCache(String id) {
+        return this.getById(id);
     }
 
     @Transactional(readOnly = false)
