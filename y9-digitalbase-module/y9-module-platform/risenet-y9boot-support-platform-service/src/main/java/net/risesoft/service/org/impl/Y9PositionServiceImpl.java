@@ -61,7 +61,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Override
     @Transactional(readOnly = false)
     public Y9Position changeDisabled(String id) {
-        Y9Position currentPosition = y9PositionManager.getByIdNotCache(id);
+        Y9Position currentPosition = y9PositionManager.getById(id);
         Y9Position originalPosition = Y9ModelConvertUtil.convert(currentPosition, Y9Position.class);
         boolean disableStatusToUpdate = !currentPosition.getDisabled();
 
@@ -131,7 +131,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     @Override
     public Optional<Y9Position> findById(String id) {
-        return y9PositionManager.findById(id);
+        return y9PositionManager.findByIdFromCache(id);
     }
 
     @Override
@@ -146,7 +146,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     @Override
     public Y9Position getById(String id) {
-        return y9PositionManager.getById(id);
+        return y9PositionManager.getByIdFromCache(id);
     }
 
     @Override
@@ -213,7 +213,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Transactional(readOnly = false)
     public Y9Position move(String id, String parentId) {
         Y9OrgBase parentToMove = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
-        Y9Position currentPosition = y9PositionManager.getByIdNotCache(id);
+        Y9Position currentPosition = y9PositionManager.getById(id);
         Y9Position originalPosition = Y9ModelConvertUtil.convert(currentPosition, Y9Position.class);
 
         currentPosition.setParentId(parentId);
@@ -256,7 +256,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Transactional(readOnly = false)
     public Y9Position saveOrUpdate(Y9Position position) {
         if (StringUtils.isNotEmpty(position.getId())) {
-            Optional<Y9Position> positionOptional = y9PositionManager.findByIdNotCache(position.getId());
+            Optional<Y9Position> positionOptional = y9PositionManager.findById(position.getId());
             if (positionOptional.isPresent()) {
                 Y9Position originalPosition = Y9ModelConvertUtil.convert(positionOptional.get(), Y9Position.class);
 

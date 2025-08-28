@@ -17,9 +17,13 @@ public interface Y9SystemManager {
 
     Optional<Y9System> findById(String id);
 
+    Optional<Y9System> findByIdFromCache(String id);
+
     Optional<Y9System> findByName(String systemName);
 
     Y9System getById(String id);
+
+    Y9System getByIdFromCache(String id);
 
     Y9System getByName(String systemName);
 

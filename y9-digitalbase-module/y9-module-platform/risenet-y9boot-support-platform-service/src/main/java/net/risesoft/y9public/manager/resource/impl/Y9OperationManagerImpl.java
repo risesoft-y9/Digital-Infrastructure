@@ -45,16 +45,26 @@ public class Y9OperationManagerImpl implements Y9OperationManager {
     private final CompositeResourceManager compositeResourceManager;
 
     @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Optional<Y9Operation> findById(String id) {
         return y9OperationRepository.findById(id);
     }
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Optional<Y9Operation> findByIdFromCache(String id) {
+        return y9OperationRepository.findById(id);
+    }
+
+    @Override
     public Y9Operation getById(String id) {
         return y9OperationRepository.findById(id)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.OPERATION_NOT_FOUND, id));
+    }
+
+    @Override
+    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Y9Operation getByIdFromCache(String id) {
+        return this.getById(id);
     }
 
     @Transactional(readOnly = false)
@@ -81,7 +91,7 @@ public class Y9OperationManagerImpl implements Y9OperationManager {
     public Y9Operation update(Y9Operation y9Operation) {
         Y9ResourceBase parent = compositeResourceManager.getResourceAsParent(y9Operation.getParentId());
 
-        Y9Operation currentOperation = this.getById(y9Operation.getId());
+        Y9Operation currentOperation = this.getByIdFromCache(y9Operation.getId());
         Y9Operation originalOperation = new Y9Operation();
         Y9BeanUtil.copyProperties(currentOperation, originalOperation);
         Y9BeanUtil.copyProperties(y9Operation, currentOperation);
@@ -104,7 +114,7 @@ public class Y9OperationManagerImpl implements Y9OperationManager {
     @Override
     @Transactional(readOnly = false)
     public Y9Operation updateTabIndex(String id, int index) {
-        Y9Operation y9Operation = this.getById(id);
+        Y9Operation y9Operation = this.getByIdFromCache(id);
         y9Operation.setTabIndex(index);
         return this.update(y9Operation);
     }

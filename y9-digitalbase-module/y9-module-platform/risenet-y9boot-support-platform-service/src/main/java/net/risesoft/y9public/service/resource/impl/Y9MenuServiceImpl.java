@@ -157,7 +157,7 @@ public class Y9MenuServiceImpl implements Y9MenuService {
 
     @Override
     public Optional<Y9Menu> findById(String id) {
-        return y9MenuManager.findById(id);
+        return y9MenuManager.findByIdFromCache(id);
     }
 
     @Override
@@ -167,7 +167,7 @@ public class Y9MenuServiceImpl implements Y9MenuService {
 
     @Override
     public Y9Menu getById(String id) {
-        return y9MenuManager.getById(id);
+        return y9MenuManager.getByIdFromCache(id);
     }
 
     @Override

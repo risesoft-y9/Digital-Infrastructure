@@ -217,7 +217,7 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     private void checkGroupExists(String groupId) {
-        y9GroupManager.getById(groupId);
+        y9GroupManager.getByIdFromCache(groupId);
     }
 
     /**
@@ -227,14 +227,14 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     private void checkPersonExists(String personId) {
-        y9PersonManager.getById(personId);
+        y9PersonManager.getByIdFromCache(personId);
     }
 
     @Transactional(readOnly = false)
     public Y9PersonsToGroups addY9PersonsToGroups(String personId, String groupId, Integer maxGroupsOrder,
         Integer maxPersonsOrder) {
-        Y9Person person = y9PersonManager.getById(personId);
-        Y9Group group = y9GroupManager.getById(groupId);
+        Y9Person person = y9PersonManager.getByIdFromCache(personId);
+        Y9Group group = y9GroupManager.getByIdFromCache(groupId);
 
         Y9PersonsToGroups y9PersonsToGroups = new Y9PersonsToGroups();
         y9PersonsToGroups.setGroupId(groupId);
@@ -265,8 +265,8 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
 
     @Transactional(readOnly = false)
     public void remove(String personId, String groupId) {
-        Y9Person person = y9PersonManager.getById(personId);
-        Y9Group group = y9GroupManager.getById(groupId);
+        Y9Person person = y9PersonManager.getByIdFromCache(personId);
+        Y9Group group = y9GroupManager.getByIdFromCache(groupId);
 
         Optional<Y9PersonsToGroups> optionalY9PersonsToGroups =
             y9PersonsToGroupsRepository.findByGroupIdAndPersonId(groupId, personId);

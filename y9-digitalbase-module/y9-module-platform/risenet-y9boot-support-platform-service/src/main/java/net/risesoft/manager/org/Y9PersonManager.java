@@ -11,7 +11,7 @@ public interface Y9PersonManager {
 
     void delete(Y9Person y9Person);
 
-    Optional<Y9Person> findById(String id);
+    Optional<Y9Person> findByIdFromCache(String id);
 
     /**
      * 根据id，获取人员信息（直接读取数据库）
@@ -19,7 +19,7 @@ public interface Y9PersonManager {
      * @param id 人员id
      * @return {@code Optional<Y9Person>}
      */
-    Optional<Y9Person> findByIdNotCache(String id);
+    Optional<Y9Person> findById(String id);
 
     /**
      * 根据主键id获取人员实例
@@ -28,9 +28,9 @@ public interface Y9PersonManager {
      * @return {@link Y9Person } 人员对象
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
-    Y9Person getById(String id);
+    Y9Person getByIdFromCache(String id);
 
-    Y9Person getByIdNotCache(String id);
+    Y9Person getById(String id);
 
     List<Y9Person> listByGroupId(String groupId, Boolean disabled);
 

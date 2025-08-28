@@ -70,7 +70,7 @@ public class Y9PersonExtServiceImpl implements Y9PersonExtService {
 
     @Override
     public Y9PersonExt savePersonPhoto(String personId, String photo) {
-        Y9Person y9Person = y9PersonManager.getById(personId);
+        Y9Person y9Person = y9PersonManager.getByIdFromCache(personId);
         return this.savePersonPhoto(y9Person, photo);
     }
 

@@ -315,7 +315,7 @@ public class Y9AppServiceImpl implements Y9AppService {
 
     @Override
     public Optional<Y9App> findById(String id) {
-        return y9AppManager.findById(id);
+        return y9AppManager.findByIdFromCache(id);
     }
 
     @Override
@@ -325,7 +325,7 @@ public class Y9AppServiceImpl implements Y9AppService {
 
     @Override
     public Y9App getById(String id) {
-        return y9AppManager.getById(id);
+        return y9AppManager.getByIdFromCache(id);
     }
 
     @Override

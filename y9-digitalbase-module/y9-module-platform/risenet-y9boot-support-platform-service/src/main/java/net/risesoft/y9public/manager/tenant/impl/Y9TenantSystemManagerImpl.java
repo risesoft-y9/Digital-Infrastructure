@@ -75,7 +75,8 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
                 @Override
                 public void afterCommit() {
                     // 移除系统租用后，对应系统重新加载数据源
-                    Optional<Y9System> y9SystemOptional = y9SystemManager.findById(y9TenantSystem.getSystemId());
+                    Optional<Y9System> y9SystemOptional =
+                        y9SystemManager.findByIdFromCache(y9TenantSystem.getSystemId());
                     if (y9SystemOptional.isPresent()) {
                         Y9MessageCommon syncDataSourceEvent = new Y9MessageCommon();
                         syncDataSourceEvent.setEventTarget(y9SystemOptional.get().getName());
@@ -113,7 +114,7 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
 
         y9TenantSystem = y9TenantSystemRepository.save(y9TenantSystem);
 
-        Y9System y9System = y9SystemManager.getById(y9TenantSystem.getSystemId());
+        Y9System y9System = y9SystemManager.getByIdFromCache(y9TenantSystem.getSystemId());
         TenantSystem tenantSystem = Y9ModelConvertUtil.convert(y9TenantSystem, TenantSystem.class);
 
         if (Objects.equals(Y9Context.getSystemName(), y9System.getName())) {
@@ -149,7 +150,7 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
     @Transactional(readOnly = false)
     public Y9TenantSystem saveTenantSystem(String systemId, String tenantId) {
         Y9Tenant tenant = y9TenantManager.getById(tenantId);
-        Y9System y9System = y9SystemManager.getById(systemId);
+        Y9System y9System = y9SystemManager.getByIdFromCache(systemId);
 
         Optional<Y9TenantSystem> y9TenantSystemOptional =
             y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);

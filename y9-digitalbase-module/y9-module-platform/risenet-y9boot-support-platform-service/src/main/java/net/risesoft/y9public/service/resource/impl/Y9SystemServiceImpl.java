@@ -116,7 +116,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
 
     @Override
     public Optional<Y9System> findById(String id) {
-        return y9SystemManager.findById(id);
+        return y9SystemManager.findByIdFromCache(id);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
 
     @Override
     public Y9System getById(String id) {
-        return y9SystemManager.getById(id);
+        return y9SystemManager.getByIdFromCache(id);
     }
 
     @Override

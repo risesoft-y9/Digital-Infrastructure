@@ -157,7 +157,7 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
         List<Y9System> y9SystemList = new ArrayList<>();
         if (!systemIdList.isEmpty()) {
             for (String systemId : systemIdList) {
-                y9SystemManager.findById(systemId).ifPresent(y9SystemList::add);
+                y9SystemManager.findByIdFromCache(systemId).ifPresent(y9SystemList::add);
             }
         }
         return y9SystemList.stream().sorted().collect(Collectors.toList());

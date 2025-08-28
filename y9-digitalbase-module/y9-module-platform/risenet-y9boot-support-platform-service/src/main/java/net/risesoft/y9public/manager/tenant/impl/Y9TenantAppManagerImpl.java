@@ -86,7 +86,7 @@ public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
     public Y9TenantApp save(String appId, String tenantId, String applyReason) {
         Optional<Y9TenantApp> y9TenantAppOptional =
             y9TenantAppRepository.findByTenantIdAndAppIdAndTenancy(tenantId, appId, Boolean.TRUE);
-        Y9App y9App = y9AppManager.getById(appId);
+        Y9App y9App = y9AppManager.getByIdFromCache(appId);
         String tenantDataSource =
             y9TenantSystemManager.getDataSourceIdByTenantIdAndSystemId(tenantId, y9App.getSystemId());
         if (y9TenantAppOptional.isPresent()) {
@@ -135,7 +135,7 @@ public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
         Y9TenantApp savedTenantApp = y9TenantAppRepository.save(y9TenantApp);
 
         if (Boolean.TRUE.equals(y9TenantApp.getTenancy())) {
-            Y9System y9System = y9SystemManager.getById(savedTenantApp.getSystemId());
+            Y9System y9System = y9SystemManager.getByIdFromCache(savedTenantApp.getSystemId());
             TenantApp tenantApp = Y9ModelConvertUtil.convert(savedTenantApp, TenantApp.class);
             // 注册事务同步器，在事务提交后做某些操作
             if (TransactionSynchronizationManager.isActualTransactionActive()) {

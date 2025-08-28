@@ -41,7 +41,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     @Override
     @Transactional(readOnly = false)
     public Y9Organization changeDisabled(String id) {
-        Y9Organization currentOrganization = y9OrganizationManager.getByIdNotCache(id);
+        Y9Organization currentOrganization = y9OrganizationManager.getById(id);
         Y9Organization originalOrganization = Y9ModelConvertUtil.convert(currentOrganization, Y9Organization.class);
         Boolean disableStatusToUpdate = !currentOrganization.getDisabled();
 
@@ -102,12 +102,12 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
 
     @Override
     public Optional<Y9Organization> findById(String id) {
-        return y9OrganizationManager.findById(id);
+        return y9OrganizationManager.findByIdFromCache(id);
     }
 
     @Override
     public Y9Organization getById(String id) {
-        return y9OrganizationManager.getById(id);
+        return y9OrganizationManager.getByIdFromCache(id);
     }
 
     @Override
@@ -141,8 +141,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     @Transactional(readOnly = false)
     public Y9Organization saveOrUpdate(Y9Organization organization) {
         if (StringUtils.isNotBlank(organization.getId())) {
-            Optional<Y9Organization> organizationOptional =
-                y9OrganizationManager.findByIdNotCache(organization.getId());
+            Optional<Y9Organization> organizationOptional = y9OrganizationManager.findById(organization.getId());
             if (organizationOptional.isPresent()) {
                 Y9Organization originalOrganization =
                     Y9ModelConvertUtil.convert(organizationOptional.get(), Y9Organization.class);

@@ -200,7 +200,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     public Optional<Y9Person> findById(String id) {
-        return y9PersonManager.findById(id);
+        return y9PersonManager.findByIdFromCache(id);
     }
 
     @Override
@@ -221,7 +221,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional(readOnly = true)
     public Y9Person getById(String id) {
-        return y9PersonManager.getById(id);
+        return y9PersonManager.getByIdFromCache(id);
     }
 
     @Override
@@ -442,7 +442,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Transactional(readOnly = false)
     public Y9Person saveOrUpdate(Y9Person person, Y9PersonExt personExt) {
         if (StringUtils.isNotBlank(person.getId())) {
-            Optional<Y9Person> personOptional = y9PersonManager.findByIdNotCache(person.getId());
+            Optional<Y9Person> personOptional = y9PersonManager.findById(person.getId());
             if (personOptional.isPresent()) {
                 Y9Person originalPerson = Y9ModelConvertUtil.convert(personOptional.get(), Y9Person.class);
 

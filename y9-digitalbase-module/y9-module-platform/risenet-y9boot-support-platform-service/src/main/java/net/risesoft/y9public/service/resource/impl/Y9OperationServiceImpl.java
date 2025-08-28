@@ -158,7 +158,7 @@ public class Y9OperationServiceImpl implements Y9OperationService {
 
     @Override
     public Optional<Y9Operation> findById(String id) {
-        return y9OperationManager.findById(id);
+        return y9OperationManager.findByIdFromCache(id);
     }
 
     @Override
@@ -168,7 +168,7 @@ public class Y9OperationServiceImpl implements Y9OperationService {
 
     @Override
     public Y9Operation getById(String id) {
-        return y9OperationManager.getById(id);
+        return y9OperationManager.getByIdFromCache(id);
     }
 
     @Override

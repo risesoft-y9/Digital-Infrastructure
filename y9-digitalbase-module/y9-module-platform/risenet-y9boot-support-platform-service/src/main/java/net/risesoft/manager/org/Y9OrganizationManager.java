@@ -16,7 +16,7 @@ public interface Y9OrganizationManager {
 
     void delete(Y9Organization y9Organization);
 
-    Optional<Y9Organization> findById(String id);
+    Optional<Y9Organization> findByIdFromCache(String id);
 
     /**
      * 根据id，获取组织机构信息（直接读取数据库）
@@ -24,7 +24,7 @@ public interface Y9OrganizationManager {
      * @param id 组织机构id
      * @return {@code Optional<Y9Organization>}
      */
-    Optional<Y9Organization> findByIdNotCache(String id);
+    Optional<Y9Organization> findById(String id);
 
     /**
      * 根据id，获取组织机构信息
@@ -33,7 +33,7 @@ public interface Y9OrganizationManager {
      * @return {@link Y9Organization}
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
-    Y9Organization getById(String id);
+    Y9Organization getByIdFromCache(String id);
 
     /**
      * 根据id，获取组织机构信息（直接读取数据库）
@@ -41,7 +41,7 @@ public interface Y9OrganizationManager {
      * @param id 组织机构id
      * @return {@link Y9Organization}
      */
-    Y9Organization getByIdNotCache(String id);
+    Y9Organization getById(String id);
 
     Y9Organization insert(Y9Organization organization);
 

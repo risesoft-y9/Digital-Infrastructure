@@ -78,7 +78,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
             .findByIdAndResourceType(y9Authorization.getResourceId(), y9Authorization.getResourceType())
             .getName();
         String principalName = Objects.equals(AuthorizationPrincipalTypeEnum.ROLE, y9Authorization.getPrincipalType())
-            ? y9RoleManager.getById(y9Authorization.getPrincipalId()).getName()
+            ? y9RoleManager.getByIdFromCache(y9Authorization.getPrincipalId()).getName()
             : compositeOrgBaseManager.getOrgUnit(y9Authorization.getPrincipalId()).getName();
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.AUTHORIZATION_DELETE.getAction())
@@ -221,7 +221,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
             .findByIdAndResourceType(y9Authorization.getResourceId(), y9Authorization.getResourceType())
             .getName();
         String principalName = Objects.equals(AuthorizationPrincipalTypeEnum.ROLE, y9Authorization.getPrincipalType())
-            ? y9RoleManager.getById(y9Authorization.getPrincipalId()).getName()
+            ? y9RoleManager.getByIdFromCache(y9Authorization.getPrincipalId()).getName()
             : compositeOrgBaseManager.getOrgUnit(y9Authorization.getPrincipalId()).getName();
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.AUTHORIZATION_CREATE.getAction())
@@ -273,7 +273,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     @Override
     @Transactional(readOnly = false)
     public Y9Authorization saveOrUpdateRole(Y9Authorization y9Authorization) {
-        Y9Role role = y9RoleManager.getById(y9Authorization.getPrincipalId());
+        Y9Role role = y9RoleManager.getByIdFromCache(y9Authorization.getPrincipalId());
         y9Authorization.setPrincipalId(role.getId());
         y9Authorization.setPrincipalName(role.getName());
         y9Authorization.setPrincipalType(AuthorizationPrincipalTypeEnum.ROLE);

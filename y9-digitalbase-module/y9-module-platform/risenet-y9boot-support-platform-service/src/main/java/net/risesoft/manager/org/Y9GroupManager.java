@@ -15,7 +15,7 @@ public interface Y9GroupManager {
      * @param id 用户组id
      * @return {@code Optional<Y9Group>}
      */
-    Optional<Y9Group> findById(String id);
+    Optional<Y9Group> findByIdFromCache(String id);
 
     /**
      * 根据id，获取用户组信息（直接读取数据库）
@@ -23,7 +23,7 @@ public interface Y9GroupManager {
      * @param id 用户组id
      * @return {@code Optional<Y9Group>}
      */
-    Optional<Y9Group> findByIdNotCache(String id);
+    Optional<Y9Group> findById(String id);
 
     /**
      * 根据主键id获取用户组实例
@@ -32,9 +32,9 @@ public interface Y9GroupManager {
      * @return {@link Y9Group} 用户组对象
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
-    Y9Group getById(String id);
+    Y9Group getByIdFromCache(String id);
 
-    Y9Group getByIdNotCache(String id);
+    Y9Group getById(String id);
 
     Y9Group insert(Y9Group group);
 

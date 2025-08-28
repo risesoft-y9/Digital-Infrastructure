@@ -195,8 +195,8 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
                 // deptId 对应部门的三员
                 return true;
             }
-            Y9Department targetDepartment = y9DepartmentManager.getById(deptId);
-            Y9Department managerDept = y9DepartmentManager.getById(y9Manager.getParentId());
+            Y9Department targetDepartment = y9DepartmentManager.getByIdFromCache(deptId);
+            Y9Department managerDept = y9DepartmentManager.getByIdFromCache(y9Manager.getParentId());
             // 部门三员管理 parentId 对应的部门及其后代部门
             return Y9OrgUtil.isDescendantOf(targetDepartment, managerDept);
         }

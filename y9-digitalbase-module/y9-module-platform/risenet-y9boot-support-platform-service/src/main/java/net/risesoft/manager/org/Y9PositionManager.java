@@ -14,7 +14,7 @@ public interface Y9PositionManager {
 
     void delete(Y9Position y9Position);
 
-    Optional<Y9Position> findById(String id);
+    Optional<Y9Position> findByIdFromCache(String id);
 
     /**
      * 根据id，获取岗位信息（直接读取数据库）
@@ -22,7 +22,7 @@ public interface Y9PositionManager {
      * @param id 岗位id
      * @return {@code Optional<Y9Position>}
      */
-    Optional<Y9Position> findByIdNotCache(String id);
+    Optional<Y9Position> findById(String id);
 
     /**
      * 根据主键id获取岗位实例
@@ -31,7 +31,7 @@ public interface Y9PositionManager {
      * @return {@link Y9Position} 岗位对象
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
-    Y9Position getById(String id);
+    Y9Position getByIdFromCache(String id);
 
     /**
      * 根据主键id获取岗位实例（直接读取数据库）
@@ -39,7 +39,7 @@ public interface Y9PositionManager {
      * @param id 唯一标识
      * @return {@link Y9Position} 岗位对象
      */
-    Y9Position getByIdNotCache(String id);
+    Y9Position getById(String id);
 
     Y9Position save(Y9Position position);
 

@@ -107,12 +107,12 @@ public class Y9GroupServiceImpl implements Y9GroupService {
 
     @Override
     public Optional<Y9Group> findById(String id) {
-        return y9GroupManager.findById(id);
+        return y9GroupManager.findByIdFromCache(id);
     }
 
     @Override
     public Y9Group getById(String id) {
-        return y9GroupManager.getById(id);
+        return y9GroupManager.getByIdFromCache(id);
     }
 
     @Override
@@ -149,7 +149,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
             y9PersonsToGroupsRepository.findByPersonIdOrderByGroupOrder(personId);
         List<Y9Group> groupList = new ArrayList<>();
         for (Y9PersonsToGroups y9PersonsToGroups : y9PersonsToGroupsList) {
-            Optional<Y9Group> optionalY9Group = y9GroupManager.findById(y9PersonsToGroups.getGroupId());
+            Optional<Y9Group> optionalY9Group = y9GroupManager.findByIdFromCache(y9PersonsToGroups.getGroupId());
             if (optionalY9Group.isPresent()) {
                 Y9Group y9Group = optionalY9Group.get();
                 if (disabled == null || disabled.equals(y9Group.getDisabled())) {
@@ -199,7 +199,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     @Transactional(readOnly = false)
     public Y9Group saveOrUpdate(Y9Group group) {
         if (StringUtils.isNotBlank(group.getId())) {
-            Optional<Y9Group> groupOptional = y9GroupManager.findByIdNotCache(group.getId());
+            Optional<Y9Group> groupOptional = y9GroupManager.findById(group.getId());
             if (groupOptional.isPresent()) {
                 Y9Group originalGroup = Y9ModelConvertUtil.convert(groupOptional.get(), Y9Group.class);
                 Y9Group savedGroup = y9GroupManager.update(group);
