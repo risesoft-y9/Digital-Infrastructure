@@ -2,7 +2,7 @@ package net.risesoft.y9public.service;
 
 import java.util.List;
 
-import net.risesoft.y9public.entity.Y9logUserHostIpInfo;
+import net.risesoft.log.domain.Y9LogUserHostIpInfoDO;
 
 /**
  * 人员登录ip记录管理
@@ -27,7 +27,7 @@ public interface Y9logUserHostIpInfoService {
      * @param userHostIp 登录用户机器IP
      * @return {@code List<Y9logUserHostIpInfo>}
      */
-    List<Y9logUserHostIpInfo> listByUserHostIp(String userHostIp);
+    List<Y9LogUserHostIpInfoDO> listByUserHostIp(String userHostIp);
 
     /**
      * 根据clientIp的ABC段,获取人员登录终端记录
@@ -35,7 +35,7 @@ public interface Y9logUserHostIpInfoService {
      * @param clientIpSection clientIp的ABC段
      * @return {@code List<Y9logUserHostIpInfo>}
      */
-    List<Y9logUserHostIpInfo> listUserHostIpByClientIpSection(String clientIpSection);
+    List<Y9LogUserHostIpInfoDO> listUserHostIpByClientIpSection(String clientIpSection);
 
     /**
      * 模糊搜索终端IP列表
@@ -48,7 +48,7 @@ public interface Y9logUserHostIpInfoService {
     /**
      * 保存人员登录ip记录
      * 
-     * @param y9logUserHostIpInfo 人员登录ip记录
+     * @param y9LogUserHostIpInfoDO 人员登录ip记录
      */
-    void save(Y9logUserHostIpInfo y9logUserHostIpInfo);
+    void save(Y9LogUserHostIpInfoDO y9LogUserHostIpInfoDO);
 }

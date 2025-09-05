@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.log.ClickedAppApi;
+import net.risesoft.log.domain.Y9ClickedAppDO;
 import net.risesoft.model.log.ClickedApp;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.json.Y9JsonUtil;
-import net.risesoft.y9public.entity.Y9ClickedApp;
 import net.risesoft.y9public.service.Y9ClickedAppService;
 
 /**
@@ -39,7 +39,7 @@ public class ClickedAppApiController implements ClickedAppApi {
     @PostMapping("/saveClickedAppLog")
     public Y9Result<Object> saveClickedAppLog(@RequestBody ClickedApp clickedApp) {
         String clickedAppJson = Y9JsonUtil.writeValueAsString(clickedApp);
-        Y9ClickedApp clickedApp2 = Y9JsonUtil.readValue(clickedAppJson, Y9ClickedApp.class);
+        Y9ClickedAppDO clickedApp2 = Y9JsonUtil.readValue(clickedAppJson, Y9ClickedAppDO.class);
         y9ClickedAppService.save(clickedApp2);
         return Y9Result.success();
     }

@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.y9public.entity.Y9ClickedApp;
-import net.risesoft.y9public.repository.Y9ClickedAppRepository;
+import net.risesoft.log.domain.Y9ClickedAppDO;
+import net.risesoft.log.repository.Y9ClickedAppCustomRepository;
 import net.risesoft.y9public.service.Y9ClickedAppService;
 
 /**
@@ -19,11 +19,11 @@ import net.risesoft.y9public.service.Y9ClickedAppService;
 @RequiredArgsConstructor
 public class Y9ClickedAppServiceImpl implements Y9ClickedAppService {
 
-    private final Y9ClickedAppRepository y9ClickedAppRepository;
+    private final Y9ClickedAppCustomRepository y9ClickedAppCustomRepository;
 
     @Override
-    public void save(Y9ClickedApp clickedApp) {
-        y9ClickedAppRepository.save(clickedApp);
+    public void save(Y9ClickedAppDO clickedApp) {
+        y9ClickedAppCustomRepository.save(clickedApp);
     }
 
 }

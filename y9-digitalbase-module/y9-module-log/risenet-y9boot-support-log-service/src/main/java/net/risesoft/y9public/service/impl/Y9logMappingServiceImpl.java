@@ -2,6 +2,7 @@ package net.risesoft.y9public.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,9 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.y9public.entity.Y9logMapping;
-import net.risesoft.y9public.repository.Y9logMappingRepository;
-import net.risesoft.y9public.repository.custom.Y9logMappingCustomRepository;
+import net.risesoft.log.domain.Y9LogMappingDO;
+import net.risesoft.log.repository.Y9logMappingCustomRepository;
 import net.risesoft.y9public.service.Y9logMappingService;
 
 /**
@@ -28,14 +28,12 @@ import net.risesoft.y9public.service.Y9logMappingService;
 @Transactional(readOnly = true)
 public class Y9logMappingServiceImpl implements Y9logMappingService {
 
-    private final Y9logMappingRepository y9logMappingRepository;
-
     private final Y9logMappingCustomRepository y9logMappingCustomRepository;
 
     @Override
     @Transactional(readOnly = false)
     public void deleteFieldMapping(String id) {
-        y9logMappingRepository.deleteById(id);
+        y9logMappingCustomRepository.deleteById(id);
     }
 
     @Override
@@ -44,35 +42,35 @@ public class Y9logMappingServiceImpl implements Y9logMappingService {
     }
 
     @Override
-    public Y9logMapping getFieldMappingEntity(String id) {
-        return y9logMappingRepository.findById(id).orElse(null);
+    public Y9LogMappingDO getFieldMappingEntity(String id) {
+        return y9logMappingCustomRepository.findById(id).orElse(null);
     }
 
     @Override
-    public Page<Y9logMapping> page(int page, int rows, String sort) {
-        if (sort != null && !"".equals(sort)) {
+    public Page<Y9LogMappingDO> page(int page, int rows, String sort) {
+        if (StringUtils.isNotEmpty(sort)) {
             Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.by(Sort.Direction.DESC, sort));
-            return y9logMappingRepository.findAll(pageable);
+            return y9logMappingCustomRepository.page(pageable);
         }
         Pageable pageable =
             PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.by(Sort.Direction.DESC, "modularName"));
-        return y9logMappingRepository.findAll(pageable);
+        return y9logMappingCustomRepository.page(pageable);
     }
 
     @Override
-    public Page<Y9logMapping> pageSearchList(Integer page, Integer rows, String modularName, String modularCnName) {
+    public Page<Y9LogMappingDO> pageSearchList(Integer page, Integer rows, String modularName, String modularCnName) {
         return y9logMappingCustomRepository.pageSearchList(page, rows, modularName, modularCnName);
     }
 
     @Override
     @Transactional(readOnly = false)
-    public void save(Y9logMapping y9logMapping) {
-        y9logMappingRepository.save(y9logMapping);
+    public void save(Y9LogMappingDO y9LogMappingDO) {
+        y9logMappingCustomRepository.save(y9LogMappingDO);
     }
 
     @Override
-    public List<Y9logMapping> validateName(String name) {
-        return y9logMappingRepository.findByModularName(name);
+    public List<Y9LogMappingDO> validateName(String name) {
+        return y9logMappingCustomRepository.findByModularName(name);
     }
 
 }

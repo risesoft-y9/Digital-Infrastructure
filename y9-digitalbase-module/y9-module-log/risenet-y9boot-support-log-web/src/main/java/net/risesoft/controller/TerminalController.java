@@ -21,14 +21,14 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.log.domain.Y9LogIpDeptMappingDO;
+import net.risesoft.log.domain.Y9LogUserLoginInfoDO;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9Day;
-import net.risesoft.y9public.entity.Y9logIpDeptMapping;
-import net.risesoft.y9public.entity.Y9logUserLoginInfo;
 import net.risesoft.y9public.service.Y9logIpDeptMappingService;
 import net.risesoft.y9public.service.Y9logUserHostIpInfoService;
 import net.risesoft.y9public.service.Y9logUserLoginInfoService;
@@ -95,8 +95,8 @@ public class TerminalController {
     @GetMapping(value = "/listAllUserHostIPs")
     public Y9Result<List<Map<String, Object>>> listAllUserHostIPs() {
         List<Map<String, Object>> cIPlist = new ArrayList<>();
-        List<Y9logIpDeptMapping> ipDeptMappingList = y9logIpDeptMappingService.listAllOrderByClientIpSection();
-        for (Y9logIpDeptMapping ipDeptMapping : ipDeptMappingList) {
+        List<Y9LogIpDeptMappingDO> ipDeptMappingList = y9logIpDeptMappingService.listAllOrderByClientIpSection();
+        for (Y9LogIpDeptMappingDO ipDeptMapping : ipDeptMappingList) {
             String cip = ipDeptMapping.getClientIpSection();
             HashMap<String, Object> cIPMap = new HashMap<>();
             cIPMap.put("pid", 0);
@@ -235,7 +235,7 @@ public class TerminalController {
      */
     @RiseLog(moduleName = "日志系统", operationName = "根据终端C段IP和时间段查询出该时间段终端IP的登录详情", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/pageSearchByLoginTime")
-    public Y9Page<Y9logUserLoginInfo> pageSearchByLoginTime(String startTime, String endTime, String userHostIp,
+    public Y9Page<Y9LogUserLoginInfoDO> pageSearchByLoginTime(String startTime, String endTime, String userHostIp,
         Y9PageQuery pageQuery) {
         Date start = null;
         Date end = null;
@@ -254,7 +254,7 @@ public class TerminalController {
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
         }
-        Y9Page<Y9logUserLoginInfo> userLoginInfoList = null;
+        Y9Page<Y9LogUserLoginInfoDO> userLoginInfoList = null;
         if (StringUtils.isNotBlank(userHostIp)) {
             userLoginInfoList = y9logUserLoginInfoService.pageByUserHostIpLikeAndLoginTimeBetweenAndSuccess(userHostIp,
                 start, end, "true", pageQuery.getPage(), pageQuery.getSize());
@@ -278,8 +278,8 @@ public class TerminalController {
      */
     @RiseLog(moduleName = "日志系统", operationName = "根据终端IP和人员以及时间段模糊搜索改人员的详细信息", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/pageSearchList")
-    public Y9Page<Y9logUserLoginInfo> pageSearchList(String userHostIp, String userId, String startTime, String endTime,
-        Y9PageQuery pageQuery) {
+    public Y9Page<Y9LogUserLoginInfoDO> pageSearchList(String userHostIp, String userId, String startTime,
+        String endTime, Y9PageQuery pageQuery) {
         return y9logUserLoginInfoService.page(null, userHostIp, userId, "true", startTime, endTime, pageQuery);
     }
 
@@ -313,8 +313,9 @@ public class TerminalController {
      */
     @RiseLog(moduleName = "日志系统", operationName = "根据终端IP和人员获取人员的详细信息", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/pageUserTerminalDetail")
-    public Y9Page<Y9logUserLoginInfo> pageUserTerminalDetail(String userId, String userHostIp, Y9PageQuery pageQuery) {
-        Page<Y9logUserLoginInfo> userLoginInfoList = y9logUserLoginInfoService
+    public Y9Page<Y9LogUserLoginInfoDO> pageUserTerminalDetail(String userId, String userHostIp,
+        Y9PageQuery pageQuery) {
+        Page<Y9LogUserLoginInfoDO> userLoginInfoList = y9logUserLoginInfoService
             .pageBySuccessAndUserHostIpAndUserId("true", userHostIp, userId, pageQuery.getPage(), pageQuery.getSize());
         return Y9Page.success(pageQuery.getPage(), userLoginInfoList.getTotalPages(),
             userLoginInfoList.getTotalElements(), userLoginInfoList.getContent());

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
-import net.risesoft.y9public.entity.Y9logMapping;
+import net.risesoft.log.domain.Y9LogMappingDO;
 
 /**
  * 模块名称映射
@@ -26,7 +26,7 @@ public interface Y9logMappingService {
      */
     String getCnModularName(String modularName);
 
-    Y9logMapping getFieldMappingEntity(String id);
+    Y9LogMappingDO getFieldMappingEntity(String id);
 
     /**
      * 分页获取模块名称映射
@@ -36,7 +36,7 @@ public interface Y9logMappingService {
      * @param sort 排序方式
      * @return {@code Page<Y9logMapping>}
      */
-    Page<Y9logMapping> page(int page, int rows, String sort);
+    Page<Y9LogMappingDO> page(int page, int rows, String sort);
 
     /**
      * 搜索模块名称映射
@@ -47,14 +47,14 @@ public interface Y9logMappingService {
      * @param modularCnName 中文映射
      * @return {@code Page<Y9logMapping>}
      */
-    Page<Y9logMapping> pageSearchList(Integer page, Integer rows, String modularName, String modularCnName);
+    Page<Y9LogMappingDO> pageSearchList(Integer page, Integer rows, String modularName, String modularCnName);
 
     /**
      * 保存模块名称映射
      * 
-     * @param y9logMapping 模块名称映射详情
+     * @param y9LogMappingDO 模块名称映射详情
      */
-    void save(Y9logMapping y9logMapping);
+    void save(Y9LogMappingDO y9LogMappingDO);
 
     /**
      * 验证字段映射是否存在
@@ -62,5 +62,5 @@ public interface Y9logMappingService {
      * @param name 模块名称
      * @return {@code List<Y9logMapping>}
      */
-    List<Y9logMapping> validateName(String name);
+    List<Y9LogMappingDO> validateName(String name);
 }

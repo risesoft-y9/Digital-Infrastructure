@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
+import net.risesoft.log.domain.Y9LogFlowableAccessLogDO;
 import net.risesoft.model.log.FlowableAccessLog;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
-import net.risesoft.y9public.entity.Y9logFlowableAccessLog;
 
 /**
  * 日志管理
@@ -37,7 +37,7 @@ public interface Y9logFlowableAccessLogService {
      * @param sort 排序方式
      * @return {@code Page<Y9logFlowableAccessLog>}
      */
-    Page<Y9logFlowableAccessLog> page(int page, int rows, String sort);
+    Page<Y9LogFlowableAccessLogDO> page(int page, int rows, String sort);
 
     /**
      * 多条件分页查询访问日志
@@ -65,7 +65,7 @@ public interface Y9logFlowableAccessLogService {
      * @return {@code Page<Y9logFlowableAccessLog>}
      * @throws ParseException -an error has been reached unexpectedly while parsing.
      */
-    Page<Y9logFlowableAccessLog> pageElapsedTimeByCondition(LogInfoModel search, String startDay, String endDay,
+    Page<Y9LogFlowableAccessLogDO> pageElapsedTimeByCondition(LogInfoModel search, String startDay, String endDay,
         String startTime, String endTime, Integer page, Integer rows) throws ParseException;
 
     /**
@@ -80,7 +80,7 @@ public interface Y9logFlowableAccessLogService {
      * @return {@code Page<Y9logFlowableAccessLog>}
      * @throws ParseException -an error has been reached unexpectedly while parsing.
      */
-    Page<Y9logFlowableAccessLog> pageOperateStatusByOperateStatus(LogInfoModel search, String operateStatus,
+    Page<Y9LogFlowableAccessLogDO> pageOperateStatusByOperateStatus(LogInfoModel search, String operateStatus,
         String date, String hour, Integer page, Integer rows) throws ParseException;
 
     /**
@@ -93,8 +93,8 @@ public interface Y9logFlowableAccessLogService {
      * @param rows 条数
      * @return {@code Page<Y9logFlowableAccessLog>}
      */
-    Page<Y9logFlowableAccessLog> pageSearchByCondition(LogInfoModel search, String startTime, String endTime,
+    Page<Y9LogFlowableAccessLogDO> pageSearchByCondition(LogInfoModel search, String startTime, String endTime,
         Integer page, Integer rows);
 
-    void save(Y9logFlowableAccessLog y9logFlowableAccessLog);
+    void save(Y9LogFlowableAccessLogDO y9LogFlowableAccessLogDO);
 }

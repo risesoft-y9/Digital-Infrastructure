@@ -25,11 +25,14 @@
     <modules>
         <module>risenet-y9boot-api-feignclient-log</module>
         <module>risenet-y9boot-api-interface-log</module>
+        <module>risenet-y9boot-support-log-repository-api</module>
         <module>risenet-y9boot-support-log-elasticsearch-repository</module>
         <module>risenet-y9boot-support-log-jpa-repository</module>
         <module>risenet-y9boot-support-log-service</module>
         <module>risenet-y9boot-support-log-web</module>
+
         <module>risenet-y9boot-server-log</module>
+        <module>risenet-y9boot-server-log-jpa</module>
     </modules>
 
 </project>

@@ -4,8 +4,8 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.log.domain.Y9LogUserLoginInfoDO;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.PersonInformation;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.mime.ContentDispositionUtil;
-import net.risesoft.y9public.entity.Y9logUserLoginInfo;
 import net.risesoft.y9public.service.Y9logUserLoginInfoService;
 
 import y9.client.rest.platform.org.PersonApiClient;
@@ -106,16 +106,11 @@ public class DownloadController {
     }
 
     public List<PersonInformation> loginData(String tenantID) {
-        Iterable<Y9logUserLoginInfo> userLoginInfoList = userLoginInfoService.listAll();
-        Iterator<Y9logUserLoginInfo> iterator = userLoginInfoList.iterator();
-        List<String> userIDList = new ArrayList<String>();
-        while (iterator.hasNext()) {
-            Y9logUserLoginInfo info = iterator.next();
-            String userId = info.getUserId();
-            if (!userIDList.contains(userId)) {
-                userIDList.add(userId);
-            }
-        }
+        List<String> userIDList = userLoginInfoService.listAll()
+            .stream()
+            .map(Y9LogUserLoginInfoDO::getUserId)
+            .distinct()
+            .collect(Collectors.toList());
 
         List<Person> persons = personManager.list(tenantID).getData();
         List<PersonInformation> personInformationList = new ArrayList<PersonInformation>();
@@ -150,16 +145,11 @@ public class DownloadController {
     }
 
     public List<PersonInformation> notLoginData(String tenantID) {
-        Iterable<Y9logUserLoginInfo> userLoginInfoList = userLoginInfoService.listAll();
-        Iterator<Y9logUserLoginInfo> iterator = userLoginInfoList.iterator();
-        List<String> userIDList = new ArrayList<String>();
-        while (iterator.hasNext()) {
-            Y9logUserLoginInfo info = iterator.next();
-            String userId = info.getUserId();
-            if (!userIDList.contains(userId)) {
-                userIDList.add(userId);
-            }
-        }
+        List<String> userIDList = userLoginInfoService.listAll()
+            .stream()
+            .map(Y9LogUserLoginInfoDO::getUserId)
+            .distinct()
+            .collect(Collectors.toList());
 
         List<Person> persons = personManager.list(tenantID).getData();
         List<PersonInformation> personInformationList = new ArrayList<PersonInformation>();

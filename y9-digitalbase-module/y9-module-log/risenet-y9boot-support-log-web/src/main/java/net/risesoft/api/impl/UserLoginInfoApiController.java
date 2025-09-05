@@ -24,15 +24,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.api.log.UserLoginInfoApi;
+import net.risesoft.log.domain.Y9LogIpDeptMappingDO;
+import net.risesoft.log.domain.Y9LogUserHostIpInfoDO;
+import net.risesoft.log.domain.Y9LogUserLoginInfoDO;
 import net.risesoft.model.log.LoginInfo;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
-import net.risesoft.y9public.entity.Y9logIpDeptMapping;
-import net.risesoft.y9public.entity.Y9logUserHostIpInfo;
-import net.risesoft.y9public.entity.Y9logUserLoginInfo;
 import net.risesoft.y9public.service.Y9logIpDeptMappingService;
 import net.risesoft.y9public.service.Y9logUserHostIpInfoService;
 import net.risesoft.y9public.service.Y9logUserLoginInfoService;
@@ -67,7 +67,7 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
     @Override
     public LoginInfo getTopByTenantIdAndUserId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
-        Y9logUserLoginInfo login = userLoginInfoService.getTopByTenantIdAndUserId(tenantId, personId);
+        Y9LogUserLoginInfoDO login = userLoginInfoService.getTopByTenantIdAndUserId(tenantId, personId);
         return Y9ModelConvertUtil.convert(login, LoginInfo.class);
     }
 
@@ -92,9 +92,9 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
         @RequestParam(value = "startTime", required = false) String startTime,
         @RequestParam(value = "endTime", required = false) String endTime, @Validated Y9PageQuery pageQuery) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        Y9Page<Y9logUserLoginInfo> loginList =
+        Y9Page<Y9LogUserLoginInfoDO> loginList =
             userLoginInfoService.page(tenantId, userHostIp, userHostIp, success, startTime, endTime, pageQuery);
-        List<Y9logUserLoginInfo> list = loginList.getRows();
+        List<Y9LogUserLoginInfoDO> list = loginList.getRows();
         List<LoginInfo> infoList = Y9ModelConvertUtil.convert(list, LoginInfo.class);
         return Y9Page.success(loginList.getCurrPage(), loginList.getTotalPages(), loginList.getTotal(), infoList);
     }
@@ -111,7 +111,7 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
     public Y9Result<Object> saveLoginInfo(@RequestBody LoginInfo info) {
         String userHostIp = info.getUserHostIp();
         if (userLoginInfoService != null) {
-            Y9logUserLoginInfo userLoginInfo = new Y9logUserLoginInfo();
+            Y9LogUserLoginInfoDO userLoginInfo = new Y9LogUserLoginInfoDO();
             userLoginInfo.setId(info.getId());
             userLoginInfo.setLoginTime(info.getLoginTime());
             userLoginInfo.setLoginType(info.getLoginType());
@@ -138,9 +138,9 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
          */
         String clientIpSection = userHostIp.substring(0, userHostIp.indexOf("."));
         if (userHostIpInfoService != null) {
-            List<Y9logUserHostIpInfo> list = userHostIpInfoService.listByUserHostIp(userHostIp);
+            List<Y9LogUserHostIpInfoDO> list = userHostIpInfoService.listByUserHostIp(userHostIp);
             if (list.size() <= 0) {
-                Y9logUserHostIpInfo userHostIpInfo = new Y9logUserHostIpInfo();
+                Y9LogUserHostIpInfoDO userHostIpInfo = new Y9LogUserHostIpInfoDO();
                 userHostIpInfo.setId(UUID.randomUUID().toString().replaceAll("-", ""));
                 userHostIpInfo.setClientIpSection(clientIpSection);
                 userHostIpInfo.setUserHostIp(userHostIp);
@@ -150,9 +150,9 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
 
         if (ipDeptMappingService != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            List<Y9logIpDeptMapping> list = ipDeptMappingService.listByClientIpSection(clientIpSection);
+            List<Y9LogIpDeptMappingDO> list = ipDeptMappingService.listByClientIpSection(clientIpSection);
             if (list.size() <= 0) {
-                Y9logIpDeptMapping ipDeptMapping = new Y9logIpDeptMapping();
+                Y9LogIpDeptMappingDO ipDeptMapping = new Y9LogIpDeptMappingDO();
                 ipDeptMapping.setId(UUID.randomUUID().toString().replaceAll("-", ""));
                 ipDeptMapping.setClientIpSection(clientIpSection);
                 ipDeptMapping.setDeptName("此IP未指定部门");
@@ -163,7 +163,7 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
                 ipDeptMapping.setUpdateTime(sdf.format(new Date()));
                 ipDeptMappingService.save(ipDeptMapping);
             } else {
-                for (Y9logIpDeptMapping ipDeptMapping : list) {
+                for (Y9LogIpDeptMappingDO ipDeptMapping : list) {
                     if (ipDeptMapping.getStatus() == null || ipDeptMapping.getStatus() != 1) {
                         ipDeptMapping.setStatus(1);
                         ipDeptMappingService.save(ipDeptMapping);

@@ -6,10 +6,10 @@ import java.util.Map;
 
 import org.springframework.data.domain.Page;
 
+import net.risesoft.log.domain.Y9LogUserLoginInfoDO;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
-import net.risesoft.y9public.entity.Y9logUserLoginInfo;
 
 /**
  * 登录日志管理
@@ -50,25 +50,6 @@ public interface Y9logUserLoginInfoService {
     long countBySuccessAndUserHostIpAndUserId(String success, String userHostIp, String userId);
 
     /**
-     * 根据userHostIP,查询人员登录成功的次数
-     *
-     * @param userHostIp 登录人员机器IP
-     * @param success 登录是否成功
-     * @return long
-     */
-    long countByUserHostIpAndSuccess(String userHostIp, String success);
-
-    /**
-     * 根据userHostIP和人员名称,模糊查询人员登录成功的次数
-     *
-     * @param userHostIp 登录人员机器IP
-     * @param success 登录是否成功
-     * @param userName 人员名称
-     * @return long
-     */
-    long countByUserHostIpAndSuccessAndUserNameLike(String userHostIp, String success, String userName);
-
-    /**
      * 获取一定时间段内的特点IP段登录人数数据
      *
      * @param userHostIp 登录人员机器IP
@@ -87,24 +68,14 @@ public interface Y9logUserLoginInfoService {
      * @param userId 人员id
      * @return Y9logUserLoginInfo
      */
-    Y9logUserLoginInfo getTopByTenantIdAndUserId(String tenantId, String userId);
+    Y9LogUserLoginInfoDO getTopByTenantIdAndUserId(String tenantId, String userId);
 
     /**
      * 获取全部登录信息
      *
      * @return {@code Iterable<Y9logUserLoginInfo>}
      */
-    Iterable<Y9logUserLoginInfo> listAll();
-
-    /**
-     * 根据人员id，获得特定时间段内该人员登陆的所有终端ip和登录次数。
-     *
-     * @param userId 人员id
-     * @param startTime 开始时间
-     * @param endTime 结束时间
-     * @return {@code List<Object[]>}
-     */
-    List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(String userId, Date startTime, Date endTime);
+    List<Y9LogUserLoginInfoDO> listAll();
 
     /**
      * 根据C类IP段，获取属于该IP段的IP地址和登录次数
@@ -135,8 +106,8 @@ public interface Y9logUserLoginInfoService {
      * @param pageQuery 分页信息
      * @return {@code Y9Page<Y9logUserLoginInfo>}
      */
-    Y9Page<Y9logUserLoginInfo> page(String tenantId, String userHostIp, String userId, String success, String startTime,
-        String endTime, Y9PageQuery pageQuery);
+    Y9Page<Y9LogUserLoginInfoDO> page(String tenantId, String userHostIp, String userId, String success,
+        String startTime, String endTime, Y9PageQuery pageQuery);
 
     /**
      * 获取特定时间段内的登录成功信息
@@ -148,8 +119,8 @@ public interface Y9logUserLoginInfoService {
      * @param rows 条数
      * @return {@code Y9Page<Y9logUserLoginInfo>}
      */
-    Y9Page<Y9logUserLoginInfo> pageByLoginTimeBetweenAndSuccess(Date startTime, Date endTime, String success, int page,
-        int rows);
+    Y9Page<Y9LogUserLoginInfoDO> pageByLoginTimeBetweenAndSuccess(Date startTime, Date endTime, String success,
+        int page, int rows);
 
     /**
      * 根据终端IP和人员获取人员的详细分页信息
@@ -161,7 +132,7 @@ public interface Y9logUserLoginInfoService {
      * @param rows 条数
      * @return {@code  Page<Y9logUserLoginInfo>}
      */
-    Page<Y9logUserLoginInfo> pageBySuccessAndUserHostIpAndUserId(String success, String userHostIp, String userId,
+    Page<Y9LogUserLoginInfoDO> pageBySuccessAndUserHostIpAndUserId(String success, String userHostIp, String userId,
         int page, int rows);
 
     /**
@@ -173,7 +144,7 @@ public interface Y9logUserLoginInfoService {
      * @param rows 条数
      * @return {@code  Page<Y9logUserLoginInfo>}
      */
-    Page<Y9logUserLoginInfo> pageByTenantIdAndManagerLevel(String tenantId, String managerLevel, int page, int rows);
+    Page<Y9LogUserLoginInfoDO> pageByTenantIdAndManagerLevel(String tenantId, String managerLevel, int page, int rows);
 
     /**
      * 根据IP，获取登录分页详情
@@ -210,15 +181,15 @@ public interface Y9logUserLoginInfoService {
      * @param rows 条数
      * @return {@code Y9Page<Y9logUserLoginInfo>}
      */
-    Y9Page<Y9logUserLoginInfo> pageByUserHostIpLikeAndLoginTimeBetweenAndSuccess(String userHostIp, Date startTime,
+    Y9Page<Y9LogUserLoginInfoDO> pageByUserHostIpLikeAndLoginTimeBetweenAndSuccess(String userHostIp, Date startTime,
         Date endTime, String success, int page, int rows);
 
     /**
      * 保存用户登录信息
      * 
-     * @param y9logUserLoginInfo 用户登录详情
+     * @param y9LogUserLoginInfoDO 用户登录详情
      */
-    void save(Y9logUserLoginInfo y9logUserLoginInfo);
+    void save(Y9LogUserLoginInfoDO y9LogUserLoginInfoDO);
 
     /**
      * 根据条件查询，返回相应的管理员登录日志
@@ -230,6 +201,6 @@ public interface Y9logUserLoginInfoService {
      * @param rows 条数
      * @return {@code Y9Page<Y9logUserLoginInfo>}
      */
-    Y9Page<Y9logUserLoginInfo> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel, int page,
-        int rows);
+    Y9Page<Y9LogUserLoginInfoDO> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel,
+        int page, int rows);
 }

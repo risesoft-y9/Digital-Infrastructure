@@ -1,10 +1,6 @@
 package net.risesoft.y9public.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -12,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.y9public.entity.Y9logUserHostIpInfo;
-import net.risesoft.y9public.repository.Y9logUserHostIpInfoRepository;
+import net.risesoft.log.domain.Y9LogUserHostIpInfoDO;
+import net.risesoft.log.repository.Y9logUserHostIpInfoCustomRepository;
 import net.risesoft.y9public.service.Y9logUserHostIpInfoService;
 
 /**
@@ -28,39 +24,36 @@ import net.risesoft.y9public.service.Y9logUserHostIpInfoService;
 @Transactional(readOnly = true)
 public class Y9logUserHostIpInfoServiceImpl implements Y9logUserHostIpInfoService {
 
-    private final Y9logUserHostIpInfoRepository y9logUserHostIpInfoRepository;
+    private final Y9logUserHostIpInfoCustomRepository y9logUserHostIpInfoCustomRepository;
 
     @Override
     public List<String> listAllUserHostIps() {
-        Iterator<Y9logUserHostIpInfo> userHostIpIterator = y9logUserHostIpInfoRepository.findAll().iterator();
-        Set<String> list = new HashSet<>();
-        while (userHostIpIterator.hasNext()) {
-            list.add(userHostIpIterator.next().getUserHostIp());
-        }
-        List<String> userHostIpList = new ArrayList<>();
-        userHostIpList.addAll(list);
-        return userHostIpList;
+        return y9logUserHostIpInfoCustomRepository.findAll()
+            .stream()
+            .map(Y9LogUserHostIpInfoDO::getUserHostIp)
+            .distinct()
+            .collect(Collectors.toList());
     }
 
     @Override
-    public List<Y9logUserHostIpInfo> listByUserHostIp(String userHostIp) {
-        return y9logUserHostIpInfoRepository.findByUserHostIp(userHostIp);
+    public List<Y9LogUserHostIpInfoDO> listByUserHostIp(String userHostIp) {
+        return y9logUserHostIpInfoCustomRepository.findByUserHostIp(userHostIp);
     }
 
     @Override
-    public List<Y9logUserHostIpInfo> listUserHostIpByClientIpSection(String clientIpSection) {
-        return y9logUserHostIpInfoRepository.findByClientIpSection(clientIpSection);
+    public List<Y9LogUserHostIpInfoDO> listUserHostIpByClientIpSection(String clientIpSection) {
+        return y9logUserHostIpInfoCustomRepository.findByClientIpSection(clientIpSection);
     }
 
     @Override
     public List<String> listUserHostIpByUserHostIpLike(String userHostIp) {
-        List<Y9logUserHostIpInfo> list = y9logUserHostIpInfoRepository.findByUserHostIpStartingWith(userHostIp);
-        return list.stream().map(Y9logUserHostIpInfo::getUserHostIp).collect(Collectors.toList());
+        List<Y9LogUserHostIpInfoDO> list = y9logUserHostIpInfoCustomRepository.findByUserHostIpStartingWith(userHostIp);
+        return list.stream().map(Y9LogUserHostIpInfoDO::getUserHostIp).collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = false)
-    public void save(Y9logUserHostIpInfo y9logUserHostIpInfo) {
-        y9logUserHostIpInfoRepository.save(y9logUserHostIpInfo);
+    public void save(Y9LogUserHostIpInfoDO y9LogUserHostIpInfoDO) {
+        y9logUserHostIpInfoCustomRepository.save(y9LogUserHostIpInfoDO);
     }
 }
