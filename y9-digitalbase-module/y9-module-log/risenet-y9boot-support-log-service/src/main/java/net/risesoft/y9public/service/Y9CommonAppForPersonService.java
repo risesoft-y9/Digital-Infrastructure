@@ -2,7 +2,7 @@ package net.risesoft.y9public.service;
 
 import java.util.List;
 
-import net.risesoft.y9public.entity.Y9CommonAppForPerson;
+import net.risesoft.log.domain.Y9CommonAppForPersonDO;
 
 /**
  * 个人常用应用信息管理
@@ -22,10 +22,10 @@ public interface Y9CommonAppForPersonService {
      */
     List<String> getAppNamesByPersonId(String personId);
 
-    Y9CommonAppForPerson getCommonAppForPersonByPersonId(String personId);
+    Y9CommonAppForPersonDO getCommonAppForPersonByPersonId(String personId);
 
     long getCount();
 
-    void saveOrUpdate(Y9CommonAppForPerson cafp);
+    void saveOrUpdate(Y9CommonAppForPersonDO cafp);
 
 }

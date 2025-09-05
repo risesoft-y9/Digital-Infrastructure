@@ -21,13 +21,13 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.api.log.AccessLogApi;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.log.domain.Y9LogAccessLogDO;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
-import net.risesoft.y9public.entity.Y9logAccessLog;
 import net.risesoft.y9public.service.Y9logAccessLogService;
 
 import cn.hutool.core.thread.ThreadFactoryBuilder;
@@ -116,9 +116,9 @@ public class AccessLogApiController implements AccessLogApi {
     @PostMapping("/saveLog")
     public Y9Result<Object> saveLog(@RequestBody AccessLog accessLog) {
         String accessLogJson = Y9JsonUtil.writeValueAsString(accessLog);
-        Y9logAccessLog y9AccessLog = Y9JsonUtil.readValue(accessLogJson, Y9logAccessLog.class);
+        Y9LogAccessLogDO y9LogAccessLogDO = Y9JsonUtil.readValue(accessLogJson, Y9LogAccessLogDO.class);
         accessLog.setLogTime(new Date());
-        accessLogService.save(y9AccessLog);
+        accessLogService.save(y9LogAccessLogDO);
         return Y9Result.success();
     }
 

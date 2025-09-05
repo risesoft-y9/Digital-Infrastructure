@@ -13,11 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.log.domain.Y9LogFlowableAccessLogDO;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.y9public.entity.Y9logFlowableAccessLog;
 import net.risesoft.y9public.service.Y9logFlowableAccessLogService;
 
 /**
@@ -60,11 +60,11 @@ public class FlowableAccessLogController {
      */
     @RiseLog(moduleName = "日志系统", operationName = "搜索操作用时列表", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/pageByElapsedTime")
-    public Y9Page<Y9logFlowableAccessLog> pageByElapsedTime(LogInfoModel searchDto, String startDay, String endDay,
+    public Y9Page<Y9LogFlowableAccessLogDO> pageByElapsedTime(LogInfoModel searchDto, String startDay, String endDay,
         String sTime, String lTime, Y9PageQuery pageQuery) {
         try {
-            Page<Y9logFlowableAccessLog> pageResult = logService.pageElapsedTimeByCondition(searchDto, startDay, endDay,
-                sTime, lTime, pageQuery.getPage(), pageQuery.getSize());
+            Page<Y9LogFlowableAccessLogDO> pageResult = logService.pageElapsedTimeByCondition(searchDto, startDay,
+                endDay, sTime, lTime, pageQuery.getPage(), pageQuery.getSize());
             return Y9Page.success(pageQuery.getPage(), pageResult.getTotalPages(), pageResult.getTotalElements(),
                 pageResult.getContent());
         } catch (Exception e) {
@@ -86,10 +86,10 @@ public class FlowableAccessLogController {
      */
     @RiseLog(moduleName = "日志系统", operationName = "获取操作状态列表数据", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/pageByOperateStatus")
-    public Y9Page<Y9logFlowableAccessLog> pageByOperateStatus(LogInfoModel searchDto, String date, String hour,
+    public Y9Page<Y9LogFlowableAccessLogDO> pageByOperateStatus(LogInfoModel searchDto, String date, String hour,
         String operateStatus, Y9PageQuery pageQuery) throws ParseException {
-        Page<Y9logFlowableAccessLog> pageResult = logService.pageOperateStatusByOperateStatus(searchDto, operateStatus,
-            date, hour, pageQuery.getPage(), pageQuery.getSize());
+        Page<Y9LogFlowableAccessLogDO> pageResult = logService.pageOperateStatusByOperateStatus(searchDto,
+            operateStatus, date, hour, pageQuery.getPage(), pageQuery.getSize());
         return Y9Page.success(pageQuery.getPage(), pageResult.getTotalPages(), pageResult.getTotalElements(),
             pageResult.getContent());
     }
@@ -103,8 +103,8 @@ public class FlowableAccessLogController {
      */
     @RiseLog(moduleName = "日志系统", operationName = "获取日志分页列表", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/page")
-    public Y9Page<Y9logFlowableAccessLog> page(Y9PageQuery pageQuery, String sort) {
-        Page<Y9logFlowableAccessLog> pageList = logService.page(pageQuery.getPage(), pageQuery.getSize(), sort);
+    public Y9Page<Y9LogFlowableAccessLogDO> page(Y9PageQuery pageQuery, String sort) {
+        Page<Y9LogFlowableAccessLogDO> pageList = logService.page(pageQuery.getPage(), pageQuery.getSize(), sort);
         return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(),
             pageList.getContent());
     }
@@ -120,9 +120,9 @@ public class FlowableAccessLogController {
      */
     @RiseLog(moduleName = "日志系统", operationName = "搜索日志信息", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/pageSearch")
-    public Y9Page<Y9logFlowableAccessLog> pageSearch(LogInfoModel searchDto, Y9PageQuery pageQuery,
+    public Y9Page<Y9LogFlowableAccessLogDO> pageSearch(LogInfoModel searchDto, Y9PageQuery pageQuery,
         @RequestParam(required = false) String startTime, @RequestParam(required = false) String endTime) {
-        Page<Y9logFlowableAccessLog> resultPage =
+        Page<Y9LogFlowableAccessLogDO> resultPage =
             logService.pageSearchByCondition(searchDto, startTime, endTime, pageQuery.getPage(), pageQuery.getSize());
         return Y9Page.success(pageQuery.getPage(), resultPage.getTotalPages(), resultPage.getTotalElements(),
             resultPage.getContent());

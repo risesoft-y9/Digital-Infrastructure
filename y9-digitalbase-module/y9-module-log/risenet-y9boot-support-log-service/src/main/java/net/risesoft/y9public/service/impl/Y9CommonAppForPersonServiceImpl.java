@@ -6,9 +6,8 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.y9public.entity.Y9CommonAppForPerson;
-import net.risesoft.y9public.repository.Y9CommonAppForPersonRepository;
-import net.risesoft.y9public.repository.custom.Y9CommonAppForPersonCustomRepository;
+import net.risesoft.log.domain.Y9CommonAppForPersonDO;
+import net.risesoft.log.repository.Y9CommonAppForPersonCustomRepository;
 import net.risesoft.y9public.service.Y9CommonAppForPersonService;
 
 /**
@@ -22,7 +21,6 @@ import net.risesoft.y9public.service.Y9CommonAppForPersonService;
 @RequiredArgsConstructor
 public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonService {
 
-    private final Y9CommonAppForPersonRepository commonAppForPersonRepository;
     private final Y9CommonAppForPersonCustomRepository y9CommonAppForPersonCustomRepository;
 
     @Override
@@ -31,8 +29,8 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
     }
 
     @Override
-    public Y9CommonAppForPerson getCommonAppForPersonByPersonId(String personId) {
-        return commonAppForPersonRepository.findByPersonId(personId);
+    public Y9CommonAppForPersonDO getCommonAppForPersonByPersonId(String personId) {
+        return y9CommonAppForPersonCustomRepository.findByPersonId(personId);
     }
 
     @Override
@@ -41,8 +39,8 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
     }
 
     @Override
-    public void saveOrUpdate(Y9CommonAppForPerson cafp) {
-        commonAppForPersonRepository.save(cafp);
+    public void saveOrUpdate(Y9CommonAppForPersonDO cafp) {
+        y9CommonAppForPersonCustomRepository.save(cafp);
     }
 
 }
