@@ -19,9 +19,6 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Y9ClickedApp implements Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 144334145599572308L;
 
     @Id

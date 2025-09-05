@@ -6,9 +6,9 @@ import org.springframework.kafka.annotation.KafkaListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.log.domain.Y9LogFlowableAccessLogDO;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.pubsub.constant.Y9TopicConst;
-import net.risesoft.y9public.entity.Y9logFlowableAccessLog;
 import net.risesoft.y9public.service.Y9logFlowableAccessLogService;
 
 /**
@@ -24,9 +24,9 @@ public class Y9FlowableAccessLogListener {
     @KafkaListener(topics = {Y9TopicConst.Y9_ACCESSLOG_MESSAGE_FLOWABLE})
     public void listener(ConsumerRecord<String, String> data) {
         try {
-            Y9logFlowableAccessLog y9logFlowableAccessLog =
-                Y9JsonUtil.readValue(data.value(), Y9logFlowableAccessLog.class);
-            y9logFlowableAccessLogService.save(y9logFlowableAccessLog);
+            Y9LogFlowableAccessLogDO y9LogFlowableAccessLogDO =
+                Y9JsonUtil.readValue(data.value(), Y9LogFlowableAccessLogDO.class);
+            y9logFlowableAccessLogService.save(y9LogFlowableAccessLogDO);
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
         }

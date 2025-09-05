@@ -12,11 +12,11 @@ import org.springframework.kafka.annotation.KafkaListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.log.domain.Y9LogIpDeptMappingDO;
+import net.risesoft.log.domain.Y9LogUserHostIpInfoDO;
+import net.risesoft.log.domain.Y9LogUserLoginInfoDO;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.pubsub.constant.Y9TopicConst;
-import net.risesoft.y9public.entity.Y9logIpDeptMapping;
-import net.risesoft.y9public.entity.Y9logUserHostIpInfo;
-import net.risesoft.y9public.entity.Y9logUserLoginInfo;
 import net.risesoft.y9public.service.Y9logIpDeptMappingService;
 import net.risesoft.y9public.service.Y9logUserHostIpInfoService;
 import net.risesoft.y9public.service.Y9logUserLoginInfoService;
@@ -43,7 +43,7 @@ public class Y9UserLoginInfoListener {
             String tenantId = String.valueOf(map.get("tenantId"));
             String userName = String.valueOf(map.get("userName"));
             if (y9logUserLoginInfoService != null) {
-                Y9logUserLoginInfo userLoginInfo = new Y9logUserLoginInfo();
+                Y9LogUserLoginInfoDO userLoginInfo = new Y9LogUserLoginInfoDO();
                 userLoginInfo.setId(String.valueOf(map.get("id")));
                 userLoginInfo.setLoginTime(new Date());
                 userLoginInfo.setLoginType(String.valueOf(map.get("loginType")));
@@ -72,9 +72,9 @@ public class Y9UserLoginInfoListener {
              * 保存为录入的ip,部门为"此IP未指定部门"
              */
             if (y9logUserHostIpInfoService != null) {
-                List<Y9logUserHostIpInfo> list = y9logUserHostIpInfoService.listByUserHostIp(userHostIp);
+                List<Y9LogUserHostIpInfoDO> list = y9logUserHostIpInfoService.listByUserHostIp(userHostIp);
                 if (list == null || list.isEmpty()) {
-                    Y9logUserHostIpInfo entity = new Y9logUserHostIpInfo();
+                    Y9LogUserHostIpInfoDO entity = new Y9LogUserHostIpInfoDO();
                     entity.setId(UUID.randomUUID().toString().replace("-", ""));
                     entity.setClientIpSection(clientIpSection);
                     entity.setUserHostIp(userHostIp);
@@ -84,10 +84,10 @@ public class Y9UserLoginInfoListener {
 
             if (y9logIpDeptMappingService != null) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                List<Y9logIpDeptMapping> list =
+                List<Y9LogIpDeptMappingDO> list =
                     y9logIpDeptMappingService.listByTenantIdAndClientIpSection(tenantId, clientIpSection);
                 if (list == null || list.isEmpty()) {
-                    Y9logIpDeptMapping entity = new Y9logIpDeptMapping();
+                    Y9LogIpDeptMappingDO entity = new Y9LogIpDeptMappingDO();
                     entity.setId(UUID.randomUUID().toString().replace("-", ""));
                     entity.setClientIpSection(clientIpSection);
                     entity.setDeptName("此IP未指定部门");
@@ -99,7 +99,7 @@ public class Y9UserLoginInfoListener {
                     entity.setTenantId(tenantId);
                     y9logIpDeptMappingService.save(entity);
                 } else {
-                    for (Y9logIpDeptMapping entity : list) {
+                    for (Y9LogIpDeptMappingDO entity : list) {
                         if (entity.getStatus() == null || entity.getStatus() != 1) {
                             entity.setStatus(1);
                             y9logIpDeptMappingService.save(entity);

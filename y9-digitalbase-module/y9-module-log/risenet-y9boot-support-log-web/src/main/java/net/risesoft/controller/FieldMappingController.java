@@ -17,10 +17,10 @@ import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.log.domain.Y9LogMappingDO;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.y9public.entity.Y9logMapping;
 import net.risesoft.y9public.service.Y9logMappingService;
 
 /**
@@ -77,9 +77,9 @@ public class FieldMappingController {
      */
     @RiseLog(moduleName = "日志系统", operationName = "根据id，获取字段映射", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/getFieldMappingById")
-    public Y9Result<Y9logMapping> getFieldMappingById(String id) {
-        Y9logMapping y9logMapping = y9logMappingService.getFieldMappingEntity(id);
-        return Y9Result.success(y9logMapping);
+    public Y9Result<Y9LogMappingDO> getFieldMappingById(String id) {
+        Y9LogMappingDO y9LogMappingDO = y9logMappingService.getFieldMappingEntity(id);
+        return Y9Result.success(y9LogMappingDO);
     }
 
     /**
@@ -91,8 +91,8 @@ public class FieldMappingController {
      */
     @RiseLog(moduleName = "日志系统", operationName = "获取字段映射分页列表", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/page")
-    public Y9Page<Y9logMapping> page(Y9PageQuery pageQuery, String sort) {
-        Page<Y9logMapping> resultPage = y9logMappingService.page(pageQuery.getPage(), pageQuery.getSize(), sort);
+    public Y9Page<Y9LogMappingDO> page(Y9PageQuery pageQuery, String sort) {
+        Page<Y9LogMappingDO> resultPage = y9logMappingService.page(pageQuery.getPage(), pageQuery.getSize(), sort);
         return Y9Page.success(pageQuery.getPage(), resultPage.getTotalPages(), resultPage.getTotalElements(),
             resultPage.getContent());
     }
@@ -107,8 +107,8 @@ public class FieldMappingController {
      */
     @RiseLog(moduleName = "日志系统", operationName = "搜索字段映射分页列表", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/pageSearchList")
-    public Y9Page<Y9logMapping> pageSearchList(String modularName, String modularCnName, Y9PageQuery pageQuery) {
-        Page<Y9logMapping> resultPage =
+    public Y9Page<Y9LogMappingDO> pageSearchList(String modularName, String modularCnName, Y9PageQuery pageQuery) {
+        Page<Y9LogMappingDO> resultPage =
             y9logMappingService.pageSearchList(pageQuery.getPage(), pageQuery.getSize(), modularName, modularCnName);
         return Y9Page.success(pageQuery.getPage(), resultPage.getTotalPages(), resultPage.getTotalElements(),
             resultPage.getContent());
@@ -123,7 +123,7 @@ public class FieldMappingController {
     @RiseLog(moduleName = "日志系统", operationType = OperationTypeEnum.ADD, operationName = "保存字段映射信息",
         logLevel = LogLevelEnum.RSLOG)
     @PostMapping(value = "/saveMapping")
-    public Y9Result<String> saveMapping(Y9logMapping modularNameMapping) {
+    public Y9Result<String> saveMapping(Y9LogMappingDO modularNameMapping) {
         if (StringUtils.isBlank(modularNameMapping.getId())) {
             modularNameMapping.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
@@ -140,7 +140,7 @@ public class FieldMappingController {
     @RiseLog(moduleName = "日志系统", operationName = "验证字段映射是否存在", logLevel = LogLevelEnum.RSLOG)
     @PostMapping(value = "/validate")
     public Y9Result<Boolean> validateField(String name) {
-        List<Y9logMapping> list = y9logMappingService.validateName(name);
+        List<Y9LogMappingDO> list = y9logMappingService.validateName(name);
         if (list.isEmpty()) {
             return Y9Result.success(true);
         }

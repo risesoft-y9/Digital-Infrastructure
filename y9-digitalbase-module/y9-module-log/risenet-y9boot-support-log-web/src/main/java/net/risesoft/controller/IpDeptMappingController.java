@@ -10,10 +10,10 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.log.domain.Y9LogIpDeptMappingDO;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.y9public.entity.Y9logIpDeptMapping;
 import net.risesoft.y9public.service.Y9logIpDeptMappingService;
 
 /**
@@ -41,7 +41,7 @@ public class IpDeptMappingController {
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询部门网段分页列表", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/pageSearchList")
-    public Y9Page<Y9logIpDeptMapping> pageSearchList(Y9PageQuery pageQuery, String clientIpSection, String deptName) {
+    public Y9Page<Y9LogIpDeptMappingDO> pageSearchList(Y9PageQuery pageQuery, String clientIpSection, String deptName) {
         return ipDeptMappingService.pageSearchList(pageQuery.getPage(), pageQuery.getSize(), clientIpSection, deptName);
     }
 
@@ -82,8 +82,8 @@ public class IpDeptMappingController {
     @RiseLog(moduleName = "日志系统", operationType = OperationTypeEnum.ADD, operationName = "保存部门网段信息",
         logLevel = LogLevelEnum.RSLOG)
     @PostMapping(value = "/saveOrUpdate")
-    public Y9Result<Y9logIpDeptMapping> saveOrUpdate(Y9logIpDeptMapping ipDeptMapping) {
-        Y9logIpDeptMapping y9logIpDeptMapping = ipDeptMappingService.saveOrUpdate(ipDeptMapping);
-        return Y9Result.success(y9logIpDeptMapping, "保存成功");
+    public Y9Result<Y9LogIpDeptMappingDO> saveOrUpdate(Y9LogIpDeptMappingDO ipDeptMapping) {
+        Y9LogIpDeptMappingDO y9LogIpDeptMappingDO = ipDeptMappingService.saveOrUpdate(ipDeptMapping);
+        return Y9Result.success(y9LogIpDeptMappingDO, "保存成功");
     }
 }

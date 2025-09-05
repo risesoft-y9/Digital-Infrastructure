@@ -8,9 +8,9 @@ import org.springframework.kafka.annotation.KafkaListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.log.domain.Y9LogAccessLogDO;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.pubsub.constant.Y9TopicConst;
-import net.risesoft.y9public.entity.Y9logAccessLog;
 import net.risesoft.y9public.service.Y9logAccessLogService;
 
 @Slf4j
@@ -23,12 +23,12 @@ public class Y9AccessLogListener {
     @KafkaListener(topics = {Y9TopicConst.Y9_ACCESSLOG_MESSAGE})
     public void listener(ConsumerRecord<String, String> data) {
         try {
-            Y9logAccessLog y9logAccessLog = Y9JsonUtil.readValue(data.value(), Y9logAccessLog.class);
-            y9logAccessLog.setLogTime(new Date());
-            if (y9logAccessLog.getUserHostIp().contains(":")) {
-                y9logAccessLog.setUserHostIp("127.0.0.1");
+            Y9LogAccessLogDO y9LogAccessLogDO = Y9JsonUtil.readValue(data.value(), Y9LogAccessLogDO.class);
+            y9LogAccessLogDO.setLogTime(new Date());
+            if (y9LogAccessLogDO.getUserHostIp().contains(":")) {
+                y9LogAccessLogDO.setUserHostIp("127.0.0.1");
             }
-            y9logAccessLogService.save(y9logAccessLog);
+            y9logAccessLogService.save(y9LogAccessLogDO);
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
         }

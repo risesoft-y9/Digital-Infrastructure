@@ -1,6 +1,6 @@
 package net.risesoft.y9public.service;
 
-import net.risesoft.y9public.entity.Y9ClickedApp;
+import net.risesoft.log.domain.Y9ClickedAppDO;
 
 /**
  * 应用点击日志管理
@@ -17,5 +17,5 @@ public interface Y9ClickedAppService {
      *
      * @param clickedApp 应用点击日志信息
      */
-    void save(Y9ClickedApp clickedApp);
+    void save(Y9ClickedAppDO clickedApp);
 }

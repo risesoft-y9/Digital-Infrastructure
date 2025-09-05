@@ -18,12 +18,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.api.log.FlowableAccessLogApi;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.log.domain.Y9LogFlowableAccessLogDO;
 import net.risesoft.model.log.FlowableAccessLog;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.json.Y9JsonUtil;
-import net.risesoft.y9public.entity.Y9logFlowableAccessLog;
 import net.risesoft.y9public.service.Y9logFlowableAccessLogService;
 
 import cn.hutool.core.thread.ThreadFactoryBuilder;
@@ -74,9 +74,9 @@ public class FlowableAccessLogApiController implements FlowableAccessLogApi {
     @PostMapping("/saveLog")
     public Y9Result<Object> saveLog(@RequestBody FlowableAccessLog flowableAccessLog) {
         String accessLogJson = Y9JsonUtil.writeValueAsString(flowableAccessLog);
-        Y9logFlowableAccessLog y9logFlowableAccessLog =
-            Y9JsonUtil.readValue(accessLogJson, Y9logFlowableAccessLog.class);
-        y9logFlowableAccessLogService.save(y9logFlowableAccessLog);
+        Y9LogFlowableAccessLogDO y9LogFlowableAccessLogDO =
+            Y9JsonUtil.readValue(accessLogJson, Y9LogFlowableAccessLogDO.class);
+        y9logFlowableAccessLogService.save(y9LogFlowableAccessLogDO);
         return Y9Result.success();
     }
 
