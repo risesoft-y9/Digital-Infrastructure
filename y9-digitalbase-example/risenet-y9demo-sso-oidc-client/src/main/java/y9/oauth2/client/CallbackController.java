@@ -27,16 +27,19 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
+import lombok.extern.slf4j.Slf4j;
+
+import net.risesoft.enums.platform.org.SexEnum;
+import net.risesoft.model.user.UserInfo;
+import net.risesoft.y9.util.Y9EnumUtil;
+
+import y9.oauth2.client.service.CasOidcServiceProxy;
+import y9.oauth2.client.service.OpenIdOAuth2AccessToken;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import lombok.extern.slf4j.Slf4j;
-import net.risesoft.enums.platform.SexEnum;
-import net.risesoft.model.user.UserInfo;
-import net.risesoft.y9.util.Y9EnumUtil;
-import y9.oauth2.client.service.CasOidcServiceProxy;
-import y9.oauth2.client.service.OpenIdOAuth2AccessToken;
 
 @Controller
 @RequestMapping("/public")
@@ -86,7 +89,7 @@ public class CallbackController {
             System.out.println("sessionid === " + session.getId());
             Enumeration<String> names = request.getParameterNames();
             while (names.hasMoreElements()) {
-                String name = (String)names.nextElement();
+                String name = names.nextElement();
                 String value = request.getParameter(name);
                 System.out.println(name + " === " + value);
             }
@@ -96,12 +99,12 @@ public class CallbackController {
                 DecodedJWT jwt = JWT.decode(logoutToken);
                 String oidcSessionId = jwt.getClaim("sid").asString();
                 System.out.println("oidcSessionId === " + oidcSessionId);
-                
+
                 session.invalidate();
                 try {
                     request.logout();
                 } catch (ServletException e) {
-                     e.printStackTrace();
+                    e.printStackTrace();
                 }
             }
         }
@@ -121,8 +124,8 @@ public class CallbackController {
             e.printStackTrace();
             return false;
         }
-        JwkProvider provider = new JwkProviderBuilder(url).cached(10, 24, TimeUnit.HOURS)
-            .rateLimited(10, 1, TimeUnit.MINUTES).build();
+        JwkProvider provider =
+            new JwkProviderBuilder(url).cached(10, 24, TimeUnit.HOURS).rateLimited(10, 1, TimeUnit.MINUTES).build();
 
         Jwk jwk = null;
         try {
@@ -176,12 +179,14 @@ public class CallbackController {
         userInfo.setLoginName(jwt.getClaim("loginName").asString());
         userInfo.setLoginType(jwt.getClaim("loginType").asString());
         userInfo.setMobile(jwt.getClaim("mobile").asString());
-        userInfo.setOriginal(jwt.getClaim("original").asBoolean() == null ? false : jwt.getClaim("original").asBoolean());
+        userInfo.setOriginal(jwt.getClaim("original").asBoolean() != null && jwt.getClaim("original").asBoolean());
         userInfo.setOriginalId(jwt.getClaim("originalId").asString());
         userInfo.setParentId(jwt.getClaim("parentId").asString());
         userInfo.setPersonId(jwt.getClaim("personId").asString());
-        userInfo.setPositionId(jwt.getClaim("positionId").asString() == null ? "" : jwt.getClaim("positionId").asString());
-        userInfo.setSex(jwt.getClaim("original").asInt() == null ? SexEnum.MALE : Y9EnumUtil.valueOf(SexEnum.class, jwt.getClaim("original").asInt()));
+        userInfo
+            .setPositionId(jwt.getClaim("positionId").asString() == null ? "" : jwt.getClaim("positionId").asString());
+        userInfo.setSex(jwt.getClaim("original").asInt() == null ? SexEnum.MALE
+            : Y9EnumUtil.valueOf(SexEnum.class, jwt.getClaim("original").asInt()));
         userInfo.setTenantId(jwt.getClaim("tenantId").asString());
         userInfo.setTenantShortName(jwt.getClaim("tenantShortName").asString());
         userInfo.setTenantName(jwt.getClaim("tenantName").asString());

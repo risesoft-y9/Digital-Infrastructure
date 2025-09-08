@@ -104,11 +104,13 @@
 
         <module>y9-digitalbase-module/y9-module-log/risenet-y9boot-api-interface-log</module>
         <module>y9-digitalbase-module/y9-module-log/risenet-y9boot-api-feignclient-log</module>
+        <module>y9-digitalbase-module/y9-module-log/risenet-y9boot-support-log-repository-api</module>
         <module>y9-digitalbase-module/y9-module-log/risenet-y9boot-support-log-elasticsearch-repository</module>
         <module>y9-digitalbase-module/y9-module-log/risenet-y9boot-support-log-jpa-repository</module>
         <module>y9-digitalbase-module/y9-module-log/risenet-y9boot-support-log-service</module>
         <module>y9-digitalbase-module/y9-module-log/risenet-y9boot-support-log-web</module>
         <module>y9-digitalbase-module/y9-module-log/risenet-y9boot-server-log</module>
+        <module>y9-digitalbase-module/y9-module-log/risenet-y9boot-server-log-jpa</module>
 
         <module>y9-digitalbase-module/y9-module-platform/risenet-y9boot-api-interface-platform</module>
         <module>y9-digitalbase-module/y9-module-platform/risenet-y9boot-api-feignclient-platform</module>

@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import net.risesoft.log.repository.Y9logUserLoginInfoCustomRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -39,7 +40,6 @@ import net.risesoft.consts.InitDataConsts;
 import net.risesoft.log.constant.Y9ESIndexConst;
 import net.risesoft.log.constant.Y9LogSearchConsts;
 import net.risesoft.log.domain.Y9LogUserLoginInfoDO;
-import net.risesoft.log.repository.Y9logUserLoginInfoCustomRepository;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
@@ -143,8 +143,8 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         querybuilder.withAggregation("by_UserHostIP", userHostIpAggs);
         querybuilder.withTrackTotalHits(true);
         try {
-            SearchHits<Y9logUserLoginInfo> searchHits =
-                elasticsearchOperations.search(querybuilder.build(), Y9logUserLoginInfo.class, INDEX);
+            SearchHits<Y9LogUserLoginInfo> searchHits =
+                elasticsearchOperations.search(querybuilder.build(), Y9LogUserLoginInfo.class, INDEX);
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
             List<StringTermsBucket> ipList =
                 aggregations.get("by_UserHostIP").aggregation().getAggregate().sterms().buckets().array();
@@ -235,8 +235,8 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         querybuilder.withAggregation("username-aggs", usernameAggs);
         querybuilder.withTrackTotalHits(true);
         try {
-            SearchHits<Y9logUserLoginInfo> searchHits =
-                elasticsearchOperations.search(querybuilder.build(), Y9logUserLoginInfo.class, INDEX);
+            SearchHits<Y9LogUserLoginInfo> searchHits =
+                elasticsearchOperations.search(querybuilder.build(), Y9LogUserLoginInfo.class, INDEX);
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
             List<StringTermsBucket> stbList =
                 aggregations.get("username-aggs").aggregation().getAggregate().sterms().buckets().array();
@@ -246,8 +246,8 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
                 Map<String, Object> map = new HashMap<>();
                 StringTermsBucket bucket = stbList.get(i);
                 long count = bucket.docCount();
-                Y9logUserLoginInfo y9logUserLoginInfo = bucket.aggregations().get("topHits").topHits().hits().hits()
-                    .get(0).source().to(Y9logUserLoginInfo.class);
+                Y9LogUserLoginInfo y9logUserLoginInfo = bucket.aggregations().get("topHits").topHits().hits().hits()
+                    .get(0).source().to(Y9LogUserLoginInfo.class);
                 map.put(Y9LogSearchConsts.USER_ID, y9logUserLoginInfo.getUserId());
                 map.put(Y9LogSearchConsts.USER_NAME, y9logUserLoginInfo.getUserName());
                 map.put("serverCount", String.valueOf(count));
@@ -283,8 +283,8 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         querybuilder.withTrackTotalHits(true);
 
         try {
-            SearchHits<Y9logUserLoginInfo> searchHits =
-                elasticsearchOperations.search(querybuilder.build(), Y9logUserLoginInfo.class, INDEX);
+            SearchHits<Y9LogUserLoginInfo> searchHits =
+                elasticsearchOperations.search(querybuilder.build(), Y9LogUserLoginInfo.class, INDEX);
 
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
             // 指定聚合的名称

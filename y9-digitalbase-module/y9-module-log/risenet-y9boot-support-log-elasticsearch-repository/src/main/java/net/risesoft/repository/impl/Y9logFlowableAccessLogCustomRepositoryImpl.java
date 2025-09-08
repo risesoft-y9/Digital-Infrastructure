@@ -43,10 +43,6 @@ import net.risesoft.pojo.Y9Page;
 import net.risesoft.util.AccessLogModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9Day;
-import net.risesoft.y9public.entity.Y9logAccessLog;
-import net.risesoft.y9public.entity.Y9logFlowableAccessLog;
-import net.risesoft.y9public.repository.Y9logFlowableAccessLogRepository;
-import net.risesoft.y9public.repository.custom.Y9logFlowableAccessLogCustomRepository;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.Y9LogFlowableAccessLog;
 import net.risesoft.y9public.repository.Y9LogFlowableAccessLogRepository;
@@ -134,8 +130,8 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
             .of(r -> r.field(Y9LogSearchConsts.ELAPSED_TIME).ranges(aggregationRanges))._toAggregation());
         IndexCoordinates indexs = IndexCoordinates.of(createIndexNames(startDay, endDay));
         try {
-            SearchHits<Y9logAccessLog> searchHits =
-                elasticsearchOperations.search(nativebuilder.build(), Y9logAccessLog.class, indexs);
+            SearchHits<Y9LogFlowableAccessLog> searchHits =
+                elasticsearchOperations.search(nativebuilder.build(), Y9LogFlowableAccessLog.class, indexs);
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
             List<? extends RangeBucket> buckets =
                 aggregations.get("range-elapsedtime").aggregation().getAggregate().range().buckets().array();

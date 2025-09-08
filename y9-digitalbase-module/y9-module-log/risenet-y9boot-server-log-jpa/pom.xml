@@ -2,18 +2,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>net.risesoft</groupId>
+        <artifactId>y9-digitalbase-parent</artifactId>
+        <version>${revision}</version>
+        <relativePath>../../../y9-digitalbase-parent/pom.xml</relativePath>
+    </parent>
     <groupId>net.risesoft</groupId>
     <artifactId>risenet-y9boot-server-log-jpa</artifactId>
     <version>${revision}</version>
     <packaging>war</packaging>
-
-    <parent>
-        <groupId>net.risesoft</groupId>
-        <artifactId>y9-module-log</artifactId>
-        <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
-
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>

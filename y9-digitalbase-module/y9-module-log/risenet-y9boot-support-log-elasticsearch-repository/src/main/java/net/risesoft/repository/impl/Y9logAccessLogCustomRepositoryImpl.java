@@ -13,6 +13,10 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
+import net.risesoft.log.repository.Y9logAccessLogCustomRepository;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9public.entity.Y9LogAccessLog;
+import net.risesoft.y9public.repository.Y9LogAccessLogRepository;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
@@ -42,7 +46,6 @@ import net.risesoft.consts.InitDataConsts;
 import net.risesoft.log.constant.Y9ESIndexConst;
 import net.risesoft.log.constant.Y9LogSearchConsts;
 import net.risesoft.log.domain.Y9LogAccessLogDO;
-import net.risesoft.log.repository.Y9logAccessLogCustomRepository;
 import net.risesoft.log.repository.Y9logMappingCustomRepository;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.log.LogInfoModel;
@@ -51,10 +54,10 @@ import net.risesoft.util.AccessLogModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.Y9Day;
-import net.risesoft.y9public.entity.Y9logAccessLog;
-import net.risesoft.y9public.repository.Y9logAccessLogRepository;
-import net.risesoft.y9public.repository.custom.Y9logAccessLogCustomRepository;
-import net.risesoft.y9public.repository.custom.Y9logMappingCustomRepository;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9.util.Y9Util;
+import net.risesoft.y9public.entity.Y9LogAccessLog;
+import net.risesoft.y9public.repository.Y9LogAccessLogRepository;
 
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.SortOrder;
@@ -111,7 +114,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
     @Override
     public Map<String, Object> getAppClickCount(String tenantId, String guidPath, String startDay, String endDay)
-        throws UnknownHostException {
+          {
         Builder build = new Builder();
         Map<String, Object> returnMap = new HashMap<>();
         List<String> strList = new ArrayList<>();
@@ -150,8 +153,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         querybuilder.withTrackTotalHits(true);
         IndexCoordinates indexs = IndexCoordinates.of(createIndexNames(startDay, endDay));
         try {
-            SearchHits<Y9logAccessLog> searchHits =
-                elasticsearchOperations.search(querybuilder.build(), Y9logAccessLog.class, indexs);
+            SearchHits<Y9LogAccessLog> searchHits =
+                elasticsearchOperations.search(querybuilder.build(), Y9LogAccessLog.class, indexs);
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
             List<? extends StringTermsBucket> buckets =
                 aggregations.get("by_appName").aggregation().getAggregate().sterms().buckets().array();
@@ -217,8 +220,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         IndexCoordinates indexs = IndexCoordinates.of(createIndexNames(startDay, endDay));
         try {
 
-            SearchHits<Y9logAccessLog> searchHits =
-                elasticsearchOperations.search(querybuilder.build(), Y9logAccessLog.class, indexs);
+            SearchHits<Y9LogAccessLog> searchHits =
+                elasticsearchOperations.search(querybuilder.build(), Y9LogAccessLog.class, indexs);
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
             List<? extends StringTermsBucket> buckets =
                 aggregations.get("by_modularname").aggregation().getAggregate().sterms().buckets().array();
@@ -301,8 +304,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         eNativebuilder.withAggregation("by_error_logtime", edateHistogramAgg._toAggregation());
 
         try {
-            SearchHits<Y9logAccessLog> searchHits =
-                elasticsearchOperations.search(sNativebuilder.build(), Y9logAccessLog.class, indexs);
+            SearchHits<Y9LogAccessLog> searchHits =
+                elasticsearchOperations.search(sNativebuilder.build(), Y9LogAccessLog.class, indexs);
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
             List<? extends DateHistogramBucket> buckets =
                 aggregations.get("by_success_logtime").aggregation().getAggregate().dateHistogram().buckets().array();
@@ -316,7 +319,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         }
 
         try {
-            SearchHits<Y9logAccessLog> searchHits =
+            SearchHits<Y9LogAccessLog> searchHits =
                 elasticsearchOperations.search(eNativebuilder.build(), Y9LogAccessLog.class, indexs);
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
             List<? extends DateHistogramBucket> buckets =
@@ -415,8 +418,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             .of(r -> r.field(Y9LogSearchConsts.ELAPSED_TIME).ranges(aggregationRanges))._toAggregation());
         IndexCoordinates indexs = IndexCoordinates.of(createIndexNames(startDay, endDay));
         try {
-            SearchHits<Y9logAccessLog> searchHits =
-                elasticsearchOperations.search(nativebuilder.build(), Y9logAccessLog.class, indexs);
+            SearchHits<Y9LogAccessLog> searchHits =
+                elasticsearchOperations.search(nativebuilder.build(), Y9LogAccessLog.class, indexs);
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
             List<? extends RangeBucket> buckets =
                 aggregations.get("range-elapsedtime").aggregation().getAggregate().range().buckets().array();

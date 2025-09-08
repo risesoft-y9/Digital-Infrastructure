@@ -8,8 +8,7 @@ dependencies {
     implementation(platform(project(":y9-digitalbase-dependencies")))
 
     implementation(project(":y9-digitalbase-module:y9-module-log:risenet-y9boot-support-log-web"))
-    implementation(project(":y9-digitalbase-module:y9-module-log:risenet-y9boot-support-log-elasticsearch-repository"))
-    implementation(project(":y9-digitalbase-module:y9-module-log:risenet-y9boot-api-interface-log"))
+    implementation(project(":y9-digitalbase-module:y9-module-log:risenet-y9boot-support-log-jpa-repository"))
     implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-security"))
     implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-sso-oauth2-resource"))
     implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-apisix"))
@@ -23,7 +22,7 @@ dependencies {
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 }
 
-description = "risenet-y9boot-server-log"
+description = "risenet-y9boot-server-log-jpa"
 
 val finalName = "server-log"
 

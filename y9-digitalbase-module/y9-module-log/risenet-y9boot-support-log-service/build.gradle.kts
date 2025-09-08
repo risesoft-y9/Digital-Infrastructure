@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-idgenerator"))
-    api(project(":y9-digitalbase-module:y9-module-log:risenet-y9boot-support-log-jpa-repository"))
+    api(project(":y9-digitalbase-module:y9-module-log:risenet-y9boot-support-log-repository-api"))
     api(project(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-api-feignclient-platform"))
 }
 

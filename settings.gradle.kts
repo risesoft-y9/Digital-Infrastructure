@@ -48,11 +48,13 @@ include(":y9-digitalbase-module:y9-module-filemanager:risenet-y9boot-webapp-file
 
 include(":y9-digitalbase-module:y9-module-log:risenet-y9boot-api-interface-log")
 include(":y9-digitalbase-module:y9-module-log:risenet-y9boot-api-feignclient-log")
+include(":y9-digitalbase-module:y9-module-log:risenet-y9boot-support-log-repository-api")
 include(":y9-digitalbase-module:y9-module-log:risenet-y9boot-support-log-elasticsearch-repository")
 include(":y9-digitalbase-module:y9-module-log:risenet-y9boot-support-log-jpa-repository")
 include(":y9-digitalbase-module:y9-module-log:risenet-y9boot-support-log-service")
 include(":y9-digitalbase-module:y9-module-log:risenet-y9boot-support-log-web")
 include(":y9-digitalbase-module:y9-module-log:risenet-y9boot-server-log")
+include(":y9-digitalbase-module:y9-module-log:risenet-y9boot-server-log-jpa")
 
 include(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-api-interface-platform")
 include(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-api-feignclient-platform")

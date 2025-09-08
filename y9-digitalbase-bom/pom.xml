@@ -301,6 +301,11 @@
             </dependency>
             <dependency>
                 <groupId>net.risesoft</groupId>
+                <artifactId>risenet-y9boot-support-log-repository-api</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.risesoft</groupId>
                 <artifactId>risenet-y9boot-support-log-elasticsearch-repository</artifactId>
                 <version>${revision}</version>
             </dependency>
