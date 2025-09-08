@@ -19,7 +19,7 @@ val extension = project.extensions.create<Y9DockerPluginExtension>("y9Docker")
 
 jib {
     from {
-        image = "docker-internal.youshengyun.com/tomcat:10.1-jre21-temurin"
+        image = "docker-internal.youshengyun.com/proxy/tomcat:10.1-jre21-temurin"
         platforms {
             platform {
                 architecture = "amd64"
@@ -32,7 +32,7 @@ jib {
         }
     }
     to {
-        image = "docker-registry-internal.youshengyun.com/${project.name}"
+        image = "docker-internal.youshengyun.com/v97x/${project.name}"
         auth {
             username = findProperty("dockerUsername").toString()
             password = findProperty("dockerPassword").toString()
