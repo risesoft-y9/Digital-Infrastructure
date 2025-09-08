@@ -1,10 +1,10 @@
 package net.risesoft.y9public.entity.auditlog;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
 
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
@@ -25,7 +25,7 @@ import net.risesoft.base.BaseEntity;
 @Entity
 @Table(name = "Y9_AUDIT_LOG")
 @DynamicUpdate
-@org.hibernate.annotations.Table(comment = "审计日志", appliesTo = "Y9_AUDIT_LOG")
+@Comment("审计日志" )
 @NoArgsConstructor
 @Data
 @SuperBuilder
