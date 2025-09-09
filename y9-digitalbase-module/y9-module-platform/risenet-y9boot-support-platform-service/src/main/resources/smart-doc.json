@@ -1,5 +1,5 @@
 {
-    "serverUrl": "https://vue.youshengyun.com",
+    "serverUrl": "https://test.youshengyun.com",
     "pathPrefix": "/server-platform",
     "isStrict": false,
     "allInOne": true,
@@ -99,7 +99,7 @@
             "apis": "net.risesoft.api.tenant.*"
         }
     ],
-    "appToken": "33ed54a882b34fe5b546b7cd58fef5cc",
+    "appToken": "ec3e989409e04cd985fbe53b688cbf04",
     "openUrl": "https://test.youshengyun.com/torna/api",
     "replace": true,
     "requestParamsTable": true,
