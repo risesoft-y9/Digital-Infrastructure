@@ -268,16 +268,19 @@
 
         const edit_itemList = [
             {
-                type: 'input',
+                type: 'text',
                 label: computed(() => t('姓名')),
-                prop: 'name'
+                prop: 'name',
+                props: {
+                    content: latestPersonalInfo.value.manager.name
+                }
             },
             {
-                type: 'input',
+                type: 'text',
                 label: computed(() => t('登录名称')),
                 prop: 'loginName',
                 props: {
-                    prependText: loginName_prependText
+                    content: latestPersonalInfo.value.manager.loginName
                 }
             },
             {
