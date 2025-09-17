@@ -53,7 +53,7 @@
         <gitee.developerConnection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
 
         <revision>v9.6.9-SNAPSHOT</revision>
-        <dockerBuildNumber>${maven.build.timestamp}</dockerBuildNumber>
+        <docker.tag>${project.version}-${maven.build.timestamp}</docker.tag>
 
         <spring-boot.version>2.7.18</spring-boot.version>
         <spring-cloud.version>2021.0.8</spring-cloud.version>
@@ -449,7 +449,7 @@
                             <tags>
                                 <tag>${project.version}</tag>
                                 <tag>v9.6.x</tag>
-                                <tag>${project.version}-${dockerBuildNumber}</tag>
+                                <tag>${docker.tag}</tag>
                             </tags>
                         </to>
                     </configuration>
