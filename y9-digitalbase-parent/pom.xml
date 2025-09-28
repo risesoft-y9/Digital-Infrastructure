@@ -56,6 +56,7 @@
         <git-commit-id-maven-plugin.version>8.0.2</git-commit-id-maven-plugin.version>
         <native-maven-plugin.version>0.10.1</native-maven-plugin.version>
 
+        <docker.tag>${project.version}-${maven.build.timestamp}</docker.tag>
         <docker.name>svn.youshengyun.com:9923/${project.artifactId}-native:${project.version}</docker.name>
         <docker.docker.bp-native-image>false</docker.docker.bp-native-image>
     </properties>
@@ -471,7 +472,7 @@
                             <tags>
                                 <tag>${project.version}</tag>
                                 <tag>v9.7.x</tag>
-                                <tag>${project.version}-${dockerBuildNumber}</tag>
+                                <tag>${docker.tag}</tag>
                             </tags>
                         </to>
                     </configuration>
