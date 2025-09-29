@@ -5,7 +5,7 @@ management:
     endpoints:
         web:
             exposure:
-                include: '*'
+                include: health,info
     metrics:
         tags:
             application: ${spring.application.name}

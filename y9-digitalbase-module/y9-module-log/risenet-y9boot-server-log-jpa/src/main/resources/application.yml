@@ -2,7 +2,7 @@ management:
     endpoints:
         web:
             exposure:
-                include: '*'
+                include: health,info
 server:
     port: 8080
     servlet:

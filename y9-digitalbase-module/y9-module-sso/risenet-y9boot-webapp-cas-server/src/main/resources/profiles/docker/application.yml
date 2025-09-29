@@ -226,7 +226,7 @@ management:
     endpoints:
         web:
             exposure:
-                include: '*'
+                include: health,info
 server:
     port: 7099
     servlet:

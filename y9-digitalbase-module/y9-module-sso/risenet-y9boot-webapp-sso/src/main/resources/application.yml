@@ -303,7 +303,7 @@ management:
     endpoints:
         web:
             exposure:
-                include: '*'
+                include: health,info
         access:
             default: unrestricted
     tracing:
