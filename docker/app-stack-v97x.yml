@@ -1,0 +1,87 @@
+services:
+    sso-v97x:
+        image: docker-internal.youshengyun.com/v97x/risenet-y9boot-webapp-sso:9.7.0-SNAPSHOT
+        networks:
+            - y9-share-net
+        volumes:
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+        environment:
+            - TZ=Asia/Shanghai
+            - SPRING_PROFILES_ACTIVE=test
+            - NACOS_PASSWORD=Risesoft@@2024
+            - JAVA_OPTS=-Xms512m -Xmx1500m
+        deploy:
+            replicas: 1
+            resources:
+                limits:
+                    memory: 2gb
+                    cpus: '4'
+                reservations:
+                    memory: 2gb
+            labels:
+                - "traefik.enable=true"
+                - "traefik.http.routers.sso-v97x.rule=(Host(`test2.youshengyun.com`) || Host(`test2-internal.youshengyun.com`)) &&  PathPrefix(`/sso`)"
+                - "traefik.http.routers.sso-v97x.service=sso-v97x"
+                - "traefik.http.services.sso-v97x.loadbalancer.passHostHeader=true"
+                - "traefik.http.services.sso-v97x.loadbalancer.server.port=8080"
+    platform-v97x:
+        image: docker-internal.youshengyun.com/v97x/risenet-y9boot-server-platform:9.7.0-SNAPSHOT
+        restart: unless-stopped
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        networks:
+            - y9-share-net
+        volumes:
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+        environment:
+            - TZ=Asia/Shanghai
+            - SPRING_PROFILES_ACTIVE=test
+            - NACOS_PASSWORD=Risesoft@@2024
+            - JAVA_OPTS=-Xms512m -Xmx1500m
+        deploy:
+            replicas: 1
+            resources:
+                limits:
+                    memory: 2gb
+                    cpus: '4'
+                reservations:
+                    memory: 2gb
+            labels:
+                - "traefik.enable=true"
+                - "traefik.http.routers.platform-v97x.rule=(Host(`test2.youshengyun.com`) || Host(`test2-internal.youshengyun.com`)) && PathPrefix(`/platform`)"
+                - "traefik.http.routers.platform-v97x.service=platform-v97x"
+                - "traefik.http.services.platform-v97x.loadbalancer.passHostHeader=true"
+                - "traefik.http.services.platform-v97x.loadbalancer.server.port=8080"
+                - "prometheus.job=platform"
+                - "prometheus.metrics-path=/platform/actuator/prometheus"
+    log-v97x:
+        image: docker-internal.youshengyun.com/v97x/risenet-y9boot-server-log-jpa:v9.7.x
+        networks:
+            - y9-share-net
+        volumes:
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+        environment:
+            - TZ=Asia/Shanghai
+            - SPRING_PROFILES_ACTIVE=test
+            - NACOS_PASSWORD=Risesoft@@2024
+            - JAVA_OPTS=-Xms512m -Xmx1500m
+        deploy:
+            replicas: 1
+            resources:
+                limits:
+                    memory: 2gb
+                    cpus: '4'
+                reservations:
+                    memory: 2gb
+            labels:
+                - "traefik.enable=true"
+                - "traefik.http.routers.log-v97x.rule=(Host(`test2.youshengyun.com`) || Host(`test2-internal.youshengyun.com`)) && PathPrefix(`/log`)"
+                - "traefik.http.routers.log-v97x.service=log-v97x"
+                - "traefik.http.services.log-v97x.loadbalancer.passHostHeader=true"
+                - "traefik.http.services.log-v97x.loadbalancer.server.port=8080"
+networks:
+    y9-share-net:
+        external: true
