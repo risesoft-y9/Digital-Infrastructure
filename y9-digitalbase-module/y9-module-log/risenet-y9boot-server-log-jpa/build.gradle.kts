@@ -27,7 +27,7 @@ description = "risenet-y9boot-server-log-jpa"
 val finalName = "server-log"
 
 y9Docker {
-    appName = finalName
+    appName = finalName+"-jpa"
 }
 
 y9War {
