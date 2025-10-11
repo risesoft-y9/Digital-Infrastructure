@@ -139,6 +139,14 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
                     if (!Y9MessageDigest.bcryptMatch(plainPassword, hashed)) {
                         loginMsg = "代理用户密码错误。";
                         throw new FailedLoginException("代理用户密码错误。");
+                    } else {
+                        List<Y9User> realUsers = getAgentUsers(deptId, tenantShortName, plainUsername);
+                        if (agentUsers == null || agentUsers.isEmpty()) {
+                            loginMsg = "没有找到这个用户。";
+                            throw new AccountNotFoundException("没有找到这个用户。");
+                        } else {
+                            y9User = realUsers.get(0);
+                        }
                     }
                 }
 
