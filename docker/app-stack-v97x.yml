@@ -26,7 +26,7 @@ services:
                 - "traefik.http.services.sso-v97x.loadbalancer.passHostHeader=true"
                 - "traefik.http.services.sso-v97x.loadbalancer.server.port=8080"
     platform-v97x:
-        image: docker-internal.youshengyun.com/v97x/risenet-y9boot-server-platform:9.7.0-SNAPSHOT
+        image: docker-internal.youshengyun.com/v97x/risenet-y9boot-server-y9platform:9.7.0-SNAPSHOT
         restart: unless-stopped
         extra_hosts:
             - "host.docker.internal:host-gateway"

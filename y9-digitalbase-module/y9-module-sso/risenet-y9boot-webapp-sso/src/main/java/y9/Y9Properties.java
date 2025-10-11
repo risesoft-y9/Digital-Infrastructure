@@ -32,4 +32,7 @@ public class Y9Properties {
 
     /** 非对称私钥 */
     private String rsaPrivateKey = "";
+
+    /** 对称加密密钥 */
+    private String aesKey = "";
 }
