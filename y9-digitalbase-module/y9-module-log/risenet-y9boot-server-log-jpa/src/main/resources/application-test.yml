@@ -3,7 +3,7 @@ spring:
         nacos:
             config:
                 enabled: true
-                namespace: test
+                namespace: test2
                 group: DEFAULT_GROUP
                 server-addr: nacos:8848
                 username: nacos
