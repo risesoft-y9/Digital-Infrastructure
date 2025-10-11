@@ -27,6 +27,7 @@ import com.google.common.collect.Lists;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
+import y9.Y9Properties;
 import y9.entity.Y9User;
 import y9.service.Y9LoginUserService;
 import y9.service.Y9UserService;
@@ -39,16 +40,19 @@ import y9.util.common.RSAUtil;
 public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
     private final Y9UserService y9UserService;
     private final Y9LoginUserService y9LoginUserService;
+    private final Y9Properties y9Properties;
 
     public Y9AuthenticationHandler(
         String name,
         ServicesManager servicesManager,
         Integer order,
         Y9UserService y9UserService,
-        Y9LoginUserService y9LoginUserService) {
+        Y9LoginUserService y9LoginUserService,
+        Y9Properties y9Properties) {
         super(name, servicesManager, PrincipalFactoryUtils.newPrincipalFactory(), order);
         this.y9UserService = y9UserService;
         this.y9LoginUserService = y9LoginUserService;
+        this.y9Properties = y9Properties;
     }
 
     private static void updateCredential(HttpServletRequest request, UsernamePasswordCredential riseCredential,
@@ -118,7 +122,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         Y9User y9User;
         String loginMsg = "登录成功";
         try {
-            String rsaPrivateKey = Y9Context.getProperty("y9.rsaPrivateKey");
+            String rsaPrivateKey = y9Properties.getRsaPrivateKey();
             String plainUsername = RSAUtil.privateDecrypt(encryptedUsername, rsaPrivateKey);
             String plainPassword = RSAUtil.privateDecrypt(encryptedPassword, rsaPrivateKey);
             if (plainUsername.contains("&")) {
@@ -215,7 +219,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         }
 
         if ("qrCode".equals(loginType)) {
-            String userId = AESUtil.decrypt(username);
+            String userId = AESUtil.decrypt(y9Properties.getAesKey(), username);
             if (StringUtils.isNotBlank(userId)) {
                 return y9UserService.findByPersonIdAndOriginal(userId, Boolean.TRUE);
             } else {

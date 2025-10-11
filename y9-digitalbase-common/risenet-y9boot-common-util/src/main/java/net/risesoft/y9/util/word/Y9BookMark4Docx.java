@@ -93,9 +93,9 @@ public class Y9BookMark4Docx {
     }
 
     public static void main(String[] args) {
-        try {
-            FileInputStream inputStreamdoc = new FileInputStream("D:/qm1.docx");
+        try (FileInputStream inputStreamdoc = new FileInputStream("D:/qm1.docx");
             OutputStream out = new FileOutputStream("D:/qm2.docx");
+            FileInputStream pic = new FileInputStream("D:/1.png")) {
             XWPFDocument document = new XWPFDocument(inputStreamdoc);
             Y9BookMarks4Docx bookMarks = new Y9BookMarks4Docx(document);
             // 循环进行替换
@@ -106,11 +106,10 @@ public class Y9BookMark4Docx {
                 System.out.println("=======bookMarkName:" + bookMarkName);
                 Y9BookMark4Docx bookMark = bookMarks.getBookmark(bookMarkName);
                 // 进行替换
-                bookMark.insertPicAtBookMark(new FileInputStream("D:/1.png"), XWPFDocument.PICTURE_TYPE_PNG, "2.png",
-                    Units.toEMU(100), Units.toEMU(100), Y9BookMark4Docx.REPLACE);
+                bookMark.insertPicAtBookMark(pic, XWPFDocument.PICTURE_TYPE_PNG, "2.png", Units.toEMU(100),
+                    Units.toEMU(100), Y9BookMark4Docx.REPLACE);
             }
             document.write(out);
-            out.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -290,8 +289,9 @@ public class Y9BookMark4Docx {
         insertBeforeNode = nextNode.getNextSibling();
 
         if (styleNode != null) {
-            run.getCTR().getDomNode().insertBefore(styleNode.cloneNode(true),
-                run.getCTR().getDomNode().getFirstChild());
+            run.getCTR()
+                .getDomNode()
+                .insertBefore(styleNode.cloneNode(true), run.getCTR().getDomNode().getFirstChild());
         }
         if (insertBeforeNode != null) {
             this.para.getCTP().getDomNode().insertBefore(run.getCTR().getDomNode(), insertBeforeNode);
@@ -307,8 +307,9 @@ public class Y9BookMark4Docx {
         if (childNode != null) {
             styleNode = this.getStyleNode(childNode);
             if (styleNode != null) {
-                run.getCTR().getDomNode().insertBefore(styleNode.cloneNode(true),
-                    run.getCTR().getDomNode().getFirstChild());
+                run.getCTR()
+                    .getDomNode()
+                    .insertBefore(styleNode.cloneNode(true), run.getCTR().getDomNode().getFirstChild());
             }
         }
         this.para.getCTP().getDomNode().insertBefore(run.getCTR().getDomNode(), insertBeforeNode);
@@ -399,8 +400,9 @@ public class Y9BookMark4Docx {
             if ((lastRunNode.getNodeName().equals(Y9BookMark4Docx.RUN_NODE_NAME))) {
                 styleNode = this.getStyleNode(lastRunNode);
                 if (styleNode != null) {
-                    run.getCTR().getDomNode().insertBefore(styleNode.cloneNode(true),
-                        run.getCTR().getDomNode().getFirstChild());
+                    run.getCTR()
+                        .getDomNode()
+                        .insertBefore(styleNode.cloneNode(true), run.getCTR().getDomNode().getFirstChild());
                 }
             }
             this.deleteChildNodes(nodeStack);
