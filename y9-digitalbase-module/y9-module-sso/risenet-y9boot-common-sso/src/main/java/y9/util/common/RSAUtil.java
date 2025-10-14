@@ -1,5 +1,6 @@
 package y9.util.common;
 
+import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -19,9 +20,8 @@ public class RSAUtil {
      */
     private static KeyPair getKeyPair() throws Exception {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        keyPairGenerator.initialize(1024);
-        KeyPair keyPair = keyPairGenerator.generateKeyPair();
-        return keyPair;
+        keyPairGenerator.initialize(2048);
+        return keyPairGenerator.generateKeyPair();
     }
 
     /**
@@ -57,8 +57,7 @@ public class RSAUtil {
         byte[] keyBytes = Y9Base64.base64ToByte(pubStr);
         X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        PublicKey publicKey = keyFactory.generatePublic(keySpec);
-        return publicKey;
+        return keyFactory.generatePublic(keySpec);
     }
 
     /**
@@ -68,8 +67,7 @@ public class RSAUtil {
         byte[] keyBytes = Y9Base64.base64ToByte(priStr);
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
-        return privateKey;
+        return keyFactory.generatePrivate(keySpec);
     }
 
     /**
@@ -78,9 +76,8 @@ public class RSAUtil {
     public static String publicEncrypt(String content, String publicKey) throws Exception {
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, RSAUtil.string2PublicKey(publicKey));
-        byte[] byteEncrypt = cipher.doFinal(content.getBytes("utf-8"));
-        String msg = Y9Base64.byteToBase64(byteEncrypt);
-        return msg;
+        byte[] byteEncrypt = cipher.doFinal(content.getBytes(StandardCharsets.UTF_8));
+        return Y9Base64.byteToBase64(byteEncrypt);
     }
 
     /**
@@ -90,8 +87,7 @@ public class RSAUtil {
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, RSAUtil.string2PrivateKey(privateKey));
         byte[] bytesDecrypt = cipher.doFinal(Y9Base64.base64ToByte(contentBase64));
-        String msg = new String(bytesDecrypt, "utf-8");
-        return msg;
+        return new String(bytesDecrypt, StandardCharsets.UTF_8);
     }
 
     public static void main(String[] args) {

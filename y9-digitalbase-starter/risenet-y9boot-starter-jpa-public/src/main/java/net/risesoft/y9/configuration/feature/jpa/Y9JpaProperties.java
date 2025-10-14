@@ -26,23 +26,4 @@ public class Y9JpaProperties {
      */
     private String[] packagesToScanRepositoryPublic;
 
-    /**
-     * 租户库实体包扫描路径
-     */
-    private String[] packagesToScanEntityTenant;
-
-    /**
-     * 租户库 Repository 包扫描路径
-     */
-    private String[] packagesToScanRepositoryTenant;
-
-    /**
-     * 专用库实体包扫描路径
-     */
-    private String[] packagesToScanEntityDedicated;
-
-    /**
-     * 专用库 Repository 包扫描路径
-     */
-    private String[] packagesToScanRepositoryDedicated;
 }

@@ -38,8 +38,11 @@ import y9.jpa.extension.Y9EnableJpaRepositories;
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
 @Y9EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryPublic}"},
     includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},
-    entityManagerFactoryRef = "rsPublicEntityManagerFactory", transactionManagerRef = "rsPublicTransactionManager")
+    entityManagerFactoryRef = "rsPublicEntityManagerFactory",
+    transactionManagerRef = JpaPublicConfiguration.TRANSACTION_MANAGER)
 public class JpaPublicConfiguration {
+
+    public static final String TRANSACTION_MANAGER = "rsPublicTransactionManager";
 
     @Bean(name = {"jdbcTemplate4Public"})
     @ConditionalOnMissingBean(name = "jdbcTemplate4Public")

@@ -46,6 +46,8 @@ public class Y9FileUtil {
     private static final long MB = KB * 1024;
     private static final long GB = MB * 1024;
 
+    private static final Random RANDOM = new Random();
+
     /**
      * 写出XML文件在本地，自定义存储路径
      * 
@@ -128,10 +130,9 @@ public class Y9FileUtil {
      * @return String 随机数字组成的字符串
      */
     public static String getRandomNum(int length) {
-        Random r = new Random();
         StringBuffer sb = new StringBuffer();
         for (int i = 1; i <= length; i++) {
-            sb.append(r.nextInt(10));
+            sb.append(RANDOM.nextInt(10));
         }
         return sb.toString();
     }

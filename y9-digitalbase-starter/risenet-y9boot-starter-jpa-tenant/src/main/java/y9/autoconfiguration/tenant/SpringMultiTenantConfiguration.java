@@ -49,9 +49,12 @@ import y9.jpa.extension.Y9EnableJpaRepositories;
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
 @Y9EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryTenant}"},
     includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},
-    entityManagerFactoryRef = "rsTenantEntityManagerFactory", transactionManagerRef = "rsTenantTransactionManager")
+    entityManagerFactoryRef = "rsTenantEntityManagerFactory",
+    transactionManagerRef = SpringMultiTenantConfiguration.TRANSACTION_MANAGER)
 @Slf4j
 public class SpringMultiTenantConfiguration {
+
+    public static final String TRANSACTION_MANAGER = "rsTenantTransactionManager";
 
     // @ConfigurationProperties("spring.datasource.druid.tenantDefault")
     @Bean("defaultDataSource")
@@ -227,11 +230,6 @@ public class SpringMultiTenantConfiguration {
         return new HibernateJpaVendorAdapter();
     }
 
-    /*@Bean
-    public OnY9MultiTenantApplicationReady onY9MultiTenantApplicationReady() {
-        return new OnY9MultiTenantApplicationReady();
-    }*/
-
     @Primary
     @Bean({"rsTenantEntityManagerFactory", "entityManagerFactory"})
     public LocalContainerEntityManagerFactoryBean rsTenantEntityManagerFactory(
@@ -248,7 +246,7 @@ public class SpringMultiTenantConfiguration {
     }
 
     @Primary
-    @Bean({"rsTenantTransactionManager", "transactionManager"})
+    @Bean({SpringMultiTenantConfiguration.TRANSACTION_MANAGER, "transactionManager"})
     public PlatformTransactionManager
         rsTenantTransactionManager(@Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory emf) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
@@ -284,6 +282,7 @@ public class SpringMultiTenantConfiguration {
     }
 
     @Bean("y9TenantDataSourceLookup")
+    @ConditionalOnMissingBean(name = "y9TenantDataSourceLookup")
     public Y9TenantDataSourceLookup y9TenantDataSourceLookup(@Qualifier("y9PublicDS") DruidDataSource ds,
         Environment environment) {
         return new Y9TenantDataSourceLookup(ds, environment.getProperty("y9.systemName"));

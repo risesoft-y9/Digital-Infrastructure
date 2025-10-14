@@ -14,8 +14,6 @@ public class AESUtil {
 
     public static final String IV = "1234567890123456";
 
-    public static final String KEY = "weKnAwrp23EghP5c";
-
     /*******************************************************************
      * AES加密算法 加密用的Key 可以用26个字母和数字组成，最好不要用保留字符，虽然不会错，至于怎么裁决，个人看情况而定 此处使用AES-128-CBC加密模式，key需要为16位。
      */
