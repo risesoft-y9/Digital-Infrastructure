@@ -3,7 +3,6 @@ package net.risesoft.filters;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
@@ -26,26 +25,14 @@ public class SqlInjectionRequestWrapper extends HttpServletRequestWrapper {
     public SqlInjectionRequestWrapper(HttpServletRequest request) throws IOException {
         super(request);
         StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader bufferedReader = null;
-        try (InputStream inputStream = request.getInputStream()) {
-            if (inputStream != null) {
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-                char[] charBuffer = new char[128];
-                int bytesRead = -1;
-                while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
-                    stringBuilder.append(charBuffer, 0, bytesRead);
-                }
-            } else {
-            }
-        } catch (IOException ex) {
-            throw ex;
-        } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException ex) {
-                    throw ex;
-                }
+
+        try (BufferedReader bufferedReader =
+            new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8))) {
+
+            char[] charBuffer = new char[128];
+            int bytesRead = -1;
+            while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
+                stringBuilder.append(charBuffer, 0, bytesRead);
             }
         }
         body = stringBuilder.toString();
@@ -55,7 +42,7 @@ public class SqlInjectionRequestWrapper extends HttpServletRequestWrapper {
     public ServletInputStream getInputStream() throws IOException {
         final ByteArrayInputStream byteArrayInputStream =
             new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8));
-        ServletInputStream servletInputStream = new ServletInputStream() {
+        return new ServletInputStream() {
             @Override
             public boolean isFinished() {
                 return false;
@@ -76,7 +63,6 @@ public class SqlInjectionRequestWrapper extends HttpServletRequestWrapper {
                 return byteArrayInputStream.read();
             }
         };
-        return servletInputStream;
     }
 
     @Override

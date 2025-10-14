@@ -36,8 +36,10 @@ import net.risesoft.y9.Y9Context;
 @Y9EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryDedicated}"},
     includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},
     entityManagerFactoryRef = "rsDedicatedEntityManagerFactory",
-    transactionManagerRef = "rsDedicatedTransactionManager")
+    transactionManagerRef = JpaDedicatedConfiguration.TRANSACTION_MANAGER)
 public class JpaDedicatedConfiguration {
+
+    public static final String TRANSACTION_MANAGER = "rsDedicatedTransactionManager";
 
     @Autowired
     private Environment environment;

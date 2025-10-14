@@ -10,7 +10,6 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SecureRandom;
 import java.security.Signature;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -201,15 +200,10 @@ public class RsaUtil {
      */
     public static Map<String, String> initKey() throws Exception {
         KeyPairGenerator keygen = KeyPairGenerator.getInstance(RSA_KEY_ALGORITHM);
-        SecureRandom secrand = new SecureRandom();
-        /**
-         * 初始化随机产生器
-         */
-        secrand.setSeed("initSeed".getBytes());
         /**
          * 初始化密钥生成器
          */
-        keygen.initialize(KEY_SIZE, secrand);
+        keygen.initialize(KEY_SIZE);
         KeyPair keys = keygen.genKeyPair();
 
         byte[] pubKey = keys.getPublic().getEncoded();

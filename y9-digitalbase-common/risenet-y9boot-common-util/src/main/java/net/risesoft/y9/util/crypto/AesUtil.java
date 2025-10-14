@@ -246,7 +246,7 @@ public class AesUtil {
     public static String getSecretKey(String seed) throws Exception {
         KeyGenerator keyGenerator = KeyGenerator.getInstance(ALGORITHM);
         SecureRandom secureRandom;
-        if (seed != null && !"".equals(seed)) {
+        if (seed != null && !seed.isEmpty()) {
             secureRandom = new SecureRandom(seed.getBytes());
         } else {
             secureRandom = new SecureRandom();
