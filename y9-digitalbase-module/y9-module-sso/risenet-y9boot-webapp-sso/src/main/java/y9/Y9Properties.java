@@ -1,9 +1,10 @@
 package y9;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 配置属性
@@ -18,8 +19,8 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 @Configuration
 @ConfigurationProperties(prefix = "y9", ignoreInvalidFields = true)
-//@ConfigurationPropertiesScan
-//@EnableConfigurationProperties(Y9Properties.class)
+// @ConfigurationPropertiesScan
+// @EnableConfigurationProperties(Y9Properties.class)
 public class Y9Properties {
     /** 日志保存目标：kafka、jpa */
     private String loginInfoSaveTarget = "jpa";

@@ -1,19 +1,19 @@
 version: '3.9'
 name: sso
 services:
-  sso:
-    image: svn.youshengyun.com:9923/risenet-y9boot-webapp-sso-server-jdk21-jib:v9.7.0-SNAPSHOT
-    container_name: sso01
-    restart: unless-stopped
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - y9-share-net
-    ports:
-      - "7799:7099"
-    environment:
-      - y9.login.casLoginView=casLoginView-y9-v3.0
-        
+    sso:
+        image: svn.youshengyun.com:9923/risenet-y9boot-webapp-sso-server-jdk21-jib:v9.7.0-SNAPSHOT
+        container_name: sso01
+        restart: unless-stopped
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        networks:
+            - y9-share-net
+        ports:
+            - "7799:7099"
+        environment:
+            - y9.login.casLoginView=casLoginView-y9-v3.0
+
 networks:
-  y9-share-net:
-    external: true
+    y9-share-net:
+        external: true

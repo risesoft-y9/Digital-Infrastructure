@@ -24,12 +24,12 @@ public enum CodeEnum {
         return code;
     }
 
-    public String getMsg() {
-        return msg;
-    }
-
     public void setCode(int code) {
         this.code = code;
+    }
+
+    public String getMsg() {
+        return msg;
     }
 
     public void setMsg(String msg) {

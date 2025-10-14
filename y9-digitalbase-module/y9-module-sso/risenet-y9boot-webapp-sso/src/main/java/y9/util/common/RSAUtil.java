@@ -1,11 +1,16 @@
 package y9.util.common;
 
-import y9.util.Y9Base64;
-
-import javax.crypto.Cipher;
-import java.security.*;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+
+import javax.crypto.Cipher;
+
+import y9.util.Y9Base64;
 
 public class RSAUtil {
 
@@ -91,8 +96,10 @@ public class RSAUtil {
 
     public static void main(String[] args) {
         try {
-            //String[] arr = genKeyPair();
-            String[] arr = {"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC6DvO5m7p1Of/IkPwMRdQK7tx4wZKrbmVj2aqhlX5z+McbxeiP1XgwpiFINxigtXqU49rtCb1eyUafD4lIYZ399Z5TAZeD3kH+ggdP6xRr0G7+u1UE9qgoLXPOugZsABwSOq5w9v6qGUAY8U3doLDkjCueMbEeGG96FjqaaMLckwIDAQAB","MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALoO87mbunU5/8iQ/AxF1Aru3HjBkqtuZWPZqqGVfnP4xxvF6I/VeDCmIUg3GKC1epTj2u0JvV7JRp8PiUhhnf31nlMBl4PeQf6CB0/rFGvQbv67VQT2qCgtc866BmwAHBI6rnD2/qoZQBjxTd2gsOSMK54xsR4Yb3oWOppowtyTAgMBAAECgYACb5OtSGamhj3dCFjkaD2gbwQf6Jjc+bMGHaFoQCbJqeYhbPPgfjD2ohYpdd8yq22RaXJCTDBYf1YXWwK3GeARn19tYnJodqspAya3jyfSFY+IRDQ2kQ/59w1VmBiOtJsUJG4va2Bz9SRfLZuXwOyznjKk7BE89Anb3ici6u6HYQJBAONiagv+Kc8dkxoip1NWYVFjCWNHTejWTgLLgVDZi1jep/8Xx5d5E1aewcvPCJRz8A7hYEY5Uc8Mt9PB6NhLedkCQQDReSXdMdg+/lLYwdX7lRfPH7PIGNK4UwmZQ0LW7fsoy8/TD9gMnQ9sAVHILKxQuhubDHGfonVhA08WA2nvgzpLAkEA0hMmbpYPAm8MbOT/OhtgJdUd4z8JV8hGooZpnsyd1SlAhIjvuZ3+o9Rgr29DOgQzEUxfqgFi96uEWnuYJ9zzYQJBAK0SL5qmiEjj0IeO/8Gx2c4kH2KAP/pTgWbEEAGM9ysp2jhEqvkg+5D9Nhjx8B1y50Qf7/E5RUo2da12fJyMDCkCQDjBuq+dssaPGs36oijHBxzJmeaFR6vmKBUaiwYJEHg2ayi3r3/dHRrqYxXC2wblxOhkytUl/R1DErHztHHm878="};
+            // String[] arr = genKeyPair();
+            String[] arr = {
+                "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC6DvO5m7p1Of/IkPwMRdQK7tx4wZKrbmVj2aqhlX5z+McbxeiP1XgwpiFINxigtXqU49rtCb1eyUafD4lIYZ399Z5TAZeD3kH+ggdP6xRr0G7+u1UE9qgoLXPOugZsABwSOq5w9v6qGUAY8U3doLDkjCueMbEeGG96FjqaaMLckwIDAQAB",
+                "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALoO87mbunU5/8iQ/AxF1Aru3HjBkqtuZWPZqqGVfnP4xxvF6I/VeDCmIUg3GKC1epTj2u0JvV7JRp8PiUhhnf31nlMBl4PeQf6CB0/rFGvQbv67VQT2qCgtc866BmwAHBI6rnD2/qoZQBjxTd2gsOSMK54xsR4Yb3oWOppowtyTAgMBAAECgYACb5OtSGamhj3dCFjkaD2gbwQf6Jjc+bMGHaFoQCbJqeYhbPPgfjD2ohYpdd8yq22RaXJCTDBYf1YXWwK3GeARn19tYnJodqspAya3jyfSFY+IRDQ2kQ/59w1VmBiOtJsUJG4va2Bz9SRfLZuXwOyznjKk7BE89Anb3ici6u6HYQJBAONiagv+Kc8dkxoip1NWYVFjCWNHTejWTgLLgVDZi1jep/8Xx5d5E1aewcvPCJRz8A7hYEY5Uc8Mt9PB6NhLedkCQQDReSXdMdg+/lLYwdX7lRfPH7PIGNK4UwmZQ0LW7fsoy8/TD9gMnQ9sAVHILKxQuhubDHGfonVhA08WA2nvgzpLAkEA0hMmbpYPAm8MbOT/OhtgJdUd4z8JV8hGooZpnsyd1SlAhIjvuZ3+o9Rgr29DOgQzEUxfqgFi96uEWnuYJ9zzYQJBAK0SL5qmiEjj0IeO/8Gx2c4kH2KAP/pTgWbEEAGM9ysp2jhEqvkg+5D9Nhjx8B1y50Qf7/E5RUo2da12fJyMDCkCQDjBuq+dssaPGs36oijHBxzJmeaFR6vmKBUaiwYJEHg2ayi3r3/dHRrqYxXC2wblxOhkytUl/R1DErHztHHm878="};
             System.out.println("publicKey:" + arr[0]);
             System.out.println("privateKey:" + arr[1]);
 

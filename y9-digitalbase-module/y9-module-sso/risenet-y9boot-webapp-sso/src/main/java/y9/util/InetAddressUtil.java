@@ -1,18 +1,23 @@
 package y9.util;
 
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.Properties;
+import java.util.regex.Pattern;
+
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StringUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.*;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.Properties;
-import java.util.regex.Pattern;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class InetAddressUtil {
@@ -20,18 +25,12 @@ public class InetAddressUtil {
     public static final String LOCALHOST = "127.0.0.1";
 
     public static final String ANYHOST = "0.0.0.0";
-
-    private static volatile InetAddress LOCAL_ADDRESS = null;
-
     private static final Pattern LOCAL_IP_PATTERN = Pattern.compile("127(\\.\\d{1,3}){3}$");
-
     private static final Pattern ADDRESS_PATTERN = Pattern.compile("^\\d{1,3}(\\.\\d{1,3}){3}\\:\\d{1,5}$");
-
     private static final Pattern IP_PATTERN = Pattern.compile("\\d{1,3}(\\.\\d{1,3}){3,5}$");
-
     public static Properties properties = new Properties();
-
     public static String ips = "192.168.x.x,10.161.x.x,10.1.x.x,172.20.x.x";
+    private static volatile InetAddress LOCAL_ADDRESS = null;
 
     /*
      * A类网络 ip地址范围:10.0.0.0~10.255.255.255     ip地址数量:16777216    网络数:1个A类网络

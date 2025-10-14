@@ -1,14 +1,5 @@
 package y9.util;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.binary.Base64;
-
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -17,6 +8,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Hashtable;
+
+import javax.imageio.ImageIO;
+
+import org.apache.commons.codec.binary.Base64;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Y9QRCode {

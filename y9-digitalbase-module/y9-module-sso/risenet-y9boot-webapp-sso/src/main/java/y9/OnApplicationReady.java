@@ -1,19 +1,21 @@
 package y9;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.time.Instant;
+
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import y9.entity.Y9User;
 import y9.service.Y9UserService;
 import y9.util.Y9MessageDigest;
 
-import java.time.Instant;
-import java.util.Date;
-
 /**
  * 用于生成测试的用户
+ * 
  * @author dingzhaojun
  * @date 2023/8/13
  * @since 9.6.3
@@ -28,9 +30,10 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     public void onApplicationEvent(ApplicationReadyEvent event) {
         Y9User y9User = null;
         try {
-            y9User = y9UserService.findByPersonIdAndTenantId("11111111-1111-1111-1111-111111111117", "11111111-1111-1111-1111-111111111113");
+            y9User = y9UserService.findByPersonIdAndTenantId("11111111-1111-1111-1111-111111111117",
+                "11111111-1111-1111-1111-111111111113");
         } catch (Exception e) {
-            //e.printStackTrace();
+            // e.printStackTrace();
         }
         if (y9User == null) {
             y9User = new Y9User();
@@ -57,9 +60,10 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
         }
 
         try {
-            y9User = y9UserService.findByPersonIdAndTenantId("11111111-1111-1111-1111-111111111118", "11111111-1111-1111-1111-111111111113");
+            y9User = y9UserService.findByPersonIdAndTenantId("11111111-1111-1111-1111-111111111118",
+                "11111111-1111-1111-1111-111111111113");
         } catch (Exception e) {
-            //e.printStackTrace();
+            // e.printStackTrace();
         }
         if (y9User == null) {
             y9User = new Y9User();

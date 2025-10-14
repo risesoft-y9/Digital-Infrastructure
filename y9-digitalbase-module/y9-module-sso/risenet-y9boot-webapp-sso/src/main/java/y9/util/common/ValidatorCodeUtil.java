@@ -5,19 +5,6 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class ValidatorCodeUtil {
-    public static class ValidatorCode {
-        private BufferedImage image;
-        private String code;
-
-        public String getCode() {
-            return code;
-        }
-
-        public BufferedImage getImage() {
-            return image;
-        }
-    }
-
     public static ValidatorCode getCode() {
         // 验证码图片的宽度。
         int width = 80;
@@ -102,5 +89,18 @@ public class ValidatorCodeUtil {
         int g = fc + random.nextInt(bc - fc);
         int b = fc + random.nextInt(bc - fc);
         return new Color(r, g, b);
+    }
+
+    public static class ValidatorCode {
+        private BufferedImage image;
+        private String code;
+
+        public String getCode() {
+            return code;
+        }
+
+        public BufferedImage getImage() {
+            return image;
+        }
     }
 }

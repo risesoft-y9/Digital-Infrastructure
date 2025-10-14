@@ -65,7 +65,7 @@ public class Y9Configuration {
         return new CasWebSecurityConfigurer<>() {
             @Override
             public List<String> getIgnoredEndpoints() {
-                return List.of("/y9static/**", "/api/**");
+                return List.of("/y9static", "/api");
             }
         };
     }

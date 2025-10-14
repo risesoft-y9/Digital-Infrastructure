@@ -109,7 +109,7 @@ cas:
                     startDelay: PT15S
                     repeatInterval: PT30M
             jpa:
-                enabled: true
+                enabled: false
                 dialect: org.hibernate.dialect.PostgreSQLDialect
                 driver-class: org.postgresql.Driver
                 url: jdbc:postgresql://localhost:5432/postgres
@@ -126,7 +126,7 @@ cas:
                     signing:
                         key: "CzPeT3D2l7C-dwR2LfV9DFHrwmPGXCSsEReZeTn76xiWNU45De8s1CAdPNXovoBpEilbeTY1PkwPQuMxZdN4mQ"
             redis:
-                enabled: false
+                enabled: true
                 useSsl: false
                 host: "localhost"
                 port: 6379
@@ -300,18 +300,27 @@ server:
 management:
     auditevents:
         enabled: true
+    endpoint:
+        restart:
+            access: NONE
+        shutdown:
+            access: NONE
     endpoints:
-        web:
-            exposure:
-                include: health,info
         access:
             default: unrestricted
+        jmx:
+            exposure:
+                exclude: '*'
+        web:
+            base-path: /actuator
+            discovery:
+                enabled: true
+            exposure:
+                include: info,health,status
+    server:
+        add-application-context-header: false
     tracing:
         enabled: true
-    defaults:
-        metrics:
-            export:
-                enabled: true
 spring:
     application:
         name: sso

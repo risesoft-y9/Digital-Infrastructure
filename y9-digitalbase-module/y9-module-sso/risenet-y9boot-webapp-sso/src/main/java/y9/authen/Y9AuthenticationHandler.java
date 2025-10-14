@@ -18,7 +18,6 @@ import org.apereo.cas.authentication.DefaultAuthenticationHandlerExecutionResult
 import org.apereo.cas.authentication.credential.UsernamePasswordCredential;
 import org.apereo.cas.authentication.principal.PrincipalFactoryUtils;
 import org.apereo.cas.authentication.principal.Service;
-import org.apereo.cas.services.ServicesManager;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -44,12 +43,11 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
 
     public Y9AuthenticationHandler(
         String name,
-        ServicesManager servicesManager,
         Integer order,
         Y9UserService y9UserService,
         Y9LoginUserService y9LoginUserService,
         Y9Properties y9Properties) {
-        super(name, servicesManager, PrincipalFactoryUtils.newPrincipalFactory(), order);
+        super(name, PrincipalFactoryUtils.newPrincipalFactory(), order);
         this.y9UserService = y9UserService;
         this.y9LoginUserService = y9LoginUserService;
         this.y9Properties = y9Properties;

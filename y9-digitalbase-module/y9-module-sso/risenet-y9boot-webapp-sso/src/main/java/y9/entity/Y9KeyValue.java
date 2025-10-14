@@ -33,10 +33,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class Y9KeyValue implements Serializable {
-    private static final long serialVersionUID = -3351125761118770968L;
-
     public static final String ENTITY_NAME = "Y9KeyValue";
-
+    private static final long serialVersionUID = -3351125761118770968L;
     @Id
     @Column(name = "KV_KEY")
     @Comment("键")

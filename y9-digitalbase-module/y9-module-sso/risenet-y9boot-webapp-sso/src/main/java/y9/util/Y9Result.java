@@ -1,11 +1,18 @@
 package y9.util;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import y9.util.exception.ErrorCode;
 import y9.util.exception.GlobalErrorCodeEnum;
-
-import java.io.Serializable;
 
 @Getter
 @Setter
