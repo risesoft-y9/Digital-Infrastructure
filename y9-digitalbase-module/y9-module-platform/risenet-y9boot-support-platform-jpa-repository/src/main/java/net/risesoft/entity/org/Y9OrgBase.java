@@ -7,7 +7,6 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Transient;
-import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.ColumnDefault;
@@ -56,7 +55,7 @@ public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBa
     /** 版本号,乐观锁 */
     @Column(name = "VERSION")
     @Comment("版本号,乐观锁")
-    @Version
+    // @Version
     protected Integer version;
 
     /** 是否禁用 */
@@ -111,7 +110,8 @@ public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBa
     @Override
     public int compareTo(Y9OrgBase o) {
         return Comparator.comparing(Y9OrgBase::getParentId, Comparator.nullsFirst(String::compareTo))
-            .thenComparing(Y9OrgBase::getTabIndex).compare(this, o);
+            .thenComparing(Y9OrgBase::getTabIndex)
+            .compare(this, o);
     }
 
 }
