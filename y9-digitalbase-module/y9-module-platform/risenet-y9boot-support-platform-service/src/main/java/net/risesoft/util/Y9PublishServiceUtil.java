@@ -33,7 +33,7 @@ import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 @Slf4j
 public class Y9PublishServiceUtil {
     private static boolean inited = false;
-    private static List<Y9PublishService> y9PublishServices = new ArrayList<>();
+    private static final List<Y9PublishService> y9PublishServices = new ArrayList<>();
     private static JdbcTemplate jdbcTemplate;
 
     private static void checkBeans() {
@@ -91,8 +91,7 @@ public class Y9PublishServiceUtil {
             }
             String objId = "";
             Object orgObj = msg.getOrgObj();
-            if (orgObj instanceof OrgUnit) {
-                OrgUnit orgUnit = (OrgUnit)orgObj;
+            if (orgObj instanceof OrgUnit orgUnit) {
                 objId = orgUnit.getId();
             }
 

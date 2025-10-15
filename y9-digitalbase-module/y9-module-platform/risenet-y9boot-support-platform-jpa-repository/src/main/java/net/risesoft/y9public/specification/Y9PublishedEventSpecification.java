@@ -41,7 +41,11 @@ public class Y9PublishedEventSpecification implements Specification<Y9PublishedE
         this.endTime = endTime;
     }
 
-    public Y9PublishedEventSpecification(String tenantId, String eventName, String eventDescription, Date startTime,
+    public Y9PublishedEventSpecification(
+        String tenantId,
+        String eventName,
+        String eventDescription,
+        Date startTime,
         Date endTime) {
         this.tenantId = tenantId;
         this.eventName = eventName;

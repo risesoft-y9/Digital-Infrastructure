@@ -38,7 +38,6 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSource;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 
-
 @Configuration
 @AutoConfigureBefore(DataSourceAutoConfiguration.class)
 @EnableConfigurationProperties(JpaProperties.class)
@@ -52,7 +51,7 @@ public class SpringMultiTenantConfiguration {
 
     public static final String TRANSACTION_MANAGER = "rsTenantTransactionManager";
 
-    // @ConfigurationProperties("spring.datasource.druid.tenantDefault")
+    // @ConfigurationProperties("spring.datasource.Hikari.tenantDefault")
     @Bean("defaultDataSource")
     @ConditionalOnMissingBean(name = "defaultDataSource")
     public HikariDataSource defaultDataSource(Environment environment) {

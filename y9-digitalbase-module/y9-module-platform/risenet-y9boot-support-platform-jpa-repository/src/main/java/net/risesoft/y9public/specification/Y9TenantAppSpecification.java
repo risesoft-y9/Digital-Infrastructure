@@ -35,8 +35,13 @@ public class Y9TenantAppSpecification<TenantApp> implements Specification<Tenant
         super();
     }
 
-    public Y9TenantAppSpecification(Boolean verify, String tenantName, String createTime, String verifyTime,
-        Boolean tenancy, String systemId) {
+    public Y9TenantAppSpecification(
+        Boolean verify,
+        String tenantName,
+        String createTime,
+        String verifyTime,
+        Boolean tenancy,
+        String systemId) {
         super();
         this.verify = verify;
         this.tenantName = tenantName;
@@ -46,8 +51,14 @@ public class Y9TenantAppSpecification<TenantApp> implements Specification<Tenant
         this.systemId = systemId;
     }
 
-    public Y9TenantAppSpecification(Boolean verify, String tenantName, String createTime, String verifyTime,
-        Boolean tenancy, String systemId, String appName) {
+    public Y9TenantAppSpecification(
+        Boolean verify,
+        String tenantName,
+        String createTime,
+        String verifyTime,
+        Boolean tenancy,
+        String systemId,
+        String appName) {
         super();
         this.verify = verify;
         this.tenantName = tenantName;
