@@ -20,7 +20,7 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
     volumes:
-      - d:/docker-data/kafka:/bitnami/kafka
+      - /Users/dingzhaojun/docker-data/kafka:/bitnami/kafka
     labels:
       org.springframework.boot.readiness-check.tcp.disable: true
   
