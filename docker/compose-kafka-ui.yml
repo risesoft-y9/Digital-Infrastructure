@@ -1,0 +1,17 @@
+#name: y9-dev-environments
+services:
+  kafbat-ui:
+    container_name: kafbat-ui
+    image: ghcr.io/kafbat/kafka-ui:latest
+    ports:
+      - 7000:8080
+    environment:
+      DYNAMIC_CONFIG_ENABLED: 'true'
+    #volumes:
+    #  - d:/docker-config/kafka-ui/config.yml:/etc/kafkaui/dynamic_config.yaml
+  
+networks:
+  y9-share-net:
+    external: true
+
+# docker compose -f compose-kafka-ui.yml up -d

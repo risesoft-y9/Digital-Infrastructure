@@ -91,7 +91,7 @@ services:
       org.springframework.boot.readiness-check.tcp.disable: true
       
   kafka:
-    image: bitnami/kafka:latest
+    image: bitnamilegacy/kafka:latest
     container_name: kafka01
     restart: always
     extra_hosts:
