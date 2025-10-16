@@ -1,7 +1,22 @@
 server:
     port: 8080
     servlet:
-          context-path: /y9demo-file
+        context-path: /y9demo-file
+spring:
+    autoconfigure:
+        exclude:
+            - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+            - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+    #文件相关表信息需要的数据源信息，需要配置为数字底座的公共数据源
+    datasource:
+        hikari:
+            y9-public:
+                driver-class-name: com.mysql.cj.jdbc.Driver
+                jdbcUrl: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false
+                username: root
+                password: '111111'
+                maximumPoolSize: 20
+                minimumIdle: 1
 y9:
     #系统名称，用于记录文件是哪个系统上传的
     systemName: demo-file
@@ -22,7 +37,7 @@ y9:
             #公钥
             #publicKey: 
             ftp:
-              #是否启用
+                #是否启用
                 enabled: true
                 host: localhost
                 port: 21
@@ -48,29 +63,4 @@ y9:
                 enabled: false
                 # 本地文件存储的根路径，按需设置为自己的
                 basePath: "d:/y9FileStore"
-spring:
-    autoconfigure:
-        exclude:
-            - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-            - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
-    #文件相关表信息需要的数据源信息，需要配置为数字底座的公共数据源
-    datasource:
-        druid:
-            y9-public:
-                driver-class-name: com.mysql.cj.jdbc.Driver
-                url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
-                username: root
-                password: 111111
-                initialSize: 1
-                maxActive: 20
-                maxPoolPreparedStatementPerConnectionSize: 100
-                maxWait: 60000
-                minEvictableIdleTimeMillis: 300000
-                minIdle: 1
-                poolPreparedStatements: true
-                testOnBorrow: false
-                testOnReturn: false
-                testWhileIdle: true
-                timeBetweenEvictionRunsMillis: 60000
-                useGlobalDataSourceStat: true
-                validationQuery: SELECT 1 FROM DUAL
+

@@ -25,48 +25,31 @@ spring:
                 bootstrap-mode: default
                 enabled: false
         redis:
+            database: 8
+            host: localhost
+            password: 111111
+            port: 6379
+            timeout: 10000
+            lettuce:
+                pool:
+                    max-active: 8
+                    max-idle: 8
+                    max-wait: -1
+                    min-idle: 0
+                shutdown-timeout: 100ms
+            ssl:
+                enabled: false
             repositories:
                 enabled: false
     datasource:
-        druid:
-            filter:
-                stat:
-                    log-slow-sql: true
-                    mergeSql: true
-                    slow-sql-millis: 3000
-                wall:
-                    config:
-                        drop-table-allow: false
-                    enabled: true
-            stat-view-servlet:
-                enabled: false
-                url-pattern: /druid/*
-                login-username: admin
-                login-password: admin
-                reset-enable: false
-                allow: 127.0.0.1
-            web-stat-filter:
-                enabled: false
-                url-pattern: /*
-                exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*,/static/*'
+        hikari:
             y9-public:
                 driver-class-name: com.mysql.cj.jdbc.Driver
-                url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
+                jdbcUrl: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false
                 username: root
-                password: 111111
-                initialSize: 1
-                maxActive: 20
-                maxPoolPreparedStatementPerConnectionSize: 100
-                maxWait: 60000
-                minEvictableIdleTimeMillis: 300000
-                minIdle: 1
-                poolPreparedStatements: true
-                testOnBorrow: false
-                testOnReturn: false
-                testWhileIdle: true
-                timeBetweenEvictionRunsMillis: 60000
-                useGlobalDataSourceStat: true
-                validationQuery: SELECT 1 FROM DUAL
+                password: '111111'
+                maximumPoolSize: 20
+                minimumIdle: 1
     jpa:
         generate-ddl: true
         database-platform: org.hibernate.dialect.MySQL8Dialect
@@ -84,20 +67,7 @@ spring:
                 jdbc:
                     batch_size: 100
                 show_sql: true
-    redis:
-        database: 8
-        host: localhost
-        lettuce:
-            pool:
-                max-active: 8
-                max-idle: 8
-                max-wait: -1
-                min-idle: 0
-            shutdown-timeout: 100ms
-        password: 111111
-        port: 6379
-        ssl: false
-        timeout: 10000
+
 y9:
     systemName: y9demo-cache
     systemCnName: '缓存测试'

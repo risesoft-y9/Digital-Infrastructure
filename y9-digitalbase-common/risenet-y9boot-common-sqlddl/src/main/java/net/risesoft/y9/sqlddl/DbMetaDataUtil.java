@@ -113,8 +113,8 @@ public class DbMetaDataUtil {
      * @throws Exception 异常信息
      */
     public static boolean checkTableExist(DataSource dataSource, String tableName) throws Exception {
-        String databaseName = null;
-        String tableSchema = null;
+        String databaseName;
+        String tableSchema;
         ResultSet rs = null;
         try (Connection connection = dataSource.getConnection()) {
             databaseName = connection.getCatalog();
