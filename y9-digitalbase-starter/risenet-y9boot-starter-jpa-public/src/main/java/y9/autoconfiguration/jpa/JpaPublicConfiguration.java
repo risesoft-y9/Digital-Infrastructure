@@ -36,8 +36,11 @@ import net.risesoft.y9.configuration.feature.jpa.Y9JpaProperties;
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
 @EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryPublic}"},
     includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},
-    entityManagerFactoryRef = "rsPublicEntityManagerFactory", transactionManagerRef = "rsPublicTransactionManager")
+    entityManagerFactoryRef = "rsPublicEntityManagerFactory",
+    transactionManagerRef = JpaPublicConfiguration.TRANSACTION_MANAGER)
 public class JpaPublicConfiguration {
+
+    public static final String TRANSACTION_MANAGER = "rsPublicTransactionManager";
 
     @Bean(name = {"jdbcTemplate4Public"})
     @ConditionalOnMissingBean(name = "jdbcTemplate4Public")

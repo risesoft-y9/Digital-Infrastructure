@@ -602,23 +602,27 @@
                 <inherited>false</inherited>
                 <executions>
                     <execution>
-                        <!-- Flatten and simplify our own POM for install/deploy -->
                         <id>flatten</id>
                         <phase>process-resources</phase>
                         <goals>
                             <goal>flatten</goal>
                         </goals>
                         <configuration>
-                            <flattenMode>oss</flattenMode>
+                            <updatePomFile>true</updatePomFile>
+                            <flattenMode>resolveCiFriendliesOnly</flattenMode>
                             <pomElements>
-                                <parent>expand</parent>
-                                <dependencyManagement>interpolate</dependencyManagement>
-                                <pluginManagement>interpolate</pluginManagement>
-                                <build>keep</build>
-                                <profiles>expand</profiles>
-                                <properties>interpolate</properties>
+                                <scm>expand</scm>
+                                <url>expand</url>
+                                <developers>expand</developers>
                             </pomElements>
                         </configuration>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

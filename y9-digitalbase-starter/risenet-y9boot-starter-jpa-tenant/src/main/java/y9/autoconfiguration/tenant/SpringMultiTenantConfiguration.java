@@ -32,6 +32,8 @@ import org.springframework.util.StringUtils;
 
 import com.zaxxer.hikari.HikariDataSource;
 
+import lombok.extern.slf4j.Slf4j;
+
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSource;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
@@ -42,10 +44,14 @@ import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
 @EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryTenant}"},
     includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},
-    entityManagerFactoryRef = "rsTenantEntityManagerFactory", transactionManagerRef = "rsTenantTransactionManager")
+    entityManagerFactoryRef = "rsTenantEntityManagerFactory",
+    transactionManagerRef = SpringMultiTenantConfiguration.TRANSACTION_MANAGER)
+@Slf4j
 public class SpringMultiTenantConfiguration {
 
-    // @ConfigurationProperties("spring.datasource.hikari.tenantDefault")
+    public static final String TRANSACTION_MANAGER = "rsTenantTransactionManager";
+
+    // @ConfigurationProperties("spring.datasource.Hikari.tenantDefault")
     @Bean("defaultDataSource")
     @ConditionalOnMissingBean(name = "defaultDataSource")
     public HikariDataSource defaultDataSource(Environment environment) {
@@ -115,7 +121,7 @@ public class SpringMultiTenantConfiguration {
     }
 
     @Primary
-    @Bean({"rsTenantTransactionManager", "transactionManager"})
+    @Bean({SpringMultiTenantConfiguration.TRANSACTION_MANAGER, "transactionManager"})
     public PlatformTransactionManager
         rsTenantTransactionManager(@Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory emf) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
@@ -152,9 +158,15 @@ public class SpringMultiTenantConfiguration {
     }
 
     @Bean("y9TenantDataSourceLookup")
+    @ConditionalOnMissingBean(name = "y9TenantDataSourceLookup")
     public Y9TenantDataSourceLookup y9TenantDataSourceLookup(@Qualifier("y9PublicDS") HikariDataSource ds,
         Environment environment) {
         return new Y9TenantDataSourceLookup(ds, environment.getProperty("y9.systemName"));
     }
+
+    /*@Bean
+    public OnY9MultiTenantApplicationReady onY9MultiTenantApplicationReady() {
+        return new OnY9MultiTenantApplicationReady();
+    }*/
 
 }

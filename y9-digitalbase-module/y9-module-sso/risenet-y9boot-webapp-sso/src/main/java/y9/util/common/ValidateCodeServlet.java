@@ -1,18 +1,20 @@
 package y9.util.common;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.Random;
+
+import javax.imageio.ImageIO;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import lombok.extern.slf4j.Slf4j;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.Random;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 生成随机验证码
@@ -23,6 +25,8 @@ import java.util.Random;
 @Slf4j
 public class ValidateCodeServlet extends HttpServlet {
     private static final long serialVersionUID = 5473036569686182053L;
+    char[] codeSequence = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U',
+        'V', 'W', 'X', 'Y', '3', '4', '5', '6', '7', '8', '9'}; // O
     // 验证码图片的宽度。
     private int width = 60;
     // 验证码图片的高度。
@@ -33,9 +37,6 @@ public class ValidateCodeServlet extends HttpServlet {
     // 字体高度
     private int fontHeight;
     private int codeY;
-
-    char[] codeSequence = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U',
-        'V', 'W', 'X', 'Y', '3', '4', '5', '6', '7', '8', '9'}; // O
                                                                 // 和
                                                                 // 0比较类似，我去掉了。
 

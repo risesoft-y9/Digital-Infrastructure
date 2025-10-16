@@ -39,15 +39,10 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!--<dependency>
-             <groupId>net.risesoft</groupId>
-             <artifactId>risenet-y9boot-starter-apisix</artifactId>
-             <version>${project.version}</version>
-         </dependency>-->
-
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-docker-compose</artifactId>
+            <groupId>net.risesoft</groupId>
+            <artifactId>risenet-y9boot-starter-apisix</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -55,7 +50,12 @@
             <artifactId>risenet-y9boot-common-nacos</artifactId>
             <version>${project.version}</version>
         </dependency>
- 
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-docker-compose</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>

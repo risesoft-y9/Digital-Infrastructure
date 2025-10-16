@@ -5,8 +5,9 @@ plugins {
 }
 
 dependencies {
-    implementation(platform(libs.cas.server.bom))
-    annotationProcessor(platform(libs.spring.bom))
+    implementation(enforcedPlatform(libs.cas.server.bom))
+    //implementation(enforcedPlatform(libs.spring.bom))
+    annotationProcessor(enforcedPlatform(libs.spring.bom))
 
     implementation("org.apereo.cas:cas-server-core")
     implementation("org.apereo.cas:cas-server-core-authentication-api")
@@ -41,7 +42,6 @@ dependencies {
     implementation("org.apereo.cas:cas-server-support-redis-modules")
     implementation("org.apereo.cas:cas-server-support-redis-ticket-registry")
     implementation("org.apereo.cas:cas-server-support-session-redis")
-    implementation("org.springframework.data:spring-data-redis")
 
     implementation("org.apereo.cas:cas-server-core-api-logout")
     implementation("org.apereo.cas:cas-server-core-logout")
@@ -56,8 +56,8 @@ dependencies {
     implementation("org.apereo.cas:cas-server-support-oauth-webflow")
     implementation("org.apereo.cas:cas-server-support-oauth-api")
     implementation("org.apereo.cas:cas-server-support-oauth-core-api")
-    implementation("org.apereo.cas:cas-server-support-oauth-core")
     implementation("org.apereo.cas:cas-server-support-oauth-services")
+    //implementation("org.apereo.cas:cas-server-support-oauth")
 
     implementation("org.apereo.cas:cas-server-support-oidc")
     implementation("org.apereo.cas:cas-server-support-oidc-core-api")

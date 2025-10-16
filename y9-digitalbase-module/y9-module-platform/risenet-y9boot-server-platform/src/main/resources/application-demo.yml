@@ -3,11 +3,11 @@ spring:
         nacos:
             config:
                 enabled: true
-                namespace: test2
                 group: DEFAULT_GROUP
+                namespace: demo
                 server-addr: nacos:8848
                 username: nacos
                 password: ${NACOS_PASSWORD:111111}
     config:
         import:
-            - optional:nacos:log.yml
+            - optional:nacos:platform.yml

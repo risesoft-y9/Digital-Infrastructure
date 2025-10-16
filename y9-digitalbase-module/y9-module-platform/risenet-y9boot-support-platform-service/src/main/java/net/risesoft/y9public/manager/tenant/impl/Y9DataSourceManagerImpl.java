@@ -47,8 +47,10 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
     private final Y9PlatformProperties y9PlatformProperties;
     private final Y9DataSourceRepository datasourceRepository;
 
-    public Y9DataSourceManagerImpl(@Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public,
-        Y9PlatformProperties y9PlatformProperties, Y9DataSourceRepository datasourceRepository) {
+    public Y9DataSourceManagerImpl(
+        @Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public,
+        Y9PlatformProperties y9PlatformProperties,
+        Y9DataSourceRepository datasourceRepository) {
         this.jdbcTemplate4Public = jdbcTemplate4Public;
         this.y9PlatformProperties = y9PlatformProperties;
         this.datasourceRepository = datasourceRepository;

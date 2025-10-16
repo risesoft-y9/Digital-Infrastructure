@@ -1,8 +1,10 @@
 package y9.util.exception;
 
-import lombok.AllArgsConstructor;
+import static y9.util.exception.GlobalErrorCodeConsts.AUTH_MODULE_CODE;
+import static y9.util.exception.GlobalErrorCodeConsts.NONE_MODULE_CODE;
+import static y9.util.exception.GlobalErrorCodeConsts.PERMISSION_MODULE_CODE;
 
-import static y9.util.exception.GlobalErrorCodeConsts.*;
+import lombok.AllArgsConstructor;
 
 /**
  * 全局的错误代码

@@ -75,7 +75,7 @@ public class Y9PublishedEvent extends BaseEntity {
 
     /** 事件处理对象实体类信息 */
     @Lob
-    @Column(name = "ENTITY_JSON", length = 16777215)
+    @Column(name = "ENTITY_JSON")
     @Comment("事件处理对象实体类信息")
     private String entityJson;
 

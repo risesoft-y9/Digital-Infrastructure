@@ -1,8 +1,11 @@
 package y9.util;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -13,8 +16,7 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.web.context.ServletContextAware;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 获取WebApplicationContext的一条途径
@@ -90,6 +92,11 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
         return environment;
     }
 
+    @Override
+    public void setEnvironment(Environment environment) {
+        Y9Context.environment = environment;
+    }
+
     public static String getHostIp() {
         if (Y9Context.hostIp == null) {
             Y9Context.hostIp = InetAddressUtil.getLocalAddress().getHostAddress();
@@ -111,11 +118,11 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
 
     /**
      * 获取访问者IP
-     * 
+     *
      * 在一般情况下使用Request.getRemoteAddr()即可，但是经过nginx等反向代理软件后，这个方法会失效。
-     * 
+     *
      * 本方法先从Header中获取X-Real-IP，如果不存在再从X-Forwarded-For获得第一个IP(用,分割)， 如果还不存在则调用Request .getRemoteAddr()。
-     * 
+     *
      * @param request
      * @return
      */
@@ -159,6 +166,11 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
         return servletContext;
     }
 
+    @Override
+    public void setServletContext(ServletContext servletContext) {
+        Y9Context.servletContext = servletContext;
+    }
+
     public static ServletContext getServletContext(String uripath) {
         return servletContext.getContext(uripath);
     }
@@ -170,7 +182,7 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
     /**
      * @param name
      * @return Class 注册对象的类型
-     * 
+     *
      * @throws NoSuchBeanDefinitionException
      */
     public static Class<?> getType(String name) throws NoSuchBeanDefinitionException {
@@ -183,8 +195,8 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
 
     /**
      * 判断以给定名字注册的bean定义是一个singleton还是一个prototype。 如果与给定名字相应的bean定义没有被找到，将会抛出一个异常（NoSuchBeanDefinitionException）
-     * 
-     * 
+     *
+     *
      * @param name
      * @return boolean
      * @throws NoSuchBeanDefinitionException
@@ -200,16 +212,6 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         Y9Context.applicationContext = applicationContext;
-    }
-
-    @Override
-    public void setEnvironment(Environment environment) {
-        Y9Context.environment = environment;
-    }
-
-    @Override
-    public void setServletContext(ServletContext servletContext) {
-        Y9Context.servletContext = servletContext;
     }
 
 }

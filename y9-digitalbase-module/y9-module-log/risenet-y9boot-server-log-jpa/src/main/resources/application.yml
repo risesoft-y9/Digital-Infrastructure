@@ -39,66 +39,52 @@ spring:
             - optional:nacos:log.yml
             #- optional:nacos:test01.yml?group=group_02
             #- optional:nacos:test02.yml?group=group_03&refreshEnabled=false
+    data:
+        jpa:
+            repositories:
+                bootstrap-mode: default
+                enabled: false
+        redis:
+            database: 8
+            host: localhost
+            port: 6379
+            username: default
+            password: '111111'
+            ssl:
+                enabled: false
+            lettuce:
+                pool:
+                    max-active: 8
+                    max-idle: 8
+                    max-wait: -1
+                    min-idle: 1
+            repositories:
+                enabled: false
     datasource:
-        druid:
-            filter:
-                stat:
-                    log-slow-sql: true
-                    mergeSql: true
-                    slow-sql-millis: 3000
-                wall:
-                    config:
-                        drop-table-allow: false
-                    enabled: true
-            stat-view-servlet:
-                enabled: false
-                url-pattern: /druid/*
-                login-username: admin
-                login-password: admin
-                reset-enable: false
-                allow: 127.0.0.1
-            web-stat-filter:
-                enabled: false
-                url-pattern: /*
-                exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*,/static/*'
+        hikari:
             y9-public:
-                #driver-class-name: oracle.jdbc.OracleDriver
-                #url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
-                #username: Y9_PUBLIC
-                #password: '111111'
-                driver-class-name: com.mysql.cj.jdbc.Driver
-                url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
+                driverClassName: com.mysql.cj.jdbc.Driver
+                jdbcUrl: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
                 username: root
-                password: 111111
-                initialSize: 1
-                maxActive: 20
-                maxPoolPreparedStatementPerConnectionSize: 100
-                maxWait: 60000
-                minEvictableIdleTimeMillis: 300000
-                minIdle: 1
-                poolPreparedStatements: true
-                testOnBorrow: false
-                testOnReturn: false
-                testWhileIdle: true
-                timeBetweenEvictionRunsMillis: 60000
-                useGlobalDataSourceStat: true
-                validationQuery: SELECT 1 FROM DUAL
+                password: '111111'
+                maximumPoolSize: 20
+                minimumIdle: 1
     jpa:
-        generate-ddl: true
-        database-platform: org.hibernate.dialect.MySQL8Dialect
+        #databasePlatform: org.hibernate.dialect.MySQL8Dialect
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL8Dialect
+                hbm2ddl:
+                    auto: none
+                jdbc:
+                    batchSize: 100
+                showSql: true
         hibernate:
+            ddl-auto: none
             naming:
                 implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
                 physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
         open-in-view: false
-        properties:
-            hibernate:
-                hbm2ddl:
-                    auto: none
-                dialect: org.hibernate.dialect.MySQL8Dialect
-                jdbc:
-                    batch_size: 100
-                show_sql: true
     kafka:
         bootstrap-servers: localhost:9092
         consumer:
@@ -107,20 +93,6 @@ spring:
             group-id: y9log-server
     main:
         allow-bean-definition-overriding: true
-    redis:
-        database: 8
-        host: localhost
-        password: 111111
-        port: 6379
-        lettuce:
-            pool:
-                max-active: 8
-                max-idle: 8
-                max-wait: -1
-                min-idle: 0
-            shutdown-timeout: 100ms
-        ssl: false
-        timeout: 10000
 y9:
     systemName: ${spring.application.name}
     internalIp: 192.168.x.x,10.x.x.x,172.20.x.x

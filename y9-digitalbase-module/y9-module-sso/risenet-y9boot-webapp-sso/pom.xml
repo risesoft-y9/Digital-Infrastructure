@@ -385,7 +385,7 @@
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-oauth-services</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-oidc</artifactId>

@@ -17,26 +17,6 @@ import lombok.Setter;
 public class Y9JpaProperties {
 
     /**
-     * 公共库实体包扫描路径
-     */
-    private String[] packagesToScanEntityPublic;
-
-    /**
-     * 公共库 Repository 包扫描路径
-     */
-    private String[] packagesToScanRepositoryPublic;
-
-    /**
-     * 租户库实体包扫描路径
-     */
-    private String[] packagesToScanEntityTenant;
-
-    /**
-     * 租户库 Repository 包扫描路径
-     */
-    private String[] packagesToScanRepositoryTenant;
-
-    /**
      * 专用库实体包扫描路径
      */
     private String[] packagesToScanEntityDedicated;

@@ -151,7 +151,7 @@ public class RiseLogAdvice implements MethodInterceptor {
             }
             if (response != null) {
                 // Y9CommonFilter 见到这个标志后，就不再记录日志了，因为这里已经写了日志，不需要重复写。
-                response.addHeader("y9aoplog", "true");
+                response.setHeader("y9aoplog", "true");
             }
         }
         return ret;

@@ -18,7 +18,6 @@ import org.apereo.cas.authentication.DefaultAuthenticationHandlerExecutionResult
 import org.apereo.cas.authentication.credential.UsernamePasswordCredential;
 import org.apereo.cas.authentication.principal.PrincipalFactoryUtils;
 import org.apereo.cas.authentication.principal.Service;
-import org.apereo.cas.services.ServicesManager;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -27,6 +26,7 @@ import com.google.common.collect.Lists;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
+import y9.Y9Properties;
 import y9.entity.Y9User;
 import y9.service.Y9LoginUserService;
 import y9.service.Y9UserService;
@@ -39,12 +39,18 @@ import y9.util.common.RSAUtil;
 public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
     private final Y9UserService y9UserService;
     private final Y9LoginUserService y9LoginUserService;
+    private final Y9Properties y9Properties;
 
-    public Y9AuthenticationHandler(String name, ServicesManager servicesManager, Integer order,
-        Y9UserService y9UserService, Y9LoginUserService y9LoginUserService) {
-        super(name, servicesManager, PrincipalFactoryUtils.newPrincipalFactory(), order);
+    public Y9AuthenticationHandler(
+        String name,
+        Integer order,
+        Y9UserService y9UserService,
+        Y9LoginUserService y9LoginUserService,
+        Y9Properties y9Properties) {
+        super(name, PrincipalFactoryUtils.newPrincipalFactory(), order);
         this.y9UserService = y9UserService;
         this.y9LoginUserService = y9LoginUserService;
+        this.y9Properties = y9Properties;
     }
 
     private static void updateCredential(HttpServletRequest request, UsernamePasswordCredential riseCredential,
@@ -119,9 +125,9 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         String encryptedUsername = riseCredential.getUsername();
         String encryptedPassword = riseCredential.toPassword();
         Y9User y9User;
-        String loginMsg = "登录失败";
+        String loginMsg = "登录成功";
         try {
-            String rsaPrivateKey = Y9Context.getProperty("y9.rsaPrivateKey");
+            String rsaPrivateKey = y9Properties.getRsaPrivateKey();
             String plainUsername = RSAUtil.privateDecrypt(encryptedUsername, rsaPrivateKey);
             String plainPassword = RSAUtil.privateDecrypt(encryptedPassword, rsaPrivateKey);
             if (plainUsername.contains("&")) {
@@ -141,6 +147,14 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
                     if (!Y9MessageDigest.bcryptMatch(plainPassword, hashed)) {
                         loginMsg = "代理用户密码错误";
                         throw new FailedLoginException("代理用户密码错误。");
+                    } else {
+                        List<Y9User> realUsers = getAgentUsers(deptId, tenantShortName, plainUsername);
+                        if (agentUsers == null || agentUsers.isEmpty()) {
+                            loginMsg = "没有找到这个用户。";
+                            throw new AccountNotFoundException("没有找到这个用户。");
+                        } else {
+                            y9User = realUsers.get(0);
+                        }
                     }
                 }
 
@@ -149,7 +163,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
 
                 List<Y9User> users = getUsers(loginType, deptId, tenantShortName, plainUsername);
                 if (users == null || users.isEmpty()) {
-                    loginMsg = "没有找到这个用户";
+                    loginMsg = "没有找到这个用户。";
                     throw new AccountNotFoundException("没有找到这个用户。");
                 } else if ("qrCode".equals(loginType)) {
                     y9User = users.getFirst();
@@ -159,13 +173,13 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
                     y9User = users.getFirst();
                     String hashed = y9User.getPassword();
                     if (!Y9MessageDigest.bcryptMatch(plainPassword, hashed)) {
-                        loginMsg = "用户密码错误";
+                        loginMsg = "用户密码错误。";
                         throw new FailedLoginException("用户密码错误。");
                     }
                 }
             }
 
-            y9LoginUserService.save(riseCredential, "true", "登录成功");
+            y9LoginUserService.save(riseCredential, "true", loginMsg);
 
             val attributes = buildAttributes(riseCredential, y9User);
             val principal = this.principalFactory.createPrincipal(plainUsername, attributes);
@@ -205,7 +219,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         }
 
         if ("qrCode".equals(loginType)) {
-            String userId = AESUtil.decrypt(username);
+            String userId = AESUtil.decrypt(y9Properties.getAesKey(), username);
             if (StringUtils.isNotBlank(userId)) {
                 return y9UserService.findByPersonIdAndOriginal(userId, Boolean.TRUE);
             } else {

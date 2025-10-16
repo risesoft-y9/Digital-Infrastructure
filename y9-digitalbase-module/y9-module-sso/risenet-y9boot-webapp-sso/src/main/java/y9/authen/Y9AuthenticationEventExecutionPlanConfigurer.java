@@ -3,29 +3,32 @@ package y9.authen;
 import org.apereo.cas.authentication.AuthenticationEventExecutionPlan;
 import org.apereo.cas.authentication.AuthenticationEventExecutionPlanConfigurer;
 import org.apereo.cas.services.ServicesManager;
-import y9.service.Y9LoginUserService;
-import y9.service.Y9UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
+
+import y9.Y9Properties;
+import y9.service.Y9LoginUserService;
+import y9.service.Y9UserService;
+
 @Component
+@RequiredArgsConstructor
 public class Y9AuthenticationEventExecutionPlanConfigurer implements AuthenticationEventExecutionPlanConfigurer {
 
-    @Autowired
-    ServicesManager servicesManager;
+    private final ServicesManager servicesManager;
 
-    @Autowired
-    Y9UserService y9UserService;
+    private final Y9UserService y9UserService;
 
-    @Autowired
-    Y9LoginUserService y9LoginUserService;
+    private final Y9LoginUserService y9LoginUserService;
+
+    private final Y9Properties y9Properties;
 
     @Override
     public void configureAuthenticationExecutionPlan(AuthenticationEventExecutionPlan plan) throws Exception {
         Y9PrincipalResolver y9PrincipalResolver = new Y9PrincipalResolver(y9UserService);
-        Y9AuthenticationHandler handler = new Y9AuthenticationHandler("y9AuthenticationHandler",
-                servicesManager, 0, y9UserService, y9LoginUserService);
-        //plan.registerAuthenticationHandlerWithPrincipalResolver(handler, y9PrincipalResolver);
+        Y9AuthenticationHandler handler =
+            new Y9AuthenticationHandler("y9AuthenticationHandler", 0, y9UserService, y9LoginUserService, y9Properties);
+        // plan.registerAuthenticationHandlerWithPrincipalResolver(handler, y9PrincipalResolver);
         plan.registerAuthenticationHandler(handler);
     }
 }
