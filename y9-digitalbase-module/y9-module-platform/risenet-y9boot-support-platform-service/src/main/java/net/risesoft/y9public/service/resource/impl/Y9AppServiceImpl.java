@@ -10,6 +10,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -168,7 +169,9 @@ public class Y9AppServiceImpl implements Y9AppService {
 
     @Override
     public Page<Y9App> page(Y9PageQuery pageQuery, String systemId, String name) {
-        Y9AppSpecification<Y9App> specification = new Y9AppSpecification<>(systemId, name);
+        Specification<Y9App> specification2 = Y9AppSpecification.searchBysystemIdAndName(systemId, name);
+
+        Specification<Y9App> specification = new Y9AppSpecification(systemId, name);
         PageRequest pageRequest = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(),
             Sort.by(Sort.Direction.ASC, "tabIndex").and(Sort.by(Sort.Direction.DESC, "createTime")));
         return y9AppRepository.findAll(specification, pageRequest);
