@@ -1,4 +1,4 @@
-#name: y9-dev-environments
+name: y9-dev-postgres-keycloak
 services:
   kafka:
     image: bitnamilegacy/kafka:latest
