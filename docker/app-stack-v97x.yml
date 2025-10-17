@@ -359,38 +359,6 @@ services:
                 - "traefik.http.routers.storage-v97x.service=storage-v97x"
                 - "traefik.http.services.storage-v97x.loadbalancer.passHostHeader=true"
                 - "traefik.http.services.storage-v97x.loadbalancer.server.port=8080"
-            update_config:
-                order: start-first
-        healthcheck:
-            test: [ "CMD-SHELL", "curl -fs http://localhost:8080/server-storage/actuator/health || exit 1" ]
-            interval: 10s
-            timeout: 2s
-            retries: 5
-            start_period: 30s
-    datacenter-v97x:
-        image: docker-internal.youshengyun.com/v97x/risenet-y9boot-server-datacenter:v9.7.x
-        networks:
-            - y9-share-net
-        environment:
-            - TZ=Asia/Shanghai
-            - SPRING_PROFILES_ACTIVE=test
-            - NACOS_PASSWORD=Risesoft@@2024
-            - JAVA_OPTS=-Xms512m -Xmx1500m
-        deploy:
-            replicas: 1
-            resources:
-                limits:
-                    memory: 2gb
-                    cpus: '4'
-                reservations:
-                    memory: 2gb
-            labels:
-                - "traefik.enable=true"
-                - "traefik.http.routers.datacenter-v97x.rule=(Host(`test2.youshengyun.com`) || Host(`test2-internal.youshengyun.com`)) && PathPrefix(`/server-datacenter`)"
-                - "traefik.http.routers.datacenter-v97x.service=datacenter-v97x"
-                - "traefik.http.services.datacenter-v97x.loadbalancer.passHostHeader=true"
-                - "traefik.http.services.datacenter-v97x.loadbalancer.server.port=8080"
-
     flowableui-v97x:
         image: docker-internal.youshengyun.com/v97x/risenet-y9boot-server-y9flowableui:v9.7.x
         networks:
