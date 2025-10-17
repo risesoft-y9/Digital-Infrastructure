@@ -1,7 +1,7 @@
 name: y9-dev-postgres-keycloak
 services:
   kafka:
-    image: bitnamilegacy/kafka:latest
+    image: bitnamilegacy/kafka:4.0.0
     container_name: kafka01
     restart: always
     extra_hosts:

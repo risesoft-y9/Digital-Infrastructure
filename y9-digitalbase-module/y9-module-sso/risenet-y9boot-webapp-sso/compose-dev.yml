@@ -82,7 +82,7 @@ services:
             org.springframework.boot.service-connection: elasticsearch
 
     kafka:
-        image: bitnami/kafka:latest
+        image: bitnamilegacy/kafka:4.0.0
         container_name: kafka01
         restart: always
         extra_hosts:
