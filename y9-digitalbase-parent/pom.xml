@@ -452,7 +452,7 @@
                         <skip>false</skip>
                         <from>
                             <!--<image>eclipse-temurin:21-jre</image>-->
-                            <image>docker-internal.youshengyun.com/proxy/tomcat:10.1-jre21-temurin</image>
+                            <image>docker-internal.youshengyun.com/base/tomcat:10.1.48-jdk21-temurin</image>
                             <platforms>
                                 <platform>
                                     <architecture>amd64</architecture>

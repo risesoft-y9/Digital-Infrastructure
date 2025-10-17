@@ -19,7 +19,7 @@ val extension = project.extensions.create<Y9DockerPluginExtension>("y9Docker")
 
 jib {
     from {
-        image = "docker-internal.youshengyun.com/proxy/tomcat:10.1-jre21-temurin"
+        image = "docker-internal.youshengyun.com/base/tomcat:10.1.48-jdk21-temurin"
         platforms {
             platform {
                 architecture = "amd64"
@@ -49,11 +49,11 @@ project.afterEvaluate {
         throw GradleException("y9Docker.appName must be set.")
     }
     jib.container.appRoot = "/usr/local/tomcat/webapps/${extension.appName.get()}"
-    
+
     if (extension.fromImage.isPresent) {
         jib.from.image = extension.fromImage.get()
     }
-    
+
     if (extension.toImage.isPresent) {
         jib.to.image = extension.toImage.get()
     }
