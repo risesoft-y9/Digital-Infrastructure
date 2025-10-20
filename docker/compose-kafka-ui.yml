@@ -2,11 +2,17 @@ name: y9-dev-postgres-keycloak
 services:
   kafbat-ui:
     container_name: kafbat-ui
-    image: ghcr.io/kafbat/kafka-ui:latest
+    image: ghcr.io/kafbat/kafka-ui:main
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - y9-share-net
     ports:
       - 7000:8080
     environment:
       DYNAMIC_CONFIG_ENABLED: 'true'
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka01:29092
     #volumes:
     #  - d:/docker-config/kafka-ui/config.yml:/etc/kafkaui/dynamic_config.yaml
   
