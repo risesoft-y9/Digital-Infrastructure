@@ -1,7 +1,7 @@
 name: y9-dev-postgres-keycloak
 services:
   kafka0:
-    image: confluentinc/cp-kafka:7.8.0
+    image: confluentinc/cp-kafka:latest
     hostname: kafka0
     container_name: kafka0
     #restart: always
@@ -27,6 +27,9 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1      
       KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
+    volumes:
+      - /Users/dingzhaojun/docker-data/kafka/secrets:/etc/kafka/secrets
+      - /Users/dingzhaojun/docker-data/kafka/data:/var/lib/kafka/data
 
   kafbat-ui:
     container_name: kafbat-ui
@@ -36,7 +39,7 @@ services:
     networks:
       - y9-share-net
     ports:
-      - 7000:8080
+      - 7080:8080
     depends_on:
       - kafka0
     environment:
