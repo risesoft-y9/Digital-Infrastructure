@@ -19,10 +19,21 @@
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="global-btn-second"
-                    @click="onSort('resource')"
+                    @click="addResource('resource')"
                 >
                     <i class="ri-add-line"></i>
-                    {{ $t('资源授权') }}
+                    {{ $t('应用资源授权') }}
+                </el-button>
+            </div>
+            <div class="widthBtn">
+                <el-button
+                    :size="fontSizeObj.buttonSize"
+                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    class="global-btn-second"
+                    @click="addResource('dataCatalog')"
+                >
+                    <i class="ri-add-line"></i>
+                    {{ $t('数据目录授权') }}
                 </el-button>
             </div>
             <el-button
@@ -54,7 +65,7 @@
         </template>
     </y9Table>
 
-    <!-- 资源授权 -->
+    <!-- 应用资源授权 -->
     <y9Dialog v-model:config="addAuthorizationConfigDialog">
         <y9Filter
             ref="resourceFilterRef"
@@ -114,6 +125,38 @@
             checkStrictly
         ></selectTree>
     </y9Dialog>
+    <!-- 数据目录授权 -->
+    <y9Dialog v-model:config="addDataCatalogAuthorizationConfigDialog">
+        <y9Filter
+            ref="dataCatalogFilterRef"
+            :filtersValueCallBack="dataCatalogFiltersValueCallBack"
+            :itemList="dataCatalogFilterList"
+            showBorder
+        >
+            <template #treeFilter>
+                <div class="custom-select-tree-filter">
+                    <el-button
+                        :size="fontSizeObj.buttonSize"
+                        :style="{ fontSize: fontSizeObj.baseFontSize }"
+                        class="global-btn-second refresh-btn"
+                        @click="onRefreshDataCatalogTree"
+                    >
+                        <i class="ri-refresh-line"></i>
+                        <span>{{ $t('刷新') }}</span>
+                    </el-button>
+                </div>
+            </template>
+        </y9Filter>
+        <!-- tree树 -->
+        <selectTree
+            ref="dataCatalogSelectTree"
+            :defaultCheckedKeys="resourceTreeDefaultCheckedKeys"
+            :showHeader="false"
+            :treeApiObj="dataCatalogTreeApiObj"
+            checkStrictly
+            @onNodeExpand="onNodeExpand"
+        ></selectTree>
+    </y9Dialog>
     <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
@@ -131,6 +174,7 @@
     import boolWarningCell from '@/components/BoolWarningCell/index.vue';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useI18n } from 'vue-i18n';
+    import { dataCatalogTree, dataCatalogTreeSearch, getTreeTypeList } from '@/api/dataCatalog';
 
     const { t } = useI18n();
     const settingStore = useSettingStore();
@@ -150,13 +194,19 @@
         resourceTreeDefaultCheckedKeys.value = result.data;
     }
 
-    //排序按钮点击时触发
-    const onSort = (type) => {
+    //授权按钮点击时触发
+    const addResource = (type) => {
         if (type === 'resource') {
             getResourceTreeDefaultCheckedKeys();
             Object.assign(addAuthorizationConfigDialog.value, {
                 show: true,
-                title: computed(() => t('添加资源授权'))
+                title: computed(() => t('添加应用资源授权'))
+            });
+        } else if (type === 'dataCatalog') {
+            getResourceTreeDefaultCheckedKeys();
+            Object.assign(addDataCatalogAuthorizationConfigDialog.value, {
+                show: true,
+                title: computed(() => t('添加数据目录授权'))
             });
         }
     };
@@ -166,6 +216,7 @@
 
     onMounted(() => {
         getRelateResourceListFn();
+        initDataCatalogTreeTypeList();
     });
 
     // 监听 currData.type
@@ -293,21 +344,37 @@
 
     // 资源授权 ref
     const resourceFilterRef = ref(null);
+    const dataCatalogFilterRef = ref(null);
+
     // 资源授权的 操作权限
     let authorityRef = ref(1);
+    let currentTreeType = ref(null);
 
     watch(authorityRef, (current, prev) => {
         getResourceTreeDefaultCheckedKeys();
     });
 
+    watch(currentTreeType, (current, prev) => {
+        // getResourceTreeDefaultCheckedKeys();
+        onRefreshDataCatalogTree();
+    });
+
     const resourceSelectTree = ref();
     const resourcePublicSelectTree = ref();
-    let resourceTreeDefaultCheckedKeys = ref([]);
+    const dataCatalogSelectTree = ref();
 
-    // 资源授权  弹框
+    let resourceTreeDefaultCheckedKeys = ref([]);
+    //选择树节点展开时触发
+    const selectTreeExpandNode = ref();
+
+    function onNodeExpand(node) {
+        selectTreeExpandNode.value = node;
+    }
+
+    // 应用资源授权  弹框
     let addAuthorizationConfigDialog = ref({
         show: false,
-        title: computed(() => t('添加资源授权')),
+        title: computed(() => t('添加应用资源授权')),
         width: '45%',
         onOk: () => {
             return new Promise(async (resolve, reject) => {
@@ -363,7 +430,62 @@
             });
         }
     });
-    // 资源授权 弹框 选择树过滤
+
+    // 应用资源授权  弹框
+    let addDataCatalogAuthorizationConfigDialog = ref({
+        show: false,
+        title: computed(() => t('添加数据目录授权')),
+        width: '45%',
+        onOk: () => {
+            return new Promise(async (resolve, reject) => {
+                let checkedIds = dataCatalogSelectTree.value?.y9TreeRef?.getCheckedKeys();
+
+                // 只需要新选中的 id 数组
+                const ids = checkedIds.filter((item) => !resourceTreeDefaultCheckedKeys.value.includes(item));
+
+                if (ids.length == 0) {
+                    ElNotification({
+                        title: t('失败'),
+                        message: t('请选择需要授权的数据目录'),
+                        type: 'error',
+                        duration: 2000,
+                        offset: 80
+                    });
+                    reject();
+                    return;
+                }
+
+                // 保存操作
+                const params = {
+                    authority: authorityRef.value,
+                    principalId: props.id,
+                    principalType: 0,
+                    resourceIds: ids.toString()
+                };
+
+                await saveOrUpdateRelateResource(params)
+                    .then((result) => {
+                        ElNotification({
+                            title: result.success ? t('成功') : t('失败'),
+                            message: result.msg,
+                            type: result.success ? 'success' : 'error',
+                            duration: 2000,
+                            offset: 80
+                        });
+                        if (result.success) {
+                            // 重新请求接口
+                            getRelateResourceListFn();
+                            resolve();
+                        }
+                    })
+                    .catch(() => {
+                        reject();
+                    });
+            });
+        }
+    });
+
+    // 应用资源授权 弹框 选择树过滤
     let filtersListSource = ref([
         {
             type: 'slot',
@@ -400,8 +522,81 @@
         }
     ]);
 
+    // 应用资源授权 弹框 选择树过滤
+    let dataCatalogFilterList = ref([
+        {
+            type: 'slot',
+            slotName: 'treeFilter',
+            span: settingStore.device === 'mobile' ? 24 : 8
+        },
+        {
+            type: 'select',
+            value: '',
+            span: settingStore.device === 'mobile' ? 24 : 8,
+            label: computed(() => t('数据目录树')),
+            key: 'treeType',
+            props: {
+                clearable: false,
+                options: [
+                    // {
+                    //     label: computed(() => t('隐藏')),
+                    //     value: 0
+                    // }
+                ]
+            }
+        },
+        {
+            type: 'select',
+            value: 1,
+            span: settingStore.device === 'mobile' ? 24 : 8,
+            label: computed(() => t('操作权限')),
+            key: 'authority',
+            props: {
+                clearable: false,
+                options: [
+                    {
+                        label: computed(() => t('隐藏')),
+                        value: 0
+                    },
+                    {
+                        label: computed(() => t('浏览')),
+                        value: 1
+                    },
+                    {
+                        label: computed(() => t('维护')),
+                        value: 2
+                    },
+                    {
+                        label: computed(() => t('管理')),
+                        value: 3
+                    }
+                ]
+            }
+        }
+    ]);
+
+    async function initDataCatalogTreeTypeList() {
+        let result = await getTreeTypeList();
+        dataCatalogFilterList.value.forEach((item) => {
+            if (item.key === 'treeType') {
+                item.value = result.data[0].code;
+                item.props.options = result.data.map((item) => {
+                    return {
+                        label: computed(() => t(item.name)),
+                        value: item.code
+                    };
+                });
+            }
+        });
+    }
+
     function sourceFiltersValueCallBack(filters) {
         authorityRef.value = filters.authority;
+    }
+
+    function dataCatalogFiltersValueCallBack(filters) {
+        authorityRef.value = filters.authority;
+        currentTreeType.value = filters.treeType;
     }
 
     // 选择树的选择 框
@@ -411,7 +606,7 @@
             value: ['APP', 'MENU', 'OPERATION']
         }
     ];
-    // 资源授权 请求的tree接口
+    // 应用资源授权 请求的tree接口
     let resourceTreeApiObj = ref({
         topLevel: async () => {
             console.log(props.type, props.appId, props.parentId);
@@ -430,8 +625,27 @@
             params: {}
         }
     });
-
-    //系统角色+公共角色 资源授权
+    const dataCatalogTreeApiObj = ref({
+        topLevel: async () => {
+            return dataCatalogTree({ treeType: currentTreeType.value });
+        }, //顶级（一级）tree接口,
+        childLevel: {
+            //子级（二级及二级以上）tree接口
+            api: async () => {
+                const res = await dataCatalogTree({
+                    treeType: currentTreeType.value,
+                    parentId: selectTreeExpandNode.value.id
+                });
+                return res.data || [];
+            }
+        },
+        search: {
+            //搜索接口及参数
+            api: dataCatalogTreeSearch,
+            params: {}
+        }
+    });
+    //系统角色+公共角色 应用资源授权
     let resourceTreePublicApiObj = ref({
         topLevel: async () => {
             let result = { success: false, msg: '', data: {} as any };
@@ -464,8 +678,13 @@
         }
     }
 
-    let searchTimer = null;
+    function onRefreshDataCatalogTree() {
+        if (dataCatalogSelectTree.value) {
+            dataCatalogSelectTree.value.onRefreshTree();
+        }
+    }
 
+    let searchTimer = null;
     function onSearchKeyChange(searchVal) {
         clearTimeout(searchTimer);
         searchTimer = setTimeout(() => {
