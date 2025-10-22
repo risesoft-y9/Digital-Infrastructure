@@ -23,7 +23,6 @@ import net.risesoft.enums.platform.resource.ResourceTypeEnum;
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 public interface Y9PersonToResourceAndAuthorityRepository
     extends JpaRepository<Y9PersonToResourceAndAuthority, String> {
 

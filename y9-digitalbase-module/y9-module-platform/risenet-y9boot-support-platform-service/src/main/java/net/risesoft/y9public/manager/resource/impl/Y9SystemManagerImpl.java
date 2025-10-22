@@ -7,7 +7,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +21,6 @@ import net.risesoft.y9public.repository.resource.Y9SystemRepository;
 
 @Service
 @CacheConfig(cacheNames = CacheNameConsts.SYSTEM)
-@Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9SystemManagerImpl implements Y9SystemManager {
 
@@ -33,7 +31,6 @@ public class Y9SystemManagerImpl implements Y9SystemManager {
         return y9SystemRepository.findByName(systemName);
     }
 
-    @Transactional(readOnly = false)
     @Override
     public Y9System insert(Y9System y9System) {
         if (StringUtils.isBlank(y9System.getId())) {
@@ -43,7 +40,6 @@ public class Y9SystemManagerImpl implements Y9SystemManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     @CacheEvict(key = "#y9System.id", condition = "#y9System.id!=null")
     public Y9System update(Y9System y9System) {
         return y9SystemRepository.save(y9System);
@@ -79,7 +75,6 @@ public class Y9SystemManagerImpl implements Y9SystemManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     @CacheEvict(key = "#id")
     public void delete(String id) {
         y9SystemRepository.deleteById(id);

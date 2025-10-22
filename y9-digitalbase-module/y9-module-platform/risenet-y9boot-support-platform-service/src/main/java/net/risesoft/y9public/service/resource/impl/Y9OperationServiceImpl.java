@@ -1,5 +1,7 @@
 package net.risesoft.y9public.service.resource.impl;
 
+import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -7,7 +9,6 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
@@ -15,21 +16,15 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.pojo.AuditLogEvent;
-import net.risesoft.repository.permission.Y9AuthorizationRepository;
-import net.risesoft.repository.permission.cache.person.Y9PersonToResourceAndAuthorityRepository;
-import net.risesoft.repository.permission.cache.position.Y9PositionToResourceAndAuthorityRepository;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9Operation;
-import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.resource.Y9OperationManager;
 import net.risesoft.y9public.repository.resource.Y9OperationRepository;
-import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
 import net.risesoft.y9public.service.resource.Y9OperationService;
 
 /**
@@ -39,21 +34,16 @@ import net.risesoft.y9public.service.resource.Y9OperationService;
  * @date 2022/2/10
  */
 @Service
-@Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class Y9OperationServiceImpl implements Y9OperationService {
 
     private final Y9OperationRepository y9OperationRepository;
-    private final Y9TenantAppRepository y9TenantAppRepository;
-    private final Y9AuthorizationRepository y9AuthorizationRepository;
-    private final Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository;
-    private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
 
     private final Y9OperationManager y9OperationManager;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(List<String> idList) {
         for (String id : idList) {
             this.delete(id);
@@ -61,7 +51,7 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(String id) {
         Y9Operation y9Operation = y9OperationManager.getById(id);
         y9OperationManager.delete(y9Operation);
@@ -75,20 +65,11 @@ public class Y9OperationServiceImpl implements Y9OperationService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        // 删除租户与按钮资源关联的数据
-        List<Y9TenantApp> y9TenantAppList =
-            y9TenantAppRepository.findByAppIdAndTenancy(y9Operation.getAppId(), Boolean.TRUE);
-        for (Y9TenantApp y9TenantApp : y9TenantAppList) {
-            Y9LoginUserHolder.setTenantId(y9TenantApp.getTenantId());
-            LOGGER.debug("删除租户[{}]与按钮资源关联的数据", y9TenantApp.getTenantId());
-            this.deleteTenantRelatedByOperationId(id);
-        }
-
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Operation));
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public List<Y9Operation> disable(List<String> idList) {
         List<Y9Operation> y9OperationList = new ArrayList<>();
         for (String id : idList) {
@@ -98,7 +79,7 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9Operation disable(String id) {
         Y9Operation currentOperation = this.getById(id);
         Y9Operation originalOperation = Y9ModelConvertUtil.convert(currentOperation, Y9Operation.class);
@@ -120,7 +101,7 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public List<Y9Operation> enable(List<String> idList) {
         List<Y9Operation> y9OperationList = new ArrayList<>();
         for (String id : idList) {
@@ -130,7 +111,7 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9Operation enable(String id) {
         Y9Operation currentOperation = this.getById(id);
         Y9Operation originalOperation = Y9ModelConvertUtil.convert(currentOperation, Y9Operation.class);
@@ -172,7 +153,7 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9Operation saveOrUpdate(Y9Operation y9Operation) {
         if (StringUtils.isNotBlank(y9Operation.getId())) {
             Optional<Y9Operation> y9OperationOptional = y9OperationManager.findById(y9Operation.getId());
@@ -213,25 +194,12 @@ public class Y9OperationServiceImpl implements Y9OperationService {
         return y9OperationManager.updateTabIndex(id, index);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void deleteByParentId(String parentId) {
         List<Y9Operation> y9OperationList = this.findByParentId(parentId);
         for (Y9Operation y9Operation : y9OperationList) {
             this.delete(y9Operation.getId());
         }
-    }
-
-    /**
-     * 删除相关租户数据 <br>
-     * 切换不同的数据源 需开启新事务
-     *
-     * @param operationId 应用id
-     */
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-    public void deleteTenantRelatedByOperationId(String operationId) {
-        y9AuthorizationRepository.deleteByResourceId(operationId);
-        y9PersonToResourceAndAuthorityRepository.deleteByResourceId(operationId);
-        y9PositionToResourceAndAuthorityRepository.deleteByResourceId(operationId);
     }
 
     @Override
@@ -240,27 +208,17 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void onAppDeleted(Y9EntityDeletedEvent<Y9App> event) {
         Y9App entity = event.getEntity();
         this.deleteByParentId(entity.getId());
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void onMenuDeleted(Y9EntityDeletedEvent<Y9Menu> event) {
         Y9Menu entity = event.getEntity();
         this.deleteByParentId(entity.getId());
     }
 
-    @EventListener
-    @Transactional(readOnly = false)
-    public void onTenantAppDeleted(Y9EntityDeletedEvent<Y9TenantApp> event) {
-        Y9TenantApp entity = event.getEntity();
-        Y9LoginUserHolder.setTenantId(entity.getTenantId());
-        List<Y9Operation> y9OperationList = y9OperationRepository.findByAppId(entity.getAppId());
-        for (Y9Operation y9Operation : y9OperationList) {
-            this.deleteTenantRelatedByOperationId(y9Operation.getId());
-        }
-    }
 }

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +19,6 @@ import net.risesoft.y9.util.Y9BeanUtil;
  * @date 2022/10/19
  */
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9PersonExtManagerImpl implements Y9PersonExtManager {
 
@@ -32,7 +30,6 @@ public class Y9PersonExtManagerImpl implements Y9PersonExtManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Y9PersonExt saveOrUpdate(Y9PersonExt y9PersonExt, Y9Person person) {
         if (y9PersonExt == null) {
             y9PersonExt = new Y9PersonExt();

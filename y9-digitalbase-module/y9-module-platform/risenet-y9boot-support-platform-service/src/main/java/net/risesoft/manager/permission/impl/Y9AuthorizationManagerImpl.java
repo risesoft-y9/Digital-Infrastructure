@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,7 +26,6 @@ import net.risesoft.y9public.manager.resource.CompositeResourceManager;
  * @date 2025/08/12
  */
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9AuthorizationManagerImpl implements Y9AuthorizationManager {
 
@@ -36,7 +34,6 @@ public class Y9AuthorizationManagerImpl implements Y9AuthorizationManager {
     private final CompositeResourceManager compositeResourceManager;
 
     @Override
-    @Transactional(readOnly = false)
     public Y9Authorization insert(Y9Authorization y9Authorization) {
         if (StringUtils.isBlank(y9Authorization.getId())) {
             y9Authorization.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));

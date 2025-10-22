@@ -7,7 +7,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,7 +32,6 @@ import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @CacheConfig(cacheNames = CacheNameConsts.ORG_GROUP)
 @RequiredArgsConstructor
 public class Y9GroupManagerImpl implements Y9GroupManager {
@@ -44,7 +42,6 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
 
     @Override
     @CacheEvict(key = "#y9Group.id")
-    @Transactional(readOnly = false)
     public void delete(Y9Group y9Group) {
         y9GroupRepository.delete(y9Group);
 
@@ -75,12 +72,10 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
     }
 
     @CacheEvict(key = "#y9Group.id")
-    @Transactional(readOnly = false)
     public Y9Group save(Y9Group y9Group) {
         return y9GroupRepository.save(y9Group);
     }
 
-    @Transactional(readOnly = false)
     @Override
     public Y9Group insert(Y9Group group) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(group.getParentId());
@@ -104,7 +99,6 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
         return savedGroup;
     }
 
-    @Transactional(readOnly = false)
     @Override
     public Y9Group update(Y9Group group) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(group.getParentId());
@@ -121,7 +115,6 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     @CacheEvict(key = "#id")
     public Y9Group updateTabIndex(String id, int tabIndex) {
         Y9Group group = this.getById(id);

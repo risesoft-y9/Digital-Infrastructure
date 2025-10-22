@@ -7,7 +7,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,7 +32,6 @@ import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @CacheConfig(cacheNames = CacheNameConsts.ORG_DEPARTMENT)
 @Service
 @RequiredArgsConstructor
@@ -45,7 +43,6 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
 
     @Override
     @CacheEvict(key = "#y9Department.id")
-    @Transactional(readOnly = false)
     public void delete(Y9Department y9Department) {
         y9DepartmentRepository.delete(y9Department);
 
@@ -76,7 +73,6 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
         return this.getById(id);
     }
 
-    @Transactional(readOnly = false)
     @Override
     public Y9Department insert(Y9Department dept) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(dept.getParentId());
@@ -100,7 +96,6 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
         return savedDepartment;
     }
 
-    @Transactional(readOnly = false)
     @Override
     @CacheEvict(key = "#dept.id")
     public Y9Department update(Y9Department dept) {
@@ -120,7 +115,6 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     @CacheEvict(key = "#id")
     public Y9Department updateTabIndex(String id, int tabIndex) {
         final Y9Department department = this.getById(id);

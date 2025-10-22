@@ -1,5 +1,7 @@
 package net.risesoft.y9public.service.tenant.impl;
 
+import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
+
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,7 +50,8 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     private final ConcurrentMap<String, DataSource> dataSourceMap = new ConcurrentHashMap<>();
     private final ConcurrentMap<String, Y9DataSource> y9DataSourceMap = new ConcurrentHashMap<>();
 
-    public Y9DataSourceServiceImpl(Y9DataSourceRepository datasourceRepository,
+    public Y9DataSourceServiceImpl(
+        Y9DataSourceRepository datasourceRepository,
         Y9DataSourceManager y9DataSourceManager) {
         this.datasourceRepository = datasourceRepository;
         this.y9DataSourceManager = y9DataSourceManager;
@@ -88,7 +91,7 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void changePassword(String id, String oldPassword, String newPassword) {
         Y9DataSource y9DataSource = this.getById(id);
         // 校验旧密码是否正确
@@ -100,24 +103,25 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9DataSource createTenantDefaultDataSource(String dbName) {
         return y9DataSourceManager.createTenantDefaultDataSource(dbName);
     }
 
     @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9DataSource createTenantDefaultDataSource(String dbName, String id) {
         return y9DataSourceManager.createTenantDefaultDataSourceWithId(dbName, id);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(String id) {
         y9DataSourceManager.delete(id);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void dropTenantDefaultDataSource(String dataSourceId, String dbName) {
         y9DataSourceManager.dropTenantDefaultDataSource(dataSourceId, dbName);
     }
@@ -182,7 +186,7 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void resetDefaultPassword(String id) {
         Y9DataSource y9DataSource = this.getById(id);
         // 数据源类型不能为 jndi 才能修改密码
@@ -194,7 +198,7 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9DataSource save(Y9DataSource y9DataSource) {
         return y9DataSourceManager.save(y9DataSource);
     }

@@ -23,7 +23,6 @@ import net.risesoft.enums.platform.org.OrgTypeEnum;
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 public interface Y9CustomGroupMembersRepository
     extends JpaRepository<Y9CustomGroupMember, String>, JpaSpecificationExecutor<Y9CustomGroupMember> {
 

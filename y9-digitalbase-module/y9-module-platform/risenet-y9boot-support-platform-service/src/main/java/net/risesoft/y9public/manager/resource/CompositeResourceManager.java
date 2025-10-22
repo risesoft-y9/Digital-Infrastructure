@@ -51,4 +51,12 @@ public interface CompositeResourceManager {
     Y9ResourceBase findByIdAndResourceType(String resourceId, ResourceTypeEnum resourceType);
 
     List<Y9ResourceBase> listByParentId(String parentId);
+
+    /**
+     * 获取应用下的所有资源（包括它本身）
+     * 
+     * @param appId 应用 id
+     * @return
+     */
+    List<Y9ResourceBase> findByAppId(String appId);
 }

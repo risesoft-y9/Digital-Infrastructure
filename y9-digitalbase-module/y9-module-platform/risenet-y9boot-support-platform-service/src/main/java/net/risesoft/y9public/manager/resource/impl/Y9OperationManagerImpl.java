@@ -7,7 +7,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,7 +35,6 @@ import net.risesoft.y9public.repository.resource.Y9OperationRepository;
  */
 @Service
 @CacheConfig(cacheNames = CacheNameConsts.RESOURCE_OPERATION)
-@Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9OperationManagerImpl implements Y9OperationManager {
 
@@ -67,7 +65,6 @@ public class Y9OperationManagerImpl implements Y9OperationManager {
         return this.getById(id);
     }
 
-    @Transactional(readOnly = false)
     @Override
     public Y9Operation insert(Y9Operation y9Operation) {
         Y9ResourceBase parent = compositeResourceManager.getResourceAsParent(y9Operation.getParentId());
@@ -86,7 +83,6 @@ public class Y9OperationManagerImpl implements Y9OperationManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     @CacheEvict(key = "#y9Operation.id", condition = "#y9Operation.id!=null")
     public Y9Operation update(Y9Operation y9Operation) {
         Y9ResourceBase parent = compositeResourceManager.getResourceAsParent(y9Operation.getParentId());
@@ -105,14 +101,12 @@ public class Y9OperationManagerImpl implements Y9OperationManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     @CacheEvict(key = "#y9Operation.id", condition = "#y9Operation.id!=null")
     public void delete(Y9Operation y9Operation) {
         y9OperationRepository.delete(y9Operation);
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Y9Operation updateTabIndex(String id, int index) {
         Y9Operation y9Operation = this.getByIdFromCache(id);
         y9Operation.setTabIndex(index);

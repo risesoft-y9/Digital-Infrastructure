@@ -10,10 +10,13 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.permission.Y9Authorization;
@@ -26,6 +29,7 @@ import net.risesoft.manager.permission.cache.Y9PersonToResourceAndAuthorityManag
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.permission.cache.person.Y9PersonToResourceAndAuthorityRepository;
 import net.risesoft.service.permission.cache.Y9PersonToResourceAndAuthorityService;
+import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9public.entity.resource.Y9App;
@@ -46,6 +50,7 @@ import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToResourceAndAuthorityService {
 
     private final Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository;
@@ -192,4 +197,43 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
         Y9Person person = event.getEntity();
         y9PersonToResourceAndAuthorityRepository.deleteByPersonId(person.getId());
     }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onAuthorizationDeleted(Y9EntityDeletedEvent<Y9Authorization> event) {
+        Y9Authorization y9Authorization = event.getEntity();
+        y9PersonToResourceAndAuthorityRepository.deleteByAuthorizationId(y9Authorization.getId());
+    }
+
+    @TransactionalEventListener
+    public void onResourceDeleted(Y9EntityDeletedEvent<? extends Y9ResourceBase> event) {
+        Y9ResourceBase entity = event.getEntity();
+        for (String tenantId : Y9PlatformUtil.getTenantIds()) {
+            deleteByResource(tenantId, entity);
+        }
+    }
+
+    @Async
+    protected void deleteByResource(String tenantId, Y9ResourceBase entity) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+        y9PersonToResourceAndAuthorityRepository.deleteByResourceId(entity.getId());
+        LOGGER.debug("{}资源[{}]删除时同步删除租户[{}]的人员授权缓存数据", entity.getResourceType().getName(), entity.getId(), tenantId);
+    }
+
+    @EventListener
+    public void onTenantAppDeleted(Y9EntityDeletedEvent<Y9TenantApp> event) {
+        Y9TenantApp entity = event.getEntity();
+        deleteByTenantApp(entity);
+    }
+
+    @Async
+    protected void deleteByTenantApp(Y9TenantApp entity) {
+        Y9LoginUserHolder.setTenantId(entity.getTenantId());
+        List<Y9ResourceBase> y9ResourceList = compositeResourceManager.findByAppId(entity.getAppId());
+        for (Y9ResourceBase y9ResourceBase : y9ResourceList) {
+            y9PersonToResourceAndAuthorityRepository.deleteByResourceId(y9ResourceBase.getId());
+        }
+        LOGGER.debug("应用[{}]取消租用时同步删除租户[{}]的人员授权缓存数据", entity.getAppId(), entity.getTenantId());
+    }
+
 }

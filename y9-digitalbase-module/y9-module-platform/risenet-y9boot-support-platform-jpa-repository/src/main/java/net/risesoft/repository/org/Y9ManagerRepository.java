@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import net.risesoft.entity.org.Y9Manager;
 
@@ -17,7 +16,6 @@ import net.risesoft.entity.org.Y9Manager;
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 public interface Y9ManagerRepository extends JpaRepository<Y9Manager, String> {
 
     boolean existsByLoginName(String loginName);

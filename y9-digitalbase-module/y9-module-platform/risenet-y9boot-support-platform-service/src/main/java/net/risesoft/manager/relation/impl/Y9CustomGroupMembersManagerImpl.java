@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,7 +29,6 @@ import net.risesoft.y9.util.Y9BeanUtil;
  * @since 9.6.2
  */
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9CustomGroupMembersManagerImpl implements Y9CustomGroupMembersManager {
 
@@ -39,7 +37,6 @@ public class Y9CustomGroupMembersManagerImpl implements Y9CustomGroupMembersMana
     private final CompositeOrgBaseManager compositeOrgBaseManager;
 
     @Override
-    @Transactional(readOnly = false)
     public void save(List<String> orgUnitList, String groupId) {
         for (String id : orgUnitList) {
             Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(id);
@@ -83,7 +80,6 @@ public class Y9CustomGroupMembersManagerImpl implements Y9CustomGroupMembersMana
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void share(String sourceGroupId, String targetGroupId) {
         List<Y9CustomGroupMember> customGroupMemberList =
             customGroupMembersRepository.findByGroupIdOrderByTabIndexAsc(sourceGroupId);

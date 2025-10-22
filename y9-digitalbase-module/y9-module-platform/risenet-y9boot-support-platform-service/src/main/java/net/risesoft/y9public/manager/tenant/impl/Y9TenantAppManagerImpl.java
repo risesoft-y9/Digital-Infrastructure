@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -43,7 +42,6 @@ import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
  * @since 9.6.2
  */
 @Service
-@Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
 
@@ -55,7 +53,6 @@ public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
     private final Y9SystemManager y9SystemManager;
 
     @Override
-    @Transactional(readOnly = false)
     public void deleteByAppId(String appId) {
         List<Y9TenantApp> y9TenantAppList = y9TenantAppRepository.findByAppId(appId);
         for (Y9TenantApp y9TenantApp : y9TenantAppList) {
@@ -64,7 +61,6 @@ public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void delete(Y9TenantApp y9TenantApp) {
         y9TenantAppRepository.delete(y9TenantApp);
 
@@ -82,7 +78,6 @@ public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Y9TenantApp save(String appId, String tenantId, String applyReason) {
         Optional<Y9TenantApp> y9TenantAppOptional =
             y9TenantAppRepository.findByTenantIdAndAppIdAndTenancy(tenantId, appId, Boolean.TRUE);
@@ -127,7 +122,6 @@ public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Y9TenantApp save(Y9TenantApp y9TenantApp) {
         if (StringUtils.isBlank(y9TenantApp.getId())) {
             y9TenantApp.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));

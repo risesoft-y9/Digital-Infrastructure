@@ -24,6 +24,6 @@ public class PlatformTenantDataInitializer implements TenantDataInitializer {
     @Override
     public void init(String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        initTenantDataService.initAll(tenantId);
+        initTenantDataService.initAll();
     }
 }

@@ -5,10 +5,13 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.entity.org.Y9Person;
@@ -17,6 +20,8 @@ import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.repository.permission.cache.person.Y9PersonToRoleRepository;
 import net.risesoft.service.permission.cache.Y9PersonToRoleService;
+import net.risesoft.util.Y9PlatformUtil;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.role.Y9Role;
@@ -33,6 +38,7 @@ import net.risesoft.y9public.repository.role.Y9RoleRepository;
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
 
     private final Y9PersonToRoleRepository y9PersonToRoleRepository;
@@ -128,4 +134,20 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
         Y9Person person = event.getEntity();
         y9PersonToRoleRepository.deleteByPersonId(person.getId());
     }
+
+    @TransactionalEventListener
+    public void onRoleDeleted(Y9EntityDeletedEvent<Y9Role> event) {
+        Y9Role entity = event.getEntity();
+        for (String tenantId : Y9PlatformUtil.getTenantIds()) {
+            deleteByRole(tenantId, entity);
+        }
+    }
+
+    @Async
+    protected void deleteByRole(String tenantId, Y9Role entity) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+        y9PersonToRoleRepository.deleteByRoleId(entity.getId());
+        LOGGER.debug("角色[{}]删除时同步删除租户[{}]的人员角色缓存数据", entity.getId(), tenantId);
+    }
+
 }

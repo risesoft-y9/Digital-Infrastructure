@@ -7,7 +7,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +31,6 @@ import net.risesoft.y9public.repository.resource.Y9DataCatalogRepository;
  */
 @Service
 @CacheConfig(cacheNames = CacheNameConsts.RESOURCE_DATA_CATALOG)
-@Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9DataCatalogManagerImpl implements Y9DataCatalogManager {
 
@@ -62,7 +60,6 @@ public class Y9DataCatalogManagerImpl implements Y9DataCatalogManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Y9DataCatalog insert(Y9DataCatalog y9DataCatalog) {
         if (StringUtils.isBlank(y9DataCatalog.getId())) {
             y9DataCatalog.setId(Y9IdGenerator.genId());
@@ -83,7 +80,6 @@ public class Y9DataCatalogManagerImpl implements Y9DataCatalogManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     @CacheEvict(key = "#y9DataCatalog.id", condition = "#y9DataCatalog.id!=null")
     public Y9DataCatalog update(Y9DataCatalog y9DataCatalog) {
         Y9DataCatalog originY9DataCatalog = this.getById(y9DataCatalog.getId());

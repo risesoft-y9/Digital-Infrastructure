@@ -1,5 +1,7 @@
 package net.risesoft.y9public.service.tenant.impl;
 
+import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,13 +44,13 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     private final Y9TenantSystemManager y9TenantSystemManager;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(String id) {
         y9TenantSystemManager.delete(id);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void deleteByTenantId(String tenantId) {
         List<Y9TenantSystem> y9TenantSystemList = y9TenantSystemRepository.findByTenantId(tenantId);
         for (Y9TenantSystem t : y9TenantSystemList) {
@@ -57,7 +59,7 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void deleteByTenantIdAndSystemId(String tenantId, String systemId) {
         Optional<Y9TenantSystem> systemOptional =
             y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
@@ -106,19 +108,19 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9TenantSystem save(Y9TenantSystem y9TenantSystem) {
         return y9TenantSystemManager.save(y9TenantSystem);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9TenantSystem saveTenantSystem(String systemId, String tenantId) {
         return y9TenantSystemManager.saveTenantSystem(systemId, tenantId);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public List<Y9TenantSystem> saveTenantSystems(String[] systemIds, String tenantId) {
         List<Y9TenantSystem> y9TenantSystemList = new ArrayList<>();
         for (String systemId : systemIds) {
@@ -152,6 +154,7 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     }
 
     @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
     public List<Y9System> listSystemByTenantId(String tenantId) {
         List<String> systemIdList = this.listSystemIdByTenantId(tenantId);
         List<Y9System> y9SystemList = new ArrayList<>();

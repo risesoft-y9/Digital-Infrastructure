@@ -45,7 +45,7 @@ import net.risesoft.y9.util.InetAddressUtil;
  */
 @Configuration
 @ConditionalOnProperty(name = "y9.feature.log.enabled", havingValue = "true", matchIfMissing = true)
-@EnableAsync
+@EnableAsync(proxyTargetClass = true)
 @EnableConfigurationProperties({Y9Properties.class, Y9LogProperties.class})
 public class Y9LogConfiguration {
 

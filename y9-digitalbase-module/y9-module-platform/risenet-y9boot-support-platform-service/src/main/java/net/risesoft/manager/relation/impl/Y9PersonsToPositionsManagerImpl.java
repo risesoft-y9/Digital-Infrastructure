@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,7 +36,6 @@ import net.risesoft.y9.util.Y9StringUtil;
  * @since 9.6.2
  */
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsManager {
 
@@ -47,7 +45,6 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
     private final Y9PersonManager y9PersonManager;
 
     @Override
-    @Transactional(readOnly = false)
     public List<Y9PersonsToPositions> addPositions(String personId, List<String> positionIds) {
         List<Y9PersonsToPositions> personsToPositionsList = new ArrayList<>();
         for (String positionId : positionIds) {
@@ -60,7 +57,6 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void delete(String positionId, String personId) {
         Y9Position y9Position = y9PositionManager.getByIdFromCache(positionId);
         Y9Person y9Person = y9PersonManager.getByIdFromCache(personId);
@@ -84,7 +80,6 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void delete(Y9PersonsToPositions y9PersonsToPositions) {
         y9PersonsToPositionsRepository.delete(y9PersonsToPositions);
 
@@ -92,7 +87,6 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void deleteByPersonId(String personId) {
         List<Y9PersonsToPositions> y9PersonsToPositionsList = y9PersonsToPositionsRepository.findByPersonId(personId);
         for (Y9PersonsToPositions y9PersonsToPositions : y9PersonsToPositionsList) {
@@ -124,7 +118,6 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Y9PersonsToPositions save(String personId, String positionId) {
         Y9Position y9Position = y9PositionManager.getByIdFromCache(positionId);
         Y9Person y9Person = y9PersonManager.getByIdFromCache(personId);
@@ -157,7 +150,6 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Y9PersonsToPositions saveOrUpdate(Y9PersonsToPositions y9PersonsToPositions) {
         checkPersonExist(y9PersonsToPositions.getPersonId());
         checkPositionExist(y9PersonsToPositions.getPositionId());

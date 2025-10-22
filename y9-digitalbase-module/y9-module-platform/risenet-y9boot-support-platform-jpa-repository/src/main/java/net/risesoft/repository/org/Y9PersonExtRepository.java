@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import net.risesoft.entity.org.Y9PersonExt;
 
@@ -18,7 +17,6 @@ import net.risesoft.entity.org.Y9PersonExt;
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 public interface Y9PersonExtRepository
     extends JpaRepository<Y9PersonExt, String>, JpaSpecificationExecutor<Y9PersonExt> {
 

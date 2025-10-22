@@ -3,6 +3,7 @@ package net.risesoft.y9public.manager.resource.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -131,7 +132,19 @@ public class CompositeResourceManagerImpl implements CompositeResourceManager {
         y9ResourceBaseList.addAll(y9MenuRepository.findByParentIdOrderByTabIndex(parentId));
         y9ResourceBaseList.addAll(y9OperationRepository.findByParentIdOrderByTabIndex(parentId));
         y9ResourceBaseList.addAll(y9DataCatalogRepository.findByParentIdOrderByTabIndex(parentId));
-        return y9ResourceBaseList;
+        return y9ResourceBaseList.stream().sorted().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Y9ResourceBase> findByAppId(String appId) {
+        List<Y9ResourceBase> y9ResourceList = new ArrayList<>();
+        Y9App y9App = this.findAppById(appId);
+        if (y9App != null) {
+            y9ResourceList.add(y9App);
+        }
+        y9ResourceList.addAll(y9MenuRepository.findByAppId(appId));
+        y9ResourceList.addAll(y9OperationRepository.findByAppId(appId));
+        return y9ResourceList;
     }
 
 }

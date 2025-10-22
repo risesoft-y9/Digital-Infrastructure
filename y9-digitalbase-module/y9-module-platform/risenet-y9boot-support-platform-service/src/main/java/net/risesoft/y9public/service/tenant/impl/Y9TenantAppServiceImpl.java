@@ -1,5 +1,7 @@
 package net.risesoft.y9public.service.tenant.impl;
 
+import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -46,13 +48,13 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     private final Y9TenantAppManager y9TenantAppManager;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void deleteByAppId(String appId) {
         y9TenantAppManager.deleteByAppId(appId);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void deleteByTenantIdAndAppId(String tenantId, String appId) {
         List<Y9TenantApp> y9TenantAppList = y9TenantAppRepository.findByTenantIdAndAppId(tenantId, appId);
         for (Y9TenantApp ta : y9TenantAppList) {
@@ -61,7 +63,7 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void deleteByTenantIdAndSystemId(String tenantId, String systemId) {
         List<Y9TenantApp> list = y9TenantAppRepository.findByTenantIdAndSystemId(tenantId, systemId);
         for (Y9TenantApp y9TenantApp : list) {
@@ -135,19 +137,19 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9TenantApp save(String appId, String tenantId, String applyReason) {
         return y9TenantAppManager.save(appId, tenantId, applyReason);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9TenantApp save(Y9TenantApp y9TenantApp) {
         return y9TenantAppManager.save(y9TenantApp);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void saveOrUpdate(String appId, String appName) {
         List<Y9TenantApp> list = y9TenantAppRepository.findByAppId(appId);
         for (Y9TenantApp ta : list) {
@@ -157,7 +159,7 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public int updateByAppIdAndTenantId(Boolean tenancy, String deletedName, Date deletedTime, String appId,
         String tenantId, Boolean currentTenancy) {
         try {
@@ -178,7 +180,7 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9TenantApp verify(Y9TenantApp y9TenantApp, String reason) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         if (null != userInfo) {
@@ -193,7 +195,7 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void onAppDeleted(Y9EntityDeletedEvent<Y9App> event) {
         Y9App y9App = event.getEntity();
         this.deleteByAppId(y9App.getAppId());

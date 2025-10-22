@@ -3,7 +3,6 @@ package net.risesoft.y9public.manager.auditlog.impl;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -27,7 +26,6 @@ import net.risesoft.y9public.repository.auditlog.Y9AuditLogRepository;
  * @date 2025/08/06
  */
 @Service
-@Transactional(value = "rsPublicTransactionManager")
 @Slf4j
 @RequiredArgsConstructor
 public class Y9AuditLogManagerImpl implements Y9AuditLogManager {

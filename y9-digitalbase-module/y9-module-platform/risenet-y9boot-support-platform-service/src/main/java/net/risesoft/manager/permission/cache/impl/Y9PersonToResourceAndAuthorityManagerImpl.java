@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,19 +23,16 @@ import net.risesoft.y9public.entity.resource.Y9ResourceBase;
  * @since 9.6.2
  */
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9PersonToResourceAndAuthorityManagerImpl implements Y9PersonToResourceAndAuthorityManager {
 
     private final Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository;
 
-    @Transactional(readOnly = false)
     @Override
     public void deleteByAuthorizationId(String authorizationId) {
         y9PersonToResourceAndAuthorityRepository.deleteByAuthorizationId(authorizationId);
     }
 
-    @Transactional(readOnly = false)
     @Override
     public void deleteByPersonIdAndAuthorizationIdNotIn(String personId, List<String> authorizationIdList) {
         if (authorizationIdList.isEmpty()) {
@@ -46,13 +42,11 @@ public class Y9PersonToResourceAndAuthorityManagerImpl implements Y9PersonToReso
         y9PersonToResourceAndAuthorityRepository.deleteByPersonIdAndAuthorizationIdNotIn(personId, authorizationIdList);
     }
 
-    @Transactional(readOnly = false)
     @Override
     public void deleteByPersonIdAndResourceId(String personId, String resourceId) {
         y9PersonToResourceAndAuthorityRepository.deleteByPersonIdAndResourceId(personId, resourceId);
     }
 
-    @Transactional(readOnly = false)
     @Override
     public void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Person person, Y9Authorization y9Authorization,
         Boolean inherit) {

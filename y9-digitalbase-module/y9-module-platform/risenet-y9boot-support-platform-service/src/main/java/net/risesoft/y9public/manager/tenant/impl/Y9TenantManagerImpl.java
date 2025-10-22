@@ -2,7 +2,6 @@ package net.risesoft.y9public.manager.tenant.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,7 +26,6 @@ import net.risesoft.y9public.repository.tenant.Y9TenantRepository;
  * @since 9.6.2
  */
 @Service
-@Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9TenantManagerImpl implements Y9TenantManager {
 
@@ -40,7 +38,6 @@ public class Y9TenantManagerImpl implements Y9TenantManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Y9Tenant insert(Y9Tenant y9Tenant) {
         if (StringUtils.isBlank(y9Tenant.getId())) {
             y9Tenant.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
@@ -66,7 +63,6 @@ public class Y9TenantManagerImpl implements Y9TenantManager {
         return savedY9Tenant;
     }
 
-    @Transactional(readOnly = false)
     @Override
     public Y9Tenant update(Y9Tenant y9Tenant) {
         String parentId = y9Tenant.getParentId();

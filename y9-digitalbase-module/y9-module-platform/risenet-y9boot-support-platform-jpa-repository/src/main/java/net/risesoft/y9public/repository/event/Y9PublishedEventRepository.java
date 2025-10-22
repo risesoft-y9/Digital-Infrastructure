@@ -6,7 +6,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import net.risesoft.y9public.entity.event.Y9PublishedEvent;
 
@@ -18,7 +17,6 @@ import net.risesoft.y9public.entity.event.Y9PublishedEvent;
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
-@Transactional(value = "rsPublicTransactionManager", readOnly = true)
 public interface Y9PublishedEventRepository
     extends JpaRepository<Y9PublishedEvent, String>, JpaSpecificationExecutor<Y9PublishedEvent> {
 

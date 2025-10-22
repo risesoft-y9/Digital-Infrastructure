@@ -1,5 +1,7 @@
 package net.risesoft.y9public.service.tenant.impl;
 
+import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -36,7 +38,6 @@ import net.risesoft.y9public.service.user.Y9UserService;
  * @date 2022/2/10
  */
 @Service(value = "tenantService")
-@Transactional(value = "rsPublicTransactionManager")
 @Slf4j
 @RequiredArgsConstructor
 public class Y9TenantServiceImpl implements Y9TenantService {
@@ -49,7 +50,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     private final Y9TenantManager y9TenantManager;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9Tenant changDefaultDataSourceId(String id, String datasourceId) {
         Y9Tenant y9Tenant = this.getById(id);
         y9Tenant.setDefaultDataSourceId(datasourceId);
@@ -57,7 +58,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9Tenant changeDisabled(String id) {
         Y9Tenant y9Tenant = this.getById(id);
         y9Tenant.setEnabled(!y9Tenant.getEnabled());
@@ -75,7 +76,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9Tenant createTenant(String tenantName, String tenantShortName, String dataSourceId) {
         Y9Tenant y9Tenant = new Y9Tenant();
         y9Tenant.setName(tenantName);
@@ -86,7 +87,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(String id) {
         y9UserService.deleteByTenantId(id);
         y9TenantRepository.deleteById(id);
@@ -131,7 +132,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void move(String id, String parentId) {
         Y9Tenant y9Tenant = this.getById(id);
 
@@ -148,7 +149,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9Tenant saveOrUpdate(Y9Tenant y9Tenant) {
         Y9Assert.isTrue(isNameAvailable(y9Tenant.getName(), y9Tenant.getId()), TenantErrorCodeEnum.NAME_HAS_BEEN_USED,
             y9Tenant.getName());
@@ -190,7 +191,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9Tenant saveAndInitDataSource(Y9Tenant y9Tenant) {
         Y9Tenant savedY9Tenant = this.saveOrUpdate(y9Tenant);
 
@@ -211,7 +212,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void saveTenantOrders(String[] tenantIds) {
         for (int i = 0; i < tenantIds.length; i++) {
             Y9Tenant y9Tenant = this.getById(tenantIds[i]);

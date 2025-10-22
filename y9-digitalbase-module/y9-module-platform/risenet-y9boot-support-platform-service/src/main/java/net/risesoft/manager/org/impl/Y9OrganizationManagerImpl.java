@@ -7,7 +7,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,7 +37,6 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
  * @since 9.6.3
  */
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @CacheConfig(cacheNames = CacheNameConsts.ORG_ORGANIZATION)
 @RequiredArgsConstructor
 public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
@@ -46,7 +44,6 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
     private final Y9OrganizationRepository y9OrganizationRepository;
 
     @Override
-    @Transactional(readOnly = false)
     @CacheEvict(key = "#y9Organization.id", condition = "#y9Organization.id!=null")
     public void delete(Y9Organization y9Organization) {
         y9OrganizationRepository.delete(y9Organization);
@@ -75,13 +72,11 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
         return this.getById(id);
     }
 
-    @Transactional(readOnly = false)
     @CacheEvict(key = "#y9Organization.id", condition = "#y9Organization.id!=null")
     public Y9Organization save(Y9Organization y9Organization) {
         return y9OrganizationRepository.save(y9Organization);
     }
 
-    @Transactional(readOnly = false)
     @Override
     public Y9Organization insert(Y9Organization organization) {
         if (StringUtils.isBlank(organization.getId())) {
@@ -102,7 +97,6 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
         return savedOrganization;
     }
 
-    @Transactional(readOnly = false)
     @Override
     public Y9Organization update(Y9Organization organization) {
         Y9Organization currentOrganization = this.getById(organization.getId());
@@ -119,7 +113,6 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     @CacheEvict(key = "#id")
     public Y9Organization updateTabIndex(String id, int tabIndex) {
         Y9Organization organization = this.getById(id);

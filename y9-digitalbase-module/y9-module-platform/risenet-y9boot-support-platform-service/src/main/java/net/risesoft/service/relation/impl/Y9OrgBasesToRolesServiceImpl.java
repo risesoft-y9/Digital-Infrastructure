@@ -12,10 +12,13 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.entity.org.Y9Department;
 import net.risesoft.entity.org.Y9Group;
@@ -32,7 +35,9 @@ import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.permission.Y9OrgBasesToRolesRepository;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
+import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
@@ -49,6 +54,7 @@ import net.risesoft.y9public.manager.role.Y9RoleManager;
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     private final Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository;
@@ -181,41 +187,6 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
         return mappingList;
     }
 
-    @EventListener
-    @Transactional(readOnly = false)
-    public void onOrganizationDeleted(Y9EntityDeletedEvent<Y9Organization> event) {
-        Y9Organization organization = event.getEntity();
-        y9OrgBasesToRolesRepository.deleteByOrgId(organization.getId());
-    }
-
-    @EventListener
-    @Transactional(readOnly = false)
-    public void onDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
-        Y9Department department = event.getEntity();
-        y9OrgBasesToRolesRepository.deleteByOrgId(department.getId());
-    }
-
-    @EventListener
-    @Transactional(readOnly = false)
-    public void onGroupDeleted(Y9EntityDeletedEvent<Y9Group> event) {
-        Y9Group group = event.getEntity();
-        y9OrgBasesToRolesRepository.deleteByOrgId(group.getId());
-    }
-
-    @EventListener
-    @Transactional(readOnly = false)
-    public void onPersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
-        Y9Person person = event.getEntity();
-        y9OrgBasesToRolesRepository.deleteByOrgId(person.getId());
-    }
-
-    @EventListener
-    @Transactional(readOnly = false)
-    public void onPositionDeleted(Y9EntityDeletedEvent<Y9Position> event) {
-        Y9Position position = event.getEntity();
-        y9OrgBasesToRolesRepository.deleteByOrgId(position.getId());
-    }
-
     @Transactional(readOnly = false)
     public void remove(String roleId, String orgId) {
         List<Y9OrgBasesToRoles> y9OrgBasesToRolesList = y9OrgBasesToRolesRepository.findByRoleIdAndOrgId(roleId, orgId);
@@ -302,5 +273,55 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
         if (orgUnitIncluded) {
             throw Y9ExceptionUtil.businessException(RoleErrorCodeEnum.ORG_UNIT_INCLUDED, orgBase.getId());
         }
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onOrganizationDeleted(Y9EntityDeletedEvent<Y9Organization> event) {
+        Y9Organization organization = event.getEntity();
+        y9OrgBasesToRolesRepository.deleteByOrgId(organization.getId());
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
+        Y9Department department = event.getEntity();
+        y9OrgBasesToRolesRepository.deleteByOrgId(department.getId());
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onGroupDeleted(Y9EntityDeletedEvent<Y9Group> event) {
+        Y9Group group = event.getEntity();
+        y9OrgBasesToRolesRepository.deleteByOrgId(group.getId());
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onPersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
+        Y9Person person = event.getEntity();
+        y9OrgBasesToRolesRepository.deleteByOrgId(person.getId());
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onPositionDeleted(Y9EntityDeletedEvent<Y9Position> event) {
+        Y9Position position = event.getEntity();
+        y9OrgBasesToRolesRepository.deleteByOrgId(position.getId());
+    }
+
+    @TransactionalEventListener
+    public void onRoleDeleted(Y9EntityDeletedEvent<Y9Role> event) {
+        Y9Role entity = event.getEntity();
+        for (String tenantId : Y9PlatformUtil.getTenantIds()) {
+            deleteByRole(tenantId, entity);
+        }
+    }
+
+    @Async
+    public void deleteByRole(String tenantId, Y9Role entity) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+        y9OrgBasesToRolesRepository.deleteByRoleId(entity.getId());
+        LOGGER.debug("角色[{}]删除时同步删除租户[{}]的角色组织关联数据", entity.getId(), tenantId);
     }
 }

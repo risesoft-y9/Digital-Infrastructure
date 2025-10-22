@@ -25,7 +25,6 @@ import net.risesoft.enums.platform.permission.AuthorizationPrincipalTypeEnum;
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @JaversSpringDataAuditable
 public interface Y9AuthorizationRepository extends JpaRepository<Y9Authorization, String> {
 
