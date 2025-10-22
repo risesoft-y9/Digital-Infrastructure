@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import net.risesoft.entity.org.Y9Job;
 
@@ -17,7 +16,6 @@ import net.risesoft.entity.org.Y9Job;
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 public interface Y9JobRepository extends JpaRepository<Y9Job, String>, JpaSpecificationExecutor<Y9Job> {
 
     Optional<Y9Job> findByName(String name);

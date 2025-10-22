@@ -3,7 +3,6 @@ package net.risesoft.manager.relation.impl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,14 +20,12 @@ import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
  * @since 9.6.3
  */
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9PersonsToGroupsManagerImpl implements Y9PersonsToGroupsManager {
 
     private final Y9PersonsToGroupsRepository y9PersonsToGroupsRepository;
 
     @Override
-    @Transactional(readOnly = false)
     public void delete(Y9PersonsToGroups y9PersonsToGroups) {
         y9PersonsToGroupsRepository.delete(y9PersonsToGroups);
 
@@ -36,7 +33,6 @@ public class Y9PersonsToGroupsManagerImpl implements Y9PersonsToGroupsManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void deleteByGroupId(String groupId) {
         List<Y9PersonsToGroups> y9PersonsToGroupsList = y9PersonsToGroupsRepository.findByGroupId(groupId);
         for (Y9PersonsToGroups y9PersonsToGroups : y9PersonsToGroupsList) {
@@ -45,7 +41,6 @@ public class Y9PersonsToGroupsManagerImpl implements Y9PersonsToGroupsManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void deleteByPersonId(String personId) {
         y9PersonsToGroupsRepository.deleteByPersonId(personId);
     }

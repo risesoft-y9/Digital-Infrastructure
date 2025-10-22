@@ -1,5 +1,7 @@
 package net.risesoft.y9public.service.resource.impl;
 
+import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
+
 import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
@@ -40,13 +42,11 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
     private final Y9FileStoreService y9FileStoreService;
 
     @Override
-    @Transactional(readOnly = false)
     public void delete(String id) {
         appIconRepository.deleteById(id);
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void delete(Y9AppIcon appIcon) {
         appIconRepository.delete(appIcon);
     }
@@ -90,7 +90,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void refreshAppIconData() {
         List<Y9AppIcon> apps = appIconRepository.findAll();
         for (Y9AppIcon appicon : apps) {
@@ -106,7 +106,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9AppIcon save(MultipartFile iconFile, String remark) throws Y9BusinessException {
         byte[] iconData = null;
         try {
@@ -147,7 +147,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9AppIcon save(String name, String category, String colorType, String remark, MultipartFile iconFile)
         throws Y9BusinessException {
         byte[] iconData = null;
@@ -190,7 +190,6 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void save(Y9AppIcon appIcon) {
         appIconRepository.save(appIcon);
     }

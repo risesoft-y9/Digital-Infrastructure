@@ -1,10 +1,13 @@
 package y9.autoconfiguration.jpa;
 
-import jakarta.persistence.EntityManagerFactory;
+import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
+
+import javax.persistence.EntityManagerFactory;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,6 +19,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -35,12 +39,9 @@ import net.risesoft.y9.configuration.feature.jpa.Y9JpaProperties;
 @EnableConfigurationProperties({JpaProperties.class, Y9JpaProperties.class})
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
 @EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryPublic}"},
-    includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},
-    entityManagerFactoryRef = "rsPublicEntityManagerFactory",
-    transactionManagerRef = JpaPublicConfiguration.TRANSACTION_MANAGER)
+        includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},
+        entityManagerFactoryRef = "rsPublicEntityManagerFactory", transactionManagerRef = PUBLIC_TRANSACTION_MANAGER)
 public class JpaPublicConfiguration {
-
-    public static final String TRANSACTION_MANAGER = "rsPublicTransactionManager";
 
     @Bean(name = {"jdbcTemplate4Public"})
     @ConditionalOnMissingBean(name = "jdbcTemplate4Public")

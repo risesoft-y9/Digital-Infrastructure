@@ -3,11 +3,9 @@ package net.risesoft.config;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.scheduling.annotation.EnableAsync;
 
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.configuration.Y9Properties;
@@ -22,7 +20,6 @@ import net.risesoft.y9.configuration.feature.oauth2.resource.Y9Oauth2ResourcePro
  */
 @Configuration
 @EnableConfigurationProperties({Y9Properties.class, Y9PlatformProperties.class})
-@EnableAsync(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
 public class WebMvcConfig {
 
     @SuppressWarnings({"unchecked", "rawtypes"})

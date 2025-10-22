@@ -8,7 +8,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,7 +23,6 @@ import net.risesoft.repository.setting.Y9SettingRepository;
  * @date 2024/03/28
  */
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @CacheConfig(cacheNames = CacheNameConsts.SETTING)
 @RequiredArgsConstructor
 public class Y9SettingManagerImpl implements Y9SettingManager {
@@ -50,7 +48,6 @@ public class Y9SettingManagerImpl implements Y9SettingManager {
             condition = "#y9Setting.key!=null"),
         @CacheEvict(key = "T(net.risesoft.y9.Y9LoginUserHolder).getTenantId()+'_list'",
             condition = "#y9Setting.key!=null")})
-    @Transactional(readOnly = false)
     public Y9Setting save(Y9Setting y9Setting) {
         return y9SettingRepository.save(y9Setting);
     }

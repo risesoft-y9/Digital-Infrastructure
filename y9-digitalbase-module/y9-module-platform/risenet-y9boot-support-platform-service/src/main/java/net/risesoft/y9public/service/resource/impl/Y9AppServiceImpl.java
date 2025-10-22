@@ -1,12 +1,13 @@
 package net.risesoft.y9public.service.resource.impl;
 
+import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -21,12 +22,10 @@ import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9System;
-import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
@@ -42,7 +41,6 @@ import net.risesoft.y9public.specification.Y9AppSpecification;
  * @date 2022/2/10
  */
 @Service
-@Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9AppServiceImpl implements Y9AppService {
 
@@ -59,7 +57,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void disableBySystemId(String systemId) {
         List<Y9App> list = y9AppRepository.findBySystemId(systemId);
         for (Y9App y9App : list) {
@@ -72,7 +70,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void enableBySystemId(String systemId) {
         List<Y9App> list = y9AppRepository.findBySystemId(systemId);
         for (Y9App y9App : list) {
@@ -178,7 +176,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9App saveAndRegister4Tenant(Y9App y9App) {
         Y9App savedApp = this.saveOrUpdate(y9App);
         // 审核应用
@@ -193,7 +191,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9App saveIsvApp(Y9App app) {
         if (app.getTabIndex() == null || app.getTabIndex() == 0) {
             Integer tabIndex =
@@ -205,7 +203,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void saveOrder(String[] appIds) {
         if (appIds.length > 0) {
             for (int i = 0, len = appIds.length; i < len; i++) {
@@ -217,7 +215,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9App verifyApp(String id, boolean checked, String verifyUserName) {
         Y9App y9App = this.getById(id);
         y9App.setChecked(checked);
@@ -226,7 +224,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(List<String> idList) {
         for (String id : idList) {
             this.delete(id);
@@ -234,7 +232,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(String id) {
         Y9App y9App = y9AppManager.getById(id);
         y9AppManager.delete(id);
@@ -250,7 +248,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public List<Y9App> disable(List<String> idList) {
         List<Y9App> y9AppList = new ArrayList<>();
         for (String id : idList) {
@@ -260,7 +258,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9App disable(String id) {
         Y9App currentApp = y9AppManager.getById(id);
         Y9App originalApp = Y9ModelConvertUtil.convert(currentApp, Y9App.class);
@@ -281,7 +279,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public List<Y9App> enable(List<String> idList) {
         List<Y9App> y9AppList = new ArrayList<>();
         for (String id : idList) {
@@ -291,7 +289,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9App enable(String id) {
         Y9App currentApp = y9AppManager.getById(id);
         Y9App originalApp = Y9ModelConvertUtil.convert(currentApp, Y9App.class);
@@ -332,7 +330,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9App saveOrUpdate(Y9App y9App) {
         // 每次保存都更改审核状态为未审核
         y9App.setChecked(false);
@@ -371,16 +369,8 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9App updateTabIndex(String id, int index) {
         return y9AppManager.updateTabIndex(id, index);
     }
-
-    @EventListener
-    @Transactional(readOnly = false)
-    public void onTenantAppDeleted(Y9EntityDeletedEvent<Y9TenantApp> event) {
-        Y9TenantApp entity = event.getEntity();
-        Y9LoginUserHolder.setTenantId(entity.getTenantId());
-        y9AppManager.deleteTenantRelatedByAppId(entity.getAppId());
-    }
-
 }

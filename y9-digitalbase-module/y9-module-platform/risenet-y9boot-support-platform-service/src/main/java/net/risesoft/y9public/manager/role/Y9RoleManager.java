@@ -17,8 +17,6 @@ public interface Y9RoleManager {
 
     void delete(String id);
 
-    void deleteByApp(String appId);
-
     Optional<Y9Role> findById(String id);
 
     Optional<Y9Role> findByIdFromCache(String id);
@@ -33,8 +31,6 @@ public interface Y9RoleManager {
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     Y9Role getByIdFromCache(String id);
-
-    List<Y9Role> listByAppIdAndParentId(String appId, String parentId);
 
     /**
      * 从给定节点开始，向上递归，返回递归链上所有的节点id（已去重）(如果是人员，会包括所在组，岗位id)

@@ -17,7 +17,6 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -49,7 +48,6 @@ import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @CacheConfig(cacheNames = CacheNameConsts.ORG_POSITION)
 @RequiredArgsConstructor
 public class Y9PositionManagerImpl implements Y9PositionManager {
@@ -103,7 +101,6 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     @CacheEvict(key = "#y9Position.id")
     public void delete(Y9Position y9Position) {
         y9PositionRepository.delete(y9Position);
@@ -136,13 +133,11 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     @CacheEvict(key = "#position.id")
     public Y9Position save(Y9Position position) {
         return y9PositionRepository.save(position);
     }
 
-    @Transactional(readOnly = false)
     @Override
     public Y9Position insert(Y9Position position) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(position.getParentId());
@@ -169,7 +164,6 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
         return savedPosition;
     }
 
-    @Transactional(readOnly = false)
     @CacheEvict(key = "#position.id")
     @Override
     public Y9Position update(Y9Position position) {
@@ -190,7 +184,6 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     @CacheEvict(key = "#id")
     public Y9Position updateTabIndex(String id, int tabIndex) {
         Y9Position position = this.getById(id);

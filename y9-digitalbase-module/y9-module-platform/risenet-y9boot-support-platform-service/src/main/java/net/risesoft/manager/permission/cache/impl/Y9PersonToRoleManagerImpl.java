@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,7 +22,6 @@ import net.risesoft.y9public.entity.role.Y9Role;
  * @since 9.6.2
  */
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9PersonToRoleManagerImpl implements Y9PersonToRoleManager {
 
@@ -36,7 +33,6 @@ public class Y9PersonToRoleManagerImpl implements Y9PersonToRoleManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void removeByPersonIdAndRoleId(String personId, String roleId) {
         Optional<Y9PersonToRole> y9PersonToRoleOptional =
             y9PersonToRoleRepository.findByPersonIdAndRoleId(personId, roleId);
@@ -46,7 +42,6 @@ public class Y9PersonToRoleManagerImpl implements Y9PersonToRoleManager {
     }
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
     public void save(Y9Person person, Y9Role role) {
         Optional<Y9PersonToRole> personToRoleOptional =
             y9PersonToRoleRepository.findByPersonIdAndRoleId(person.getId(), role.getId());

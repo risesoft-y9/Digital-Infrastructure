@@ -21,7 +21,6 @@ import net.risesoft.entity.permission.cache.person.Y9PersonToRole;
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 public interface Y9PersonToRoleRepository extends JpaRepository<Y9PersonToRole, String> {
 
     long countByPersonId(String personId);

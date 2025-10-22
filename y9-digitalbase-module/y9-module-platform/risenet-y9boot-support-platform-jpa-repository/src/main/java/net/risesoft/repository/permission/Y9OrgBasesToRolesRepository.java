@@ -22,7 +22,6 @@ import net.risesoft.entity.permission.Y9OrgBasesToRoles;
  * @date 2022/2/10
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Repository
 public interface Y9OrgBasesToRolesRepository extends JpaRepository<Y9OrgBasesToRoles, String> {
 

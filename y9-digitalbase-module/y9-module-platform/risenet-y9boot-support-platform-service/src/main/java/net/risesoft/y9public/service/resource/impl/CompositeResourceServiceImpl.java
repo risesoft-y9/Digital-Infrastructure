@@ -1,5 +1,7 @@
 package net.risesoft.y9public.service.resource.impl;
 
+import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,7 +36,6 @@ import net.risesoft.y9public.service.resource.CompositeResourceService;
  * @date 2022/2/10
  */
 @Service
-@Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class CompositeResourceServiceImpl implements CompositeResourceService {
 
@@ -49,6 +50,7 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
 
     private final CompositeResourceManager compositeResourceManager;
 
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
     @Override
     public Optional<? extends Y9ResourceBase> findByCustomIdAndParentId(String customId, String parentId,
         ResourceTypeEnum resourceType) {
@@ -81,6 +83,7 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
         return y9AppRepository.findAll(Sort.by("systemId", "tabIndex"));
     }
 
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
     @Override
     public List<Y9ResourceBase> searchByName(String name) {
         List<Y9ResourceBase> resourceList = new ArrayList<>();
@@ -90,6 +93,7 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
         return resourceList;
     }
 
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
     @Override
     public List<Y9ResourceBase> treeSearch(String name) {
         List<Y9ResourceBase> resourceList = this.searchByName(name);
@@ -100,6 +104,7 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
         return returnSet.stream().sorted().collect(Collectors.toList());
     }
 
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
     @Override
     public List<Y9ResourceBase> findByIdIn(List<String> resourceIdList) {
         List<Y9ResourceBase> y9ResourceList = new ArrayList<>();
@@ -113,7 +118,7 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void sort(String[] ids) {
         if (ids != null) {
             for (int i = 0; i < ids.length; i++) {

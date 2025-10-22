@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -42,7 +41,6 @@ import net.risesoft.y9public.repository.tenant.Y9TenantSystemRepository;
  * @since 9.6.2
  */
 @Service
-@Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
@@ -54,7 +52,6 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
     private final Y9DataSourceManager y9DataSourceManager;
 
     @Override
-    @Transactional(readOnly = false)
     public void deleteBySystemId(String systemId) {
         List<Y9TenantSystem> y9TenantSystemList = y9TenantSystemRepository.findBySystemId(systemId);
         for (Y9TenantSystem t : y9TenantSystemList) {
@@ -63,7 +60,6 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void delete(String id) {
         Y9TenantSystem y9TenantSystem = y9TenantSystemRepository.findById(id)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(TenantErrorCodeEnum.TENANT_SYSTEM_NOT_EXISTS, id));
@@ -99,7 +95,6 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Y9TenantSystem save(Y9TenantSystem y9TenantSystem) {
         if (StringUtils.isBlank(y9TenantSystem.getId())) {
             y9TenantSystem.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
@@ -147,7 +142,6 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Y9TenantSystem saveTenantSystem(String systemId, String tenantId) {
         Y9Tenant tenant = y9TenantManager.getById(tenantId);
         Y9System y9System = y9SystemManager.getByIdFromCache(systemId);

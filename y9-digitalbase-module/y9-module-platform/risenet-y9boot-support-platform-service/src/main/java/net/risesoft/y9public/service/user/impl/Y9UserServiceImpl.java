@@ -1,5 +1,7 @@
 package net.risesoft.y9public.service.user.impl;
 
+import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +22,6 @@ import net.risesoft.y9public.service.user.Y9UserService;
  * @date 2022/2/10
  */
 @Service
-@Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9UserServiceImpl implements Y9UserService {
 
@@ -37,7 +38,7 @@ public class Y9UserServiceImpl implements Y9UserService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(String id) {
         Optional<Y9User> orgUser = y9UserRepository.findById(id);
         if (orgUser.isPresent()) {
@@ -46,7 +47,7 @@ public class Y9UserServiceImpl implements Y9UserService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void deleteByTenantId(String tenantId) {
         List<Y9User> y9UserList = y9UserRepository.findByTenantId(tenantId);
         y9UserRepository.deleteAll(y9UserList);
@@ -83,13 +84,13 @@ public class Y9UserServiceImpl implements Y9UserService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9User save(Y9User y9User) {
         return y9UserRepository.save(y9User);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void updateByTenantId(String tenantId, String tenantName, String tenantShortName) {
         List<Y9User> list = y9UserRepository.findByTenantId(tenantId);
         for (Y9User orgUser : list) {

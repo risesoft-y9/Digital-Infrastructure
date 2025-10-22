@@ -18,7 +18,6 @@ import net.risesoft.entity.dictionary.Y9OptionValue;
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 public interface Y9OptionValueRepository extends JpaRepository<Y9OptionValue, String> {
 
     @Modifying

@@ -7,7 +7,6 @@ import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import net.risesoft.entity.org.Y9Organization;
 
@@ -19,7 +18,6 @@ import net.risesoft.entity.org.Y9Organization;
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @JaversSpringDataAuditable
 public interface Y9OrganizationRepository extends JpaRepository<Y9Organization, String> {
 

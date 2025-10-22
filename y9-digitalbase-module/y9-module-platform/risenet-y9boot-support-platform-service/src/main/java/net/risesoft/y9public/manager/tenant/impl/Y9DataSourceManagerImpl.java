@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -39,7 +38,6 @@ import cn.hutool.core.util.RandomUtil;
  * @since 9.6.2
  */
 @Service
-@Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @Slf4j
 public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
 
@@ -88,20 +86,17 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Y9DataSource createTenantDefaultDataSource(String shortName, String systemName) {
         String dataSourceName = this.buildDataSourceName(shortName, systemName);
         return this.createTenantDefaultDataSourceWithId(dataSourceName, null);
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Y9DataSource createTenantDefaultDataSource(String dbName) {
         return this.createTenantDefaultDataSourceWithId(dbName, null);
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Y9DataSource createTenantDefaultDataSourceWithId(String dbName, String specifyId) {
         if (StringUtils.isNotBlank(specifyId)) {
             Optional<Y9DataSource> y9DataSourceOptional = datasourceRepository.findById(specifyId);
@@ -240,13 +235,11 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void delete(String id) {
         datasourceRepository.deleteById(id);
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void dropTenantDefaultDataSource(String dataSourceId, String dbName) {
         if (StringUtils.isNotBlank(dataSourceId)) {
             this.delete(dataSourceId);
@@ -278,7 +271,6 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Y9DataSource save(Y9DataSource y9DataSource) {
         if (StringUtils.isBlank(y9DataSource.getId())) {
             y9DataSource.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));

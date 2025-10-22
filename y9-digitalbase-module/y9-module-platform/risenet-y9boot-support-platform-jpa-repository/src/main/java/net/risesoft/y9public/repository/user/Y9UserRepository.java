@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import net.risesoft.y9public.entity.user.Y9User;
 
@@ -18,7 +17,6 @@ import net.risesoft.y9public.entity.user.Y9User;
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
-@Transactional(value = "rsPublicTransactionManager", readOnly = true)
 public interface Y9UserRepository extends JpaRepository<Y9User, String>, JpaSpecificationExecutor<Y9User> {
 
     List<Y9User> findByGuidPathContaining(String guidPath);

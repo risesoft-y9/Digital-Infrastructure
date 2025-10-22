@@ -1,9 +1,14 @@
 
 package y9.autoconfiguration.tenant;
 
-import javax.sql.DataSource;
+import static net.risesoft.consts.JpaTenantConsts.TENANT_TRANSACTION_MANAGER;
+
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.StringTokenizer;
 
 import jakarta.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -44,12 +49,9 @@ import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
 @EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryTenant}"},
     includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},
-    entityManagerFactoryRef = "rsTenantEntityManagerFactory",
-    transactionManagerRef = SpringMultiTenantConfiguration.TRANSACTION_MANAGER)
+    entityManagerFactoryRef = "rsTenantEntityManagerFactory", transactionManagerRef = TENANT_TRANSACTION_MANAGER)
 @Slf4j
 public class SpringMultiTenantConfiguration {
-
-    public static final String TRANSACTION_MANAGER = "rsTenantTransactionManager";
 
     // @ConfigurationProperties("spring.datasource.Hikari.tenantDefault")
     @Bean("defaultDataSource")
@@ -121,7 +123,7 @@ public class SpringMultiTenantConfiguration {
     }
 
     @Primary
-    @Bean({SpringMultiTenantConfiguration.TRANSACTION_MANAGER, "transactionManager"})
+    @Bean({TENANT_TRANSACTION_MANAGER, "transactionManager"})
     public PlatformTransactionManager
         rsTenantTransactionManager(@Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory emf) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();

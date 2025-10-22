@@ -1,5 +1,7 @@
 package net.risesoft.y9public.service.resource.impl;
 
+import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -7,7 +9,6 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
@@ -15,20 +16,14 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.pojo.AuditLogEvent;
-import net.risesoft.repository.permission.Y9AuthorizationRepository;
-import net.risesoft.repository.permission.cache.person.Y9PersonToResourceAndAuthorityRepository;
-import net.risesoft.repository.permission.cache.position.Y9PositionToResourceAndAuthorityRepository;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
-import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.resource.Y9MenuManager;
 import net.risesoft.y9public.repository.resource.Y9MenuRepository;
-import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
 import net.risesoft.y9public.service.resource.Y9MenuService;
 
 /**
@@ -38,21 +33,16 @@ import net.risesoft.y9public.service.resource.Y9MenuService;
  * @date 2022/2/10
  */
 @Service
-@Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class Y9MenuServiceImpl implements Y9MenuService {
 
     private final Y9MenuRepository y9MenuRepository;
-    private final Y9TenantAppRepository y9TenantAppRepository;
-    private final Y9AuthorizationRepository y9AuthorizationRepository;
-    private final Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository;
-    private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
 
     private final Y9MenuManager y9MenuManager;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(List<String> idList) {
         for (String id : idList) {
             this.delete(id);
@@ -60,7 +50,7 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(String id) {
         Y9Menu y9Menu = y9MenuManager.getById(id);
         y9MenuManager.delete(y9Menu);
@@ -74,20 +64,11 @@ public class Y9MenuServiceImpl implements Y9MenuService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        // 删除租户与菜单资源关联的数据
-        List<Y9TenantApp> y9TenantAppList =
-            y9TenantAppRepository.findByAppIdAndTenancy(y9Menu.getAppId(), Boolean.TRUE);
-        for (Y9TenantApp y9TenantApp : y9TenantAppList) {
-            Y9LoginUserHolder.setTenantId(y9TenantApp.getTenantId());
-            LOGGER.debug("删除租户[{}]与菜单资源关联的数据", y9TenantApp.getTenantId());
-            this.deleteTenantRelatedByMenuId(id);
-        }
-
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Menu));
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public List<Y9Menu> disable(List<String> idList) {
         List<Y9Menu> y9MenuList = new ArrayList<>();
         for (String id : idList) {
@@ -97,7 +78,7 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9Menu disable(String id) {
         Y9Menu currentMenu = this.getById(id);
         Y9Menu originalMenu = Y9ModelConvertUtil.convert(currentMenu, Y9Menu.class);
@@ -119,7 +100,7 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public List<Y9Menu> enable(List<String> idList) {
         List<Y9Menu> y9MenuList = new ArrayList<>();
         for (String id : idList) {
@@ -129,7 +110,7 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9Menu enable(String id) {
         Y9Menu currentMenu = this.getById(id);
         Y9Menu originalMenu = Y9ModelConvertUtil.convert(currentMenu, Y9Menu.class);
@@ -171,7 +152,7 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9Menu saveOrUpdate(Y9Menu y9Menu) {
         if (StringUtils.isNotBlank(y9Menu.getId())) {
             Optional<Y9Menu> y9MenuOptional = y9MenuManager.findById(y9Menu.getId());
@@ -207,29 +188,17 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     }
 
     @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9Menu updateTabIndex(String id, int index) {
         return y9MenuManager.updateTabIndex(id, index);
     }
 
-    @Transactional(readOnly = false)
-    public void deleteByParentId(String parentId) {
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
+    private void deleteByParentId(String parentId) {
         List<Y9Menu> y9MenuList = this.findByParentId(parentId);
         for (Y9Menu y9Menu : y9MenuList) {
-            this.delete(y9Menu.getId());
+            delete(y9Menu.getId());
         }
-    }
-
-    /**
-     * 删除相关租户数据 <br>
-     * 切换不同的数据源 需开启新事务
-     *
-     * @param menuId 菜单id
-     */
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-    public void deleteTenantRelatedByMenuId(String menuId) {
-        y9AuthorizationRepository.deleteByResourceId(menuId);
-        y9PersonToResourceAndAuthorityRepository.deleteByResourceId(menuId);
-        y9PositionToResourceAndAuthorityRepository.deleteByResourceId(menuId);
     }
 
     @Override
@@ -238,28 +207,17 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void onAppDeleted(Y9EntityDeletedEvent<Y9App> event) {
         Y9App entity = event.getEntity();
         this.deleteByParentId(entity.getId());
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void onMenuDeleted(Y9EntityDeletedEvent<Y9Menu> event) {
         Y9Menu entity = event.getEntity();
         this.deleteByParentId(entity.getId());
-    }
-
-    @EventListener
-    @Transactional(readOnly = false)
-    public void onTenantAppDeleted(Y9EntityDeletedEvent<Y9TenantApp> event) {
-        Y9TenantApp entity = event.getEntity();
-        Y9LoginUserHolder.setTenantId(entity.getTenantId());
-        List<Y9Menu> y9MenuList = y9MenuRepository.findByAppId(entity.getAppId());
-        for (Y9Menu y9Menu : y9MenuList) {
-            this.deleteTenantRelatedByMenuId(y9Menu.getId());
-        }
     }
 
 }

@@ -1,5 +1,7 @@
 package net.risesoft.y9public.service.resource.impl;
 
+import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,7 +51,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     private final Y9SystemManager y9SystemManager;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(String id) {
         Y9System y9System = y9SystemManager.getById(id);
         y9AppManager.deleteBySystemId(id);
@@ -67,7 +69,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9System disable(String id) {
         Y9System currentSystem = y9SystemManager.getById(id);
         Y9System originalSystem = Y9ModelConvertUtil.convert(currentSystem, Y9System.class);
@@ -91,7 +93,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9System enable(String id) {
         Y9System currentSystem = y9SystemManager.getById(id);
         Y9System originalSystem = Y9ModelConvertUtil.convert(currentSystem, Y9System.class);
@@ -174,7 +176,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9System saveAndRegister4Tenant(Y9System y9System) {
         if (Y9LoginUserHolder.getUserInfo().getManagerLevel().isTenantManager()) {
             y9System.setTenantId(Y9LoginUserHolder.getTenantId());
@@ -188,7 +190,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void saveOrder(String[] systemIds) {
         if (systemIds.length > 0) {
             for (int i = 0, len = systemIds.length; i < len; i++) {
@@ -200,7 +202,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9System saveOrUpdate(Y9System y9System) {
         Y9Assert.isTrue(isNameAvailable(y9System.getId(), y9System.getName()),
             SystemErrorCodeEnum.SYSTEM_WITH_SPECIFIC_NAME_EXISTS, y9System.getName());

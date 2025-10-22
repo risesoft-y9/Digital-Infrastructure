@@ -7,7 +7,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +31,6 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
  * @since 9.6.3
  */
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @CacheConfig(cacheNames = CacheNameConsts.ORG_JOB)
 @RequiredArgsConstructor
 public class Y9JobManagerImpl implements Y9JobManager {
@@ -41,7 +39,6 @@ public class Y9JobManagerImpl implements Y9JobManager {
 
     @Override
     @CacheEvict(key = "#y9Job.id")
-    @Transactional(readOnly = false)
     public void delete(Y9Job y9Job) {
         y9JobRepository.delete(y9Job);
     }
@@ -71,14 +68,12 @@ public class Y9JobManagerImpl implements Y9JobManager {
 
     @Override
     @CacheEvict(key = "#y9Job.id", condition = "#y9Job.id!=null")
-    @Transactional(readOnly = false)
     public Y9Job save(Y9Job y9Job) {
         return y9JobRepository.save(y9Job);
     }
 
     @Override
     @CacheEvict(key = "#id")
-    @Transactional(readOnly = false)
     public Y9Job updateTabIndex(String id, int tabIndex) {
         Y9Job y9Job = this.getById(id);
         y9Job.setTabIndex(tabIndex);
@@ -87,7 +82,6 @@ public class Y9JobManagerImpl implements Y9JobManager {
 
     @Override
     @CacheEvict(key = "#y9Job.id", condition = "#y9Job.id!=null")
-    @Transactional(readOnly = false)
     public Y9Job update(Y9Job job) {
         Y9Job currentJob = this.getById(job.getId());
         Y9Job originY9Job = Y9ModelConvertUtil.convert(currentJob, Y9Job.class);
@@ -101,7 +95,6 @@ public class Y9JobManagerImpl implements Y9JobManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Y9Job insert(Y9Job job) {
         if (StringUtils.isBlank(job.getId())) {
             job.setId(Y9IdGenerator.genId());

@@ -1,5 +1,7 @@
 package net.risesoft.y9public.service.event.impl;
 
+import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
+
 import java.util.Date;
 import java.util.Optional;
 
@@ -32,7 +34,7 @@ public class Y9PublishedEventSyncHistoryServiceImpl implements Y9PublishedEventS
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9PublishedEventSyncHistory saveOrUpdate(String tenantId, String appName, Date syncTime, Integer status) {
         Optional<Y9PublishedEventSyncHistory> y9PublishedEventSyncHistoryOptional =
             y9PublishedEventSyncHistoryRepository.findByTenantIdAndAppName(tenantId, appName);

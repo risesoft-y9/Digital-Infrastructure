@@ -10,7 +10,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -44,7 +43,6 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.signing.Y9MessageDigest;
 
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @CacheConfig(cacheNames = CacheNameConsts.ORG_PERSON)
 @RequiredArgsConstructor
 public class Y9PersonManagerImpl implements Y9PersonManager {
@@ -60,7 +58,6 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
 
     @Override
     @CacheEvict(key = "#y9Person.id")
-    @Transactional(readOnly = false)
     public void delete(Y9Person y9Person) {
         y9PersonRepository.delete(y9Person);
     }
@@ -130,12 +127,10 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
     }
 
     @CacheEvict(key = "#y9Person.id")
-    @Transactional(readOnly = false)
     public Y9Person save(Y9Person y9Person) {
         return y9PersonRepository.save(y9Person);
     }
 
-    @Transactional(readOnly = false)
     @Override
     public Y9Person insert(Y9Person person) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
@@ -175,7 +170,6 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
         return savedPerson;
     }
 
-    @Transactional(readOnly = false)
     @Override
     public Y9Person update(Y9Person person) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
@@ -200,7 +194,6 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     @CacheEvict(key = "#id")
     public Y9Person updateTabIndex(String id, int tabIndex) {
         Y9Person person = this.getById(id);
@@ -211,7 +204,6 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
         return this.update(updatedPerson);
     }
 
-    @Transactional(readOnly = false)
     @Override
     public void updatePersonByOriginalId(Y9Person originalPerson, Y9PersonExt originalExt) {
         List<Y9Person> persons = y9PersonRepository.findByOriginalId(originalPerson.getId());

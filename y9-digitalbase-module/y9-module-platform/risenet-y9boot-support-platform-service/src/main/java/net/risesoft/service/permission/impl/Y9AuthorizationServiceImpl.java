@@ -10,10 +10,13 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.entity.org.Y9Department;
 import net.risesoft.entity.org.Y9Group;
@@ -28,19 +31,20 @@ import net.risesoft.enums.platform.permission.AuthorizationPrincipalTypeEnum;
 import net.risesoft.exception.AuthorizationErrorCodeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.permission.Y9AuthorizationManager;
-import net.risesoft.manager.permission.cache.Y9PersonToResourceAndAuthorityManager;
-import net.risesoft.manager.permission.cache.Y9PositionToResourceAndAuthorityManager;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.service.permission.Y9AuthorizationService;
+import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.resource.CompositeResourceManager;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
 
@@ -51,8 +55,8 @@ import net.risesoft.y9public.manager.role.Y9RoleManager;
  * @date 2022/2/10
  */
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
 
     private final Y9AuthorizationRepository y9AuthorizationRepository;
@@ -62,8 +66,6 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
 
     private final Y9AuthorizationManager y9AuthorizationManager;
     private final Y9RoleManager y9RoleManager;
-    private final Y9PersonToResourceAndAuthorityManager y9PersonToResourceAndAuthorityManager;
-    private final Y9PositionToResourceAndAuthorityManager y9PositionToResourceAndAuthorityManager;
 
     @Override
     @Transactional(readOnly = false)
@@ -71,8 +73,6 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
         Y9Authorization y9Authorization = this.getById(id);
 
         y9AuthorizationRepository.delete(y9Authorization);
-        y9PersonToResourceAndAuthorityManager.deleteByAuthorizationId(id);
-        y9PositionToResourceAndAuthorityManager.deleteByAuthorizationId(id);
 
         String resourceName = compositeResourceManager
             .findByIdAndResourceType(y9Authorization.getResourceId(), y9Authorization.getResourceType())
@@ -374,4 +374,55 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(position.getId(),
             AuthorizationPrincipalTypeEnum.POSITION);
     }
+
+    @TransactionalEventListener
+    public void onResourceDeleted(Y9EntityDeletedEvent<? extends Y9ResourceBase> event) {
+        Y9ResourceBase entity = event.getEntity();
+        for (String tenantId : Y9PlatformUtil.getTenantIds()) {
+            deleteByResource(tenantId, entity);
+        }
+    }
+
+    @Async
+    protected void deleteByResource(String tenantId, Y9ResourceBase entity) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+        y9AuthorizationRepository.deleteByResourceId(entity.getId());
+        LOGGER.debug("{}资源[{}]删除时同步删除租户[{}]的授权数据", entity.getResourceType().getName(), entity.getId(), tenantId);
+    }
+
+    @EventListener
+    public void onTenantAppDeleted(Y9EntityDeletedEvent<Y9TenantApp> event) {
+        Y9TenantApp entity = event.getEntity();
+        deleteByTenantApp(entity);
+    }
+
+    @Async
+    protected void deleteByTenantApp(Y9TenantApp entity) {
+        Y9LoginUserHolder.setTenantId(entity.getTenantId());
+        List<Y9ResourceBase> y9ResourceList = compositeResourceManager.findByAppId(entity.getAppId());
+        for (Y9ResourceBase y9ResourceBase : y9ResourceList) {
+            y9AuthorizationRepository.deleteByResourceId(y9ResourceBase.getId());
+        }
+        LOGGER.debug("应用[{}]取消租用时同步删除租户[{}]的授权数据", entity.getAppId(), entity.getTenantId());
+    }
+
+    @TransactionalEventListener
+    public void onRoleDeleted(Y9EntityDeletedEvent<Y9Role> event) {
+        Y9Role entity = event.getEntity();
+        for (String tenantId : Y9PlatformUtil.getTenantIds()) {
+            deleteByRole(tenantId, entity);
+        }
+    }
+
+    @Async
+    protected void deleteByRole(String tenantId, Y9Role entity) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+        List<Y9Authorization> authorizationList = y9AuthorizationRepository
+            .findByPrincipalIdAndPrincipalType(entity.getId(), AuthorizationPrincipalTypeEnum.ROLE);
+        for (Y9Authorization y9Authorization : authorizationList) {
+            delete(y9Authorization.getId());
+        }
+        LOGGER.debug("角色[{}]删除时同步删除租户[{}]的角色授权数据", entity.getId(), tenantId);
+    }
+
 }

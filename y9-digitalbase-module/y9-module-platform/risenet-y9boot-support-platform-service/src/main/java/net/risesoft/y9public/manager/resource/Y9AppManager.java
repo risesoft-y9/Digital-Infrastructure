@@ -16,14 +16,6 @@ public interface Y9AppManager {
 
     void deleteBySystemId(String systemId);
 
-    /**
-     * 删除相关租户数据 <br>
-     * 切换不同的数据源 需开启新事务
-     *
-     * @param appId 应用id
-     */
-    void deleteTenantRelatedByAppId(String appId);
-
     Optional<Y9App> findById(String id);
 
     Optional<Y9App> findByIdFromCache(String id);

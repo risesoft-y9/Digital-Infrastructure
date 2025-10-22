@@ -20,7 +20,6 @@ import net.risesoft.entity.org.Y9DepartmentProp;
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 public interface Y9DepartmentPropRepository
     extends JpaRepository<Y9DepartmentProp, String>, JpaSpecificationExecutor<Y9DepartmentProp> {
 

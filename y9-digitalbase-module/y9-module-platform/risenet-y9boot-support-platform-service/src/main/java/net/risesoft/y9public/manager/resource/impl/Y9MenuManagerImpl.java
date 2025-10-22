@@ -7,7 +7,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,7 +35,6 @@ import net.risesoft.y9public.repository.resource.Y9MenuRepository;
  */
 @Service
 @CacheConfig(cacheNames = CacheNameConsts.RESOURCE_MENU)
-@Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9MenuManagerImpl implements Y9MenuManager {
 
@@ -67,7 +65,6 @@ public class Y9MenuManagerImpl implements Y9MenuManager {
         return this.getById(id);
     }
 
-    @Transactional(readOnly = false)
     @Override
     public Y9Menu insert(Y9Menu y9Menu) {
         Y9ResourceBase parent = compositeResourceManager.getResourceAsParent(y9Menu.getParentId());
@@ -86,7 +83,6 @@ public class Y9MenuManagerImpl implements Y9MenuManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     @CacheEvict(key = "#y9Menu.id", condition = "#y9Menu.id!=null")
     public Y9Menu update(Y9Menu y9Menu) {
         Y9ResourceBase parent = compositeResourceManager.getResourceAsParent(y9Menu.getParentId());
@@ -105,14 +101,12 @@ public class Y9MenuManagerImpl implements Y9MenuManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     @CacheEvict(key = "#y9Menu.id")
     public void delete(Y9Menu y9Menu) {
         y9MenuRepository.delete(y9Menu);
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Y9Menu updateTabIndex(String id, int index) {
         Y9Menu y9Menu = this.getById(id);
 

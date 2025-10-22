@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import net.risesoft.y9public.entity.resource.Y9Menu;
 
@@ -18,7 +17,6 @@ import net.risesoft.y9public.entity.resource.Y9Menu;
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
-@Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @JaversSpringDataAuditable
 public interface Y9MenuRepository extends JpaRepository<Y9Menu, String> {
 

@@ -1,7 +1,6 @@
 package net.risesoft.manager.relation.impl;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -15,7 +14,6 @@ import net.risesoft.repository.relation.Y9PositionsToGroupsRepository;
  * @date 2024/03/14
  */
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9PositionsToGroupsManagerImpl implements Y9PositionsToGroupsManager {
 

@@ -3,7 +3,6 @@ package net.risesoft.manager.dictionary.impl;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,14 +19,12 @@ import net.risesoft.repository.dictionary.Y9OptionValueRepository;
  * @since 9.6.2
  */
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9OptionValueManagerImpl implements Y9OptionValueManager {
 
     private final Y9OptionValueRepository y9OptionValueRepository;
 
     @Override
-    @Transactional(readOnly = false)
     public Y9OptionValue create(String code, String name, String type) {
         Optional<Y9OptionValue> optionalY9OptionValue = y9OptionValueRepository.findByTypeAndName(type, name);
         if (optionalY9OptionValue.isEmpty()) {
@@ -49,7 +46,6 @@ public class Y9OptionValueManagerImpl implements Y9OptionValueManager {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void deleteByType(String type) {
         y9OptionValueRepository.deleteByType(type);
     }

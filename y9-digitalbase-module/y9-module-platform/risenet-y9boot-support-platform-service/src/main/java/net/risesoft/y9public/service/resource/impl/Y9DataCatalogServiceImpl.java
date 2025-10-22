@@ -1,5 +1,7 @@
 package net.risesoft.y9public.service.resource.impl;
 
+import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,7 +12,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
@@ -24,13 +25,9 @@ import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.enums.platform.resource.DataCatalogTypeEnum;
 import net.risesoft.model.platform.resource.DataCatalog;
-import net.risesoft.repository.permission.Y9AuthorizationRepository;
-import net.risesoft.repository.permission.cache.person.Y9PersonToResourceAndAuthorityRepository;
-import net.risesoft.repository.permission.cache.position.Y9PositionToResourceAndAuthorityRepository;
 import net.risesoft.service.dictionary.Y9OptionValueService;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.permission.cache.Y9PersonToResourceAndAuthorityService;
-import net.risesoft.service.permission.cache.Y9PositionToResourceAndAuthorityService;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
@@ -39,10 +36,8 @@ import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9public.entity.resource.Y9DataCatalog;
-import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.resource.Y9DataCatalogManager;
 import net.risesoft.y9public.repository.resource.Y9DataCatalogRepository;
-import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
 import net.risesoft.y9public.service.resource.Y9DataCatalogService;
 
 /**
@@ -54,7 +49,6 @@ import net.risesoft.y9public.service.resource.Y9DataCatalogService;
  */
 @RequiredArgsConstructor
 @Service
-@Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @Slf4j
 public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
 
@@ -64,19 +58,8 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     private final Y9DataCatalogManager y9DataCatalogManager;
 
     private final CompositeOrgBaseService compositeOrgBaseService;
-    private final Y9PositionToResourceAndAuthorityService y9PositionToResourceAndAuthorityService;
     private final Y9PersonToResourceAndAuthorityService y9PersonToResourceAndAuthorityService;
     private final Y9OptionValueService y9OptionValueService;
-
-    private final Y9TenantAppRepository y9TenantAppRepository;
-    private final Y9AuthorizationRepository y9AuthorizationRepository;
-    private final Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository;
-    private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
-
-    @Override
-    public List<DataCatalog> getTree(String tenantId, String parentId, String treeType) {
-        return this.getTree(tenantId, parentId, treeType, null, false, null, null);
-    }
 
     @Override
     public DataCatalog getDataCatalogById(String id) {
@@ -85,7 +68,7 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9DataCatalog saveOrUpdate(Y9DataCatalog y9DataCatalog) {
         if (StringUtils.isNotBlank(y9DataCatalog.getId())) {
             Optional<Y9DataCatalog> y9DataCatalogOptional = y9DataCatalogManager.findById(y9DataCatalog.getId());
@@ -98,25 +81,16 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(String id) {
         Y9DataCatalog y9DataCatalog = y9DataCatalogManager.getById(id);
         y9DataCatalogRepository.deleteById(id);
-
-        // 删除租户与数据目录资源关联的数据
-        List<Y9TenantApp> y9TenantAppList =
-            y9TenantAppRepository.findByAppIdAndTenancy(y9DataCatalog.getAppId(), Boolean.TRUE);
-        for (Y9TenantApp y9TenantApp : y9TenantAppList) {
-            Y9LoginUserHolder.setTenantId(y9TenantApp.getTenantId());
-            LOGGER.debug("删除租户[{}]与数据目录资源关联的数据", y9TenantApp.getTenantId());
-            this.deleteTenantRelatedByDataCatalogId(id);
-        }
 
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9DataCatalog));
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void saveByYears(Y9DataCatalog y9DataCatalog, Integer startYear, Integer endYear) {
         for (int year = startYear; year <= endYear; year++) {
             Optional<Y9DataCatalog> y9DataCatalogOptional = y9DataCatalogRepository.findByTenantIdAndParentIdAndName(
@@ -136,6 +110,12 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
         return this.treeSearch(tenantId, name, treeType, null, null);
     }
 
+    @Override
+    public List<DataCatalog> getTree(String tenantId, String parentId, String treeType) {
+        return this.getTree(tenantId, parentId, treeType, null, false, null, null);
+    }
+
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
     @Override
     public List<DataCatalog> getTree(String tenantId, String parentId, String treeType, Boolean enabled,
         boolean includeAllDescendant, AuthorityEnum authority, String personId) {
@@ -186,6 +166,7 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     }
 
     @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
     public List<DataCatalog> treeSearch(String tenantId, String name, String treeType, AuthorityEnum authority,
         String personId) {
         List<DataCatalog> dataCatalogList = new ArrayList<>();
@@ -217,7 +198,7 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void saveByType(Y9DataCatalog y9DataCatalog) {
         DataCatalogTypeEnum dataCatalogType = y9DataCatalog.getType();
         if (DataCatalogTypeEnum.ORG_UNIT.equals(dataCatalogType)) {
@@ -240,6 +221,7 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     }
 
     @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
     public DataCatalog getTreeRoot(String id) {
         DataCatalog dataCatalog = getDataCatalogById(id);
 
@@ -255,8 +237,8 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
         return y9DataCatalogRepository.findByParentIdIsNull();
     }
 
-    @Transactional(readOnly = false)
-    public void recursivelySaveOrgUnitDataCatalog(String parentDataCatalogId, String treeType, String parentOrgUnitId) {
+    private void recursivelySaveOrgUnitDataCatalog(String parentDataCatalogId, String treeType,
+        String parentOrgUnitId) {
         List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.listOrgUnitsAsParentByParentId(parentOrgUnitId);
         for (Y9OrgBase y9OrgBase : y9OrgBaseList) {
             Optional<Y9DataCatalog> y9DataCatalogOptional =
@@ -283,27 +265,13 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
         }
     }
 
-    /**
-     * 删除相关租户数据 <br>
-     * 切换不同的数据源 需开启新事务
-     *
-     * @param dataCatalogId 数据目录id
-     */
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-    public void deleteTenantRelatedByDataCatalogId(String dataCatalogId) {
-        y9AuthorizationRepository.deleteByResourceId(dataCatalogId);
-        y9PersonToResourceAndAuthorityRepository.deleteByResourceId(dataCatalogId);
-        y9PositionToResourceAndAuthorityRepository.deleteByResourceId(dataCatalogId);
-    }
-
     @EventListener
-    @Transactional(readOnly = false)
     public void onDataCatalogDeleted(Y9EntityDeletedEvent<Y9DataCatalog> event) {
         Y9DataCatalog entity = event.getEntity();
         this.deleteByParentId(entity.getId());
     }
 
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void deleteByParentId(String id) {
         List<Y9DataCatalog> y9DataCatalogList =
             y9DataCatalogRepository.findByTenantIdAndParentId(Y9LoginUserHolder.getTenantId(), id);
@@ -313,7 +281,7 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void onDepartmentUpdated(Y9EntityUpdatedEvent<Y9Department> event) {
         Y9Department updatedDepartment = event.getUpdatedEntity();
 
@@ -326,7 +294,7 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void onDepartmentCreated(Y9EntityCreatedEvent<Y9Department> event) {
         Y9Department createdDepartment = event.getEntity();
 
@@ -344,7 +312,7 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void onDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
         Y9Department entity = event.getEntity();
         List<Y9DataCatalog> y9DataCatalogList =
@@ -356,7 +324,7 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void onOrganizationUpdated(Y9EntityUpdatedEvent<Y9Organization> event) {
         Y9Organization updatedOrganization = event.getUpdatedEntity();
 
@@ -369,7 +337,7 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void onOrganizationDeleted(Y9EntityDeletedEvent<Y9Organization> event) {
         Y9Organization entity = event.getEntity();
         List<Y9DataCatalog> y9DataCatalogList =
