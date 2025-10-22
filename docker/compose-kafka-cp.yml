@@ -1,10 +1,11 @@
 name: y9-dev-postgres-keycloak
 services:
   kafka0:
-    image: confluentinc/cp-kafka:latest
+    #image: confluentinc/cp-kafka:latest
+    image: apache/kafka:latest
     hostname: kafka0
     container_name: kafka0
-    #restart: always
+    restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
@@ -30,6 +31,7 @@ services:
     volumes:
       - /Users/dingzhaojun/docker-data/kafka/secrets:/etc/kafka/secrets
       - /Users/dingzhaojun/docker-data/kafka/data:/var/lib/kafka/data
+      - /Users/dingzhaojun/docker-data/kafka/config:/mnt/shared/config
 
   kafbat-ui:
     container_name: kafbat-ui
@@ -39,7 +41,7 @@ services:
     networks:
       - y9-share-net
     ports:
-      - 7080:8080
+      - 7001:8080
     depends_on:
       - kafka0
     environment:
