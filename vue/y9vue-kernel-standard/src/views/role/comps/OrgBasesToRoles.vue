@@ -414,7 +414,7 @@
             searchKey.value = '';
             negativeTreeApiObj.value.childLevel.params.treeType = orgType.value;
             negativeTreeApiObj.value.search.params.treeType = orgType.value;
-            selectTreeRef.value.onRefreshTree();
+            selectTreeRef.value && selectTreeRef.value.onRefreshTree();
             // if (searchKey.value) {
             //     onSearchKeyChange(searchKey.value);
             // }
@@ -425,7 +425,7 @@
 
     function onRefreshTree() {
         searchKey.value = '';
-        selectTreeRef.value.onRefreshTree();
+        selectTreeRef.value && selectTreeRef.value.onRefreshTree();
     }
 
     let searchTimer;

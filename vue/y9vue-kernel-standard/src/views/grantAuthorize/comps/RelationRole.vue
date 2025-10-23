@@ -343,6 +343,7 @@
         () => formline.value.authority,
         (new_, old_) => {
             getSelectTreeDefaultCheckedKeys();
+            selectTreeRef.value && selectTreeRef.value.onRefreshTree();
         }
     );
 
@@ -365,11 +366,7 @@
 
     // 请求 列表接口
     async function initList() {
-        let result = await getRelationRoleList(
-            props.id,
-            roleFormLine.value.roleNodeName,
-            roleFormLine.value.authority
-        );
+        let result = await getRelationRoleList(props.id, roleFormLine.value.roleNodeName, roleFormLine.value.authority);
         tableRoleConfig.value.tableData = result.data;
     }
 
