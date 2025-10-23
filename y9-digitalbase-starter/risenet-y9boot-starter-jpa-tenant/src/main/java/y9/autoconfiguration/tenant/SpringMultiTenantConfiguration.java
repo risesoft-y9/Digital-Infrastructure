@@ -286,10 +286,4 @@ public class SpringMultiTenantConfiguration {
         Environment environment) {
         return new Y9TenantDataSourceLookup(ds, environment.getProperty("y9.systemName"));
     }
-
-    /*@Bean
-    public OnY9MultiTenantApplicationReady onY9MultiTenantApplicationReady() {
-        return new OnY9MultiTenantApplicationReady();
-    }*/
-
 }

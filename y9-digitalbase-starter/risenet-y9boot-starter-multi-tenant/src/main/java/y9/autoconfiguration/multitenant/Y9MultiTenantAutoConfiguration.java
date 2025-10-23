@@ -41,6 +41,8 @@ import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.feature.multitenant.Y9MultiTenantProperties;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 
+import y9.autoconfiguration.tenant.Y9MultiTenantSchemaUpdaterOnApplicationReady;
+
 /**
  * 多租户自动配置类
  * 
@@ -75,26 +77,38 @@ public class Y9MultiTenantAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = "liquibaseDbUpdater")
+    @ConditionalOnClass(value = Y9TenantHibernateInfoHolder.class)
+    public Y9MultiTenantSchemaUpdaterOnApplicationReady
+        y9MultiTenantSchemaUpdaterOnApplicationReady(Y9TenantDataSourceLookup y9TenantDataSourceLookup) {
+        return new Y9MultiTenantSchemaUpdaterOnApplicationReady(y9TenantDataSourceLookup);
+    }
+
+    @Bean
     @ConditionalOnMissingBean(SchemaUpdater.class)
     public SchemaUpdater noneSchemaUpdater() {
         return new NoneSchemaUpdater();
     }
 
-    @Bean
-    public TenantAppEventListener tenantAppEventListener(MultiTenantDao multiTenantDao) {
-        return new TenantAppEventListener(multiTenantDao);
-    }
+    @Configuration(proxyBeanMethods = false)
+    public static class EventListenerConfiguration {
+        @Bean
+        public TenantAppEventListener tenantAppEventListener(MultiTenantDao multiTenantDao) {
+            return new TenantAppEventListener(multiTenantDao);
+        }
 
-    @Bean
-    public TenantSystemRegisteredEventListener tenantSystemRegisteredEventListener(
-        Y9TenantDataSourceLookup y9TenantDataSourceLookup, SchemaUpdater schemaUpdater, MultiTenantDao multiTenantDao) {
-        return new TenantSystemRegisteredEventListener(y9TenantDataSourceLookup, schemaUpdater, multiTenantDao);
-    }
+        @Bean
+        public TenantSystemRegisteredEventListener tenantSystemRegisteredEventListener(
+            Y9TenantDataSourceLookup y9TenantDataSourceLookup, SchemaUpdater schemaUpdater,
+            MultiTenantDao multiTenantDao) {
+            return new TenantSystemRegisteredEventListener(y9TenantDataSourceLookup, schemaUpdater, multiTenantDao);
+        }
 
-    @Bean
-    public TenantDataSourceEventListener
-        tenantDataSourceEventListener(Y9TenantDataSourceLookup y9TenantDataSourceLookup) {
-        return new TenantDataSourceEventListener(y9TenantDataSourceLookup);
+        @Bean
+        public TenantDataSourceEventListener
+            tenantDataSourceEventListener(Y9TenantDataSourceLookup y9TenantDataSourceLookup) {
+            return new TenantDataSourceEventListener(y9TenantDataSourceLookup);
+        }
     }
 
     @Bean
