@@ -287,7 +287,7 @@
     let { loading, tableOrgConfig, personConfigDialog, treeApiObj, filtersList, filtersValueCallBack } = toRefs(state);
 
     function onRefreshTree() {
-        selectTreeRef.value.onRefreshTree();
+        selectTreeRef.value && selectTreeRef.value.onRefreshTree();
     }
 
     let searchTimer = null;
@@ -316,6 +316,7 @@
         () => authorityRef.value,
         (new_, old_) => {
             getSelectTreeDefaultCheckedKeys();
+            onRefreshTree();
         }
     );
 

@@ -350,8 +350,10 @@
     let authorityRef = ref(1);
     let currentTreeType = ref(null);
 
-    watch(authorityRef, (current, prev) => {
-        getResourceTreeDefaultCheckedKeys();
+    watch(authorityRef, async (current, prev) => {
+        await getResourceTreeDefaultCheckedKeys();
+        onRefreshTree();
+        onRefreshDataCatalogTree();
     });
 
     watch(currentTreeType, (current, prev) => {
@@ -672,9 +674,9 @@
 
     function onRefreshTree() {
         if (props.type == 'private' && props.appId) {
-            resourceSelectTree.value.onRefreshTree();
+            resourceSelectTree.value && resourceSelectTree.value.onRefreshTree();
         } else {
-            resourcePublicSelectTree.value.onRefreshTree();
+            resourcePublicSelectTree.value && resourcePublicSelectTree.value.onRefreshTree();
         }
     }
 
