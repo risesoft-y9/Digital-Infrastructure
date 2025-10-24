@@ -43,7 +43,7 @@ public class DefaultServicesManagerRegisteredServiceLocator implements ServicesM
     @Override
     public boolean supports(final RegisteredService registeredService, final Service service) {
         return (OAuthRegisteredService.class.isAssignableFrom(registeredService.getClass())
-            && registeredService.getFriendlyName().equalsIgnoreCase("OAuth2 Client"))
+            && registeredService.getFriendlyName().equalsIgnoreCase("OAuth2 Client")) // y9 add
             || (CasRegisteredService.class.isAssignableFrom(registeredService.getClass())
                 && registeredService.getFriendlyName().equalsIgnoreCase(CasRegisteredService.FRIENDLY_NAME))
             || (RegexRegisteredService.class.isAssignableFrom(registeredService.getClass())

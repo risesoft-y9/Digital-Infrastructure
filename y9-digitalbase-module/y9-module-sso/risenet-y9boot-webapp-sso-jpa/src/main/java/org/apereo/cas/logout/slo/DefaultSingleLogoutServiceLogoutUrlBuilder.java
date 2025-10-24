@@ -29,7 +29,7 @@ public class DefaultSingleLogoutServiceLogoutUrlBuilder extends BaseSingleLogout
         final Optional<HttpServletRequest> httpRequest) {
         return super.supports(registeredService, singleLogoutService, httpRequest)
             && (registeredService.getFriendlyName().equalsIgnoreCase(CasRegisteredService.FRIENDLY_NAME)
-                || registeredService.getFriendlyName().equalsIgnoreCase("OAuth2 Client"));
+                || registeredService.getFriendlyName().equalsIgnoreCase("OAuth2 Client")); // y9 add
     }
 
 }

@@ -33,6 +33,6 @@ public class DefaultSingleLogoutServiceMessageHandler extends BaseSingleLogoutSe
         final RegisteredService registeredService, final SingleLogoutExecutionRequest context) {
         return super.supportsInternal(singleLogoutService, registeredService, context)
             && (registeredService.getFriendlyName().equalsIgnoreCase(CasRegisteredService.FRIENDLY_NAME)
-                || registeredService.getFriendlyName().equalsIgnoreCase("OAuth2 Client"));
+                || registeredService.getFriendlyName().equalsIgnoreCase("OAuth2 Client")); // y9 add
     }
 }
