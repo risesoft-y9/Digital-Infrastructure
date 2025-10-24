@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9public.entity.event.Y9PublishedEvent;
+import net.risesoft.y9public.specification.query.PublishedEventQuery;
 
 /**
  * @author dingzhaojun
@@ -36,13 +37,8 @@ public interface Y9PublishedEventService {
      * 分页查询
      *
      * @param pageQuery 分页信息
-     * @param tenantId 租户id
-     * @param eventName 事件名
-     * @param eventDescription 事件描述
-     * @param startTime 开始事件
-     * @param endTime 结束事件
+     * @param query 查询条件
      * @return {@code Page<Y9PublishedEvent>}
      */
-    Page<Y9PublishedEvent> page(Y9PageQuery pageQuery, String tenantId, String eventName, String eventDescription,
-        Date startTime, Date endTime);
+    Page<Y9PublishedEvent> page(Y9PageQuery pageQuery, PublishedEventQuery query);
 }

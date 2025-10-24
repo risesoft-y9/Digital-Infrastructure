@@ -19,6 +19,7 @@ import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.event.Y9PublishedEvent;
 import net.risesoft.y9public.service.event.Y9PublishedEventService;
+import net.risesoft.y9public.specification.query.PublishedEventQuery;
 
 /**
  * 操作事件管理
@@ -56,10 +57,22 @@ public class PublishedEventController {
         @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime, Y9PageQuery pageQuery) {
         Page<Y9PublishedEvent> pageList;
         if (Y9LoginUserHolder.getUserInfo().getManagerLevel().equals(ManagerLevelEnum.OPERATION_SECURITY_MANAGER)) {
-            pageList = y9PublishedEventService.page(pageQuery, null, eventName, eventDescription, startTime, endTime);
+            PublishedEventQuery query = PublishedEventQuery.builder()
+                .eventName(eventName)
+                .eventDescription(eventDescription)
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
+            pageList = y9PublishedEventService.page(pageQuery, query);
         } else {
-            pageList = y9PublishedEventService.page(pageQuery, Y9LoginUserHolder.getTenantId(), eventName,
-                eventDescription, startTime, endTime);
+            PublishedEventQuery query = PublishedEventQuery.builder()
+                .tenantId(Y9LoginUserHolder.getTenantId())
+                .eventName(eventName)
+                .eventDescription(eventDescription)
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
+            pageList = y9PublishedEventService.page(pageQuery, query);
         }
         return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(),
             pageList.getContent(), "获取数据成功");

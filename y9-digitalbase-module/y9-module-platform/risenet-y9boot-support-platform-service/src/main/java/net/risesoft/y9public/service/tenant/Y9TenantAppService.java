@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 
 import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
+import net.risesoft.y9public.specification.query.TenantAppQuery;
 
 /**
  * @author dingzhaojun
@@ -77,7 +78,7 @@ public interface Y9TenantAppService {
      * @return {@code Page<}{@link String}{@code >}
      */
     List<String> listAppIdBySystemIdAndTenantId(String systemId, String tenantId, Boolean verify, Boolean tenancy);
-    
+
     /**
      * 根据租户id，获取已审核且还在租用的应用id列表
      *
@@ -128,17 +129,10 @@ public interface Y9TenantAppService {
      *
      * @param page page
      * @param rows rows
-     * @param verify 审核状态
-     * @param tenantName 租户名称
-     * @param createTime 创建时间
-     * @param verifyTime 审核时间
-     * @param tenancy 租户状态
-     * @param appName 应用名称
-     * @param systemIds 管理的应用ids
+     * @param tenantAppQuery 搜索查询
      * @return {@code Page<}{@link Y9TenantApp}{@code >}
      */
-    Page<Y9TenantApp> page(Integer page, Integer rows, Boolean verify, String tenantName, String createTime,
-        String verifyTime, Boolean tenancy, String appName, String systemIds);
+    Page<Y9TenantApp> page(Integer page, Integer rows, TenantAppQuery tenantAppQuery);
 
     /**
      * 租户租用应用，已租用系统的应用自动审核通过
