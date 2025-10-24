@@ -1,11 +1,10 @@
 package net.risesoft.y9public.specification;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -13,6 +12,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
 import net.risesoft.y9public.entity.event.Y9PublishedEvent;
+import net.risesoft.y9public.specification.query.PublishedEventQuery;
 
 /**
  * @author dingzhaojun
@@ -23,57 +23,35 @@ import net.risesoft.y9public.entity.event.Y9PublishedEvent;
 public class Y9PublishedEventSpecification implements Specification<Y9PublishedEvent> {
     private static final long serialVersionUID = -242256666295779942L;
 
-    private String eventName;
-    private String eventDescription;
-    private Date startTime;
-    private Date endTime;
-    private String tenantId;
+    private final PublishedEventQuery eventQuery;
 
-    public Y9PublishedEventSpecification(String tenantId, Date startTime) {
-        this.tenantId = tenantId;
-        this.startTime = startTime;
-    }
-
-    public Y9PublishedEventSpecification(String eventName, String eventDescription, Date startTime, Date endTime) {
-        this.eventName = eventName;
-        this.eventDescription = eventDescription;
-        this.startTime = startTime;
-        this.endTime = endTime;
-    }
-
-    public Y9PublishedEventSpecification(
-        String tenantId,
-        String eventName,
-        String eventDescription,
-        Date startTime,
-        Date endTime) {
-        this.tenantId = tenantId;
-        this.eventName = eventName;
-        this.eventDescription = eventDescription;
-        this.startTime = startTime;
-        this.endTime = endTime;
+    public Y9PublishedEventSpecification(PublishedEventQuery eventQuery) {
+        this.eventQuery = eventQuery;
     }
 
     @Override
     public Predicate toPredicate(Root<Y9PublishedEvent> root, CriteriaQuery<?> criteriaQuery,
         CriteriaBuilder criteriaBuilder) {
-        Predicate predicate = criteriaBuilder.conjunction();
-        List<Expression<Boolean>> expressions = predicate.getExpressions();
-        if (StringUtils.hasText(tenantId)) {
-            expressions.add(criteriaBuilder.equal(root.<String>get("tenantId"), tenantId));
+        List<Predicate> list = new ArrayList<>();
+        if (StringUtils.hasText(eventQuery.getTenantId())) {
+            list.add(criteriaBuilder.equal(root.<String>get("tenantId"), eventQuery.getTenantId()));
         }
-        if (StringUtils.hasText(eventName)) {
-            expressions.add(criteriaBuilder.like(root.<String>get("eventName"), "%" + eventName + "%"));
+        if (StringUtils.hasText(eventQuery.getEventName())) {
+            list.add(criteriaBuilder.like(root.get("eventName"), "%" + eventQuery.getEventName() + "%"));
         }
-        if (StringUtils.hasText(eventDescription)) {
-            expressions.add(criteriaBuilder.like(root.<String>get("eventDescription"), "%" + eventDescription + "%"));
+        if (StringUtils.hasText(eventQuery.getEventDescription())) {
+            list.add(criteriaBuilder.like(root.get("eventDescription"), "%" + eventQuery.getEventDescription() + "%"));
         }
-        if (startTime != null) {
-            expressions.add(criteriaBuilder.greaterThanOrEqualTo(root.<Date>get("createTime"), startTime));
+        if (eventQuery.getStartTime() != null) {
+            list.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createTime"), eventQuery.getStartTime()));
         }
-        if (endTime != null) {
-            expressions.add(criteriaBuilder.lessThanOrEqualTo(root.<Date>get("createTime"), endTime));
+        if (eventQuery.getEndTime() != null) {
+            list.add(criteriaBuilder.lessThanOrEqualTo(root.get("createTime"), eventQuery.getEndTime()));
         }
-        return predicate;
+        // 如果没有条件，返回空查询
+        if (list.isEmpty()) {
+            return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+        }
+        return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
     }
 }

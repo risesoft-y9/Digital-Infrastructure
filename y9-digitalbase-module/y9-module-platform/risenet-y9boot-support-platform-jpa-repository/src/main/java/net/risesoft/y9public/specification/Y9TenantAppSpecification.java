@@ -2,13 +2,13 @@ package net.risesoft.y9public.specification;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaBuilder.In;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -17,104 +17,23 @@ import org.springframework.data.jpa.domain.Specification;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.y9public.entity.tenant.Y9TenantApp;
+import net.risesoft.y9public.specification.query.TenantAppQuery;
+
 @Slf4j
-public class Y9TenantAppSpecification<TenantApp> implements Specification<TenantApp> {
+public class Y9TenantAppSpecification implements Specification<Y9TenantApp> {
 
     private static final long serialVersionUID = -4477532138695659736L;
 
-    private String tenantName;
-    private Boolean verify;
-    private String createTime;
-    private String verifyTime;
-    private Boolean tenancy;
-    private String systemId;
-
-    private String appName;
+    private TenantAppQuery tenantAppQuery;
 
     public Y9TenantAppSpecification() {
         super();
     }
 
-    public Y9TenantAppSpecification(
-        Boolean verify,
-        String tenantName,
-        String createTime,
-        String verifyTime,
-        Boolean tenancy,
-        String systemId) {
+    public Y9TenantAppSpecification(TenantAppQuery tenantAppQuery) {
         super();
-        this.verify = verify;
-        this.tenantName = tenantName;
-        this.createTime = createTime;
-        this.verifyTime = verifyTime;
-        this.tenancy = tenancy;
-        this.systemId = systemId;
-    }
-
-    public Y9TenantAppSpecification(
-        Boolean verify,
-        String tenantName,
-        String createTime,
-        String verifyTime,
-        Boolean tenancy,
-        String systemId,
-        String appName) {
-        super();
-        this.verify = verify;
-        this.tenantName = tenantName;
-        this.createTime = createTime;
-        this.verifyTime = verifyTime;
-        this.tenancy = tenancy;
-        this.systemId = systemId;
-        this.appName = appName;
-    }
-
-    public String getAppName() {
-        return appName;
-    }
-
-    public void setAppName(String appName) {
-        this.appName = appName;
-    }
-
-    public String getSystemId() {
-        return systemId;
-    }
-
-    public void setSystemId(String systemId) {
-        this.systemId = systemId;
-    }
-
-    public Boolean getTenancy() {
-        return tenancy;
-    }
-
-    public void setTenancy(Boolean tenancy) {
-        this.tenancy = tenancy;
-    }
-
-    public String getTenantName() {
-        return tenantName;
-    }
-
-    public void setTenantName(String tenantName) {
-        this.tenantName = tenantName;
-    }
-
-    public Boolean getVerify() {
-        return verify;
-    }
-
-    public void setVerify(Boolean verify) {
-        this.verify = verify;
-    }
-
-    public String getcreateTime() {
-        return createTime;
-    }
-
-    public String getverifyTime() {
-        return verifyTime;
+        this.tenantAppQuery = tenantAppQuery;
     }
 
     private boolean isNullOrEmpty(Object value) {
@@ -124,59 +43,58 @@ public class Y9TenantAppSpecification<TenantApp> implements Specification<Tenant
         return value == null;
     }
 
-    public void setVerifyTime(String verifyTime) {
-        this.verifyTime = verifyTime;
-    }
-
-    public void setcreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
     @Override
-    public Predicate toPredicate(Root<TenantApp> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+    public Predicate toPredicate(Root<Y9TenantApp> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Predicate predicate = cb.conjunction();
-        List<Expression<Boolean>> expressions = predicate.getExpressions();
-        if (verify != null) {
-            expressions.add(cb.equal(root.get("verify").as(Boolean.class), verify));
+        List<Predicate> list = new ArrayList<>();
+        if (tenantAppQuery.getVerify() != null) {
+            list.add(cb.equal(root.get("verify").as(Boolean.class), tenantAppQuery.getVerify()));
         }
-        if (StringUtils.isNotBlank(tenantName)) {
-            expressions.add(cb.like(root.get("tenantName").as(String.class), "%" + tenantName + "%"));
+        if (StringUtils.isNotBlank(tenantAppQuery.getTenantName())) {
+            list.add(cb.like(root.get("tenantName").as(String.class), "%" + tenantAppQuery.getTenantName() + "%"));
         }
 
-        if (StringUtils.isNotBlank(appName)) {
-            expressions.add(cb.like(root.get("appName").as(String.class), "%" + appName + "%"));
+        if (StringUtils.isNotBlank(tenantAppQuery.getAppName())) {
+            list.add(cb.like(root.get("appName").as(String.class), "%" + tenantAppQuery.getAppName() + "%"));
         }
-        if (createTime != null || verifyTime != null) {
-            if (!isNullOrEmpty(createTime)) {
-                try {
-                    expressions
-                        .add(cb.greaterThanOrEqualTo(root.get("verifyTime").as(Date.class), sdf.parse(createTime)));
-                } catch (ParseException e) {
-                    LOGGER.warn(e.getMessage(), e);
-                }
-            }
-            if (!isNullOrEmpty(verifyTime)) {
-                try {
-                    expressions.add(cb.lessThanOrEqualTo(root.get("verifyTime").as(Date.class), sdf.parse(verifyTime)));
-                } catch (ParseException e) {
-                    LOGGER.warn(e.getMessage(), e);
-                }
-            }
+
+        if (tenantAppQuery.getTenancy() != null) {
+            list.add(cb.equal(root.get("tenancy"), tenantAppQuery.getTenancy()));
         }
-        if (tenancy != null) {
-            expressions.add(cb.equal(root.get("tenancy"), tenancy));
-        }
-        if (systemId != null && !"3".equals(systemId) && !"".equals(systemId)) {
-            String[] sid = systemId.split(",");
+        if (tenantAppQuery.getSystemIds() != null && !"3".equals(tenantAppQuery.getSystemIds())
+            && !"".equals(tenantAppQuery.getSystemIds())) {
+            String[] sid = tenantAppQuery.getSystemIds().split(",");
             // in条件拼接
             In<String> in = cb.in(root.get("systemId").as(String.class));
             for (String id : sid) {
                 in.value(id);
             }
-            expressions.add(in);
+            list.add(in);
         }
-        return predicate;
+
+        if (tenantAppQuery.getCreateTime() != null || tenantAppQuery.getVerifyTime() != null) {
+            if (!isNullOrEmpty(tenantAppQuery.getCreateTime())) {
+                try {
+                    list.add(cb.greaterThanOrEqualTo(root.get("verifyTime").as(Date.class),
+                        sdf.parse(tenantAppQuery.getCreateTime())));
+                } catch (ParseException e) {
+                    LOGGER.warn(e.getMessage(), e);
+                }
+            }
+            if (!isNullOrEmpty(tenantAppQuery.getVerifyTime())) {
+                try {
+                    list.add(cb.lessThanOrEqualTo(root.get("verifyTime").as(Date.class),
+                        sdf.parse(tenantAppQuery.getVerifyTime())));
+                } catch (ParseException e) {
+                    LOGGER.warn(e.getMessage(), e);
+                }
+            }
+        }
+        // 如果没有条件，返回空查询
+        if (list.isEmpty()) {
+            return cb.conjunction(); // 相当于 WHERE 1=1
+        }
+        return cb.and(list.toArray(new Predicate[list.size()]));
     }
 
 }

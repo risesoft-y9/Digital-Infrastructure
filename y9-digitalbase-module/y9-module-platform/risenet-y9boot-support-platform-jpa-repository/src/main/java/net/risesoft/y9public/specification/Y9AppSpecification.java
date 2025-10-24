@@ -6,15 +6,19 @@ import java.util.List;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaBuilder.In;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import net.risesoft.y9public.entity.resource.Y9App;
 
+@Setter
+@Getter
 public class Y9AppSpecification implements Specification<Y9App> {
 
     private static final long serialVersionUID = 5719564952546180907L;
@@ -38,35 +42,9 @@ public class Y9AppSpecification implements Specification<Y9App> {
         this.appName = appName;
     }
 
-    public String getAppName() {
-        return appName;
-    }
-
-    public void setAppName(String appName) {
-        this.appName = appName;
-    }
-
-    public String getIds() {
-        return ids;
-    }
-
-    public void setIds(String ids) {
-        this.ids = ids;
-    }
-
-    public String getSystemId() {
-        return systemId;
-    }
-
-    public void setSystemId(String systemId) {
-        this.systemId = systemId;
-    }
-
     @Override
     public Predicate toPredicate(Root<Y9App> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-        Predicate predicate = cb.conjunction();
-        List<Predicate> predicateList = new ArrayList<>();
-        List<Expression<Boolean>> expressions = predicate.getExpressions();
+        List<Predicate> list = new ArrayList<>();
         if (StringUtils.hasText(ids)) {
             String[] sid = ids.split(",");
             // in条件拼接
@@ -74,17 +52,19 @@ public class Y9AppSpecification implements Specification<Y9App> {
             for (String id : sid) {
                 in.value(id);
             }
-            predicateList.add(in);
+            list.add(in);
         }
         if (StringUtils.hasText(systemId)) {
-            expressions.add(cb.equal(root.get("systemId").as(String.class), systemId));
-            predicateList.add(cb.equal(root.get("systemId").as(String.class), systemId));
+            list.add(cb.equal(root.get("systemId").as(String.class), systemId));
         }
         if (StringUtils.hasText(appName)) {
-            expressions.add(cb.like(root.get("name").as(String.class), "%" + appName + "%"));
-            predicateList.add(cb.like(root.get("name").as(String.class), "%" + appName + "%"));
+            list.add(cb.like(root.get("name").as(String.class), "%" + appName + "%"));
         }
-        return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
+        // 如果没有条件，返回空查询
+        if (list.isEmpty()) {
+            return cb.conjunction(); // 相当于 WHERE 1=1
+        }
+        return cb.and(list.toArray(new Predicate[list.size()]));
     }
 
     public static Specification<Y9App> searchBysystemIdAndName(String systemId, String name) {

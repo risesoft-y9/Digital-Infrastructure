@@ -1,10 +1,10 @@
 package net.risesoft.y9public.specification;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -31,23 +31,26 @@ public class Y9AuditLogSpecification implements Specification<Y9AuditLog> {
 
     @Override
     public Predicate toPredicate(Root<Y9AuditLog> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-        Predicate predicate = criteriaBuilder.conjunction();
-        List<Expression<Boolean>> expressions = predicate.getExpressions();
+        List<Predicate> list = new ArrayList<>();
         if (StringUtils.hasText(auditLogQuery.getTenantId())) {
-            expressions.add(criteriaBuilder.equal(root.get("tenantId"), auditLogQuery.getTenantId()));
+            list.add(criteriaBuilder.equal(root.get("tenantId"), auditLogQuery.getTenantId()));
         }
         if (StringUtils.hasText(auditLogQuery.getAction())) {
-            expressions.add(criteriaBuilder.equal(root.get("action"), auditLogQuery.getAction()));
+            list.add(criteriaBuilder.equal(root.get("action"), auditLogQuery.getAction()));
         }
         if (StringUtils.hasText(auditLogQuery.getDescription())) {
-            expressions.add(criteriaBuilder.like(root.get("description"), "%" + auditLogQuery.getDescription() + "%"));
+            list.add(criteriaBuilder.like(root.get("description"), "%" + auditLogQuery.getDescription() + "%"));
         }
         if (auditLogQuery.getStartTime() != null) {
-            expressions.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createTime"), auditLogQuery.getStartTime()));
+            list.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createTime"), auditLogQuery.getStartTime()));
         }
         if (auditLogQuery.getEndTime() != null) {
-            expressions.add(criteriaBuilder.lessThanOrEqualTo(root.get("createTime"), auditLogQuery.getEndTime()));
+            list.add(criteriaBuilder.lessThanOrEqualTo(root.get("createTime"), auditLogQuery.getEndTime()));
         }
-        return predicate;
+        // 如果没有条件，返回空查询
+        if (list.isEmpty()) {
+            return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+        }
+        return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
     }
 }

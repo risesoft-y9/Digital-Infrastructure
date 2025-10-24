@@ -31,6 +31,7 @@ import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
 import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
 import net.risesoft.y9public.service.tenant.Y9TenantAppService;
 import net.risesoft.y9public.specification.Y9TenantAppSpecification;
+import net.risesoft.y9public.specification.query.TenantAppQuery;
 
 /**
  * @author dingzhaojun
@@ -121,18 +122,23 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
         String verifyTime, Boolean tenancy, String systemId) {
         Sort sort = Sort.by(Sort.Direction.ASC, "verify").and(Sort.by(Sort.Direction.DESC, "createTime"));
         PageRequest pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, sort);
-        Y9TenantAppSpecification<Y9TenantApp> spec =
-            new Y9TenantAppSpecification<>(verify, tenantName, createTime, verifyTime, tenancy, systemId);
+        TenantAppQuery tenantAppQuery = TenantAppQuery.builder()
+            .verify(verify)
+            .tenantName(tenantName)
+            .createTime(createTime)
+            .verifyTime(verifyTime)
+            .tenancy(tenancy)
+            .systemIds(systemId)
+            .build();
+        Y9TenantAppSpecification spec = new Y9TenantAppSpecification(tenantAppQuery);
         return y9TenantAppRepository.findAll(spec, pageable);
     }
 
     @Override
-    public Page<Y9TenantApp> page(Integer page, Integer rows, Boolean verify, String tenantName, String createTime,
-        String verifyTime, Boolean tenancy, String appName, String systemIds) {
+    public Page<Y9TenantApp> page(Integer page, Integer rows, TenantAppQuery tenantAppQuery) {
         Sort sort = Sort.by(Sort.Direction.DESC, "createTime").and(Sort.by(Sort.Direction.ASC, "verify"));
         PageRequest pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, sort);
-        Y9TenantAppSpecification<Y9TenantApp> spec =
-            new Y9TenantAppSpecification<>(verify, tenantName, createTime, verifyTime, tenancy, systemIds, appName);
+        Y9TenantAppSpecification spec = new Y9TenantAppSpecification(tenantAppQuery);
         return y9TenantAppRepository.findAll(spec, pageable);
     }
 
