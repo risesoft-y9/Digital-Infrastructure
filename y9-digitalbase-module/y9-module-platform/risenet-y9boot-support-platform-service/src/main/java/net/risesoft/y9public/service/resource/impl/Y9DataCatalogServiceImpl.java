@@ -106,11 +106,13 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     }
 
     @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
     public List<DataCatalog> treeSearch(String tenantId, String name, String treeType) {
         return this.treeSearch(tenantId, name, treeType, null, null);
     }
 
     @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
     public List<DataCatalog> getTree(String tenantId, String parentId, String treeType) {
         return this.getTree(tenantId, parentId, treeType, null, false, null, null);
     }
@@ -266,6 +268,7 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     }
 
     @EventListener
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void onDataCatalogDeleted(Y9EntityDeletedEvent<Y9DataCatalog> event) {
         Y9DataCatalog entity = event.getEntity();
         this.deleteByParentId(entity.getId());
