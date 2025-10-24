@@ -331,6 +331,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     }
 
     @EventListener
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void onRoleDeleted(Y9EntityDeletedEvent<Y9Role> event) {
         Y9Role y9Role = event.getEntity();
         if (RoleTypeEnum.FOLDER.equals(y9Role.getType())) {
