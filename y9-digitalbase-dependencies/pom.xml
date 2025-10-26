@@ -114,8 +114,8 @@
 
         <spring-boot.version>3.5.6</spring-boot.version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
-        <alibaba-cloud.version>2023.0.3.3</alibaba-cloud.version>
-        <alibaba-nacos.version>2.4.2</alibaba-nacos.version>
+        <alibaba-cloud.version>2025.0.0.0</alibaba-cloud.version>
+        <alibaba-nacos.version>3.0.3</alibaba-nacos.version>
 
         <antisamy.version>1.7.8</antisamy.version>
         <aspectj.version>1.9.24</aspectj.version>

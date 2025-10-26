@@ -11,7 +11,7 @@ ojdbc-bom = "23.8.0.25.04"
 # hutool
 cn-hutool-hutool-all = "5.8.40"
 # alibaba
-spring-cloud-alibaba = "2023.0.3.3"
+spring-cloud-alibaba = "2025.0.0.0"
 alibaba-transmittable-thread-local = "2.14.5"
 # 人大金仓
 cn-com-kingbase-kesdialect-for-hibernate4 = "1.0.0"

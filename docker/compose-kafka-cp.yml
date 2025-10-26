@@ -34,8 +34,9 @@ services:
       - /Users/dingzhaojun/docker-data/kafka/config:/mnt/shared/config
 
   kafbat-ui:
-    container_name: kafbat-ui
     image: ghcr.io/kafbat/kafka-ui:main
+    container_name: kafbat-ui
+    restart: always    
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
