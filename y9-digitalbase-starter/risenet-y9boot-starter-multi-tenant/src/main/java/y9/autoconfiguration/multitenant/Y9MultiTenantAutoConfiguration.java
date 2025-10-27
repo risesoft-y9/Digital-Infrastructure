@@ -1,5 +1,7 @@
 package y9.autoconfiguration.multitenant;
 
+import java.util.Map;
+
 import org.hibernate.integrator.api.integrator.Y9TenantHibernateInfoHolder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -8,7 +10,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -33,15 +37,15 @@ import net.risesoft.listener.MultiTenantApplicationReadyListener;
 import net.risesoft.listener.TenantAppEventListener;
 import net.risesoft.listener.TenantDataSourceEventListener;
 import net.risesoft.listener.TenantSystemRegisteredEventListener;
-import net.risesoft.schema.JpaSchemaUpdater;
-import net.risesoft.schema.LiquibaseSchemaUpdater;
-import net.risesoft.schema.NoneSchemaUpdater;
-import net.risesoft.schema.SchemaUpdater;
+import net.risesoft.schema.JpaSchemaUpdaterOnTenantSystemEvent;
+import net.risesoft.schema.LiquibaseSchemaUpdaterOnTenantSystemEvent;
+import net.risesoft.schema.NoneSchemaUpdaterOnTenantSystemEvent;
+import net.risesoft.schema.SchemaUpdaterOnTenantSystemEvent;
+import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.feature.multitenant.Y9MultiTenantProperties;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
-
-import y9.autoconfiguration.tenant.Y9MultiTenantSchemaUpdaterOnApplicationReady;
 
 /**
  * 多租户自动配置类
@@ -63,31 +67,53 @@ public class Y9MultiTenantAutoConfiguration {
         return new Y9TenantDataSourceLookup(ds, environment.getProperty("y9.systemName"));
     }
 
-    @Bean
-    @ConditionalOnBean(name = "y9MultiTenantSpringLiquibase")
-    public SchemaUpdater liquibaseDbUpdater(Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase) {
-        return new LiquibaseSchemaUpdater(y9MultiTenantSpringLiquibase);
+    @Configuration(proxyBeanMethods = false)
+    public static class SchemaUpdaterOnTenantSystemEventConfiguration {
+        @Bean
+        @ConditionalOnBean(name = "y9MultiTenantSpringLiquibase")
+        public SchemaUpdaterOnTenantSystemEvent
+            liquibaseDbUpdater(Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase) {
+            return new LiquibaseSchemaUpdaterOnTenantSystemEvent(y9MultiTenantSpringLiquibase);
+        }
+
+        @Bean
+        @ConditionalOnMissingBean(name = "liquibaseDbUpdater")
+        @ConditionalOnClass(value = Y9TenantHibernateInfoHolder.class)
+        public SchemaUpdaterOnTenantSystemEvent jpaDbUpdater() {
+            return new JpaSchemaUpdaterOnTenantSystemEvent();
+        }
+
+        @Bean
+        @ConditionalOnMissingBean(SchemaUpdaterOnTenantSystemEvent.class)
+        public SchemaUpdaterOnTenantSystemEvent noneSchemaUpdater() {
+            return new NoneSchemaUpdaterOnTenantSystemEvent();
+        }
     }
 
-    @Bean
-    @ConditionalOnMissingBean(name = "liquibaseDbUpdater")
-    @ConditionalOnClass(value = Y9TenantHibernateInfoHolder.class)
-    public SchemaUpdater jpaDbUpdater() {
-        return new JpaSchemaUpdater();
-    }
+    @Configuration(proxyBeanMethods = false)
+    public static class SchemaUpdaterOnApplicationReadyEventConfiguration {
+        @Bean
+        @ConditionalOnMissingBean(name = "liquibaseDbUpdater")
+        @ConditionalOnClass(value = Y9TenantHibernateInfoHolder.class)
+        public ApplicationListener<ApplicationReadyEvent>
+            jpaSchemaUpdaterOnApplicationReadyEvent(Y9TenantDataSourceLookup y9TenantDataSourceLookup) {
+            return applicationReadyEvent -> {
+                Map<String, DruidDataSource> map = y9TenantDataSourceLookup.getDataSources();
+                for (String tenantId : map.keySet()) {
+                    Y9LoginUserHolder.setTenantId(tenantId);
+                    Y9TenantHibernateInfoHolder.schemaUpdate(Y9Context.getEnvironment());
+                }
+            };
+        }
 
-    @Bean
-    @ConditionalOnMissingBean(name = "liquibaseDbUpdater")
-    @ConditionalOnClass(value = Y9TenantHibernateInfoHolder.class)
-    public Y9MultiTenantSchemaUpdaterOnApplicationReady
-        y9MultiTenantSchemaUpdaterOnApplicationReady(Y9TenantDataSourceLookup y9TenantDataSourceLookup) {
-        return new Y9MultiTenantSchemaUpdaterOnApplicationReady(y9TenantDataSourceLookup);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(SchemaUpdater.class)
-    public SchemaUpdater noneSchemaUpdater() {
-        return new NoneSchemaUpdater();
+        @Bean
+        @ConditionalOnBean(name = "y9MultiTenantSpringLiquibase")
+        public ApplicationListener<ApplicationReadyEvent>
+            liquibaseSchemaUpdaterOnApplicationReadyEvent(Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase) {
+            return applicationReadyEvent -> {
+                y9MultiTenantSpringLiquibase.updateAll();
+            };
+        }
     }
 
     @Configuration(proxyBeanMethods = false)
@@ -99,9 +125,10 @@ public class Y9MultiTenantAutoConfiguration {
 
         @Bean
         public TenantSystemRegisteredEventListener tenantSystemRegisteredEventListener(
-            Y9TenantDataSourceLookup y9TenantDataSourceLookup, SchemaUpdater schemaUpdater,
-            MultiTenantDao multiTenantDao) {
-            return new TenantSystemRegisteredEventListener(y9TenantDataSourceLookup, schemaUpdater, multiTenantDao);
+            Y9TenantDataSourceLookup y9TenantDataSourceLookup,
+            SchemaUpdaterOnTenantSystemEvent schemaUpdaterOnTenantSystemEvent, MultiTenantDao multiTenantDao) {
+            return new TenantSystemRegisteredEventListener(y9TenantDataSourceLookup, schemaUpdaterOnTenantSystemEvent,
+                multiTenantDao);
         }
 
         @Bean

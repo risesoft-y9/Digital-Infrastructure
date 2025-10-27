@@ -8,6 +8,7 @@ import org.springframework.core.io.ResourceLoader;
 import com.alibaba.druid.pool.DruidDataSource;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.y9.configuration.feature.liquibase.Y9LiquibaseProperties;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
@@ -21,6 +22,7 @@ import liquibase.integration.spring.SpringLiquibase;
  * @since 9.6.3
  */
 @RequiredArgsConstructor
+@Slf4j
 public class Y9MultiTenantSpringLiquibase implements InitializingBean {
 
     private final Y9TenantDataSourceLookup y9TenantDataSourceLookup;
@@ -29,15 +31,14 @@ public class Y9MultiTenantSpringLiquibase implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        updateAll();
+        // updateAll();
     }
 
     /**
      * 更新所有租户数据源的表结构
      *
-     * @throws LiquibaseException - all Liquibase exceptions.
      */
-    public void updateAll() throws LiquibaseException {
+    public void updateAll() {
         Map<String, DruidDataSource> dataSources = y9TenantDataSourceLookup.getDataSources();
         for (Map.Entry<String, DruidDataSource> stringDruidDataSourceEntry : dataSources.entrySet()) {
             DruidDataSource dataSource = stringDruidDataSourceEntry.getValue();
@@ -45,19 +46,22 @@ public class Y9MultiTenantSpringLiquibase implements InitializingBean {
         }
     }
 
-    private void update(DruidDataSource dataSource) throws LiquibaseException {
-        SpringLiquibase liquibase =
-            LiquibaseUtil.getSpringLiquibase(dataSource, this.properties, this.resourceLoader, true);
-        liquibase.afterPropertiesSet();
+    private void update(DruidDataSource dataSource) {
+        try {
+            SpringLiquibase liquibase =
+                LiquibaseUtil.getSpringLiquibase(dataSource, this.properties, this.resourceLoader, true);
+            liquibase.afterPropertiesSet();
+        } catch (LiquibaseException e) {
+            LOGGER.warn("更新表结构异常", e);
+        }
     }
 
     /**
      * 更新单个租户数据源的表结构
      *
      * @param tenantId 租户id
-     * @throws LiquibaseException - all Liquibase exceptions.
      */
-    public void update(String tenantId) throws LiquibaseException {
+    public void update(String tenantId) {
         // 方法暴露出去 工程中可调用执行
         DruidDataSource dataSource = (DruidDataSource)y9TenantDataSourceLookup.getDataSource(tenantId);
         update(dataSource);

@@ -5,8 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.liquibase.Y9MultiTenantSpringLiquibase;
 
-import liquibase.exception.LiquibaseException;
-
 /**
  * liquibase 更新器
  * 
@@ -16,12 +14,12 @@ import liquibase.exception.LiquibaseException;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class LiquibaseSchemaUpdater implements SchemaUpdater {
+public class LiquibaseSchemaUpdaterOnTenantSystemEvent implements SchemaUpdaterOnTenantSystemEvent {
 
     private final Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase;
 
     @Override
-    public void doUpdate(String tenantId) throws LiquibaseException {
+    public void doUpdate(String tenantId) {
         y9MultiTenantSpringLiquibase.update(tenantId);
     }
 }
