@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -55,6 +54,15 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
 
     private static final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd");
 
+    private static PageImpl<Y9LogFlowableAccessLogDO>
+        poPageToDoPage(Page<Y9LogFlowableAccessLog> flowableAccessLogPage) {
+        List<Y9LogFlowableAccessLogDO> list = flowableAccessLogPage.getContent()
+            .stream()
+            .map(l -> Y9ModelConvertUtil.convert(l, Y9LogFlowableAccessLogDO.class))
+            .collect(Collectors.toList());
+        return new PageImpl<>(list, flowableAccessLogPage.getPageable(), flowableAccessLogPage.getTotalElements());
+    }
+
     private final Y9LogFlowableAccessLogRepository y9logFlowableAccessLogRepository;
 
     public Y9logFlowableAccessLogCustomRepositoryImpl(
@@ -71,8 +79,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
             @Override
             public Predicate toPredicate(Root<Y9LogFlowableAccessLog> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
+                List<Predicate> list = new ArrayList<>();
                 list.add(criteriaBuilder.isNotNull(root.get(Y9LogSearchConsts.USER_NAME).as(String.class)));
 
                 if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
@@ -89,7 +96,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                     list.add(criteriaBuilder.greaterThanOrEqualTo(
                         root.get(Y9LogSearchConsts.ELAPSED_TIME).as(Long.class), elapsedTimeStart));
                 }
-                return predicate;
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         });
     }
@@ -128,15 +135,6 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
         return list;
     }
 
-    private static PageImpl<Y9LogFlowableAccessLogDO>
-        poPageToDoPage(Page<Y9LogFlowableAccessLog> flowableAccessLogPage) {
-        List<Y9LogFlowableAccessLogDO> list = flowableAccessLogPage.getContent()
-            .stream()
-            .map(l -> Y9ModelConvertUtil.convert(l, Y9LogFlowableAccessLogDO.class))
-            .collect(Collectors.toList());
-        return new PageImpl<>(list, flowableAccessLogPage.getPageable(), flowableAccessLogPage.getTotalElements());
-    }
-
     @Override
     public Page<Y9LogFlowableAccessLogDO> page(int page, int rows, String sort) {
         Pageable pageable;
@@ -154,8 +152,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                 @Override
                 public Predicate toPredicate(Root<Y9LogFlowableAccessLog> root, CriteriaQuery<?> query,
                     CriteriaBuilder criteriaBuilder) {
-                    Predicate predicate = criteriaBuilder.conjunction();
-                    List<Expression<Boolean>> list = predicate.getExpressions();
+                    List<Predicate> list = new ArrayList<>();
 
                     if (StringUtils.isNotBlank(tenantId)) {
                         list.add(
@@ -163,7 +160,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                     }
 
                     list.add(criteriaBuilder.isNotNull(root.get(Y9LogSearchConsts.USER_NAME).as(String.class)));
-                    return predicate;
+                    return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
                 }
             }, pageable);
         return poPageToDoPage(flowableAccessLogPage);
@@ -181,8 +178,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
             @Override
             public Predicate toPredicate(Root<Y9LogFlowableAccessLog> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
+                List<Predicate> list = new ArrayList<>();
 
                 if (StringUtils.isNotBlank(searchDto.getLogLevel())) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.LOG_LEVEL).as(String.class),
@@ -231,7 +227,11 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                     }
                 }
 
-                return predicate;
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         }, pageable);
 
@@ -253,8 +253,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                 @Override
                 public Predicate toPredicate(Root<Y9LogFlowableAccessLog> root, CriteriaQuery<?> query,
                     CriteriaBuilder criteriaBuilder) {
-                    Predicate predicate = criteriaBuilder.conjunction();
-                    List<Expression<Boolean>> list = predicate.getExpressions();
+                    List<Predicate> list = new ArrayList<>();
                     if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
                         list.add(
                             criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
@@ -304,7 +303,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                         }
                     }
                     list.add(criteriaBuilder.isNotNull(root.get(Y9LogSearchConsts.USER_NAME).as(String.class)));
-                    return predicate;
+                    return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
                 }
             }, pageable);
         return poPageToDoPage(flowableAccessLogPage);
@@ -324,8 +323,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                 @Override
                 public Predicate toPredicate(Root<Y9LogFlowableAccessLog> root, CriteriaQuery<?> query,
                     CriteriaBuilder criteriaBuilder) {
-                    Predicate predicate = criteriaBuilder.conjunction();
-                    List<Expression<Boolean>> list = predicate.getExpressions();
+                    List<Predicate> list = new ArrayList<>();
 
                     list.add(criteriaBuilder.isNotNull(root.get(Y9LogSearchConsts.USER_NAME).as(String.class)));
 
@@ -382,7 +380,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                             e.printStackTrace();
                         }
                     }
-                    return predicate;
+                    return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
                 }
             }, pageable);
         return poPageToDoPage(flowableAccessLogPage);
@@ -401,8 +399,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                 @Override
                 public Predicate toPredicate(Root<Y9LogFlowableAccessLog> root, CriteriaQuery<?> query,
                     CriteriaBuilder criteriaBuilder) {
-                    Predicate predicate = criteriaBuilder.conjunction();
-                    List<Expression<Boolean>> list = predicate.getExpressions();
+                    List<Predicate> list = new ArrayList<>();
                     if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
                         list.add(
                             criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
@@ -462,7 +459,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                         }
                     }
                     list.add(criteriaBuilder.isNotNull(root.get(Y9LogSearchConsts.USER_NAME).as(String.class)));
-                    return predicate;
+                    return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
                 }
             }, pageable);
         return poPageToDoPage(flowableAccessLogPage);

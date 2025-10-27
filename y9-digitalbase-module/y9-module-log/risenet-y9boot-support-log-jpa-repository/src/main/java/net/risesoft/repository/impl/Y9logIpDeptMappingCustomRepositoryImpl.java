@@ -1,12 +1,12 @@
 package net.risesoft.repository.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -44,45 +44,35 @@ public class Y9logIpDeptMappingCustomRepositoryImpl implements Y9logIpDeptMappin
     private final Y9LogIpDeptMappingRepository y9logIpDeptMappingRepository;
 
     @Override
-    public Y9Page<Y9LogIpDeptMappingDO> pageSearchList(int page, int rows, String clientIp4Abc, String deptName) {
+    public void deleteById(String id) {
+        y9logIpDeptMappingRepository.deleteById(id);
+    }
 
-        Pageable pageable =
-            PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.by(Sort.Direction.ASC, "clientIpSection"));
-
-        Page<Y9LogIpDeptMapping> pageInfo = y9logIpDeptMappingRepository.findAll(new Specification<>() {
-            private static final long serialVersionUID = -2210269486911993525L;
-
-            @Override
-            public Predicate toPredicate(Root<Y9LogIpDeptMapping> root, CriteriaQuery<?> query,
-                CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
-
-                if (StringUtils.isNotBlank(deptName)) {
-                    list.add(criteriaBuilder.like(root.get("deptName").as(String.class), "*" + deptName + "*"));
-                }
-                if (StringUtils.isNotBlank(clientIp4Abc)) {
-                    list.add(
-                        criteriaBuilder.like(root.get("clientIpSection").as(String.class), "*" + clientIp4Abc + "*"));
-                }
-
-                String tenantId = Y9LoginUserHolder.getTenantId();
-                if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
-                    list.add(criteriaBuilder.equal(root.get("tenantId").as(String.class), tenantId));
-                }
-                return predicate;
-            }
-        }, pageable);
-        List<Y9LogIpDeptMappingDO> list = pageInfo.getContent()
+    @Override
+    public List<Y9LogIpDeptMappingDO> findAll(Sort sort) {
+        return y9logIpDeptMappingRepository.findAll(sort)
             .stream()
             .map(m -> Y9ModelConvertUtil.convert(m, Y9LogIpDeptMappingDO.class))
             .collect(Collectors.toList());
-        return Y9Page.success(page, pageInfo.getTotalPages(), pageInfo.getTotalElements(), list);
     }
 
     @Override
     public List<Y9LogIpDeptMappingDO> findByClientIpSection(String clientIpSection) {
         return y9logIpDeptMappingRepository.findByClientIpSection(clientIpSection)
+            .stream()
+            .map(m -> Y9ModelConvertUtil.convert(m, Y9LogIpDeptMappingDO.class))
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Y9LogIpDeptMappingDO> findById(String id) {
+        return y9logIpDeptMappingRepository.findById(id)
+            .map(m -> Y9ModelConvertUtil.convert(m, Y9LogIpDeptMappingDO.class));
+    }
+
+    @Override
+    public List<Y9LogIpDeptMappingDO> findByTenantId(String tenantId, Sort sort) {
+        return y9logIpDeptMappingRepository.findByTenantId(tenantId, sort)
             .stream()
             .map(m -> Y9ModelConvertUtil.convert(m, Y9LogIpDeptMappingDO.class))
             .collect(Collectors.toList());
@@ -97,8 +87,53 @@ public class Y9logIpDeptMappingCustomRepositoryImpl implements Y9logIpDeptMappin
     }
 
     @Override
-    public void deleteById(String id) {
-        y9logIpDeptMappingRepository.deleteById(id);
+    public Page<Y9LogIpDeptMappingDO> page(Pageable pageable) {
+        Page<Y9LogIpDeptMapping> page = y9logIpDeptMappingRepository.findAll(pageable);
+        List<Y9LogIpDeptMappingDO> list = page.getContent()
+            .stream()
+            .map(m -> Y9ModelConvertUtil.convert(m, Y9LogIpDeptMappingDO.class))
+            .collect(Collectors.toList());
+        return new PageImpl<>(list, pageable, page.getTotalElements());
+    }
+
+    @Override
+    public Y9Page<Y9LogIpDeptMappingDO> pageSearchList(int page, int rows, String clientIp4Abc, String deptName) {
+
+        Pageable pageable =
+            PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.by(Sort.Direction.ASC, "clientIpSection"));
+
+        Page<Y9LogIpDeptMapping> pageInfo = y9logIpDeptMappingRepository.findAll(new Specification<>() {
+            private static final long serialVersionUID = -2210269486911993525L;
+
+            @Override
+            public Predicate toPredicate(Root<Y9LogIpDeptMapping> root, CriteriaQuery<?> query,
+                CriteriaBuilder criteriaBuilder) {
+                List<Predicate> list = new ArrayList<>();
+
+                if (StringUtils.isNotBlank(deptName)) {
+                    list.add(criteriaBuilder.like(root.get("deptName").as(String.class), "*" + deptName + "*"));
+                }
+                if (StringUtils.isNotBlank(clientIp4Abc)) {
+                    list.add(
+                        criteriaBuilder.like(root.get("clientIpSection").as(String.class), "*" + clientIp4Abc + "*"));
+                }
+
+                String tenantId = Y9LoginUserHolder.getTenantId();
+                if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+                    list.add(criteriaBuilder.equal(root.get("tenantId").as(String.class), tenantId));
+                }
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
+            }
+        }, pageable);
+        List<Y9LogIpDeptMappingDO> list = pageInfo.getContent()
+            .stream()
+            .map(m -> Y9ModelConvertUtil.convert(m, Y9LogIpDeptMappingDO.class))
+            .collect(Collectors.toList());
+        return Y9Page.success(page, pageInfo.getTotalPages(), pageInfo.getTotalElements(), list);
     }
 
     @Override
@@ -107,38 +142,6 @@ public class Y9logIpDeptMappingCustomRepositoryImpl implements Y9logIpDeptMappin
             Y9ModelConvertUtil.convert(y9LogIpDeptMappingDO, Y9LogIpDeptMapping.class);
         return Y9ModelConvertUtil.convert(y9logIpDeptMappingRepository.save(y9LogIpDeptMapping),
             Y9LogIpDeptMappingDO.class);
-    }
-
-    @Override
-    public List<Y9LogIpDeptMappingDO> findByTenantId(String tenantId, Sort sort) {
-        return y9logIpDeptMappingRepository.findByTenantId(tenantId, sort)
-            .stream()
-            .map(m -> Y9ModelConvertUtil.convert(m, Y9LogIpDeptMappingDO.class))
-            .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Y9LogIpDeptMappingDO> findAll(Sort sort) {
-        return y9logIpDeptMappingRepository.findAll(sort)
-            .stream()
-            .map(m -> Y9ModelConvertUtil.convert(m, Y9LogIpDeptMappingDO.class))
-            .collect(Collectors.toList());
-    }
-
-    @Override
-    public Optional<Y9LogIpDeptMappingDO> findById(String id) {
-        return y9logIpDeptMappingRepository.findById(id)
-            .map(m -> Y9ModelConvertUtil.convert(m, Y9LogIpDeptMappingDO.class));
-    }
-
-    @Override
-    public Page<Y9LogIpDeptMappingDO> page(Pageable pageable) {
-        Page<Y9LogIpDeptMapping> page = y9logIpDeptMappingRepository.findAll(pageable);
-        List<Y9LogIpDeptMappingDO> list = page.getContent()
-            .stream()
-            .map(m -> Y9ModelConvertUtil.convert(m, Y9LogIpDeptMappingDO.class))
-            .collect(Collectors.toList());
-        return new PageImpl<>(list, pageable, page.getTotalElements());
     }
 
 }
