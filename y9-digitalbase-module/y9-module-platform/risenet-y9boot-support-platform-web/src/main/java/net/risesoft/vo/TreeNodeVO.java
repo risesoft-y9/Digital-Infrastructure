@@ -1,4 +1,4 @@
-package net.risesoft.pojo;
+package net.risesoft.vo;
 
 import java.io.Serializable;
 

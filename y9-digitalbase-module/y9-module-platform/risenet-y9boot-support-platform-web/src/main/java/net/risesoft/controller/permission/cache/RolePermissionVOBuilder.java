@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.controller.permission.vo.RolePermissionVO;
 import net.risesoft.entity.permission.cache.Y9IdentityToRoleBase;
+import net.risesoft.vo.permission.RolePermissionVO;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.resource.Y9SystemService;

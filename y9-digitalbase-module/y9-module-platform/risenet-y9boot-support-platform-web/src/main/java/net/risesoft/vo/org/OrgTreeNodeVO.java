@@ -1,4 +1,4 @@
-package net.risesoft.controller.org.vo;
+package net.risesoft.vo.org;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +14,8 @@ import net.risesoft.enums.TreeTypeEnum;
 import net.risesoft.enums.platform.org.OrgTreeTypeEnum;
 import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.enums.platform.org.SexEnum;
-import net.risesoft.pojo.TreeNodeVO;
 import net.risesoft.service.org.CompositeOrgBaseService;
+import net.risesoft.vo.TreeNodeVO;
 
 /**
  * 组织树节点vo

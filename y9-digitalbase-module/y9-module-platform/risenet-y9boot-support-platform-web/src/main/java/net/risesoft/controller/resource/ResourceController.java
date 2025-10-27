@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.controller.resource.vo.ResourceBaseVO;
-import net.risesoft.controller.resource.vo.ResourceTreeNodeVO;
 import net.risesoft.enums.platform.TreeNodeType;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
@@ -29,6 +27,8 @@ import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.vo.resource.ResourceBaseVO;
+import net.risesoft.vo.resource.ResourceTreeNodeVO;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9App;

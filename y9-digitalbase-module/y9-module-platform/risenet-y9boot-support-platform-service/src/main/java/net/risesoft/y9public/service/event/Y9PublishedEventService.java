@@ -16,13 +16,6 @@ import net.risesoft.y9public.specification.query.PublishedEventQuery;
  * @date 2022/2/10
  */
 public interface Y9PublishedEventService {
-    /**
-     * 根据租户id，获取所有同步事件
-     *
-     * @param tenantId 租户id
-     * @return {@code List<Y9PublishedEvent>}
-     */
-    List<Y9PublishedEvent> listByTenantId(String tenantId);
 
     /**
      * 根据开始时间和租户id，获取从开始时间以及之后的所有同步事件

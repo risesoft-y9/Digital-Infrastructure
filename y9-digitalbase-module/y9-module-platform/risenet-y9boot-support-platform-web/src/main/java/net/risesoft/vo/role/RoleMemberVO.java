@@ -1,4 +1,4 @@
-package net.risesoft.controller.role.vo;
+package net.risesoft.vo.role;
 
 import java.io.Serializable;
 import java.util.Date;

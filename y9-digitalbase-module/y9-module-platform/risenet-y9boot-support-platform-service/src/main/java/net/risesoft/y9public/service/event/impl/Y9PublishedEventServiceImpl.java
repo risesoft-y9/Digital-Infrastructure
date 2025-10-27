@@ -31,12 +31,6 @@ public class Y9PublishedEventServiceImpl implements Y9PublishedEventService {
     private final Y9PublishedEventRepository y9PublishedEventRepository;
 
     @Override
-    public List<Y9PublishedEvent> listByTenantId(String tenantId) {
-        Sort sort = Sort.by(Sort.Direction.ASC, "createTime");
-        return y9PublishedEventRepository.findByTenantId(tenantId, sort);
-    }
-
-    @Override
     public List<Y9PublishedEvent> listByTenantId(String tenantId, Date startTime) {
         Sort sort = Sort.by(Sort.Direction.ASC, "createTime");
         PublishedEventQuery query = PublishedEventQuery.builder().tenantId(tenantId).startTime(startTime).build();

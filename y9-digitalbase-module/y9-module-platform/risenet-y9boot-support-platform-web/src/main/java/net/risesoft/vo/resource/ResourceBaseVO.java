@@ -1,4 +1,4 @@
-package net.risesoft.controller.resource.vo;
+package net.risesoft.vo.resource;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package net.risesoft.controller.org.vo;
+package net.risesoft.vo.org;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package net.risesoft.controller.resource.vo;
+package net.risesoft.vo.resource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import lombok.Setter;
 
 import net.risesoft.enums.TreeTypeEnum;
 import net.risesoft.model.platform.resource.DataCatalog;
-import net.risesoft.pojo.TreeNodeVO;
+import net.risesoft.vo.TreeNodeVO;
 import net.risesoft.y9.util.Y9BeanUtil;
 
 /**
