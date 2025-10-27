@@ -112,11 +112,11 @@ y9:
             kafkaEnabled: false
     service:
         org:
-            directUrl: https://test-api.youshengyun.com
+            directUrl: http://localhost:7055
     common:
         kafkaEnabled: false
-        logBaseUrl: https://test-api.youshengyun.com/server-log
-        orgBaseUrl: https://test-api.youshengyun.com/server-platform
+        logBaseUrl: http://localhost:7055/server-log
+        orgBaseUrl: http://localhost:7055/server-platform
     feature:
         apisix:
             enabled: false
