@@ -8,10 +8,10 @@ import lombok.RequiredArgsConstructor;
  * @since 9.6.3
  */
 @RequiredArgsConstructor
-public class NoneSchemaUpdater implements SchemaUpdater {
+public class NoneSchemaUpdaterOnTenantSystemEvent implements SchemaUpdaterOnTenantSystemEvent {
 
     @Override
-    public void doUpdate(String tenantId) throws Exception {
+    public void doUpdate(String tenantId) {
 
     }
 }

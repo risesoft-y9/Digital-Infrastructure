@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.dao.MultiTenantDao;
 import net.risesoft.init.TenantDataInitializer;
 import net.risesoft.model.platform.tenant.TenantSystem;
-import net.risesoft.schema.SchemaUpdater;
+import net.risesoft.schema.SchemaUpdaterOnTenantSystemEvent;
 import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
 import net.risesoft.y9.pubsub.event.Y9EventCommon;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
@@ -27,7 +27,7 @@ import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 public class TenantSystemRegisteredEventListener {
 
     private final Y9TenantDataSourceLookup y9TenantDataSourceLookup;
-    private final SchemaUpdater schemaUpdater;
+    private final SchemaUpdaterOnTenantSystemEvent schemaUpdaterOnTenantSystemEvent;
     private final MultiTenantDao multiTenantDao;
 
     private List<TenantDataInitializer> tenantDataInitializerList;
@@ -46,7 +46,7 @@ public class TenantSystemRegisteredEventListener {
 
                 y9TenantDataSourceLookup.loadDataSources();
 
-                schemaUpdater.doUpdate(tenantSystem.getTenantId());
+                schemaUpdaterOnTenantSystemEvent.doUpdate(tenantSystem.getTenantId());
                 LOGGER.info("租户数据结构更新完成");
 
                 if (tenantDataInitializerList != null && !tenantDataInitializerList.isEmpty()) {

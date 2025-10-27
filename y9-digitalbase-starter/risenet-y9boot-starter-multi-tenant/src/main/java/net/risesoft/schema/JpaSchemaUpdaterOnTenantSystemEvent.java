@@ -15,7 +15,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
  * @since 9.6.3
  */
 @RequiredArgsConstructor
-public class JpaSchemaUpdater implements SchemaUpdater {
+public class JpaSchemaUpdaterOnTenantSystemEvent implements SchemaUpdaterOnTenantSystemEvent {
 
     @Override
     public void doUpdate(String tenantId) {
