@@ -135,7 +135,7 @@
             {
                 type: 'input',
                 value: '',
-                key: 'oSName',
+                key: 'osName',
                 label: computed(() => t('操作系统')),
                 labelWidth: '82px',
                 span: settingStore.device === 'mobile' ? 24 : 6
