@@ -1,12 +1,12 @@
 package net.risesoft.repository.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -36,16 +36,15 @@ import net.risesoft.y9public.repository.Y9LogMappingRepository;
 @RequiredArgsConstructor
 public class Y9logMappingCustomRepositoryImpl implements Y9logMappingCustomRepository {
 
-    private final Y9LogMappingRepository y9logMappingRepository;
-
-    @Override
-    public String getCnModularName(String modularName) {
-        List<Y9LogMapping> list = y9logMappingRepository.findByModularName(modularName);
-        if (list.isEmpty()) {
-            return "";
-        }
-        return list.get(0).getModularCnName();
+    private static PageImpl<Y9LogMappingDO> poPageToDoPage(Page<Y9LogMapping> logMappingPage) {
+        List<Y9LogMappingDO> list = logMappingPage.getContent()
+            .stream()
+            .map(l -> Y9ModelConvertUtil.convert(l, Y9LogMappingDO.class))
+            .collect(Collectors.toList());
+        return new PageImpl<>(list, logMappingPage.getPageable(), logMappingPage.getTotalElements());
     }
+
+    private final Y9LogMappingRepository y9logMappingRepository;
 
     @Override
     public void deleteById(String id) {
@@ -58,17 +57,20 @@ public class Y9logMappingCustomRepositoryImpl implements Y9logMappingCustomRepos
     }
 
     @Override
-    public void save(Y9LogMappingDO y9LogMappingDO) {
-        Y9LogMapping y9LogMapping = Y9ModelConvertUtil.convert(y9LogMappingDO, Y9LogMapping.class);
-        y9logMappingRepository.save(y9LogMapping);
-    }
-
-    @Override
     public List<Y9LogMappingDO> findByModularName(String name) {
         return y9logMappingRepository.findByModularName(name)
             .stream()
             .map(m -> Y9ModelConvertUtil.convert(m, Y9LogMappingDO.class))
             .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getCnModularName(String modularName) {
+        List<Y9LogMapping> list = y9logMappingRepository.findByModularName(modularName);
+        if (list.isEmpty()) {
+            return "";
+        }
+        return list.get(0).getModularCnName();
     }
 
     @Override
@@ -88,8 +90,7 @@ public class Y9logMappingCustomRepositoryImpl implements Y9logMappingCustomRepos
             @Override
             public Predicate toPredicate(Root<Y9LogMapping> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
+                List<Predicate> list = new ArrayList<>();
 
                 if (StringUtils.isNotBlank(modularCnName)) {
                     list.add(criteriaBuilder.equal(root.get("modularCnName").as(String.class), modularCnName));
@@ -98,17 +99,19 @@ public class Y9logMappingCustomRepositoryImpl implements Y9logMappingCustomRepos
                     list.add(criteriaBuilder.equal(root.get("modularName").as(String.class), modularName));
                 }
 
-                return predicate;
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         }, pageable);
         return poPageToDoPage(y9LogMappingPage);
     }
 
-    private static PageImpl<Y9LogMappingDO> poPageToDoPage(Page<Y9LogMapping> logMappingPage) {
-        List<Y9LogMappingDO> list = logMappingPage.getContent()
-            .stream()
-            .map(l -> Y9ModelConvertUtil.convert(l, Y9LogMappingDO.class))
-            .collect(Collectors.toList());
-        return new PageImpl<>(list, logMappingPage.getPageable(), logMappingPage.getTotalElements());
+    @Override
+    public void save(Y9LogMappingDO y9LogMappingDO) {
+        Y9LogMapping y9LogMapping = Y9ModelConvertUtil.convert(y9LogMappingDO, Y9LogMapping.class);
+        y9logMappingRepository.save(y9LogMapping);
     }
 }

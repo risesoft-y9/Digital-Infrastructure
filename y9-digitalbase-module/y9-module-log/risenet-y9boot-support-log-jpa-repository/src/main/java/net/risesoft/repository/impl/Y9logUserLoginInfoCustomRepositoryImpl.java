@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -56,6 +55,14 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
 
     private static final FastDateFormat DATE_TIME_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
 
+    private static PageImpl<Y9LogUserLoginInfoDO> poPageToDoPage(Page<Y9LogUserLoginInfo> userLoginInfoPage) {
+        List<Y9LogUserLoginInfoDO> list = userLoginInfoPage.getContent()
+            .stream()
+            .map(l -> Y9ModelConvertUtil.convert(l, Y9LogUserLoginInfoDO.class))
+            .collect(Collectors.toList());
+        return new PageImpl<>(list, userLoginInfoPage.getPageable(), userLoginInfoPage.getTotalElements());
+    }
+
     private final Y9LogUserLoginInfoRepository y9logUserLoginInfoRepository;
 
     @Override
@@ -66,8 +73,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             @Override
             public Predicate toPredicate(Root<Y9LogUserLoginInfo> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
+                List<Predicate> list = new ArrayList<>();
 
                 if (StringUtils.isNotBlank(success)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.SUCCESS).as(String.class), success));
@@ -78,7 +84,11 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
                 }
                 list.add(
                     criteriaBuilder.between(root.get(Y9LogSearchConsts.LOGIN_TIME).as(Date.class), startTime, endTime));
-                return predicate;
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         });
     }
@@ -91,8 +101,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             @Override
             public Predicate toPredicate(Root<Y9LogUserLoginInfo> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
+                List<Predicate> list = new ArrayList<>();
                 String tenantId = Y9LoginUserHolder.getTenantId();
                 if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
@@ -107,7 +116,11 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
                 if (StringUtils.isNotBlank(success)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.SUCCESS).as(String.class), success));
                 }
-                return predicate;
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         });
     }
@@ -121,8 +134,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             @Override
             public Predicate toPredicate(Root<Y9LogUserLoginInfo> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
+                List<Predicate> list = new ArrayList<>();
                 String tenantId = Y9LoginUserHolder.getTenantId();
                 if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
@@ -136,9 +148,65 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
                 }
                 list.add(
                     criteriaBuilder.between(root.get(Y9LogSearchConsts.LOGIN_TIME).as(Date.class), startTime, endTime));
-                return predicate;
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         });
+    }
+
+    @Override
+    public Integer countByUserId(String personId) {
+        return y9logUserLoginInfoRepository.countByUserId(personId);
+    }
+
+    @Override
+    public List<Y9LogUserLoginInfoDO> findAll() {
+        return y9logUserLoginInfoRepository.findAll()
+            .stream()
+            .map(l -> Y9ModelConvertUtil.convert(l, Y9LogUserLoginInfoDO.class))
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<Y9LogUserLoginInfoDO> findBySuccessAndUserHostIpAndUserId(String success, String userHostIp,
+        String userId, Pageable pageable) {
+        Page<Y9LogUserLoginInfo> page =
+            y9logUserLoginInfoRepository.findBySuccessAndUserHostIpAndUserId(success, userHostIp, userId, pageable);
+        return poPageToDoPage(page);
+    }
+
+    @Override
+    public Page<Y9LogUserLoginInfoDO> findByTenantIdAndManagerLevel(String tenantId, String managerLevel,
+        Pageable pageable) {
+        Page<Y9LogUserLoginInfo> page =
+            y9logUserLoginInfoRepository.findByTenantIdAndManagerLevel(tenantId, managerLevel, pageable);
+        return poPageToDoPage(page);
+    }
+
+    @Override
+    public Page<Y9LogUserLoginInfoDO> findByTenantIdAndSuccessAndUserHostIpAndUserId(String tenantId, String success,
+        String userHostIp, String userId, Pageable pageable) {
+        Page<Y9LogUserLoginInfo> page = y9logUserLoginInfoRepository
+            .findByTenantIdAndSuccessAndUserHostIpAndUserId(tenantId, success, userHostIp, userId, pageable);
+        return poPageToDoPage(page);
+    }
+
+    @Override
+    public Set<Y9LogUserLoginInfoDO> findByUserIdAndSuccess(String userId, String success) {
+        return y9logUserLoginInfoRepository.findByUserIdAndSuccess(userId, success)
+            .stream()
+            .map(l -> Y9ModelConvertUtil.convert(l, Y9LogUserLoginInfoDO.class))
+            .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Y9LogUserLoginInfoDO findTopByTenantIdAndUserIdOrderByLoginTimeDesc(String tenantId, String userId) {
+        Y9LogUserLoginInfo y9LogUserLoginInfo =
+            y9logUserLoginInfoRepository.findTopByTenantIdAndUserIdOrderByLoginTimeDesc(tenantId, userId);
+        return Y9ModelConvertUtil.convert(y9LogUserLoginInfo, Y9LogUserLoginInfoDO.class);
     }
 
     @Override
@@ -178,8 +246,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             @Override
             public Predicate toPredicate(Root<Y9LogUserLoginInfo> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
+                List<Predicate> list = new ArrayList<>();
 
                 if (StringUtils.isNotBlank(userId)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.USER_ID).as(String.class), userId));
@@ -203,7 +270,11 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
                     }
                 }
 
-                return predicate;
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         }, pageable);
         List<Y9LogUserLoginInfoDO> list = pageInfo.getContent()
@@ -225,8 +296,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             @Override
             public Predicate toPredicate(Root<Y9LogUserLoginInfo> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
+                List<Predicate> list = new ArrayList<>();
 
                 if (StringUtils.isNotBlank(success)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.SUCCESS).as(String.class), success));
@@ -239,7 +309,11 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
                 if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
                 }
-                return predicate;
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         }, pageable);
         List<Y9LogUserLoginInfoDO> list = pageInfo.getContent()
@@ -318,8 +392,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             @Override
             public Predicate toPredicate(Root<Y9LogUserLoginInfo> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
+                List<Predicate> list = new ArrayList<>();
                 if (StringUtils.isNotBlank(success)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.SUCCESS).as(String.class), success));
                 }
@@ -335,7 +408,11 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
                 if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
                 }
-                return predicate;
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         }, pageable);
         List<Y9LogUserLoginInfoDO> list = pageInfo.getContent()
@@ -345,6 +422,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         return Y9Page.success(page, pageInfo.getTotalPages(), pageInfo.getTotalElements(), list);
     }
 
+    @Override
     public void save(Y9LogUserLoginInfoDO y9LogUserLoginInfoDO) {
         Y9LogUserLoginInfo y9LogUserLoginInfo =
             Y9ModelConvertUtil.convert(y9LogUserLoginInfoDO, Y9LogUserLoginInfo.class);
@@ -363,9 +441,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             @Override
             public Predicate toPredicate(Root<Y9LogUserLoginInfo> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
-
+                List<Predicate> list = new ArrayList<>();
                 if (StringUtils.isNotBlank(tenantId)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
                 }
@@ -417,7 +493,11 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
                         LOGGER.warn(e.getMessage(), e);
                     }
                 }
-                return predicate;
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         }, pageable);
         List<Y9LogUserLoginInfoDO> list = pageInfo.getContent()
@@ -425,65 +505,5 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             .map(l -> Y9ModelConvertUtil.convert(l, Y9LogUserLoginInfoDO.class))
             .collect(Collectors.toList());
         return Y9Page.success(page, pageInfo.getTotalPages(), pageInfo.getTotalElements(), list);
-    }
-
-    @Override
-    public Integer countByUserId(String personId) {
-        return y9logUserLoginInfoRepository.countByUserId(personId);
-    }
-
-    @Override
-    public Y9LogUserLoginInfoDO findTopByTenantIdAndUserIdOrderByLoginTimeDesc(String tenantId, String userId) {
-        Y9LogUserLoginInfo y9LogUserLoginInfo =
-            y9logUserLoginInfoRepository.findTopByTenantIdAndUserIdOrderByLoginTimeDesc(tenantId, userId);
-        return Y9ModelConvertUtil.convert(y9LogUserLoginInfo, Y9LogUserLoginInfoDO.class);
-    }
-
-    @Override
-    public List<Y9LogUserLoginInfoDO> findAll() {
-        return y9logUserLoginInfoRepository.findAll()
-            .stream()
-            .map(l -> Y9ModelConvertUtil.convert(l, Y9LogUserLoginInfoDO.class))
-            .collect(Collectors.toList());
-    }
-
-    @Override
-    public Set<Y9LogUserLoginInfoDO> findByUserIdAndSuccess(String userId, String success) {
-        return y9logUserLoginInfoRepository.findByUserIdAndSuccess(userId, success)
-            .stream()
-            .map(l -> Y9ModelConvertUtil.convert(l, Y9LogUserLoginInfoDO.class))
-            .collect(Collectors.toSet());
-    }
-
-    @Override
-    public Page<Y9LogUserLoginInfoDO> findByTenantIdAndSuccessAndUserHostIpAndUserId(String tenantId, String success,
-        String userHostIp, String userId, Pageable pageable) {
-        Page<Y9LogUserLoginInfo> page = y9logUserLoginInfoRepository
-            .findByTenantIdAndSuccessAndUserHostIpAndUserId(tenantId, success, userHostIp, userId, pageable);
-        return poPageToDoPage(page);
-    }
-
-    @Override
-    public Page<Y9LogUserLoginInfoDO> findBySuccessAndUserHostIpAndUserId(String success, String userHostIp,
-        String userId, Pageable pageable) {
-        Page<Y9LogUserLoginInfo> page =
-            y9logUserLoginInfoRepository.findBySuccessAndUserHostIpAndUserId(success, userHostIp, userId, pageable);
-        return poPageToDoPage(page);
-    }
-
-    @Override
-    public Page<Y9LogUserLoginInfoDO> findByTenantIdAndManagerLevel(String tenantId, String managerLevel,
-        Pageable pageable) {
-        Page<Y9LogUserLoginInfo> page =
-            y9logUserLoginInfoRepository.findByTenantIdAndManagerLevel(tenantId, managerLevel, pageable);
-        return poPageToDoPage(page);
-    }
-
-    private static PageImpl<Y9LogUserLoginInfoDO> poPageToDoPage(Page<Y9LogUserLoginInfo> userLoginInfoPage) {
-        List<Y9LogUserLoginInfoDO> list = userLoginInfoPage.getContent()
-            .stream()
-            .map(l -> Y9ModelConvertUtil.convert(l, Y9LogUserLoginInfoDO.class))
-            .collect(Collectors.toList());
-        return new PageImpl<>(list, userLoginInfoPage.getPageable(), userLoginInfoPage.getTotalElements());
     }
 }

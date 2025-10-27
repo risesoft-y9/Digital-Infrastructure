@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaBuilder.In;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -64,7 +63,16 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
     private static final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd");
 
+    private static PageImpl<Y9LogAccessLogDO> poPageToDoPage(Page<Y9LogAccessLog> y9LogAccessLogPage) {
+        List<Y9LogAccessLogDO> list = y9LogAccessLogPage.getContent()
+            .stream()
+            .map(l -> Y9ModelConvertUtil.convert(l, Y9LogAccessLogDO.class))
+            .collect(Collectors.toList());
+        return new PageImpl<>(list, y9LogAccessLogPage.getPageable(), y9LogAccessLogPage.getTotalElements());
+    }
+
     private final Y9logMappingCustomRepository y9logMappingCustomRepository;
+
     private final Y9LogAccessLogRepository y9logAccessLogRepository;
 
     private final JdbcTemplate jdbcTemplate4Public;
@@ -235,8 +243,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             @Override
             public Predicate toPredicate(Root<Y9LogAccessLog> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
+                List<Predicate> list = new ArrayList<>();
                 list.add(criteriaBuilder.isNotNull(root.get(Y9LogSearchConsts.USER_NAME).as(String.class)));
 
                 if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
@@ -253,7 +260,11 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                     list.add(criteriaBuilder.greaterThanOrEqualTo(
                         root.get(Y9LogSearchConsts.ELAPSED_TIME).as(Long.class), elapsedTimeStart));
                 }
-                return predicate;
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         });
     }
@@ -267,8 +278,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             @Override
             public Predicate toPredicate(Root<Y9LogAccessLog> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
+                List<Predicate> list = new ArrayList<>();
                 list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.USER_NAME).as(String.class), loginName));
                 if (StringUtils.isNotBlank(tenantId)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
@@ -284,7 +294,11 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                     LOGGER.warn(e1.getMessage(), e1);
                 }
 
-                return predicate;
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         });
 
@@ -344,26 +358,21 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             @Override
             public Predicate toPredicate(Root<Y9LogAccessLog> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
+                List<Predicate> list = new ArrayList<>();
 
                 if (StringUtils.isNotBlank(tenantId)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
                 }
 
                 list.add(criteriaBuilder.isNotNull(root.get(Y9LogSearchConsts.USER_NAME).as(String.class)));
-                return predicate;
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         }, pageable);
         return poPageToDoPage(y9LogAccessLogPage);
-    }
-
-    private static PageImpl<Y9LogAccessLogDO> poPageToDoPage(Page<Y9LogAccessLog> y9LogAccessLogPage) {
-        List<Y9LogAccessLogDO> list = y9LogAccessLogPage.getContent()
-            .stream()
-            .map(l -> Y9ModelConvertUtil.convert(l, Y9LogAccessLogDO.class))
-            .collect(Collectors.toList());
-        return new PageImpl<>(list, y9LogAccessLogPage.getPageable(), y9LogAccessLogPage.getTotalElements());
     }
 
     @Override
@@ -379,8 +388,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             @Override
             public Predicate toPredicate(Root<Y9LogAccessLog> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
+                List<Predicate> list = new ArrayList<>();
 
                 if (StringUtils.isNotBlank(searchDto.getLogLevel())) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.LOG_LEVEL).as(String.class),
@@ -421,7 +429,11 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                     }
                 }
 
-                return predicate;
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         }, pageable);
 
@@ -452,8 +464,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             @Override
             public Predicate toPredicate(Root<Y9LogAccessLog> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
+                List<Predicate> list = new ArrayList<>();
                 if (StringUtils.isNotBlank(operateType)) {
                     list.add(
                         criteriaBuilder.equal(root.get(Y9LogSearchConsts.OPERATE_TYPE).as(String.class), operateType));
@@ -467,7 +478,11 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                     list.add(in);
                 }
 
-                return predicate;
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         }, pageable);
 
@@ -493,8 +508,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             @Override
             public Predicate toPredicate(Root<Y9LogAccessLog> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
+                List<Predicate> list = new ArrayList<>();
                 if (tenantId != null) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
                 }
@@ -507,7 +521,11 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                         managerLevel));
                 }
                 list.add(criteriaBuilder.isNotNull(root.get(Y9LogSearchConsts.USER_NAME).as(String.class)));
-                return predicate;
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         }, pageable);
         return poPageToDoPage(y9LogAccessLogPage);
@@ -526,8 +544,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             @Override
             public Predicate toPredicate(Root<Y9LogAccessLog> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
+                List<Predicate> list = new ArrayList<>();
                 if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
                 }
@@ -568,7 +585,11 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                     }
                 }
                 list.add(criteriaBuilder.isNotNull(root.get(Y9LogSearchConsts.USER_NAME).as(String.class)));
-                return predicate;
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         }, pageable);
         return poPageToDoPage(y9LogAccessLogPage);
@@ -587,8 +608,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             @Override
             public Predicate toPredicate(Root<Y9LogAccessLog> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
+                List<Predicate> list = new ArrayList<>();
 
                 list.add(criteriaBuilder.isNotNull(root.get(Y9LogSearchConsts.USER_NAME).as(String.class)));
 
@@ -638,7 +658,11 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                         e.printStackTrace();
                     }
                 }
-                return predicate;
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         }, pageable);
         return poPageToDoPage(y9LogAccessLogPage);
@@ -656,8 +680,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             @Override
             public Predicate toPredicate(Root<Y9LogAccessLog> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
+                List<Predicate> list = new ArrayList<>();
                 if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
                 }
@@ -704,7 +727,11 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                     }
                 }
                 list.add(criteriaBuilder.isNotNull(root.get(Y9LogSearchConsts.USER_NAME).as(String.class)));
-                return predicate;
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         }, pageable);
         return poPageToDoPage(y9LogAccessLogPage);
@@ -733,8 +760,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             @Override
             public Predicate toPredicate(Root<Y9LogAccessLog> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> list = predicate.getExpressions();
+                List<Predicate> list = new ArrayList<>();
 
                 if (StringUtils.isNotBlank(tenantId)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
@@ -789,7 +815,11 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                     }
                 }
 
-                return predicate;
+                // 如果没有条件，返回空查询
+                if (list.isEmpty()) {
+                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+                }
+                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         }, pageable);
         return poPageToDoPage(y9LogAccessLogPage);
