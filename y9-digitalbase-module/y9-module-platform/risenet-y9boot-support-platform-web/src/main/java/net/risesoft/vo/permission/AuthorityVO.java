@@ -1,4 +1,4 @@
-package net.risesoft.controller.permission.vo;
+package net.risesoft.vo.permission;
 
 import lombok.Data;
 

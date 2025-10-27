@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.controller.org.vo.OrgTreeNodeVO;
 import net.risesoft.entity.org.Y9Department;
 import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
@@ -25,6 +24,7 @@ import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
+import net.risesoft.vo.org.OrgTreeNodeVO;
 
 /**
  * 部门管理

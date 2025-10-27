@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.controller.permission.vo.RolePermissionVO;
 import net.risesoft.entity.permission.cache.person.Y9PersonToRole;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.permission.cache.Y9PersonToRoleService;
+import net.risesoft.vo.permission.RolePermissionVO;
 
 /**
  * 权限展示

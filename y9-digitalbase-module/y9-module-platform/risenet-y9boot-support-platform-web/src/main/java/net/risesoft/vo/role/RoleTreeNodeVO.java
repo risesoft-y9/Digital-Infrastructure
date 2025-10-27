@@ -1,4 +1,4 @@
-package net.risesoft.controller.role.vo;
+package net.risesoft.vo.role;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import lombok.Setter;
 import net.risesoft.enums.TreeTypeEnum;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.enums.platform.TreeNodeType;
-import net.risesoft.pojo.TreeNodeVO;
+import net.risesoft.vo.TreeNodeVO;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.role.Y9Role;

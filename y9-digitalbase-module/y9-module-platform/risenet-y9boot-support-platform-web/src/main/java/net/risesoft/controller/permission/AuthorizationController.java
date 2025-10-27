@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.LevelConsts;
-import net.risesoft.controller.permission.vo.AuthorizationVO;
 import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
@@ -37,6 +36,7 @@ import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.permission.Y9AuthorizationService;
 import net.risesoft.util.Y9OrgUtil;
+import net.risesoft.vo.permission.AuthorizationVO;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.resource.CompositeResourceService;

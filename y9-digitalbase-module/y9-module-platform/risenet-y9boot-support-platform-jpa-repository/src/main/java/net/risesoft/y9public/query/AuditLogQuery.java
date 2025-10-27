@@ -1,4 +1,4 @@
-package net.risesoft.y9public.specification.query;
+package net.risesoft.y9public.query;
 
 import java.util.Date;
 

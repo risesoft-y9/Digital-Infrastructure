@@ -13,8 +13,8 @@ import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9public.entity.auditlog.Y9AuditLog;
+import net.risesoft.y9public.query.AuditLogQuery;
 import net.risesoft.y9public.service.auditlog.Y9AuditLogService;
-import net.risesoft.y9public.specification.query.AuditLogQuery;
 
 /**
  * 审计日志

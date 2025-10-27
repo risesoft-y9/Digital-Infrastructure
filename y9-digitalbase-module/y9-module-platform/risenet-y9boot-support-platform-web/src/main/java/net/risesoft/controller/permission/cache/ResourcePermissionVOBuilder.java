@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.controller.permission.vo.ResourcePermissionVO;
 import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.entity.permission.cache.Y9IdentityToResourceAndAuthorityBase;
 import net.risesoft.enums.platform.permission.AuthorizationPrincipalTypeEnum;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.permission.Y9AuthorizationService;
+import net.risesoft.vo.permission.ResourcePermissionVO;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.resource.CompositeResourceService;

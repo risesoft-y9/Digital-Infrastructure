@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.controller.role.vo.RoleMemberVO;
 import net.risesoft.entity.org.Y9Department;
 import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.permission.Y9OrgBasesToRoles;
@@ -33,6 +32,7 @@ import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
 import net.risesoft.util.Y9OrgUtil;
+import net.risesoft.vo.role.RoleMemberVO;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.role.Y9Role;
 

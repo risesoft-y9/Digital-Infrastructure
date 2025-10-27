@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.controller.resource.vo.AppIconDTO;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
@@ -28,6 +27,7 @@ import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.vo.resource.AppIconDTO;
 import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9public.entity.resource.Y9AppIcon;
 import net.risesoft.y9public.service.Y9FileStoreService;

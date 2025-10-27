@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.InitDataConsts;
-import net.risesoft.controller.role.vo.RoleTreeNodeVO;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.vo.role.RoleTreeNodeVO;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.role.Y9RoleService;
 

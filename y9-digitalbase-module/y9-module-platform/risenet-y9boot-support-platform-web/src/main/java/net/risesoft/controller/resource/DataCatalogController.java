@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.controller.resource.vo.DataCatalogTreeNodeVO;
 import net.risesoft.entity.dictionary.Y9OptionValue;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.platform.resource.DataCatalog;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.vo.resource.DataCatalogTreeNodeVO;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.resource.Y9DataCatalog;
 import net.risesoft.y9public.service.resource.Y9DataCatalogService;
