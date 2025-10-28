@@ -27,6 +27,7 @@ import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.query.platform.PersonQuery;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9Day;
 import net.risesoft.y9public.service.Y9logIpDeptMappingService;
@@ -174,7 +175,8 @@ public class TerminalController {
     public Y9Page<Map<String, Object>> pagePersonByDeptId(String parentId, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         List<Map<String, Object>> list = new ArrayList<>();
-        Y9Page<Person> personPage = personManager.pageByParentId(tenantId, parentId, false, pageQuery);
+        PersonQuery personQuery = PersonQuery.builder().parentId(parentId).disabled(false).build();
+        Y9Page<Person> personPage = personManager.page(tenantId, personQuery, pageQuery);
         List<Person> personList = personPage.getRows();
         if (!personList.isEmpty()) {
             personList.forEach(person -> {
@@ -206,7 +208,8 @@ public class TerminalController {
         Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         List<Map<String, Object>> list = new ArrayList<>();
-        Y9Page<Person> personPage = personManager.pageByParentIdAndName(tenantId, parentId, false, userName, pageQuery);
+        PersonQuery personQuery = PersonQuery.builder().parentId(parentId).name(userName).disabled(false).build();
+        Y9Page<Person> personPage = personManager.page(tenantId, personQuery, pageQuery);
         List<Person> personList = personPage.getRows();
         if (!personList.isEmpty()) {
             for (Person orgPerson : personList) {

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.api.platform.org.dto.CreateGroupDTO;
+import net.risesoft.dto.platform.CreateGroupDTO;
 import net.risesoft.model.platform.org.Group;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Result;

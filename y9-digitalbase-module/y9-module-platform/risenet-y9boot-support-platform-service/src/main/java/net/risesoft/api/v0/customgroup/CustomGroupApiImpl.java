@@ -25,6 +25,7 @@ import net.risesoft.model.platform.org.CustomGroupMember;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.query.platform.CustomGroupMemberQuery;
 import net.risesoft.service.org.Y9CustomGroupService;
 import net.risesoft.service.relation.Y9CustomGroupMembersService;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -169,7 +170,8 @@ public class CustomGroupApiImpl implements CustomGroupApi {
         @RequestParam("personId") @NotBlank String personId, @RequestParam("groupId") @NotBlank String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9CustomGroupMember> y9CustomGroupMemberList = customGroupMembersService.listByGroupId(groupId);
+        List<Y9CustomGroupMember> y9CustomGroupMemberList =
+            customGroupMembersService.list(new CustomGroupMemberQuery(groupId));
         return Y9ModelConvertUtil.convert(y9CustomGroupMemberList, CustomGroupMember.class);
     }
 
@@ -190,7 +192,7 @@ public class CustomGroupApiImpl implements CustomGroupApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9CustomGroupMember> y9CustomGroupMemberList = customGroupMembersService
-            .listByGroupIdAndMemberType(groupId, Y9EnumUtil.valueOf(OrgTypeEnum.class, memberType));
+            .list(new CustomGroupMemberQuery(groupId, Y9EnumUtil.valueOf(OrgTypeEnum.class, memberType)));
         return Y9ModelConvertUtil.convert(y9CustomGroupMemberList, CustomGroupMember.class);
     }
 

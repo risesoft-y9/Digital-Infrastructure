@@ -6,9 +6,9 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
+import net.risesoft.query.platform.TenantAppQuery;
 import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
-import net.risesoft.y9public.specification.query.TenantAppQuery;
 
 /**
  * @author dingzhaojun

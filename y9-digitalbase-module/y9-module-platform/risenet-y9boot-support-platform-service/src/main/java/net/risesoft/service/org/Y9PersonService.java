@@ -9,6 +9,7 @@ import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.org.Y9PersonExt;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.query.platform.PersonQuery;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
@@ -342,13 +343,5 @@ public interface Y9PersonService {
      */
     Y9Person updateTabIndex(String id, int tabIndex);
 
-    /**
-     * 分页获取机构下的人员列表
-     *
-     * @param orgIdList 组织节点 id 列表，不为空则查询指定组织节点下的人员
-     * @param disabled null 查全量，true 查询被禁用的， false查询未禁用的
-     * @param pageQuery
-     * @return {@code  Page<Y9Person>}
-     */
-    Page<Y9Person> page(List<String> orgIdList, Boolean disabled, Y9PageQuery pageQuery);
+    Page<Y9Person> page(PersonQuery personQuery, Y9PageQuery pageQuery);
 }

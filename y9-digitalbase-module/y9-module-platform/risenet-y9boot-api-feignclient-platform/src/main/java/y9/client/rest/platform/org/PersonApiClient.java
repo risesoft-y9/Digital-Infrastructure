@@ -9,6 +9,7 @@ import net.risesoft.api.platform.org.PersonApi;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.query.platform.PersonQuery;
 
 /**
  * 人员服务组件
@@ -25,18 +26,8 @@ import net.risesoft.pojo.Y9PageQuery;
 public interface PersonApiClient extends PersonApi {
 
     @Override
-    @GetMapping("/pageByName")
-    Y9Page<Person> pageByName(@RequestParam("tenantId") String tenantId,
-        @RequestParam(value = "name", required = false) String name, @SpringQueryMap Y9PageQuery pageQuery);
+    @GetMapping("/page")
+    Y9Page<Person> page(@RequestParam("tenantId") String tenantId, @SpringQueryMap PersonQuery personQuery,
+        @SpringQueryMap Y9PageQuery pageQuery);
 
-    @Override
-    @GetMapping("/pageByParentId")
-    Y9Page<Person> pageByParentId(@RequestParam("tenantId") String tenantId, @RequestParam("parentId") String parentId,
-        @RequestParam("disabled") boolean disabled, @SpringQueryMap Y9PageQuery pageQuery);
-
-    @Override
-    @GetMapping("/pageByParentIdAndName")
-    Y9Page<Person> pageByParentIdAndName(@RequestParam("tenantId") String tenantId,
-        @RequestParam("parentId") String parentId, @RequestParam("disabled") boolean disabled,
-        @RequestParam(value = "name", required = false) String name, @SpringQueryMap Y9PageQuery pageQuery);
 }

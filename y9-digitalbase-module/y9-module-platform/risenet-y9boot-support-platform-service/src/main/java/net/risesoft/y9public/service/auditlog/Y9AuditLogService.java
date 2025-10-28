@@ -3,8 +3,8 @@ package net.risesoft.y9public.service.auditlog;
 import org.springframework.data.domain.Page;
 
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.query.platform.AuditLogQuery;
 import net.risesoft.y9public.entity.auditlog.Y9AuditLog;
-import net.risesoft.y9public.query.AuditLogQuery;
 
 /**
  * 审计日志 Service

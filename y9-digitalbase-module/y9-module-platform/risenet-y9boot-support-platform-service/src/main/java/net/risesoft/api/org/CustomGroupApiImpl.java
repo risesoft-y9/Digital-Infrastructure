@@ -22,13 +22,13 @@ import net.risesoft.api.platform.org.CustomGroupApi;
 import net.risesoft.entity.org.Y9CustomGroup;
 import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.relation.Y9CustomGroupMember;
-import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.model.platform.org.CustomGroup;
 import net.risesoft.model.platform.org.CustomGroupMember;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.query.platform.CustomGroupMemberQuery;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9CustomGroupService;
 import net.risesoft.service.relation.Y9CustomGroupMembersService;
@@ -177,43 +177,12 @@ public class CustomGroupApiImpl implements CustomGroupApi {
         return Y9Result.success();
     }
 
-    /**
-     * 根据用户组id获取用户组成员
-     *
-     * @param tenantId 租户id
-     * @param personId 人员Id
-     * @param groupId 用户组id
-     * @return {@code Y9Result<List<CustomGroupMember>>} 通用请求返回对象 - data 是查找的用户组成员列表
-     * @since 9.6.0
-     */
     @Override
-    public Y9Result<List<CustomGroupMember>> listCustomGroupMemberByGroupId(
-        @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId,
-        @RequestParam("groupId") @NotBlank String groupId) {
+    public Y9Result<List<CustomGroupMember>> listCustomGroupMember(String tenantId,
+        CustomGroupMemberQuery customGroupMemberQuery) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9CustomGroupMember> y9CustomGroupMemberList = customGroupMembersService.listByGroupId(groupId);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9CustomGroupMemberList, CustomGroupMember.class));
-    }
-
-    /**
-     * 根据用户组id和成员类型，获取用户组成员列表
-     *
-     * @param tenantId 租户id
-     * @param personId 人员id
-     * @param groupId 用户组id
-     * @param memberType 成员类型 {@link OrgTypeEnum}
-     * @return {@code Y9Result<List<CustomGroupMember>>} 通用请求返回对象 - data 是查找的用户组成员列表
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<List<CustomGroupMember>> listCustomGroupMemberByGroupIdAndMemberType(
-        @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") String personId,
-        @RequestParam("groupId") @NotBlank String groupId, @RequestParam("memberType") OrgTypeEnum memberType) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        List<Y9CustomGroupMember> y9CustomGroupMemberList =
-            customGroupMembersService.listByGroupIdAndMemberType(groupId, memberType);
+        List<Y9CustomGroupMember> y9CustomGroupMemberList = customGroupMembersService.list(customGroupMemberQuery);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9CustomGroupMemberList, CustomGroupMember.class));
     }
 
@@ -240,44 +209,13 @@ public class CustomGroupApiImpl implements CustomGroupApi {
         return Y9Page.success(0, 0, 0, null);
     }
 
-    /**
-     * 根据自定义用户组id分页获取其自定义用户组成员列表
-     *
-     * @param tenantId 租户id
-     * @param groupId 用户组Id
-     * @param pageQuery 分页查询参数
-     * @return {@code Y9Page<CustomGroupMember>} 通用分页请求返回对象 - rows 是返回的用户组成员列表
-     * @since 9.6.0
-     */
     @Override
-    public Y9Page<CustomGroupMember> pageCustomGroupMemberByGroupId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("groupId") @NotBlank String groupId, @Validated Y9PageQuery pageQuery) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        Page<Y9CustomGroupMember> y9CustomGroupMemberPage = customGroupMembersService.pageByGroupId(groupId, pageQuery);
-        return Y9Page.success(pageQuery.getPage(), y9CustomGroupMemberPage.getTotalPages(),
-            y9CustomGroupMemberPage.getTotalElements(),
-            Y9ModelConvertUtil.convert(y9CustomGroupMemberPage.getContent(), CustomGroupMember.class));
-    }
-
-    /**
-     * 根据自定义用户组id和成员类型分页获取其自定义用户组成员列表
-     *
-     * @param tenantId 租户id
-     * @param groupId 用户组Id
-     * @param memberType 成员类型
-     * @param pageQuery 分页查询参数
-     * @return {@code Y9Page<CustomGroupMember>}
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Page<CustomGroupMember> pageCustomGroupMemberByGroupIdAndMemberType(
-        @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupId") @NotBlank String groupId,
-        @RequestParam("memberType") OrgTypeEnum memberType, @Validated Y9PageQuery pageQuery) {
+    public Y9Page<CustomGroupMember> pageCustomGroupMember(@RequestParam("tenantId") @NotBlank String tenantId,
+        @Validated CustomGroupMemberQuery customGroupMemberQuery, @Validated Y9PageQuery pageQuery) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Page<Y9CustomGroupMember> y9CustomGroupMemberPage =
-            customGroupMembersService.pageByGroupIdAndMemberType(groupId, memberType, pageQuery);
+            customGroupMembersService.page(customGroupMemberQuery, pageQuery);
         return Y9Page.success(pageQuery.getPage(), y9CustomGroupMemberPage.getTotalPages(),
             y9CustomGroupMemberPage.getTotalElements(),
             Y9ModelConvertUtil.convert(y9CustomGroupMemberPage.getContent(), CustomGroupMember.class));
