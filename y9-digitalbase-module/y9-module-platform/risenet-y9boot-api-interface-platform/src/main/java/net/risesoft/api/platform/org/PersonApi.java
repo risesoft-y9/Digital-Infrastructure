@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.api.platform.org.dto.CreatePersonDTO;
-import net.risesoft.api.platform.org.dto.PersonInfoDTO;
+import net.risesoft.dto.platform.CreatePersonDTO;
+import net.risesoft.dto.platform.PersonInfoDTO;
 import net.risesoft.model.platform.Role;
 import net.risesoft.model.platform.org.Group;
 import net.risesoft.model.platform.org.OrgUnit;
@@ -21,6 +21,7 @@ import net.risesoft.model.platform.org.Position;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.query.platform.PersonQuery;
 
 /**
  * 人员服务组件
@@ -305,47 +306,16 @@ public interface PersonApi {
         @RequestParam("newPassword") @NotBlank String newPassword);
 
     /**
-     * 分页模糊搜索人员列表（不包含禁用）
+     * 分页搜索人员列表
      *
      * @param tenantId 租户id
-     * @param name 人员名称
+     * @param personQuery 查询参数
      * @param pageQuery 分页查询参数
      * @return {@code Y9Page<Person>} 通用请求返回对象 - data 是人员对象
      */
-    @GetMapping("/pageByName")
-    Y9Page<Person> pageByName(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam(required = false) String name, @Validated Y9PageQuery pageQuery);
-
-    /**
-     * 分页获取父节点下的人员
-     *
-     * @param tenantId 租户ID
-     * @param parentId 部门ID
-     * @param disabled 是否禁用
-     * @param pageQuery 分页查询参数
-     * @return {@code Y9Page<Person>} 通用请求返回对象 - data 是人员对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/pageByParentId")
-    Y9Page<Person> pageByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("parentId") @NotBlank String parentId, @RequestParam("disabled") boolean disabled,
+    @GetMapping("/page")
+    Y9Page<Person> page(@RequestParam("tenantId") @NotBlank String tenantId, @Validated PersonQuery personQuery,
         @Validated Y9PageQuery pageQuery);
-
-    /**
-     * 分页模糊搜索父节点下的人员列表
-     *
-     * @param tenantId 租户ID
-     * @param parentId 部门ID
-     * @param disabled 是否禁用
-     * @param name 人员名称
-     * @param pageQuery 分页查询参数
-     * @return {@code Y9Page<Person>} 通用请求返回对象 - data 是人员对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/pageByParentIdAndName")
-    Y9Page<Person> pageByParentIdAndName(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("parentId") @NotBlank String parentId, @RequestParam("disabled") boolean disabled,
-        @RequestParam(value = "name", required = false) String name, Y9PageQuery pageQuery);
 
     /**
      * 保存人员头像

@@ -17,8 +17,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.query.platform.TenantAppQuery;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
-import net.risesoft.y9public.specification.query.TenantAppQuery;
 
 @Slf4j
 public class Y9TenantAppSpecification implements Specification<Y9TenantApp> {

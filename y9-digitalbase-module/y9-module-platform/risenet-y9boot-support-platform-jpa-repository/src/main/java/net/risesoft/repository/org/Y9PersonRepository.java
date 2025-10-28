@@ -26,11 +26,7 @@ public interface Y9PersonRepository extends JpaRepository<Y9Person, String>, Jpa
 
     long countByDisabledAndGuidPathContaining(Boolean disabled, String guidPath);
 
-    long countByParentId(String parentId);
-
     List<Y9Person> findByDisabled(Boolean disabled);
-
-    List<Y9Person> findByDisabledAndGuidPathContaining(Boolean disabled, String guidPath);
 
     Page<Y9Person> findByDisabledAndNameContaining(Boolean disabled, String userName, Pageable pageable);
 
@@ -45,8 +41,6 @@ public interface Y9PersonRepository extends JpaRepository<Y9Person, String>, Jpa
     Optional<Y9Person> findByLoginNameAndParentId(String loginName, String parentId);
 
     List<Y9Person> findByLoginNameAndTenantIdAndOriginal(String loginName, String tenantId, Boolean original);
-
-    List<Y9Person> findByMobileAndOriginal(String mobile, Boolean original);
 
     List<Y9Person> findByNameContaining(String name);
 

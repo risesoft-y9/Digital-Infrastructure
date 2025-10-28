@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.query.platform.PublishedEventQuery;
 import net.risesoft.y9public.entity.event.Y9PublishedEvent;
-import net.risesoft.y9public.specification.query.PublishedEventQuery;
 
 /**
  * @author dingzhaojun

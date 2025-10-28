@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.query.platform.AuditLogQuery;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.auditlog.Y9AuditLog;
-import net.risesoft.y9public.query.AuditLogQuery;
 import net.risesoft.y9public.repository.auditlog.Y9AuditLogRepository;
 import net.risesoft.y9public.service.auditlog.Y9AuditLogService;
 import net.risesoft.y9public.specification.Y9AuditLogSpecification;

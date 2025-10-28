@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.model.platform.org.CustomGroup;
 import net.risesoft.model.platform.org.CustomGroupMember;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.query.platform.CustomGroupMemberQuery;
 
 /**
  * 自定义用户组组件
@@ -110,30 +110,13 @@ public interface CustomGroupApi {
      * 根据用户组id获取用户组成员
      *
      * @param tenantId 租户id
-     * @param personId 人员Id
-     * @param groupId 用户组id
+     * @param customGroupMemberQuery 查询条件
      * @return {@code Y9Result<List<CustomGroupMember>>} 通用请求返回对象 - data 是查找的用户组成员列表
      * @since 9.6.0
      */
-    @GetMapping("/listCustomGroupMemberByGroupId")
-    Y9Result<List<CustomGroupMember>> listCustomGroupMemberByGroupId(
-        @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId,
-        @RequestParam("groupId") @NotBlank String groupId);
-
-    /**
-     * 根据用户组id和成员类型，获取用户组成员列表
-     *
-     * @param tenantId 租户id
-     * @param personId 人员id
-     * @param groupId 用户组id
-     * @param memberType 成员类型
-     * @return {@code Y9Result<List<CustomGroupMember>>} 通用请求返回对象 - data 是查找的用户组成员列表
-     * @since 9.6.0
-     */
-    @GetMapping("/listCustomGroupMemberByGroupIdAndMemberType")
-    Y9Result<List<CustomGroupMember>> listCustomGroupMemberByGroupIdAndMemberType(
-        @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") String personId,
-        @RequestParam("groupId") @NotBlank String groupId, @RequestParam("memberType") OrgTypeEnum memberType);
+    @GetMapping("/listCustomGroupMember")
+    Y9Result<List<CustomGroupMember>> listCustomGroupMember(@RequestParam("tenantId") @NotBlank String tenantId,
+        @Validated CustomGroupMemberQuery customGroupMemberQuery);
 
     /**
      * 根据人员id分页获取其自定义用户组列表
@@ -149,32 +132,17 @@ public interface CustomGroupApi {
         @RequestParam("personId") @NotBlank String personId, @Validated Y9PageQuery pageQuery);
 
     /**
-     * 根据自定义用户组id分页获取其自定义用户组成员列表
+     * 分页获取自定义用户组成员列表
      *
      * @param tenantId 租户id
-     * @param groupId 用户组Id
+     * @param customGroupMemberQuery 查询条件
      * @param pageQuery 分页查询参数
      * @return {@code Y9Page<CustomGroupMember>} 通用分页请求返回对象 - rows 是返回的用户组成员列表
      * @since 9.6.0
      */
-    @GetMapping("/pageCustomGroupMemberByGroupId")
-    Y9Page<CustomGroupMember> pageCustomGroupMemberByGroupId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("groupId") @NotBlank String groupId, @Validated Y9PageQuery pageQuery);
-
-    /**
-     * 根据自定义用户组id和成员类型分页获取其自定义用户组成员列表
-     *
-     * @param tenantId 租户id
-     * @param groupId 用户组Id
-     * @param memberType 成员类型
-     * @param pageQuery 分页查询参数
-     * @return {@code Y9Page<CustomGroupMember>}
-     * @since 9.6.0
-     */
-    @GetMapping("/pageCustomGroupMemberByGroupIdAndMemberType")
-    Y9Page<CustomGroupMember> pageCustomGroupMemberByGroupIdAndMemberType(
-        @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupId") @NotBlank String groupId,
-        @RequestParam("memberType") OrgTypeEnum memberType, @Validated Y9PageQuery pageQuery);
+    @GetMapping("/pageCustomGroupMember")
+    Y9Page<CustomGroupMember> pageCustomGroupMember(@RequestParam("tenantId") @NotBlank String tenantId,
+        @Validated CustomGroupMemberQuery customGroupMemberQuery, @Validated Y9PageQuery pageQuery);
 
     /**
      * 删除组成员

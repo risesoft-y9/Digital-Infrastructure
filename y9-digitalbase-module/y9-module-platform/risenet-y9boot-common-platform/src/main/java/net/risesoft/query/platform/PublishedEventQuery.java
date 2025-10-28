@@ -1,4 +1,4 @@
-package net.risesoft.y9public.specification.query;
+package net.risesoft.query.platform;
 
 import java.util.Date;
 
@@ -23,10 +23,10 @@ public class PublishedEventQuery {
     /** 事件描述 */
     private String eventDescription;
 
-    /** 开始时间 */
+    /** 开始时间 格式 yyyy-MM-dd HH:mm:ss */
     private Date startTime;
 
-    /** 结束时间 */
+    /** 结束时间 格式 yyyy-MM-dd HH:mm:ss */
     private Date endTime;
 
 }

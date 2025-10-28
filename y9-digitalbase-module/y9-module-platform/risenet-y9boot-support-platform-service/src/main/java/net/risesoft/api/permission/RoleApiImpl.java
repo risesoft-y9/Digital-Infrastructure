@@ -17,21 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.permission.RoleApi;
-import net.risesoft.entity.org.Y9OrgBase;
-import net.risesoft.entity.org.Y9Person;
-import net.risesoft.entity.permission.Y9OrgBasesToRoles;
 import net.risesoft.enums.platform.RoleTypeEnum;
-import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.model.platform.Role;
-import net.risesoft.model.platform.org.OrgUnit;
-import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
 import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.role.Y9RoleService;
 
@@ -144,65 +137,6 @@ public class RoleApiImpl implements RoleApi {
     public Y9Result<Role> getRole(@RequestParam("roleId") @NotBlank String roleId) {
         Y9Role y9Role = y9RoleService.findById(roleId).orElse(null);
         return Y9Result.success(ModelConvertUtil.y9RoleToRole(y9Role));
-    }
-
-    /**
-     * 根据角色Id获取关联的组织节点集合
-     *
-     * @param tenantId 租户id
-     * @param roleId 角色唯一标识
-     * @param orgType 数据类型
-     * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是组织节点集合
-     * @since 9.6.0
-     * @deprecated 9.6.9 移除
-     */
-    @Deprecated(since = "9.6.9", forRemoval = true)
-    @Override
-    public Y9Result<List<OrgUnit>> listOrgUnitsById(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgType") OrgTypeEnum orgType) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        List<Y9OrgBasesToRoles> roleMappingList = y9OrgBasesToRolesService.listByRoleId(roleId);
-        List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
-        for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
-            if (!Boolean.TRUE.equals(roleMapping.getNegative())) {
-                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
-                if (y9OrgBase == null || !orgType.equals(y9OrgBase.getOrgType())) {
-                    continue;
-                }
-                y9OrgBaseList.add(y9OrgBase);
-            }
-        }
-        Collections.sort(y9OrgBaseList);
-        return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList));
-    }
-
-    /**
-     * 根据角色Id获取直接关联的人员对象集合
-     *
-     * @param tenantId 租户id
-     * @param roleId 角色唯一标识
-     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<List<Person>> listPersonsById(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("roleId") @NotBlank String roleId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        List<Y9OrgBasesToRoles> roleMappingList = y9OrgBasesToRolesService.listByRoleId(roleId);
-        List<Person> persons = new ArrayList<>();
-        for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
-            if (!Boolean.TRUE.equals(roleMapping.getNegative())) {
-                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
-                if (y9OrgBase == null || !(OrgTypeEnum.PERSON.equals(y9OrgBase.getOrgType()))) {
-                    continue;
-                }
-                Y9Person y9Person = y9PersonService.getById(roleMapping.getOrgId());
-                persons.add(Y9ModelConvertUtil.convert(y9Person, Person.class));
-            }
-        }
-        return Y9Result.success(persons);
     }
 
     /**

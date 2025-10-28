@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.org.GroupApi;
-import net.risesoft.api.platform.org.dto.CreateGroupDTO;
+import net.risesoft.dto.platform.CreateGroupDTO;
 import net.risesoft.entity.org.Y9Group;
 import net.risesoft.entity.org.Y9Person;
 import net.risesoft.model.platform.org.Group;

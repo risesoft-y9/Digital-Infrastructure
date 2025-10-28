@@ -11,8 +11,8 @@ import jakarta.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
+import net.risesoft.query.platform.PublishedEventQuery;
 import net.risesoft.y9public.entity.event.Y9PublishedEvent;
-import net.risesoft.y9public.specification.query.PublishedEventQuery;
 
 /**
  * @author dingzhaojun

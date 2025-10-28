@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.api.platform.org.dto.CreateDepartmentDTO;
+import net.risesoft.dto.platform.CreateDepartmentDTO;
 import net.risesoft.enums.platform.org.DepartmentPropCategoryEnum;
 import net.risesoft.model.platform.org.Department;
 import net.risesoft.model.platform.org.DepartmentProp;

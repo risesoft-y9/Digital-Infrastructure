@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.api.platform.org.dto.CreatePositionDTO;
+import net.risesoft.dto.platform.CreatePositionDTO;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.org.Position;
 import net.risesoft.pojo.Y9Result;

@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.enums.platform.RoleTypeEnum;
-import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.model.platform.Role;
-import net.risesoft.model.platform.org.OrgUnit;
-import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Result;
 
 /**
@@ -86,31 +83,6 @@ public interface RoleApi {
      */
     @GetMapping("/getRole")
     Y9Result<Role> getRole(@RequestParam("roleId") @NotBlank String roleId);
-
-    /**
-     * 根据角色Id获取关联的组织节点集合
-     *
-     * @param tenantId 租户id
-     * @param roleId 角色唯一标识
-     * @param orgType 数据类型
-     * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是组织节点集合
-     * @since 9.6.0
-     */
-    @GetMapping("/listOrgUnitsById")
-    Y9Result<List<OrgUnit>> listOrgUnitsById(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgType") OrgTypeEnum orgType);
-
-    /**
-     * 根据角色Id获取直接关联的人员对象集合
-     *
-     * @param tenantId 租户id
-     * @param roleId 角色唯一标识
-     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/listPersonsById")
-    Y9Result<List<Person>> listPersonsById(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("roleId") @NotBlank String roleId);
 
     /**
      * 根据父节点Id获取相应子级角色节点

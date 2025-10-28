@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.api.platform.org.dto.CreateJobDTO;
+import net.risesoft.dto.platform.CreateJobDTO;
 import net.risesoft.model.platform.org.Job;
 import net.risesoft.pojo.Y9Result;
 
