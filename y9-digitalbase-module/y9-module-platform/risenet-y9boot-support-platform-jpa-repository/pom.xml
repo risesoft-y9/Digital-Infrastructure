@@ -55,7 +55,7 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-  
+
     <profiles>
         <profile>
             <id>build-db-doc</id>
