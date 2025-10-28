@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
     <name>risenet-y9boot-3rd-jpa</name>
     <description>RiseSoft/Digital Infrastructure extend for JpaRepositories</description>
-    
+
     <properties>
     </properties>
 

@@ -15,7 +15,7 @@
     <version>${revision}</version>
     <name>y9-module-log</name>
     <description>RiseSoft/Digital Infrastructure webapp parent</description>
-    
+
     <scm>
         <url>${gitee.url}</url>
         <connection>${gitee.connection}</connection>

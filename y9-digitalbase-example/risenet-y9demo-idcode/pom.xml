@@ -14,7 +14,7 @@
     <packaging>war</packaging>
     <name>risenet-y9demo-idcode</name>
     <description>risenet-y9demo-idcode</description>
-    
+
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>

@@ -15,7 +15,7 @@
 
     <modules>
         <module>risenet-y9boot-common-sso</module>
-        
+
         <module>risenet-y9boot-webapp-sso</module>
         <module>risenet-y9boot-webapp-sso-jpa</module>
     </modules>

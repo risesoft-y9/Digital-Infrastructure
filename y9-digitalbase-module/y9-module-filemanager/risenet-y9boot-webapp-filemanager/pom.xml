@@ -13,7 +13,7 @@
     <artifactId>risenet-y9boot-webapp-filemanager</artifactId>
     <packaging>war</packaging>
     <version>${revision}</version>
-    
+
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>

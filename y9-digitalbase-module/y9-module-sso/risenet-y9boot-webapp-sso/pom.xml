@@ -36,13 +36,13 @@
             <artifactId>risenet-y9boot-common-sso</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-common-nacos</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
