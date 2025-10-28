@@ -20,21 +20,6 @@
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>y9-internet-repo</id>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <!-- <updatePolicy>always</updatePolicy> -->
-                <!-- always,daily(default),interval:XXX,never -->
-            </snapshots>
-        </repository>
-    </repositories>
-
     <dependencies>
 
         <dependency>
