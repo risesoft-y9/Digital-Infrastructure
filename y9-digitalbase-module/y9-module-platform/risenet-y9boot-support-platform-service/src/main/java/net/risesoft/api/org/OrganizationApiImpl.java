@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.org.OrganizationApi;
-import net.risesoft.api.platform.org.dto.CreateOrganizationDTO;
+import net.risesoft.dto.platform.CreateOrganizationDTO;
 import net.risesoft.entity.org.Y9Department;
 import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.model.platform.org.Department;

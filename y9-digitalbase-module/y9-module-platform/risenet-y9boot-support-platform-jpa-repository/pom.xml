@@ -27,6 +27,12 @@
     <dependencies>
         <dependency>
             <groupId>net.risesoft</groupId>
+            <artifactId>risenet-y9boot-common-platform</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-idgenerator</artifactId>
             <version>${project.version}</version>
         </dependency>

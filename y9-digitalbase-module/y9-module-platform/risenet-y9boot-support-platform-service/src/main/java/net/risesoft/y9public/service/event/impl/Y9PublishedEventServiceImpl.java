@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.query.platform.PublishedEventQuery;
 import net.risesoft.y9public.entity.event.Y9PublishedEvent;
 import net.risesoft.y9public.repository.event.Y9PublishedEventRepository;
 import net.risesoft.y9public.service.event.Y9PublishedEventService;
 import net.risesoft.y9public.specification.Y9PublishedEventSpecification;
-import net.risesoft.y9public.specification.query.PublishedEventQuery;
 
 /**
  * @author dingzhaojun

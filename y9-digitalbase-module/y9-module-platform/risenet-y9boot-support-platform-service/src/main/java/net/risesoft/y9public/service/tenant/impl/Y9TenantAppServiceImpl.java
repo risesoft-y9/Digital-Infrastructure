@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.exception.TenantErrorCodeEnum;
 import net.risesoft.model.user.UserInfo;
+import net.risesoft.query.platform.TenantAppQuery;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
@@ -31,7 +32,6 @@ import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
 import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
 import net.risesoft.y9public.service.tenant.Y9TenantAppService;
 import net.risesoft.y9public.specification.Y9TenantAppSpecification;
-import net.risesoft.y9public.specification.query.TenantAppQuery;
 
 /**
  * @author dingzhaojun

@@ -3,7 +3,6 @@ package net.risesoft.service.relation.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +19,10 @@ import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.relation.Y9CustomGroupMembersManager;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.query.platform.CustomGroupMemberQuery;
 import net.risesoft.repository.relation.Y9CustomGroupMembersRepository;
 import net.risesoft.service.relation.Y9CustomGroupMembersService;
+import net.risesoft.specification.Y9CustomGroupMemberSpecification;
 
 /**
  * @author dingzhaojun
@@ -55,11 +56,6 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
     }
 
     @Override
-    public Integer getMaxTabIndex(String groupId) {
-        return customGroupMembersRepository.getMaxTabIndex(groupId);
-    }
-
-    @Override
     public List<Y9Person> listAllPersonsByGroupId(String groupId) {
         List<Y9Person> orgPersonList = new ArrayList<>();
         List<Y9CustomGroupMember> orgCustomGroupMemberList =
@@ -90,17 +86,6 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
             }
         }
         return orgPersonList;
-    }
-
-    @Override
-    public List<Y9CustomGroupMember> listByGroupId(String groupId) {
-        return StringUtils.isNotEmpty(groupId) ? customGroupMembersRepository.findByGroupIdOrderByTabIndexAsc(groupId)
-            : null;
-    }
-
-    @Override
-    public List<Y9CustomGroupMember> listByGroupIdAndMemberType(String groupId, OrgTypeEnum memberType) {
-        return customGroupMembersRepository.findByGroupIdAndMemberTypeOrderByTabIndexAsc(groupId, memberType);
     }
 
     @Override
@@ -147,6 +132,19 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
     @Transactional(readOnly = false)
     public void share(String sourceGroupId, String targetGroupId) {
         y9CustomGroupMembersManager.share(sourceGroupId, targetGroupId);
+    }
+
+    @Override
+    public List<Y9CustomGroupMember> list(CustomGroupMemberQuery customGroupMemberQuery) {
+        return customGroupMembersRepository.findAll(new Y9CustomGroupMemberSpecification(customGroupMemberQuery));
+    }
+
+    @Override
+    public Page<Y9CustomGroupMember> page(CustomGroupMemberQuery customGroupMemberQuery, Y9PageQuery pageQuery) {
+        Y9CustomGroupMemberSpecification specification = new Y9CustomGroupMemberSpecification(customGroupMemberQuery);
+        Pageable pageable =
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.ASC, "tabIndex"));
+        return customGroupMembersRepository.findAll(specification, pageable);
     }
 
 }

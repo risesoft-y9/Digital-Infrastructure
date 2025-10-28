@@ -1,4 +1,4 @@
-package net.risesoft.api.platform.org.dto;
+package net.risesoft.dto.platform;
 
 import lombok.Getter;
 import lombok.Setter;

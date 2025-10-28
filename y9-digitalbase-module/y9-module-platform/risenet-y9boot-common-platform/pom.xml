@@ -1,5 +1,7 @@
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.risesoft</groupId>
@@ -7,10 +9,10 @@
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>risenet-y9boot-api-interface-platform</artifactId>
+    <artifactId>risenet-y9boot-common-platform</artifactId>
     <packaging>jar</packaging>
-    <name>risenet-y9boot-api-interface-platform</name>
-    <description>RiseSoft/Digital Infrastructure platform interface</description>
+    <name>risenet-y9boot-common-platform</name>
+    <description>RiseSoft/Digital Infrastructure platform common</description>
 
     <properties>
     </properties>
@@ -22,13 +24,6 @@
     </scm>
 
     <dependencies>
-
-        <dependency>
-            <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-common-platform</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-common-model</artifactId>
@@ -42,21 +37,10 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
 
 </project>

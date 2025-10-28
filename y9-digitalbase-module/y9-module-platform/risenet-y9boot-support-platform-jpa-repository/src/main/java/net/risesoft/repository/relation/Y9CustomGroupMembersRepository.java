@@ -30,10 +30,6 @@ public interface Y9CustomGroupMembersRepository
     @Transactional(readOnly = false)
     void deleteByGroupId(String groupId);
 
-    @Modifying
-    @Transactional(readOnly = false)
-    void deleteByGroupIdAndMemberId(String groupId, String memberId);
-
     Page<Y9CustomGroupMember> findByGroupId(String groupId, Pageable pageable);
 
     Optional<Y9CustomGroupMember> findByGroupIdAndMemberId(String groupId, String memberId);
