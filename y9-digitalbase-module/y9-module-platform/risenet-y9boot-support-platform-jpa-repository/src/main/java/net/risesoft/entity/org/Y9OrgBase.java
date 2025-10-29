@@ -112,7 +112,8 @@ public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBa
     @Override
     public int compareTo(Y9OrgBase o) {
         return Comparator.comparing(Y9OrgBase::getParentId, Comparator.nullsFirst(String::compareTo))
-            .thenComparing(Y9OrgBase::getTabIndex).compare(this, o);
+            .thenComparing(Y9OrgBase::getTabIndex)
+            .compare(this, o);
     }
 
 }
