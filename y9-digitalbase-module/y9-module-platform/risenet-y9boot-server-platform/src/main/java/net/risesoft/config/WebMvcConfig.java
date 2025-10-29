@@ -1,6 +1,7 @@
 package net.risesoft.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +11,6 @@ import org.springframework.context.annotation.DependsOn;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
-import net.risesoft.y9.configuration.feature.oauth2.resource.Y9Oauth2ResourceProperties;
 
 /**
  * @author dingzhaojun
@@ -25,14 +25,10 @@ public class WebMvcConfig {
     @SuppressWarnings({"unchecked", "rawtypes"})
     @DependsOn("y9Context")
     @Bean
-    public FilterRegistrationBean checkUserLoginFilter(Y9Oauth2ResourceProperties y9Oauth2ResourceProperties) {
+    @ConditionalOnProperty(value = "y9.feature.oauth2.resource.enabled", havingValue = "true")
+    public FilterRegistrationBean checkUserLoginFilter() {
         FilterRegistrationBean filterBean = new FilterRegistrationBean();
-        boolean enabled = y9Oauth2ResourceProperties.isEnabled();
-        if (enabled) {
-            filterBean.setFilter(new CheckUserLoginFilter4Platform());
-        } else {
-            filterBean.setFilter(new CheckUserLoginFilterSkipSSO());
-        }
+        filterBean.setFilter(new CheckUserLoginFilter4Platform());
         filterBean.setAsyncSupported(false);
         filterBean.setOrder(50);
         filterBean.addUrlPatterns("/api/*");

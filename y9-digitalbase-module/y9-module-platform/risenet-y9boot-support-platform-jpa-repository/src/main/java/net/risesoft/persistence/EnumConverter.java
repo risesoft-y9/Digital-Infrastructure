@@ -1,6 +1,5 @@
 package net.risesoft.persistence;
 
-import net.risesoft.enums.FileStoreTypeEnum;
 import net.risesoft.enums.platform.DataSourceTypeEnum;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.enums.platform.SqlFileTypeEnum;
@@ -82,12 +81,6 @@ public class EnumConverter {
     public static class GroupTypeEnumConverter extends AbstractEnumConverter<GroupTypeEnum, String> {
         public GroupTypeEnumConverter() {
             super(GroupTypeEnum.class);
-        }
-    }
-
-    public static class FileStoreTypeEnumConverter extends AbstractEnumConverter<FileStoreTypeEnum, Integer> {
-        public FileStoreTypeEnumConverter() {
-            super(FileStoreTypeEnum.class);
         }
     }
 
