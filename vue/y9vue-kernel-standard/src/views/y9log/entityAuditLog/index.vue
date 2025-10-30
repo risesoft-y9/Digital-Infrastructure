@@ -49,19 +49,19 @@
         if (currInfo.value.nodeType != undefined) {
             switch (currInfo.value.nodeType) {
                 case 'Organization':
-                    entityClass = 'net.risesoft.entity.Y9Organization';
+                    entityClass = 'net.risesoft.entity.org.Y9Organization';
                     break;
                 case 'Department':
-                    entityClass = 'net.risesoft.entity.Y9Department';
+                    entityClass = 'net.risesoft.entity.org.Y9Department';
                     break;
                 case 'Group':
-                    entityClass = 'net.risesoft.entity.Y9Group';
+                    entityClass = 'net.risesoft.entity.org.Y9Group';
                     break;
                 case 'Position':
-                    entityClass = 'net.risesoft.entity.Y9Position';
+                    entityClass = 'net.risesoft.entity.org.Y9Position';
                     break;
                 case 'Person':
-                    entityClass = 'net.risesoft.entity.Y9Person';
+                    entityClass = 'net.risesoft.entity.org.Y9Person';
                     break;
                 case 'role':
                     entityClass = 'net.risesoft.y9public.entity.role.Y9Role';
