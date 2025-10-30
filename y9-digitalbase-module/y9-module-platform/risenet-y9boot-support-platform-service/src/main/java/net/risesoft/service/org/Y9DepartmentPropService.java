@@ -17,13 +17,6 @@ public interface Y9DepartmentPropService {
     /**
      * 根据部门唯一标识删除
      *
-     * @param deptId 唯一标识
-     */
-    void deleteByDeptId(String deptId);
-
-    /**
-     * 根据部门唯一标识删除
-     *
      * @param id 唯一标识
      */
     void deleteById(String id);

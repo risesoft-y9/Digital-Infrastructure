@@ -165,6 +165,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
         // 删除人员关联数据
         y9PersonsToPositionsManager.deleteByPersonId(id);
+        y9PersonExtManager.deleteByPersonId(id);
         y9PersonManager.delete(y9Person);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()

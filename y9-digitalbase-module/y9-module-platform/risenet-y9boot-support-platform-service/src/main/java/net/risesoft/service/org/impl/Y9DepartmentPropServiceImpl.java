@@ -36,12 +36,6 @@ public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
 
     @Override
     @Transactional(readOnly = false)
-    public void deleteByDeptId(String deptId) {
-        y9DepartmentPropRepository.deleteByDeptId(deptId);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
     public void deleteById(String id) {
         y9DepartmentPropRepository.deleteById(id);
     }

@@ -25,8 +25,21 @@ public class Y9PersonExtManagerImpl implements Y9PersonExtManager {
     private final Y9PersonExtRepository y9PersonExtRepository;
 
     @Override
+    public void deleteByPersonId(String personId) {
+        Optional<Y9PersonExt> personext = y9PersonExtRepository.findByPersonId(personId);
+        if (personext.isPresent()) {
+            y9PersonExtRepository.delete(personext.get());
+        }
+    }
+
+    @Override
     public Optional<Y9PersonExt> findByPersonId(String personId) {
         return y9PersonExtRepository.findByPersonId(personId);
+    }
+
+    @Override
+    public List<Y9PersonExt> listByIdTypeAndIdNum(String idType, String idNum) {
+        return y9PersonExtRepository.findByIdTypeAndIdNum(idType, idNum);
     }
 
     @Override
@@ -44,10 +57,5 @@ public class Y9PersonExtManagerImpl implements Y9PersonExtManager {
         y9PersonExt.setName(person.getName());
         y9PersonExt.setPersonId(person.getId());
         return y9PersonExtRepository.save(y9PersonExt);
-    }
-
-    @Override
-    public List<Y9PersonExt> listByIdTypeAndIdNum(String idType, String idNum) {
-        return y9PersonExtRepository.findByIdTypeAndIdNum(idType, idNum);
     }
 }
