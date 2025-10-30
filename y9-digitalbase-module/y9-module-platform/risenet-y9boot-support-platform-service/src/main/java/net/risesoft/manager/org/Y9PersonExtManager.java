@@ -15,8 +15,15 @@ import net.risesoft.entity.org.Y9PersonExt;
 public interface Y9PersonExtManager {
 
     /**
+     * 删除人员扩展信息
+     *
+     * @param personId personId
+     */
+    void deleteByPersonId(String personId);
+
+    /**
      * 根据人员id，获取人员扩展信息
-     * 
+     *
      * @param personId 人员id
      * @return {@code  Optional<Y9PersonExt>}
      */
@@ -33,7 +40,7 @@ public interface Y9PersonExtManager {
 
     /**
      * 保存人员扩展信息
-     * 
+     *
      * @param personExt 扩展信息详情
      * @param person 人员信息详情
      * @return {@link Y9PersonExt}
