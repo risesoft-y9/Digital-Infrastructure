@@ -89,7 +89,6 @@ public class OrgEventListener {
 
     @TransactionalEventListener
     public void onOrgUnitDeleted(Y9EntityDeletedEvent<? extends Y9OrgBase> event) {
-
         Y9OrgBase y9OrgBase = event.getEntity();
         OrgTypeEnum orgType = y9OrgBase.getOrgType();
         String eventName = Y9StringUtil.format("删除{}", orgType.getName());
@@ -199,7 +198,7 @@ public class OrgEventListener {
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, eventName, eventDescription);
 
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("新增人员用户组关联后保存及发送消息到中间件完成");
+            LOGGER.debug("新增Y9PersonsToGroups后保存及发送消息到中间件完成");
         }
     }
 
@@ -221,7 +220,7 @@ public class OrgEventListener {
             Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, eventName, eventDescription);
 
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("新增组织节点后保存及发送消息到中间件完成");
+                LOGGER.debug("移除Y9PersonsToGroups后保存及发送消息到中间件完成");
             }
         }
     }
@@ -272,7 +271,7 @@ public class OrgEventListener {
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, eventName, eventDescription);
 
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("新增人员用户组关联后保存及发送消息到中间件完成");
+            LOGGER.debug("新增Y9PersonsToPositions后保存及发送消息到中间件完成");
         }
     }
 
@@ -295,7 +294,7 @@ public class OrgEventListener {
             Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, eventName, eventDescription);
 
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("新增组织节点后保存及发送消息到中间件完成");
+                LOGGER.debug("移除Y9PersonsToPositions后保存及发送消息到中间件完成");
             }
         }
     }

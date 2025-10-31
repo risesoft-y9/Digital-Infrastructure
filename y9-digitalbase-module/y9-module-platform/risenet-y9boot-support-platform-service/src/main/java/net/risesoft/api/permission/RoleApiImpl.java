@@ -20,8 +20,6 @@ import net.risesoft.api.platform.permission.RoleApi;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.model.platform.Role;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.org.CompositeOrgBaseService;
-import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
 import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -44,9 +42,7 @@ import net.risesoft.y9public.service.role.Y9RoleService;
 @RequiredArgsConstructor
 public class RoleApiImpl implements RoleApi {
 
-    private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9OrgBasesToRolesService y9OrgBasesToRolesService;
-    private final Y9PersonService y9PersonService;
     private final Y9RoleService y9RoleService;
 
     /**
