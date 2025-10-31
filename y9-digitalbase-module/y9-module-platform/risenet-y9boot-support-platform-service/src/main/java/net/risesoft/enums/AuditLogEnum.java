@@ -102,8 +102,8 @@ public enum AuditLogEnum {
     OPERATION_UPDATE("OPERATION_UPDATE", "按钮 [{}] 更新"),
     OPERATION_UPDATE_ENABLE("OPERATION_UPDATE_ENABLE", "按钮 [{}] 更新状态为 [{}]"),
 
-    // 权限
-    AUTHORIZATION_CREATE("AUTHORIZATION_CREATE", "授权 [{}-{}] {} [{}-{}] 创建"), // 例子：授权 [角色-全体成员] 查看 [应用-日程安排] 创建
+    // 权限 例子：授权 [角色-全体成员] 查看 [应用-日程安排] 创建
+    AUTHORIZATION_CREATE("AUTHORIZATION_CREATE", "授权 [{}-{}] {} [{}-{}] 创建"),
     AUTHORIZATION_DELETE("AUTHORIZATION_DELETE", "授权 [{}-{}] {} [{}-{}] 删除"),
 
     // 角色
