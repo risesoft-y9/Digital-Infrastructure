@@ -4,9 +4,7 @@ import java.io.Serializable;
 
 import lombok.Data;
 
-import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.enums.platform.org.SexEnum;
-import net.risesoft.model.user.UserInfo;
 
 /**
  * 人员
@@ -125,28 +123,5 @@ public class Person extends OrgUnit implements Serializable {
      * 原始人员id
      */
     private String originalId;
-
-    public UserInfo toUserInfo() {
-        UserInfo userInfo = new UserInfo();
-        userInfo.setAvator(avator);
-        userInfo.setCaid(caid);
-        userInfo.setDn(dn);
-        userInfo.setEmail(email);
-        userInfo.setGuidPath(guidPath);
-        userInfo.setLoginName(loginName);
-        userInfo.setMobile(mobile);
-        userInfo.setName(name);
-        userInfo.setOriginal(original);
-        userInfo.setOriginalId(originalId);
-        userInfo.setParentId(parentId);
-        userInfo.setPassword(password);
-        userInfo.setPersonId(id);
-        userInfo.setPersonType(personType);
-        userInfo.setSex(sex);
-        userInfo.setTenantId(tenantId);
-        userInfo.setGlobalManager(false);
-        userInfo.setManagerLevel(ManagerLevelEnum.GENERAL_USER);
-        return userInfo;
-    }
 
 }
