@@ -134,6 +134,13 @@ public interface Y9DepartmentService {
      */
     Y9Department move(String id, String parentId);
 
+    /**
+     * 删除部门配置信息
+     *
+     * @param deptId 部门id
+     * @param category 部门配置类别
+     * @param orgBaseId 机构节点唯一标识(可能是机构id,也可能是部门id)
+     */
     void removeDepartmentProp(String deptId, Integer category, String orgBaseId);
 
     /**
@@ -171,6 +178,14 @@ public interface Y9DepartmentService {
      */
     Y9Department updateTabIndex(String id, int tabIndex);
 
+    /**
+     * 获取可继承的部门属性对应组织节点列表
+     *
+     * @param deptId 部门唯一标识
+     * @param category 部门属性类别
+     * @param disabled 是否包含禁用
+     * @return
+     */
     List<Y9OrgBase> listInheritableDepartmentPropOrgUnits(String deptId, Integer category, Boolean disabled);
 
     /**

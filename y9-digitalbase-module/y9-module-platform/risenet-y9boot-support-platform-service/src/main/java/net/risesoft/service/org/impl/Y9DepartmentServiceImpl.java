@@ -29,22 +29,22 @@ import net.risesoft.entity.org.Y9DepartmentProp;
 import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.enums.AuditLogEnum;
+import net.risesoft.enums.platform.org.DepartmentPropCategoryEnum;
 import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
-import net.risesoft.id.IdType;
-import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9DepartmentManager;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9PageQuery;
-import net.risesoft.repository.org.Y9DepartmentPropRepository;
 import net.risesoft.repository.org.Y9DepartmentRepository;
+import net.risesoft.service.org.Y9DepartmentPropService;
 import net.risesoft.service.org.Y9DepartmentService;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
+import net.risesoft.y9.util.Y9EnumUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 
@@ -61,10 +61,11 @@ import net.risesoft.y9.util.Y9StringUtil;
 public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
     private final Y9DepartmentRepository y9DepartmentRepository;
-    private final Y9DepartmentPropRepository y9DepartmentPropRepository;
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9DepartmentManager y9DepartmentManager;
+
+    private final Y9DepartmentPropService y9DepartmentPropService;
 
     @Override
     @Transactional(readOnly = false)
@@ -217,9 +218,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     public List<Y9OrgBase> listDepartmentPropOrgUnits(String deptId, Integer category, Boolean inherit,
         Boolean disabled) {
-        List<Y9DepartmentProp> y9DepartmentPropList =
-            y9DepartmentPropRepository.findByDeptIdAndCategoryOrderByTabIndex(deptId, category);
-
+        List<Y9DepartmentProp> y9DepartmentPropList = y9DepartmentPropService.listByDeptIdAndCategory(deptId,
+            Y9EnumUtil.valueOf(DepartmentPropCategoryEnum.class, category));
         if (!y9DepartmentPropList.isEmpty()) {
             return getY9OrgBaseList(y9DepartmentPropList, disabled);
         }
@@ -253,8 +253,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
                 break;
             }
             currentDeptId = currentDepartmentOptional.get().getParentId();
-            List<Y9DepartmentProp> currentDepartmentPropList =
-                y9DepartmentPropRepository.findByDeptIdAndCategoryOrderByTabIndex(currentDeptId, category);
+            List<Y9DepartmentProp> currentDepartmentPropList = y9DepartmentPropService
+                .listByDeptIdAndCategory(currentDeptId, Y9EnumUtil.valueOf(DepartmentPropCategoryEnum.class, category));
             if (!currentDepartmentPropList.isEmpty()) {
                 y9DepartmentPropList.addAll(currentDepartmentPropList);
                 break;
@@ -347,7 +347,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional(readOnly = false)
     public void removeDepartmentProp(String deptId, Integer category, String orgBaseId) {
-        y9DepartmentPropRepository.deleteByDeptIdAndCategoryAndOrgBaseId(deptId, category, orgBaseId);
+        y9DepartmentPropService.deleteByDeptIdAndCategoryAndOrgBaseId(deptId,
+            Y9EnumUtil.valueOf(DepartmentPropCategoryEnum.class, category), orgBaseId);
     }
 
     @Override
@@ -414,19 +415,11 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Transactional(readOnly = false)
     public void setDepartmentPropOrgUnits(String deptId, Integer category, List<String> orgBaseIds) {
         for (String orgBaseId : orgBaseIds) {
-            Optional<Y9DepartmentProp> optionalY9DepartmentProp =
-                y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId, category);
-            if (optionalY9DepartmentProp.isEmpty()) {
-                Y9DepartmentProp y9DepartmentProp = new Y9DepartmentProp();
-                y9DepartmentProp.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-                y9DepartmentProp.setDeptId(deptId);
-                y9DepartmentProp.setOrgBaseId(orgBaseId);
-                y9DepartmentProp.setCategory(category);
-
-                Integer tabIndex = y9DepartmentPropRepository.getMaxTabIndex(deptId, category).orElse(1);
-                y9DepartmentProp.setTabIndex(++tabIndex);
-                y9DepartmentPropRepository.save(y9DepartmentProp);
-            }
+            Y9DepartmentProp y9DepartmentProp = new Y9DepartmentProp();
+            y9DepartmentProp.setDeptId(deptId);
+            y9DepartmentProp.setOrgBaseId(orgBaseId);
+            y9DepartmentProp.setCategory(category);
+            y9DepartmentPropService.saveOrUpdate(y9DepartmentProp);
         }
     }
 
