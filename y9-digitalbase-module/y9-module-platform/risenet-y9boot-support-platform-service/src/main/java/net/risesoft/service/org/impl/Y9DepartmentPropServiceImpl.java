@@ -41,6 +41,13 @@ public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
     }
 
     @Override
+    @Transactional(readOnly = false)
+    public void deleteByDeptIdAndCategoryAndOrgBaseId(String deptId, DepartmentPropCategoryEnum category,
+        String orgBaseId) {
+        y9DepartmentPropRepository.deleteByDeptIdAndCategoryAndOrgBaseId(deptId, category.getValue(), orgBaseId);
+    }
+
+    @Override
     public Optional<Y9DepartmentProp> findById(String id) {
         return y9DepartmentPropRepository.findById(id);
     }
@@ -73,25 +80,30 @@ public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
     @Override
     @Transactional(readOnly = false)
     public void saveOrUpdate(Y9DepartmentProp y9DepartmentProp) {
-        String id = y9DepartmentProp.getId();
-        Y9DepartmentProp prop = null;
-        if (StringUtils.isNotEmpty(id)) {
-            prop = this.findById(id).orElse(null);
-        } else {
-            id = Y9IdGenerator.genId(IdType.SNOWFLAKE);
+        Optional<Y9DepartmentProp> optionalY9DepartmentProp =
+            y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(y9DepartmentProp.getDeptId(),
+                y9DepartmentProp.getOrgBaseId(), y9DepartmentProp.getCategory());
+        if (optionalY9DepartmentProp.isEmpty()) {
+            String id = y9DepartmentProp.getId();
+            Y9DepartmentProp prop = null;
+            if (StringUtils.isNotEmpty(id)) {
+                prop = this.findById(id).orElse(null);
+            } else {
+                id = Y9IdGenerator.genId(IdType.SNOWFLAKE);
+            }
+            if (null == prop) {
+                prop = new Y9DepartmentProp();
+                prop.setId(id);
+            }
+            prop.setDeptId(y9DepartmentProp.getDeptId());
+            prop.setOrgBaseId(y9DepartmentProp.getOrgBaseId());
+            prop.setCategory(y9DepartmentProp.getCategory());
+            Integer tabIndex =
+                y9DepartmentPropRepository.getMaxTabIndex(y9DepartmentProp.getDeptId(), y9DepartmentProp.getCategory())
+                    .orElse(1);
+            prop.setTabIndex(++tabIndex);
+            y9DepartmentPropRepository.save(prop);
         }
-        if (null == prop) {
-            prop = new Y9DepartmentProp();
-            prop.setId(id);
-        }
-        prop.setDeptId(y9DepartmentProp.getDeptId());
-        prop.setOrgBaseId(y9DepartmentProp.getOrgBaseId());
-        prop.setCategory(y9DepartmentProp.getCategory());
-        Integer tabIndex =
-            y9DepartmentPropRepository.getMaxTabIndex(y9DepartmentProp.getDeptId(), y9DepartmentProp.getCategory())
-                .orElse(1);
-        prop.setTabIndex(++tabIndex);
-        y9DepartmentPropRepository.save(prop);
     }
 
     @EventListener
