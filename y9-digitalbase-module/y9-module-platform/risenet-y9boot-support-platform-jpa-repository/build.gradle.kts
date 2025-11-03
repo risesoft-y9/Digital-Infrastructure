@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    api(project(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-common-platform"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-idgenerator"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-jpa-public"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-jpa-tenant"))

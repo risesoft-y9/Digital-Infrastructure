@@ -58,6 +58,7 @@ include(":y9-digitalbase-module:y9-module-log:risenet-y9boot-server-log-jpa")
 
 include(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-api-interface-platform")
 include(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-api-feignclient-platform")
+include(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-common-platform")
 include(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-support-platform-jpa-repository")
 include(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-support-platform-service")
 include(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-support-platform-web")

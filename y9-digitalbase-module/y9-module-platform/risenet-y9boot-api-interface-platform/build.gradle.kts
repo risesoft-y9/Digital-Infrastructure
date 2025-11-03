@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
     api(project(":y9-digitalbase-common:risenet-y9boot-common-model"))
+    api(project(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-common-platform"))
     api(project(":y9-digitalbase-common:risenet-y9boot-common-util"))
     api(platform(libs.spring.boot.bom))
 

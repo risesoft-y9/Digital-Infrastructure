@@ -11,7 +11,7 @@ import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.Cipher;
 
-import y9.util.Y9Base64;
+import net.risesoft.oidc.util.Y9Base64;
 
 public class RSAUtil {
 

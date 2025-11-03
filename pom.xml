@@ -114,6 +114,7 @@
 
         <module>y9-digitalbase-module/y9-module-platform/risenet-y9boot-api-interface-platform</module>
         <module>y9-digitalbase-module/y9-module-platform/risenet-y9boot-api-feignclient-platform</module>
+        <module>y9-digitalbase-module/y9-module-platform/risenet-y9boot-common-platform</module>
         <module>y9-digitalbase-module/y9-module-platform/risenet-y9boot-support-platform-jpa-repository</module>
         <module>y9-digitalbase-module/y9-module-platform/risenet-y9boot-support-platform-service</module>
         <module>y9-digitalbase-module/y9-module-platform/risenet-y9boot-support-platform-web</module>

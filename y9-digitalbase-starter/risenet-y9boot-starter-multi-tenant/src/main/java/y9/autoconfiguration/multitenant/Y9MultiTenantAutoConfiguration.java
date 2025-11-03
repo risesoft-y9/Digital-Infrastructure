@@ -98,7 +98,7 @@ public class Y9MultiTenantAutoConfiguration {
         public ApplicationListener<ApplicationReadyEvent>
             jpaSchemaUpdaterOnApplicationReadyEvent(Y9TenantDataSourceLookup y9TenantDataSourceLookup) {
             return applicationReadyEvent -> {
-                Map<String, DruidDataSource> map = y9TenantDataSourceLookup.getDataSources();
+                Map<String, HikariDataSource> map = y9TenantDataSourceLookup.getDataSources();
                 for (String tenantId : map.keySet()) {
                     Y9LoginUserHolder.setTenantId(tenantId);
                     Y9TenantHibernateInfoHolder.schemaUpdate(Y9Context.getEnvironment());
