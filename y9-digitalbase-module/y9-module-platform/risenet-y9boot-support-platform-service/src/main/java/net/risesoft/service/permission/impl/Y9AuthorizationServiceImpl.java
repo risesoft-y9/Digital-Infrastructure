@@ -68,7 +68,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     private final Y9RoleManager y9RoleManager;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void delete(String id) {
         Y9Authorization y9Authorization = this.getById(id);
 
@@ -95,7 +95,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void delete(String[] ids) {
         if (ids != null) {
             for (String id : ids) {
@@ -163,7 +163,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void save(AuthorityEnum authority, String principalId, AuthorizationPrincipalTypeEnum principalType,
         String[] resourceIds) {
         for (String id : resourceIds) {
@@ -180,7 +180,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void saveByOrg(AuthorityEnum authority, String resourceId, String[] principleIds) {
         for (String principleId : principleIds) {
             Y9Authorization y9Authorization = new Y9Authorization();
@@ -192,7 +192,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void saveByRoles(AuthorityEnum authority, String resourceId, String[] roleIds) {
         for (String roleId : roleIds) {
             Y9Authorization y9Authorization = new Y9Authorization();
@@ -203,7 +203,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
         }
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Authorization saveOrUpdate(Y9Authorization y9Authorization) {
         // 如已存在则修改
         Optional<Y9Authorization> optionalY9Authorization =
@@ -238,7 +238,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Authorization saveOrUpdateOrg(Y9Authorization y9Authorization) {
         Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(y9Authorization.getPrincipalId());
 
@@ -271,7 +271,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Authorization saveOrUpdateRole(Y9Authorization y9Authorization) {
         Y9Role role = y9RoleManager.getByIdFromCache(y9Authorization.getPrincipalId());
         y9Authorization.setPrincipalId(role.getId());
@@ -281,6 +281,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9Authorization> listInheritByPrincipalTypeAndResourceId(
         AuthorizationPrincipalTypeEnum authorizationPrincipalType, String resourceId) {
         List<Y9Authorization> y9AuthorizationList = new ArrayList<>();
@@ -301,6 +302,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9Authorization> listInheritByPrincipalTypeIsOrgUnitAndResourceId(String resourceId) {
         List<Y9Authorization> y9AuthorizationList = new ArrayList<>();
 
@@ -336,7 +338,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onOrganizationDeleted(Y9EntityDeletedEvent<Y9Organization> event) {
         Y9Organization organization = event.getEntity();
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(organization.getId(),
@@ -344,7 +346,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
         Y9Department department = event.getEntity();
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(department.getId(),
@@ -352,7 +354,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onGroupDeleted(Y9EntityDeletedEvent<Y9Group> event) {
         Y9Group group = event.getEntity();
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(group.getId(),
@@ -360,7 +362,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onPersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
         Y9Person person = event.getEntity();
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(person.getId(),
@@ -368,7 +370,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onPositionDeleted(Y9EntityDeletedEvent<Y9Position> event) {
         Y9Position position = event.getEntity();
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(position.getId(),

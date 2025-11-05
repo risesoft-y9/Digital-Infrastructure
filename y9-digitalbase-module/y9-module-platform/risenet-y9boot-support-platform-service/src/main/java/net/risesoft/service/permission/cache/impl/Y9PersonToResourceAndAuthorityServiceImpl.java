@@ -47,7 +47,6 @@ import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
  * @author mengjuhua
  * @date 2022/2/10
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -64,6 +63,7 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
     private final Y9TenantAppManager y9TenantAppManager;
 
     @Override
+    @Transactional
     public void deleteByAuthorizationIdAndOrgUnitId(String authorizationId, String orgUnitId) {
         List<Y9Person> allPersons = compositeOrgBaseManager.listAllDescendantPersons(orgUnitId);
         for (Y9Person y9Person : allPersons) {
@@ -71,13 +71,13 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
         }
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public void deleteByAuthorizationIdAndPersonId(String authorizationId, String personId) {
         y9PersonToResourceAndAuthorityRepository.deleteByAuthorizationIdAndPersonId(authorizationId, personId);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public void deleteByOrgUnitId(String orgUnitId) {
         List<Y9Person> personList = compositeOrgBaseManager.listAllDescendantPersons(orgUnitId);
@@ -86,7 +86,7 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
         }
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public void deleteByPersonId(String personId) {
         y9PersonToResourceAndAuthorityRepository.deleteByPersonId(personId);
@@ -126,6 +126,7 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9App> listAppsByAuthority(String personId, AuthorityEnum authority) {
         List<Y9PersonToResourceAndAuthority> resourceList = y9PersonToResourceAndAuthorityRepository
             .findByPersonIdAndAuthorityAndResourceType(personId, authority, ResourceTypeEnum.APP);
@@ -143,7 +144,7 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
         return appSet.stream().sorted().collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Person person, Y9Authorization y9Authorization,
         Boolean inherit) {
@@ -158,6 +159,7 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9ResourceBase> listSubResources(String personId, String resourceId, AuthorityEnum authority) {
         Set<Y9ResourceBase> returnResourceSet = new HashSet<>();
         List<Y9PersonToResourceAndAuthority> y9PersonToResourceAndAuthorityList =
@@ -174,6 +176,7 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9Menu> listSubMenus(String personId, String resourceId, AuthorityEnum authority) {
         List<Y9PersonToResourceAndAuthority> y9PersonToResourceAndAuthorityList =
             this.list(personId, resourceId, ResourceTypeEnum.MENU, authority);
@@ -192,14 +195,14 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onPersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
         Y9Person person = event.getEntity();
         y9PersonToResourceAndAuthorityRepository.deleteByPersonId(person.getId());
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onAuthorizationDeleted(Y9EntityDeletedEvent<Y9Authorization> event) {
         Y9Authorization y9Authorization = event.getEntity();
         y9PersonToResourceAndAuthorityRepository.deleteByAuthorizationId(y9Authorization.getId());

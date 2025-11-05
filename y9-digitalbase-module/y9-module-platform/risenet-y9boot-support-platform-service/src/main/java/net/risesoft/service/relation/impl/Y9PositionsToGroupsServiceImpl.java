@@ -25,7 +25,6 @@ import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
  * @author mengjuhua
  * @date 2022/2/10
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsService {
@@ -34,13 +33,13 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
 
     private final Y9PositionManager y9PositionManager;
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void delete(Y9PositionsToGroups groupPosition) {
         y9PositionsToGroupsRepository.delete(groupPosition);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void deleteByGroupId(String groupId) {
         List<Y9PositionsToGroups> list = y9PositionsToGroupsRepository.findByGroupId(groupId);
         for (Y9PositionsToGroups groupPosition : list) {
@@ -50,7 +49,7 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void deleteByPositionId(String positionId) {
         List<Y9PositionsToGroups> list = y9PositionsToGroupsRepository.findByPositionId(positionId);
         for (Y9PositionsToGroups groupPosition : list) {
@@ -78,6 +77,7 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9Position> listPositionsByGroupId(String groupId) {
         List<Y9PositionsToGroups> orgGroupPositions =
             y9PositionsToGroupsRepository.findByGroupIdOrderByPositionOrder(groupId);
@@ -89,7 +89,7 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public List<Y9PositionsToGroups> orderPositions(String groupId, String[] positionIds) {
         List<Y9PositionsToGroups> positionList = new ArrayList<>();
         for (int i = 0; i < positionIds.length; i++) {
@@ -105,7 +105,7 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void removePositions(String groupId, String[] positionIds) {
         for (int i = 0; i < positionIds.length; i++) {
             Optional<Y9PositionsToGroups> optionalY9PositionsToGroups =
@@ -117,7 +117,7 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void saveGroupPosition(String groupId, String[] positionIds) {
         Integer maxPositionOrder = getMaxPositionOrderByGroupId(groupId);
         for (int i = 0; i < positionIds.length; i++) {
@@ -136,7 +136,7 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onPositionDeleted(Y9EntityDeletedEvent<Y9Position> event) {
         Y9Position position = event.getEntity();
         y9PositionsToGroupsRepository.deleteByPositionId(position.getId());

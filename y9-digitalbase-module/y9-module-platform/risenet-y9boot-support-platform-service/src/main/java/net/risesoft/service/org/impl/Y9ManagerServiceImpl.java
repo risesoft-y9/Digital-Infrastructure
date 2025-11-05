@@ -49,7 +49,6 @@ import cn.hutool.core.date.DateUtil;
  * @author mengjuhua
  * @date 2022/2/10
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class Y9ManagerServiceImpl implements Y9ManagerService {
@@ -63,7 +62,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     private final Y9PlatformProperties y9PlatformProperties;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Manager changeDisabled(String id) {
         Y9Manager currentManager = this.getById(id);
         Y9Manager originalManager = Y9ModelConvertUtil.convert(currentManager, Y9Manager.class);
@@ -86,7 +85,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void changePassword(String id, String newPassword) {
         Y9Manager currentManager = this.getById(id);
         Y9Manager originalManager = Y9ModelConvertUtil.convert(currentManager, Y9Manager.class);
@@ -113,7 +112,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void delete(List<String> ids) {
         for (String id : ids) {
             this.delete(id);
@@ -121,7 +120,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void delete(String id) {
         Y9Manager y9Manager = this.getById(id);
         y9ManagerRepository.delete(y9Manager);
@@ -186,6 +185,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isDeptManager(String managerId, String deptId) {
         Y9Manager y9Manager = this.getById(managerId);
         if (Boolean.TRUE.equals(y9Manager.getGlobalManager())) {
@@ -239,7 +239,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Manager resetDefaultPassword(String id) {
         Y9Manager currentManager = this.getById(id);
         Y9Manager originalManager = Y9ModelConvertUtil.convert(currentManager, Y9Manager.class);
@@ -261,7 +261,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         return savedManager;
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Manager insert(Y9Manager y9Manager) {
         String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(y9Manager.getParentId());
@@ -283,7 +283,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         return y9Manager;
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Manager update(Y9Manager y9Manager) {
         Y9Manager currentManager = this.getById(y9Manager.getId());
         Y9Manager originalManager = Y9ModelConvertUtil.convert(currentManager, Y9Manager.class);
@@ -296,7 +296,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Manager saveOrUpdate(Y9Manager y9Manager) {
         if (StringUtils.isNotBlank(y9Manager.getId())) {
             Y9Manager oldManager = y9ManagerRepository.findById(y9Manager.getId()).orElse(null);
@@ -333,7 +333,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void updateCheckTime(String managerId, Date checkTime) {
         Y9Manager y9Manager = this.getById(managerId);
         y9Manager.setLastReviewLogTime(checkTime);
@@ -341,14 +341,14 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onParentDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
         Y9Department parentDepartment = event.getEntity();
         // 删除部门时其下管理员也要删除
         removeByParentId(parentDepartment.getId());
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void removeByParentId(String parentId) {
         List<Y9Manager> y9ManagerList = listByParentId(parentId);
         for (Y9Manager y9Manager : y9ManagerList) {

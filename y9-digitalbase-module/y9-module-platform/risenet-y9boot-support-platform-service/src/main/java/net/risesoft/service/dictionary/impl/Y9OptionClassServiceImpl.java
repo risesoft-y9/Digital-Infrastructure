@@ -27,7 +27,6 @@ import net.risesoft.y9.util.Y9StringUtil;
  * @author mengjuhua
  * @date 2022/2/10
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class Y9OptionClassServiceImpl implements Y9OptionClassService {
@@ -37,7 +36,7 @@ public class Y9OptionClassServiceImpl implements Y9OptionClassService {
     private final Y9OptionValueManager y9OptionValueManager;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void deleteByType(String type) {
         Y9OptionClass y9OptionClass = getById(type);
         y9OptionClassRepository.deleteById(type);
@@ -78,7 +77,7 @@ public class Y9OptionClassServiceImpl implements Y9OptionClassService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9OptionClass saveOptionClass(Y9OptionClass optionClass) {
         Optional<Y9OptionClass> y9OptionClassOptional = y9OptionClassRepository.findById(optionClass.getType());
         if (y9OptionClassOptional.isPresent()) {

@@ -29,7 +29,6 @@ import net.risesoft.y9.util.Y9StringUtil;
  * @author mengjuhua
  * @date 2022/2/10
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class Y9OptionValueServiceImpl implements Y9OptionValueService {
@@ -38,13 +37,13 @@ public class Y9OptionValueServiceImpl implements Y9OptionValueService {
     private final Y9OptionValueManager y9OptionValueManager;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9OptionValue create(String code, String name, String type) {
         return y9OptionValueManager.create(code, name, type);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void delete(String[] ids) {
         for (String id : ids) {
             Y9OptionValue y9OptionValue = getById(id);
@@ -74,7 +73,7 @@ public class Y9OptionValueServiceImpl implements Y9OptionValueService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9OptionValue saveOptionValue(Y9OptionValue optionValue) {
         if (StringUtils.isNotBlank(optionValue.getId())) {
             Optional<Y9OptionValue> y9OptionValueOptional = y9OptionValueRepository.findById(optionValue.getId());

@@ -42,7 +42,7 @@ public class UpdatePositionNameListener {
     private final CompositeOrgBaseService compositeOrgBaseService;
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onY9JobUpdated(Y9EntityUpdatedEvent<Y9Job> event) {
         Y9Job y9Job = event.getUpdatedEntity();
 
@@ -54,7 +54,7 @@ public class UpdatePositionNameListener {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onY9PersonUpdated(Y9EntityUpdatedEvent<Y9Person> event) {
         Y9Person originY9Person = event.getOriginEntity();
         Y9Person updatedY9Person = event.getUpdatedEntity();
@@ -73,7 +73,7 @@ public class UpdatePositionNameListener {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onY9PersonsToPositionsCreated(Y9EntityCreatedEvent<Y9PersonsToPositions> event) {
         Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
 
@@ -85,7 +85,7 @@ public class UpdatePositionNameListener {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onY9PersonsToPositionsDeleted(Y9EntityDeletedEvent<Y9PersonsToPositions> event) {
         Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
 
@@ -97,7 +97,7 @@ public class UpdatePositionNameListener {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onY9PositionUpdated(Y9EntityUpdatedEvent<Y9Position> event) {
         Y9Position updatedY9Position = event.getUpdatedEntity();
 
@@ -108,7 +108,7 @@ public class UpdatePositionNameListener {
         }
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void updatePositionName(Y9Position y9Position) {
         Y9Job y9Job = y9JobService.getById(y9Position.getJobId());
 
@@ -132,7 +132,7 @@ public class UpdatePositionNameListener {
         }
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void updatePositionName(String positionId) {
         Optional<Y9Position> y9PositionOptional = y9PositionService.findById(positionId);
         if (y9PositionOptional.isPresent()) {
@@ -140,7 +140,7 @@ public class UpdatePositionNameListener {
         }
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void updatePositionName(Y9Job y9Job) {
         List<Y9Position> y9PositionList = y9PositionService.findByJobId(y9Job.getId());
         for (Y9Position y9Position : y9PositionList) {

@@ -32,7 +32,6 @@ import net.risesoft.service.relation.Y9PersonsToPositionsService;
  * @date 2023/10/08
  * @since 9.6.3
  */
-@Transactional(value = "rsTenantTransactionManager")
 @Service
 @RequiredArgsConstructor
 public class InitTenantDataServiceImpl implements InitTenantDataService {
@@ -46,6 +45,7 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     private final Y9PositionService y9PositionService;
     private final Y9PersonsToPositionsService y9PersonsToPositionsService;
 
+    @Transactional
     public void creatOptionValue(String type) {
         if (OptionClassConsts.DUTY.equals(type)) {
             createDutyValues(type);
@@ -227,7 +227,7 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
         y9OptionValueService.create("5", "其他", type);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void createOptionClass(String className, String type) {
         Optional<Y9OptionClass> optionClass = y9OptionClassService.findByType(type);
         if (!optionClass.isPresent()) {
@@ -306,18 +306,18 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void initAll() {
         // 租户必要的数据
         this.initOptionClass();
         this.initManagers();
 
-        // 租户的示例数据
-        // FIXME 是否需要？
+        // 租户的示例数据 ;FIXME 是否需要？
         this.initOrg();
     }
 
     @Override
+    @Transactional
     public void initManagers() {
         // 新建租户三员及他们所在的虚拟组织
         boolean virtualOrganizationNotExists = y9OrganizationService.list(true, false).isEmpty();
@@ -330,6 +330,7 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     }
 
     @Override
+    @Transactional
     public void initOptionClass() {
         createOptionClass("职务", OptionClassConsts.DUTY);
         createOptionClass("职级", OptionClassConsts.DUTY_LEVEL);
@@ -340,7 +341,8 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
         createOptionClass("数据目录树类型", OptionClassConsts.DATA_CATALOG_TREE_TYPE);
     }
 
-    private void initOrg() {
+    @Transactional
+    public void initOrg() {
         boolean organizationNotExists = y9OrganizationService.list(false, false).isEmpty();
         if (organizationNotExists) {
             Y9Job y9Job = y9JobService.create("无", "001");

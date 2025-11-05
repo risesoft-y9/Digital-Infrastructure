@@ -1,11 +1,14 @@
 package net.risesoft.y9public.service.resource.impl;
 
+import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
+
 import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +51,7 @@ public class Y9ApiAccessControlServiceImpl implements Y9ApiAccessControlService 
     }
 
     @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9ApiAccessControl saveOrUpdate(Y9ApiAccessControl apiAccessControl) {
 
         if (ApiAccessControlType.WHITE_LIST.equals(apiAccessControl.getType())
@@ -89,11 +93,13 @@ public class Y9ApiAccessControlServiceImpl implements Y9ApiAccessControlService 
     }
 
     @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(String id) {
         y9ApiAccessControlRepository.deleteById(id);
     }
 
     @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9ApiAccessControl changeEnabled(String id) {
         Y9ApiAccessControl y9ApiAccessControl = getById(id);
         y9ApiAccessControl.setEnabled(!y9ApiAccessControl.getEnabled());
@@ -101,6 +107,7 @@ public class Y9ApiAccessControlServiceImpl implements Y9ApiAccessControlService 
     }
 
     @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Y9ApiAccessControl saveAppIdSecret(Y9ApiAccessControl apiAccessControl) {
         if (StringUtils.isBlank(apiAccessControl.getId())) {
             apiAccessControl.setValue(RandomStringUtils.randomAlphanumeric(38));
@@ -124,7 +131,8 @@ public class Y9ApiAccessControlServiceImpl implements Y9ApiAccessControlService 
     }
 
     private Integer getNextTabIndex(ApiAccessControlType type) {
-        return y9ApiAccessControlRepository.findTopByTypeOrderByCreateTime(type).map(Y9ApiAccessControl::getTabIndex)
+        return y9ApiAccessControlRepository.findTopByTypeOrderByCreateTime(type)
+            .map(Y9ApiAccessControl::getTabIndex)
             .orElse(-1) + 1;
     }
 }

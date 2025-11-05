@@ -38,7 +38,6 @@ import net.risesoft.y9.util.Y9StringUtil;
  * @date 2022/9/22
  */
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9JobServiceImpl implements Y9JobService {
 
@@ -60,7 +59,7 @@ public class Y9JobServiceImpl implements Y9JobService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Job create(String name, String code) {
         Optional<Y9Job> y9JobOptional = y9JobRepository.findByName(name);
         if (y9JobOptional.isPresent()) {
@@ -73,7 +72,7 @@ public class Y9JobServiceImpl implements Y9JobService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void delete(List<String> ids) {
         for (String id : ids) {
             this.deleteById(id);
@@ -81,7 +80,7 @@ public class Y9JobServiceImpl implements Y9JobService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void deleteById(String id) {
         checkIfRelatedPositionExists(id);
 
@@ -105,6 +104,7 @@ public class Y9JobServiceImpl implements Y9JobService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9Job> findByPersonId(String personId) {
         List<Y9PersonsToPositions> y9PersonsToPositionsList =
             y9PersonsToPositionsRepository.findByPersonIdOrderByPositionOrderAsc(personId);
@@ -134,7 +134,7 @@ public class Y9JobServiceImpl implements Y9JobService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public List<Y9Job> order(List<String> jobIds) {
         List<Y9Job> jobList = new ArrayList<>();
 
@@ -152,7 +152,7 @@ public class Y9JobServiceImpl implements Y9JobService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Job saveOrUpdate(Y9Job job) {
         // 检查名称是否可用
         Y9Assert.isTrue(y9JobManager.isNameAvailable(job.getName(), job.getId()), OrgUnitErrorCodeEnum.JOB_EXISTS,

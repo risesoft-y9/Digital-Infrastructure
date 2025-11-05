@@ -276,6 +276,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     }
 
     @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
     public List<Y9Role> treeSearch(String name, String parentId) {
         List<Y9Role> roleList = y9RoleRepository.findByParentIdAndNameContainingOrderByTabIndexAsc(parentId, name);
         Set<Y9Role> roleSet = new HashSet<>(roleList);
@@ -286,6 +287,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     }
 
     @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
     public List<Y9Role> treeSearch(String name) {
         List<Y9Role> roleNodeList = y9RoleRepository.findByNameContainingOrderByTabIndexAsc(name);
         Set<Y9Role> roleSet = new HashSet<>(roleNodeList);

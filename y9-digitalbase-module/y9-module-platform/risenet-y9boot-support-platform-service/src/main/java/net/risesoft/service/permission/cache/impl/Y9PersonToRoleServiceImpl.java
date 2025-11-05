@@ -35,7 +35,6 @@ import net.risesoft.y9public.repository.role.Y9RoleRepository;
  * @author mengjuhua
  * @date 2022/2/10
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -66,6 +65,7 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Boolean hasRole(String personId, String systemName, String roleName, String properties) {
         Y9System y9System = y9SystemManager.getByName(systemName);
 
@@ -97,6 +97,7 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9Person> listPersonsByRoleId(String roleId, Boolean disabled) {
         List<String> personIdList = y9PersonToRoleRepository.findPersonIdByRoleId(roleId);
         return personIdList.stream().map(y9PersonManager::getByIdFromCache).filter(p -> {
@@ -115,21 +116,21 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void removeByPersonId(String personId) {
         List<Y9PersonToRole> y9PersonToRoleList = y9PersonToRoleRepository.findByPersonId(personId);
         y9PersonToRoleRepository.deleteAll(y9PersonToRoleList);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void removeByRoleId(String roleId) {
         List<Y9PersonToRole> mappingList = y9PersonToRoleRepository.findByRoleId(roleId);
         y9PersonToRoleRepository.deleteAll(mappingList);
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onPersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
         Y9Person person = event.getEntity();
         y9PersonToRoleRepository.deleteByPersonId(person.getId());

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -48,6 +49,7 @@ public class PersonIconServiceImpl implements PersonIconService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<PersonIconItem> listByOrgUnitId(String orgUnitId) {
         Optional<Y9OrgBase> orgUnitOptional = compositeOrgBaseService.findOrgUnitPersonOrPosition(orgUnitId);
         if (orgUnitOptional.isPresent()) {
@@ -66,6 +68,7 @@ public class PersonIconServiceImpl implements PersonIconService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Y9Page<PersonIconItem> pageByOrgUnitId(String orgUnitId, Y9PageQuery pageQuery) {
         Optional<Y9OrgBase> orgUnitOptional = compositeOrgBaseService.findOrgUnitPersonOrPosition(orgUnitId);
         if (orgUnitOptional.isPresent()) {

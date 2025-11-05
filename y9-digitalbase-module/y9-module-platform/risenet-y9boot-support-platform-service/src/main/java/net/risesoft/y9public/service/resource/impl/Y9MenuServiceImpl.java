@@ -194,7 +194,7 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     }
 
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    private void deleteByParentId(String parentId) {
+    public void deleteByParentId(String parentId) {
         List<Y9Menu> y9MenuList = this.findByParentId(parentId);
         for (Y9Menu y9Menu : y9MenuList) {
             delete(y9Menu.getId());

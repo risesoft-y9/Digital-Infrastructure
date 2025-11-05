@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -88,6 +89,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
      * @param resourceId 资源id
      * @return {@code List<}{@link Y9Authorization}{@code >}
      */
+    @Transactional(readOnly = true)
     public List<Y9Authorization> listByResourceIdRelated(String resourceId) {
         List<Y9Authorization> authorizationList = new ArrayList<>();
         listByResourceIdRelated(authorizationList, resourceId);
@@ -102,6 +104,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
     }
 
     @Override
+    @Transactional
     public void recalculateByOrgUnitId(String orgUnitId) {
         Optional<Y9OrgBase> y9OrgBaseOptional = compositeOrgBaseManager.findOrgUnit(orgUnitId);
         if (y9OrgBaseOptional.isPresent()) {
@@ -133,6 +136,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
     }
 
     @Override
+    @Transactional
     public void recalculateByPerson(Y9Person person) {
         try {
             List<String> principalIdList = getIdentityRelatedPrincipalIdList(person.getId());
@@ -159,6 +163,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
     }
 
     @Override
+    @Transactional
     public void recalculateByPosition(Y9Position position) {
         try {
             List<String> principalIdList = getIdentityRelatedPrincipalIdList(position.getId());
@@ -185,6 +190,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
     }
 
     @Override
+    @Transactional
     public void recalculateByResourceId(String resourceId) {
         List<Y9Authorization> authorizationList = listByResourceIdRelated(resourceId);
         for (Y9Authorization y9Authorization : authorizationList) {
@@ -200,7 +206,8 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
         }
     }
 
-    private void recalculateByPerson(Map<String, List<Y9Authorization>> resourceIdAuthorizationListMap,
+    @Transactional
+    public void recalculateByPerson(Map<String, List<Y9Authorization>> resourceIdAuthorizationListMap,
         Y9ResourceBase y9ResourceBase, Y9Person person) {
         String resourceId = y9ResourceBase.getId();
 
@@ -254,7 +261,8 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
         return inheritY9AuthorizationList;
     }
 
-    private void recalculateByPosition(final Map<String, List<Y9Authorization>> resourceIdAuthorizationListMap,
+    @Transactional
+    public void recalculateByPosition(final Map<String, List<Y9Authorization>> resourceIdAuthorizationListMap,
         Y9ResourceBase y9ResourceBase, Y9Position position) {
         String resourceId = y9ResourceBase.getId();
 
