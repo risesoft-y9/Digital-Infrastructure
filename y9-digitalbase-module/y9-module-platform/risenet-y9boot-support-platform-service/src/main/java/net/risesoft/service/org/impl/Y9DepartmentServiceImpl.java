@@ -55,7 +55,6 @@ import net.risesoft.y9.util.Y9StringUtil;
  * @date 2022/2/10
  */
 @Slf4j
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class Y9DepartmentServiceImpl implements Y9DepartmentService {
@@ -68,7 +67,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     private final Y9DepartmentPropService y9DepartmentPropService;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Department changeDisable(String id) {
         Y9Department currentDepartment = y9DepartmentManager.getById(id);
         Y9Department originalDepartment = Y9ModelConvertUtil.convert(currentDepartment, Y9Department.class);
@@ -111,7 +110,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void delete(String id) {
         Y9Department y9Department = this.getById(id);
 
@@ -216,6 +215,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9OrgBase> listDepartmentPropOrgUnits(String deptId, Integer category, Boolean inherit,
         Boolean disabled) {
         List<Y9DepartmentProp> y9DepartmentPropList = y9DepartmentPropService.listByDeptIdAndCategory(deptId,
@@ -243,6 +243,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9OrgBase> listInheritableDepartmentPropOrgUnits(String deptId, Integer category, Boolean disabled) {
         List<Y9DepartmentProp> y9DepartmentPropList = new ArrayList<>();
 
@@ -272,7 +273,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Department move(String id, String parentId) {
         Y9OrgBase parentToMove = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
         Y9Department currentDepartment = y9DepartmentManager.getById(id);
@@ -298,23 +299,29 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onParentOrganizationDeleted(Y9EntityDeletedEvent<Y9Organization> event) {
         Y9Organization y9Organization = event.getEntity();
         // 删除组织时其下部门也要删除
         removeByParentId(y9Organization.getId());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("删除组织时其下部门同步删除执行完成！");
+        }
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onParentDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
         Y9Department parentDepartment = event.getEntity();
         // 删除部门时其下部门也要删除
         removeByParentId(parentDepartment.getId());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("删除部门时其下岗位同步删除执行完成！");
+        }
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onParentUpdated(Y9EntityUpdatedEvent<? extends Y9OrgBase> event) {
         Y9OrgBase originOrgBase = event.getOriginEntity();
         Y9OrgBase updatedOrgBase = event.getUpdatedEntity();
@@ -336,7 +343,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         }
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void removeByParentId(String parentId) {
         List<Y9Department> y9DepartmentList = this.listByParentId(parentId, Boolean.FALSE);
         for (Y9Department y9Department : y9DepartmentList) {
@@ -345,14 +352,14 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void removeDepartmentProp(String deptId, Integer category, String orgBaseId) {
         y9DepartmentPropService.deleteByDeptIdAndCategoryAndOrgBaseId(deptId,
             Y9EnumUtil.valueOf(DepartmentPropCategoryEnum.class, category), orgBaseId);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Department saveOrUpdate(Y9Department dept) {
         if (StringUtils.isNotBlank(dept.getId())) {
             Optional<Y9Department> departmentOptional = y9DepartmentManager.findById(dept.getId());
@@ -390,7 +397,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Department saveProperties(String id, String properties) {
         Y9Department currentDepartment = y9DepartmentManager.getById(id);
         Y9Department originalDepartment = Y9ModelConvertUtil.convert(currentDepartment, Y9Department.class);
@@ -412,7 +419,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void setDepartmentPropOrgUnits(String deptId, Integer category, List<String> orgBaseIds) {
         for (String orgBaseId : orgBaseIds) {
             Y9DepartmentProp y9DepartmentProp = new Y9DepartmentProp();
@@ -424,7 +431,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Department updateTabIndex(String id, int tabIndex) {
         Y9Department originalDepartment =
             Y9ModelConvertUtil.convert(y9DepartmentManager.getById(id), Y9Department.class);
@@ -444,6 +451,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Y9Department> page(List<String> orgIdList, Y9PageQuery pageQuery) {
         Pageable pageable =
             PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.ASC, "createTime"));

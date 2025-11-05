@@ -42,11 +42,13 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
     private final Y9FileStoreService y9FileStoreService;
 
     @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(String id) {
         appIconRepository.deleteById(id);
     }
 
     @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(Y9AppIcon appIcon) {
         appIconRepository.delete(appIcon);
     }
@@ -190,6 +192,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
     }
 
     @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void save(Y9AppIcon appIcon) {
         appIconRepository.save(appIcon);
     }

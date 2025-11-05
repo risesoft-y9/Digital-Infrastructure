@@ -28,7 +28,6 @@ import net.risesoft.y9.util.Y9StringUtil;
  * @author mengjuhua
  * @date 2022/2/10
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class Y9OrganizationServiceImpl implements Y9OrganizationService {
@@ -39,7 +38,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     private final CompositeOrgBaseManager compositeOrgBaseManager;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Organization changeDisabled(String id) {
         Y9Organization currentOrganization = y9OrganizationManager.getById(id);
         Y9Organization originalOrganization = Y9ModelConvertUtil.convert(currentOrganization, Y9Organization.class);
@@ -67,7 +66,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Organization create(String organizationName, Boolean virtual) {
         Y9Organization y9Organization = new Y9Organization();
         y9Organization.setName(organizationName);
@@ -76,7 +75,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void delete(String id) {
         Y9Organization y9Organization = this.getById(id);
         y9OrganizationManager.delete(y9Organization);
@@ -116,6 +115,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9Organization> list(Boolean virtual, Boolean disabled) {
         if (null == virtual) {
             return list(disabled);
@@ -138,7 +138,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Organization saveOrUpdate(Y9Organization organization) {
         if (StringUtils.isNotBlank(organization.getId())) {
             Optional<Y9Organization> organizationOptional = y9OrganizationManager.findById(organization.getId());
@@ -177,7 +177,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public List<Y9Organization> saveOrder(List<String> orgIds) {
         List<Y9Organization> orgList = new ArrayList<>();
 
@@ -189,7 +189,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Organization saveProperties(String orgId, String properties) {
         Y9Organization currentOrganization = y9OrganizationManager.getById(orgId);
         Y9Organization originalOrganization = Y9ModelConvertUtil.convert(currentOrganization, Y9Organization.class);

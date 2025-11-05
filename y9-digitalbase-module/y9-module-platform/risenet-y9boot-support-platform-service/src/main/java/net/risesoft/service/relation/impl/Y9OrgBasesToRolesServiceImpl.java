@@ -51,7 +51,6 @@ import net.risesoft.y9public.manager.role.Y9RoleManager;
  * @author mengjuhua
  * @date 2022/2/10
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -63,7 +62,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
     private final Y9RoleManager y9RoleManager;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public List<Y9OrgBasesToRoles> addOrgUnitsForRole(String roleId, List<String> orgIds, Boolean negative) {
         List<Y9OrgBasesToRoles> mappingList = new ArrayList<>();
         for (String orgId : orgIds) {
@@ -81,6 +80,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public long countByRoleIdAndOrgIdsWithoutNegative(String roleId, List<String> orgIds) {
         Set<String> orgIdset = new HashSet<>();
         orgIdset.addAll(orgIds);
@@ -131,13 +131,13 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
         return roleNodeMappings.stream().map(Y9OrgBasesToRoles::getRoleId).collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public void remove(String id) {
         remove(getById(id));
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public void remove(List<String> ids) {
         for (String id : ids) {
@@ -146,7 +146,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void removeOrgBases(String roleId, List<String> orgIds) {
         for (String orgId : orgIds) {
             remove(roleId, orgId);
@@ -154,6 +154,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Y9OrgBasesToRoles> page(Y9PageQuery pageQuery, String roleId, String unitName) {
         if (StringUtils.isNotEmpty(unitName)) {
             List<String> orgUnitIdList = compositeOrgBaseManager.listOrgUnitIdByName(unitName);
@@ -175,7 +176,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public List<Y9OrgBasesToRoles> addRolesForOrgUnit(String orgId, List<String> roleIds, Boolean negative) {
         List<Y9OrgBasesToRoles> mappingList = new ArrayList<>();
         for (String roleId : roleIds) {
@@ -187,7 +188,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
         return mappingList;
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void remove(String roleId, String orgId) {
         List<Y9OrgBasesToRoles> y9OrgBasesToRolesList = y9OrgBasesToRolesRepository.findByRoleIdAndOrgId(roleId, orgId);
         for (Y9OrgBasesToRoles y9OrgBasesToRoles : y9OrgBasesToRolesList) {
@@ -195,7 +196,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
         }
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void remove(Y9OrgBasesToRoles y9OrgBasesToRoles) {
         Y9Role y9Role = y9RoleManager.getByIdFromCache(y9OrgBasesToRoles.getRoleId());
         Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(y9OrgBasesToRoles.getOrgId());
@@ -214,7 +215,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9OrgBasesToRoles));
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9OrgBasesToRoles saveOrUpdate(String roleId, String orgId, Boolean negative) {
         Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(orgId);
         Y9Role y9Role = y9RoleManager.getByIdFromCache(roleId);
@@ -241,7 +242,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
         return optionalY9OrgBasesToRoles.get();
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9OrgBasesToRoles insert(String roleId, String orgId, Boolean negative, Y9OrgBase orgBase) {
         Y9OrgBasesToRoles y9OrgBasesToRoles = new Y9OrgBasesToRoles();
         y9OrgBasesToRoles.setId(Y9IdGenerator.genId());
@@ -276,35 +277,35 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onOrganizationDeleted(Y9EntityDeletedEvent<Y9Organization> event) {
         Y9Organization organization = event.getEntity();
         y9OrgBasesToRolesRepository.deleteByOrgId(organization.getId());
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
         Y9Department department = event.getEntity();
         y9OrgBasesToRolesRepository.deleteByOrgId(department.getId());
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onGroupDeleted(Y9EntityDeletedEvent<Y9Group> event) {
         Y9Group group = event.getEntity();
         y9OrgBasesToRolesRepository.deleteByOrgId(group.getId());
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onPersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
         Y9Person person = event.getEntity();
         y9OrgBasesToRolesRepository.deleteByOrgId(person.getId());
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onPositionDeleted(Y9EntityDeletedEvent<Y9Position> event) {
         Y9Position position = event.getEntity();
         y9OrgBasesToRolesRepository.deleteByOrgId(position.getId());

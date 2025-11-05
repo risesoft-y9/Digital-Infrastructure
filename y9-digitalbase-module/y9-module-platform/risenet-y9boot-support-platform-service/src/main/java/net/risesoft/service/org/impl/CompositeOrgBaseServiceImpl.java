@@ -67,7 +67,6 @@ import net.risesoft.y9.pubsub.message.Y9MessageOrg;
  * @since 9.6.3
  */
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
@@ -417,6 +416,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public HashMap<String, Serializable> getSyncMap(String syncId, OrgTypeEnum orgType, Integer needRecursion) {
         HashMap<String, Serializable> dataMap = new HashMap<>(16);
         dataMap.put(Y9OrgEventConst.ORG_TYPE, orgType);
@@ -470,6 +470,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public SyncOrgUnits getSyncOrgUnits(String syncId, OrgTypeEnum orgType, boolean recursionRequired) {
         SyncOrgUnits syncOrgUnits = new SyncOrgUnits();
         syncOrgUnits.setOrgUnitId(syncId);
@@ -594,6 +595,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9OrgBase> getTree(String id, OrgTreeTypeEnum treeType, Boolean disabled) {
         Set<Y9OrgBase> orgBaseSet = new HashSet<>();
         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_BUREAU)) {
@@ -626,6 +628,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9OrgBase> getTree4DeptManager(String id, OrgTreeTypeEnum treeType, Boolean disabled) {
         Set<Y9OrgBase> orgBaseSet = new HashSet<>();
         Optional<Y9Department> managerDeptOptional =
@@ -703,6 +706,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9OrgBase> listAllOrgUnits(String orgId) {
         List<Y9OrgBase> childrenList = new ArrayList<>();
         List<Y9Department> depts = findDepartmentByParentId(orgId, Boolean.FALSE);
@@ -755,7 +759,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void sort(List<String> orgUnitIds) {
         int tabIndex = 0;
         for (String orgUnitId : orgUnitIds) {
@@ -864,6 +868,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
      * 查询顺序:{@code 机构->部门->用户组->岗位->人员->三员}
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType, Boolean disabled) {
         Set<Y9OrgBase> orgBaseSet = new HashSet<>();
 
@@ -921,6 +926,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType, String dnName, Boolean disabled) {
         Set<Y9OrgBase> orgBaseSet = new HashSet<>();
 
@@ -991,6 +997,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9OrgBase> listOrgUnitsAsParentByParentId(String parentId) {
         if (StringUtils.isBlank(parentId)) {
             return new ArrayList<>(

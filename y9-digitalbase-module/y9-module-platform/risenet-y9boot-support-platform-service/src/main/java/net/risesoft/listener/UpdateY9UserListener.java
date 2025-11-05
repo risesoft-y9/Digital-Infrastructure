@@ -47,7 +47,7 @@ public class UpdateY9UserListener {
      * @param event 管理员添加事件
      */
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onY9ManagerCreated(Y9EntityCreatedEvent<Y9Manager> event) {
         Y9Manager y9Manager = event.getEntity();
         String personId = y9Manager.getId();
@@ -104,7 +104,7 @@ public class UpdateY9UserListener {
      * @param event 管理员删除事件
      */
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onY9ManagerDeleted(Y9EntityDeletedEvent<Y9Manager> event) {
         Y9Manager y9Manager = event.getEntity();
         LOGGER.info("开始处理管理员员删除->{}", y9Manager.getId());
@@ -125,7 +125,7 @@ public class UpdateY9UserListener {
      * @param event 管理员更新事件
      */
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onY9ManagerUpdated(Y9EntityUpdatedEvent<Y9Manager> event) {
         Y9Manager y9Manager = event.getUpdatedEntity();
         String tenantId = y9Manager.getTenantId();
@@ -184,7 +184,7 @@ public class UpdateY9UserListener {
      * @param event 人员添加事件
      */
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onY9PersonCreated(Y9EntityCreatedEvent<Y9Person> event) {
         Y9Person person = event.getEntity();
         String personId = person.getId();
@@ -245,7 +245,7 @@ public class UpdateY9UserListener {
      * @param event 人员删除事件
      */
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onY9PersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
         Y9Person person = event.getEntity();
         LOGGER.info("开始处理人员删除->{}", person.getId());
@@ -265,7 +265,7 @@ public class UpdateY9UserListener {
      * @param event 人员更新事件
      */
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onY9PersonUpdated(Y9EntityUpdatedEvent<Y9Person> event) {
         Y9Person person = event.getUpdatedEntity();
         String tenantId = person.getTenantId();
@@ -328,7 +328,7 @@ public class UpdateY9UserListener {
      * @param event 人员-岗位关联新增事件
      */
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onY9PersonsToPositionsCreated(Y9EntityCreatedEvent<Y9PersonsToPositions> event) {
         Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
 
@@ -353,7 +353,7 @@ public class UpdateY9UserListener {
      * @param event 人员-岗位关联删除事件
      */
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onY9PersonsToPositionsDeleted(Y9EntityDeletedEvent<Y9PersonsToPositions> event) {
         Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
 
@@ -378,7 +378,7 @@ public class UpdateY9UserListener {
      * @param event 租户更新事件
      */
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onY9TenantUpdated(Y9EntityUpdatedEvent<Y9Tenant> event) {
         Y9Tenant originEntity = event.getOriginEntity();
         Y9Tenant updatedEntity = event.getUpdatedEntity();

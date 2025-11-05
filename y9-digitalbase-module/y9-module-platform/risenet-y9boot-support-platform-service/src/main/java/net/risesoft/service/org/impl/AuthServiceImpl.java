@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -121,6 +122,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AuthenticateResult authenticate3(String loginName, String base64EncodedPassword) {
         AuthenticateResult authenticateResult = new AuthenticateResult();
         String newpassword = "";
@@ -169,6 +171,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Message authenticate3(final String tenantName, final String loginName, final String password) {
         Message message = new Message();
         if (StringUtils.isEmpty(tenantName)) {
@@ -265,6 +268,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AuthenticateResult authenticate5(String mobile, String base64EncodedPassword) {
         AuthenticateResult authenticateResult = new AuthenticateResult();
 
@@ -290,6 +294,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Message authenticate5(final String tenantShortName, final String mobile, final String password) {
         Message message = new Message();
         if (StringUtils.isEmpty(tenantShortName)) {
@@ -332,6 +337,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Message authenticate6(final String tenantShortName, final String loginName, final String password,
         final String parentId) {
         Message message = new Message();

@@ -92,9 +92,7 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
         List<Y9Person> personList = new ArrayList<>();
         for (String personId : personIdList) {
             Y9Person y9Person = getByIdFromCache(personId);
-            if (disabled == null) {
-                personList.add(y9Person);
-            } else if (disabled.equals(y9Person.getDisabled())) {
+            if (disabled == null || disabled.equals(y9Person.getDisabled())) {
                 personList.add(y9Person);
             }
         }
@@ -117,9 +115,7 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
         List<Y9Person> personList = new ArrayList<>();
         for (String personId : personIdList) {
             Y9Person y9Person = getByIdFromCache(personId);
-            if (disabled == null) {
-                personList.add(y9Person);
-            } else if (disabled.equals(y9Person.getDisabled())) {
+            if (disabled == null || disabled.equals(y9Person.getDisabled())) {
                 personList.add(y9Person);
             }
         }

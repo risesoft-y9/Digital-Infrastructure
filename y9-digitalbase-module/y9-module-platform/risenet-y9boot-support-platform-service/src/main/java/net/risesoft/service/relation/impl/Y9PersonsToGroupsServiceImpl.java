@@ -37,7 +37,6 @@ import net.risesoft.y9.util.Y9StringUtil;
  * @author mengjuhua
  * @date 2022/2/10
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
@@ -49,7 +48,7 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     private final Y9PersonsToGroupsRepository y9PersonsToGroupsRepository;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void addGroups(String personId, String[] groupIds) {
         for (int i = 0; i < groupIds.length; i++) {
             String groupId = groupIds[i];
@@ -64,7 +63,7 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void addPersons(String groupId, String[] personIds) {
         for (int i = 0; i < personIds.length; i++) {
             String personId = personIds[i];
@@ -79,7 +78,7 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void deleteByPersonId(String personId) {
         y9PersonsToGroupsManager.deleteByPersonId(personId);
     }
@@ -117,7 +116,7 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public List<Y9PersonsToGroups> orderGroups(String personId, String[] groupIds) {
         List<Y9PersonsToGroups> personsGroupsList = new ArrayList<>();
         for (int i = 0; i < groupIds.length; i++) {
@@ -141,7 +140,7 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public List<Y9PersonsToGroups> orderPersons(String groupId, String[] personIds) {
         List<Y9PersonsToGroups> personsGroupsList = new ArrayList<>();
         for (int i = 0; i < personIds.length; i++) {
@@ -165,7 +164,7 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void removeGroups(String personId, String[] groupIds) {
         for (String groupId : groupIds) {
             remove(personId, groupId);
@@ -173,7 +172,7 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void removePersons(String groupId, String[] personIds) {
         for (String personId : personIds) {
             remove(personId, groupId);
@@ -185,7 +184,7 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
         return y9PersonsToGroupsRepository.findByPersonIdOrderByGroupOrder(personId);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public Y9PersonsToGroups saveOrUpdate(Y9PersonsToGroups y9PersonsToGroups) {
         checkPersonExists(y9PersonsToGroups.getPersonId());
@@ -230,7 +229,7 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
         y9PersonManager.getByIdFromCache(personId);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9PersonsToGroups addY9PersonsToGroups(String personId, String groupId, Integer maxGroupsOrder,
         Integer maxPersonsOrder) {
         Y9Person person = y9PersonManager.getByIdFromCache(personId);
@@ -257,13 +256,13 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onPersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
         Y9Person person = event.getEntity();
         y9PersonsToGroupsRepository.deleteByPersonId(person.getId());
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void remove(String personId, String groupId) {
         Y9Person person = y9PersonManager.getByIdFromCache(personId);
         Y9Group group = y9GroupManager.getByIdFromCache(groupId);

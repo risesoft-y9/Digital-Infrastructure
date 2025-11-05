@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.org.Y9Department;
@@ -41,9 +42,9 @@ import net.risesoft.y9.util.Y9StringUtil;
  * @author mengjuhua
  * @date 2022/2/10
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class Y9PositionServiceImpl implements Y9PositionService {
 
     private final Y9PositionRepository y9PositionRepository;
@@ -59,7 +60,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Position changeDisabled(String id) {
         Y9Position currentPosition = y9PositionManager.getById(id);
         Y9Position originalPosition = Y9ModelConvertUtil.convert(currentPosition, Y9Position.class);
@@ -82,6 +83,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
+    @Transactional
     public Y9Position create(String parentId, String jobId) {
         Y9Position y9Position = new Y9Position();
         y9Position.setParentId(parentId);
@@ -90,7 +92,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void delete(List<String> ids) {
         for (String id : ids) {
             this.deleteById(id);
@@ -98,7 +100,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void deleteById(String id) {
         final Y9Position y9Position = this.getById(id);
 
@@ -116,7 +118,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void deleteByParentId(String parentId) {
         List<Y9Position> positionList = listByParentId(parentId, null);
         for (Y9Position position : positionList) {
@@ -196,6 +198,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9Position> listByPersonId(String personId, Boolean disabled) {
         List<Y9PersonsToPositions> ppsList =
             y9PersonsToPositionsRepository.findByPersonIdOrderByPositionOrderAsc(personId);
@@ -210,7 +213,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Position move(String id, String parentId) {
         Y9OrgBase parentToMove = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
         Y9Position currentPosition = y9PositionManager.getById(id);
@@ -234,13 +237,13 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Position save(Y9Position position) {
         return y9PositionManager.save(position);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public List<Y9Position> saveOrder(List<String> positionIds) {
         List<Y9Position> orgPositionList = new ArrayList<>();
 
@@ -253,7 +256,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Position saveOrUpdate(Y9Position position) {
         if (StringUtils.isNotEmpty(position.getId())) {
             Optional<Y9Position> positionOptional = y9PositionManager.findById(position.getId());
@@ -293,7 +296,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Position saveProperties(String id, String properties) {
         Y9Position currentPosition = y9PositionManager.getById(id);
         Y9Position originalPosition = Y9ModelConvertUtil.convert(currentPosition, Y9Position.class);
@@ -315,6 +318,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9Position> treeSearch(String name) {
         List<Y9Position> positionList = new ArrayList<>();
         List<Y9Position> positionListTemp = y9PositionRepository.findByNameContainingOrderByTabIndexAsc(name);
@@ -326,29 +330,35 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Position updateTabIndex(String id, int tabIndex) {
         return y9PositionManager.updateTabIndex(id, tabIndex);
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onParentDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
         Y9Department parentDepartment = event.getEntity();
         // 删除部门时其下岗位也要删除
         deleteByParentId(parentDepartment.getId());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("删除部门时其下岗位同步删除执行完成！");
+        }
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onParentOrganizationDeleted(Y9EntityDeletedEvent<Y9Organization> event) {
         Y9Organization y9Organization = event.getEntity();
         // 删除组织时其下岗位也要删除
         deleteByParentId(y9Organization.getId());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("删除组织时其下岗位同步删除执行完成！");
+        }
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onParentUpdated(Y9EntityUpdatedEvent<? extends Y9OrgBase> event) {
         Y9OrgBase originOrgBase = event.getOriginEntity();
         Y9OrgBase updatedOrgBase = event.getUpdatedEntity();

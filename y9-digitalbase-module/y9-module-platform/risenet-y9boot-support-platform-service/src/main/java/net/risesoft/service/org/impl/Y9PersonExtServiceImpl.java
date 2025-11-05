@@ -24,7 +24,6 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
  * @author mengjuhua
  * @date 2022/2/10
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class Y9PersonExtServiceImpl implements Y9PersonExtService {
@@ -63,19 +62,20 @@ public class Y9PersonExtServiceImpl implements Y9PersonExtService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9PersonExt saveOrUpdate(Y9PersonExt y9PersonExt, Y9Person person) {
         return y9PersonExtManager.saveOrUpdate(y9PersonExt, person);
     }
 
     @Override
+    @Transactional
     public Y9PersonExt savePersonPhoto(String personId, String photo) {
         Y9Person y9Person = y9PersonManager.getByIdFromCache(personId);
         return this.savePersonPhoto(y9Person, photo);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9PersonExt savePersonPhoto(Y9Person person, byte[] photo) {
         Y9PersonExt ext;
         Optional<Y9PersonExt> optionalY9PersonExt = y9PersonExtRepository.findByPersonId(person.getId());
@@ -92,7 +92,7 @@ public class Y9PersonExtServiceImpl implements Y9PersonExtService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9PersonExt savePersonPhoto(Y9Person person, String photo) {
         byte[] p = new byte[0];
         if (StringUtils.isNotBlank(photo)) {
@@ -113,7 +113,7 @@ public class Y9PersonExtServiceImpl implements Y9PersonExtService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9PersonExt savePersonSign(Y9Person person, byte[] sign) {
         Y9PersonExt ext;
         Optional<Y9PersonExt> optionalY9PersonExt = y9PersonExtRepository.findByPersonId(person.getId());
@@ -130,7 +130,7 @@ public class Y9PersonExtServiceImpl implements Y9PersonExtService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9PersonExt savePersonSign(Y9Person person, String sign) {
         byte[] s = new byte[0];
         if (StringUtils.isNotBlank(sign)) {

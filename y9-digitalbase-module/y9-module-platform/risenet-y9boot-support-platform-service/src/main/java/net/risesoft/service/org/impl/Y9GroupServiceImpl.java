@@ -37,7 +37,6 @@ import net.risesoft.y9.util.Y9StringUtil;
  * @author mengjuhua
  * @date 2022/2/10
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class Y9GroupServiceImpl implements Y9GroupService {
@@ -50,7 +49,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     private final Y9PersonsToGroupsManager y9PersonsToGroupsManager;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Group changeDisabled(String id) {
         Y9Group currentGroup = this.getById(id);
         Y9Group originalGroup = Y9ModelConvertUtil.convert(currentGroup, Y9Group.class);
@@ -73,7 +72,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void delete(String groupId) {
         Y9Group y9Group = this.getById(groupId);
 
@@ -92,7 +91,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void deleteByParentId(String parentId) {
         List<Y9Group> groupList = listByParentId(parentId, null);
         for (Y9Group group : groupList) {
@@ -144,6 +143,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9Group> listByPersonId(String personId, Boolean disabled) {
         List<Y9PersonsToGroups> y9PersonsToGroupsList =
             y9PersonsToGroupsRepository.findByPersonIdOrderByGroupOrder(personId);
@@ -161,7 +161,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Group move(String id, String parentId) {
         Y9Group currentGroup = this.getById(id);
         Y9OrgBase parentToMove = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
@@ -185,7 +185,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public List<Y9Group> saveOrder(List<String> groupIds) {
         List<Y9Group> groupList = new ArrayList<>();
         int tabIndex = 0;
@@ -196,7 +196,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Group saveOrUpdate(Y9Group group) {
         if (StringUtils.isNotBlank(group.getId())) {
             Optional<Y9Group> groupOptional = y9GroupManager.findById(group.getId());
@@ -232,7 +232,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Group saveProperties(String id, String properties) {
         Y9Group currentGroup = this.getById(id);
         Y9Group originalGroup = Y9ModelConvertUtil.convert(currentGroup, Y9Group.class);
@@ -254,7 +254,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onParentDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
         Y9Department parentDepartment = event.getEntity();
         // 删除部门时其下岗位也要删除
@@ -262,7 +262,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onParentOrganizationDeleted(Y9EntityDeletedEvent<Y9Organization> event) {
         Y9Organization y9Organization = event.getEntity();
         // 删除组织时其下岗位也要删除
@@ -270,7 +270,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onParentUpdated(Y9EntityUpdatedEvent<? extends Y9OrgBase> event) {
         Y9OrgBase originOrgBase = event.getOriginEntity();
         Y9OrgBase updatedOrgBase = event.getUpdatedEntity();

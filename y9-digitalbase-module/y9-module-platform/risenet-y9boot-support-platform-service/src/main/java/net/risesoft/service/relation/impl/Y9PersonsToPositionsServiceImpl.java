@@ -25,7 +25,6 @@ import net.risesoft.y9.util.Y9BeanUtil;
  * @author mengjuhua
  * @date 2022/2/10
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsService {
@@ -35,7 +34,7 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
     private final Y9PersonsToPositionsManager y9PersonsToPositionsManager;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public List<Y9PersonsToPositions> addPersons(String positionId, String[] personIds) {
         List<Y9PersonsToPositions> personsToPositionsList = new ArrayList<>();
         for (int i = 0; i < personIds.length; i++) {
@@ -49,7 +48,7 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public List<Y9PersonsToPositions> addPositions(String personId, String[] positionIds) {
         List<Y9PersonsToPositions> personsToPositionsList = new ArrayList<>();
         for (int i = 0; i < positionIds.length; i++) {
@@ -63,7 +62,7 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void deleteByPersonId(String personId) {
         List<Y9PersonsToPositions> y9PersonsToPositionsList = y9PersonsToPositionsRepository.findByPersonId(personId);
         for (Y9PersonsToPositions y9PersonsToPositions : y9PersonsToPositionsList) {
@@ -72,7 +71,7 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void deleteByPositionId(String positionId) {
         List<Y9PersonsToPositions> y9PersonsToPositionsList =
             y9PersonsToPositionsRepository.findByPositionId(positionId);
@@ -82,7 +81,7 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void deletePersons(String positionId, String[] personIds) {
         for (String personId : personIds) {
             y9PersonsToPositionsManager.delete(positionId, personId);
@@ -90,7 +89,7 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void deletePositions(String personId, String[] positionIds) {
         for (String positionId : positionIds) {
             y9PersonsToPositionsManager.delete(positionId, personId);
@@ -120,7 +119,7 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public List<Y9PersonsToPositions> orderPersons(String positionId, String[] personIds) {
         List<Y9PersonsToPositions> orgPositionsPersonsList = new ArrayList<>();
         for (int i = 0; i < personIds.length; i++) {
@@ -144,7 +143,7 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public List<Y9PersonsToPositions> orderPositions(String personId, String[] positionIds) {
         List<Y9PersonsToPositions> orgPositionsPersonsList = new ArrayList<>();
 
@@ -168,7 +167,7 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void saveOrUpdate(Y9PersonsToPositions y9PersonsToPositions) {
         y9PersonsToPositionsManager.saveOrUpdate(y9PersonsToPositions);
     }

@@ -22,7 +22,6 @@ import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
  * @author mengjuhua
  * @date 2022/2/10
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class Y9OrgBaseMovedServiceImpl
@@ -31,6 +30,7 @@ public class Y9OrgBaseMovedServiceImpl
     private final Y9OrgBaseMovedRepository y9OrgBaseMovedRepository;
 
     @Override
+    @Transactional
     public void onApplicationEvent(Y9EntityUpdatedEvent<? extends Y9OrgBase> event) {
 
         Y9OrgBase originEntity = event.getOriginEntity();
@@ -42,7 +42,7 @@ public class Y9OrgBaseMovedServiceImpl
 
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void save(Y9OrgBase originEntity, Y9OrgBase updatedEntity) {
         Y9OrgBaseMoved y9OrgBaseMoved = new Y9OrgBaseMoved();
         y9OrgBaseMoved.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));

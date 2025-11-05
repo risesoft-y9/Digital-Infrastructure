@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +55,8 @@ public class IdentityRoleCalculatorImpl implements IdentityRoleCalculator {
     private final Y9PersonToRoleManager y9PersonToRoleManager;
     private final Y9PositionToRoleManager y9PositionToRoleManager;
 
-    private void recalculate(Y9Person y9Person, List<Y9Role> personRelatedY9RoleList) {
+    @Transactional
+    public void recalculate(Y9Person y9Person, List<Y9Role> personRelatedY9RoleList) {
         removeInvalidByPersonId(y9Person.getId(), personRelatedY9RoleList);
 
         for (Y9Role y9Role : personRelatedY9RoleList) {
@@ -62,7 +64,8 @@ public class IdentityRoleCalculatorImpl implements IdentityRoleCalculator {
         }
     }
 
-    private void recalculate(Y9Position y9Position, List<Y9Role> positionRelatedY9RoleList) {
+    @Transactional
+    public void recalculate(Y9Position y9Position, List<Y9Role> positionRelatedY9RoleList) {
         removeInvalidByPositionId(y9Position.getId(), positionRelatedY9RoleList);
         for (Y9Role y9Role : positionRelatedY9RoleList) {
             y9PositionToRoleManager.save(y9Position, y9Role);
@@ -70,6 +73,7 @@ public class IdentityRoleCalculatorImpl implements IdentityRoleCalculator {
     }
 
     @Override
+    @Transactional
     public void recalculateByOrgUnitId(final String orgUnitId) {
         Optional<Y9OrgBase> y9OrgBaseOptional = compositeOrgBaseService.findOrgUnit(orgUnitId);
         if (y9OrgBaseOptional.isPresent()) {
@@ -122,6 +126,7 @@ public class IdentityRoleCalculatorImpl implements IdentityRoleCalculator {
     }
 
     @Override
+    @Transactional
     public void recalculateByPersonId(String personId) {
         try {
             Optional<Y9Person> y9PersonOptional = y9PersonManager.findByIdFromCache(personId);
@@ -152,7 +157,8 @@ public class IdentityRoleCalculatorImpl implements IdentityRoleCalculator {
      * @param personId 人员id
      * @param newCalculatedY9RoleList 最新计算的角色列表
      */
-    private void removeInvalidByPersonId(String personId, List<Y9Role> newCalculatedY9RoleList) {
+    @Transactional
+    public void removeInvalidByPersonId(String personId, List<Y9Role> newCalculatedY9RoleList) {
         List<String> originY9RoleIdList = y9PersonToRoleManager.findRoleIdByPersonId(personId);
         Set<String> newCalculatedY9RoleIdSet =
             newCalculatedY9RoleList.stream().map(Y9Role::getId).collect(Collectors.toSet());
@@ -169,7 +175,8 @@ public class IdentityRoleCalculatorImpl implements IdentityRoleCalculator {
      * @param positionId 人员id
      * @param newCalculatedY9RoleList 最新计算的角色列表
      */
-    private void removeInvalidByPositionId(String positionId, List<Y9Role> newCalculatedY9RoleList) {
+    @Transactional
+    public void removeInvalidByPositionId(String positionId, List<Y9Role> newCalculatedY9RoleList) {
         List<String> originY9RoleIdList = y9PositionToRoleManager.listRoleIdByPositionId(positionId);
         Set<String> newCalculatedY9RoleIdSet =
             newCalculatedY9RoleList.stream().map(Y9Role::getId).collect(Collectors.toSet());

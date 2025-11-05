@@ -50,7 +50,6 @@ import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
  * @author mengjuhua
  * @date 2022/4/6
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -66,7 +65,7 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
     private final Y9AppManager y9AppManager;
     private final Y9MenuManager y9MenuManager;
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public void deleteByAuthorizationIdAndOrgUnitId(String authorizationId, String orgId) {
         List<Y9Position> allPersons = compositeOrgBaseManager.listAllDescendantPositions(orgId);
@@ -75,13 +74,13 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
         }
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public void deleteByAuthorizationIdAndPositionId(String authorizationId, String positionId) {
         y9PositionToResourceAndAuthorityRepository.deleteByAuthorizationIdAndPositionId(authorizationId, positionId);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public void deleteByOrgUnitId(String orgUnitId) {
         List<Y9Position> positionList = compositeOrgBaseManager.listAllDescendantPositions(orgUnitId);
@@ -90,7 +89,7 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
         }
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public void deleteByPositionId(String positionId) {
         y9PositionToResourceAndAuthorityRepository.deleteByPositionId(positionId);
@@ -116,6 +115,7 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9PositionToResourceAndAuthority> list(String positionId, String parentResourceId,
         AuthorityEnum authority) {
         if (StringUtils.isBlank(parentResourceId)) {
@@ -139,6 +139,7 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9App> listAppsByAuthority(String positionId, AuthorityEnum authority) {
         List<Y9PositionToResourceAndAuthority> resourceList = y9PositionToResourceAndAuthorityRepository
             .findByPositionIdAndAuthorityAndResourceType(positionId, authority, ResourceTypeEnum.APP);
@@ -148,7 +149,7 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
                 .getByTenantIdAndAppIdAndTenancy(Y9LoginUserHolder.getTenantId(), r.getResourceId(), true);
             if (y9TenantAppOptional.isPresent()) {
                 Y9App y9App = y9AppManager.getByIdFromCache(r.getResourceId());
-                if (y9App.getEnabled()) {
+                if (!Boolean.FALSE.equals(y9App.getEnabled())) {
                     appList.add(y9App);
                 }
             }
@@ -161,7 +162,7 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
         return y9PositionToResourceAndAuthorityRepository.findByPositionId(positionId);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Position y9Position, Y9Authorization y9Authorization,
         Boolean inherit) {
@@ -176,6 +177,7 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9ResourceBase> listSubResources(String positionId, String resourceId, AuthorityEnum authority) {
         Set<Y9ResourceBase> returnResourceSet = new HashSet<>();
         List<Y9PositionToResourceAndAuthority> personToResourceAndAuthorityList =
@@ -191,6 +193,7 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9Menu> listSubMenus(String positionId, String resourceId, ResourceTypeEnum resourceType,
         AuthorityEnum authority) {
         List<Y9PositionToResourceAndAuthority> personToResourceAndAuthorityList =
@@ -202,7 +205,7 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
         Set<Y9Menu> y9MenuSet = new HashSet<>();
         for (String menuId : menuIdList) {
             Y9Menu y9Menu = y9MenuManager.getByIdFromCache(menuId);
-            if (y9Menu.getEnabled()) {
+            if (!Boolean.FALSE.equals(y9Menu.getEnabled())) {
                 y9MenuSet.add(y9Menu);
             }
         }
@@ -210,14 +213,14 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onPositionDeleted(Y9EntityDeletedEvent<Y9Position> event) {
         Y9Position position = event.getEntity();
         y9PositionToResourceAndAuthorityRepository.deleteByPositionId(position.getId());
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onAuthorizationDeleted(Y9EntityDeletedEvent<Y9Authorization> event) {
         Y9Authorization y9Authorization = event.getEntity();
         y9PositionToResourceAndAuthorityRepository.deleteByAuthorizationId(y9Authorization.getId());

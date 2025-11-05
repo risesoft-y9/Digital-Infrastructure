@@ -129,7 +129,7 @@ public class Y9AppServiceImpl implements Y9AppService {
 
     @Override
     public List<Y9App> listByAppName(String appName) {
-        if (appName != null && appName.length() > 0) {
+        if (appName != null && !appName.isEmpty()) {
             return y9AppRepository.findByName(appName);
         }
         return Collections.emptyList();
@@ -156,6 +156,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
     public List<Y9App> listBySystemName(String systemName) {
         Optional<Y9System> y9SystemOptional = y9SystemRepository.findByName(systemName);
         if (y9SystemOptional.isPresent()) {

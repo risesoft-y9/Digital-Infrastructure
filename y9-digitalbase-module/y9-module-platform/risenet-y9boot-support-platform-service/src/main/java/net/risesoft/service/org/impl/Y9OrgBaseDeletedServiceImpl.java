@@ -24,7 +24,6 @@ import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
  * @author mengjuhua
  * @date 2022/2/10
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class Y9OrgBaseDeletedServiceImpl
@@ -38,7 +37,7 @@ public class Y9OrgBaseDeletedServiceImpl
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void onApplicationEvent(Y9EntityDeletedEvent<? extends Y9OrgBase> event) {
         Y9OrgBase y9OrgBase = event.getEntity();
         String json = Y9JsonUtil.writeValueAsString(y9OrgBase);

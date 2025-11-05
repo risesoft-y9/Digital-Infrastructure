@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.entity.org.Y9Department;
 import net.risesoft.entity.org.Y9DepartmentProp;
@@ -27,7 +28,7 @@ import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
  * @author mengjuhua
  * @date 2022/2/10
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
@@ -35,13 +36,13 @@ public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
     private final Y9DepartmentPropRepository y9DepartmentPropRepository;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void deleteById(String id) {
         y9DepartmentPropRepository.deleteById(id);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void deleteByDeptIdAndCategoryAndOrgBaseId(String deptId, DepartmentPropCategoryEnum category,
         String orgBaseId) {
         y9DepartmentPropRepository.deleteByDeptIdAndCategoryAndOrgBaseId(deptId, category.getValue(), orgBaseId);
@@ -78,7 +79,7 @@ public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void saveOrUpdate(Y9DepartmentProp y9DepartmentProp) {
         Optional<Y9DepartmentProp> optionalY9DepartmentProp =
             y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(y9DepartmentProp.getDeptId(),
@@ -107,23 +108,32 @@ public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
         Y9Department department = event.getEntity();
         y9DepartmentPropRepository.deleteByDeptId(department.getId());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("删除部门，同步删除部门信息配置执行完成！");
+        }
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onPersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
         Y9Person person = event.getEntity();
         y9DepartmentPropRepository.deleteByOrgBaseId(person.getId());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("删除人员时其下部门信息配置同步删除执行完成！");
+        }
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onPositionDeleted(Y9EntityDeletedEvent<Y9Position> event) {
         Y9Position position = event.getEntity();
         y9DepartmentPropRepository.deleteByOrgBaseId(position.getId());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("删除岗位时其下部门信息配置同步删除执行完成！");
+        }
     }
 }

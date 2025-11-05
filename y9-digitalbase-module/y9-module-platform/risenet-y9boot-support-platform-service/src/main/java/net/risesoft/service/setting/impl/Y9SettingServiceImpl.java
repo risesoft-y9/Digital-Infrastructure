@@ -23,7 +23,6 @@ import net.risesoft.service.setting.Y9SettingService;
  */
 @Slf4j
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9SettingServiceImpl implements Y9SettingService {
 
@@ -79,8 +78,8 @@ public class Y9SettingServiceImpl implements Y9SettingService {
         return setting;
     }
 
-    @Transactional(readOnly = false)
-    private void saveObjectFiledAsSettingItem(AbstractSetting setting) {
+    @Transactional
+    public void saveObjectFiledAsSettingItem(AbstractSetting setting) {
         Field[] declaredFields = setting.getClass().getDeclaredFields();
         for (Field declaredField : declaredFields) {
             declaredField.setAccessible(true);
@@ -99,7 +98,7 @@ public class Y9SettingServiceImpl implements Y9SettingService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Setting saveOrUpdate(Y9Setting y9Setting) {
         return y9SettingManager.save(y9Setting);
     }
@@ -110,7 +109,7 @@ public class Y9SettingServiceImpl implements Y9SettingService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void saveTenantSetting(TenantSetting tenantSetting) {
         this.saveObjectFiledAsSettingItem(tenantSetting);
     }

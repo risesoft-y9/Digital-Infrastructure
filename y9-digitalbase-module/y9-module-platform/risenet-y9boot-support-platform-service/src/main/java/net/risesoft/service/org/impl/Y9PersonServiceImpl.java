@@ -56,7 +56,6 @@ import net.risesoft.y9.util.signing.Y9MessageDigest;
  * @author mengjuhua
  * @date 2022/2/10
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -73,7 +72,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     private final Y9SettingService y9SettingService;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public List<Y9Person> addPersons(String parentId, List<String> personIds) {
         List<Y9Person> personList = new ArrayList<>();
         for (String originalId : personIds) {
@@ -111,7 +110,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Person changeDisabled(String id) {
         Y9Person currentPerson = this.getById(id);
         Y9Person originalPerson = Y9ModelConvertUtil.convert(currentPerson, Y9Person.class);
@@ -139,7 +138,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Person create(String parentId, String name, String loginName, String mobile) {
         Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByLoginNameAndOriginalTrue(loginName);
         Y9Person y9Person = y9PersonOptional.orElse(new Y9Person());
@@ -151,7 +150,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void delete(List<String> ids) {
         for (String id : ids) {
             delete(id);
@@ -159,7 +158,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void delete(String id) {
         Y9Person y9Person = this.getById(id);
 
@@ -182,7 +181,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void deleteByParentId(String parentId) {
         List<Y9Person> personList = listByParentId(parentId, null);
         for (Y9Person person : personList) {
@@ -227,6 +226,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Y9Person getPersonByLoginNameAndTenantId(String loginName, String tenantId) {
         List<Y9Person> personList = new ArrayList<>();
         try {
@@ -242,6 +242,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isLoginNameAvailable(String personId, final String loginName) {
         Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByLoginNameAndOriginalTrue(loginName);
 
@@ -274,6 +275,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9Person> listByIdTypeAndIdNum(String idType, String idNum, Boolean disabled) {
         List<Y9PersonExt> y9PersonExtList = y9PersonExtManager.listByIdTypeAndIdNum(idType, idNum);
         List<Y9Person> y9PersonList = new ArrayList<>();
@@ -309,6 +311,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9OrgBase> listParents(String personId) {
         List<String> parentIds = this.listParentIdByPersonId(personId);
         List<Y9OrgBase> parentList = new ArrayList<>();
@@ -320,7 +323,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Person modifyPassword(String id, String oldPassword, String newPassword) {
         Y9Person currentPerson = this.getById(id);
 
@@ -348,7 +351,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Person move(String id, String parentId) {
         Y9Person currentPerson = this.getById(id);
         Y9OrgBase parentToMove = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
@@ -372,7 +375,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public List<Y9OrgBase> order(List<String> personIds) {
         List<Y9OrgBase> personList = new ArrayList<>();
 
@@ -405,7 +408,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void resetDefaultPassword(String id) {
         Y9Person currentPerson = this.getById(id);
         Y9Person originalPerson = Y9ModelConvertUtil.convert(currentPerson, Y9Person.class);
@@ -426,7 +429,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Person saveAvator(String id, String avatorUrl) {
         final Y9Person person = this.getById(id);
 
@@ -436,7 +439,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Person saveOrUpdate(Y9Person person, Y9PersonExt personExt) {
         if (StringUtils.isNotBlank(person.getId())) {
             Optional<Y9Person> personOptional = y9PersonManager.findById(person.getId());
@@ -477,7 +480,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Person saveOrUpdate(Y9Person person, Y9PersonExt ext, List<String> positionIds, List<String> jobIds) {
         person = this.saveOrUpdate(person, ext);
 
@@ -503,7 +506,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Person saveProperties(String id, String properties) {
         Y9Person currentPerson = this.getById(id);
         Y9Person originalPerson = Y9ModelConvertUtil.convert(currentPerson, Y9Person.class);
@@ -525,7 +528,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Person saveWeixinId(String id, String weixinId) {
         Y9Person person = this.getById(id);
 
@@ -535,7 +538,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9Person updateTabIndex(String id, int tabIndex) {
         Y9Person currentPerson = y9PersonManager.getById(id);
         Y9Person originalPerson = Y9ModelConvertUtil.convert(currentPerson, Y9Person.class);
@@ -586,23 +589,29 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onParentDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
         Y9Department parentDepartment = event.getEntity();
         // 删除部门时其下人员也要删除
         deleteByParentId(parentDepartment.getId());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("删除部门时其下人员同步删除执行完成！");
+        }
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onParentOrganizationDeleted(Y9EntityDeletedEvent<Y9Organization> event) {
         Y9Organization y9Organization = event.getEntity();
         // 删除组织时其下人员也要删除
         deleteByParentId(y9Organization.getId());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("删除组织时其下人员同步删除执行完成！");
+        }
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onParentUpdated(Y9EntityUpdatedEvent<? extends Y9OrgBase> event) {
         Y9OrgBase originOrgBase = event.getOriginEntity();
         Y9OrgBase updatedOrgBase = event.getUpdatedEntity();

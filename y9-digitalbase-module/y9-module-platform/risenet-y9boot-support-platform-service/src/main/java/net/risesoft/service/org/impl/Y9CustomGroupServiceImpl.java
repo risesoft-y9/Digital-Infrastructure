@@ -31,7 +31,6 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
  * @date 2022/2/10
  */
 @Service
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
 
@@ -41,7 +40,7 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
     private final Y9CustomGroupMembersManager y9CustomGroupMembersManager;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void delete(List<String> idList) {
         for (String id : idList) {
             customGroupRepository.deleteById(id);
@@ -78,7 +77,7 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9CustomGroup save(Y9CustomGroup y9CustomGroup) {
         if (StringUtils.isBlank(y9CustomGroup.getId())) {
             y9CustomGroup.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
@@ -88,7 +87,7 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public boolean saveCustomGroupOrder(List<String> sortIdList) {
         for (int i = 0; i < sortIdList.size(); i++) {
             Y9CustomGroup customGroup = this.getById(sortIdList.get(i));
@@ -99,7 +98,7 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9CustomGroup saveOrUpdate(String personId, List<String> personIdList, String groupId, String groupName) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         Y9CustomGroup group = new Y9CustomGroup();
@@ -122,7 +121,7 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public boolean share(List<String> personIds, List<String> groupIds) {
         for (String personId : personIds) {
             for (String groupId : groupIds) {
@@ -133,7 +132,7 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
         return true;
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9CustomGroup share(String personId, String groupId) {
         Y9CustomGroup customGroup = this.getById(groupId);
         Y9CustomGroup group = new Y9CustomGroup();

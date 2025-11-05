@@ -12,14 +12,13 @@ import net.risesoft.service.idcode.Y9IdCodeService;
 
 /**
  * 统一码服务实现
- * 
+ *
  * @author : qinman
  * @date : 2024-06-12
  **/
 @Component
 @Slf4j
 @RequiredArgsConstructor
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 public class Y9IdCodeServiceImpl implements Y9IdCodeService {
 
     private final Y9IdCodeRepository y9IdCodeRepository;

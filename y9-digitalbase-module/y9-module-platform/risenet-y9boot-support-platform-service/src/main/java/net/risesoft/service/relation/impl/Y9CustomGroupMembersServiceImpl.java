@@ -30,7 +30,6 @@ import net.risesoft.specification.Y9CustomGroupMemberSpecification;
  * @author mengjuhua
  * @date 2022/2/10
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersService {
@@ -42,7 +41,7 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
     private final Y9PersonManager y9PersonManager;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void delete(List<String> memberIdList) {
         for (String id : memberIdList) {
             delete(id);
@@ -50,12 +49,13 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void delete(String id) {
         customGroupMembersRepository.deleteById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9Person> listAllPersonsByGroupId(String groupId) {
         List<Y9Person> orgPersonList = new ArrayList<>();
         List<Y9CustomGroupMember> orgCustomGroupMemberList =
@@ -104,19 +104,19 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void save(List<String> orgUnitList, String groupId) {
         y9CustomGroupMembersManager.save(orgUnitList, groupId);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Y9CustomGroupMember save(Y9CustomGroupMember member) {
         return customGroupMembersRepository.save(member);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public boolean saveOrder(List<String> memberIdList) {
         for (int i = 0; i < memberIdList.size(); i++) {
             Y9CustomGroupMember member = customGroupMembersRepository.findById(memberIdList.get(i)).orElse(null);
@@ -129,7 +129,7 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void share(String sourceGroupId, String targetGroupId) {
         y9CustomGroupMembersManager.share(sourceGroupId, targetGroupId);
     }

@@ -35,7 +35,6 @@ import net.risesoft.y9public.repository.role.Y9RoleRepository;
  * @author shidaobang
  * @date 2022/4/6
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -60,6 +59,7 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Boolean hasRole(String positionId, String systemName, String roleName, String properties) {
         Y9System y9System = y9SystemManager.getByName(systemName);
 
@@ -86,7 +86,7 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void removeByPositionId(String positionId) {
         List<Y9PositionToRole> y9PositionToRoleList = y9PositionToRoleRepository.findByPositionId(positionId);
         if (!y9PositionToRoleList.isEmpty()) {
@@ -95,7 +95,7 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void removeByRoleId(String roleId) {
         List<Y9PositionToRole> y9PositionToRoleList = y9PositionToRoleRepository.findByRoleId(roleId);
         if (!y9PositionToRoleList.isEmpty()) {
@@ -104,6 +104,7 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9Position> listPositionsByRoleId(String roleId, Boolean disabled) {
         List<String> positionIdList = y9PositionToRoleRepository.findPositionIdByRoleId(roleId);
         return positionIdList.stream().map(y9PositionManager::getByIdFromCache).filter(p -> {
@@ -116,13 +117,14 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Y9Role> listRolesByPositionId(String positionId) {
         List<String> roleIdList = y9PositionToRoleRepository.findRoleIdByPositionId(positionId);
         return roleIdList.stream().map(y9RoleManager::getByIdFromCache).collect(Collectors.toList());
     }
 
     @EventListener
-    @Transactional(readOnly = false)
+    @Transactional
     public void onPositionDeleted(Y9EntityDeletedEvent<Y9Position> event) {
         Y9Position position = event.getEntity();
         y9PositionToRoleRepository.deleteByPositionId(position.getId());
