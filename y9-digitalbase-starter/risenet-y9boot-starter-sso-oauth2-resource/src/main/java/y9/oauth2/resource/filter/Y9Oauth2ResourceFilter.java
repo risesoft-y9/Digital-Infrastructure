@@ -75,9 +75,9 @@ public class Y9Oauth2ResourceFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-            throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
+        throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest)servletRequest;
+        HttpServletResponse response = (HttpServletResponse)servletResponse;
 
         try {
             HttpSession session = request.getSession(false);
@@ -113,7 +113,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
                 DecodedJWT jwt = JWT.decode(accessToken);
                 if (y9Oauth2ResourceProperties.getJwt().isValidationRequired() && !verify(jwt)) {
                     setResponse(response, HttpStatus.UNAUTHORIZED,
-                            GlobalErrorCodeEnum.ACCESS_TOKEN_VERIFICATION_FAILED);
+                        GlobalErrorCodeEnum.ACCESS_TOKEN_VERIFICATION_FAILED);
                     return;
                 }
                 userInfo = toUserInfo(jwt);
@@ -183,12 +183,12 @@ public class Y9Oauth2ResourceFilter implements Filter {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setBasicAuth(y9Oauth2ResourceProperties.getOpaque().getClientId(),
-                y9Oauth2ResourceProperties.getOpaque().getClientSecret(), StandardCharsets.UTF_8);
+            y9Oauth2ResourceProperties.getOpaque().getClientSecret(), StandardCharsets.UTF_8);
 
         URI uri = URI.create(y9Oauth2ResourceProperties.getOpaque().getIntrospectionUri() + "?token=" + accessToken);
         RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.POST, uri);
         ResponseEntity<OAuth20IntrospectionAccessTokenResponse> responseEntity =
-                this.restTemplate.exchange(requestEntity, OAuth20IntrospectionAccessTokenResponse.class);
+            this.restTemplate.exchange(requestEntity, OAuth20IntrospectionAccessTokenResponse.class);
         return responseEntity;
     }
 
@@ -248,8 +248,8 @@ public class Y9Oauth2ResourceFilter implements Filter {
 
         }
 
-        JwkProvider provider = new JwkProviderBuilder(url).cached(10, 24, TimeUnit.HOURS)
-                .rateLimited(10, 1, TimeUnit.MINUTES).build();
+        JwkProvider provider =
+            new JwkProviderBuilder(url).cached(10, 24, TimeUnit.HOURS).rateLimited(10, 1, TimeUnit.MINUTES).build();
 
         Jwk jwk = null;
         try {
@@ -270,10 +270,10 @@ public class Y9Oauth2ResourceFilter implements Filter {
         Algorithm algorithm = null;
         switch (jwt.getAlgorithm()) {
             case "RS256":
-                algorithm = Algorithm.RSA256((RSAPublicKey) publicKey);
+                algorithm = Algorithm.RSA256((RSAPublicKey)publicKey);
                 break;
             case "RS512":
-                algorithm = Algorithm.RSA512((RSAPublicKey) publicKey);
+                algorithm = Algorithm.RSA512((RSAPublicKey)publicKey);
         }
         try {
             algorithm.verify(jwt);
@@ -282,7 +282,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
             return false;
         }
 
-        BaseVerification verification = (BaseVerification) JWT.require(algorithm);
+        BaseVerification verification = (BaseVerification)JWT.require(algorithm);
         verification.withClaimPresence("tenantId");
         JWTVerifier verifier = verification.build();
         try {
@@ -318,7 +318,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
         userInfo.setIdNum(jwt.getClaim("idNum").asString());
         userInfo.setAvator(jwt.getClaim("avator").asString());
         userInfo.setPersonType(jwt.getClaim("personType").asString());
-        //userInfo.setPassword(jwt.getClaim("password").asString());
+        // userInfo.setPassword(jwt.getClaim("password").asString());
         userInfo.setGlobalManager(jwt.getClaim("globalManager").asBoolean());
         userInfo.setManagerLevel(Y9EnumUtil.valueOf(ManagerLevelEnum.class, jwt.getClaim("managerLevel").asInt()));
         return userInfo;

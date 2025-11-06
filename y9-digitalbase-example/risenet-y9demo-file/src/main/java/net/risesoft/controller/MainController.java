@@ -74,7 +74,7 @@ public class MainController {
     @PostMapping(value = "/uploadFile")
     public void uploadFile(MultipartFile file) {
         try {
-            String fullPath = Y9FileStore.buildPath("aaa","bbb");
+            String fullPath = Y9FileStore.buildPath("aaa", "bbb");
             Y9FileStore y9FileStore = y9FileStoreService.uploadFile(file, fullPath, file.getOriginalFilename());
             log.info("fileStoreId:{}", y9FileStore.getId());
         } catch (Exception e) {

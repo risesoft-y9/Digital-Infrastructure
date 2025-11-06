@@ -24,15 +24,15 @@ public class Y9logUserHostIpInfoCustomRepositoryImpl implements Y9logUserHostIpI
 
     private final Y9LogUserHostIpInfoRepository y9logUserHostIpInfoRepository;
 
-    @Override
-    public List<Y9LogUserHostIpInfoDO> findByUserHostIp(String userHostIp) {
-        return poToDoList(y9logUserHostIpInfoRepository.findByUserHostIp(userHostIp));
-    }
-
     private static List<Y9LogUserHostIpInfoDO> poToDoList(List<Y9LogUserHostIpInfo> list) {
         return list.stream()
             .map(h -> Y9ModelConvertUtil.convert(h, Y9LogUserHostIpInfoDO.class))
             .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Y9LogUserHostIpInfoDO> findByUserHostIp(String userHostIp) {
+        return poToDoList(y9logUserHostIpInfoRepository.findByUserHostIp(userHostIp));
     }
 
     @Override

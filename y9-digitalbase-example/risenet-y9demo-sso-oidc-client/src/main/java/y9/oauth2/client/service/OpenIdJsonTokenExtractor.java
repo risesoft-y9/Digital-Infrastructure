@@ -8,13 +8,7 @@ import com.github.scribejava.core.extractors.OAuth2AccessTokenJsonExtractor;
  */
 public class OpenIdJsonTokenExtractor extends OAuth2AccessTokenJsonExtractor {
 
-    protected OpenIdJsonTokenExtractor() {
-    }
-
-    private static class InstanceHolder {
-
-        private static final OpenIdJsonTokenExtractor INSTANCE = new OpenIdJsonTokenExtractor();
-    }
+    protected OpenIdJsonTokenExtractor() {}
 
     public static OpenIdJsonTokenExtractor instance() {
         return InstanceHolder.INSTANCE;
@@ -22,9 +16,14 @@ public class OpenIdJsonTokenExtractor extends OAuth2AccessTokenJsonExtractor {
 
     @Override
     protected OpenIdOAuth2AccessToken createToken(String accessToken, String tokenType, Integer expiresIn,
-            String refreshToken, String scope, JsonNode response, String rawResponse) {
+        String refreshToken, String scope, JsonNode response, String rawResponse) {
         final JsonNode idToken = response.get("id_token");
         return new OpenIdOAuth2AccessToken(accessToken, tokenType, expiresIn, refreshToken, scope,
-                idToken == null ? null : idToken.asText(), rawResponse);
+            idToken == null ? null : idToken.asText(), rawResponse);
+    }
+
+    private static class InstanceHolder {
+
+        private static final OpenIdJsonTokenExtractor INSTANCE = new OpenIdJsonTokenExtractor();
     }
 }

@@ -28,7 +28,9 @@ public class Y9LogProperties {
     @Getter
     @AllArgsConstructor
     public enum ReportMethod {
-        API, KAFKA, CONSOLE
+        API,
+        KAFKA,
+        CONSOLE
     }
 
 }

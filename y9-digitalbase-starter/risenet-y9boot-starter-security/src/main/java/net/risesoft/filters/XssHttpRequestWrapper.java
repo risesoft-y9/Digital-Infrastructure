@@ -26,6 +26,20 @@ import net.risesoft.y9.configuration.feature.security.Y9SecurityProperties;
 @Slf4j
 public class XssHttpRequestWrapper extends HttpServletRequestWrapper {
 
+    private static Policy policy;
+
+    static {
+        try {
+            policy = Policy.getInstance(new ClassPathResource("antisamy-y9.xml").getInputStream());
+        } catch (PolicyException | IOException e) {
+            LOGGER.warn(e.getMessage(), e);
+        }
+    }
+
+    public XssHttpRequestWrapper(HttpServletRequest request) {
+        super(request);
+    }
+
     public static void main(String[] args) {
         try {
             String str = "<script>alert(\"xss\");</script>HELLO WORD！";
@@ -42,20 +56,6 @@ public class XssHttpRequestWrapper extends HttpServletRequestWrapper {
             LOGGER.warn(e.getMessage(), e);
         }
 
-    }
-
-    private static Policy policy;
-
-    static {
-        try {
-            policy = Policy.getInstance(new ClassPathResource("antisamy-y9.xml").getInputStream());
-        } catch (PolicyException | IOException e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-    }
-
-    public XssHttpRequestWrapper(HttpServletRequest request) {
-        super(request);
     }
 
     /**

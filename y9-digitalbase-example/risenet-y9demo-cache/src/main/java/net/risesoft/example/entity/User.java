@@ -13,7 +13,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 /**
  * 描述：人员
  */

@@ -62,19 +62,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     private static final FastDateFormat DATE_TIME_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
 
     private static final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd");
-
-    private static PageImpl<Y9LogAccessLogDO> poPageToDoPage(Page<Y9LogAccessLog> y9LogAccessLogPage) {
-        List<Y9LogAccessLogDO> list = y9LogAccessLogPage.getContent()
-            .stream()
-            .map(l -> Y9ModelConvertUtil.convert(l, Y9LogAccessLogDO.class))
-            .collect(Collectors.toList());
-        return new PageImpl<>(list, y9LogAccessLogPage.getPageable(), y9LogAccessLogPage.getTotalElements());
-    }
-
     private final Y9logMappingCustomRepository y9logMappingCustomRepository;
-
     private final Y9LogAccessLogRepository y9logAccessLogRepository;
-
     private final JdbcTemplate jdbcTemplate4Public;
 
     public Y9logAccessLogCustomRepositoryImpl(
@@ -84,6 +73,14 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         this.y9logMappingCustomRepository = y9logMappingCustomRepository;
         this.y9logAccessLogRepository = y9logAccessLogRepository;
         this.jdbcTemplate4Public = jdbcTemplate4Public;
+    }
+
+    private static PageImpl<Y9LogAccessLogDO> poPageToDoPage(Page<Y9LogAccessLog> y9LogAccessLogPage) {
+        List<Y9LogAccessLogDO> list = y9LogAccessLogPage.getContent()
+            .stream()
+            .map(l -> Y9ModelConvertUtil.convert(l, Y9LogAccessLogDO.class))
+            .collect(Collectors.toList());
+        return new PageImpl<>(list, y9LogAccessLogPage.getPageable(), y9LogAccessLogPage.getTotalElements());
     }
 
     @Override

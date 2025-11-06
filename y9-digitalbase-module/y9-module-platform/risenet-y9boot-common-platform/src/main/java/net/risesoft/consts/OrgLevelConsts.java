@@ -22,6 +22,10 @@ public class OrgLevelConsts extends LevelConsts {
     /** 角色，岗位，用户组，人员 */
     public static final String CN = "cn=";
 
+    private OrgLevelConsts() {
+        throw new IllegalStateException("OrgLevelConsts class");
+    }
+
     /**
      * 根据组织节点类型得到
      *
@@ -42,9 +46,5 @@ public class OrgLevelConsts extends LevelConsts {
                 break;
         }
         return orgLevel;
-    }
-
-    private OrgLevelConsts() {
-        throw new IllegalStateException("OrgLevelConsts class");
     }
 }

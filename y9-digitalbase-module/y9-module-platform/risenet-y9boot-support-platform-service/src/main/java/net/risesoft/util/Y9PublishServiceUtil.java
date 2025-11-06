@@ -32,8 +32,8 @@ import net.risesoft.y9.pubsub.message.Y9MessageOrg;
  */
 @Slf4j
 public class Y9PublishServiceUtil {
-    private static boolean inited = false;
     private static final List<Y9PublishService> y9PublishServices = new ArrayList<>();
+    private static boolean inited = false;
     private static JdbcTemplate jdbcTemplate;
 
     private static void checkBeans() {

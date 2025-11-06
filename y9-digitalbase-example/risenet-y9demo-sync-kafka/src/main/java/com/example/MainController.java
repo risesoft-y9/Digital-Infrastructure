@@ -1,5 +1,7 @@
 package com.example;
 
+import jakarta.annotation.Resource;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,8 +13,6 @@ import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.Y9PublishService;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
-
-import jakarta.annotation.Resource;
 
 @RestController
 @RequestMapping("/")

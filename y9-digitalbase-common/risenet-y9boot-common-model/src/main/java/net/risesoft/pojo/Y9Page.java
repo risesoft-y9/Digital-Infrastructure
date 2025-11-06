@@ -28,50 +28,30 @@ import net.risesoft.exception.GlobalErrorCodeEnum;
 public class Y9Page<T> implements Serializable {
 
     private static final long serialVersionUID = 6789650187574079674L;
-
-    public static <T> Y9Page<T> success(int currPage, int totalPages, long total, List<T> rows) {
-        return success(currPage, totalPages, total, rows, GlobalErrorCodeEnum.SUCCESS.getDescription());
-    }
-
-    public static <T> Y9Page<T> success(int currPage, int totalPages, long total, List<T> rows, String msg) {
-        return new Y9Page<>(currPage, totalPages, total, rows, GlobalErrorCodeEnum.SUCCESS.getCode(), msg,
-            Boolean.TRUE);
-    }
-
-    public static <T> Y9Page<T> failure(int currPage, int totalPages, long total, List<T> rows, String msg, long code) {
-        return new Y9Page<>(currPage, totalPages, total, rows, code, msg, Boolean.FALSE);
-    }
-
     /**
      * 当前页
      */
     private int currPage;
-
     /**
      * 总页数
      */
     private int totalPages;
-
     /**
      * 总条数
      */
     private long total;
-
     /**
      * 数据项
      */
     private List<T> rows;
-
     /**
      * 错误代码
      */
     private long code;
-
     /**
      * 调用信息
      */
     private String msg;
-
     /**
      * 操作是否成功
      */
@@ -85,5 +65,18 @@ public class Y9Page<T> implements Serializable {
     @Deprecated
     public Y9Page() {
 
+    }
+
+    public static <T> Y9Page<T> success(int currPage, int totalPages, long total, List<T> rows) {
+        return success(currPage, totalPages, total, rows, GlobalErrorCodeEnum.SUCCESS.getDescription());
+    }
+
+    public static <T> Y9Page<T> success(int currPage, int totalPages, long total, List<T> rows, String msg) {
+        return new Y9Page<>(currPage, totalPages, total, rows, GlobalErrorCodeEnum.SUCCESS.getCode(), msg,
+            Boolean.TRUE);
+    }
+
+    public static <T> Y9Page<T> failure(int currPage, int totalPages, long total, List<T> rows, String msg, long code) {
+        return new Y9Page<>(currPage, totalPages, total, rows, code, msg, Boolean.FALSE);
     }
 }

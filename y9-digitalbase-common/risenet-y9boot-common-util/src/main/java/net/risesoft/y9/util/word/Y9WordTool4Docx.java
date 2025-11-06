@@ -72,7 +72,9 @@ public class Y9WordTool4Docx {
                             Node node2 = node1.getChildNodes().item(x);
                             // 遍历所有节点为"w:r"的所有自己点，找到节点名为"w:rPr"的节点
                             for (int y = 0; y < node2.getChildNodes().getLength(); y++) {
-                                if (node2.getChildNodes().item(y).getNodeName()
+                                if (node2.getChildNodes()
+                                    .item(y)
+                                    .getNodeName()
                                     .endsWith(Y9BookMark4Docx.STYLE_NODE_NAME)) {
                                     // 将节点为"w:rPr"的节点(字体格式)存到HashMap中
                                     styleNode.put(i + "", node2.getChildNodes().item(y));
@@ -122,8 +124,10 @@ public class Y9WordTool4Docx {
                             // 改变单元格的值，标题栏不用改变单元格的值
                             run.setText(content.get(i - rowNum).get(columnMap.get(j + "")));
                             // 将单元格段落的字体格式设为原来单元格的字体格式
-                            run.getCTR().getDomNode().insertBefore(styleNode.get(j + "").cloneNode(true),
-                                run.getCTR().getDomNode().getFirstChild());
+                            run.getCTR()
+                                .getDomNode()
+                                .insertBefore(styleNode.get(j + "").cloneNode(true),
+                                    run.getCTR().getDomNode().getFirstChild());
                         }
                         para.setAlignment(ParagraphAlignment.CENTER);
                     }

@@ -3,14 +3,6 @@ package net.risesoft.y9public.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,6 +10,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+
+import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "RISESOFT_DEMO_TIPS")

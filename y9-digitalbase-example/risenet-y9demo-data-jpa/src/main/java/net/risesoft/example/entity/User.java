@@ -2,16 +2,16 @@ package net.risesoft.example.entity;
 
 import java.io.Serializable;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 /**
  * 描述：人员

@@ -1,6 +1,5 @@
 package net.risesoft.y9.util.mime;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 

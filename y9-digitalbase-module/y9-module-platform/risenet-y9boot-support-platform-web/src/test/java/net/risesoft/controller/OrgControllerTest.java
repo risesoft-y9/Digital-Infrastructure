@@ -58,9 +58,8 @@ public class OrgControllerTest {
         if (orgType.equals(OrgTypeEnum.DEPARTMENT)) {
             id = y9Department.getId();
         }
-        mockMvc.perform(post("/api/rest/org/getAllPersonsCount")
-                        .param("id", id).param("orgType", orgType.toString()))
-                .andExpect(status().isOk());
+        mockMvc.perform(post("/api/rest/org/getAllPersonsCount").param("id", id).param("orgType", orgType.toString()))
+            .andExpect(status().isOk());
         if (orgType.equals(OrgTypeEnum.ORGANIZATION)) {
             verify(y9OrganizationService, times(1)).getById(y9Organization.getId());
         }
@@ -91,37 +90,39 @@ public class OrgControllerTest {
     @Test
     void testChangeDisabled() throws Exception {
         when(y9OrganizationService.changeDisabled(y9Organization.getId())).thenReturn(y9Organization);
-        mockMvc.perform(post("/api/rest/org/changeDisabled")
-                        .param("id", y9Organization.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.id").value(y9Organization.getId()))
-                .andExpect(jsonPath("$.msg").value("组织禁用状态修改成功"));
+        mockMvc.perform(post("/api/rest/org/changeDisabled").param("id", y9Organization.getId()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.id").value(y9Organization.getId()))
+            .andExpect(jsonPath("$.msg").value("组织禁用状态修改成功"));
         verify(y9OrganizationService, times(1)).changeDisabled(y9Organization.getId());
     }
 
     @Test
     public void testGetExtendProperties() throws Exception {
         when(y9OrganizationService.getById(y9Organization.getId())).thenReturn(y9Organization);
-        mockMvc.perform(get("/api/rest/org/getExtendProperties")
-                        .param("orgId", y9Organization.getId())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/rest/org/getExtendProperties").param("orgId", y9Organization.getId())
+            .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
     }
 
     @Test
     void testRemove() throws Exception {
-        mockMvc.perform(
-            post("/api/rest/org/remove").contentType(MediaType.APPLICATION_JSON).param("orgId", y9Organization.getId()))
-            .andExpect(status().isOk()).andExpect(jsonPath("$.success").value(true));
+        mockMvc
+            .perform(post("/api/rest/org/remove").contentType(MediaType.APPLICATION_JSON)
+                .param("orgId", y9Organization.getId()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.success").value(true));
     }
 
     @Test
     void testSaveOrUpdate() throws Exception {
         when(y9OrganizationService.saveOrUpdate(y9Organization)).thenReturn(y9Organization);
-        MvcResult mvcResult = mockMvc.perform(post("/api/rest/org/saveOrUpdate").contentType(MediaType.APPLICATION_JSON).param("id", y9Organization.getId()).param("name", y9Organization.getName()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andReturn();
+        MvcResult mvcResult = mockMvc
+            .perform(post("/api/rest/org/saveOrUpdate").contentType(MediaType.APPLICATION_JSON)
+                .param("id", y9Organization.getId())
+                .param("name", y9Organization.getName()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.success").value(true))
+            .andReturn();
         System.out.println(mvcResult.getResponse().getContentAsString(Charset.defaultCharset()));
     }
 }

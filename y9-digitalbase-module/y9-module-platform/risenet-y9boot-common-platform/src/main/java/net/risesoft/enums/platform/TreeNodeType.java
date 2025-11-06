@@ -37,8 +37,7 @@ public enum TreeNodeType {
     /** 操作 */
     OPERATION("OPERATION");
     ;
-    
+
     private final String value;
-    
-    
+
 }

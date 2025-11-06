@@ -12,7 +12,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import net.risesoft.log.repository.Y9logUserLoginInfoCustomRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -40,11 +39,11 @@ import net.risesoft.consts.InitDataConsts;
 import net.risesoft.log.constant.Y9ESIndexConst;
 import net.risesoft.log.constant.Y9LogSearchConsts;
 import net.risesoft.log.domain.Y9LogUserLoginInfoDO;
+import net.risesoft.log.repository.Y9logUserLoginInfoCustomRepository;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9Util;
 import net.risesoft.y9public.entity.Y9LogUserLoginInfo;
@@ -71,6 +70,14 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
 
     private final Y9LogUserLoginInfoRepository y9logUserLoginInfoRepository;
     private final ElasticsearchOperations elasticsearchOperations;
+
+    private static PageImpl<Y9LogUserLoginInfoDO> poPageToDoPage(Page<Y9LogUserLoginInfo> userLoginInfoPage) {
+        List<Y9LogUserLoginInfoDO> list = userLoginInfoPage.getContent()
+            .stream()
+            .map(l -> Y9ModelConvertUtil.convert(l, Y9LogUserLoginInfoDO.class))
+            .collect(Collectors.toList());
+        return new PageImpl<>(list, userLoginInfoPage.getPageable(), userLoginInfoPage.getTotalElements());
+    }
 
     @Override
     public long countByLoginTimeBetweenAndSuccess(Date startTime, Date endTime, String success) {
@@ -246,8 +253,14 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
                 Map<String, Object> map = new HashMap<>();
                 StringTermsBucket bucket = stbList.get(i);
                 long count = bucket.docCount();
-                Y9LogUserLoginInfo y9logUserLoginInfo = bucket.aggregations().get("topHits").topHits().hits().hits()
-                    .get(0).source().to(Y9LogUserLoginInfo.class);
+                Y9LogUserLoginInfo y9logUserLoginInfo = bucket.aggregations()
+                    .get("topHits")
+                    .topHits()
+                    .hits()
+                    .hits()
+                    .get(0)
+                    .source()
+                    .to(Y9LogUserLoginInfo.class);
                 map.put(Y9LogSearchConsts.USER_ID, y9logUserLoginInfo.getUserId());
                 map.put(Y9LogSearchConsts.USER_NAME, y9logUserLoginInfo.getUserName());
                 map.put("serverCount", String.valueOf(count));
@@ -458,13 +471,5 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         Y9LogUserLoginInfo y9LogUserLoginInfo =
             Y9ModelConvertUtil.convert(y9LogUserLoginInfoDO, Y9LogUserLoginInfo.class);
         y9logUserLoginInfoRepository.save(y9LogUserLoginInfo);
-    }
-
-    private static PageImpl<Y9LogUserLoginInfoDO> poPageToDoPage(Page<Y9LogUserLoginInfo> userLoginInfoPage) {
-        List<Y9LogUserLoginInfoDO> list = userLoginInfoPage.getContent()
-            .stream()
-            .map(l -> Y9ModelConvertUtil.convert(l, Y9LogUserLoginInfoDO.class))
-            .collect(Collectors.toList());
-        return new PageImpl<>(list, userLoginInfoPage.getPageable(), userLoginInfoPage.getTotalElements());
     }
 }

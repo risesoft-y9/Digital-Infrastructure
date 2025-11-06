@@ -203,7 +203,8 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         if (systemId != null) {
             List<Map<String, Object>> tenantSystems = publicJdbcTemplate.queryForList(
                 "SELECT TENANT_ID, TENANT_DATA_SOURCE FROM Y9_COMMON_TENANT_SYSTEM WHERE SYSTEM_ID = ?", systemId);
-            Set<String> tenantIdSet = tenantSystems.stream().map(tenantSystem -> (String)tenantSystem.get("TENANT_ID"))
+            Set<String> tenantIdSet = tenantSystems.stream()
+                .map(tenantSystem -> (String)tenantSystem.get("TENANT_ID"))
                 .collect(Collectors.toSet());
 
             // 2.1.1 有租户租用系统

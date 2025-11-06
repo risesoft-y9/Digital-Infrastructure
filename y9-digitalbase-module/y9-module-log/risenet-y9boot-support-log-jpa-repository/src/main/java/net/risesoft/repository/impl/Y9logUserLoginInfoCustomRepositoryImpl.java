@@ -54,6 +54,7 @@ import net.risesoft.y9public.repository.Y9LogUserLoginInfoRepository;
 public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInfoCustomRepository {
 
     private static final FastDateFormat DATE_TIME_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
+    private final Y9LogUserLoginInfoRepository y9logUserLoginInfoRepository;
 
     private static PageImpl<Y9LogUserLoginInfoDO> poPageToDoPage(Page<Y9LogUserLoginInfo> userLoginInfoPage) {
         List<Y9LogUserLoginInfoDO> list = userLoginInfoPage.getContent()
@@ -62,8 +63,6 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             .collect(Collectors.toList());
         return new PageImpl<>(list, userLoginInfoPage.getPageable(), userLoginInfoPage.getTotalElements());
     }
-
-    private final Y9LogUserLoginInfoRepository y9logUserLoginInfoRepository;
 
     @Override
     public long countByLoginTimeBetweenAndSuccess(Date startTime, Date endTime, String success) {

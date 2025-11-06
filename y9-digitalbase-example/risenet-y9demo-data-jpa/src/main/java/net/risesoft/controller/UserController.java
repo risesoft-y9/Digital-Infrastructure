@@ -59,8 +59,7 @@ public class UserController {
             user.setSex("男");
             user = userService.save(user);
 
-            tipsService.saveOrUpdate(Y9IdGenerator.genId(), user.getId(), "测试消息", "http://127.0.0.1:7056/links",
-                null);
+            tipsService.saveOrUpdate(Y9IdGenerator.genId(), user.getId(), "测试消息", "http://127.0.0.1:7056/links", null);
         }
         User user2 = userService.findTopByOrderByIdDesc();
         User newUser = userService.findById(user2.getId());

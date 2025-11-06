@@ -86,6 +86,37 @@ public class Y9LogConfiguration {
         return new Y9Context();
     }
 
+    @Bean
+    @ConditionalOnMissingBean(name = "y9LogFilter")
+    public FilterRegistrationBean<LogFilter> y9LogFilter(AccessLogReporter accessLogReporter,
+        Y9Properties y9Properties) {
+        String serverIp = InetAddressUtil.getLocalAddress(y9Properties.getInternalIp()).getHostAddress();
+
+        final FilterRegistrationBean<LogFilter> filterBean = new FilterRegistrationBean<>();
+        filterBean.setFilter(new LogFilter(accessLogReporter, serverIp));
+        filterBean.setAsyncSupported(false);
+        filterBean.addUrlPatterns("/*");
+        filterBean.setOrder(FilterOrderConsts.LOG_ORDER);
+
+        return filterBean;
+    }
+
+    @Bean(name = {"y9ThreadPoolTaskExecutor"})
+    @ConditionalOnMissingBean(name = "y9ThreadPoolTaskExecutor")
+    public Executor y9ThreadPoolTaskExecutor(ThreadPoolTaskExecutorBuilder builder) {
+        ThreadPoolTaskExecutor taskExecutor = builder.build();
+        // 核心线程数
+        taskExecutor.setCorePoolSize(10);
+        taskExecutor.setAllowCoreThreadTimeOut(true);
+        // 最大线程数
+        taskExecutor.setMaxPoolSize(20);
+        // 配置队列大小
+        taskExecutor.setQueueCapacity(100);
+        taskExecutor.setThreadNamePrefix("y9Log-");
+        taskExecutor.initialize();
+        return TtlExecutors.getTtlExecutor(taskExecutor);
+    }
+
     @Configuration
     @AutoConfigureAfter(KafkaAutoConfiguration.class)
     @ConditionalOnProperty(value = "y9.feature.log.reportMethod", havingValue = "kafka", matchIfMissing = true)
@@ -126,36 +157,5 @@ public class Y9LogConfiguration {
             return new AccessLogConsoleReporter();
         }
 
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(name = "y9LogFilter")
-    public FilterRegistrationBean<LogFilter> y9LogFilter(AccessLogReporter accessLogReporter,
-        Y9Properties y9Properties) {
-        String serverIp = InetAddressUtil.getLocalAddress(y9Properties.getInternalIp()).getHostAddress();
-
-        final FilterRegistrationBean<LogFilter> filterBean = new FilterRegistrationBean<>();
-        filterBean.setFilter(new LogFilter(accessLogReporter, serverIp));
-        filterBean.setAsyncSupported(false);
-        filterBean.addUrlPatterns("/*");
-        filterBean.setOrder(FilterOrderConsts.LOG_ORDER);
-
-        return filterBean;
-    }
-
-    @Bean(name = {"y9ThreadPoolTaskExecutor"})
-    @ConditionalOnMissingBean(name = "y9ThreadPoolTaskExecutor")
-    public Executor y9ThreadPoolTaskExecutor(ThreadPoolTaskExecutorBuilder builder) {
-        ThreadPoolTaskExecutor taskExecutor = builder.build();
-        // 核心线程数
-        taskExecutor.setCorePoolSize(10);
-        taskExecutor.setAllowCoreThreadTimeOut(true);
-        // 最大线程数
-        taskExecutor.setMaxPoolSize(20);
-        // 配置队列大小
-        taskExecutor.setQueueCapacity(100);
-        taskExecutor.setThreadNamePrefix("y9Log-");
-        taskExecutor.initialize();
-        return TtlExecutors.getTtlExecutor(taskExecutor);
     }
 }

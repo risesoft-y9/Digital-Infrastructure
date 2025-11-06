@@ -244,8 +244,11 @@ public class Y9RegisterByApisixRestApi {
                         AnnotationInfo methodRequestMappingAnnotationInfo =
                             methodInfo.getAnnotationInfo("org.springframework.web.bind.annotation.RequestMapping");
                         if (null != methodRequestMappingAnnotationInfo) {
-                            String[] methodRequestMappingAnnotationValues = (String[])methodRequestMappingAnnotationInfo
-                                .getParameterValues().asMap().get("value").getValue();
+                            String[] methodRequestMappingAnnotationValues =
+                                (String[])methodRequestMappingAnnotationInfo.getParameterValues()
+                                    .asMap()
+                                    .get("value")
+                                    .getValue();
 
                             for (String methodRequestMappingAnnotationValue : methodRequestMappingAnnotationValues) {
                                 methodRequestMappingAnnotationValue = methodRequestMappingAnnotationValue.contains("{")

@@ -36,6 +36,8 @@ import net.risesoft.y9public.repository.Y9LogMappingRepository;
 @RequiredArgsConstructor
 public class Y9logMappingCustomRepositoryImpl implements Y9logMappingCustomRepository {
 
+    private final Y9LogMappingRepository y9logMappingRepository;
+
     private static PageImpl<Y9LogMappingDO> poPageToDoPage(Page<Y9LogMapping> logMappingPage) {
         List<Y9LogMappingDO> list = logMappingPage.getContent()
             .stream()
@@ -43,8 +45,6 @@ public class Y9logMappingCustomRepositoryImpl implements Y9logMappingCustomRepos
             .collect(Collectors.toList());
         return new PageImpl<>(list, logMappingPage.getPageable(), logMappingPage.getTotalElements());
     }
-
-    private final Y9LogMappingRepository y9logMappingRepository;
 
     @Override
     public void deleteById(String id) {

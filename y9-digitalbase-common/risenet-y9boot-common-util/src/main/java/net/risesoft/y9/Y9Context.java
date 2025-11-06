@@ -98,7 +98,7 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
 
     /**
      * 获取对象
-     * 
+     *
      * @param name bean名字
      * @return T 一个以所给名字注册的bean的实例
      * @param <T> 返回类型
@@ -111,7 +111,7 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
 
     /**
      * 获取对应类型的bean
-     * 
+     *
      * @param clz the class or interface to match, or null for all concrete beans
      * @return a Map with the matching beans, containing the bean names as keys and the corresponding bean instances as
      *         values

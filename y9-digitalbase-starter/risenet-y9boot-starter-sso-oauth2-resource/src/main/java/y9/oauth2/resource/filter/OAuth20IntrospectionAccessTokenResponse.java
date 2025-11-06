@@ -1,15 +1,16 @@
 package y9.oauth2.resource.filter;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-
-import java.io.Serial;
-import java.io.Serializable;
 
 /**
  * This is {@link OAuth20IntrospectionAccessTokenResponse}.

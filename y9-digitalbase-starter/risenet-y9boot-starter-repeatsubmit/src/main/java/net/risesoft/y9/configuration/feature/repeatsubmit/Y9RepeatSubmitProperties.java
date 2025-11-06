@@ -24,6 +24,7 @@ public class Y9RepeatSubmitProperties {
     private CacheType cacheType = CacheType.LOCAL;
 
     public enum CacheType {
-        LOCAL, REDIS
+        LOCAL,
+        REDIS
     }
 }

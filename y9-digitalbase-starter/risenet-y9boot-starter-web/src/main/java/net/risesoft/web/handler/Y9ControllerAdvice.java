@@ -118,8 +118,12 @@ public class Y9ControllerAdvice {
         // 参数类型不匹配检验
         StringBuilder msg = new StringBuilder();
         List<FieldError> fieldErrors = e.getFieldErrors();
-        fieldErrors.forEach((oe) -> msg.append(oe.getObjectName()).append(".").append(oe.getField()).append("=")
-            .append(oe.getRejectedValue()).append("，与预期的字段类型不匹配"));
+        fieldErrors.forEach((oe) -> msg.append(oe.getObjectName())
+            .append(".")
+            .append(oe.getField())
+            .append("=")
+            .append(oe.getRejectedValue())
+            .append("，与预期的字段类型不匹配"));
         return Y9Result.failure(GlobalErrorCodeEnum.INVALID_ARGUMENT, msg.toString());
     }
 

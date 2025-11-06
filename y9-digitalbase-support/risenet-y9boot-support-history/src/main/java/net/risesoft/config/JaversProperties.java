@@ -21,6 +21,11 @@ public class JaversProperties {
     private Dialect dialect = Dialect.AUTO;
 
     public enum Dialect {
-        AUTO, H2, POSTGRES, ORACLE, MYSQL, MSSQL;
+        AUTO,
+        H2,
+        POSTGRES,
+        ORACLE,
+        MYSQL,
+        MSSQL;
     }
 }

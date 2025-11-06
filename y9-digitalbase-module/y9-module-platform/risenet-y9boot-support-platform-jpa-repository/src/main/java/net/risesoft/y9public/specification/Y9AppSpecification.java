@@ -42,6 +42,19 @@ public class Y9AppSpecification implements Specification<Y9App> {
         this.appName = appName;
     }
 
+    public static Specification<Y9App> searchBysystemIdAndName(String systemId, String name) {
+        return (root, query, cb) -> {
+            List<Predicate> predicateList = new ArrayList<>();
+            if (StringUtils.hasText(systemId)) {
+                predicateList.add(cb.equal(root.get("systemId").as(String.class), systemId));
+            }
+            if (StringUtils.hasText(name)) {
+                predicateList.add(cb.like(root.get("name").as(String.class), "%" + name + "%"));
+            }
+            return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
+        };
+    }
+
     @Override
     public Predicate toPredicate(Root<Y9App> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
         List<Predicate> list = new ArrayList<>();
@@ -65,19 +78,6 @@ public class Y9AppSpecification implements Specification<Y9App> {
             return cb.conjunction(); // 相当于 WHERE 1=1
         }
         return cb.and(list.toArray(new Predicate[list.size()]));
-    }
-
-    public static Specification<Y9App> searchBysystemIdAndName(String systemId, String name) {
-        return (root, query, cb) -> {
-            List<Predicate> predicateList = new ArrayList<>();
-            if (StringUtils.hasText(systemId)) {
-                predicateList.add(cb.equal(root.get("systemId").as(String.class), systemId));
-            }
-            if (StringUtils.hasText(name)) {
-                predicateList.add(cb.like(root.get("name").as(String.class), "%" + name + "%"));
-            }
-            return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
-        };
     }
 
 }

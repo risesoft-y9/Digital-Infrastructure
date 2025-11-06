@@ -25,7 +25,7 @@ import net.risesoft.base.BaseEntity;
 @Entity
 @Table(name = "Y9_AUDIT_LOG")
 @DynamicUpdate
-@Comment("审计日志" )
+@Comment("审计日志")
 @NoArgsConstructor
 @Data
 @SuperBuilder

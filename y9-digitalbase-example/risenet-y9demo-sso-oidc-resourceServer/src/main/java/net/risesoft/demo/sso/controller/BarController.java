@@ -1,8 +1,9 @@
 package net.risesoft.demo.sso.controller;
 
-
 import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -16,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.risesoft.model.user.UserInfo;
-
-import jakarta.servlet.http.HttpSession;
 import net.risesoft.demo.sso.resource.Bar;
+import net.risesoft.model.user.UserInfo;
 
 @RestController
 @RequestMapping(value = "/bars")
@@ -34,9 +33,9 @@ public class BarController {
 
     @GetMapping
     public List<Bar> findAll(HttpSession session) {
-    	String loginName = (String)session.getAttribute("loginName");
-    	UserInfo userInfo = (UserInfo)session.getAttribute("userInfo");
-    	
+        String loginName = (String)session.getAttribute("loginName");
+        UserInfo userInfo = (UserInfo)session.getAttribute("userInfo");
+
         List<Bar> barList = new ArrayList<Bar>();
         barList.add(new Bar(nextLong(), "用户: " + loginName));
         barList.add(new Bar(nextLong(), "租户: " + userInfo.getTenantName()));
@@ -44,11 +43,11 @@ public class BarController {
         barList.add(new Bar(nextLong(), "随机: " + nextString()));
         return barList;
     }
-    
+
     private Long nextLong() {
         return Long.parseLong(RandomStringUtils.secure().nextNumeric(4));
     }
-    
+
     private String nextString() {
         return RandomStringUtils.secure().nextAlphabetic(4);
     }

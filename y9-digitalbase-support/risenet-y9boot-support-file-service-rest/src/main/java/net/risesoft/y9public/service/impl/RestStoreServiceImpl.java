@@ -60,8 +60,8 @@ public class RestStoreServiceImpl implements StoreService {
 
         String fileManagerUrl = y9RestFileProperties.getFileManagerUrl();
         String destination = fileManagerUrl + "/rest/storeFile";
-        HttpRequest httpRequest = HttpRequest.post(destination).form("fullPath", fullPath, "fileName", realFileName,
-            "multipartFile", tempFile);
+        HttpRequest httpRequest = HttpRequest.post(destination)
+            .form("fullPath", fullPath, "fileName", realFileName, "multipartFile", tempFile);
         HttpResponse httpResponse = httpRequest.send();
         httpResponse.close();
 

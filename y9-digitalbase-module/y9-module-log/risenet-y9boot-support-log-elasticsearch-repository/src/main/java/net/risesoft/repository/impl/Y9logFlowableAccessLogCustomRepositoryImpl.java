@@ -126,8 +126,9 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
 
         NativeQueryBuilder nativebuilder = new NativeQueryBuilder();
         nativebuilder.withQuery(builder.build()._toQuery());
-        nativebuilder.withAggregation("range-elapsedtime", RangeAggregation
-            .of(r -> r.field(Y9LogSearchConsts.ELAPSED_TIME).ranges(aggregationRanges))._toAggregation());
+        nativebuilder.withAggregation("range-elapsedtime",
+            RangeAggregation.of(r -> r.field(Y9LogSearchConsts.ELAPSED_TIME).ranges(aggregationRanges))
+                ._toAggregation());
         IndexCoordinates indexs = IndexCoordinates.of(createIndexNames(startDay, endDay));
         try {
             SearchHits<Y9LogFlowableAccessLog> searchHits =

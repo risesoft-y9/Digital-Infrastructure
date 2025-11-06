@@ -1,7 +1,8 @@
 package y9.oauth2.client.service;
 
-import com.github.scribejava.core.model.OAuth2AccessToken;
 import java.util.Objects;
+
+import com.github.scribejava.core.model.OAuth2AccessToken;
 
 public class OpenIdOAuth2AccessToken extends OAuth2AccessToken {
 
@@ -22,8 +23,14 @@ public class OpenIdOAuth2AccessToken extends OAuth2AccessToken {
         this(accessToken, null, null, null, null, openIdToken, rawResponse);
     }
 
-    public OpenIdOAuth2AccessToken(String accessToken, String tokenType, Integer expiresIn, String refreshToken,
-            String scope, String openIdToken, String rawResponse) {
+    public OpenIdOAuth2AccessToken(
+        String accessToken,
+        String tokenType,
+        Integer expiresIn,
+        String refreshToken,
+        String scope,
+        String openIdToken,
+        String rawResponse) {
         super(accessToken, tokenType, expiresIn, refreshToken, scope, rawResponse);
         this.openIdToken = openIdToken;
     }
@@ -54,6 +61,6 @@ public class OpenIdOAuth2AccessToken extends OAuth2AccessToken {
             return false;
         }
 
-        return Objects.equals(openIdToken, ((OpenIdOAuth2AccessToken) obj).getOpenIdToken());
+        return Objects.equals(openIdToken, ((OpenIdOAuth2AccessToken)obj).getOpenIdToken());
     }
 }

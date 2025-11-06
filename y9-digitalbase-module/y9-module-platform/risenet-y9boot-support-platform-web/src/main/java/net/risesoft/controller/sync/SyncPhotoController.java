@@ -40,8 +40,10 @@ public class SyncPhotoController {
     private final Y9PersonService y9PersonService;
     private final Y9PersonExtService y9PersonExtService;
 
-    public SyncPhotoController(@Qualifier("jdbcTemplate4Tenant") JdbcTemplate jdbcTemplate4Tenant,
-        @Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate, Y9PersonService y9PersonService,
+    public SyncPhotoController(
+        @Qualifier("jdbcTemplate4Tenant") JdbcTemplate jdbcTemplate4Tenant,
+        @Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate,
+        Y9PersonService y9PersonService,
         Y9PersonExtService y9PersonExtService) {
         this.jdbcTemplate4Tenant = jdbcTemplate4Tenant;
         this.jdbcTemplate = jdbcTemplate;

@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin")
 public class AppController {
 
-	@RequestMapping("/test")
-	public String test() throws IOException {
-		return "test";
-	}
+    @RequestMapping("/test")
+    public String test() throws IOException {
+        return "test";
+    }
 
 }

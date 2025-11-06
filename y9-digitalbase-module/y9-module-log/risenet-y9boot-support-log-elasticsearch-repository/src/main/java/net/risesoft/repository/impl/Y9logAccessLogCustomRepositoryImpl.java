@@ -13,10 +13,6 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
-import net.risesoft.log.repository.Y9logAccessLogCustomRepository;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
-import net.risesoft.y9public.entity.Y9LogAccessLog;
-import net.risesoft.y9public.repository.Y9LogAccessLogRepository;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
@@ -46,6 +42,7 @@ import net.risesoft.consts.InitDataConsts;
 import net.risesoft.log.constant.Y9ESIndexConst;
 import net.risesoft.log.constant.Y9LogSearchConsts;
 import net.risesoft.log.domain.Y9LogAccessLogDO;
+import net.risesoft.log.repository.Y9logAccessLogCustomRepository;
 import net.risesoft.log.repository.Y9logMappingCustomRepository;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.log.LogInfoModel;
@@ -55,7 +52,6 @@ import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.Y9Day;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
-import net.risesoft.y9.util.Y9Util;
 import net.risesoft.y9public.entity.Y9LogAccessLog;
 import net.risesoft.y9public.repository.Y9LogAccessLogRepository;
 
@@ -113,8 +109,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public Map<String, Object> getAppClickCount(String tenantId, String guidPath, String startDay, String endDay)
-          {
+    public Map<String, Object> getAppClickCount(String tenantId, String guidPath, String startDay, String endDay) {
         Builder build = new Builder();
         Map<String, Object> returnMap = new HashMap<>();
         List<String> strList = new ArrayList<>();
@@ -136,7 +131,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 Date sDay = Y9Day.getStartOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(startDay));
                 Date eDay = Y9Day.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
                 build.must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME)
-                    .from(String.valueOf(sDay.getTime())).to(String.valueOf(eDay.getTime())))));
+                    .from(String.valueOf(sDay.getTime()))
+                    .to(String.valueOf(eDay.getTime())))));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -202,7 +198,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 Date sDay = Y9Day.getStartOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(startDay));
                 Date eDay = Y9Day.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
                 builder.must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOGIN_TIME)
-                    .from(String.valueOf(sDay.getTime())).to(String.valueOf(eDay.getTime())))));
+                    .from(String.valueOf(sDay.getTime()))
+                    .to(String.valueOf(eDay.getTime())))));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -286,19 +283,27 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
         IndexCoordinates indexs = IndexCoordinates.of(createIndexNames(selectedDate, null));
 
-        DateHistogramAggregation sdateHistogramAgg = DateHistogramAggregation.of(d -> d
-            .field(Y9LogSearchConsts.LOG_TIME).calendarInterval(CalendarInterval.Hour).timeZone("GMT+08:00")
-            .offset(t -> t.time("-8h")).minDocCount(0).extendedBounds(bounds -> bounds
-                .min(FieldDateMath.of(f -> f.expr(startTimeStr))).max(FieldDateMath.of(f -> f.expr(etartTimeStr)))));
+        DateHistogramAggregation sdateHistogramAgg =
+            DateHistogramAggregation.of(d -> d.field(Y9LogSearchConsts.LOG_TIME)
+                .calendarInterval(CalendarInterval.Hour)
+                .timeZone("GMT+08:00")
+                .offset(t -> t.time("-8h"))
+                .minDocCount(0)
+                .extendedBounds(bounds -> bounds.min(FieldDateMath.of(f -> f.expr(startTimeStr)))
+                    .max(FieldDateMath.of(f -> f.expr(etartTimeStr)))));
 
         NativeQueryBuilder sNativebuilder = new NativeQueryBuilder();
         sNativebuilder.withQuery(sbuilder.build()._toQuery());
         sNativebuilder.withAggregation("by_success_logtime", sdateHistogramAgg._toAggregation());
 
-        DateHistogramAggregation edateHistogramAgg = DateHistogramAggregation.of(d -> d
-            .field(Y9LogSearchConsts.LOG_TIME).calendarInterval(CalendarInterval.Hour).timeZone("GMT+08:00")
-            .offset(t -> t.time("-8h")).minDocCount(0).extendedBounds(bounds -> bounds
-                .min(FieldDateMath.of(f -> f.expr(startTimeStr))).max(FieldDateMath.of(f -> f.expr(etartTimeStr)))));
+        DateHistogramAggregation edateHistogramAgg =
+            DateHistogramAggregation.of(d -> d.field(Y9LogSearchConsts.LOG_TIME)
+                .calendarInterval(CalendarInterval.Hour)
+                .timeZone("GMT+08:00")
+                .offset(t -> t.time("-8h"))
+                .minDocCount(0)
+                .extendedBounds(bounds -> bounds.min(FieldDateMath.of(f -> f.expr(startTimeStr)))
+                    .max(FieldDateMath.of(f -> f.expr(etartTimeStr)))));
         NativeQueryBuilder eNativebuilder = new NativeQueryBuilder();
         eNativebuilder.withQuery(ebuilder.build()._toQuery());
         eNativebuilder.withAggregation("by_error_logtime", edateHistogramAgg._toAggregation());
@@ -414,8 +419,9 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
         NativeQueryBuilder nativebuilder = new NativeQueryBuilder();
         nativebuilder.withQuery(builder.build()._toQuery());
-        nativebuilder.withAggregation("range-elapsedtime", RangeAggregation
-            .of(r -> r.field(Y9LogSearchConsts.ELAPSED_TIME).ranges(aggregationRanges))._toAggregation());
+        nativebuilder.withAggregation("range-elapsedtime",
+            RangeAggregation.of(r -> r.field(Y9LogSearchConsts.ELAPSED_TIME).ranges(aggregationRanges))
+                ._toAggregation());
         IndexCoordinates indexs = IndexCoordinates.of(createIndexNames(startDay, endDay));
         try {
             SearchHits<Y9LogAccessLog> searchHits =

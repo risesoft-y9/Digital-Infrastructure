@@ -22,8 +22,8 @@ public class Y9JpaHibernateConnectionProvider implements ConnectionProvider {
         GetConnectionWork connectionWork = new GetConnectionWork();
         session.doWork(connectionWork);
 
-        //TODO that's a dirty hack forced by upgrading to Hibernate 6
-        //this method should accept a connection consumer
+        // TODO that's a dirty hack forced by upgrading to Hibernate 6
+        // this method should accept a connection consumer
         return connectionWork.theConnection;
     }
 

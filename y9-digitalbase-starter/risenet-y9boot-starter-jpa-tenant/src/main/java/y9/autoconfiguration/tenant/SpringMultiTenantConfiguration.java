@@ -3,12 +3,9 @@ package y9.autoconfiguration.tenant;
 
 import static net.risesoft.consts.JpaTenantConsts.TENANT_TRANSACTION_MANAGER;
 
-import java.sql.SQLException;
-import java.util.Collections;
-import java.util.StringTokenizer;
+import javax.sql.DataSource;
 
 import jakarta.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;

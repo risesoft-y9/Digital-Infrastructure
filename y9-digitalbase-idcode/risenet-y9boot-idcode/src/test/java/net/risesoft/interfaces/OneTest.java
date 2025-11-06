@@ -44,8 +44,9 @@ public class OneTest {
         AreaInfoResult result = One.m101();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("区划名称:{} 区域ID:{} 区域父ID:{} 区域级别:{}", item.getName(),
-                item.getId(), item.getParentId(), item.getLevel()));
+            result.getList()
+                .forEach(item -> LOGGER.debug("区划名称:{} 区域ID:{} 区域父ID:{} 区域级别:{}", item.getName(), item.getId(),
+                    item.getParentId(), item.getLevel()));
         }
     }
 
@@ -59,8 +60,9 @@ public class OneTest {
         AreaInfoResult result = One.m102(440000, AddressLevelEnum.PREFECTURE.getValue());
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("区划名称:{} 区域ID:{} 区域父ID:{} 区域级别:{}", item.getName(),
-                item.getId(), item.getParentId(), item.getLevel()));
+            result.getList()
+                .forEach(item -> LOGGER.debug("区划名称:{} 区域ID:{} 区域父ID:{} 区域级别:{}", item.getName(), item.getId(),
+                    item.getParentId(), item.getLevel()));
         }
     }
 
@@ -71,8 +73,9 @@ public class OneTest {
         TradeInfoResult result = One.m103();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("行业名称:{} 行业ID:{} 行业父ID:{} 行业级别:{}", item.getName(),
-                item.getId(), item.getParentId(), item.getLevel()));
+            result.getList()
+                .forEach(item -> LOGGER.debug("行业名称:{} 行业ID:{} 行业父ID:{} 行业级别:{}", item.getName(), item.getId(),
+                    item.getParentId(), item.getLevel()));
         }
     }
 
@@ -86,8 +89,9 @@ public class OneTest {
         TradeInfoResult result = One.m104(2);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("行业名称:{} 行业ID:{} 行业父ID:{} 行业级别:{}", item.getName(),
-                item.getId(), item.getParentId(), item.getLevel()));
+            result.getList()
+                .forEach(item -> LOGGER.debug("行业名称:{} 行业ID:{} 行业父ID:{} 行业级别:{}", item.getName(), item.getId(),
+                    item.getParentId(), item.getLevel()));
         }
     }
 

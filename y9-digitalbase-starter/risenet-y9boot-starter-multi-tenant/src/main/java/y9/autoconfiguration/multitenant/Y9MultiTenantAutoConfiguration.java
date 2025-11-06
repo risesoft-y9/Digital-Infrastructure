@@ -67,6 +67,11 @@ public class Y9MultiTenantAutoConfiguration {
         return new Y9TenantDataSourceLookup(ds, environment.getProperty("y9.systemName"));
     }
 
+    @Bean
+    public MultiTenantDao multiTenantDao(@Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public) {
+        return new MultiTenantDao(jdbcTemplate4Public);
+    }
+
     @Configuration(proxyBeanMethods = false)
     public static class SchemaUpdaterOnTenantSystemEventConfiguration {
         @Bean
@@ -136,11 +141,6 @@ public class Y9MultiTenantAutoConfiguration {
             tenantDataSourceEventListener(Y9TenantDataSourceLookup y9TenantDataSourceLookup) {
             return new TenantDataSourceEventListener(y9TenantDataSourceLookup);
         }
-    }
-
-    @Bean
-    public MultiTenantDao multiTenantDao(@Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public) {
-        return new MultiTenantDao(jdbcTemplate4Public);
     }
 
     @AutoConfiguration(after = KafkaAutoConfiguration.class)

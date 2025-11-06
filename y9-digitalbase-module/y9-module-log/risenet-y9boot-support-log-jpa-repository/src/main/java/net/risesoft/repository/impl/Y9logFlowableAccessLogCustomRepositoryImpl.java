@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -54,6 +53,12 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
     private static final FastDateFormat DATE_TIME_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
 
     private static final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd");
+    private final Y9LogFlowableAccessLogRepository y9logFlowableAccessLogRepository;
+
+    public Y9logFlowableAccessLogCustomRepositoryImpl(
+        Y9LogFlowableAccessLogRepository y9logFlowableAccessLogRepository) {
+        this.y9logFlowableAccessLogRepository = y9logFlowableAccessLogRepository;
+    }
 
     private static PageImpl<Y9LogFlowableAccessLogDO>
         poPageToDoPage(Page<Y9LogFlowableAccessLog> flowableAccessLogPage) {
@@ -62,13 +67,6 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
             .map(l -> Y9ModelConvertUtil.convert(l, Y9LogFlowableAccessLogDO.class))
             .collect(Collectors.toList());
         return new PageImpl<>(list, flowableAccessLogPage.getPageable(), flowableAccessLogPage.getTotalElements());
-    }
-
-    private final Y9LogFlowableAccessLogRepository y9logFlowableAccessLogRepository;
-
-    public Y9logFlowableAccessLogCustomRepositoryImpl(
-        Y9LogFlowableAccessLogRepository y9logFlowableAccessLogRepository) {
-        this.y9logFlowableAccessLogRepository = y9logFlowableAccessLogRepository;
     }
 
     public long getOperateTimeCount(Date startDay, Date endDay, boolean betweenAble, long elapsedTimeStart,

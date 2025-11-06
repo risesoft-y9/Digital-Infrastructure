@@ -10,18 +10,18 @@ import net.risesoft.y9.Y9Context;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-	@Bean
-	public Y9Context y9Context() {
-		return new Y9Context();
-	}
+    @Bean
+    public Y9Context y9Context() {
+        return new Y9Context();
+    }
 
-	@Override
-	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-		configurer.enable();
-	}
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
+    }
 
-	@Override
-	public void addViewControllers(ViewControllerRegistry registry) {
-		registry.addRedirectViewController("/", "/admin/test");
-	}
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addRedirectViewController("/", "/admin/test");
+    }
 }

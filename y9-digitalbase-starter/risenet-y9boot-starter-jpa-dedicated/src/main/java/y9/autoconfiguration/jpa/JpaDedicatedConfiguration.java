@@ -1,7 +1,6 @@
 package y9.autoconfiguration.jpa;
 
 import jakarta.persistence.EntityManagerFactory;
-import y9.jpa.extension.Y9EnableJpaRepositories;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,6 +27,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.zaxxer.hikari.HikariDataSource;
 
 import net.risesoft.y9.Y9Context;
+
+import y9.jpa.extension.Y9EnableJpaRepositories;
 
 @Configuration
 @AutoConfigureBefore(DataSourceAutoConfiguration.class)

@@ -13,5 +13,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ApiAccessControlType {
-    WHITE_LIST, BLACK_LIST, APP_ID_SECRET;
+    WHITE_LIST,
+    BLACK_LIST,
+    APP_ID_SECRET;
 }

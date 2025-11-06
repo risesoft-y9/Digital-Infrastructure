@@ -38,12 +38,24 @@ public class Y9TenantHibernateInfoHolder {
         return metadata;
     }
 
+    public static void setMetadata(Metadata metadata) {
+        Y9TenantHibernateInfoHolder.metadata = metadata;
+    }
+
     public static SessionFactoryServiceRegistry getServiceRegistry() {
         return serviceRegistry;
     }
 
+    public static void setServiceRegistry(SessionFactoryServiceRegistry serviceRegistry) {
+        Y9TenantHibernateInfoHolder.serviceRegistry = serviceRegistry;
+    }
+
     public static SessionFactoryImplementor getSessionFactory() {
         return sessionFactory;
+    }
+
+    public static void setSessionFactory(SessionFactoryImplementor sessionFactory) {
+        Y9TenantHibernateInfoHolder.sessionFactory = sessionFactory;
     }
 
     public static void schemaUpdate(Environment env) {
@@ -93,17 +105,5 @@ public class Y9TenantHibernateInfoHolder {
             LOGGER.warn(e.getMessage(), e);
         }
 
-    }
-
-    public static void setMetadata(Metadata metadata) {
-        Y9TenantHibernateInfoHolder.metadata = metadata;
-    }
-
-    public static void setServiceRegistry(SessionFactoryServiceRegistry serviceRegistry) {
-        Y9TenantHibernateInfoHolder.serviceRegistry = serviceRegistry;
-    }
-
-    public static void setSessionFactory(SessionFactoryImplementor sessionFactory) {
-        Y9TenantHibernateInfoHolder.sessionFactory = sessionFactory;
     }
 }

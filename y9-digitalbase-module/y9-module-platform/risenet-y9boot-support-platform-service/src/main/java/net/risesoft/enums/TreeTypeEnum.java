@@ -7,5 +7,9 @@ package net.risesoft.enums;
  * @date 2023/12/21
  */
 public enum TreeTypeEnum {
-    ROLE, ORG, RESOURCE, SYSTEM, DATA_CATALOG;
+    ROLE,
+    ORG,
+    RESOURCE,
+    SYSTEM,
+    DATA_CATALOG;
 }

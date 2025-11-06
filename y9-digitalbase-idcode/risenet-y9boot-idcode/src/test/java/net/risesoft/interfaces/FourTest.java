@@ -126,8 +126,9 @@ public class FourTest {
         BaseIdCodeInfo result = Four.m404(Config.MAIN_CODE, searchType);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{}", item.getId(),
-                item.getCodeUseId(), item.getCategoryCode(), item.getCategoryMemo(), item.getCompleteCode()));
+            result.getList()
+                .forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{}", item.getId(),
+                    item.getCodeUseId(), item.getCategoryCode(), item.getCategoryMemo(), item.getCompleteCode()));
         }
     }
 
@@ -232,8 +233,9 @@ public class FourTest {
         BaseIdCodeInfo result = Four.m410(Config.MAIN_CODE, searchType);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{}", item.getId(),
-                item.getCodeUseId(), item.getCategoryCode(), item.getCategoryMemo(), item.getCompleteCode()));
+            result.getList()
+                .forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{}", item.getId(),
+                    item.getCodeUseId(), item.getCategoryCode(), item.getCategoryMemo(), item.getCompleteCode()));
         }
     }
 }
