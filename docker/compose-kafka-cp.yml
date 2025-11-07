@@ -29,9 +29,9 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1      
       KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
     volumes:
-      - /Users/dingzhaojun/docker-data/kafka/secrets:/etc/kafka/secrets
-      - /Users/dingzhaojun/docker-data/kafka/data:/var/lib/kafka/data
-      - /Users/dingzhaojun/docker-data/kafka/config:/mnt/shared/config
+      - d:/docker-data/kafka/secrets:/etc/kafka/secrets
+      - d:/docker-data/kafka/data:/var/lib/kafka/data
+      - d:/docker-data/kafka/config:/mnt/shared/config
 
   kafbat-ui:
     image: ghcr.io/kafbat/kafka-ui:main

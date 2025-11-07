@@ -6,9 +6,9 @@ plugins {
 }
 
 dependencies {
-    api("org.aspectj:aspectjrt:1.9.24")
-    api("org.aspectj:aspectjtools:1.9.24")
-    api("org.aspectj:aspectjweaver:1.9.24")
+    api("org.aspectj:aspectjrt:1.9.25")
+    api("org.aspectj:aspectjtools:1.9.25")
+    api("org.aspectj:aspectjweaver:1.9.25")
 
     aspect("org.springframework:spring-aspects:6.2.8")
     testAspect("org.springframework:spring-aspects:6.2.8")
@@ -22,7 +22,7 @@ interface Y9AspectjPluginExtension {
 val extension = project.extensions.create<Y9AspectjPluginExtension>("y9Aspectj")
 
 // Set a default value for 'message'
-extension.aspectjVersion.convention("1.9.24")
+extension.aspectjVersion.convention("1.9.25")
 
 tasks.named("compileJava") {
     configure<AjcAction> {

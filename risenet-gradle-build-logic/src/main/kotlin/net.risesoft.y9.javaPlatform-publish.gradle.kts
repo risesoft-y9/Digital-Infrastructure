@@ -1,5 +1,4 @@
 import com.vanniktech.maven.publish.JavaPlatform
-import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
     `maven-publish`
@@ -43,7 +42,7 @@ publishing {
 mavenPublishing {
     configure(JavaPlatform())
     coordinates(project.group.toString(), project.name, y9bom_version.toString())
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = false)
+    publishToMavenCentral(automaticRelease = false)
     if (!(y9bom_version.toString().endsWith("SNAPSHOT"))) signAllPublications()
     pom {
         name = project.name
