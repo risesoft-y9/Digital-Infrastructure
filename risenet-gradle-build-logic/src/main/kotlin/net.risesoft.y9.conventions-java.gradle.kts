@@ -19,8 +19,9 @@ tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     val compilerArgs = options.compilerArgs
     compilerArgs.add("-parameters")
-    compilerArgs.add("-Xlint:all")
+    //compilerArgs.add("-Xlint:all")
     compilerArgs.add("-Xdiags:verbose")
+    compilerArgs.add("-Xlint:-serial")
 }
 
 tasks.withType<Javadoc> {
@@ -41,7 +42,7 @@ tasks.test {
 
 tasks.withType<Test> { // OR tasks.test {
     onlyIf {
-        properties["SKIP_TEST"].toString().toBoolean()==false
+        properties["SKIP_TEST"].toString().toBoolean() == false
     }
     //enabled = false
 }
