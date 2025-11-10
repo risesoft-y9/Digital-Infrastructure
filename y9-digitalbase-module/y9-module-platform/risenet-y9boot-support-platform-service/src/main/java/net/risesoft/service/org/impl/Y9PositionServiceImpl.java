@@ -12,9 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.org.Y9Department;
-import net.risesoft.entity.org.Y9Job;
 import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.entity.org.Y9Position;
@@ -24,16 +22,20 @@ import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
+import net.risesoft.model.platform.org.Job;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.Position;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.org.Y9PositionRepository;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.service.org.Y9PositionService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9Assert;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 
 /**
@@ -55,15 +57,15 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     private final Y9PersonsToPositionsManager y9PersonsToPositionsManager;
 
     @Override
-    public String buildName(Y9Job y9Job, List<Y9PersonsToPositions> personsToPositionsList) {
-        return y9PositionManager.buildName(y9Job, personsToPositionsList);
+    public String buildName(Job y9Job, List<Person> personList) {
+        return y9PositionManager.buildName(y9Job.getName(), personList);
     }
 
     @Override
     @Transactional
-    public Y9Position changeDisabled(String id) {
+    public Position changeDisabled(String id) {
         Y9Position currentPosition = y9PositionManager.getById(id);
-        Y9Position originalPosition = Y9ModelConvertUtil.convert(currentPosition, Y9Position.class);
+        Y9Position originalPosition = PlatformModelConvertUtil.convert(currentPosition, Y9Position.class);
         boolean disableStatusToUpdate = !currentPosition.getDisabled();
 
         currentPosition.setDisabled(disableStatusToUpdate);
@@ -79,13 +81,13 @@ public class Y9PositionServiceImpl implements Y9PositionService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedPosition;
+        return PlatformModelConvertUtil.y9PositionToPosition(savedPosition);
     }
 
     @Override
     @Transactional
-    public Y9Position create(String parentId, String jobId) {
-        Y9Position y9Position = new Y9Position();
+    public Position create(String parentId, String jobId) {
+        Position y9Position = new Position();
         y9Position.setParentId(parentId);
         y9Position.setJobId(jobId);
         return this.saveOrUpdate(y9Position);
@@ -102,7 +104,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Override
     @Transactional
     public void deleteById(String id) {
-        final Y9Position y9Position = this.getById(id);
+        final Y9Position y9Position = y9PositionManager.getById(id);
 
         y9PersonsToPositionsManager.deleteByPositionId(id);
         y9PositionManager.delete(y9Position);
@@ -120,25 +122,21 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Override
     @Transactional
     public void deleteByParentId(String parentId) {
-        List<Y9Position> positionList = listByParentId(parentId, null);
-        for (Y9Position position : positionList) {
+        List<Position> positionList = listByParentId(parentId, null);
+        for (Position position : positionList) {
             deleteById(position.getId());
         }
     }
 
     @Override
-    public boolean existsById(String id) {
-        return y9PositionRepository.existsById(id);
+    public Optional<Position> findById(String id) {
+        return y9PositionManager.findByIdFromCache(id).map(PlatformModelConvertUtil::y9PositionToPosition);
     }
 
     @Override
-    public Optional<Y9Position> findById(String id) {
-        return y9PositionManager.findByIdFromCache(id);
-    }
-
-    @Override
-    public List<Y9Position> findByJobId(String jobId) {
-        return y9PositionRepository.findByJobId(jobId);
+    public List<Position> findByJobId(String jobId) {
+        List<Y9Position> y9PositionList = y9PositionRepository.findByJobId(jobId);
+        return PlatformModelConvertUtil.y9PositionToPosition(y9PositionList);
     }
 
     @Override
@@ -147,16 +145,16 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    public Y9Position getById(String id) {
-        return y9PositionManager.getByIdFromCache(id);
+    public Position getById(String id) {
+        return PlatformModelConvertUtil.y9PositionToPosition(y9PositionManager.getByIdFromCache(id));
     }
 
     @Override
     public Boolean hasPosition(String positionName, String personId) {
-        List<Y9Position> list = listByPersonId(personId, Boolean.FALSE);
+        List<Position> list = listByPersonId(personId, Boolean.FALSE);
         boolean exist = false;
         if (!list.isEmpty()) {
-            for (Y9Position p : list) {
+            for (Position p : list) {
                 if (p.getName().equals(positionName)) {
                     exist = true;
                     break;
@@ -168,43 +166,29 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    public List<Y9Position> listAll() {
-        return y9PositionRepository.findAll();
+    public List<Position> listAll() {
+        return PlatformModelConvertUtil.y9PositionToPosition(y9PositionRepository.findAll());
     }
 
     @Override
-    public List<Y9Position> listByDn(String dn) {
-        return y9PositionRepository.findByDn(dn);
-    }
-
-    @Override
-    public List<Y9Position> listByNameLike(String name) {
-        return y9PositionRepository.findByNameContainingOrderByTabIndexAsc(name);
-    }
-
-    @Override
-    public List<Y9Position> listByNameLikeAndDn(String name, String dn) {
-        return y9PositionRepository.findByNameContainingAndDnContainingOrDnContaining(name, OrgLevelConsts.UNIT + dn,
-            OrgLevelConsts.ORGANIZATION + dn);
-    }
-
-    @Override
-    public List<Y9Position> listByParentId(String parentId, Boolean disabled) {
+    public List<Position> listByParentId(String parentId, Boolean disabled) {
+        List<Y9Position> y9PositionList;
         if (disabled == null) {
-            return y9PositionRepository.findByParentIdOrderByTabIndexAsc(parentId);
+            y9PositionList = y9PositionRepository.findByParentIdOrderByTabIndexAsc(parentId);
         } else {
-            return y9PositionRepository.findByParentIdAndDisabledOrderByTabIndexAsc(parentId, disabled);
+            y9PositionList = y9PositionRepository.findByParentIdAndDisabledOrderByTabIndexAsc(parentId, disabled);
         }
+        return PlatformModelConvertUtil.y9PositionToPosition(y9PositionList);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Y9Position> listByPersonId(String personId, Boolean disabled) {
+    public List<Position> listByPersonId(String personId, Boolean disabled) {
         List<Y9PersonsToPositions> ppsList =
             y9PersonsToPositionsRepository.findByPersonIdOrderByPositionOrderAsc(personId);
-        List<Y9Position> pList = new ArrayList<>();
+        List<Position> pList = new ArrayList<>();
         for (Y9PersonsToPositions pps : ppsList) {
-            Y9Position y9Position = this.getById(pps.getPositionId());
+            Position y9Position = this.getById(pps.getPositionId());
             if (disabled == null || disabled.equals(y9Position.getDisabled())) {
                 pList.add(y9Position);
             }
@@ -214,10 +198,10 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     @Override
     @Transactional
-    public Y9Position move(String id, String parentId) {
+    public Position move(String id, String parentId) {
         Y9OrgBase parentToMove = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
         Y9Position currentPosition = y9PositionManager.getById(id);
-        Y9Position originalPosition = Y9ModelConvertUtil.convert(currentPosition, Y9Position.class);
+        Y9Position originalPosition = PlatformModelConvertUtil.convert(currentPosition, Y9Position.class);
 
         currentPosition.setParentId(parentId);
         currentPosition.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parentId));
@@ -233,18 +217,27 @@ public class Y9PositionServiceImpl implements Y9PositionService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedPosition;
+        return PlatformModelConvertUtil.y9PositionToPosition(savedPosition);
     }
 
     @Override
     @Transactional
-    public Y9Position save(Y9Position position) {
-        return y9PositionManager.save(position);
+    public Position save(Position position) {
+        Y9Position y9Position;
+        if (StringUtils.isNotBlank(position.getId())) {
+            y9Position = y9PositionManager.getById(position.getId());
+            Y9BeanUtil.copyProperties(position, y9Position);
+        } else {
+            y9Position = PlatformModelConvertUtil.convert(position, Y9Position.class);
+        }
+
+        Y9Position savedPosition = y9PositionManager.save(y9Position);
+        return PlatformModelConvertUtil.y9PositionToPosition(savedPosition);
     }
 
     @Override
     @Transactional
-    public List<Y9Position> saveOrder(List<String> positionIds) {
+    public List<Position> saveOrder(List<String> positionIds) {
         List<Y9Position> orgPositionList = new ArrayList<>();
 
         int tabIndex = 0;
@@ -252,20 +245,23 @@ public class Y9PositionServiceImpl implements Y9PositionService {
             orgPositionList.add(y9PositionManager.updateTabIndex(positionId, tabIndex++));
         }
 
-        return orgPositionList;
+        return PlatformModelConvertUtil.y9PositionToPosition(orgPositionList);
     }
 
     @Override
     @Transactional
-    public Y9Position saveOrUpdate(Y9Position position) {
-        if (StringUtils.isNotEmpty(position.getId())) {
-            Optional<Y9Position> positionOptional = y9PositionManager.findById(position.getId());
+    public Position saveOrUpdate(Position position) {
+        Y9Position y9Position = PlatformModelConvertUtil.convert(position, Y9Position.class);
+
+        if (StringUtils.isNotEmpty(y9Position.getId())) {
+            Optional<Y9Position> positionOptional = y9PositionManager.findById(y9Position.getId());
             if (positionOptional.isPresent()) {
-                Y9Position originalPosition = Y9ModelConvertUtil.convert(positionOptional.get(), Y9Position.class);
+                Y9Position originalPosition =
+                    PlatformModelConvertUtil.convert(positionOptional.get(), Y9Position.class);
 
                 // 修改的岗位容量不能小于当前岗位人数
-                checkHeadCountAvailability(position);
-                Y9Position savedPosition = y9PositionManager.update(position);
+                checkHeadCountAvailability(y9Position);
+                Y9Position savedPosition = y9PositionManager.update(y9Position);
 
                 AuditLogEvent auditLogEvent = AuditLogEvent.builder()
                     .action(AuditLogEnum.POSITION_UPDATE.getAction())
@@ -277,11 +273,11 @@ public class Y9PositionServiceImpl implements Y9PositionService {
                     .build();
                 Y9Context.publishEvent(auditLogEvent);
 
-                return savedPosition;
+                return PlatformModelConvertUtil.y9PositionToPosition(savedPosition);
             }
         }
 
-        Y9Position savedPosition = y9PositionManager.insert(position);
+        Y9Position savedPosition = y9PositionManager.insert(y9Position);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.POSITION_CREATE.getAction())
@@ -292,14 +288,14 @@ public class Y9PositionServiceImpl implements Y9PositionService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedPosition;
+        return PlatformModelConvertUtil.y9PositionToPosition(savedPosition);
     }
 
     @Override
     @Transactional
-    public Y9Position saveProperties(String id, String properties) {
+    public Position saveProperties(String id, String properties) {
         Y9Position currentPosition = y9PositionManager.getById(id);
-        Y9Position originalPosition = Y9ModelConvertUtil.convert(currentPosition, Y9Position.class);
+        Y9Position originalPosition = PlatformModelConvertUtil.convert(currentPosition, Y9Position.class);
 
         currentPosition.setProperties(properties);
         Y9Position savedPosition = y9PositionManager.update(currentPosition);
@@ -314,25 +310,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedPosition;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Y9Position> treeSearch(String name) {
-        List<Y9Position> positionList = new ArrayList<>();
-        List<Y9Position> positionListTemp = y9PositionRepository.findByNameContainingOrderByTabIndexAsc(name);
-        positionList.addAll(positionListTemp);
-        for (Y9Position p : positionListTemp) {
-            recursionUpPosition(positionList, p.getParentId());
-        }
-        return positionList;
-    }
-
-    @Override
-    @Transactional
-    public Y9Position updateTabIndex(String id, int tabIndex) {
-        return y9PositionManager.updateTabIndex(id, tabIndex);
+        return PlatformModelConvertUtil.y9PositionToPosition(savedPosition);
     }
 
     @EventListener
@@ -375,15 +353,6 @@ public class Y9PositionServiceImpl implements Y9PositionService {
                 y9PositionManager.update(position);
             }
         }
-    }
-
-    private void recursionUpPosition(List<Y9Position> positionList, String parentId) {
-        if (StringUtils.isBlank(parentId)) {
-            return;
-        }
-        Y9Position position = this.getById(parentId);
-        positionList.add(position);
-        recursionUpPosition(positionList, position.getParentId());
     }
 
     private void checkHeadCountAvailability(Y9Position position) {

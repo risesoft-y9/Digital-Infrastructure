@@ -1,6 +1,5 @@
 package net.risesoft.model.platform.org;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -8,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import net.risesoft.enums.platform.org.MaritalStatusEnum;
+import net.risesoft.model.BaseModel;
+import net.risesoft.y9.validation.IdNumber;
 
 /**
  * 人员信息扩展
@@ -19,30 +20,18 @@ import net.risesoft.enums.platform.org.MaritalStatusEnum;
  * @date 2022/4/21
  */
 @Data
-public class PersonExt implements Serializable {
+public class PersonExt extends BaseModel {
     private static final long serialVersionUID = 1274186459521666925L;
 
     /**
      * 人员ID
      */
-    protected String personId;
+    private String personId;
 
     /**
      * 名称
      */
-    protected String name;
-
-    /**
-     * 创建时间
-     */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    protected Date createTime;
-
-    /**
-     * 更新时间
-     */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updateTime;
+    private String name;
 
     /**
      * 照片
@@ -61,29 +50,19 @@ public class PersonExt implements Serializable {
     private Date birthday;
 
     /**
-     * 居住国家
-     */
-    private String country;
-
-    /**
      * 居住城市
      */
     private String city;
 
     /**
-     * 证件类型
+     * 居住国家
      */
-    private String idType;
+    private String country;
 
     /**
-     * 证件号码
+     * 学历
      */
-    private String idNum;
-
-    /**
-     * 人员籍贯
-     */
-    private String province;
+    private String education;
 
     /**
      * 家庭地址
@@ -96,14 +75,15 @@ public class PersonExt implements Serializable {
     private String homePhone;
 
     /**
-     * 政治面貌
+     * 证件号码
      */
-    private String politicalStatus;
+    @IdNumber
+    private String idNum;
 
     /**
-     * 学历
+     * 证件类型
      */
-    private String education;
+    private String idType;
 
     /**
      * 婚姻状况
@@ -111,9 +91,19 @@ public class PersonExt implements Serializable {
     private MaritalStatusEnum maritalStatus;
 
     /**
+     * 政治面貌
+     */
+    private String politicalStatus;
+
+    /**
      * 专业
      */
     private String professional;
+
+    /**
+     * 人员籍贯
+     */
+    private String province;
 
     /**
      * 入职时间

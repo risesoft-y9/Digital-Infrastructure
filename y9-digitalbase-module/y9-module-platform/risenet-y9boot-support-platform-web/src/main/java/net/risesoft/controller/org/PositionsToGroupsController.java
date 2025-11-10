@@ -1,6 +1,5 @@
 package net.risesoft.controller.org;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
@@ -15,14 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.org.Y9Position;
-import net.risesoft.entity.relation.Y9PositionsToGroups;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.org.Position;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.service.relation.Y9PositionsToGroupsService;
 
 /**
@@ -40,7 +37,6 @@ import net.risesoft.service.relation.Y9PositionsToGroupsService;
 @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER})
 public class PositionsToGroupsController {
 
-    private final Y9PositionService y9PositionService;
     private final Y9PositionsToGroupsService y9PositionsToGroupsService;
 
     /**
@@ -67,16 +63,8 @@ public class PositionsToGroupsController {
      */
     @RiseLog(operationName = "获取组岗位列表")
     @RequestMapping(value = "/listPositionsByGroupId")
-    public Y9Result<List<Y9Position>> listPositionsByGroupId(@RequestParam @NotBlank String groupId) {
-        List<Y9PositionsToGroups> list = y9PositionsToGroupsService.listByGroupId(groupId);
-        List<Y9Position> positionList = new ArrayList<>();
-        if (null != list && !list.isEmpty()) {
-            for (Y9PositionsToGroups groupPosition : list) {
-                Y9Position y9Position = y9PositionService.getById(groupPosition.getPositionId());
-                positionList.add(y9Position);
-            }
-        }
-        return Y9Result.success(positionList, "获取岗位关联列表成功");
+    public Y9Result<List<Position>> listPositionsByGroupId(@RequestParam @NotBlank String groupId) {
+        return Y9Result.success(y9PositionsToGroupsService.listPositionsByGroupId(groupId), "获取岗位关联列表成功");
     }
 
     /**

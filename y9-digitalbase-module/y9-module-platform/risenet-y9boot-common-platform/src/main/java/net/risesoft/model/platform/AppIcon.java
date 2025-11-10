@@ -1,8 +1,10 @@
 package net.risesoft.model.platform;
 
-import java.io.Serializable;
+import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
+
+import net.risesoft.model.BaseModel;
 
 /**
  * 图标实体类
@@ -14,7 +16,7 @@ import lombok.Data;
  * @date 2022/4/21
  */
 @Data
-public class AppIcon implements Serializable {
+public class AppIcon extends BaseModel {
 
     private static final long serialVersionUID = -9188764434950145342L;
 
@@ -26,22 +28,13 @@ public class AppIcon implements Serializable {
     /**
      * 名称
      */
+    @NotBlank
     private String name;
 
     /**
      * 类型
      */
     private String type;
-
-    /**
-     * 创建时间
-     */
-    private String createDateTime;
-
-    /**
-     * 更新时间
-     */
-    private String updateDateTime;
 
     /**
      * 上传路径
@@ -57,5 +50,15 @@ public class AppIcon implements Serializable {
      * 图标图片的base64
      */
     private String iconData;
+
+    /**
+     * 颜色类型
+     */
+    private String colorType;
+
+    /**
+     * 所属类别
+     */
+    private String category;
 
 }

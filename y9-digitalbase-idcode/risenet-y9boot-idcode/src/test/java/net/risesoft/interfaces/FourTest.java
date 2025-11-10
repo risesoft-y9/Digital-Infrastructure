@@ -18,7 +18,7 @@ import org.springframework.core.env.Environment;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.IdCode;
+import net.risesoft.IdCodeConfig;
 import net.risesoft.enums.CodePayTypeEnum;
 import net.risesoft.model.BaseIdCodeInfo;
 import net.risesoft.model.BatchRegistInfo;
@@ -39,7 +39,7 @@ public class FourTest {
 
     @BeforeEach
     public void setUp() {
-        IdCode.init(environment.getProperty("idCode.api_code"), environment.getProperty("idCode.api_key"),
+        IdCodeConfig.init(environment.getProperty("idCode.api_code"), environment.getProperty("idCode.api_key"),
             environment.getProperty("idCode.idCode_url"), environment.getProperty("idCode.main_code"),
             environment.getProperty("idCode.analyze_url"), environment.getProperty("idCode.goto_url"),
             environment.getProperty("idCode.sample_url"));
@@ -126,8 +126,9 @@ public class FourTest {
         BaseIdCodeInfo result = Four.m404(Config.MAIN_CODE, searchType);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{}", item.getId(),
-                item.getCodeUseId(), item.getCategoryCode(), item.getCategoryMemo(), item.getCompleteCode()));
+            result.getList()
+                .forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{}", item.getId(),
+                    item.getCodeUseId(), item.getCategoryCode(), item.getCategoryMemo(), item.getCompleteCode()));
         }
     }
 
@@ -232,8 +233,9 @@ public class FourTest {
         BaseIdCodeInfo result = Four.m410(Config.MAIN_CODE, searchType);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{}", item.getId(),
-                item.getCodeUseId(), item.getCategoryCode(), item.getCategoryMemo(), item.getCompleteCode()));
+            result.getList()
+                .forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{}", item.getId(),
+                    item.getCodeUseId(), item.getCategoryCode(), item.getCategoryMemo(), item.getCompleteCode()));
         }
     }
 }

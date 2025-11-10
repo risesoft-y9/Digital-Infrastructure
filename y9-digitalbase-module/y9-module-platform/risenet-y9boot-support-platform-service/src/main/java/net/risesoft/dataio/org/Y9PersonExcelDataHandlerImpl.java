@@ -15,14 +15,14 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.dataio.ExcelImportError;
-import net.risesoft.entity.org.Y9Department;
-import net.risesoft.entity.org.Y9Job;
-import net.risesoft.entity.org.Y9OrgBase;
-import net.risesoft.entity.org.Y9Person;
 import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.enums.platform.org.SexEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.model.platform.org.Department;
+import net.risesoft.model.platform.org.Job;
+import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.PersonInformation;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
@@ -61,9 +61,9 @@ public class Y9PersonExcelDataHandlerImpl implements Y9PersonDataHandler {
     }
 
     private List<PersonInformation> getPersonList(String orgBaseId) {
-        List<Y9Person> persons = compositeOrgBaseService.listAllDescendantPersons(orgBaseId);
+        List<Person> persons = compositeOrgBaseService.listAllDescendantPersons(orgBaseId);
         List<PersonInformation> personList = new ArrayList<>();
-        for (Y9Person person : persons) {
+        for (Person person : persons) {
             PersonInformation personInformation = new PersonInformation();
 
             personInformation.setName(person.getName());
@@ -72,14 +72,14 @@ public class Y9PersonExcelDataHandlerImpl implements Y9PersonDataHandler {
             personInformation.setLoginName(person.getLoginName());
             personInformation.setMobile(person.getMobile());
             personInformation.setSex(person.getSex().getDescription());
-            List<Y9Job> y9JobList = y9JobService.findByPersonId(person.getId());
-            personInformation.setJobs(y9JobList.stream().map(Y9Job::getName).collect(Collectors.joining(SPLITTER)));
+            List<Job> y9JobList = y9JobService.findByPersonId(person.getId());
+            personInformation.setJobs(y9JobList.stream().map(Job::getName).collect(Collectors.joining(SPLITTER)));
             personList.add(personInformation);
         }
         return personList;
     }
 
-    private String getDepartmentNamePath(Y9Person person) {
+    private String getDepartmentNamePath(Person person) {
         String namePath = Y9OrgUtil.dnToNamePath(person.getDn(), OrgLevelConsts.SEPARATOR);
         namePath = StringUtils.substringAfter(namePath, OrgLevelConsts.SEPARATOR);
         if (StringUtils.contains(namePath, OrgLevelConsts.SEPARATOR)) {
@@ -141,7 +141,7 @@ public class Y9PersonExcelDataHandlerImpl implements Y9PersonDataHandler {
             throw new IllegalArgumentException("手机号不合法");
         }
 
-        Optional<Y9Person> y9PersonOptional = y9PersonService.findByLoginName(personLoginName);
+        Optional<Person> y9PersonOptional = y9PersonService.findByLoginName(personLoginName);
         if (y9PersonOptional.isPresent()) {
             throw new IllegalArgumentException("该登录名已被使用");
         }
@@ -149,29 +149,29 @@ public class Y9PersonExcelDataHandlerImpl implements Y9PersonDataHandler {
         String fullPath = Optional.ofNullable(pi.getDepartmentNamePath()).orElse("");
         String[] departments = fullPath.split(SPLITTER);
 
-        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgId);
-        String dn = y9OrgBase.getDn();
-        String parentId = y9OrgBase.getId();
+        OrgUnit orgUnit = compositeOrgBaseService.getOrgUnit(orgId);
+        String dn = orgUnit.getDn();
+        String parentId = orgUnit.getId();
 
         for (int i = 0, length = departments.length; i < length; i++) {
             dn = OrgLevelConsts.UNIT + departments[i] + SPLITTER + dn;
-            List<Y9Department> departmentList = y9DepartmentService.listByDn(dn, false);
+            List<Department> departmentList = y9DepartmentService.listByDn(dn, false);
             if (!departmentList.isEmpty()) {
                 parentId = departmentList.get(0).getId();
             } else {
                 // 不存在的部门则创建
-                Y9Department department = new Y9Department();
+                Department department = new Department();
                 department.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
                 department.setTenantId(Y9LoginUserHolder.getTenantId());
                 department.setName(StringUtils.trim(departments[i]));
                 department.setOrgType(OrgTypeEnum.DEPARTMENT);
                 department.setParentId(parentId);
-                Y9Department dept = y9DepartmentService.saveOrUpdate(department);
+                Department dept = y9DepartmentService.saveOrUpdate(department);
                 parentId = dept.getId();
             }
         }
 
-        Y9Person y9Person = new Y9Person();
+        Person y9Person = new Person();
         y9Person.setName(personName);
         y9Person.setEmail(pi.getEmail());
         y9Person.setMobile(personMobile);

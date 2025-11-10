@@ -15,10 +15,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.enums.AuditLogEnum;
+import net.risesoft.model.platform.resource.Operation;
 import net.risesoft.pojo.AuditLogEvent;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
@@ -70,8 +71,8 @@ public class Y9OperationServiceImpl implements Y9OperationService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public List<Y9Operation> disable(List<String> idList) {
-        List<Y9Operation> y9OperationList = new ArrayList<>();
+    public List<Operation> disable(List<String> idList) {
+        List<Operation> y9OperationList = new ArrayList<>();
         for (String id : idList) {
             y9OperationList.add(this.disable(id));
         }
@@ -80,9 +81,9 @@ public class Y9OperationServiceImpl implements Y9OperationService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9Operation disable(String id) {
-        Y9Operation currentOperation = this.getById(id);
-        Y9Operation originalOperation = Y9ModelConvertUtil.convert(currentOperation, Y9Operation.class);
+    public Operation disable(String id) {
+        Y9Operation currentOperation = y9OperationManager.getById(id);
+        Y9Operation originalOperation = PlatformModelConvertUtil.convert(currentOperation, Y9Operation.class);
 
         currentOperation.setEnabled(Boolean.FALSE);
         Y9Operation savedOperation = y9OperationManager.update(currentOperation);
@@ -97,13 +98,13 @@ public class Y9OperationServiceImpl implements Y9OperationService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedOperation;
+        return entityToModel(savedOperation);
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public List<Y9Operation> enable(List<String> idList) {
-        List<Y9Operation> y9OperationList = new ArrayList<>();
+    public List<Operation> enable(List<String> idList) {
+        List<Operation> y9OperationList = new ArrayList<>();
         for (String id : idList) {
             y9OperationList.add(this.enable(id));
         }
@@ -112,9 +113,9 @@ public class Y9OperationServiceImpl implements Y9OperationService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9Operation enable(String id) {
-        Y9Operation currentOperation = this.getById(id);
-        Y9Operation originalOperation = Y9ModelConvertUtil.convert(currentOperation, Y9Operation.class);
+    public Operation enable(String id) {
+        Y9Operation currentOperation = y9OperationManager.getById(id);
+        Y9Operation originalOperation = PlatformModelConvertUtil.convert(currentOperation, Y9Operation.class);
 
         currentOperation.setEnabled(Boolean.TRUE);
         Y9Operation savedOperation = y9OperationManager.update(currentOperation);
@@ -129,7 +130,7 @@ public class Y9OperationServiceImpl implements Y9OperationService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedOperation;
+        return entityToModel(savedOperation);
     }
 
     @Override
@@ -138,27 +139,31 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     @Override
-    public Optional<Y9Operation> findById(String id) {
-        return y9OperationManager.findByIdFromCache(id);
+    public Optional<Operation> findById(String id) {
+        return y9OperationManager.findByIdFromCache(id).map(Y9OperationServiceImpl::entityToModel);
     }
 
     @Override
-    public List<Y9Operation> findByNameLike(String name) {
-        return y9OperationRepository.findByNameContainingOrderByTabIndex(name);
+    public List<Operation> findByNameLike(String name) {
+        List<Y9Operation> y9OperationList = y9OperationRepository.findByNameContainingOrderByTabIndex(name);
+        return entityToModel(y9OperationList);
     }
 
     @Override
-    public Y9Operation getById(String id) {
-        return y9OperationManager.getByIdFromCache(id);
+    public Operation getById(String id) {
+        return entityToModel(y9OperationManager.getByIdFromCache(id));
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9Operation saveOrUpdate(Y9Operation y9Operation) {
+    public Operation saveOrUpdate(Operation operation) {
+        Y9Operation y9Operation = PlatformModelConvertUtil.convert(operation, Y9Operation.class);
+
         if (StringUtils.isNotBlank(y9Operation.getId())) {
             Optional<Y9Operation> y9OperationOptional = y9OperationManager.findById(y9Operation.getId());
             if (y9OperationOptional.isPresent()) {
-                Y9Operation originOperation = Y9ModelConvertUtil.convert(y9OperationOptional.get(), Y9Operation.class);
+                Y9Operation originOperation =
+                    PlatformModelConvertUtil.convert(y9OperationOptional.get(), Y9Operation.class);
                 Y9Operation savedOperation = y9OperationManager.update(y9Operation);
 
                 AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -171,7 +176,7 @@ public class Y9OperationServiceImpl implements Y9OperationService {
                     .build();
                 Y9Context.publishEvent(auditLogEvent);
 
-                return savedOperation;
+                return entityToModel(savedOperation);
             }
         }
 
@@ -186,25 +191,26 @@ public class Y9OperationServiceImpl implements Y9OperationService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedOperation;
+        return entityToModel(savedOperation);
     }
 
     @Override
-    public Y9Operation updateTabIndex(String id, int index) {
-        return y9OperationManager.updateTabIndex(id, index);
+    public Operation updateTabIndex(String id, int index) {
+        return entityToModel(y9OperationManager.updateTabIndex(id, index));
     }
 
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void deleteByParentId(String parentId) {
-        List<Y9Operation> y9OperationList = this.findByParentId(parentId);
-        for (Y9Operation y9Operation : y9OperationList) {
+        List<Operation> y9OperationList = this.findByParentId(parentId);
+        for (Operation y9Operation : y9OperationList) {
             this.delete(y9Operation.getId());
         }
     }
 
     @Override
-    public List<Y9Operation> findByParentId(String parentId) {
-        return y9OperationRepository.findByParentIdOrderByTabIndex(parentId);
+    public List<Operation> findByParentId(String parentId) {
+        List<Y9Operation> y9OperationList = y9OperationRepository.findByParentIdOrderByTabIndex(parentId);
+        return entityToModel(y9OperationList);
     }
 
     @EventListener
@@ -221,4 +227,11 @@ public class Y9OperationServiceImpl implements Y9OperationService {
         this.deleteByParentId(entity.getId());
     }
 
+    private static Operation entityToModel(Y9Operation savedOperation) {
+        return PlatformModelConvertUtil.convert(savedOperation, Operation.class);
+    }
+
+    private List<Operation> entityToModel(List<Y9Operation> y9OperationList) {
+        return PlatformModelConvertUtil.convert(y9OperationList, Operation.class);
+    }
 }

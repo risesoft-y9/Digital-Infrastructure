@@ -2,6 +2,7 @@ package net.risesoft.manager.org.impl;
 
 import java.util.Optional;
 
+import net.risesoft.util.PlatformModelConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -21,7 +22,6 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
  * 职位 manager 实现类
@@ -84,7 +84,7 @@ public class Y9JobManagerImpl implements Y9JobManager {
     @CacheEvict(key = "#y9Job.id", condition = "#y9Job.id!=null")
     public Y9Job update(Y9Job job) {
         Y9Job currentJob = this.getById(job.getId());
-        Y9Job originY9Job = Y9ModelConvertUtil.convert(currentJob, Y9Job.class);
+        Y9Job originY9Job = PlatformModelConvertUtil.convert(currentJob, Y9Job.class);
 
         Y9BeanUtil.copyProperties(job, currentJob);
         Y9Job savedJob = y9JobRepository.save(currentJob);

@@ -8,7 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import javax.persistence.Version;
-import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
@@ -45,6 +44,11 @@ public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBa
     @Comment("UUID字段")
     protected String id;
 
+    /** 自定义id */
+    @Column(name = "CUSTOM_ID", length = 255)
+    @Comment("自定义id")
+    protected String customId;
+
     /** 父节点id 组织机构中不需要这个字段，其他组织节点的实体表中加入该字段，为了操作方便此处保留 */
     @Transient
     protected String parentId;
@@ -72,18 +76,12 @@ public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBa
     @Comment("描述")
     protected String description;
 
-    /** 自定义id */
-    @Column(name = "CUSTOM_ID", length = 255)
-    @Comment("自定义id")
-    protected String customId;
-
     /** 由name组成的父子关系列表(倒序)，之间用逗号分隔 */
     @Column(name = "DN", length = 2000)
     @Comment("由name组成的父子关系列表(倒序)，之间用逗号分隔")
     protected String dn;
 
     /** 名称 */
-    @NotBlank
     @Column(name = "NAME", length = 255, nullable = false)
     @Comment("名称")
     protected String name;

@@ -1,15 +1,16 @@
 package net.risesoft.model.platform.org;
 
-import java.io.Serializable;
-import java.util.Date;
+import java.util.Comparator;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import javax.validation.constraints.NotBlank;
+
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import lombok.Data;
 
 import net.risesoft.enums.platform.org.OrgTypeEnum;
+import net.risesoft.model.BaseModel;
 
 /**
  * 组织节点
@@ -29,7 +30,7 @@ import net.risesoft.enums.platform.org.OrgTypeEnum;
     @JsonSubTypes.Type(value = Organization.class, name = "Organization"),
     @JsonSubTypes.Type(value = Person.class, name = "Person"),
     @JsonSubTypes.Type(value = Position.class, name = "Position")})
-public abstract class OrgUnit implements Serializable {
+public abstract class OrgUnit extends BaseModel implements Comparable<OrgUnit> {
 
     private static final long serialVersionUID = 4473986529965103226L;
 
@@ -37,6 +38,11 @@ public abstract class OrgUnit implements Serializable {
      * 唯一标识
      */
     protected String id;
+
+    /**
+     * 自定义ID
+     */
+    protected String customId;
 
     /**
      * 父节点ID
@@ -49,18 +55,6 @@ public abstract class OrgUnit implements Serializable {
     protected String tenantId;
 
     /**
-     * 创建时间
-     */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    protected Date createTime;
-
-    /**
-     * 更新时间
-     */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    protected Date updateTime;
-
-    /**
      * 是否禁用
      */
     protected Boolean disabled;
@@ -71,11 +65,6 @@ public abstract class OrgUnit implements Serializable {
     protected String description;
 
     /**
-     * 自定义ID
-     */
-    protected String customId;
-
-    /**
      * 域名称
      */
     protected String dn;
@@ -83,6 +72,7 @@ public abstract class OrgUnit implements Serializable {
     /**
      * 名称
      */
+    @NotBlank
     protected String name;
 
     /**
@@ -105,4 +95,10 @@ public abstract class OrgUnit implements Serializable {
      */
     protected String guidPath;
 
+    @Override
+    public int compareTo(OrgUnit o) {
+        return Comparator.comparing(OrgUnit::getParentId, Comparator.nullsFirst(String::compareTo))
+            .thenComparing(OrgUnit::getTabIndex)
+            .compare(this, o);
+    }
 }

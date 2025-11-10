@@ -11,23 +11,23 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.org.Y9Position;
-import net.risesoft.entity.relation.Y9PersonsToGroups;
-import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.manager.permission.cache.Y9PersonToRoleManager;
 import net.risesoft.manager.permission.cache.Y9PositionToRoleManager;
+import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.org.PersonsGroups;
+import net.risesoft.model.platform.org.PersonsPositions;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.service.permission.cache.IdentityRoleCalculator;
 import net.risesoft.service.relation.Y9PersonsToGroupsService;
 import net.risesoft.service.relation.Y9PersonsToPositionsService;
-import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.entity.Y9Role;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
 
 /**
@@ -75,9 +75,9 @@ public class IdentityRoleCalculatorImpl implements IdentityRoleCalculator {
     @Override
     @Transactional
     public void recalculateByOrgUnitId(final String orgUnitId) {
-        Optional<Y9OrgBase> y9OrgBaseOptional = compositeOrgBaseService.findOrgUnit(orgUnitId);
+        Optional<OrgUnit> y9OrgBaseOptional = compositeOrgBaseService.findOrgUnit(orgUnitId);
         if (y9OrgBaseOptional.isPresent()) {
-            Y9OrgBase y9OrgBase = y9OrgBaseOptional.get();
+            OrgUnit y9OrgBase = y9OrgBaseOptional.get();
             OrgTypeEnum orgType = y9OrgBase.getOrgType();
             switch (orgType) {
                 case ORGANIZATION:
@@ -102,8 +102,8 @@ public class IdentityRoleCalculatorImpl implements IdentityRoleCalculator {
                     }
                     break;
                 case GROUP:
-                    List<Y9PersonsToGroups> y9PersonsToGroups = y9PersonsToGroupsService.findByGroupId(orgUnitId);
-                    for (Y9PersonsToGroups orgPersonsGroup : y9PersonsToGroups) {
+                    List<PersonsGroups> y9PersonsToGroups = y9PersonsToGroupsService.listByGroupId(orgUnitId);
+                    for (PersonsGroups orgPersonsGroup : y9PersonsToGroups) {
                         String orgPersonId = orgPersonsGroup.getPersonId();
                         this.recalculateByPersonId(orgPersonId);
                     }
@@ -111,9 +111,9 @@ public class IdentityRoleCalculatorImpl implements IdentityRoleCalculator {
                 case POSITION:
                     this.recalculateByPositionId(orgUnitId);
                     // 人员的角色还包括关联岗位的角色
-                    List<Y9PersonsToPositions> y9PersonsToPositionsList =
-                        y9PersonsToPositionsService.findByPositionId(orgUnitId);
-                    for (Y9PersonsToPositions y9PersonsToPositions : y9PersonsToPositionsList) {
+                    List<PersonsPositions> y9PersonsToPositionsList =
+                        y9PersonsToPositionsService.listByPositionId(orgUnitId);
+                    for (PersonsPositions y9PersonsToPositions : y9PersonsToPositionsList) {
                         this.recalculateByPersonId(y9PersonsToPositions.getPersonId());
                     }
                     break;

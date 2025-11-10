@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.permission.cache.position.Y9PositionToResourceAndAuthority;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
+import net.risesoft.model.platform.permission.cache.PositionToResource;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.permission.cache.Y9PositionToResourceAndAuthorityService;
+import net.risesoft.service.permission.cache.Y9PositionToResourceService;
 import net.risesoft.vo.permission.ResourcePermissionVO;
 
 /**
@@ -36,7 +36,7 @@ import net.risesoft.vo.permission.ResourcePermissionVO;
 @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
 public class PositionResourcesController {
 
-    private final Y9PositionToResourceAndAuthorityService y9PositionToResourceAndAuthorityService;
+    private final Y9PositionToResourceService y9PositionToResourceService;
     private final ResourcePermissionVOBuilder resourcePermissionVOBuilder;
 
     /**
@@ -47,9 +47,8 @@ public class PositionResourcesController {
      */
     @GetMapping("/getByPositionId")
     public Y9Result<List<ResourcePermissionVO>> getByPositionId(@RequestParam @NotBlank String positionId) {
-        List<Y9PositionToResourceAndAuthority> y9PositionToResourceAndAuthorityList =
-            y9PositionToResourceAndAuthorityService.list(positionId);
-        return Y9Result.success(resourcePermissionVOBuilder
-            .buildResourcePermissionVOList(new ArrayList<>(y9PositionToResourceAndAuthorityList)));
+        List<PositionToResource> positionToResourceList = y9PositionToResourceService.list(positionId);
+        return Y9Result.success(
+            resourcePermissionVOBuilder.buildResourcePermissionVOList(new ArrayList<>(positionToResourceList)));
     }
 }

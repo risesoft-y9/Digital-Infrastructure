@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
@@ -41,13 +40,11 @@ public class Y9Job extends BaseEntity {
     private String id;
 
     /** 数据代码 */
-    @NotBlank
     @Column(name = "CODE", length = 255, nullable = false)
     @Comment("数据代码")
     private String code;
 
     /** 名称 */
-    @NotBlank
     @Column(name = "NAME", length = 255, nullable = false, unique = true)
     @Comment("名称")
     private String name;

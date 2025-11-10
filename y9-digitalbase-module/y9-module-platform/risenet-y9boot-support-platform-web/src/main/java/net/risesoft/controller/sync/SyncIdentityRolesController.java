@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.org.Organization;
+import net.risesoft.model.platform.tenant.Tenant;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.service.permission.cache.IdentityRoleCalculator;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
 
 /**
@@ -51,12 +51,12 @@ public class SyncIdentityRolesController {
         double start = System.currentTimeMillis();
         LOGGER.info("更新人员/岗位角色开始时间：{}", fdf.format(new Date()));
 
-        List<Y9Tenant> y9TenantList = y9TenantService.listAll();
-        for (Y9Tenant y9Tenant : y9TenantList) {
-            Y9LoginUserHolder.setTenantId(y9Tenant.getId());
-            LOGGER.debug("同步租户[{}]人员/岗位角色", y9Tenant.getId());
-            for (Y9Organization y9Organization : y9OrganizationService.list()) {
-                identityRoleCalculator.recalculateByOrgUnitId(y9Organization.getId());
+        List<Tenant> tenantList = y9TenantService.listAll();
+        for (Tenant tenant : tenantList) {
+            Y9LoginUserHolder.setTenantId(tenant.getId());
+            LOGGER.debug("同步租户[{}]人员/岗位角色", tenant.getId());
+            for (Organization organization : y9OrganizationService.list()) {
+                identityRoleCalculator.recalculateByOrgUnitId(organization.getId());
             }
         }
 
@@ -104,8 +104,8 @@ public class SyncIdentityRolesController {
         LOGGER.info("更新人员/岗位角色开始时间：{},租户id--->{}", fdf.format(new Date()), tenantId);
 
         Y9LoginUserHolder.setTenantId(tenantId);
-        for (Y9Organization y9Organization : y9OrganizationService.list()) {
-            identityRoleCalculator.recalculateByOrgUnitId(y9Organization.getId());
+        for (Organization organization : y9OrganizationService.list()) {
+            identityRoleCalculator.recalculateByOrgUnitId(organization.getId());
         }
 
         double end = System.currentTimeMillis();

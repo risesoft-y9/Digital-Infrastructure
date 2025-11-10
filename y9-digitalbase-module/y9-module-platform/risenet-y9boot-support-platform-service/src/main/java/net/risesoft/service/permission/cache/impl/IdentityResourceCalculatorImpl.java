@@ -27,8 +27,8 @@ import net.risesoft.manager.permission.cache.Y9PositionToResourceAndAuthorityMan
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.repository.permission.Y9OrgBasesToRolesRepository;
 import net.risesoft.service.permission.cache.IdentityResourceCalculator;
+import net.risesoft.y9public.entity.Y9Role;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
-import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.manager.resource.CompositeResourceManager;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
 

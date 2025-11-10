@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.OptionClassConsts;
-import net.risesoft.entity.dictionary.Y9OptionValue;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.dictionary.OptionValue;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.dictionary.Y9OptionValueService;
@@ -44,84 +44,84 @@ public class OptionValueController {
      * 根据字典类型，获取字典属性值列表
      *
      * @param type 字典类型
-     * @return {@code Y9Result<List<Y9OptionValue>>}
+     * @return {@code Y9Result<List<OptionValue>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取字典属性值列表")
     @RequestMapping(value = "/listByType")
-    public Y9Result<List<Y9OptionValue>> listByType(@RequestParam("type") @NotBlank String type) {
+    public Y9Result<List<OptionValue>> listByType(@RequestParam("type") @NotBlank String type) {
         return Y9Result.success(y9OptionValueService.listByType(type), "获取字典属性值列表成功");
     }
 
     /**
      * 获取职务名称列表
      *
-     * @return {@code Y9Result<List<Y9OptionValue>>}
+     * @return {@code Y9Result<List<OptionValue>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取职务名称列表")
     @RequestMapping(value = "/listDuty")
-    public Y9Result<List<Y9OptionValue>> listDuty() {
+    public Y9Result<List<OptionValue>> listDuty() {
         return Y9Result.success(y9OptionValueService.listByType(OptionClassConsts.DUTY), "获取职务名称列表成功");
     }
 
     /**
      * 获取职备级别列表
      *
-     * @return {@code Y9Result<List<Y9OptionValue>>}
+     * @return {@code Y9Result<List<OptionValue>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取职备级别列表")
     @RequestMapping(value = "/listDutyLevel")
-    public Y9Result<List<Y9OptionValue>> listDutyLevel() {
+    public Y9Result<List<OptionValue>> listDutyLevel() {
         return Y9Result.success(y9OptionValueService.listByType(OptionClassConsts.DUTY_LEVEL), "获取职备级别列表成功");
     }
 
     /**
      * 获取职务类型列表
      *
-     * @return {@code Y9Result<List<Y9OptionValue>>}
+     * @return {@code Y9Result<List<OptionValue>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取职务类型列表")
     @RequestMapping(value = "/listDutyType")
-    public Y9Result<List<Y9OptionValue>> listDutyType() {
+    public Y9Result<List<OptionValue>> listDutyType() {
         return Y9Result.success(y9OptionValueService.listByType(OptionClassConsts.DUTY_TYPE), "获取职务类型列表成功");
     }
 
     /**
      * 获取人员编制列表
      *
-     * @return {@code Y9Result<List<Y9OptionValue>>}
+     * @return {@code Y9Result<List<OptionValue>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取人员编制列表")
     @RequestMapping(value = "/listOfficialType")
-    public Y9Result<List<Y9OptionValue>> listOfficialType() {
+    public Y9Result<List<OptionValue>> listOfficialType() {
         return Y9Result.success(y9OptionValueService.listByType(OptionClassConsts.OFFICIAL_TYPE), "获取人员编制列表成功");
     }
 
     /**
      * 获取组织机构类型列表
      *
-     * @return {@code Y9Result<List<Y9OptionValue>>}
+     * @return {@code Y9Result<List<OptionValue>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取组织机构类型列表")
     @RequestMapping(value = "/listOrgType")
-    public Y9Result<List<Y9OptionValue>> listOrgType() {
+    public Y9Result<List<OptionValue>> listOrgType() {
         return Y9Result.success(y9OptionValueService.listByType(OptionClassConsts.ORGANIZATION_TYPE), "获取组织机构类型列表成功");
     }
 
     /**
      * 获取证件类型列表
      *
-     * @return {@code Y9Result<List<Y9OptionValue>>}
+     * @return {@code Y9Result<List<OptionValue>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取证件类型列表")
     @RequestMapping(value = "/listPrincipalIdType")
-    public Y9Result<List<Y9OptionValue>> listPrincipalIdType() {
+    public Y9Result<List<OptionValue>> listPrincipalIdType() {
         return Y9Result.success(y9OptionValueService.listByType(OptionClassConsts.PRINCIPAL_ID_TYPE), "获取证件类型列表成功");
     }
 
@@ -142,13 +142,12 @@ public class OptionValueController {
      * 保存新增字典数据
      *
      * @param optionValue 字典数据实体
-     * @return {@code Y9Result<Y9OptionValue>}
+     * @return {@code Y9Result<OptionValue>}
      */
     @RiseLog(operationName = "保存新增字典数据", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOptionValue")
-    public Y9Result<Y9OptionValue> saveOptionValue(@Validated Y9OptionValue optionValue) {
-        Y9OptionValue value = y9OptionValueService.saveOptionValue(optionValue);
-        return Y9Result.success(value, "保存新增字典数据成功");
+    public Y9Result<OptionValue> saveOptionValue(@Validated OptionValue optionValue) {
+        return Y9Result.success(y9OptionValueService.saveOptionValue(optionValue), "保存新增字典数据成功");
     }
 
 }

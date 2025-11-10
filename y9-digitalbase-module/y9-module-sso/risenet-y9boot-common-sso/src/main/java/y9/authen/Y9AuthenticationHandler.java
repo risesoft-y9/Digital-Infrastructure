@@ -263,6 +263,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         attributes.put("avator", toArrayList(y9User.getAvator()));
         attributes.put("personType", toArrayList(y9User.getPersonType()));
 
+        // FIXME 密码为敏感字段 不返回？
         attributes.put("password", toArrayList(y9User.getPassword()));
         attributes.put("original", Lists.newArrayList(y9User.getOriginal() == null || y9User.getOriginal()));
         attributes.put("originalId", toArrayList(y9User.getOriginalId()));

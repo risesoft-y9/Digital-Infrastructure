@@ -18,10 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.TenantErrorCodeEnum;
+import net.risesoft.model.platform.tenant.Tenant;
 import net.risesoft.pojo.AuditLogEvent;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.util.Y9Assert;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
@@ -51,34 +52,16 @@ public class Y9TenantServiceImpl implements Y9TenantService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9Tenant changDefaultDataSourceId(String id, String datasourceId) {
-        Y9Tenant y9Tenant = this.getById(id);
-        y9Tenant.setDefaultDataSourceId(datasourceId);
-        return y9TenantRepository.save(y9Tenant);
-    }
-
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9Tenant changeDisabled(String id) {
-        Y9Tenant y9Tenant = this.getById(id);
+    public Tenant changeDisabled(String id) {
+        Y9Tenant y9Tenant = y9TenantManager.getById(id);
         y9Tenant.setEnabled(!y9Tenant.getEnabled());
-        return y9TenantRepository.save(y9Tenant);
-    }
-
-    @Override
-    public long countByShortName(String shortName) {
-        return y9TenantRepository.countByShortName(shortName);
-    }
-
-    @Override
-    public long countByShortNameAndIdIsNot(String shortName, String tenantId) {
-        return y9TenantRepository.countByShortNameAndIdIsNot(shortName, tenantId);
+        return PlatformModelConvertUtil.y9TenantToTenant(y9TenantRepository.save(y9Tenant));
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9Tenant createTenant(String tenantName, String tenantShortName, String dataSourceId) {
-        Y9Tenant y9Tenant = new Y9Tenant();
+    public Tenant createTenant(String tenantName, String tenantShortName, String dataSourceId) {
+        Tenant y9Tenant = new Tenant();
         y9Tenant.setName(tenantName);
         y9Tenant.setShortName(tenantShortName);
         y9Tenant.setEnabled(Boolean.TRUE);
@@ -94,51 +77,56 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     }
 
     @Override
-    public Optional<Y9Tenant> findById(String id) {
-        return y9TenantRepository.findById(id);
+    public Optional<Tenant> findById(String id) {
+        return y9TenantRepository.findById(id).map(PlatformModelConvertUtil::y9TenantToTenant);
     }
 
     @Override
-    public Optional<Y9Tenant> findByShortName(String shortName) {
-        return y9TenantRepository.findByShortName(shortName);
+    public Optional<Tenant> findByShortName(String shortName) {
+        return y9TenantRepository.findByShortName(shortName).map(PlatformModelConvertUtil::y9TenantToTenant);
     }
 
     @Override
-    public Y9Tenant getById(String id) {
-        return y9TenantManager.getById(id);
+    public Tenant getById(String id) {
+        return PlatformModelConvertUtil.y9TenantToTenant(y9TenantManager.getById(id));
     }
 
     @Override
-    public List<Y9Tenant> listAll() {
-        return y9TenantRepository.findAll(Sort.by(Direction.ASC, "createTime"));
+    public List<Tenant> listAll() {
+        List<Y9Tenant> y9TenantList = y9TenantRepository.findAll(Sort.by(Direction.ASC, "createTime"));
+        return PlatformModelConvertUtil.y9TenantToTenant(y9TenantList);
     }
 
     @Override
-    public List<Y9Tenant> listByGuidPathLike(String guidPath) {
-        return y9TenantRepository.findByGuidPathContaining(guidPath);
+    public List<Tenant> listByGuidPathLike(String guidPath) {
+        List<Y9Tenant> y9TenantList = y9TenantRepository.findByGuidPathContaining(guidPath);
+        return PlatformModelConvertUtil.y9TenantToTenant(y9TenantList);
     }
 
     @Override
-    public List<Y9Tenant> listByParentIdAndTenantType(String parentId) {
+    public List<Tenant> listByParentIdAndTenantType(String parentId) {
+        List<Y9Tenant> y9TenantList;
         if (StringUtils.isBlank(parentId)) {
-            return y9TenantRepository.findByParentIdIsNullOrderByTabIndexAsc();
+            y9TenantList = y9TenantRepository.findByParentIdIsNullOrderByTabIndexAsc();
+        } else {
+            y9TenantList = y9TenantRepository.findByParentIdOrderByTabIndexAsc(parentId);
         }
-        return y9TenantRepository.findByParentIdOrderByTabIndexAsc(parentId);
+        return PlatformModelConvertUtil.y9TenantToTenant(y9TenantList);
     }
 
     @Override
-    public Optional<Y9Tenant> findByTenantName(String tenantName) {
-        return y9TenantRepository.findByName(tenantName);
+    public Optional<Tenant> findByTenantName(String tenantName) {
+        return y9TenantRepository.findByName(tenantName).map(PlatformModelConvertUtil::y9TenantToTenant);
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void move(String id, String parentId) {
-        Y9Tenant y9Tenant = this.getById(id);
+        Tenant y9Tenant = this.getById(id);
 
         if (StringUtils.isNotBlank(parentId)) {
-            List<Y9Tenant> tenants = this.listByGuidPathLike(y9Tenant.getGuidPath());
-            Set<String> tenantIdSet = tenants.stream().map(Y9Tenant::getId).collect(Collectors.toSet());
+            List<Tenant> tenants = this.listByGuidPathLike(y9Tenant.getGuidPath());
+            Set<String> tenantIdSet = tenants.stream().map(Tenant::getId).collect(Collectors.toSet());
 
             // 不能将租户移动到本身或子租户中
             Y9Assert.notNull(tenantIdSet.contains(parentId), TenantErrorCodeEnum.MOVE_TO_SUB_TENANT_NOT_PERMITTED);
@@ -150,7 +138,9 @@ public class Y9TenantServiceImpl implements Y9TenantService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9Tenant saveOrUpdate(Y9Tenant y9Tenant) {
+    public Tenant saveOrUpdate(Tenant tenant) {
+        Y9Tenant y9Tenant = PlatformModelConvertUtil.convert(tenant, Y9Tenant.class);
+
         Y9Assert.isTrue(isNameAvailable(y9Tenant.getName(), y9Tenant.getId()), TenantErrorCodeEnum.NAME_HAS_BEEN_USED,
             y9Tenant.getName());
         Y9Assert.isTrue(isShortNameAvailable(y9Tenant.getShortName(), y9Tenant.getId()),
@@ -159,7 +149,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
         if (StringUtils.isNotBlank(y9Tenant.getId())) {
             Optional<Y9Tenant> y9TenantOptional = y9TenantRepository.findById(y9Tenant.getId());
             if (y9TenantOptional.isPresent()) {
-                Y9Tenant originTenant = Y9ModelConvertUtil.convert(y9TenantOptional.get(), Y9Tenant.class);
+                Y9Tenant originTenant = PlatformModelConvertUtil.convert(y9TenantOptional.get(), Y9Tenant.class);
                 Y9Tenant savedTenant = y9TenantManager.update(y9Tenant);
 
                 AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -172,28 +162,28 @@ public class Y9TenantServiceImpl implements Y9TenantService {
                     .build();
                 Y9Context.publishEvent(auditLogEvent);
 
-                return savedTenant;
+                return PlatformModelConvertUtil.y9TenantToTenant(savedTenant);
             }
         }
 
-        Y9Tenant savedY9Tenant = y9TenantManager.insert(y9Tenant);
+        Y9Tenant savedTenant = y9TenantManager.insert(y9Tenant);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.TENANT_CREATE.getAction())
-            .description(Y9StringUtil.format(AuditLogEnum.TENANT_CREATE.getDescription(), savedY9Tenant.getName()))
-            .objectId(savedY9Tenant.getId())
+            .description(Y9StringUtil.format(AuditLogEnum.TENANT_CREATE.getDescription(), savedTenant.getName()))
+            .objectId(savedTenant.getId())
             .oldObject(null)
-            .currentObject(savedY9Tenant)
+            .currentObject(savedTenant)
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedY9Tenant;
+        return PlatformModelConvertUtil.y9TenantToTenant(savedTenant);
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9Tenant saveAndInitDataSource(Y9Tenant y9Tenant) {
-        Y9Tenant savedY9Tenant = this.saveOrUpdate(y9Tenant);
+    public Tenant saveAndInitDataSource(Tenant y9Tenant) {
+        Tenant savedY9Tenant = this.saveOrUpdate(y9Tenant);
 
         if (StringUtils.isBlank(savedY9Tenant.getDefaultDataSourceId())) {
             Y9DataSource y9DataSource = null;
@@ -215,7 +205,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void saveTenantOrders(String[] tenantIds) {
         for (int i = 0; i < tenantIds.length; i++) {
-            Y9Tenant y9Tenant = this.getById(tenantIds[i]);
+            Y9Tenant y9Tenant = y9TenantManager.getById(tenantIds[i]);
             y9Tenant.setTabIndex(i);
             y9TenantRepository.save(y9Tenant);
         }

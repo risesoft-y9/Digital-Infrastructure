@@ -16,8 +16,6 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.api.platform.tenant.TenantApi;
 import net.risesoft.model.platform.tenant.Tenant;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
-import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
 
 /**
@@ -47,8 +45,7 @@ public class TenantApiImpl implements TenantApi {
      */
     @Override
     public Y9Result<Tenant> findByName(@RequestParam("tenantName") @NotBlank String tenantName) {
-        Y9Tenant y9Tenant = y9TenantService.findByTenantName(tenantName).orElse(null);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Tenant, Tenant.class));
+        return Y9Result.success(y9TenantService.findByTenantName(tenantName).orElse(null));
     }
 
     /**
@@ -60,8 +57,7 @@ public class TenantApiImpl implements TenantApi {
      */
     @Override
     public Y9Result<Tenant> findByShortName(@RequestParam("shortName") @NotBlank String shortName) {
-        Y9Tenant y9Tenant = y9TenantService.findByShortName(shortName).orElse(null);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Tenant, Tenant.class));
+        return Y9Result.success(y9TenantService.findByShortName(shortName).orElse(null));
     }
 
     /**
@@ -73,8 +69,7 @@ public class TenantApiImpl implements TenantApi {
      */
     @Override
     public Y9Result<Tenant> getById(@RequestParam("tenantId") @NotBlank String tenantId) {
-        Y9Tenant y9Tenant = y9TenantService.getById(tenantId);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Tenant, Tenant.class));
+        return Y9Result.success(y9TenantService.getById(tenantId));
     }
 
     /**
@@ -85,8 +80,7 @@ public class TenantApiImpl implements TenantApi {
      */
     @Override
     public Y9Result<List<Tenant>> listAllTenants() {
-        List<Y9Tenant> tenantEntityList = y9TenantService.listAll();
-        return Y9Result.success(Y9ModelConvertUtil.convert(tenantEntityList, Tenant.class));
+        return Y9Result.success(y9TenantService.listAll());
     }
 
 }

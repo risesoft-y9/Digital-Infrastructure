@@ -16,14 +16,14 @@ import net.risesoft.exception.TenantErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.model.platform.tenant.TenantSystem;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
 import net.risesoft.y9.pubsub.event.Y9EventCommon;
 import net.risesoft.y9.pubsub.message.Y9MessageCommon;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
-import net.risesoft.y9public.entity.resource.Y9System;
+import net.risesoft.y9public.entity.Y9System;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.entity.tenant.Y9TenantSystem;
@@ -52,6 +52,12 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
     private final Y9DataSourceManager y9DataSourceManager;
 
     @Override
+    public Y9TenantSystem getById(String id) {
+        return y9TenantSystemRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(TenantErrorCodeEnum.TENANT_SYSTEM_NOT_EXISTS, id));
+    }
+
+    @Override
     public void deleteBySystemId(String systemId) {
         List<Y9TenantSystem> y9TenantSystemList = y9TenantSystemRepository.findBySystemId(systemId);
         for (Y9TenantSystem t : y9TenantSystemList) {
@@ -61,8 +67,7 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
 
     @Override
     public void delete(String id) {
-        Y9TenantSystem y9TenantSystem = y9TenantSystemRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(TenantErrorCodeEnum.TENANT_SYSTEM_NOT_EXISTS, id));
+        Y9TenantSystem y9TenantSystem = this.getById(id);
         y9TenantSystemRepository.delete(y9TenantSystem);
 
         // 注册事务同步器，在事务提交后做某些操作
@@ -110,7 +115,7 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
         y9TenantSystem = y9TenantSystemRepository.save(y9TenantSystem);
 
         Y9System y9System = y9SystemManager.getByIdFromCache(y9TenantSystem.getSystemId());
-        TenantSystem tenantSystem = Y9ModelConvertUtil.convert(y9TenantSystem, TenantSystem.class);
+        TenantSystem tenantSystem = PlatformModelConvertUtil.convert(y9TenantSystem, TenantSystem.class);
 
         if (Objects.equals(Y9Context.getSystemName(), y9System.getName())) {
             // 对于租用数字底座的，立即发送租用事件，用于集成测试

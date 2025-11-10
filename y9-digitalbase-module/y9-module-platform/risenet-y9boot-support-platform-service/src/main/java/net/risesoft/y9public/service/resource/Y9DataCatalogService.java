@@ -2,10 +2,9 @@ package net.risesoft.y9public.service.resource;
 
 import java.util.List;
 
-import net.risesoft.entity.dictionary.Y9OptionValue;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.model.platform.dictionary.OptionValue;
 import net.risesoft.model.platform.resource.DataCatalog;
-import net.risesoft.y9public.entity.resource.Y9DataCatalog;
 
 /**
  * 数据目录 service
@@ -20,9 +19,9 @@ public interface Y9DataCatalogService {
 
     DataCatalog getDataCatalogById(String id);
 
-    Y9DataCatalog saveOrUpdate(Y9DataCatalog y9DataCatalog);
+    DataCatalog saveOrUpdate(DataCatalog y9DataCatalog);
 
-    void saveByYears(Y9DataCatalog y9DataCatalog, Integer startYear, Integer endYear);
+    void saveByYears(DataCatalog y9DataCatalog, Integer startYear, Integer endYear);
 
     List<DataCatalog> getTree(String tenantId, String parentId, String treeType);
 
@@ -34,11 +33,11 @@ public interface Y9DataCatalogService {
     List<DataCatalog> treeSearch(String tenantId, String name, String treeType, AuthorityEnum authority,
         String personId);
 
-    List<Y9OptionValue> getTreeTypeList();
+    List<OptionValue> getTreeTypeList();
 
-    void saveByType(Y9DataCatalog y9DataCatalog);
+    void saveByType(DataCatalog y9DataCatalog);
 
     DataCatalog getTreeRoot(String id);
 
-    List<Y9DataCatalog> listRoot();
+    List<DataCatalog> listRoot();
 }

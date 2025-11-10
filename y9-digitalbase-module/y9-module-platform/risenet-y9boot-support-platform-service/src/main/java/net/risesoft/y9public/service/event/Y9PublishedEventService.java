@@ -3,11 +3,10 @@ package net.risesoft.y9public.service.event;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-
+import net.risesoft.model.platform.PublishedEvent;
+import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.query.platform.PublishedEventQuery;
-import net.risesoft.y9public.entity.event.Y9PublishedEvent;
 
 /**
  * @author dingzhaojun
@@ -24,7 +23,7 @@ public interface Y9PublishedEventService {
      * @param startTime 开始事件
      * @return {@code List<Y9PublishedEvent>}
      */
-    List<Y9PublishedEvent> listByTenantId(String tenantId, Date startTime);
+    List<PublishedEvent> listByTenantId(String tenantId, Date startTime);
 
     /**
      * 分页查询
@@ -33,5 +32,5 @@ public interface Y9PublishedEventService {
      * @param query 查询条件
      * @return {@code Page<Y9PublishedEvent>}
      */
-    Page<Y9PublishedEvent> page(Y9PageQuery pageQuery, PublishedEventQuery query);
+    Y9Page<PublishedEvent> page(Y9PageQuery pageQuery, PublishedEventQuery query);
 }

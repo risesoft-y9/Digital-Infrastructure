@@ -3,7 +3,7 @@ package net.risesoft.manager.permission.cache;
 import java.util.List;
 
 import net.risesoft.entity.org.Y9Position;
-import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.entity.Y9Role;
 
 /**
  * 岗位角色 Manager

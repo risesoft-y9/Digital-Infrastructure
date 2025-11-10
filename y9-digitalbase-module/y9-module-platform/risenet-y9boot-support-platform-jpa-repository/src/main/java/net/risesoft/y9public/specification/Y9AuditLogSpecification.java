@@ -14,7 +14,7 @@ import org.springframework.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.query.platform.AuditLogQuery;
-import net.risesoft.y9public.entity.auditlog.Y9AuditLog;
+import net.risesoft.y9public.entity.Y9AuditLog;
 
 /**
  * 审计日志查询条件

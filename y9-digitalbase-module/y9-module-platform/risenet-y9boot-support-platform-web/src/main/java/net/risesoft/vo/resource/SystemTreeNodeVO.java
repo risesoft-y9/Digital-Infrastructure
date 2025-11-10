@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import net.risesoft.enums.TreeTypeEnum;
+import net.risesoft.model.platform.System;
 import net.risesoft.vo.TreeNodeVO;
-import net.risesoft.y9public.entity.resource.Y9System;
 
 /**
  * 系统树节点vo
@@ -29,24 +29,24 @@ public class SystemTreeNodeVO extends TreeNodeVO {
     /** 租户id */
     private String tenantId;
 
-    public static SystemTreeNodeVO convertY9System(Y9System y9System) {
+    public static SystemTreeNodeVO convertSystem(System system) {
         SystemTreeNodeVO systemTreeNodeVO = new SystemTreeNodeVO();
-        systemTreeNodeVO.setId(y9System.getId());
-        systemTreeNodeVO.setName(y9System.getName());
-        systemTreeNodeVO.setCnName(y9System.getCnName());
+        systemTreeNodeVO.setId(system.getId());
+        systemTreeNodeVO.setName(system.getName());
+        systemTreeNodeVO.setCnName(system.getCnName());
         systemTreeNodeVO.setParentId(null);
-        systemTreeNodeVO.setTabIndex(y9System.getTabIndex());
+        systemTreeNodeVO.setTabIndex(system.getTabIndex());
         systemTreeNodeVO.setHasChild(true);
         systemTreeNodeVO.setNodeType("SYSTEM");
-        systemTreeNodeVO.setSystemId(y9System.getId());
-        systemTreeNodeVO.setTenantId(y9System.getTenantId());
+        systemTreeNodeVO.setSystemId(system.getId());
+        systemTreeNodeVO.setTenantId(system.getTenantId());
         return systemTreeNodeVO;
     }
 
-    public static List<SystemTreeNodeVO> convertY9SystemList(List<Y9System> y9SystemList) {
+    public static List<SystemTreeNodeVO> convertY9SystemList(List<System> systemList) {
         List<SystemTreeNodeVO> roleTreeNodeVOList = new ArrayList<>();
-        for (Y9System y9System : y9SystemList) {
-            roleTreeNodeVOList.add(convertY9System(y9System));
+        for (System system : systemList) {
+            roleTreeNodeVOList.add(convertSystem(system));
         }
         return roleTreeNodeVOList;
     }

@@ -18,16 +18,20 @@ import net.risesoft.entity.org.Y9Position;
 import net.risesoft.entity.permission.cache.position.Y9PositionToRole;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.manager.org.Y9PositionManager;
+import net.risesoft.model.platform.Role;
+import net.risesoft.model.platform.org.Position;
+import net.risesoft.model.platform.permission.cache.PositionToRole;
 import net.risesoft.repository.permission.cache.position.Y9PositionToRoleRepository;
 import net.risesoft.service.permission.cache.Y9PositionToRoleService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
-import net.risesoft.y9public.entity.resource.Y9System;
-import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.entity.Y9Role;
+import net.risesoft.y9public.entity.Y9System;
 import net.risesoft.y9public.manager.resource.Y9SystemManager;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
-import net.risesoft.y9public.repository.role.Y9RoleRepository;
+import net.risesoft.y9public.repository.Y9RoleRepository;
 
 /**
  * PositionToRoleServiceImpl
@@ -48,7 +52,7 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
     private final Y9RoleManager y9RoleManager;
 
     @Override
-    public Boolean hasPublicRole(String positionId, String roleName) {
+    public boolean hasPublicRole(String positionId, String roleName) {
         List<Y9Role> y9RoleList = y9RoleRepository.findByParentIdAndName(InitDataConsts.TOP_PUBLIC_ROLE_ID, roleName);
         return y9RoleList.stream().anyMatch(y9Role -> hasRole(positionId, y9Role.getId()));
     }
@@ -60,7 +64,7 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
 
     @Override
     @Transactional(readOnly = true)
-    public Boolean hasRole(String positionId, String systemName, String roleName, String properties) {
+    public boolean hasRole(String positionId, String systemName, String roleName, String properties) {
         Y9System y9System = y9SystemManager.getByName(systemName);
 
         List<Y9Role> y9RoleList;
@@ -75,37 +79,19 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
     }
 
     @Override
-    public Boolean hasRoleByCustomId(String positionId, String customId) {
+    public boolean hasRoleByCustomId(String positionId, String customId) {
         List<Y9Role> y9RoleList = y9RoleRepository.findByCustomId(customId);
         return y9RoleList.stream().anyMatch(y9Role -> hasRole(positionId, y9Role.getId()));
     }
 
     @Override
-    public List<Y9PositionToRole> listByPositionId(String positionId) {
-        return y9PositionToRoleRepository.findByPositionId(positionId);
-    }
-
-    @Override
-    @Transactional
-    public void removeByPositionId(String positionId) {
-        List<Y9PositionToRole> y9PositionToRoleList = y9PositionToRoleRepository.findByPositionId(positionId);
-        if (!y9PositionToRoleList.isEmpty()) {
-            y9PositionToRoleRepository.deleteAll(y9PositionToRoleList);
-        }
-    }
-
-    @Override
-    @Transactional
-    public void removeByRoleId(String roleId) {
-        List<Y9PositionToRole> y9PositionToRoleList = y9PositionToRoleRepository.findByRoleId(roleId);
-        if (!y9PositionToRoleList.isEmpty()) {
-            y9PositionToRoleRepository.deleteAll(y9PositionToRoleList);
-        }
+    public List<PositionToRole> listByPositionId(String positionId) {
+        return entityToModel(y9PositionToRoleRepository.findByPositionId(positionId));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Y9Position> listPositionsByRoleId(String roleId, Boolean disabled) {
+    public List<Position> listPositionsByRoleId(String roleId, Boolean disabled) {
         List<String> positionIdList = y9PositionToRoleRepository.findPositionIdByRoleId(roleId);
         return positionIdList.stream().map(y9PositionManager::getByIdFromCache).filter(p -> {
             if (disabled == null) {
@@ -113,14 +99,17 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
             } else {
                 return disabled.equals(p.getDisabled());
             }
-        }).collect(Collectors.toList());
+        }).map(PlatformModelConvertUtil::y9PositionToPosition).collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Y9Role> listRolesByPositionId(String positionId) {
+    public List<Role> listRolesByPositionId(String positionId) {
         List<String> roleIdList = y9PositionToRoleRepository.findRoleIdByPositionId(positionId);
-        return roleIdList.stream().map(y9RoleManager::getByIdFromCache).collect(Collectors.toList());
+        return roleIdList.stream()
+            .map(y9RoleManager::getByIdFromCache)
+            .map(PlatformModelConvertUtil::y9RoleToRole)
+            .collect(Collectors.toList());
     }
 
     @EventListener
@@ -145,4 +134,7 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
         LOGGER.debug("角色[{}]删除时同步删除租户[{}]的岗位角色缓存数据", entity.getId(), tenantId);
     }
 
+    private List<PositionToRole> entityToModel(List<Y9PositionToRole> y9PositionToRoleList) {
+        return PlatformModelConvertUtil.convert(y9PositionToRoleList, PositionToRole.class);
+    }
 }

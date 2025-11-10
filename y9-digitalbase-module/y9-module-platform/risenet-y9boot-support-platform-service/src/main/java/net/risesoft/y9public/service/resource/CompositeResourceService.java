@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
-import net.risesoft.y9public.entity.resource.Y9App;
+import net.risesoft.model.platform.resource.App;
+import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 
 /**
@@ -25,8 +26,7 @@ public interface CompositeResourceService {
      * @param resourceType 资源类型{@link ResourceTypeEnum}
      * @return {@code Optional<? extends Y9ResourceBase>}
      */
-    Optional<? extends Y9ResourceBase> findByCustomIdAndParentId(String customId, String parentId,
-        ResourceTypeEnum resourceType);
+    Optional<Resource> findByCustomIdAndParentId(String customId, String parentId, ResourceTypeEnum resourceType);
 
     /**
      * 根据主键ID获取资源实例
@@ -34,7 +34,7 @@ public interface CompositeResourceService {
      * @param id 唯一标识
      * @return {@link Y9ResourceBase}资源对象 或 null
      */
-    Y9ResourceBase findById(String id);
+    Resource findById(String id);
 
     /**
      * 根据父资源id查找子资源集合
@@ -42,7 +42,7 @@ public interface CompositeResourceService {
      * @param parentId 父资源id
      * @return {@code List<Y9ResourceBase>}
      */
-    List<Y9ResourceBase> listByParentId(String parentId);
+    List<Resource> listByParentId(String parentId);
 
     /**
      * 根据系统id查询所有的根资源（App资源）
@@ -50,22 +50,14 @@ public interface CompositeResourceService {
      * @param systemId 系统id
      * @return {@code List<Y9ResourceBase>}
      */
-    List<Y9ResourceBase> listRootResourceBySystemId(String systemId);
+    List<App> listRootResourceBySystemId(String systemId);
 
     /**
      * 查询所有的根资源（App资源）
      *
      * @return {@code List<Y9App>}
      */
-    List<Y9App> listRootResourceList();
-
-    /**
-     * 根据名称查找
-     *
-     * @param name 名字
-     * @return {@code List<Y9ResourceBase>}
-     */
-    List<Y9ResourceBase> searchByName(String name);
+    List<App> listRootResourceList();
 
     /**
      * 排序
@@ -80,7 +72,7 @@ public interface CompositeResourceService {
      * @param name 名字
      * @return {@code List<Y9ResourceBase>}
      */
-    List<Y9ResourceBase> treeSearch(String name);
+    List<Resource> treeSearch(String name);
 
     /**
      * 通过资源 id 列表查找
@@ -88,5 +80,13 @@ public interface CompositeResourceService {
      * @param resourceIdList 资源id列表
      * @return {@code List<Y9ResourceBase> }
      */
-    List<Y9ResourceBase> findByIdIn(List<String> resourceIdList);
+    List<Resource> findByIdIn(List<String> resourceIdList);
+
+    /**
+     * 查找资源 id 查找其父节点
+     *
+     * @param resourceId 资源id
+     * @return {@code Resource }
+     */
+    Resource findResourceParent(String resourceId);
 }

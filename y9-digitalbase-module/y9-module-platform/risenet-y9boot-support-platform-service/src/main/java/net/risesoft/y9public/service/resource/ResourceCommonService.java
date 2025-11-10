@@ -3,8 +3,8 @@ package net.risesoft.y9public.service.resource;
 import java.util.List;
 import java.util.Optional;
 
+import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.y9.exception.Y9NotFoundException;
-import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 
 /**
  * @author dingzhaojun
@@ -12,7 +12,7 @@ import net.risesoft.y9public.entity.resource.Y9ResourceBase;
  * @author mengjuhua
  * @date 2022/2/10
  */
-public interface ResourceCommonService<T extends Y9ResourceBase> {
+public interface ResourceCommonService<T extends Resource> {
 
     /**
      * 批量删除资源

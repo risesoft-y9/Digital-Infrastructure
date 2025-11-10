@@ -44,12 +44,14 @@ public class Y9Operation extends Y9ResourceBase {
     @Column(name = "PARENT_ID", length = 38, nullable = false)
     private String parentId;
 
+    /** 按钮展示方式 */
     @ColumnDefault("0")
     @Column(name = "DISPLAY_TYPE", nullable = false)
     @Comment("按钮展示方式")
     @Convert(converter = EnumConverter.OperationDisplayTypeEnumConverter.class)
     private OperationDisplayTypeEnum displayType = OperationDisplayTypeEnum.ICON_TEXT;
 
+    /** 按钮事件 */
     @Column(name = "EVENT_NAME", length = 50)
     @Comment("按钮事件")
     private String eventName;

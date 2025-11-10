@@ -31,10 +31,13 @@ import net.risesoft.enums.platform.permission.AuthorizationPrincipalTypeEnum;
 import net.risesoft.exception.AuthorizationErrorCodeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.permission.Y9AuthorizationManager;
+import net.risesoft.model.platform.permission.Authorization;
 import net.risesoft.pojo.AuditLogEvent;
+import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.service.permission.Y9AuthorizationService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -42,8 +45,8 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9StringUtil;
+import net.risesoft.y9public.entity.Y9Role;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
-import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.resource.CompositeResourceManager;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
@@ -105,61 +108,47 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @Override
-    public Optional<Y9Authorization> findById(String id) {
-        return y9AuthorizationRepository.findById(id);
+    public Optional<Authorization> findById(String id) {
+        return y9AuthorizationRepository.findById(id).map(Y9AuthorizationServiceImpl::entityToModel);
     }
 
     @Override
-    public List<Y9Authorization> listByPrincipalId(String principalId) {
-        return y9AuthorizationRepository.findByPrincipalIdOrderByCreateTime(principalId);
-    }
-
-    @Override
-    public List<Y9Authorization> listByPrincipalIdAndPrincipalType(String principalId,
+    public List<Authorization> listByPrincipalIdAndPrincipalType(String principalId,
         AuthorizationPrincipalTypeEnum principalTypeEnum) {
-        return y9AuthorizationRepository.findByPrincipalIdAndPrincipalType(principalId, principalTypeEnum);
+        List<Y9Authorization> y9AuthorizationList =
+            y9AuthorizationRepository.findByPrincipalIdAndPrincipalType(principalId, principalTypeEnum);
+        return entityToModel(y9AuthorizationList);
     }
 
     @Override
-    public List<Y9Authorization> listByPrincipalIdAndResourceId(String principalId, String resourceId) {
-        return y9AuthorizationRepository.findByPrincipalIdAndResourceId(principalId, resourceId,
-            Sort.by(Sort.Direction.ASC, "createTime"));
-    }
-
-    @Override
-    public List<Y9Authorization> listByPrincipalTypeAndResourceId(AuthorizationPrincipalTypeEnum principalType,
+    public List<Authorization> listByPrincipalTypeAndResourceId(AuthorizationPrincipalTypeEnum principalType,
         String resourceId) {
-        return y9AuthorizationRepository.findByResourceIdAndPrincipalType(resourceId, principalType);
+        List<Y9Authorization> y9AuthorizationList =
+            y9AuthorizationRepository.findByResourceIdAndPrincipalType(resourceId, principalType);
+        return entityToModel(y9AuthorizationList);
     }
 
     @Override
-    public List<Y9Authorization> listByPrincipalTypeNotAndResourceId(AuthorizationPrincipalTypeEnum principalType,
-        String resourceId) {
-        return y9AuthorizationRepository.findByResourceIdAndPrincipalTypeNot(resourceId, principalType);
-    }
-
-    @Override
-    public List<Y9Authorization> listByResourceId(String resourceId) {
-        return y9AuthorizationRepository.findByResourceId(resourceId);
-    }
-
-    @Override
-    public List<Y9Authorization> listByRoleIds(List<String> principalIds, String resourceId, AuthorityEnum authority) {
-        return y9AuthorizationRepository.findByResourceIdAndAuthorityAndPrincipalIdIn(resourceId, authority,
-            principalIds);
-    }
-
-    @Override
-    public Page<Y9Authorization> page(Y9PageQuery pageQuery, String resourceId,
+    public List<Authorization> listByResourceIdAndPrincipalTypeNot(String resourceId,
         AuthorizationPrincipalTypeEnum principalType) {
-        PageRequest pageRequest = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by("createTime"));
-        return y9AuthorizationRepository.findByResourceIdAndPrincipalType(resourceId, principalType, pageRequest);
+        List<Y9Authorization> y9AuthorizationList =
+            y9AuthorizationRepository.findByResourceIdAndPrincipalTypeNot(resourceId, principalType);
+        return entityToModel(y9AuthorizationList);
     }
 
     @Override
-    public Page<Y9Authorization> pageByPrincipalId(String principalId, Y9PageQuery pageQuery) {
+    public List<Authorization> listByRoleIds(List<String> principalIds, String resourceId, AuthorityEnum authority) {
+        List<Y9Authorization> y9AuthorizationList =
+            y9AuthorizationRepository.findByResourceIdAndAuthorityAndPrincipalIdIn(resourceId, authority, principalIds);
+        return entityToModel(y9AuthorizationList);
+    }
+
+    @Override
+    public Y9Page<Authorization> pageByPrincipalId(String principalId, Y9PageQuery pageQuery) {
         PageRequest pageable = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by("createTime"));
-        return y9AuthorizationRepository.findByPrincipalId(principalId, pageable);
+        Page<Y9Authorization> y9AuthorizationPage = y9AuthorizationRepository.findByPrincipalId(principalId, pageable);
+        return Y9Page.success(pageQuery.getPage(), y9AuthorizationPage.getTotalPages(),
+            y9AuthorizationPage.getTotalElements(), entityToModel(y9AuthorizationPage.getContent()));
     }
 
     @Override
@@ -167,7 +156,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     public void save(AuthorityEnum authority, String principalId, AuthorizationPrincipalTypeEnum principalType,
         String[] resourceIds) {
         for (String id : resourceIds) {
-            Y9Authorization y9Authorization = new Y9Authorization();
+            Authorization y9Authorization = new Authorization();
             y9Authorization.setAuthority(authority);
             y9Authorization.setPrincipalId(principalId);
             y9Authorization.setResourceId(id);
@@ -183,7 +172,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     @Transactional
     public void saveByOrg(AuthorityEnum authority, String resourceId, String[] principleIds) {
         for (String principleId : principleIds) {
-            Y9Authorization y9Authorization = new Y9Authorization();
+            Authorization y9Authorization = new Authorization();
             y9Authorization.setPrincipalId(principleId);
             y9Authorization.setAuthority(authority);
             y9Authorization.setResourceId(resourceId);
@@ -195,7 +184,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     @Transactional
     public void saveByRoles(AuthorityEnum authority, String resourceId, String[] roleIds) {
         for (String roleId : roleIds) {
-            Y9Authorization y9Authorization = new Y9Authorization();
+            Authorization y9Authorization = new Authorization();
             y9Authorization.setPrincipalId(roleId);
             y9Authorization.setAuthority(authority);
             y9Authorization.setResourceId(resourceId);
@@ -204,7 +193,9 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @Transactional
-    public Y9Authorization saveOrUpdate(Y9Authorization y9Authorization) {
+    public Authorization saveOrUpdate(Authorization authorization) {
+        Y9Authorization y9Authorization = PlatformModelConvertUtil.convert(authorization, Y9Authorization.class);
+
         // 如已存在则修改
         Optional<Y9Authorization> optionalY9Authorization =
             y9AuthorizationRepository.findByPrincipalIdAndResourceIdAndAuthority(y9Authorization.getPrincipalId(),
@@ -212,7 +203,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
         if (optionalY9Authorization.isPresent()) {
             Y9Authorization originY9Authorization = optionalY9Authorization.get();
             Y9BeanUtil.copyProperties(y9Authorization, originY9Authorization, "id");
-            return y9AuthorizationRepository.save(originY9Authorization);
+            return entityToModel(y9AuthorizationRepository.save(originY9Authorization));
         }
 
         Y9Authorization savedAuthorization = y9AuthorizationManager.insert(y9Authorization);
@@ -234,12 +225,12 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedAuthorization;
+        return entityToModel(savedAuthorization);
     }
 
     @Override
     @Transactional
-    public Y9Authorization saveOrUpdateOrg(Y9Authorization y9Authorization) {
+    public Authorization saveOrUpdateOrg(Authorization y9Authorization) {
         Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(y9Authorization.getPrincipalId());
 
         checkIfOrgUnitIncludedInResourceRelatedAuthorities(y9Authorization.getResourceId(),
@@ -272,17 +263,17 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
 
     @Override
     @Transactional
-    public Y9Authorization saveOrUpdateRole(Y9Authorization y9Authorization) {
-        Y9Role role = y9RoleManager.getByIdFromCache(y9Authorization.getPrincipalId());
-        y9Authorization.setPrincipalId(role.getId());
-        y9Authorization.setPrincipalName(role.getName());
-        y9Authorization.setPrincipalType(AuthorizationPrincipalTypeEnum.ROLE);
-        return this.saveOrUpdate(y9Authorization);
+    public Authorization saveOrUpdateRole(Authorization authorization) {
+        Y9Role role = y9RoleManager.getByIdFromCache(authorization.getPrincipalId());
+        authorization.setPrincipalId(role.getId());
+        authorization.setPrincipalName(role.getName());
+        authorization.setPrincipalType(AuthorizationPrincipalTypeEnum.ROLE);
+        return this.saveOrUpdate(authorization);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Y9Authorization> listInheritByPrincipalTypeAndResourceId(
+    public List<Authorization> listInheritByPrincipalTypeAndResourceId(
         AuthorizationPrincipalTypeEnum authorizationPrincipalType, String resourceId) {
         List<Y9Authorization> y9AuthorizationList = new ArrayList<>();
 
@@ -298,12 +289,12 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
             y9AuthorizationList.addAll(inheritY9AuthorizationList);
             currentResourceId = parentResourceId;
         }
-        return y9AuthorizationList;
+        return entityToModel(y9AuthorizationList);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Y9Authorization> listInheritByPrincipalTypeIsOrgUnitAndResourceId(String resourceId) {
+    public List<Authorization> listInheritByPrincipalTypeIsOrgUnitAndResourceId(String resourceId) {
         List<Y9Authorization> y9AuthorizationList = new ArrayList<>();
 
         String currentResourceId = resourceId;
@@ -318,7 +309,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
             y9AuthorizationList.addAll(inheritY9AuthorizationList);
             currentResourceId = parentResourceId;
         }
-        return y9AuthorizationList;
+        return entityToModel(y9AuthorizationList);
     }
 
     @Override
@@ -425,6 +416,14 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
             delete(y9Authorization.getId());
         }
         LOGGER.debug("角色[{}]删除时同步删除租户[{}]的角色授权数据", entity.getId(), tenantId);
+    }
+
+    private static List<Authorization> entityToModel(List<Y9Authorization> y9AuthorizationList) {
+        return PlatformModelConvertUtil.convert(y9AuthorizationList, Authorization.class);
+    }
+
+    private static Authorization entityToModel(Y9Authorization y9Authorization) {
+        return PlatformModelConvertUtil.convert(y9Authorization, Authorization.class);
     }
 
 }

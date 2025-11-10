@@ -21,6 +21,7 @@ import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 import net.risesoft.y9.exception.Y9BusinessException;
+import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9.util.base64.Y9Base64Util;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
@@ -51,6 +52,12 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         this.jdbcTemplate4Public = jdbcTemplate4Public;
         this.y9PlatformProperties = y9PlatformProperties;
         this.datasourceRepository = datasourceRepository;
+    }
+
+    @Override
+    public Y9DataSource getById(String id) {
+        return datasourceRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(DataSourceErrorCodeEnum.DATA_SOURCE_NOT_FOUND, id));
     }
 
     private static String replaceSchemaNameInJdbcUrlParam(String originalJdbcUrl, String newSchemaName) {
@@ -88,11 +95,6 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
     public Y9DataSource createTenantDefaultDataSource(String shortName, String systemName) {
         String dataSourceName = this.buildDataSourceName(shortName, systemName);
         return this.createTenantDefaultDataSourceWithId(dataSourceName, null);
-    }
-
-    @Override
-    public Y9DataSource createTenantDefaultDataSource(String dbName) {
-        return this.createTenantDefaultDataSourceWithId(dbName, null);
     }
 
     @Override

@@ -23,7 +23,7 @@ import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.org.PersonsGroups;
 import net.risesoft.model.platform.org.PersonsPositions;
 import net.risesoft.service.setting.Y9SettingService;
-import net.risesoft.util.ModelConvertUtil;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
@@ -77,8 +77,8 @@ public class OrgEventListener {
         }
 
         if (!OrgTypeEnum.MANAGER.equals(orgType)) {
-            Y9MessageOrg<OrgUnit> msg = new Y9MessageOrg<>(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBase), eventType,
-                Y9LoginUserHolder.getTenantId());
+            Y9MessageOrg<OrgUnit> msg = new Y9MessageOrg<>(PlatformModelConvertUtil.orgBaseToOrgUnit(y9OrgBase),
+                eventType, Y9LoginUserHolder.getTenantId());
             Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, eventName, eventDescription);
 
             if (LOGGER.isDebugEnabled()) {
@@ -112,8 +112,8 @@ public class OrgEventListener {
                 break;
         }
         if (!OrgTypeEnum.MANAGER.equals(orgType)) {
-            Y9MessageOrg<OrgUnit> msg = new Y9MessageOrg<>(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBase), eventType,
-                Y9LoginUserHolder.getTenantId());
+            Y9MessageOrg<OrgUnit> msg = new Y9MessageOrg<>(PlatformModelConvertUtil.orgBaseToOrgUnit(y9OrgBase),
+                eventType, Y9LoginUserHolder.getTenantId());
             Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, eventName, eventDescription);
 
             if (LOGGER.isDebugEnabled()) {
@@ -173,8 +173,8 @@ public class OrgEventListener {
                 break;
         }
         if (!OrgTypeEnum.MANAGER.equals(orgType)) {
-            Y9MessageOrg<OrgUnit> msg = new Y9MessageOrg<>(ModelConvertUtil.orgBaseToOrgUnit(updatedOrgUnit), eventType,
-                Y9LoginUserHolder.getTenantId());
+            Y9MessageOrg<OrgUnit> msg = new Y9MessageOrg<>(PlatformModelConvertUtil.orgBaseToOrgUnit(updatedOrgUnit),
+                eventType, Y9LoginUserHolder.getTenantId());
             Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, eventName, eventDescription);
 
             if (LOGGER.isDebugEnabled()) {
@@ -193,7 +193,7 @@ public class OrgEventListener {
         String eventType = Y9OrgEventTypeConst.GROUP_ADD_PERSON;
 
         Y9MessageOrg<PersonsGroups> msg =
-            new Y9MessageOrg<>(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class), eventType,
+            new Y9MessageOrg<>(PlatformModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class), eventType,
                 Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, eventName, eventDescription);
 
@@ -215,7 +215,7 @@ public class OrgEventListener {
             String eventDescription = Y9StringUtil.format("用户组[{}]移除人员[{}]", group.getName(), person.getName());
             String eventType = Y9OrgEventTypeConst.GROUP_REMOVE_PERSON;
             Y9MessageOrg<PersonsGroups> msg =
-                new Y9MessageOrg<>(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class), eventType,
+                new Y9MessageOrg<>(PlatformModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class), eventType,
                     Y9LoginUserHolder.getTenantId());
             Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, eventName, eventDescription);
 
@@ -246,7 +246,7 @@ public class OrgEventListener {
                 updatedPersonToGroups.getPersonOrder());
         }
         Y9MessageOrg<PersonsGroups> msg =
-            new Y9MessageOrg<>(ModelConvertUtil.convert(updatedPersonToGroups, PersonsGroups.class), eventType,
+            new Y9MessageOrg<>(PlatformModelConvertUtil.convert(updatedPersonToGroups, PersonsGroups.class), eventType,
                 Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, eventName, eventDescription);
 
@@ -266,8 +266,8 @@ public class OrgEventListener {
         String eventType = Y9OrgEventTypeConst.POSITION_ADD_PERSON;
 
         Y9MessageOrg<PersonsPositions> msg =
-            new Y9MessageOrg<>(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class), eventType,
-                Y9LoginUserHolder.getTenantId());
+            new Y9MessageOrg<>(PlatformModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
+                eventType, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, eventName, eventDescription);
 
         if (LOGGER.isDebugEnabled()) {
@@ -289,8 +289,8 @@ public class OrgEventListener {
             String eventDescription = Y9StringUtil.format("岗位[{}]移除人员[{}]", position.getName(), person.getName());
             String eventType = Y9OrgEventTypeConst.POSITION_REMOVE_PERSON;
             Y9MessageOrg<PersonsPositions> msg =
-                new Y9MessageOrg<>(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class), eventType,
-                    Y9LoginUserHolder.getTenantId());
+                new Y9MessageOrg<>(PlatformModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
+                    eventType, Y9LoginUserHolder.getTenantId());
             Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, eventName, eventDescription);
 
             if (LOGGER.isDebugEnabled()) {
@@ -320,8 +320,8 @@ public class OrgEventListener {
                 updatedPersonsToPositions.getPositionOrder());
         }
         Y9MessageOrg<PersonsPositions> msg =
-            new Y9MessageOrg<>(ModelConvertUtil.convert(updatedPersonsToPositions, PersonsPositions.class), eventType,
-                Y9LoginUserHolder.getTenantId());
+            new Y9MessageOrg<>(PlatformModelConvertUtil.convert(updatedPersonsToPositions, PersonsPositions.class),
+                eventType, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, eventName, eventDescription);
 
         if (LOGGER.isDebugEnabled()) {

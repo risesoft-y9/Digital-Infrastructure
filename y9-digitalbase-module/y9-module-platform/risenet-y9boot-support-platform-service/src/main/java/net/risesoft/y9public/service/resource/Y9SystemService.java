@@ -3,11 +3,10 @@ package net.risesoft.y9public.service.resource;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-
+import net.risesoft.model.platform.System;
+import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.exception.Y9NotFoundException;
-import net.risesoft.y9public.entity.resource.Y9System;
 
 /**
  * SystemService
@@ -28,33 +27,33 @@ public interface Y9SystemService {
      * 根据id禁用
      *
      * @param id 唯一标识
-     * @return {@link Y9System}
+     * @return {@link System}
      */
-    Y9System disable(String id);
+    System disable(String id);
 
     /**
      * 根据id启用
      *
      * @param id 唯一标识
-     * @return {@link Y9System}
+     * @return {@link System}
      */
-    Y9System enable(String id);
+    System enable(String id);
 
     /**
      * 根据id获取系统对象
      *
      * @param id 唯一标识
-     * @return {@code Optional<Y9System>}系统对象 或 null
+     * @return {@code Optional<System>}系统对象 或 null
      */
-    Optional<Y9System> findById(String id);
+    Optional<System> findById(String id);
 
     /**
      * 根据系统名称获取系统实体
      *
      * @param name 系统名
-     * @return {@code Optional<Y9System>}
+     * @return {@code Optional<System>}
      */
-    Optional<Y9System> findByName(String name);
+    Optional<System> findByName(String name);
 
     /**
      * 根据id查询System实体
@@ -63,75 +62,59 @@ public interface Y9SystemService {
      * @return 系统对象
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
-    Y9System getById(String id);
+    System getById(String id);
 
     /**
      * 根据名字查询System实体
      *
      * @param systemName 系统名称
-     * @return {@link Y9System}
+     * @return {@link System}
      * @throws Y9NotFoundException systemName 对应的记录不存在的情况
      */
-    Y9System getByName(String systemName);
+    System getByName(String systemName);
 
     /**
-     * 查询所有Y9System
+     * 查询所有系统
      *
-     * @return {@code List<Y9System>}
+     * @return {@code List<System>}
      */
-    List<Y9System> listAll();
+    List<System> listAll();
 
     /**
      * 获取系统id列表
      *
      * @param autoInit 是否自动租用系统
-     * @return {@code List<Y9System>}
+     * @return {@code List<System>}
      */
     List<String> listByAutoInit(Boolean autoInit);
-
-    /**
-     * 根据系统中文名称，模糊搜索系统列表
-     *
-     * @param cnName 系统中文名称
-     * @return {@code List<Y9System>}
-     */
-    List<Y9System> listByCnNameContaining(String cnName);
 
     /**
      * 根据contextPath获取系统实体
      *
      * @param contextPath 上下文路径
-     * @return {@code List<Y9System>}
+     * @return {@code List<System>}
      */
-    List<Y9System> listByContextPath(String contextPath);
+    List<System> listByContextPath(String contextPath);
 
-    List<Y9System> listByIds(List<String> systemIdList);
-
-    /**
-     * 按租户ID获取系统列表
-     *
-     * @param tenantId 租户 ID
-     * @return {@code List<Y9System> }
-     */
-    List<Y9System> listByTenantId(String tenantId);
+    List<System> listByIds(List<String> systemIdList);
 
     /**
      * 分页查询系统列表
      *
      * @param pageQuery 分页查询参数
-     * @return {@code Page<Y9System>}
+     * @return {@code Page<System>}
      */
-    Page<Y9System> page(Y9PageQuery pageQuery);
+    Y9Page<System> page(Y9PageQuery pageQuery);
 
-    Y9System saveAndRegister4Tenant(Y9System y9System);
+    System saveAndRegister4Tenant(System y9System);
 
     /**
      * 保存系统
      *
      * @param y9System 系统对象
-     * @return {@link Y9System}
+     * @return {@link System}
      */
-    Y9System saveOrUpdate(Y9System y9System);
+    System saveOrUpdate(System y9System);
 
     /**
      * 保存系统排序

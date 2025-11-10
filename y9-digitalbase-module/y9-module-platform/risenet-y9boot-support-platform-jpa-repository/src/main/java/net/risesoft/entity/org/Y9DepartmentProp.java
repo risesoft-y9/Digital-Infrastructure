@@ -34,7 +34,7 @@ public class Y9DepartmentProp extends BaseEntity {
 
     /** 唯一标示 */
     @Id
-    @Column(name = "ID", length = 38, nullable = false, unique = true)
+    @Column(name = "ID", length = 38)
     @Comment("唯一标示")
     private String id;
 

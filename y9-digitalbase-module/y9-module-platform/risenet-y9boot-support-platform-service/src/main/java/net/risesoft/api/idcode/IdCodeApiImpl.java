@@ -1,5 +1,7 @@
 package net.risesoft.api.idcode;
 
+import java.util.Optional;
+
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.context.annotation.Primary;
@@ -12,14 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.idcode.Y9IdCode;
-import net.risesoft.entity.org.Y9Person;
+import net.risesoft.model.platform.IdCode;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.idcode.Y9IdCodeService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
  * 统一码服务组件
@@ -50,15 +50,10 @@ public class IdCodeApiImpl {
     public Y9Result<Person> getPerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("code") @NotBlank String code) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        Y9IdCode y9IdCode = y9IdCodeService.findById(code);
-        if (y9IdCode == null) {
+        Optional<IdCode> idCodeOptional = y9IdCodeService.findById(code);
+        if (idCodeOptional.isEmpty()) {
             return Y9Result.failure("统一码不存在");
         }
-        Y9Person y9Person = y9PersonService.getById(y9IdCode.getOrgUnitId());
-        if (y9Person == null) {
-            return Y9Result.failure("人员不存在或者已删除");
-        }
-        y9Person.setPassword(null);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Person, Person.class), "根据人员id，获取人员统一码信息成功");
+        return Y9Result.success(y9PersonService.getById(idCodeOptional.get().getOrgUnitId()), "根据人员id，获取人员统一码信息成功");
     }
 }

@@ -37,12 +37,6 @@ public class Y9OrgBasesToRoles extends BaseEntity {
 
     private static final long serialVersionUID = 3967117431373531659L;
 
-    /** 组织类型 */
-    @Column(name = "ORG_TYPE", length = 255, nullable = false)
-    @Comment("组织类型")
-    @Convert(converter = EnumConverter.OrgTypeEnumConverter.class)
-    protected OrgTypeEnum orgType;
-
     /** 主键 */
     @Id
     @Column(name = "ID")
@@ -58,6 +52,12 @@ public class Y9OrgBasesToRoles extends BaseEntity {
     @Column(name = "ORG_ID", length = 38, nullable = false)
     @Comment("人员或部门组织机构等唯一标识")
     private String orgId;
+
+    /** 组织类型 */
+    @Column(name = "ORG_TYPE", length = 255, nullable = false)
+    @Comment("组织类型")
+    @Convert(converter = EnumConverter.OrgTypeEnumConverter.class)
+    private OrgTypeEnum orgType;
 
     /** 父节点唯一标识 */
     @Column(name = "ORG_PARENT_ID")

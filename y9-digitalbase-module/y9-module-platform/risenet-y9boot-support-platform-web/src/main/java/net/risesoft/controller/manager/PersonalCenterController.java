@@ -17,14 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.org.Y9Manager;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.org.Manager;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9ManagerService;
-import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 
 /**
  * 个人中心
@@ -41,7 +40,6 @@ import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 public class PersonalCenterController {
 
     private final Y9ManagerService y9ManagerService;
-    private final Y9PlatformProperties y9PlatformProperties;
 
     /**
      * 校验密码
@@ -69,7 +67,7 @@ public class PersonalCenterController {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Map<String, Object> map = new HashMap<>(8);
 
-        Y9Manager manager = y9ManagerService.getById(managerId);
+        Manager manager = y9ManagerService.getById(managerId);
         map.put("manager", manager);
         map.put("passwordModifiedCycle", y9ManagerService.getPasswordModifiedCycle(manager.getManagerLevel()));
         map.put("reviewLogCycle", y9ManagerService.getReviewLogCycle(manager.getManagerLevel()));
@@ -120,14 +118,13 @@ public class PersonalCenterController {
     /**
      * 更新个人数据
      *
-     * @param y9Manager 人员信息
+     * @param manager 人员信息
      * @return {@code Y9Result<Y9Manager>}
      */
     @RiseLog(operationType = OperationTypeEnum.MODIFY, operationName = "更新个人数据")
     @PostMapping(value = "/updateManager")
-    public Y9Result<Y9Manager> updateManager(Y9Manager y9Manager) {
-        Y9Manager manager = y9ManagerService.saveOrUpdate(y9Manager);
-        return Y9Result.success(manager, "修改成功");
+    public Y9Result<Manager> updateManager(Manager manager) {
+        return Y9Result.success(y9ManagerService.saveOrUpdate(manager), "修改成功");
     }
 
 }

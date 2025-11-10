@@ -13,14 +13,15 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import net.risesoft.api.log.UserLoginInfoApi;
-import net.risesoft.entity.org.Y9Manager;
-import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.service.AccessLogReporter;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.log.LoginInfo;
+import net.risesoft.model.platform.org.Manager;
+import net.risesoft.model.platform.org.Organization;
+import net.risesoft.model.platform.tenant.Tenant;
 import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.service.permission.cache.IdentityResourceCalculator;
@@ -28,7 +29,6 @@ import net.risesoft.service.permission.cache.IdentityRoleCalculator;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
 
 @Service
@@ -61,16 +61,16 @@ public class ScheduledTask {
             Y9LoginUserHolder.setTenantId(tenantId);
             LOGGER.debug("检查租户[{}]三员审查情况", tenantId);
 
-            List<Y9Manager> y9ManagerList = y9ManagerService.listAll();
-            for (Y9Manager y9Manager : y9ManagerList) {
-                int reviewLogCycle = y9ManagerService.getReviewLogCycle(y9Manager.getManagerLevel());
+            List<Manager> managerList = y9ManagerService.listAll();
+            for (Manager manager : managerList) {
+                int reviewLogCycle = y9ManagerService.getReviewLogCycle(manager.getManagerLevel());
 
                 if (0 == reviewLogCycle) {
                     continue;
                 }
 
                 LoginInfo loginInfo =
-                    userLoginInfoApi.getTopByTenantIdAndUserId(y9Manager.getTenantId(), y9Manager.getId());
+                    userLoginInfoApi.getTopByTenantIdAndUserId(manager.getTenantId(), manager.getId());
                 Date checkTime = loginInfo == null ? new Date() : loginInfo.getLoginTime();
                 try {
                     Calendar calendar = Calendar.getInstance();
@@ -85,8 +85,8 @@ public class ScheduledTask {
                         log.setLogTime(new Date());
                         log.setElapsedTime(String.valueOf(elapsedTime));
                         log.setSuccess("成功");
-                        log.setManagerLevel(y9Manager.getManagerLevel().getValue().toString());
-                        log.setLogMessage(y9Manager.getName() + "已超过" + reviewLogCycle + "天未登录系统审查。");
+                        log.setManagerLevel(manager.getManagerLevel().getValue().toString());
+                        log.setLogMessage(manager.getName() + "已超过" + reviewLogCycle + "天未登录系统审查。");
                         log.setTenantId(tenantId);
                         log.setId(Y9IdGenerator.genId());
                         log.setServerIp(Y9Context.getHostIp());
@@ -101,7 +101,7 @@ public class ScheduledTask {
                             accessLogReporter.report(log);
                         }
                     }
-                    y9ManagerService.updateCheckTime(y9Manager.getId(), checkTime);
+                    y9ManagerService.updateCheckTime(manager.getId(), checkTime);
                 } catch (Exception e) {
                     LOGGER.warn(e.getMessage(), e);
                 }
@@ -126,10 +126,10 @@ public class ScheduledTask {
             Y9LoginUserHolder.setTenantId(tenantId);
             LOGGER.debug("检查租户[{}]三员密码修改情况", tenantId);
 
-            List<Y9Manager> y9ManagerList = y9ManagerService.listAll();
-            for (Y9Manager y9Manager : y9ManagerList) {
-                int modifyPasswordCycle = y9ManagerService.getPasswordModifiedCycle(y9Manager.getManagerLevel());
-                Date modifyPwdTime = y9Manager.getLastModifyPasswordTime();
+            List<Manager> managerList = y9ManagerService.listAll();
+            for (Manager manager : managerList) {
+                int modifyPasswordCycle = y9ManagerService.getPasswordModifiedCycle(manager.getManagerLevel());
+                Date modifyPwdTime = manager.getLastModifyPasswordTime();
                 boolean saveLog = false;
                 if (modifyPwdTime == null) {
                     saveLog = true;
@@ -145,25 +145,25 @@ public class ScheduledTask {
                 if (saveLog) {
                     long end = System.nanoTime();
                     long elapsedTime = end - start;
-                    AccessLog log = new AccessLog();
-                    log.setLogLevel(LogLevelEnum.MANAGERLOG.toString());
-                    log.setLogTime(new Date());
-                    log.setElapsedTime(String.valueOf(elapsedTime));
-                    log.setSuccess("成功");
-                    log.setManagerLevel(y9Manager.getManagerLevel().getValue().toString());
-                    log.setLogMessage(y9Manager.getName() + "已超过" + modifyPasswordCycle + "天未修改密码。");
-                    log.setTenantId(tenantId);
-                    log.setId(Y9IdGenerator.genId());
-                    log.setServerIp(Y9Context.getHostIp());
-                    log.setUserHostIp(Y9Context.getHostIp());
-                    log.setSystemName(systemName);
-                    log.setMethodName("checkManagerPasswordModification");
-                    log.setModularName("数字底座");
-                    log.setOperateName("检查三员密码修改");
-                    log.setOperateType(OperationTypeEnum.CHECK.getValue());
+                    AccessLog accessLog = new AccessLog();
+                    accessLog.setLogLevel(LogLevelEnum.MANAGERLOG.toString());
+                    accessLog.setLogTime(new Date());
+                    accessLog.setElapsedTime(String.valueOf(elapsedTime));
+                    accessLog.setSuccess("成功");
+                    accessLog.setManagerLevel(manager.getManagerLevel().getValue().toString());
+                    accessLog.setLogMessage(manager.getName() + "已超过" + modifyPasswordCycle + "天未修改密码。");
+                    accessLog.setTenantId(tenantId);
+                    accessLog.setId(Y9IdGenerator.genId());
+                    accessLog.setServerIp(Y9Context.getHostIp());
+                    accessLog.setUserHostIp(Y9Context.getHostIp());
+                    accessLog.setSystemName(systemName);
+                    accessLog.setMethodName("checkManagerPasswordModification");
+                    accessLog.setModularName("数字底座");
+                    accessLog.setOperateName("检查三员密码修改");
+                    accessLog.setOperateType(OperationTypeEnum.CHECK.getValue());
 
                     if (accessLogReporter != null) {
-                        accessLogReporter.report(log);
+                        accessLogReporter.report(accessLog);
                     }
                 }
             }
@@ -183,12 +183,12 @@ public class ScheduledTask {
     @Scheduled(cron = "0 0 2 * * ?")
     @SchedulerLock(name = "syncIdentityResourceLock", lockAtLeastFor = "PT30M")
     public void syncIdentityResource() {
-        List<Y9Tenant> y9TenantList = y9TenantService.listAll();
-        for (Y9Tenant y9Tenant : y9TenantList) {
+        List<Tenant> y9TenantList = y9TenantService.listAll();
+        for (Tenant y9Tenant : y9TenantList) {
             Y9LoginUserHolder.setTenantId(y9Tenant.getId());
             LOGGER.debug("同步租户[{}]授权主体的资源权限", y9Tenant.getId());
 
-            for (Y9Organization y9Organization : y9OrganizationService.list()) {
+            for (Organization y9Organization : y9OrganizationService.list()) {
                 identityResourceCalculator.recalculateByOrgUnitId(y9Organization.getId());
             }
         }
@@ -202,12 +202,12 @@ public class ScheduledTask {
     @Scheduled(cron = "0 0 4 * * ?")
     @SchedulerLock(name = "syncIdentityRoleLock", lockAtLeastFor = "PT30M")
     public void syncIdentityRole() {
-        List<Y9Tenant> y9TenantList = y9TenantService.listAll();
-        for (Y9Tenant y9Tenant : y9TenantList) {
+        List<Tenant> y9TenantList = y9TenantService.listAll();
+        for (Tenant y9Tenant : y9TenantList) {
             Y9LoginUserHolder.setTenantId(y9Tenant.getId());
             LOGGER.debug("同步租户[{}]授权主体的角色", y9Tenant.getId());
 
-            for (Y9Organization y9Organization : y9OrganizationService.list()) {
+            for (Organization y9Organization : y9OrganizationService.list()) {
                 identityRoleCalculator.recalculateByOrgUnitId(y9Organization.getId());
             }
         }

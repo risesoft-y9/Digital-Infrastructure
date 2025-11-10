@@ -18,11 +18,15 @@ import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.relation.Y9CustomGroupMembersManager;
+import net.risesoft.model.platform.org.CustomGroupMember;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.query.platform.CustomGroupMemberQuery;
 import net.risesoft.repository.relation.Y9CustomGroupMembersRepository;
 import net.risesoft.service.relation.Y9CustomGroupMembersService;
 import net.risesoft.specification.Y9CustomGroupMemberSpecification;
+import net.risesoft.util.PlatformModelConvertUtil;
 
 /**
  * @author dingzhaojun
@@ -56,7 +60,7 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
 
     @Override
     @Transactional(readOnly = true)
-    public List<Y9Person> listAllPersonsByGroupId(String groupId) {
+    public List<Person> listAllPersonsByGroupId(String groupId) {
         List<Y9Person> orgPersonList = new ArrayList<>();
         List<Y9CustomGroupMember> orgCustomGroupMemberList =
             customGroupMembersRepository.findByGroupIdOrderByTabIndexAsc(groupId);
@@ -85,34 +89,13 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
                 default:
             }
         }
-        return orgPersonList;
-    }
-
-    @Override
-    public Page<Y9CustomGroupMember> pageByGroupId(String groupId, Y9PageQuery pageQuery) {
-        Sort sort = Sort.by(Sort.Direction.ASC, "tabIndex");
-        Pageable pageable = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), sort);
-        return customGroupMembersRepository.findByGroupId(groupId, pageable);
-    }
-
-    @Override
-    public Page<Y9CustomGroupMember> pageByGroupIdAndMemberType(String groupId, OrgTypeEnum memberType,
-        Y9PageQuery pageQuery) {
-        Pageable pageable =
-            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.ASC, "tabIndex"));
-        return customGroupMembersRepository.findByGroupIdAndMemberType(groupId, memberType, pageable);
+        return PlatformModelConvertUtil.y9PersonToPerson(orgPersonList);
     }
 
     @Override
     @Transactional
     public void save(List<String> orgUnitList, String groupId) {
         y9CustomGroupMembersManager.save(orgUnitList, groupId);
-    }
-
-    @Override
-    @Transactional
-    public Y9CustomGroupMember save(Y9CustomGroupMember member) {
-        return customGroupMembersRepository.save(member);
     }
 
     @Override
@@ -129,22 +112,25 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
     }
 
     @Override
-    @Transactional
-    public void share(String sourceGroupId, String targetGroupId) {
-        y9CustomGroupMembersManager.share(sourceGroupId, targetGroupId);
+    public List<CustomGroupMember> list(CustomGroupMemberQuery customGroupMemberQuery) {
+        List<Y9CustomGroupMember> y9CustomGroupMemberList =
+            customGroupMembersRepository.findAll(new Y9CustomGroupMemberSpecification(customGroupMemberQuery));
+        return entityToModel(y9CustomGroupMemberList);
     }
 
     @Override
-    public List<Y9CustomGroupMember> list(CustomGroupMemberQuery customGroupMemberQuery) {
-        return customGroupMembersRepository.findAll(new Y9CustomGroupMemberSpecification(customGroupMemberQuery));
-    }
-
-    @Override
-    public Page<Y9CustomGroupMember> page(CustomGroupMemberQuery customGroupMemberQuery, Y9PageQuery pageQuery) {
+    public Y9Page<CustomGroupMember> page(CustomGroupMemberQuery customGroupMemberQuery, Y9PageQuery pageQuery) {
         Y9CustomGroupMemberSpecification specification = new Y9CustomGroupMemberSpecification(customGroupMemberQuery);
         Pageable pageable =
             PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.ASC, "tabIndex"));
-        return customGroupMembersRepository.findAll(specification, pageable);
+        Page<Y9CustomGroupMember> y9CustomGroupMemberPage =
+            customGroupMembersRepository.findAll(specification, pageable);
+        return Y9Page.success(pageQuery.getPage(), y9CustomGroupMemberPage.getTotalPages(),
+            y9CustomGroupMemberPage.getTotalElements(), entityToModel(y9CustomGroupMemberPage.getContent()));
+    }
+
+    private List<CustomGroupMember> entityToModel(List<Y9CustomGroupMember> y9CustomGroupMemberList) {
+        return PlatformModelConvertUtil.convert(y9CustomGroupMemberList, CustomGroupMember.class);
     }
 
 }

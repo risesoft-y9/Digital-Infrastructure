@@ -14,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.v0.resource.AppIconApi;
 import net.risesoft.model.platform.AppIcon;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
-import net.risesoft.y9public.entity.resource.Y9AppIcon;
 import net.risesoft.y9public.service.resource.Y9AppIconService;
 
 /**
@@ -44,8 +42,7 @@ public class AppIconApiImpl implements AppIconApi {
      */
     @Override
     public List<AppIcon> listAllIcon() {
-        List<Y9AppIcon> appIconList = appIconService.listAll();
-        return Y9ModelConvertUtil.convert(appIconList, AppIcon.class);
+        return appIconService.listAll();
     }
 
     /**
@@ -57,8 +54,7 @@ public class AppIconApiImpl implements AppIconApi {
      */
     @Override
     public List<AppIcon> searchAppIcon(@RequestParam("name") @NotBlank String name) {
-        List<Y9AppIcon> appIconList = appIconService.listByName(name);
-        return Y9ModelConvertUtil.convert(appIconList, AppIcon.class);
+        return appIconService.listByName(name);
     }
 
 }

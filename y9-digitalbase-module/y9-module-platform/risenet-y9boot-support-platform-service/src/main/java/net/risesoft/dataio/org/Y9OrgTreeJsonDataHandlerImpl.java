@@ -13,30 +13,30 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.dataio.org.model.Y9DepartmentJsonModel;
-import net.risesoft.dataio.org.model.Y9DepartmentPropJsonModel;
-import net.risesoft.dataio.org.model.Y9GroupJsonModel;
-import net.risesoft.dataio.org.model.Y9JobJsonModel;
-import net.risesoft.dataio.org.model.Y9OptionClassJsonModel;
-import net.risesoft.dataio.org.model.Y9OptionValueJsonModel;
-import net.risesoft.dataio.org.model.Y9OrganizationJsonModel;
-import net.risesoft.dataio.org.model.Y9PersonExtJsonModel;
-import net.risesoft.dataio.org.model.Y9PersonJsonModel;
-import net.risesoft.dataio.org.model.Y9PersonsToGroupsJsonModel;
-import net.risesoft.dataio.org.model.Y9PersonsToPositionsJsonModel;
-import net.risesoft.dataio.org.model.Y9PositionJsonModel;
-import net.risesoft.entity.dictionary.Y9OptionClass;
-import net.risesoft.entity.dictionary.Y9OptionValue;
-import net.risesoft.entity.org.Y9Department;
-import net.risesoft.entity.org.Y9DepartmentProp;
-import net.risesoft.entity.org.Y9Group;
-import net.risesoft.entity.org.Y9Job;
-import net.risesoft.entity.org.Y9Organization;
-import net.risesoft.entity.org.Y9Person;
-import net.risesoft.entity.org.Y9PersonExt;
-import net.risesoft.entity.org.Y9Position;
-import net.risesoft.entity.relation.Y9PersonsToGroups;
-import net.risesoft.entity.relation.Y9PersonsToPositions;
+import net.risesoft.dataio.org.model.DepartmentJsonModel;
+import net.risesoft.dataio.org.model.DepartmentPropJsonModel;
+import net.risesoft.dataio.org.model.GroupJsonModel;
+import net.risesoft.dataio.org.model.JobJsonModel;
+import net.risesoft.dataio.org.model.OptionClassJsonModel;
+import net.risesoft.dataio.org.model.OptionValueJsonModel;
+import net.risesoft.dataio.org.model.OrganizationJsonModel;
+import net.risesoft.dataio.org.model.PersonExtJsonModel;
+import net.risesoft.dataio.org.model.PersonJsonModel;
+import net.risesoft.dataio.org.model.PersonsToGroupsJsonModel;
+import net.risesoft.dataio.org.model.PersonsToPositionsJsonModel;
+import net.risesoft.dataio.org.model.PositionJsonModel;
+import net.risesoft.model.platform.dictionary.OptionClass;
+import net.risesoft.model.platform.dictionary.OptionValue;
+import net.risesoft.model.platform.org.Department;
+import net.risesoft.model.platform.org.DepartmentProp;
+import net.risesoft.model.platform.org.Group;
+import net.risesoft.model.platform.org.Job;
+import net.risesoft.model.platform.org.Organization;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.PersonExt;
+import net.risesoft.model.platform.org.PersonsGroups;
+import net.risesoft.model.platform.org.PersonsPositions;
+import net.risesoft.model.platform.org.Position;
 import net.risesoft.service.dictionary.Y9OptionClassService;
 import net.risesoft.service.dictionary.Y9OptionValueService;
 import net.risesoft.service.org.Y9DepartmentPropService;
@@ -49,9 +49,9 @@ import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.service.relation.Y9PersonsToGroupsService;
 import net.risesoft.service.relation.Y9PersonsToPositionsService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9.json.Y9JsonUtil;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
  * 组织架构树 JSON 数据的导入导出
@@ -85,8 +85,8 @@ public class Y9OrgTreeJsonDataHandlerImpl implements Y9OrgTreeDataHandler {
 
     @Override
     public void exportOrgTree(String orgId, OutputStream outputStream) {
-        Y9OrganizationJsonModel y9OrganizationJsonModel = this.buildOrganization(orgId);
-        String jsonStr = Y9JsonUtil.writeValueAsStringWithDefaultPrettyPrinter(y9OrganizationJsonModel);
+        OrganizationJsonModel organizationJsonModel = this.buildOrganization(orgId);
+        String jsonStr = Y9JsonUtil.writeValueAsStringWithDefaultPrettyPrinter(organizationJsonModel);
 
         try {
             IOUtils.write(jsonStr, outputStream, StandardCharsets.UTF_8);
@@ -96,31 +96,31 @@ public class Y9OrgTreeJsonDataHandlerImpl implements Y9OrgTreeDataHandler {
     }
 
     @Override
-    public void importOrgTree(Y9OrganizationJsonModel y9OrganizationJsonModel) {
-        importJobList(y9OrganizationJsonModel.getJobList());
-        importOptionClassList(y9OrganizationJsonModel.getOptionClassList());
+    public void importOrgTree(OrganizationJsonModel organizationJsonModel) {
+        importJobList(organizationJsonModel.getJobList());
+        importOptionClassList(organizationJsonModel.getOptionClassList());
 
-        Y9Organization y9Organization = Y9ModelConvertUtil.convert(y9OrganizationJsonModel, Y9Organization.class);
+        Organization y9Organization = PlatformModelConvertUtil.convert(organizationJsonModel, Organization.class);
         y9OrganizationService.saveOrUpdate(y9Organization);
-        importDepartmentList(y9OrganizationJsonModel.getDepartmentList());
-        importPersonList(y9OrganizationJsonModel.getPersonList());
-        importPositionList(y9OrganizationJsonModel.getPositionList());
-        importGroupList(y9OrganizationJsonModel.getGroupList());
+        importDepartmentList(organizationJsonModel.getDepartmentList());
+        importPersonList(organizationJsonModel.getPersonList());
+        importPositionList(organizationJsonModel.getPositionList());
+        importGroupList(organizationJsonModel.getGroupList());
     }
 
-    private void importGroupList(List<Y9GroupJsonModel> groupList) {
-        for (Y9GroupJsonModel y9GroupJsonModel : groupList) {
-            Y9Group y9Group = Y9ModelConvertUtil.convert(y9GroupJsonModel, Y9Group.class);
+    private void importGroupList(List<GroupJsonModel> groupList) {
+        for (GroupJsonModel groupJsonModel : groupList) {
+            Group y9Group = PlatformModelConvertUtil.convert(groupJsonModel, Group.class);
             y9GroupService.saveOrUpdate(y9Group);
-            List<Y9PersonsToGroupsJsonModel> personsToGroupsList = y9GroupJsonModel.getPersonsToGroupsList();
+            List<PersonsToGroupsJsonModel> personsToGroupsList = groupJsonModel.getPersonsToGroupsList();
             importPersonsToGroupsList(personsToGroupsList);
         }
     }
 
-    private void importPersonsToGroupsList(List<Y9PersonsToGroupsJsonModel> personsToGroupsList) {
-        for (Y9PersonsToGroupsJsonModel personsToGroupsJsonModel : personsToGroupsList) {
-            Y9PersonsToGroups y9PersonsToGroups =
-                Y9ModelConvertUtil.convert(personsToGroupsJsonModel, Y9PersonsToGroups.class);
+    private void importPersonsToGroupsList(List<PersonsToGroupsJsonModel> personsToGroupsList) {
+        for (PersonsToGroupsJsonModel personsToGroupsJsonModel : personsToGroupsList) {
+            PersonsGroups y9PersonsToGroups =
+                PlatformModelConvertUtil.convert(personsToGroupsJsonModel, PersonsGroups.class);
             try {
                 y9PersonsToGroupsService.saveOrUpdate(y9PersonsToGroups);
             } catch (Y9NotFoundException ignored) {
@@ -129,20 +129,19 @@ public class Y9OrgTreeJsonDataHandlerImpl implements Y9OrgTreeDataHandler {
         }
     }
 
-    private void importPositionList(List<Y9PositionJsonModel> positionList) {
-        for (Y9PositionJsonModel y9PositionJsonModel : positionList) {
-            Y9Position y9Position = Y9ModelConvertUtil.convert(y9PositionJsonModel, Y9Position.class);
+    private void importPositionList(List<PositionJsonModel> positionList) {
+        for (PositionJsonModel positionJsonModel : positionList) {
+            Position y9Position = PlatformModelConvertUtil.convert(positionJsonModel, Position.class);
             y9PositionService.saveOrUpdate(y9Position);
-            List<Y9PersonsToPositionsJsonModel> personsToPositionsList =
-                y9PositionJsonModel.getPersonsToPositionsList();
+            List<PersonsToPositionsJsonModel> personsToPositionsList = positionJsonModel.getPersonsToPositionsList();
             importPersonsToPositionsList(personsToPositionsList);
         }
     }
 
-    private void importPersonsToPositionsList(List<Y9PersonsToPositionsJsonModel> personsToPositionsList) {
-        for (Y9PersonsToPositionsJsonModel y9PersonsToPositionsJsonModel : personsToPositionsList) {
-            Y9PersonsToPositions y9PersonsToPositions =
-                Y9ModelConvertUtil.convert(y9PersonsToPositionsJsonModel, Y9PersonsToPositions.class);
+    private void importPersonsToPositionsList(List<PersonsToPositionsJsonModel> personsToPositionsList) {
+        for (PersonsToPositionsJsonModel personsToPositionsJsonModel : personsToPositionsList) {
+            PersonsPositions y9PersonsToPositions =
+                PlatformModelConvertUtil.convert(personsToPositionsJsonModel, PersonsPositions.class);
             try {
                 y9PersonsToPositionsService.saveOrUpdate(y9PersonsToPositions);
             } catch (Y9NotFoundException ignored) {
@@ -151,190 +150,190 @@ public class Y9OrgTreeJsonDataHandlerImpl implements Y9OrgTreeDataHandler {
         }
     }
 
-    private void importPersonList(List<Y9PersonJsonModel> personList) {
-        for (Y9PersonJsonModel y9PersonJsonModel : personList) {
-            Y9Person y9Person = Y9ModelConvertUtil.convert(y9PersonJsonModel, Y9Person.class);
-            Y9PersonExt y9PersonExt = Y9ModelConvertUtil.convert(y9PersonJsonModel.getY9PersonExt(), Y9PersonExt.class);
+    private void importPersonList(List<PersonJsonModel> personList) {
+        for (PersonJsonModel personJsonModel : personList) {
+            Person y9Person = PlatformModelConvertUtil.convert(personJsonModel, Person.class);
+            PersonExt y9PersonExt = PlatformModelConvertUtil.convert(personJsonModel.getY9PersonExt(), PersonExt.class);
             y9PersonService.saveOrUpdate(y9Person, y9PersonExt);
 
-            importPersonsToGroupsList(y9PersonJsonModel.getPersonsToGroupsList());
-            importPersonsToPositionsList(y9PersonJsonModel.getPersonsToPositionsList());
+            importPersonsToGroupsList(personJsonModel.getPersonsToGroupsList());
+            importPersonsToPositionsList(personJsonModel.getPersonsToPositionsList());
         }
     }
 
-    private void importDepartmentList(List<Y9DepartmentJsonModel> departmentList) {
-        for (Y9DepartmentJsonModel y9DepartmentJsonModel : departmentList) {
-            Y9Department y9Department = Y9ModelConvertUtil.convert(y9DepartmentJsonModel, Y9Department.class);
+    private void importDepartmentList(List<DepartmentJsonModel> departmentList) {
+        for (DepartmentJsonModel departmentJsonModel : departmentList) {
+            Department y9Department = PlatformModelConvertUtil.convert(departmentJsonModel, Department.class);
             y9DepartmentService.saveOrUpdate(y9Department);
-            importDepartmentPropList(y9DepartmentJsonModel.getDepartmentPropList());
-            importDepartmentList(y9DepartmentJsonModel.getSubDepartmentList());
-            importGroupList(y9DepartmentJsonModel.getGroupList());
-            importPositionList(y9DepartmentJsonModel.getPositionList());
-            importPersonList(y9DepartmentJsonModel.getPersonList());
+            importDepartmentPropList(departmentJsonModel.getDepartmentPropList());
+            importDepartmentList(departmentJsonModel.getSubDepartmentList());
+            importGroupList(departmentJsonModel.getGroupList());
+            importPositionList(departmentJsonModel.getPositionList());
+            importPersonList(departmentJsonModel.getPersonList());
         }
     }
 
-    private void importDepartmentPropList(List<Y9DepartmentPropJsonModel> departmentPropList) {
-        for (Y9DepartmentPropJsonModel y9DepartmentPropJsonModel : departmentPropList) {
-            Y9DepartmentProp y9DepartmentProp =
-                Y9ModelConvertUtil.convert(y9DepartmentPropJsonModel, Y9DepartmentProp.class);
+    private void importDepartmentPropList(List<DepartmentPropJsonModel> departmentPropList) {
+        for (DepartmentPropJsonModel departmentPropJsonModel : departmentPropList) {
+            DepartmentProp y9DepartmentProp =
+                PlatformModelConvertUtil.convert(departmentPropJsonModel, DepartmentProp.class);
             y9DepartmentPropService.saveOrUpdate(y9DepartmentProp);
         }
     }
 
-    private void importOptionClassList(List<Y9OptionClassJsonModel> optionClassList) {
-        for (Y9OptionClassJsonModel y9OptionClassJsonModel : optionClassList) {
-            Y9OptionClass y9OptionClass = Y9ModelConvertUtil.convert(y9OptionClassJsonModel, Y9OptionClass.class);
+    private void importOptionClassList(List<OptionClassJsonModel> optionClassList) {
+        for (OptionClassJsonModel optionClassJsonModel : optionClassList) {
+            OptionClass y9OptionClass = PlatformModelConvertUtil.convert(optionClassJsonModel, OptionClass.class);
             y9OptionClassService.saveOptionClass(y9OptionClass);
-            for (Y9OptionValueJsonModel y9OptionValueJsonModel : y9OptionClassJsonModel.getOptionValueList()) {
-                Y9OptionValue y9OptionValue = Y9ModelConvertUtil.convert(y9OptionValueJsonModel, Y9OptionValue.class);
+            for (OptionValueJsonModel optionValueJsonModel : optionClassJsonModel.getOptionValueList()) {
+                OptionValue y9OptionValue = PlatformModelConvertUtil.convert(optionValueJsonModel, OptionValue.class);
                 y9OptionValueService.saveOptionValue(y9OptionValue);
             }
         }
     }
 
-    private void importJobList(List<Y9JobJsonModel> jobList) {
-        for (Y9JobJsonModel y9JobJsonModel : jobList) {
-            Y9Job y9Job = Y9ModelConvertUtil.convert(y9JobJsonModel, Y9Job.class);
+    private void importJobList(List<JobJsonModel> jobList) {
+        for (JobJsonModel jobJsonModel : jobList) {
+            Job y9Job = PlatformModelConvertUtil.convert(jobJsonModel, Job.class);
             y9JobService.saveOrUpdate(y9Job);
         }
     }
 
-    private Y9OrganizationJsonModel buildOrganization(String orgId) {
-        Y9Organization y9Organization = y9OrganizationService.getById(orgId);
-        Y9OrganizationJsonModel y9OrganizationJsonModel =
-            Y9ModelConvertUtil.convert(y9Organization, Y9OrganizationJsonModel.class);
-        y9OrganizationJsonModel.setOptionClassList(this.buildOptionClassList());
-        y9OrganizationJsonModel.setJobList(this.buildJobList());
-        y9OrganizationJsonModel.setDepartmentList(this.buildDepartmentList(orgId));
-        y9OrganizationJsonModel.setGroupList(this.buildGroupList(orgId));
-        y9OrganizationJsonModel.setPersonList(this.buildPersonList(orgId));
-        y9OrganizationJsonModel.setPositionList(this.buildPositionList(orgId));
-        return y9OrganizationJsonModel;
+    private OrganizationJsonModel buildOrganization(String orgId) {
+        Organization y9Organization = y9OrganizationService.getById(orgId);
+        OrganizationJsonModel organizationJsonModel =
+            PlatformModelConvertUtil.convert(y9Organization, OrganizationJsonModel.class);
+        organizationJsonModel.setOptionClassList(this.buildOptionClassList());
+        organizationJsonModel.setJobList(this.buildJobList());
+        organizationJsonModel.setDepartmentList(this.buildDepartmentList(orgId));
+        organizationJsonModel.setGroupList(this.buildGroupList(orgId));
+        organizationJsonModel.setPersonList(this.buildPersonList(orgId));
+        organizationJsonModel.setPositionList(this.buildPositionList(orgId));
+        return organizationJsonModel;
     }
 
-    private List<Y9PositionJsonModel> buildPositionList(String parentId) {
-        List<Y9PositionJsonModel> y9PositionJsonModelList = new ArrayList<>();
-        List<Y9Position> y9PositionList = y9PositionService.listByParentId(parentId, null);
-        for (Y9Position y9Position : y9PositionList) {
-            y9PositionJsonModelList.add(this.buildPosition(y9Position));
+    private List<PositionJsonModel> buildPositionList(String parentId) {
+        List<PositionJsonModel> positionJsonModelList = new ArrayList<>();
+        List<Position> y9PositionList = y9PositionService.listByParentId(parentId, null);
+        for (Position y9Position : y9PositionList) {
+            positionJsonModelList.add(this.buildPosition(y9Position));
         }
-        return y9PositionJsonModelList;
+        return positionJsonModelList;
     }
 
-    private Y9PositionJsonModel buildPosition(Y9Position y9Position) {
-        Y9PositionJsonModel y9PositionJsonModel = Y9ModelConvertUtil.convert(y9Position, Y9PositionJsonModel.class);
-        y9PositionJsonModel.setPersonsToPositionsList(this.buildPersonsToPositionsListByPositionId(y9Position.getId()));
-        return y9PositionJsonModel;
+    private PositionJsonModel buildPosition(Position y9Position) {
+        PositionJsonModel positionJsonModel = PlatformModelConvertUtil.convert(y9Position, PositionJsonModel.class);
+        positionJsonModel.setPersonsToPositionsList(this.buildPersonsToPositionsListByPositionId(y9Position.getId()));
+        return positionJsonModel;
     }
 
-    private List<Y9PersonsToPositionsJsonModel> buildPersonsToPositionsListByPositionId(String positionId) {
-        List<Y9PersonsToPositions> y9PersonsToPositionsList = y9PersonsToPositionsService.listByPositionId(positionId);
-        return Y9ModelConvertUtil.convert(y9PersonsToPositionsList, Y9PersonsToPositionsJsonModel.class);
+    private List<PersonsToPositionsJsonModel> buildPersonsToPositionsListByPositionId(String positionId) {
+        List<PersonsPositions> y9PersonsToPositionsList = y9PersonsToPositionsService.listByPositionId(positionId);
+        return PlatformModelConvertUtil.convert(y9PersonsToPositionsList, PersonsToPositionsJsonModel.class);
     }
 
-    private List<Y9PersonJsonModel> buildPersonList(String parentId) {
-        List<Y9PersonJsonModel> y9PersonJsonModelList = new ArrayList<>();
-        List<Y9Person> y9PersonList = y9PersonService.listByParentId(parentId, null);
-        for (Y9Person y9Person : y9PersonList) {
-            y9PersonJsonModelList.add(this.buildPerson(y9Person));
+    private List<PersonJsonModel> buildPersonList(String parentId) {
+        List<PersonJsonModel> personJsonModelList = new ArrayList<>();
+        List<Person> y9PersonList = y9PersonService.listByParentId(parentId, null);
+        for (Person y9Person : y9PersonList) {
+            personJsonModelList.add(this.buildPerson(y9Person));
         }
-        return y9PersonJsonModelList;
+        return personJsonModelList;
     }
 
-    private Y9PersonJsonModel buildPerson(Y9Person y9Person) {
-        Y9PersonJsonModel y9PersonJsonModel = Y9ModelConvertUtil.convert(y9Person, Y9PersonJsonModel.class);
-        y9PersonJsonModel.setY9PersonExt(this.buildPersonExt(y9Person.getId()));
-        y9PersonJsonModel.setPersonsToGroupsList(this.buildPersonsToGroupsListByPersonId(y9Person.getId()));
-        y9PersonJsonModel.setPersonsToPositionsList(this.buildPersonsToPositionsListByPersonId(y9Person.getId()));
-        return y9PersonJsonModel;
+    private PersonJsonModel buildPerson(Person y9Person) {
+        PersonJsonModel personJsonModel = PlatformModelConvertUtil.convert(y9Person, PersonJsonModel.class);
+        personJsonModel.setY9PersonExt(this.buildPersonExt(y9Person.getId()));
+        personJsonModel.setPersonsToGroupsList(this.buildPersonsToGroupsListByPersonId(y9Person.getId()));
+        personJsonModel.setPersonsToPositionsList(this.buildPersonsToPositionsListByPersonId(y9Person.getId()));
+        return personJsonModel;
     }
 
-    private List<Y9PersonsToPositionsJsonModel> buildPersonsToPositionsListByPersonId(String personId) {
-        List<Y9PersonsToPositions> y9PersonsToPositionsList = y9PersonsToPositionsService.listByPersonId(personId);
-        return Y9ModelConvertUtil.convert(y9PersonsToPositionsList, Y9PersonsToPositionsJsonModel.class);
+    private List<PersonsToPositionsJsonModel> buildPersonsToPositionsListByPersonId(String personId) {
+        List<PersonsPositions> y9PersonsToPositionsList = y9PersonsToPositionsService.listByPersonId(personId);
+        return PlatformModelConvertUtil.convert(y9PersonsToPositionsList, PersonsToPositionsJsonModel.class);
     }
 
-    private List<Y9PersonsToGroupsJsonModel> buildPersonsToGroupsListByPersonId(String personId) {
-        List<Y9PersonsToGroups> y9PersonsToGroupsList = y9PersonsToGroupsService.listByPersonId(personId);
-        return Y9ModelConvertUtil.convert(y9PersonsToGroupsList, Y9PersonsToGroupsJsonModel.class);
+    private List<PersonsToGroupsJsonModel> buildPersonsToGroupsListByPersonId(String personId) {
+        List<PersonsGroups> y9PersonsToGroupsList = y9PersonsToGroupsService.listByPersonId(personId);
+        return PlatformModelConvertUtil.convert(y9PersonsToGroupsList, PersonsToGroupsJsonModel.class);
     }
 
-    private Y9PersonExtJsonModel buildPersonExt(String personId) {
-        Optional<Y9PersonExt> y9PersonExtOptional = y9PersonExtService.findByPersonId(personId);
-        return y9PersonExtOptional.map(y9PersonExt -> Y9ModelConvertUtil.convert(y9PersonExt,
-            Y9PersonExtJsonModel.class, ignorePersonExtProperties)).orElse(null);
+    private PersonExtJsonModel buildPersonExt(String personId) {
+        Optional<PersonExt> y9PersonExtOptional = y9PersonExtService.findByPersonId(personId);
+        return y9PersonExtOptional.map(y9PersonExt -> PlatformModelConvertUtil.convert(y9PersonExt,
+            PersonExtJsonModel.class, ignorePersonExtProperties)).orElse(null);
     }
 
-    private List<Y9GroupJsonModel> buildGroupList(String parentId) {
-        List<Y9GroupJsonModel> y9GroupJsonModelList = new ArrayList<>();
-        List<Y9Group> y9GroupList = y9GroupService.listByParentId(parentId, null);
-        for (Y9Group y9Group : y9GroupList) {
-            y9GroupJsonModelList.add(this.buildGroup(y9Group));
+    private List<GroupJsonModel> buildGroupList(String parentId) {
+        List<GroupJsonModel> groupJsonModelList = new ArrayList<>();
+        List<Group> y9GroupList = y9GroupService.listByParentId(parentId, null);
+        for (Group y9Group : y9GroupList) {
+            groupJsonModelList.add(this.buildGroup(y9Group));
         }
-        return y9GroupJsonModelList;
+        return groupJsonModelList;
     }
 
-    private Y9GroupJsonModel buildGroup(Y9Group y9Group) {
-        Y9GroupJsonModel y9GroupJsonModel = Y9ModelConvertUtil.convert(y9Group, Y9GroupJsonModel.class);
-        y9GroupJsonModel.setPersonsToGroupsList(this.buildPersonsToGroupsListByGroupId(y9Group.getId()));
-        return y9GroupJsonModel;
+    private GroupJsonModel buildGroup(Group y9Group) {
+        GroupJsonModel groupJsonModel = PlatformModelConvertUtil.convert(y9Group, GroupJsonModel.class);
+        groupJsonModel.setPersonsToGroupsList(this.buildPersonsToGroupsListByGroupId(y9Group.getId()));
+        return groupJsonModel;
     }
 
-    private List<Y9PersonsToGroupsJsonModel> buildPersonsToGroupsListByGroupId(String groupId) {
-        List<Y9PersonsToGroups> y9PersonsToGroupsList = y9PersonsToGroupsService.listByGroupId(groupId);
-        return Y9ModelConvertUtil.convert(y9PersonsToGroupsList, Y9PersonsToGroupsJsonModel.class);
+    private List<PersonsToGroupsJsonModel> buildPersonsToGroupsListByGroupId(String groupId) {
+        List<PersonsGroups> y9PersonsToGroupsList = y9PersonsToGroupsService.listByGroupId(groupId);
+        return PlatformModelConvertUtil.convert(y9PersonsToGroupsList, PersonsToGroupsJsonModel.class);
     }
 
-    private List<Y9DepartmentJsonModel> buildDepartmentList(String parentId) {
-        List<Y9DepartmentJsonModel> y9DepartmentJsonModelList = new ArrayList<>();
-        List<Y9Department> y9DepartmentList = y9DepartmentService.listByParentId(parentId, null);
-        for (Y9Department y9Department : y9DepartmentList) {
-            y9DepartmentJsonModelList.add(this.buildDepartment(y9Department));
+    private List<DepartmentJsonModel> buildDepartmentList(String parentId) {
+        List<DepartmentJsonModel> departmentJsonModelList = new ArrayList<>();
+        List<Department> y9DepartmentList = y9DepartmentService.listByParentId(parentId, null);
+        for (Department y9Department : y9DepartmentList) {
+            departmentJsonModelList.add(this.buildDepartment(y9Department));
         }
-        return y9DepartmentJsonModelList;
+        return departmentJsonModelList;
     }
 
-    private Y9DepartmentJsonModel buildDepartment(Y9Department y9Department) {
-        Y9DepartmentJsonModel y9DepartmentJsonModel =
-            Y9ModelConvertUtil.convert(y9Department, Y9DepartmentJsonModel.class);
-        y9DepartmentJsonModel.setDepartmentPropList(this.buildDepartmentPropList(y9Department.getId()));
-        y9DepartmentJsonModel.setSubDepartmentList(this.buildDepartmentList(y9Department.getId()));
-        y9DepartmentJsonModel.setGroupList(this.buildGroupList(y9Department.getId()));
-        y9DepartmentJsonModel.setPositionList(this.buildPositionList(y9Department.getId()));
-        y9DepartmentJsonModel.setPersonList(this.buildPersonList(y9Department.getId()));
-        return y9DepartmentJsonModel;
+    private DepartmentJsonModel buildDepartment(Department y9Department) {
+        DepartmentJsonModel departmentJsonModel =
+            PlatformModelConvertUtil.convert(y9Department, DepartmentJsonModel.class);
+        departmentJsonModel.setDepartmentPropList(this.buildDepartmentPropList(y9Department.getId()));
+        departmentJsonModel.setSubDepartmentList(this.buildDepartmentList(y9Department.getId()));
+        departmentJsonModel.setGroupList(this.buildGroupList(y9Department.getId()));
+        departmentJsonModel.setPositionList(this.buildPositionList(y9Department.getId()));
+        departmentJsonModel.setPersonList(this.buildPersonList(y9Department.getId()));
+        return departmentJsonModel;
     }
 
-    private List<Y9DepartmentPropJsonModel> buildDepartmentPropList(String departmentId) {
-        List<Y9DepartmentProp> y9DepartmentPropList = y9DepartmentPropService.listByDeptId(departmentId);
-        return Y9ModelConvertUtil.convert(y9DepartmentPropList, Y9DepartmentPropJsonModel.class);
+    private List<DepartmentPropJsonModel> buildDepartmentPropList(String departmentId) {
+        List<DepartmentProp> y9DepartmentPropList = y9DepartmentPropService.listByDeptId(departmentId);
+        return PlatformModelConvertUtil.convert(y9DepartmentPropList, DepartmentPropJsonModel.class);
     }
 
-    private List<Y9JobJsonModel> buildJobList() {
-        List<Y9Job> y9JobList = y9JobService.listAll();
-        return Y9ModelConvertUtil.convert(y9JobList, Y9JobJsonModel.class);
+    private List<JobJsonModel> buildJobList() {
+        List<Job> y9JobList = y9JobService.listAll();
+        return PlatformModelConvertUtil.convert(y9JobList, JobJsonModel.class);
     }
 
-    private List<Y9OptionClassJsonModel> buildOptionClassList() {
-        List<Y9OptionClassJsonModel> y9OptionClassJsonModelList = new ArrayList<>();
-        List<Y9OptionClass> y9OptionClassList = y9OptionClassService.list();
-        for (Y9OptionClass y9OptionClass : y9OptionClassList) {
-            y9OptionClassJsonModelList.add(this.buildOptionClass(y9OptionClass));
+    private List<OptionClassJsonModel> buildOptionClassList() {
+        List<OptionClassJsonModel> optionClassJsonModelList = new ArrayList<>();
+        List<OptionClass> optionClassList = y9OptionClassService.list();
+        for (OptionClass optionClass : optionClassList) {
+            optionClassJsonModelList.add(this.buildOptionClass(optionClass));
         }
-        return y9OptionClassJsonModelList;
+        return optionClassJsonModelList;
     }
 
-    private Y9OptionClassJsonModel buildOptionClass(Y9OptionClass y9OptionClass) {
-        Y9OptionClassJsonModel y9OptionClassJsonModel =
-            Y9ModelConvertUtil.convert(y9OptionClass, Y9OptionClassJsonModel.class);
-        y9OptionClassJsonModel.setOptionValueList(this.buildOptionValueList(y9OptionClass));
-        return y9OptionClassJsonModel;
+    private OptionClassJsonModel buildOptionClass(OptionClass optionClass) {
+        OptionClassJsonModel optionClassJsonModel =
+            PlatformModelConvertUtil.convert(optionClass, OptionClassJsonModel.class);
+        optionClassJsonModel.setOptionValueList(this.buildOptionValueList(optionClass));
+        return optionClassJsonModel;
     }
 
-    private List<Y9OptionValueJsonModel> buildOptionValueList(Y9OptionClass y9OptionClass) {
-        List<Y9OptionValue> y9OptionValueList = y9OptionValueService.listByType(y9OptionClass.getType());
-        return Y9ModelConvertUtil.convert(y9OptionValueList, Y9OptionValueJsonModel.class);
+    private List<OptionValueJsonModel> buildOptionValueList(OptionClass optionClass) {
+        List<OptionValue> optionValueList = y9OptionValueService.listByType(optionClass.getType());
+        return PlatformModelConvertUtil.convert(optionValueList, OptionValueJsonModel.class);
     }
 
 }

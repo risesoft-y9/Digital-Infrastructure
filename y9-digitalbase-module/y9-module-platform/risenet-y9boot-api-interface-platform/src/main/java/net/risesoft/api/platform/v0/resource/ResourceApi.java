@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
+import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
 
 /**
@@ -92,7 +93,7 @@ public interface ResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/listSubMenus")
-    List<Resource> listSubMenus(@RequestParam("resourceId") @NotBlank String resourceId);
+    List<Menu> listSubMenus(@RequestParam("resourceId") @NotBlank String resourceId);
 
     /**
      * 获得指定资源的子资源

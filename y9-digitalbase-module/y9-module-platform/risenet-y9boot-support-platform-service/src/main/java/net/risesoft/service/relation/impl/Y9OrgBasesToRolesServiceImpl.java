@@ -1,11 +1,8 @@
 package net.risesoft.service.relation.impl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
@@ -31,10 +28,13 @@ import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.RoleErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
+import net.risesoft.model.platform.permission.OrgBasesToRoles;
 import net.risesoft.pojo.AuditLogEvent;
+import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.permission.Y9OrgBasesToRolesRepository;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -42,7 +42,7 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.util.Y9StringUtil;
-import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.entity.Y9Role;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
 
 /**
@@ -63,8 +63,8 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     @Override
     @Transactional
-    public List<Y9OrgBasesToRoles> addOrgUnitsForRole(String roleId, List<String> orgIds, Boolean negative) {
-        List<Y9OrgBasesToRoles> mappingList = new ArrayList<>();
+    public List<OrgBasesToRoles> addOrgUnitsForRole(String roleId, List<String> orgIds, Boolean negative) {
+        List<OrgBasesToRoles> mappingList = new ArrayList<>();
         for (String orgId : orgIds) {
             if (y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative).isPresent()) {
                 continue;
@@ -74,61 +74,16 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
         return mappingList;
     }
 
-    @Override
-    public long countByRoleIdAndOrgIds(String roleId, List<String> orgIds) {
-        return y9OrgBasesToRolesRepository.countByRoleIdAndOrgIdIn(roleId, orgIds);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public long countByRoleIdAndOrgIdsWithoutNegative(String roleId, List<String> orgIds) {
-        Set<String> orgIdset = new HashSet<>();
-        orgIdset.addAll(orgIds);
-        long count = y9OrgBasesToRolesRepository.countByRoleIdAndOrgIdInAndNegative(roleId, orgIdset, Boolean.TRUE);
-        if (count > 0) {
-            return 0;
-        }
-        return y9OrgBasesToRolesRepository.countByRoleIdAndOrgIdInAndNegative(roleId, orgIdset, Boolean.FALSE);
-    }
-
-    @Override
-    public Y9OrgBasesToRoles getById(String id) {
+    private Y9OrgBasesToRoles getById(String id) {
         return y9OrgBasesToRolesRepository.findById(id)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(RoleErrorCodeEnum.ORG_UNIT_ROLE_NOT_FOUND, id));
     }
 
     @Override
-    public List<Y9OrgBasesToRoles> listByRoleId(String roleId) {
-        return y9OrgBasesToRolesRepository.findByRoleId(roleId, Sort.by(Sort.Direction.DESC, "orgOrder"));
-    }
-
-    @Override
-    public List<Y9OrgBasesToRoles> listByRoleIdAndNegative(String roleId, Boolean negative) {
-        return y9OrgBasesToRolesRepository.findByRoleIdAndNegativeOrderByOrgOrderDesc(roleId, negative);
-    }
-
-    @Override
-    public List<String> listDistinctRoleIdByOrgId(String orgId) {
-        return y9OrgBasesToRolesRepository.findDistinctRoleIdByOrgId(orgId);
-    }
-
-    @Override
-    public List<String> listOrgIdsByRoleId(String roleId) {
-        List<Y9OrgBasesToRoles> lists =
+    public List<OrgBasesToRoles> listByRoleId(String roleId) {
+        List<Y9OrgBasesToRoles> y9OrgBasesToRolesList =
             y9OrgBasesToRolesRepository.findByRoleId(roleId, Sort.by(Sort.Direction.DESC, "orgOrder"));
-        return lists.stream().map(Y9OrgBasesToRoles::getOrgId).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<String> listRoleIdByParentId(String parentId) {
-        return y9OrgBasesToRolesRepository.findDistinctRoleIdByParentId(parentId);
-    }
-
-    @Override
-    public List<String> listRoleIdsByOrgIdAndNegative(String orgId, Boolean negative) {
-        List<Y9OrgBasesToRoles> roleNodeMappings =
-            y9OrgBasesToRolesRepository.findByOrgIdAndNegativeOrderByOrgOrderDesc(orgId, negative);
-        return roleNodeMappings.stream().map(Y9OrgBasesToRoles::getRoleId).collect(Collectors.toList());
+        return entityToModel(y9OrgBasesToRolesList);
     }
 
     @Transactional
@@ -155,15 +110,19 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Y9OrgBasesToRoles> page(Y9PageQuery pageQuery, String roleId, String unitName) {
+    public Y9Page<OrgBasesToRoles> page(Y9PageQuery pageQuery, String roleId, String unitName) {
+        Page<Y9OrgBasesToRoles> y9OrgBasesToRolesPage;
         if (StringUtils.isNotEmpty(unitName)) {
             List<String> orgUnitIdList = compositeOrgBaseManager.listOrgUnitIdByName(unitName);
-            return y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdIn(roleId, orgUnitIdList, PageRequest
-                .of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "createTime")));
+            y9OrgBasesToRolesPage =
+                y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdIn(roleId, orgUnitIdList, PageRequest
+                    .of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "createTime")));
         } else {
-            return y9OrgBasesToRolesRepository.findByRoleId(roleId, PageRequest.of(pageQuery.getPage4Db(),
-                pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "createTime")));
+            y9OrgBasesToRolesPage = y9OrgBasesToRolesRepository.findByRoleId(roleId, PageRequest
+                .of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "createTime")));
         }
+        return Y9Page.success(pageQuery.getPage(), y9OrgBasesToRolesPage.getTotalPages(),
+            y9OrgBasesToRolesPage.getTotalElements(), entityToModel(y9OrgBasesToRolesPage.getContent()));
     }
 
     @Override
@@ -177,8 +136,8 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     @Override
     @Transactional
-    public List<Y9OrgBasesToRoles> addRolesForOrgUnit(String orgId, List<String> roleIds, Boolean negative) {
-        List<Y9OrgBasesToRoles> mappingList = new ArrayList<>();
+    public List<OrgBasesToRoles> addRolesForOrgUnit(String orgId, List<String> roleIds, Boolean negative) {
+        List<OrgBasesToRoles> mappingList = new ArrayList<>();
         for (String roleId : roleIds) {
             if (y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative).isPresent()) {
                 continue;
@@ -216,7 +175,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
     }
 
     @Transactional
-    public Y9OrgBasesToRoles saveOrUpdate(String roleId, String orgId, Boolean negative) {
+    public OrgBasesToRoles saveOrUpdate(String roleId, String orgId, Boolean negative) {
         Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(orgId);
         Y9Role y9Role = y9RoleManager.getByIdFromCache(roleId);
 
@@ -237,9 +196,9 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
                 .build();
             Y9Context.publishEvent(auditLogEvent);
 
-            return orgBasesToRoles;
+            return entityToModel(orgBasesToRoles);
         }
-        return optionalY9OrgBasesToRoles.get();
+        return entityToModel(optionalY9OrgBasesToRoles.get());
     }
 
     @Transactional
@@ -324,5 +283,13 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
         Y9LoginUserHolder.setTenantId(tenantId);
         y9OrgBasesToRolesRepository.deleteByRoleId(entity.getId());
         LOGGER.debug("角色[{}]删除时同步删除租户[{}]的角色组织关联数据", entity.getId(), tenantId);
+    }
+
+    private static List<OrgBasesToRoles> entityToModel(List<Y9OrgBasesToRoles> y9OrgBasesToRolesList) {
+        return PlatformModelConvertUtil.convert(y9OrgBasesToRolesList, OrgBasesToRoles.class);
+    }
+
+    private static OrgBasesToRoles entityToModel(Y9OrgBasesToRoles y9OrgBasesToRoles) {
+        return PlatformModelConvertUtil.convert(y9OrgBasesToRoles, OrgBasesToRoles.class);
     }
 }

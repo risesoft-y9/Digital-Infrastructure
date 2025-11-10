@@ -18,14 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.org.Y9Department;
-import net.risesoft.entity.org.Y9OrgBase;
-import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.enums.platform.org.OrgTreeTypeEnum;
 import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.org.Department;
+import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.org.Organization;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.permission.annotation.IsAnyManager;
@@ -36,7 +35,6 @@ import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.vo.org.OrgTreeNodeVO;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
  * 组织机构管理
@@ -66,9 +64,9 @@ public class OrgController {
      */
     @RiseLog(operationName = "禁用组织", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/changeDisabled")
-    public Y9Result<Y9Organization> changeDisabled(@NotBlank @RequestParam String id) {
-        Y9Organization y9Organization = y9OrganizationService.changeDisabled(id);
-        return Y9Result.success(y9Organization, "组织禁用状态修改成功");
+    public Y9Result<Organization> changeDisabled(@NotBlank @RequestParam String id) {
+        Organization organization = y9OrganizationService.changeDisabled(id);
+        return Y9Result.success(organization, "组织禁用状态修改成功");
     }
 
     /**
@@ -93,8 +91,7 @@ public class OrgController {
     @RiseLog(operationName = "根据组织机构id，获取组织机构信息")
     @RequestMapping(value = "/getOrganizationById")
     public Y9Result<Organization> getOrganizationById(@NotBlank @RequestParam String orgId) {
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9OrganizationService.getById(orgId), Organization.class),
-            "根据组织机构id，获取组织机构信息成功！");
+        return Y9Result.success(y9OrganizationService.getById(orgId), "根据组织机构id，获取组织机构信息成功！");
     }
 
     /**
@@ -110,10 +107,9 @@ public class OrgController {
         @RequestParam OrgTypeEnum orgType) {
         long count = 0;
         if (orgType.equals(OrgTypeEnum.ORGANIZATION)) {
-            Y9Organization org = y9OrganizationService.getById(id);
-            count = y9PersonService.countByGuidPathLikeAndDisabledAndDeletedFalse(org.getId());
+            count = y9PersonService.countByGuidPathLikeAndDisabledAndDeletedFalse(id);
         } else if (orgType.equals(OrgTypeEnum.DEPARTMENT)) {
-            Y9Department dept = y9DepartmentService.getById(id);
+            Department dept = y9DepartmentService.getById(id);
             if (StringUtils.isNotBlank(dept.getGuidPath())) {
                 count = y9PersonService.countByGuidPathLikeAndDisabledAndDeletedFalse(dept.getGuidPath());
             } else {
@@ -136,14 +132,14 @@ public class OrgController {
     public Y9Result<List<OrgTreeNodeVO>> getTree2(@RequestParam @NotBlank String id,
         @RequestParam OrgTreeTypeEnum treeType, @RequestParam(required = false) Boolean disabled) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-        List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
+        List<OrgUnit> orgUnitList = new ArrayList<>();
         if (userInfo.isGlobalManager() && !ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
-            y9OrgBaseList = compositeOrgBaseService.getTree(id, treeType, disabled);
+            orgUnitList = compositeOrgBaseService.getTree(id, treeType, disabled);
         } else if (!ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
-            y9OrgBaseList = compositeOrgBaseService.getTree4DeptManager(id, treeType, disabled);
+            orgUnitList = compositeOrgBaseService.getTree4DeptManager(id, treeType, disabled);
         }
-        return Y9Result.success(
-            OrgTreeNodeVO.convertY9OrgBaseList(y9OrgBaseList, treeType, true, compositeOrgBaseService), "获取机构树成功！");
+        return Y9Result.success(OrgTreeNodeVO.convertOrgUnitList(orgUnitList, treeType, true, compositeOrgBaseService),
+            "获取机构树成功！");
     }
 
     /**
@@ -158,20 +154,18 @@ public class OrgController {
     @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
     public Y9Result<List<OrgTreeNodeVO>> list2(@RequestParam OrgTreeTypeEnum treeType,
         @RequestParam(required = false) boolean virtual) {
-        List<Y9Organization> organizationList;
+        List<Organization> organizationList;
         if (Y9LoginUserHolder.getUserInfo().isGlobalManager()) {
             organizationList = y9OrganizationService.list(virtual, null);
         } else {
-            List<Y9Organization> orgList = y9OrganizationService.list(false, null);
-            Y9Department managerDept = y9DepartmentService.getById(Y9LoginUserHolder.getUserInfo().getParentId());
+            List<Organization> orgList = y9OrganizationService.list(false, null);
+            Department managerDept = y9DepartmentService.getById(Y9LoginUserHolder.getUserInfo().getParentId());
             String mapping = managerDept.getGuidPath();
             organizationList =
                 orgList.stream().filter(org -> mapping.contains(org.getGuidPath())).collect(Collectors.toList());
         }
-
         return Y9Result.success(
-            OrgTreeNodeVO.convertY9OrgBaseList(organizationList, treeType, true, compositeOrgBaseService),
-            "获取组织架构列表成功！");
+            OrgTreeNodeVO.convertOrgUnitList(organizationList, treeType, true, compositeOrgBaseService), "获取组织架构列表成功！");
     }
 
     /**
@@ -199,8 +193,8 @@ public class OrgController {
     @PostMapping(value = "/saveExtendProperties")
     public Y9Result<String> saveExtendProperties(@RequestParam @NotBlank String orgId,
         @RequestParam String properties) {
-        Y9Organization orgOrg = y9OrganizationService.saveProperties(orgId, properties);
-        return Y9Result.success(orgOrg.getProperties(), "保存扩展属性成成功！");
+        Organization organization = y9OrganizationService.saveProperties(orgId, properties);
+        return Y9Result.success(organization.getProperties(), "保存扩展属性成成功！");
     }
 
     /**
@@ -211,9 +205,8 @@ public class OrgController {
      */
     @RiseLog(operationName = "新建或者更新组织机构", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")
-    public Y9Result<Organization> saveOrUpdate(@Validated Y9Organization org) {
-        Y9Organization returnOrg = y9OrganizationService.saveOrUpdate(org);
-        return Y9Result.success(Y9ModelConvertUtil.convert(returnOrg, Organization.class), "新建或者更新组织机构成功！");
+    public Y9Result<Organization> saveOrUpdate(@Validated Organization org) {
+        return Y9Result.success(y9OrganizationService.saveOrUpdate(org), "新建或者更新组织机构成功！");
     }
 
     /**
@@ -259,15 +252,15 @@ public class OrgController {
     public Y9Result<List<OrgTreeNodeVO>> treeSearch2(@RequestParam String name, @RequestParam OrgTreeTypeEnum treeType,
         @RequestParam(required = false) Boolean disabled) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-        List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
+        List<OrgUnit> orgUnitList = new ArrayList<>();
         if (userInfo.isGlobalManager()) {
-            y9OrgBaseList = compositeOrgBaseService.treeSearch(name, treeType, disabled);
+            orgUnitList = compositeOrgBaseService.treeSearch(name, treeType, disabled);
         } else if (ManagerLevelEnum.SYSTEM_MANAGER.equals(userInfo.getManagerLevel())
             || ManagerLevelEnum.SECURITY_MANAGER.equals(userInfo.getManagerLevel())) {
-            y9OrgBaseList = compositeOrgBaseService.treeSearch4DeptManager(name, treeType, disabled);
+            orgUnitList = compositeOrgBaseService.treeSearch4DeptManager(name, treeType, disabled);
         }
-        return Y9Result.success(
-            OrgTreeNodeVO.convertY9OrgBaseList(y9OrgBaseList, treeType, false, compositeOrgBaseService), "获取机构树成功！");
+        return Y9Result.success(OrgTreeNodeVO.convertOrgUnitList(orgUnitList, treeType, false, compositeOrgBaseService),
+            "获取机构树成功！");
     }
 
 }

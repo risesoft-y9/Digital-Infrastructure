@@ -34,6 +34,6 @@ public class Organization extends OrgUnit {
     /**
      * 机构类型,0=实体组织，1=虚拟组织
      */
-    private Boolean virtual = false;
+    private Boolean virtual;
 
 }

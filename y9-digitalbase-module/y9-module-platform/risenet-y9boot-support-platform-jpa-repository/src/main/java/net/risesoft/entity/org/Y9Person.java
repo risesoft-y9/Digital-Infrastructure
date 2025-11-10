@@ -4,8 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
@@ -19,7 +17,6 @@ import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.enums.platform.org.PersonTypeEnum;
 import net.risesoft.enums.platform.org.SexEnum;
 import net.risesoft.persistence.EnumConverter;
-import net.risesoft.y9.validation.Mobile;
 
 /**
  * 人员实体
@@ -61,7 +58,6 @@ public class Y9Person extends Y9OrgBase {
     /**
      * 电子邮箱
      */
-    @Email
     @Column(name = "EMAIL", length = 255)
     @Comment("电子邮箱")
     private String email;
@@ -69,7 +65,6 @@ public class Y9Person extends Y9OrgBase {
     /**
      * 登录名
      */
-    @NotBlank
     @Column(name = "LOGIN_NAME", length = 255, nullable = false)
     @Comment("登录名")
     private String loginName;
@@ -77,7 +72,6 @@ public class Y9Person extends Y9OrgBase {
     /**
      * 手机号码
      */
-    @Mobile
     @Column(name = "MOBILE", length = 255, nullable = false)
     @Comment("手机号码")
     private String mobile;

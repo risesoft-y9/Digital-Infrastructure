@@ -7,7 +7,9 @@ package net.risesoft.service.permission.cache;
  * @date 2024/03/08
  */
 public interface IdentityRoleCalculator {
+
     void recalculateByOrgUnitId(String orgUnitId);
 
     void recalculateByPersonId(String personId);
+
 }

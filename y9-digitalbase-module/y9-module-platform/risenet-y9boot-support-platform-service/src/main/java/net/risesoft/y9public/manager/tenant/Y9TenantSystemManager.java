@@ -12,6 +12,8 @@ import net.risesoft.y9public.entity.tenant.Y9TenantSystem;
 public interface Y9TenantSystemManager {
     void delete(String id);
 
+    Y9TenantSystem getById(String id);
+
     void deleteBySystemId(String systemId);
 
     String getDataSourceIdByTenantIdAndSystemId(String tenantId, String systemId);

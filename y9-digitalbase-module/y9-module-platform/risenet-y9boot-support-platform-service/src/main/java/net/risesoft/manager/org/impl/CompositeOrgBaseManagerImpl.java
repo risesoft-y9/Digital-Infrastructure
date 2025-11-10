@@ -279,10 +279,7 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
     }
 
     @Override
-    public Optional<Y9OrgBase> findOrgUnitPersonOrPosition(String orgUnitId) {
-        if (StringUtils.isBlank(orgUnitId)) {
-            return Optional.empty();
-        }
+    public Optional<Y9OrgBase> findPersonOrPosition(String orgUnitId) {
         Y9OrgBase y9OrgBase = this.findPositionById(orgUnitId);
         if (y9OrgBase != null) {
             return Optional.of(y9OrgBase);
@@ -296,15 +293,9 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
 
     @Override
     public Y9OrgBase getPersonOrPosition(String orgUnitId) {
-        Y9OrgBase y9OrgBase = this.findPositionById(orgUnitId);
-        if (y9OrgBase != null) {
-            return y9OrgBase;
-        }
-        y9OrgBase = this.findPersonById(orgUnitId);
-        if (y9OrgBase != null) {
-            return y9OrgBase;
-        }
-        throw Y9ExceptionUtil.businessException(OrgUnitErrorCodeEnum.PERSON_OR_POSITION_NOT_FOUND, orgUnitId);
+        return this.findPersonOrPosition(orgUnitId)
+            .orElseThrow(
+                () -> Y9ExceptionUtil.businessException(OrgUnitErrorCodeEnum.PERSON_OR_POSITION_NOT_FOUND, orgUnitId));
     }
 
     @Cacheable(cacheNames = CacheNameConsts.ORG_ORGANIZATION, key = "#id", condition = "#id!=null",

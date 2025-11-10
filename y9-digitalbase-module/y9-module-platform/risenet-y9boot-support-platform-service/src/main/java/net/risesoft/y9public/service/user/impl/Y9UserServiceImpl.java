@@ -10,9 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9public.entity.user.Y9User;
-import net.risesoft.y9public.repository.user.Y9UserRepository;
+import net.risesoft.model.user.UserInfo;
+import net.risesoft.util.PlatformModelConvertUtil;
+import net.risesoft.y9public.entity.Y9User;
+import net.risesoft.y9public.repository.Y9UserRepository;
 import net.risesoft.y9public.service.user.Y9UserService;
 
 /**
@@ -26,16 +27,6 @@ import net.risesoft.y9public.service.user.Y9UserService;
 public class Y9UserServiceImpl implements Y9UserService {
 
     private final Y9UserRepository y9UserRepository;
-
-    @Override
-    public boolean isCaidAvailable(String personId, String caid) {
-        Optional<Y9User> y9UserOptional = y9UserRepository.findByTenantIdAndCaid(Y9LoginUserHolder.getTenantId(), caid);
-        if (y9UserOptional.isEmpty()) {
-            return true;
-        }
-
-        return y9UserOptional.get().getPersonId().equals(personId);
-    }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
@@ -54,49 +45,45 @@ public class Y9UserServiceImpl implements Y9UserService {
     }
 
     @Override
-    public Optional<Y9User> findByLoginNameAndTenantId(String loginName, String tenantId) {
-        return y9UserRepository.findByLoginNameAndTenantIdAndOriginalTrue(loginName, tenantId);
+    public Optional<UserInfo> findByPersonIdAndTenantId(String personId, String tenantId) {
+        return y9UserRepository.findByPersonIdAndTenantId(personId, tenantId).map(this::entityToModel);
     }
 
     @Override
-    public Optional<Y9User> findByPersonIdAndTenantId(String personId, String tenantId) {
-        return y9UserRepository.findByPersonIdAndTenantId(personId, tenantId);
+    public List<UserInfo> listAll() {
+        List<Y9User> y9UserList = y9UserRepository.findAll();
+        return entityToModel(y9UserList);
     }
 
     @Override
-    public List<Y9User> listAll() {
-        return y9UserRepository.findAll();
-    }
-
-    @Override
-    public List<Y9User> listByGuidPathLike(String guidPath) {
-        return y9UserRepository.findByGuidPathContaining(guidPath);
-    }
-
-    @Override
-    public List<Y9User> listByLoginName(String loginName) {
-        return y9UserRepository.findByLoginName(loginName);
-    }
-
-    @Override
-    public List<Y9User> listByTenantId(String tenantId) {
-        return y9UserRepository.findByTenantId(tenantId);
+    public List<UserInfo> listByTenantId(String tenantId) {
+        List<Y9User> y9UserList = y9UserRepository.findByTenantId(tenantId);
+        return entityToModel(y9UserList);
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9User save(Y9User y9User) {
-        return y9UserRepository.save(y9User);
+    public UserInfo save(UserInfo userInfo) {
+        Y9User y9User = PlatformModelConvertUtil.convert(userInfo, Y9User.class);
+        return entityToModel(y9UserRepository.save(y9User));
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void updateByTenantId(String tenantId, String tenantName, String tenantShortName) {
-        List<Y9User> list = y9UserRepository.findByTenantId(tenantId);
-        for (Y9User orgUser : list) {
-            orgUser.setTenantName(tenantName);
-            orgUser.setTenantShortName(tenantShortName);
-            save(orgUser);
+        List<UserInfo> list = this.listByTenantId(tenantId);
+        for (UserInfo userInfo : list) {
+            userInfo.setTenantName(tenantName);
+            userInfo.setTenantShortName(tenantShortName);
+            save(userInfo);
         }
+    }
+
+    private List<UserInfo> entityToModel(List<Y9User> y9UserList) {
+        return PlatformModelConvertUtil.convert(y9UserList, UserInfo.class);
+    }
+
+    private UserInfo entityToModel(Y9User y9User) {
+        return PlatformModelConvertUtil.convert(y9User, UserInfo.class);
     }
 }

@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.permission.Y9Authorization;
-import net.risesoft.entity.permission.cache.person.Y9PersonToResourceAndAuthority;
+import net.risesoft.entity.permission.cache.person.Y9PersonToResource;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.permission.cache.Y9PersonToResourceAndAuthorityManager;
 import net.risesoft.repository.permission.cache.person.Y9PersonToResourceAndAuthorityRepository;
@@ -50,27 +50,27 @@ public class Y9PersonToResourceAndAuthorityManagerImpl implements Y9PersonToReso
     @Override
     public void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Person person, Y9Authorization y9Authorization,
         Boolean inherit) {
-        Optional<Y9PersonToResourceAndAuthority> optionalY9PersonToResourceAndAuthority =
+        Optional<Y9PersonToResource> optionalY9PersonToResourceAndAuthority =
             y9PersonToResourceAndAuthorityRepository.findByPersonIdAndResourceIdAndAuthorizationIdAndAuthority(
                 person.getId(), y9ResourceBase.getId(), y9Authorization.getId(), y9Authorization.getAuthority());
-        Y9PersonToResourceAndAuthority y9PersonToResourceAndAuthority;
+        Y9PersonToResource y9PersonToResource;
         if (optionalY9PersonToResourceAndAuthority.isEmpty()) {
-            y9PersonToResourceAndAuthority = new Y9PersonToResourceAndAuthority();
-            y9PersonToResourceAndAuthority.setId(Y9IdGenerator.genId());
-            y9PersonToResourceAndAuthority.setTenantId(person.getTenantId());
-            y9PersonToResourceAndAuthority.setPersonId(person.getId());
-            y9PersonToResourceAndAuthority.setResourceId(y9ResourceBase.getId());
-            y9PersonToResourceAndAuthority.setAuthority(y9Authorization.getAuthority());
-            y9PersonToResourceAndAuthority.setAuthorizationId(y9Authorization.getId());
+            y9PersonToResource = new Y9PersonToResource();
+            y9PersonToResource.setId(Y9IdGenerator.genId());
+            y9PersonToResource.setTenantId(person.getTenantId());
+            y9PersonToResource.setPersonId(person.getId());
+            y9PersonToResource.setResourceId(y9ResourceBase.getId());
+            y9PersonToResource.setAuthority(y9Authorization.getAuthority());
+            y9PersonToResource.setAuthorizationId(y9Authorization.getId());
         } else {
-            y9PersonToResourceAndAuthority = optionalY9PersonToResourceAndAuthority.get();
+            y9PersonToResource = optionalY9PersonToResourceAndAuthority.get();
         }
-        y9PersonToResourceAndAuthority.setResourceType(y9ResourceBase.getResourceType());
-        y9PersonToResourceAndAuthority.setParentResourceId(y9ResourceBase.getParentId());
-        y9PersonToResourceAndAuthority.setInherit(inherit);
-        y9PersonToResourceAndAuthority.setAppId(y9ResourceBase.getAppId());
-        y9PersonToResourceAndAuthority.setSystemId(y9ResourceBase.getSystemId());
+        y9PersonToResource.setResourceType(y9ResourceBase.getResourceType());
+        y9PersonToResource.setParentResourceId(y9ResourceBase.getParentId());
+        y9PersonToResource.setInherit(inherit);
+        y9PersonToResource.setAppId(y9ResourceBase.getAppId());
+        y9PersonToResource.setSystemId(y9ResourceBase.getSystemId());
 
-        y9PersonToResourceAndAuthorityRepository.save(y9PersonToResourceAndAuthority);
+        y9PersonToResourceAndAuthorityRepository.save(y9PersonToResource);
     }
 }

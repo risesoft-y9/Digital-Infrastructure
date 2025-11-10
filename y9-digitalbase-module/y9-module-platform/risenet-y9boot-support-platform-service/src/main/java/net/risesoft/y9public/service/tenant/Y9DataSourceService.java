@@ -4,11 +4,10 @@ import java.util.Optional;
 
 import javax.sql.DataSource;
 
-import org.springframework.data.domain.Page;
-
+import net.risesoft.model.platform.tenant.DataSourceInfo;
+import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.exception.Y9NotFoundException;
-import net.risesoft.y9public.entity.tenant.Y9DataSource;
 
 /**
  * @author dingzhaojun
@@ -29,9 +28,9 @@ public interface Y9DataSourceService {
      */
     void changePassword(String id, String oldPassword, String newPassword);
 
-    Y9DataSource createTenantDefaultDataSource(String dbName);
+    DataSourceInfo createTenantDefaultDataSource(String dbName);
 
-    Y9DataSource createTenantDefaultDataSource(String dbName, String id);
+    DataSourceInfo createTenantDefaultDataSource(String dbName, String id);
 
     /**
      * 根据id删除数据源
@@ -54,30 +53,22 @@ public interface Y9DataSourceService {
      * @param id 数据源主键id
      * @return 数据源对象 或 null
      */
-    Optional<Y9DataSource> findById(String id);
-
-    /**
-     * 根据 jndi数据源名称 查找
-     *
-     * @param jndiName jndi数据源名称
-     * @return {@code Optional<}{@link Y9DataSource}{@code >}
-     */
-    Optional<Y9DataSource> findByJndiName(String jndiName);
+    Optional<DataSourceInfo> findById(String id);
 
     /**
      * 根据ID获取数据源
      *
      * @param id 数据源主键id
-     * @return {@link Y9DataSource}
+     * @return {@link DataSourceInfo}
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
-    Y9DataSource getById(String id);
+    DataSourceInfo getById(String id);
 
     /**
      * 获取根据ID获取要测试的数据源
      *
      * @param id 唯一标识
-     * @return {@link Y9DataSource}
+     * @return {@link DataSourceInfo}
      */
     DataSource getDataSource(String id);
 
@@ -85,9 +76,9 @@ public interface Y9DataSourceService {
      * 查询租户数据源分页列表
      *
      * @param pageQuery 分页信息
-     * @return {@code Page<}{@link Y9DataSource}{@code >}
+     * @return {@code Page<}{@link DataSourceInfo}{@code >}
      */
-    Page<Y9DataSource> page(Y9PageQuery pageQuery);
+    Y9Page<DataSourceInfo> page(Y9PageQuery pageQuery);
 
     /**
      * 重置默认密码
@@ -100,7 +91,7 @@ public interface Y9DataSourceService {
      * 保存租户数据源
      *
      * @param y9DataSource 数据源对象
-     * @return {@link Y9DataSource}
+     * @return {@link DataSourceInfo}
      */
-    Y9DataSource save(Y9DataSource y9DataSource);
+    DataSourceInfo save(DataSourceInfo y9DataSource);
 }

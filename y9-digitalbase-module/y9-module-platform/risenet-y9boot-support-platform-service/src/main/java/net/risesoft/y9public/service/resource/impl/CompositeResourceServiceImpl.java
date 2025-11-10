@@ -17,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
+import net.risesoft.model.platform.resource.App;
+import net.risesoft.model.platform.resource.Resource;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.manager.resource.CompositeResourceManager;
@@ -52,53 +55,57 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
 
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
     @Override
-    public Optional<? extends Y9ResourceBase> findByCustomIdAndParentId(String customId, String parentId,
+    public Optional<Resource> findByCustomIdAndParentId(String customId, String parentId,
         ResourceTypeEnum resourceType) {
         if (ResourceTypeEnum.APP.equals(resourceType)) {
-            return y9AppRepository.findBySystemIdAndCustomId(parentId, customId);
+            return y9AppRepository.findBySystemIdAndCustomId(parentId, customId)
+                .map(PlatformModelConvertUtil::y9AppToApp);
         } else if (ResourceTypeEnum.MENU.equals(resourceType)) {
-            return y9MenuRepository.findByParentIdAndCustomId(parentId, customId);
+            return y9MenuRepository.findByParentIdAndCustomId(parentId, customId)
+                .map(PlatformModelConvertUtil::y9MenuToMenu);
         } else {
-            return y9OperationRepository.findByParentIdAndCustomId(parentId, customId);
+            return y9OperationRepository.findByParentIdAndCustomId(parentId, customId)
+                .map(PlatformModelConvertUtil::y9OperationToOperation);
         }
     }
 
     @Override
-    public Y9ResourceBase findById(String id) {
-        return compositeResourceManager.findResource(id).orElse(null);
+    public Resource findById(String id) {
+        return compositeResourceManager.findResource(id)
+            .map(PlatformModelConvertUtil::resourceBaseToResource)
+            .orElse(null);
     }
 
     @Override
-    public List<Y9ResourceBase> listByParentId(String parentId) {
-        return compositeResourceManager.listByParentId(parentId);
+    public List<Resource> listByParentId(String parentId) {
+        return PlatformModelConvertUtil.resourceBaseToResource(compositeResourceManager.listByParentId(parentId));
     }
 
     @Override
-    public List<Y9ResourceBase> listRootResourceBySystemId(String systemId) {
-        return new ArrayList<>(y9AppRepository.findBySystemIdOrderByTabIndex(systemId));
+    public List<App> listRootResourceBySystemId(String systemId) {
+        return PlatformModelConvertUtil.y9AppToApp(y9AppRepository.findBySystemIdOrderByTabIndex(systemId));
     }
 
     @Override
-    public List<Y9App> listRootResourceList() {
-        return y9AppRepository.findAll(Sort.by("systemId", "tabIndex"));
+    public List<App> listRootResourceList() {
+        List<Y9App> y9AppList = y9AppRepository.findAll(Sort.by("systemId", "tabIndex"));
+        return PlatformModelConvertUtil.y9AppToApp(y9AppList);
     }
 
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
-    @Override
-    public List<Y9ResourceBase> searchByName(String name) {
+    private List<Resource> search(String name) {
         List<Y9ResourceBase> resourceList = new ArrayList<>();
         resourceList.addAll(y9AppRepository.findByNameContainingOrderByTabIndex(name));
         resourceList.addAll(y9MenuRepository.findByNameContainingOrderByTabIndex(name));
         resourceList.addAll(y9OperationRepository.findByNameContainingOrderByTabIndex(name));
-        return resourceList;
+        return PlatformModelConvertUtil.resourceBaseToResource(resourceList);
     }
 
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
     @Override
-    public List<Y9ResourceBase> treeSearch(String name) {
-        List<Y9ResourceBase> resourceList = this.searchByName(name);
-        Set<Y9ResourceBase> returnSet = new HashSet<>(resourceList);
-        for (Y9ResourceBase resource : resourceList) {
+    public List<Resource> treeSearch(String name) {
+        List<Resource> resourceList = this.search(name);
+        Set<Resource> returnSet = new HashSet<>(resourceList);
+        for (Resource resource : resourceList) {
             fillResourcesRecursivelyToRoot(resource, returnSet);
         }
         return returnSet.stream().sorted().collect(Collectors.toList());
@@ -106,10 +113,10 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
 
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
     @Override
-    public List<Y9ResourceBase> findByIdIn(List<String> resourceIdList) {
-        List<Y9ResourceBase> y9ResourceList = new ArrayList<>();
+    public List<Resource> findByIdIn(List<String> resourceIdList) {
+        List<Resource> y9ResourceList = new ArrayList<>();
         for (String resourceId : resourceIdList) {
-            Y9ResourceBase y9ResourceBase = this.findById(resourceId);
+            Resource y9ResourceBase = this.findById(resourceId);
             if (y9ResourceBase != null) {
                 y9ResourceList.add(y9ResourceBase);
             }
@@ -118,12 +125,21 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
     }
 
     @Override
+    public Resource findResourceParent(String resourceId) {
+        Resource resource = findById(resourceId);
+        if (resource != null) {
+            return findResourceParent(resource.getId());
+        }
+        return null;
+    }
+
+    @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void sort(String[] ids) {
         if (ids != null) {
             for (int i = 0; i < ids.length; i++) {
                 String id = ids[i];
-                Y9ResourceBase y9ResourceBase = this.findById(id);
+                Resource y9ResourceBase = this.findById(id);
                 if (ResourceTypeEnum.APP.equals(y9ResourceBase.getResourceType())) {
                     y9AppManager.updateTabIndex(id, i);
                 } else if (ResourceTypeEnum.MENU.equals(y9ResourceBase.getResourceType())) {
@@ -135,11 +151,11 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
         }
     }
 
-    private void fillResourcesRecursivelyToRoot(Y9ResourceBase y9ResourceBase, Set<Y9ResourceBase> resourceSet) {
+    private void fillResourcesRecursivelyToRoot(Resource y9ResourceBase, Set<Resource> resourceSet) {
         if (StringUtils.isEmpty(y9ResourceBase.getParentId())) {
             return;
         }
-        Y9ResourceBase parent = this.findById(y9ResourceBase.getParentId());
+        Resource parent = this.findById(y9ResourceBase.getParentId());
         if (parent == null) {
             return;
         }

@@ -14,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.api.platform.user.UserApi;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
-import net.risesoft.y9public.entity.user.Y9User;
 import net.risesoft.y9public.service.user.Y9UserService;
 
 /**
@@ -45,8 +43,7 @@ public class UserApiImpl implements UserApi {
     @Override
     public Y9Result<UserInfo> get(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
-        Y9User y9User = y9UserService.findByPersonIdAndTenantId(personId, tenantId).orElse(null);
-        UserInfo userInfo = Y9ModelConvertUtil.convert(y9User, UserInfo.class);
+        UserInfo userInfo = y9UserService.findByPersonIdAndTenantId(personId, tenantId).orElse(null);
         return Y9Result.success(userInfo);
     }
 }

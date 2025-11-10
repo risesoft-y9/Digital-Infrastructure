@@ -8,8 +8,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.entity.org.Y9OrgBase;
-import net.risesoft.entity.permission.Y9OrgBasesToRoles;
+import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.permission.OrgBasesToRoles;
 import net.risesoft.util.Y9OrgUtil;
 
 /**
@@ -51,14 +51,14 @@ public class RoleMemberVO implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
-    public static RoleMemberVO of(Y9OrgBasesToRoles y9OrgBasesToRoles, Y9OrgBase y9OrgBase) {
+    public static RoleMemberVO of(OrgBasesToRoles y9OrgBasesToRoles, OrgUnit orgUnit) {
         RoleMemberVO roleMemberVO = new RoleMemberVO();
         roleMemberVO.setId(y9OrgBasesToRoles.getId());
         roleMemberVO.setOrgUnitId(y9OrgBasesToRoles.getOrgId());
-        roleMemberVO.setOrgUnitName(y9OrgBase.getName());
-        roleMemberVO.setOrgTypeStr(y9OrgBase.getOrgType().getName());
-        roleMemberVO.setOrgUnitDn(y9OrgBase.getDn());
-        roleMemberVO.setOrgUnitNamePath(Y9OrgUtil.dnToNamePath(y9OrgBase.getDn()));
+        roleMemberVO.setOrgUnitName(orgUnit.getName());
+        roleMemberVO.setOrgTypeStr(orgUnit.getOrgType().getName());
+        roleMemberVO.setOrgUnitDn(orgUnit.getDn());
+        roleMemberVO.setOrgUnitNamePath(Y9OrgUtil.dnToNamePath(orgUnit.getDn()));
         roleMemberVO.setNegative(y9OrgBasesToRoles.getNegative());
         roleMemberVO.setCreateTime(y9OrgBasesToRoles.getCreateTime());
         return roleMemberVO;

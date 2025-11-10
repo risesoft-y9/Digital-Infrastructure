@@ -2,7 +2,7 @@ package net.risesoft.dataio.org;
 
 import java.io.OutputStream;
 
-import net.risesoft.dataio.org.model.Y9OrganizationJsonModel;
+import net.risesoft.dataio.org.model.OrganizationJsonModel;
 
 /**
  * Y9OrgTreeDataHandler
@@ -14,5 +14,5 @@ public interface Y9OrgTreeDataHandler {
 
     void exportOrgTree(String orgId, OutputStream outputStream);
 
-    void importOrgTree(Y9OrganizationJsonModel y9OrganizationJsonModel);
+    void importOrgTree(OrganizationJsonModel organizationJsonModel);
 }

@@ -15,12 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.v0.org.DepartmentApi;
-import net.risesoft.entity.org.Y9Department;
-import net.risesoft.entity.org.Y9DepartmentProp;
-import net.risesoft.entity.org.Y9Group;
-import net.risesoft.entity.org.Y9OrgBase;
-import net.risesoft.entity.org.Y9Person;
-import net.risesoft.entity.org.Y9Position;
 import net.risesoft.enums.platform.org.DepartmentPropCategoryEnum;
 import net.risesoft.model.platform.org.Department;
 import net.risesoft.model.platform.org.DepartmentProp;
@@ -34,11 +28,9 @@ import net.risesoft.service.org.Y9DepartmentService;
 import net.risesoft.service.org.Y9GroupService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
-import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.Y9EnumUtil;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
  * 部门服务组件
@@ -77,9 +69,8 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentJson") @NotBlank String departmentJson) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Department y9Department = Y9JsonUtil.readValue(departmentJson, Y9Department.class);
-        y9Department = y9DepartmentService.saveOrUpdate(y9Department);
-        return Y9ModelConvertUtil.convert(y9Department, Department.class);
+        Department department = Y9JsonUtil.readValue(departmentJson, Department.class);
+        return y9DepartmentService.saveOrUpdate(department);
     }
 
     /**
@@ -130,8 +121,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9OrgBase bureau = compositeOrgBaseService.findOrgUnitBureau(departmentId).orElse(null);
-        return ModelConvertUtil.orgBaseToOrgUnit(bureau);
+        return compositeOrgBaseService.findOrgUnitBureau(departmentId).orElse(null);
     }
 
     /**
@@ -147,8 +137,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Department y9Department = y9DepartmentService.findById(departmentId).orElse(null);
-        return Y9ModelConvertUtil.convert(y9Department, Department.class);
+        return y9DepartmentService.findById(departmentId).orElse(null);
     }
 
     /**
@@ -164,8 +153,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9OrgBase parent = compositeOrgBaseService.findOrgUnitParent(departmentId).orElse(null);
-        return ModelConvertUtil.orgBaseToOrgUnit(parent);
+        return compositeOrgBaseService.findOrgUnitParent(departmentId).orElse(null);
     }
 
     /**
@@ -181,8 +169,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = compositeOrgBaseService.listAllDescendantPersons(departmentId);
-        return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
+        return compositeOrgBaseService.listAllDescendantPersons(departmentId);
     }
 
     /**
@@ -199,8 +186,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = compositeOrgBaseService.listAllDescendantPersons(departmentId, disabled);
-        return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
+        return compositeOrgBaseService.listAllDescendantPersons(departmentId, disabled);
     }
 
     /**
@@ -219,9 +205,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("name") @NotBlank String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList =
-            compositeOrgBaseService.searchAllPersonsRecursionDownward(departmentId, name, disabled);
-        return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
+        return compositeOrgBaseService.searchAllPersonsRecursionDownward(departmentId, name, disabled);
     }
 
     /**
@@ -237,8 +221,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("dn") @NotBlank String dn) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Department> y9DepartmentList = y9DepartmentService.listByDn(dn, false);
-        return Y9ModelConvertUtil.convert(y9DepartmentList, Department.class);
+        return y9DepartmentService.listByDn(dn, false);
     }
 
     /**
@@ -255,9 +238,8 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("category") Integer category) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9DepartmentProp> y9DepartmentPropList = y9DepartmentPropService.listByOrgBaseIdAndCategory(orgUnitId,
+        return y9DepartmentPropService.listByOrgBaseIdAndCategory(orgUnitId,
             Y9EnumUtil.valueOf(DepartmentPropCategoryEnum.class, category));
-        return Y9ModelConvertUtil.convert(y9DepartmentPropList, DepartmentProp.class);
     }
 
     /**
@@ -273,8 +255,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("deptName") @NotBlank String deptName) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Department> y9DepartmentList = y9DepartmentService.listByNameLike(deptName, false);
-        return Y9ModelConvertUtil.convert(y9DepartmentList, Department.class);
+        return y9DepartmentService.listByNameLike(deptName, false);
     }
 
     /**
@@ -290,8 +271,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("ids") @NotEmpty List<String> ids) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Department> y9DepartmentList = y9DepartmentService.list(ids);
-        return Y9ModelConvertUtil.convert(y9DepartmentList, Department.class);
+        return y9DepartmentService.list(ids);
     }
 
     /**
@@ -307,8 +287,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Group> y9GroupList = y9GroupService.listByParentId(departmentId, false);
-        return Y9ModelConvertUtil.convert(y9GroupList, Group.class);
+        return y9GroupService.listByParentId(departmentId, false);
     }
 
     /**
@@ -324,9 +303,8 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9OrgBase> y9OrgBaseList = y9DepartmentService.listDepartmentPropOrgUnits(departmentId,
+        return y9DepartmentService.listDepartmentPropOrgUnits(departmentId,
             DepartmentPropCategoryEnum.LEADER.getValue(), Boolean.FALSE, Boolean.FALSE);
-        return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
     }
 
     /**
@@ -342,9 +320,8 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9OrgBase> y9OrgBaseList = y9DepartmentService.listDepartmentPropOrgUnits(departmentId,
+        return y9DepartmentService.listDepartmentPropOrgUnits(departmentId,
             DepartmentPropCategoryEnum.MANAGER.getValue(), Boolean.FALSE, Boolean.FALSE);
-        return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
     }
 
     /**
@@ -360,8 +337,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByParentId(departmentId, false);
-        return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
+        return y9PersonService.listByParentId(departmentId, false);
     }
 
     /**
@@ -378,8 +354,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByParentId(departmentId, disabled);
-        return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
+        return y9PersonService.listByParentId(departmentId, disabled);
     }
 
     /**
@@ -395,8 +370,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Position> y9PositionList = y9PositionService.listByParentId(departmentId, false);
-        return Y9ModelConvertUtil.convert(y9PositionList, Position.class);
+        return y9PositionService.listByParentId(departmentId, false);
     }
 
     /**
@@ -412,8 +386,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Department> y9DepartmentList = y9DepartmentService.listByParentId(departmentId, false);
-        return Y9ModelConvertUtil.convert(y9DepartmentList, Department.class);
+        return y9DepartmentService.listByParentId(departmentId, false);
     }
 
     /**
@@ -429,8 +402,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentJson") @NotBlank String departmentJson) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Department y9Department = Y9JsonUtil.readValue(departmentJson, Y9Department.class);
-        y9Department = y9DepartmentService.saveOrUpdate(y9Department);
-        return Y9ModelConvertUtil.convert(y9Department, Department.class);
+        Department y9Department = Y9JsonUtil.readValue(departmentJson, Department.class);
+        return y9DepartmentService.saveOrUpdate(y9Department);
     }
 }

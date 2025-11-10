@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.entity.org.Y9Person;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9PersonExtService;
 import net.risesoft.service.org.Y9PersonService;
@@ -40,8 +40,10 @@ public class SyncPhotoController {
     private final Y9PersonService y9PersonService;
     private final Y9PersonExtService y9PersonExtService;
 
-    public SyncPhotoController(@Qualifier("jdbcTemplate4Tenant") JdbcTemplate jdbcTemplate4Tenant,
-        @Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate, Y9PersonService y9PersonService,
+    public SyncPhotoController(
+        @Qualifier("jdbcTemplate4Tenant") JdbcTemplate jdbcTemplate4Tenant,
+        @Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate,
+        Y9PersonService y9PersonService,
         Y9PersonExtService y9PersonExtService) {
         this.jdbcTemplate4Tenant = jdbcTemplate4Tenant;
         this.jdbcTemplate = jdbcTemplate;
@@ -77,8 +79,8 @@ public class SyncPhotoController {
         for (String tenantId : tenantIdList) {
             Y9LoginUserHolder.setTenantId(tenantId);
             LOGGER.debug("同步租户[{}]人员头像信息", tenantId);
-            List<Y9Person> persons = y9PersonService.listAll();
-            for (Y9Person person : persons) {
+            List<Person> personList = y9PersonService.listAll();
+            for (Person person : personList) {
                 y9PersonExtService.savePersonPhoto(person, getPhotoById(person.getId()));
             }
         }
@@ -96,8 +98,8 @@ public class SyncPhotoController {
     @RiseLog(operationName = "同步人员信息", operationType = OperationTypeEnum.MODIFY)
     public Y9Result<String> syncPersonPhoto2(@RequestParam String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        List<Y9Person> persons = y9PersonService.listAll();
-        for (Y9Person person : persons) {
+        List<Person> personList = y9PersonService.listAll();
+        for (Person person : personList) {
             y9PersonExtService.savePersonPhoto(person, getPhotoById(person.getId()));
         }
 
@@ -115,7 +117,7 @@ public class SyncPhotoController {
     @RiseLog(operationName = "同步人员信息", operationType = OperationTypeEnum.MODIFY)
     public Y9Result<String> syncPersonPhotoByPersonId(@RequestParam String tenantId, @RequestParam String id) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        Y9Person person = y9PersonService.getById(id);
+        Person person = y9PersonService.getById(id);
         if (person != null && person.getId() != null) {
             y9PersonExtService.savePersonPhoto(person, getPhotoById(person.getId()));
         }

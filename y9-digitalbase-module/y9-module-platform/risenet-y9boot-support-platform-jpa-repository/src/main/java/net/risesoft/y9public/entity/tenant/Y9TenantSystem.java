@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
@@ -61,17 +60,5 @@ public class Y9TenantSystem extends BaseEntity {
     @Comment("租户数据已经初始化")
     @ColumnDefault("0")
     private Boolean initialized = false;
-
-    /** 系统名称 */
-    @Transient
-    private String systemName;
-
-    /** 系统中文名称 */
-    @Transient
-    private String systemCnName;
-
-    /** 租户数据源名称 */
-    @Transient
-    private String tenantDataSourceName;
 
 }

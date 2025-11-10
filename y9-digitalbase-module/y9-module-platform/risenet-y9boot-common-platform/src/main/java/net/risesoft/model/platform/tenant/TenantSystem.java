@@ -2,6 +2,8 @@ package net.risesoft.model.platform.tenant;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotBlank;
+
 import lombok.Data;
 
 /**
@@ -20,9 +22,11 @@ public class TenantSystem implements Serializable {
     private String id;
 
     /** 租户id */
+    @NotBlank
     private String tenantId;
 
     /** 系统id */
+    @NotBlank
     private String systemId;
 
     /** 数据源id */

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import net.risesoft.util.PlatformModelConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -39,7 +40,6 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.signing.Y9MessageDigest;
 
 @Service
@@ -170,7 +170,7 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
     public Y9Person update(Y9Person person) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
         Y9Person currentPerson = this.getById(person.getId());
-        Y9Person originPerson = Y9ModelConvertUtil.convert(currentPerson, Y9Person.class);
+        Y9Person originPerson = PlatformModelConvertUtil.convert(currentPerson, Y9Person.class);
 
         Y9BeanUtil.copyProperties(person, currentPerson, "tenantId");
         currentPerson.setTenantId(Y9LoginUserHolder.getTenantId());
@@ -194,7 +194,7 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
     public Y9Person updateTabIndex(String id, int tabIndex) {
         Y9Person person = this.getById(id);
 
-        Y9Person updatedPerson = Y9ModelConvertUtil.convert(person, Y9Person.class);
+        Y9Person updatedPerson = PlatformModelConvertUtil.convert(person, Y9Person.class);
         updatedPerson.setTabIndex(tabIndex);
         updatedPerson.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(person));
         return this.update(updatedPerson);

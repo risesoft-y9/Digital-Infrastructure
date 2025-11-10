@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.permission.cache.position.Y9PositionToRole;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
+import net.risesoft.model.platform.permission.cache.PositionToRole;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.permission.cache.Y9PositionToRoleService;
@@ -47,9 +47,8 @@ public class PositionRolesController {
      */
     @GetMapping("/getByPositionId")
     public Y9Result<List<RolePermissionVO>> getByPositionId(@RequestParam @NotBlank String positionId) {
-        List<Y9PositionToRole> rolePermissionVOList = y9PositionToRoleService.listByPositionId(positionId);
-        return Y9Result
-            .success(rolePermissionVOBuilder.buildRolePermissionVOList(new ArrayList<>(rolePermissionVOList)));
+        List<PositionToRole> positionToRoleList = y9PositionToRoleService.listByPositionId(positionId);
+        return Y9Result.success(rolePermissionVOBuilder.buildRolePermissionVOList(new ArrayList<>(positionToRoleList)));
     }
 
 }

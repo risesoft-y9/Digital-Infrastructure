@@ -12,12 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.org.ManagerApi;
-import net.risesoft.entity.org.Y9Manager;
 import net.risesoft.model.platform.org.Manager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
  * 三员服务组件
@@ -50,8 +48,7 @@ public class ManagerApiImpl implements ManagerApi {
         @RequestParam("managerId") @NotBlank String managerId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Manager y9Manager = y9ManagerService.findById(managerId).orElse(null);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Manager, Manager.class));
+        return Y9Result.success(y9ManagerService.findById(managerId).orElse(null));
     }
 
     /**
@@ -67,8 +64,7 @@ public class ManagerApiImpl implements ManagerApi {
         @RequestParam("loginName") @NotBlank String loginName) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Manager y9Manager = y9ManagerService.findByLoginName(loginName).orElse(null);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Manager, Manager.class));
+        return Y9Result.success(y9ManagerService.findByLoginName(loginName).orElse(null));
     }
 
     /**

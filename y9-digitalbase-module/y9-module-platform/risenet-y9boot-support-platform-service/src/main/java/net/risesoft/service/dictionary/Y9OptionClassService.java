@@ -3,7 +3,7 @@ package net.risesoft.service.dictionary;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.entity.dictionary.Y9OptionClass;
+import net.risesoft.model.platform.dictionary.OptionClass;
 
 /**
  * @author dingzhaojun
@@ -24,9 +24,9 @@ public interface Y9OptionClassService {
      * 按类型查找
      *
      * @param type 类型
-     * @return {@code Optional<Y9OptionClass> }
+     * @return {@code Optional<OptionClass> }
      */
-    Optional<Y9OptionClass> findByType(String type);
+    Optional<OptionClass> findByType(String type);
 
     /**
      * 字典类型表中是否有数据
@@ -38,16 +38,16 @@ public interface Y9OptionClassService {
     /**
      * 字曲典类型列表
      *
-     * @return {@code List<Y9OptionClass>}
+     * @return {@code List<OptionClass>}
      */
-    List<Y9OptionClass> list();
+    List<OptionClass> list();
 
     /**
      * 保存新增字典类型
      *
      * @param optionClass 字典类型对象
-     * @return {@link Y9OptionClass}
+     * @return {@link OptionClass}
      */
-    Y9OptionClass saveOptionClass(Y9OptionClass optionClass);
+    OptionClass saveOptionClass(OptionClass optionClass);
 
 }

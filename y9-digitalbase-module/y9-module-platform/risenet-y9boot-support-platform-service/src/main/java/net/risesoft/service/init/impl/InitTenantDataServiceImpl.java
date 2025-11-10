@@ -7,16 +7,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.consts.OptionClassConsts;
-import net.risesoft.entity.dictionary.Y9OptionClass;
-import net.risesoft.entity.org.Y9Job;
-import net.risesoft.entity.org.Y9Manager;
-import net.risesoft.entity.org.Y9Organization;
-import net.risesoft.entity.org.Y9Person;
-import net.risesoft.entity.org.Y9Position;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
+import net.risesoft.model.platform.dictionary.OptionClass;
+import net.risesoft.model.platform.org.Job;
+import net.risesoft.model.platform.org.Manager;
+import net.risesoft.model.platform.org.Organization;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.Position;
 import net.risesoft.service.dictionary.Y9OptionClassService;
 import net.risesoft.service.dictionary.Y9OptionValueService;
 import net.risesoft.service.init.InitTenantDataService;
@@ -34,6 +35,7 @@ import net.risesoft.service.relation.Y9PersonsToPositionsService;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class InitTenantDataServiceImpl implements InitTenantDataService {
 
     private final Y9OrganizationService y9OrganizationService;
@@ -94,7 +96,7 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
 
     private void createAuditManager(String parentId) {
         if (!y9ManagerService.existsByLoginName(InitDataConsts.DEFAULT_AUDIT_MANAGER)) {
-            Y9Manager auditManager = new Y9Manager();
+            Manager auditManager = new Manager();
             auditManager.setParentId(parentId);
             auditManager.setName(ManagerLevelEnum.AUDIT_MANAGER.getName());
             auditManager.setLoginName(InitDataConsts.DEFAULT_AUDIT_MANAGER);
@@ -229,9 +231,9 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
 
     @Transactional
     public void createOptionClass(String className, String type) {
-        Optional<Y9OptionClass> optionClass = y9OptionClassService.findByType(type);
+        Optional<OptionClass> optionClass = y9OptionClassService.findByType(type);
         if (!optionClass.isPresent()) {
-            Y9OptionClass option = new Y9OptionClass();
+            OptionClass option = new OptionClass();
             option.setName(className);
             option.setType(type);
             y9OptionClassService.saveOptionClass(option);
@@ -277,7 +279,7 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
 
     private void createSecurityManager(String parentId) {
         if (!y9ManagerService.existsByLoginName(InitDataConsts.DEFAULT_SECURITY_MANAGER)) {
-            Y9Manager securityManager = new Y9Manager();
+            Manager securityManager = new Manager();
             securityManager.setParentId(parentId);
             securityManager.setName(ManagerLevelEnum.SECURITY_MANAGER.getName());
             securityManager.setLoginName(InitDataConsts.DEFAULT_SECURITY_MANAGER);
@@ -292,7 +294,7 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
 
     private void createSystemManager(String parentId) {
         if (!y9ManagerService.existsByLoginName(InitDataConsts.DEFAULT_SYSTEM_MANAGER)) {
-            Y9Manager systemManager = new Y9Manager();
+            Manager systemManager = new Manager();
             systemManager.setParentId(parentId);
             systemManager.setName(ManagerLevelEnum.SYSTEM_MANAGER.getName());
             systemManager.setLoginName(InitDataConsts.DEFAULT_SYSTEM_MANAGER);
@@ -322,7 +324,7 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
         // 新建租户三员及他们所在的虚拟组织
         boolean virtualOrganizationNotExists = y9OrganizationService.list(true, false).isEmpty();
         if (virtualOrganizationNotExists) {
-            Y9Organization y9Organization = y9OrganizationService.create("虚拟组织", Boolean.TRUE);
+            Organization y9Organization = y9OrganizationService.create("虚拟组织", Boolean.TRUE);
             createSystemManager(y9Organization.getId());
             createSecurityManager(y9Organization.getId());
             createAuditManager(y9Organization.getId());
@@ -345,13 +347,13 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     public void initOrg() {
         boolean organizationNotExists = y9OrganizationService.list(false, false).isEmpty();
         if (organizationNotExists) {
-            Y9Job y9Job = y9JobService.create("无", "001");
+            Job y9Job = y9JobService.create("无", "001");
 
-            Y9Organization y9Organization = y9OrganizationService.create("组织", Boolean.FALSE);
+            Organization y9Organization = y9OrganizationService.create("组织", Boolean.FALSE);
 
-            Y9Person y9Person = y9PersonService.create(y9Organization.getId(), "业务用户", "user", "13511111111");
+            Person y9Person = y9PersonService.create(y9Organization.getId(), "业务用户", "user", "13511111111");
 
-            Y9Position y9Position = y9PositionService.create(y9Organization.getId(), y9Job.getId());
+            Position y9Position = y9PositionService.create(y9Organization.getId(), y9Job.getId());
 
             y9PersonsToPositionsService.addPositions(y9Person.getId(), new String[] {y9Position.getId()});
         }

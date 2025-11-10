@@ -3,6 +3,7 @@ package net.risesoft.service.org.impl;
 import java.util.List;
 import java.util.Optional;
 
+import net.risesoft.util.PlatformModelConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import net.risesoft.entity.org.Y9Position;
 import net.risesoft.enums.platform.org.DepartmentPropCategoryEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.model.platform.org.DepartmentProp;
 import net.risesoft.repository.org.Y9DepartmentPropRepository;
 import net.risesoft.service.org.Y9DepartmentPropService;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
@@ -48,39 +50,32 @@ public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
         y9DepartmentPropRepository.deleteByDeptIdAndCategoryAndOrgBaseId(deptId, category.getValue(), orgBaseId);
     }
 
-    @Override
-    public Optional<Y9DepartmentProp> findById(String id) {
+    private Optional<Y9DepartmentProp> findById(String id) {
         return y9DepartmentPropRepository.findById(id);
     }
 
     @Override
-    public List<Y9DepartmentProp> listAll() {
-        return y9DepartmentPropRepository.findAll();
+    public List<DepartmentProp> listByDeptId(String deptId) {
+        return entityToModel(y9DepartmentPropRepository.findByDeptId(deptId));
     }
 
     @Override
-    public List<Y9DepartmentProp> listByCategory(DepartmentPropCategoryEnum category) {
-        return y9DepartmentPropRepository.findByCategoryOrderByTabIndex(category.getValue());
+    public List<DepartmentProp> listByDeptIdAndCategory(String deptId, DepartmentPropCategoryEnum category) {
+        List<Y9DepartmentProp> y9DepartmentPropList =
+            y9DepartmentPropRepository.findByDeptIdAndCategoryOrderByTabIndex(deptId, category.getValue());
+        return entityToModel(y9DepartmentPropList);
     }
 
     @Override
-    public List<Y9DepartmentProp> listByDeptId(String deptId) {
-        return y9DepartmentPropRepository.findByDeptId(deptId);
-    }
-
-    @Override
-    public List<Y9DepartmentProp> listByDeptIdAndCategory(String deptId, DepartmentPropCategoryEnum category) {
-        return y9DepartmentPropRepository.findByDeptIdAndCategoryOrderByTabIndex(deptId, category.getValue());
-    }
-
-    @Override
-    public List<Y9DepartmentProp> listByOrgBaseIdAndCategory(String orgBaseId, DepartmentPropCategoryEnum category) {
-        return y9DepartmentPropRepository.findByOrgBaseIdAndCategoryOrderByTabIndex(orgBaseId, category.getValue());
+    public List<DepartmentProp> listByOrgBaseIdAndCategory(String orgBaseId, DepartmentPropCategoryEnum category) {
+        List<Y9DepartmentProp> y9DepartmentPropList =
+            y9DepartmentPropRepository.findByOrgBaseIdAndCategoryOrderByTabIndex(orgBaseId, category.getValue());
+        return entityToModel(y9DepartmentPropList);
     }
 
     @Override
     @Transactional
-    public void saveOrUpdate(Y9DepartmentProp y9DepartmentProp) {
+    public void saveOrUpdate(DepartmentProp y9DepartmentProp) {
         Optional<Y9DepartmentProp> optionalY9DepartmentProp =
             y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(y9DepartmentProp.getDeptId(),
                 y9DepartmentProp.getOrgBaseId(), y9DepartmentProp.getCategory());
@@ -99,12 +94,14 @@ public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
             prop.setDeptId(y9DepartmentProp.getDeptId());
             prop.setOrgBaseId(y9DepartmentProp.getOrgBaseId());
             prop.setCategory(y9DepartmentProp.getCategory());
-            Integer tabIndex =
-                y9DepartmentPropRepository.getMaxTabIndex(y9DepartmentProp.getDeptId(), y9DepartmentProp.getCategory())
-                    .orElse(1);
-            prop.setTabIndex(++tabIndex);
+            prop.setTabIndex(getNextTabIndex(y9DepartmentProp));
             y9DepartmentPropRepository.save(prop);
         }
+    }
+
+    private Integer getNextTabIndex(DepartmentProp y9DepartmentProp) {
+        return y9DepartmentPropRepository.getMaxTabIndex(y9DepartmentProp.getDeptId(), y9DepartmentProp.getCategory())
+            .orElse(-1) + 1;
     }
 
     @EventListener
@@ -135,5 +132,9 @@ public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("删除岗位时其下部门信息配置同步删除执行完成！");
         }
+    }
+
+    private List<DepartmentProp> entityToModel(List<Y9DepartmentProp> y9DepartmentPropList) {
+        return PlatformModelConvertUtil.convert(y9DepartmentPropList, DepartmentProp.class);
     }
 }

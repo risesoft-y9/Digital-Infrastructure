@@ -14,7 +14,7 @@ import org.springframework.core.env.Environment;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.IdCode;
+import net.risesoft.IdCodeConfig;
 import net.risesoft.enums.AddressLevelEnum;
 import net.risesoft.model.AreaInfoResult;
 import net.risesoft.model.TradeInfoResult;
@@ -31,7 +31,7 @@ public class OneTest {
 
     @BeforeEach
     public void setUp() {
-        IdCode.init(environment.getProperty("idCode.api_code"), environment.getProperty("idCode.api_key"),
+        IdCodeConfig.init(environment.getProperty("idCode.api_code"), environment.getProperty("idCode.api_key"),
             environment.getProperty("idCode.idCode_url"), environment.getProperty("idCode.main_code"),
             environment.getProperty("idCode.analyze_url"), environment.getProperty("idCode.goto_url"),
             environment.getProperty("idCode.sample_url"));
@@ -44,8 +44,9 @@ public class OneTest {
         AreaInfoResult result = One.m101();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("区划名称:{} 区域ID:{} 区域父ID:{} 区域级别:{}", item.getName(),
-                item.getId(), item.getParentId(), item.getLevel()));
+            result.getList()
+                .forEach(item -> LOGGER.debug("区划名称:{} 区域ID:{} 区域父ID:{} 区域级别:{}", item.getName(), item.getId(),
+                    item.getParentId(), item.getLevel()));
         }
     }
 
@@ -59,8 +60,9 @@ public class OneTest {
         AreaInfoResult result = One.m102(440000, AddressLevelEnum.PREFECTURE.getValue());
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("区划名称:{} 区域ID:{} 区域父ID:{} 区域级别:{}", item.getName(),
-                item.getId(), item.getParentId(), item.getLevel()));
+            result.getList()
+                .forEach(item -> LOGGER.debug("区划名称:{} 区域ID:{} 区域父ID:{} 区域级别:{}", item.getName(), item.getId(),
+                    item.getParentId(), item.getLevel()));
         }
     }
 
@@ -71,8 +73,9 @@ public class OneTest {
         TradeInfoResult result = One.m103();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("行业名称:{} 行业ID:{} 行业父ID:{} 行业级别:{}", item.getName(),
-                item.getId(), item.getParentId(), item.getLevel()));
+            result.getList()
+                .forEach(item -> LOGGER.debug("行业名称:{} 行业ID:{} 行业父ID:{} 行业级别:{}", item.getName(), item.getId(),
+                    item.getParentId(), item.getLevel()));
         }
     }
 
@@ -86,8 +89,9 @@ public class OneTest {
         TradeInfoResult result = One.m104(2);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("行业名称:{} 行业ID:{} 行业父ID:{} 行业级别:{}", item.getName(),
-                item.getId(), item.getParentId(), item.getLevel()));
+            result.getList()
+                .forEach(item -> LOGGER.debug("行业名称:{} 行业ID:{} 行业父ID:{} 行业级别:{}", item.getName(), item.getId(),
+                    item.getParentId(), item.getLevel()));
         }
     }
 

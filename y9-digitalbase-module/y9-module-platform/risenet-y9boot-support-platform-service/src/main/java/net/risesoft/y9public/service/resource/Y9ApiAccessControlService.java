@@ -3,7 +3,7 @@ package net.risesoft.y9public.service.resource;
 import java.util.List;
 
 import net.risesoft.enums.platform.ApiAccessControlType;
-import net.risesoft.y9public.entity.resource.Y9ApiAccessControl;
+import net.risesoft.model.platform.ApiAccessControl;
 
 /**
  * api 访问控制 service
@@ -14,19 +14,13 @@ import net.risesoft.y9public.entity.resource.Y9ApiAccessControl;
  */
 public interface Y9ApiAccessControlService {
 
-    List<Y9ApiAccessControl> listByType(ApiAccessControlType type);
+    List<ApiAccessControl> listByType(ApiAccessControlType type);
 
-    List<Y9ApiAccessControl> listByTypeAndEnabled(ApiAccessControlType type);
-
-    Y9ApiAccessControl saveOrUpdate(Y9ApiAccessControl apiAccessControl);
-
-    Y9ApiAccessControl getById(String id);
-
-    boolean isMatch(String key, String value, Boolean enabled);
+    ApiAccessControl saveOrUpdate(ApiAccessControl apiAccessControl);
 
     void delete(String id);
 
-    Y9ApiAccessControl changeEnabled(String id);
+    ApiAccessControl changeEnabled(String id);
 
-    Y9ApiAccessControl saveAppIdSecret(Y9ApiAccessControl apiAccessControl);
+    ApiAccessControl saveAppIdSecret(ApiAccessControl apiAccessControl);
 }

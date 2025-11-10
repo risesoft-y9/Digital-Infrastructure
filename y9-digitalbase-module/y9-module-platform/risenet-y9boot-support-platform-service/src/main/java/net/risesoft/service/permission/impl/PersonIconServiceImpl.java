@@ -10,19 +10,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.org.Y9OrgBase;
-import net.risesoft.entity.org.Y9Person;
-import net.risesoft.entity.org.Y9Position;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.Position;
 import net.risesoft.model.platform.permission.PersonIconItem;
+import net.risesoft.model.platform.resource.App;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.permission.PersonIconService;
 import net.risesoft.service.permission.cache.IdentityResourceCalculator;
-import net.risesoft.service.permission.cache.Y9PersonToResourceAndAuthorityService;
-import net.risesoft.service.permission.cache.Y9PositionToResourceAndAuthorityService;
-import net.risesoft.y9public.entity.resource.Y9App;
+import net.risesoft.service.permission.cache.Y9PersonToResourceService;
+import net.risesoft.service.permission.cache.Y9PositionToResourceService;
 import net.risesoft.y9public.service.resource.Y9AppService;
 
 /**
@@ -36,8 +36,8 @@ import net.risesoft.y9public.service.resource.Y9AppService;
 public class PersonIconServiceImpl implements PersonIconService {
 
     private final IdentityResourceCalculator identityResourceCalculator;
-    private final Y9PersonToResourceAndAuthorityService y9PersonToResourceAndAuthorityService;
-    private final Y9PositionToResourceAndAuthorityService y9PositionToResourceAndAuthorityService;
+    private final Y9PersonToResourceService y9PersonToResourceService;
+    private final Y9PositionToResourceService y9PositionToResourceService;
 
     protected final CompositeOrgBaseService compositeOrgBaseService;
 
@@ -51,16 +51,14 @@ public class PersonIconServiceImpl implements PersonIconService {
     @Override
     @Transactional(readOnly = true)
     public List<PersonIconItem> listByOrgUnitId(String orgUnitId) {
-        Optional<Y9OrgBase> orgUnitOptional = compositeOrgBaseService.findOrgUnitPersonOrPosition(orgUnitId);
+        Optional<OrgUnit> orgUnitOptional = compositeOrgBaseService.findOrgUnitPersonOrPosition(orgUnitId);
         if (orgUnitOptional.isPresent()) {
-            Y9OrgBase orgUnit = orgUnitOptional.get();
-            if (orgUnit instanceof Y9Person) {
-                List<Y9App> y9Apps =
-                    y9PersonToResourceAndAuthorityService.listAppsByAuthority(orgUnitId, AuthorityEnum.BROWSE);
+            OrgUnit orgUnit = orgUnitOptional.get();
+            if (orgUnit instanceof Person) {
+                List<App> y9Apps = y9PersonToResourceService.listAppsByAuthority(orgUnitId, AuthorityEnum.BROWSE);
                 return convert(y9Apps);
-            } else if (orgUnit instanceof Y9Position) {
-                List<Y9App> y9Apps =
-                    y9PositionToResourceAndAuthorityService.listAppsByAuthority(orgUnitId, AuthorityEnum.BROWSE);
+            } else if (orgUnit instanceof Position) {
+                List<App> y9Apps = y9PositionToResourceService.listAppsByAuthority(orgUnitId, AuthorityEnum.BROWSE);
                 return convert(y9Apps);
             }
         }
@@ -70,19 +68,19 @@ public class PersonIconServiceImpl implements PersonIconService {
     @Override
     @Transactional(readOnly = true)
     public Y9Page<PersonIconItem> pageByOrgUnitId(String orgUnitId, Y9PageQuery pageQuery) {
-        Optional<Y9OrgBase> orgUnitOptional = compositeOrgBaseService.findOrgUnitPersonOrPosition(orgUnitId);
+        Optional<OrgUnit> orgUnitOptional = compositeOrgBaseService.findOrgUnitPersonOrPosition(orgUnitId);
         if (orgUnitOptional.isPresent()) {
-            Y9OrgBase orgUnit = orgUnitOptional.get();
-            if (orgUnit instanceof Y9Person) {
-                Page<String> appIdPage = y9PersonToResourceAndAuthorityService.pageAppIdByAuthority(orgUnitId,
-                    AuthorityEnum.BROWSE, pageQuery);
-                List<Y9App> y9Apps = y9AppService.listByIds(appIdPage.getContent());
+            OrgUnit orgUnit = orgUnitOptional.get();
+            if (orgUnit instanceof Person) {
+                Page<String> appIdPage =
+                    y9PersonToResourceService.pageAppIdByAuthority(orgUnitId, AuthorityEnum.BROWSE, pageQuery);
+                List<App> y9Apps = y9AppService.listByIds(appIdPage.getContent());
                 return Y9Page.success(pageQuery.getPage(), appIdPage.getTotalPages(), appIdPage.getTotalElements(),
                     convert(y9Apps));
-            } else if (orgUnit instanceof Y9Position) {
-                Page<String> appIdPage = y9PositionToResourceAndAuthorityService.pageAppIdByAuthority(orgUnitId,
-                    AuthorityEnum.BROWSE, pageQuery);
-                List<Y9App> y9Apps = y9AppService.listByIds(appIdPage.getContent());
+            } else if (orgUnit instanceof Position) {
+                Page<String> appIdPage =
+                    y9PositionToResourceService.pageAppIdByAuthority(orgUnitId, AuthorityEnum.BROWSE, pageQuery);
+                List<App> y9Apps = y9AppService.listByIds(appIdPage.getContent());
                 return Y9Page.success(pageQuery.getPage(), appIdPage.getTotalPages(), appIdPage.getTotalElements(),
                     convert(y9Apps));
             }
@@ -91,7 +89,7 @@ public class PersonIconServiceImpl implements PersonIconService {
         return Y9Page.success(pageQuery.getPage(), 0, 0, List.of());
     }
 
-    private List<PersonIconItem> convert(List<Y9App> y9Apps) {
+    private List<PersonIconItem> convert(List<App> y9Apps) {
         return y9Apps.stream().map(y9App -> {
             PersonIconItem personIconItem = new PersonIconItem();
             personIconItem.setAppId(y9App.getAppId());

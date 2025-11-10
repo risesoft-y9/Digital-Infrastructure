@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.model.platform.resource.VueMenu;
 import net.risesoft.pojo.Y9Result;
@@ -81,7 +82,7 @@ public interface PositionResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/listSubMenus")
-    Y9Result<List<Resource>> listSubMenus(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Menu>> listSubMenus(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam("resourceId") @NotBlank String resourceId);
 

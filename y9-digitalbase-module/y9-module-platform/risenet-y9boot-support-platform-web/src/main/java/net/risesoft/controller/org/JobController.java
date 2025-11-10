@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.org.Y9Job;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.org.Job;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9JobService;
@@ -61,9 +61,8 @@ public class JobController {
      */
     @RiseLog(operationName = "根据id查找职位", operationType = OperationTypeEnum.BROWSE)
     @GetMapping("/getJobById/{id}")
-    public Y9Result<Y9Job> getJobById(@PathVariable("id") @NotBlank String id) {
-        Y9Job y9Job = y9JobService.getById(id);
-        return Y9Result.success(y9Job, "操作成功");
+    public Y9Result<Job> getJobById(@PathVariable("id") @NotBlank String id) {
+        return Y9Result.success(y9JobService.getById(id), "操作成功");
     }
 
     /**
@@ -74,9 +73,8 @@ public class JobController {
      */
     @RiseLog(operationName = "查找所有职位", operationType = OperationTypeEnum.BROWSE)
     @GetMapping("/listAll")
-    public Y9Result<List<Y9Job>> listAll() {
-        List<Y9Job> jobList = y9JobService.listAll();
-        return Y9Result.success(jobList, "查询成功");
+    public Y9Result<List<Job>> listAll() {
+        return Y9Result.success(y9JobService.listAll(), "查询成功");
     }
 
     /**
@@ -87,9 +85,8 @@ public class JobController {
      */
     @RiseLog(operationName = "保存或修改职位", operationType = OperationTypeEnum.MODIFY)
     @PostMapping("/saveOrUpdate")
-    public Y9Result<Y9Job> saveOrUpdate(@Validated Y9Job job) {
-        Y9Job y9Job = y9JobService.saveOrUpdate(job);
-        return Y9Result.success(y9Job, "操作成功");
+    public Y9Result<Job> saveOrUpdate(@Validated Job job) {
+        return Y9Result.success(y9JobService.saveOrUpdate(job), "操作成功");
     }
 
     /**
@@ -100,8 +97,8 @@ public class JobController {
      */
     @RiseLog(operationName = "保存职位排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
-    public Y9Result<List<Y9Job>> saveOrder(@RequestParam(value = "jobIds") List<String> jobIds) {
-        List<Y9Job> jobList = y9JobService.order(jobIds);
+    public Y9Result<List<Job>> saveOrder(@RequestParam(value = "jobIds") List<String> jobIds) {
+        List<Job> jobList = y9JobService.order(jobIds);
         return Y9Result.success(jobList, "保存职位排序成功");
     }
 
@@ -114,8 +111,8 @@ public class JobController {
      */
     @RiseLog(operationName = "根据名称获取职位", operationType = OperationTypeEnum.BROWSE)
     @GetMapping("/searchByName")
-    public Y9Result<List<Y9Job>> searchByName(@RequestParam String name) {
-        List<Y9Job> y9Jobs = y9JobService.listByNameLike(name);
-        return Y9Result.success(y9Jobs, "操作成功");
+    public Y9Result<List<Job>> searchByName(@RequestParam String name) {
+        List<Job> jobList = y9JobService.listByNameLike(name);
+        return Y9Result.success(jobList, "操作成功");
     }
 }

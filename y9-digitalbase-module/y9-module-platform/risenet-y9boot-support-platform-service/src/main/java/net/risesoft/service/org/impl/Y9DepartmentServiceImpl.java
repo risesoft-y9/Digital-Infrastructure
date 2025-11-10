@@ -6,18 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.entity.org.Y9Department;
-import net.risesoft.entity.org.Y9DepartmentProp;
 import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.enums.AuditLogEnum;
@@ -34,18 +23,20 @@ import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9DepartmentManager;
+import net.risesoft.model.platform.org.Department;
+import net.risesoft.model.platform.org.DepartmentProp;
+import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.pojo.AuditLogEvent;
-import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.org.Y9DepartmentRepository;
 import net.risesoft.service.org.Y9DepartmentPropService;
 import net.risesoft.service.org.Y9DepartmentService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9EnumUtil;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 
 /**
@@ -68,9 +59,9 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
     @Override
     @Transactional
-    public Y9Department changeDisable(String id) {
+    public Department changeDisable(String id) {
         Y9Department currentDepartment = y9DepartmentManager.getById(id);
-        Y9Department originalDepartment = Y9ModelConvertUtil.convert(currentDepartment, Y9Department.class);
+        Y9Department originalDepartment = PlatformModelConvertUtil.convert(currentDepartment, Y9Department.class);
 
         Boolean disableStatusToUpdate = !currentDepartment.getDisabled();
         if (disableStatusToUpdate) {
@@ -91,7 +82,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedDepartment;
+        return (Department)PlatformModelConvertUtil.orgBaseToOrgUnit(savedDepartment);
     }
 
     /**
@@ -112,7 +103,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional
     public void delete(String id) {
-        Y9Department y9Department = this.getById(id);
+        Y9Department y9Department = y9DepartmentManager.getById(id);
 
         y9DepartmentManager.delete(y9Department);
 
@@ -127,101 +118,103 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @Override
-    public Optional<Y9Department> findById(String id) {
-        return y9DepartmentManager.findByIdFromCache(id);
+    public Optional<Department> findById(String id) {
+        return y9DepartmentManager.findByIdFromCache(id).map(PlatformModelConvertUtil::y9DepartmentToDepartment);
     }
 
     @Override
-    public Y9Department getById(String id) {
-        return y9DepartmentManager.getByIdFromCache(id);
+    public Department getById(String id) {
+        return PlatformModelConvertUtil.y9DepartmentToDepartment(y9DepartmentManager.getByIdFromCache(id));
     }
 
-    private void getDeptTrees(String orgBaseId, List<Y9Department> deptList, Boolean disabled) {
-        List<Y9Department> childrenList = this.listByParentIdAndDisabled(orgBaseId, disabled);
+    private void getDeptTrees(String orgBaseId, List<Department> deptList, Boolean disabled) {
+        List<Y9Department> childrenList = y9DepartmentRepository.findByParentIdAndDisabled(orgBaseId, disabled);
         if (childrenList.isEmpty()) {
             return;
         }
-        deptList.addAll(childrenList);
+        deptList.addAll(PlatformModelConvertUtil.y9DepartmentToDepartment(childrenList));
         for (Y9Department orgDept : childrenList) {
             getDeptTrees(orgDept.getId(), deptList, disabled);
         }
     }
 
     @Override
-    public List<Y9Department> list() {
-        return y9DepartmentRepository.findAll();
-    }
-
-    @Override
-    public List<Y9Department> list(List<String> ids) {
-        List<Y9Department> y9DepartmentList = new ArrayList<>();
+    public List<Department> list(List<String> ids) {
+        List<Department> y9DepartmentList = new ArrayList<>();
         for (String id : ids) {
-            Optional<Y9Department> y9DepartmentOptional = findById(id);
+            Optional<Department> y9DepartmentOptional = findById(id);
             y9DepartmentOptional.ifPresent(y9DepartmentList::add);
         }
         return y9DepartmentList;
     }
 
     @Override
-    public List<Y9Department> listBureau(String organizationId, Boolean disabled) {
+    public List<Department> listBureau(String organizationId, Boolean disabled) {
+        List<Y9Department> y9DepartmentList;
         if (disabled == null) {
-            return y9DepartmentRepository.findByBureauAndGuidPathContainingOrderByTabIndexAsc(Boolean.TRUE,
+            y9DepartmentList = y9DepartmentRepository.findByBureauAndGuidPathContainingOrderByTabIndexAsc(Boolean.TRUE,
                 organizationId);
         } else {
-            return y9DepartmentRepository.findByBureauAndGuidPathContainingAndDisabledOrderByTabIndexAsc(Boolean.TRUE,
-                organizationId, disabled);
+            y9DepartmentList = y9DepartmentRepository
+                .findByBureauAndGuidPathContainingAndDisabledOrderByTabIndexAsc(Boolean.TRUE, organizationId, disabled);
         }
+        return PlatformModelConvertUtil.y9DepartmentToDepartment(y9DepartmentList);
     }
 
     @Override
-    public List<Y9Department> listBureauByNameLike(String name, Boolean disabled) {
+    public List<Department> listBureauByNameLike(String name, Boolean disabled) {
+        List<Y9Department> y9DepartmentList;
         if (disabled == null) {
-            return y9DepartmentRepository.findByBureauAndNameContainingOrderByGuidPathAsc(Boolean.TRUE, name);
+            y9DepartmentList =
+                y9DepartmentRepository.findByBureauAndNameContainingOrderByGuidPathAsc(Boolean.TRUE, name);
         } else {
-            return y9DepartmentRepository.findByBureauAndNameContainingAndDisabledOrderByGuidPathAsc(Boolean.TRUE, name,
-                disabled);
+            y9DepartmentList = y9DepartmentRepository
+                .findByBureauAndNameContainingAndDisabledOrderByGuidPathAsc(Boolean.TRUE, name, disabled);
         }
+        return PlatformModelConvertUtil.y9DepartmentToDepartment(y9DepartmentList);
     }
 
     @Override
-    public List<Y9Department> listByDn(String dn, Boolean disabled) {
+    public List<Department> listByDn(String dn, Boolean disabled) {
+        List<Y9Department> y9DepartmentList;
         if (disabled == null) {
-            return y9DepartmentRepository.findByDn(dn);
+            y9DepartmentList = y9DepartmentRepository.findByDn(dn);
         } else {
-            return y9DepartmentRepository.findByDnAndDisabled(dn, disabled);
+            y9DepartmentList = y9DepartmentRepository.findByDnAndDisabled(dn, disabled);
         }
+        return PlatformModelConvertUtil.y9DepartmentToDepartment(y9DepartmentList);
     }
 
     @Override
-    public List<Y9Department> listByNameLike(String name, Boolean disabled) {
+    public List<Department> listByNameLike(String name, Boolean disabled) {
+        List<Y9Department> y9DepartmentList;
         if (disabled == null) {
-            return y9DepartmentRepository.findByNameContainingOrderByTabIndexAsc(name);
+            y9DepartmentList = y9DepartmentRepository.findByNameContainingOrderByTabIndexAsc(name);
         } else {
-            return y9DepartmentRepository.findByNameContainingAndDisabledOrderByTabIndexAsc(name, disabled);
+            y9DepartmentList = y9DepartmentRepository.findByNameContainingAndDisabledOrderByTabIndexAsc(name, disabled);
         }
+        return PlatformModelConvertUtil.y9DepartmentToDepartment(y9DepartmentList);
     }
 
     @Override
-    public List<Y9Department> listByParentId(String parentId, Boolean disabled) {
+    public List<Department> listByParentId(String parentId, Boolean disabled) {
+        List<Y9Department> y9DepartmentList;
         if (disabled == null) {
-            return y9DepartmentRepository.findByParentIdOrderByTabIndexAsc(parentId);
+            y9DepartmentList = y9DepartmentRepository.findByParentIdOrderByTabIndexAsc(parentId);
         } else {
-            return y9DepartmentRepository.findByParentIdAndDisabledOrderByTabIndexAsc(parentId, disabled);
+            y9DepartmentList = y9DepartmentRepository.findByParentIdAndDisabledOrderByTabIndexAsc(parentId, disabled);
         }
-    }
-
-    private List<Y9Department> listByParentIdAndDisabled(String orgBaseId, boolean disabled) {
-        return y9DepartmentRepository.findByParentIdAndDisabled(orgBaseId, disabled);
+        return PlatformModelConvertUtil.y9DepartmentToDepartment(y9DepartmentList);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Y9OrgBase> listDepartmentPropOrgUnits(String deptId, Integer category, Boolean inherit,
+    public List<OrgUnit> listDepartmentPropOrgUnits(String deptId, Integer category, Boolean inherit,
         Boolean disabled) {
-        List<Y9DepartmentProp> y9DepartmentPropList = y9DepartmentPropService.listByDeptIdAndCategory(deptId,
+        List<DepartmentProp> y9DepartmentPropList = y9DepartmentPropService.listByDeptIdAndCategory(deptId,
             Y9EnumUtil.valueOf(DepartmentPropCategoryEnum.class, category));
         if (!y9DepartmentPropList.isEmpty()) {
-            return getY9OrgBaseList(y9DepartmentPropList, disabled);
+            return getOrgUnitList(y9DepartmentPropList, disabled);
         }
 
         if (Boolean.TRUE.equals(inherit)) {
@@ -231,30 +224,31 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         return List.of();
     }
 
-    private List<Y9OrgBase> getY9OrgBaseList(List<Y9DepartmentProp> y9DepartmentPropList, Boolean disabled) {
+    private List<OrgUnit> getOrgUnitList(List<DepartmentProp> y9DepartmentPropList, Boolean disabled) {
         List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
-        for (Y9DepartmentProp prop : y9DepartmentPropList) {
+        for (DepartmentProp prop : y9DepartmentPropList) {
             Y9OrgBase y9OrgBase = compositeOrgBaseManager.getPersonOrPosition(prop.getOrgBaseId());
-            if (disabled == null || disabled.equals(y9OrgBase.getDisabled())) {
+            if (disabled.equals(y9OrgBase.getDisabled())) {
                 y9OrgBaseList.add(y9OrgBase);
             }
         }
-        return y9OrgBaseList;
+        return PlatformModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Y9OrgBase> listInheritableDepartmentPropOrgUnits(String deptId, Integer category, Boolean disabled) {
-        List<Y9DepartmentProp> y9DepartmentPropList = new ArrayList<>();
+    public List<OrgUnit> listInheritableDepartmentPropOrgUnits(String deptId, Integer category, Boolean disabled) {
+        List<DepartmentProp> y9DepartmentPropList = new ArrayList<>();
 
         String currentDeptId = deptId;
         while (true) {
+            // 循环实现的递归向上
             Optional<Y9Department> currentDepartmentOptional = y9DepartmentManager.findByIdFromCache(currentDeptId);
             if (currentDepartmentOptional.isEmpty()) {
                 break;
             }
             currentDeptId = currentDepartmentOptional.get().getParentId();
-            List<Y9DepartmentProp> currentDepartmentPropList = y9DepartmentPropService
+            List<DepartmentProp> currentDepartmentPropList = y9DepartmentPropService
                 .listByDeptIdAndCategory(currentDeptId, Y9EnumUtil.valueOf(DepartmentPropCategoryEnum.class, category));
             if (!currentDepartmentPropList.isEmpty()) {
                 y9DepartmentPropList.addAll(currentDepartmentPropList);
@@ -262,22 +256,22 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
             }
         }
 
-        return getY9OrgBaseList(y9DepartmentPropList, disabled);
+        return getOrgUnitList(y9DepartmentPropList, disabled);
     }
 
     @Override
-    public List<Y9Department> listRecursivelyByParentId(String orgUnitId, Boolean disabled) {
-        List<Y9Department> deptList = new ArrayList<>();
+    public List<Department> listRecursivelyByParentId(String orgUnitId, Boolean disabled) {
+        List<Department> deptList = new ArrayList<>();
         getDeptTrees(orgUnitId, deptList, disabled);
         return deptList;
     }
 
     @Override
     @Transactional
-    public Y9Department move(String id, String parentId) {
+    public Department move(String id, String parentId) {
         Y9OrgBase parentToMove = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
         Y9Department currentDepartment = y9DepartmentManager.getById(id);
-        Y9Department originalDepartment = Y9ModelConvertUtil.convert(currentDepartment, Y9Department.class);
+        Y9Department originalDepartment = PlatformModelConvertUtil.convert(currentDepartment, Y9Department.class);
 
         checkMoveTarget(currentDepartment, parentId);
 
@@ -295,7 +289,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedDepartment;
+        return PlatformModelConvertUtil.y9DepartmentToDepartment(savedDepartment);
     }
 
     @EventListener
@@ -345,8 +339,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
     @Transactional
     public void removeByParentId(String parentId) {
-        List<Y9Department> y9DepartmentList = this.listByParentId(parentId, Boolean.FALSE);
-        for (Y9Department y9Department : y9DepartmentList) {
+        List<Department> y9DepartmentList = this.listByParentId(parentId, Boolean.FALSE);
+        for (Department y9Department : y9DepartmentList) {
             this.delete(y9Department.getId());
         }
     }
@@ -360,13 +354,15 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
     @Override
     @Transactional
-    public Y9Department saveOrUpdate(Y9Department dept) {
-        if (StringUtils.isNotBlank(dept.getId())) {
-            Optional<Y9Department> departmentOptional = y9DepartmentManager.findById(dept.getId());
+    public Department saveOrUpdate(Department department) {
+        Y9Department y9Department = PlatformModelConvertUtil.convert(department, Y9Department.class);
+
+        if (StringUtils.isNotBlank(y9Department.getId())) {
+            Optional<Y9Department> departmentOptional = y9DepartmentManager.findById(y9Department.getId());
             if (departmentOptional.isPresent()) {
                 Y9Department originalDepartment =
-                    Y9ModelConvertUtil.convert(departmentOptional.get(), Y9Department.class);
-                Y9Department savedDepartment = y9DepartmentManager.update(dept);
+                    PlatformModelConvertUtil.convert(departmentOptional.get(), Y9Department.class);
+                Y9Department savedDepartment = y9DepartmentManager.update(y9Department);
 
                 AuditLogEvent auditLogEvent = AuditLogEvent.builder()
                     .action(AuditLogEnum.DEPARTMENT_UPDATE.getAction())
@@ -378,29 +374,29 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
                     .build();
                 Y9Context.publishEvent(auditLogEvent);
 
-                return savedDepartment;
+                return PlatformModelConvertUtil.y9DepartmentToDepartment(savedDepartment);
             }
         }
 
-        Y9Department savedDepartment = y9DepartmentManager.insert(dept);
+        Y9Department savedDepartment = y9DepartmentManager.insert(y9Department);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.DEPARTMENT_CREATE.getAction())
-            .description(Y9StringUtil.format(AuditLogEnum.DEPARTMENT_CREATE.getDescription(), dept.getName()))
-            .objectId(dept.getId())
+            .description(Y9StringUtil.format(AuditLogEnum.DEPARTMENT_CREATE.getDescription(), y9Department.getName()))
+            .objectId(y9Department.getId())
             .oldObject(null)
             .currentObject(savedDepartment)
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedDepartment;
+        return PlatformModelConvertUtil.y9DepartmentToDepartment(savedDepartment);
     }
 
     @Override
     @Transactional
-    public Y9Department saveProperties(String id, String properties) {
+    public Department saveProperties(String id, String properties) {
         Y9Department currentDepartment = y9DepartmentManager.getById(id);
-        Y9Department originalDepartment = Y9ModelConvertUtil.convert(currentDepartment, Y9Department.class);
+        Y9Department originalDepartment = PlatformModelConvertUtil.convert(currentDepartment, Y9Department.class);
 
         currentDepartment.setProperties(properties);
         Y9Department savedDepartment = y9DepartmentManager.update(currentDepartment);
@@ -415,14 +411,14 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedDepartment;
+        return PlatformModelConvertUtil.y9DepartmentToDepartment(savedDepartment);
     }
 
     @Override
     @Transactional
     public void setDepartmentPropOrgUnits(String deptId, Integer category, List<String> orgBaseIds) {
         for (String orgBaseId : orgBaseIds) {
-            Y9DepartmentProp y9DepartmentProp = new Y9DepartmentProp();
+            DepartmentProp y9DepartmentProp = new DepartmentProp();
             y9DepartmentProp.setDeptId(deptId);
             y9DepartmentProp.setOrgBaseId(orgBaseId);
             y9DepartmentProp.setCategory(category);
@@ -432,9 +428,9 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
     @Override
     @Transactional
-    public Y9Department updateTabIndex(String id, int tabIndex) {
+    public Department updateTabIndex(String id, int tabIndex) {
         Y9Department originalDepartment =
-            Y9ModelConvertUtil.convert(y9DepartmentManager.getById(id), Y9Department.class);
+            PlatformModelConvertUtil.convert(y9DepartmentManager.getById(id), Y9Department.class);
         Y9Department savedDepartment = y9DepartmentManager.updateTabIndex(id, tabIndex);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -447,26 +443,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedDepartment;
+        return PlatformModelConvertUtil.y9DepartmentToDepartment(savedDepartment);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public Page<Y9Department> page(List<String> orgIdList, Y9PageQuery pageQuery) {
-        Pageable pageable =
-            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.ASC, "createTime"));
-        Specification<Y9Department> spec = new Specification<>() {
-            private static final long serialVersionUID = -95805766801894738L;
-
-            @Override
-            public Predicate toPredicate(Root<Y9Department> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
-                List<Predicate> predicates = new ArrayList<>();
-                for (String id : orgIdList) {
-                    predicates.add(cb.like(root.get("guidPath").as(String.class), "%" + id + "%"));
-                }
-                return cb.or(predicates.toArray(new Predicate[predicates.size()]));
-            }
-        };
-        return y9DepartmentRepository.findAll(spec, pageable);
-    }
 }

@@ -33,6 +33,7 @@ import net.risesoft.persistence.EnumConverter;
 public class Y9Group extends Y9OrgBase {
 
     private static final long serialVersionUID = -8480745083494990707L;
+
     /** 父节点id */
     @Column(name = "PARENT_ID", length = 38, nullable = false)
     @Comment("父节点id")

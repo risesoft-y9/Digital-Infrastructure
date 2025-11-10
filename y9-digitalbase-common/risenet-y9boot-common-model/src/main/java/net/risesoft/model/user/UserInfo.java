@@ -21,6 +21,8 @@ public class UserInfo implements Serializable {
 
     private static final long serialVersionUID = -867112844100528415L;
 
+    private String id;
+
     /** 租户Id */
     private String tenantId;
 
@@ -36,7 +38,7 @@ public class UserInfo implements Serializable {
     /** 登录名称 */
     private String loginName;
 
-    /** 密码 */
+    // FIXME 密码为敏感字段 不返回？
     private String password;
 
     /** 性别 */
@@ -102,34 +104,5 @@ public class UserInfo implements Serializable {
 
     /** 微信id */
     private String weixinId;
-    // 以上是sso server返回的用户属性
-    // 以下字段是Y9Person中的字段
-
-    /*
-    private String jsonStr;
-    private String orderedPath;
-    private String weixinId;
-    
-    private Integer official;
-    private String officialType;
-    private String duty;
-    private Integer dutyLevel;
-    private String dutyLevelName;
-    private String province;
-    private String officeAddress;
-    private String officePhone;
-    private String officeFax;
-    
-    private String id;
-    private Date createTime;
-    private Date updateTime;
-    private Boolean deleted;
-    private Boolean disabled;
-    private String description;
-    private String customId;
-    private String orgType;
-    private String properties;
-    private Integer tabIndex;
-    */
 
 }

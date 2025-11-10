@@ -1,6 +1,9 @@
 package net.risesoft.model.platform.resource;
 
 import java.io.Serializable;
+import java.util.Comparator;
+
+import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -23,7 +26,7 @@ import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "resourceType")
 @JsonSubTypes({@JsonSubTypes.Type(value = App.class, name = "0"), @JsonSubTypes.Type(value = Menu.class, name = "1"),
     @JsonSubTypes.Type(value = Operation.class, name = "2")})
-public class Resource implements Serializable {
+public class Resource implements Serializable, Comparable<Resource> {
 
     private static final long serialVersionUID = 1680635528797868917L;
 
@@ -33,8 +36,19 @@ public class Resource implements Serializable {
     protected String id;
 
     /**
+     * 自定义 id
+     */
+    protected String customId;
+
+    /**
+     * 系统 id
+     */
+    protected String systemId;
+
+    /**
      * 名称
      */
+    @NotBlank
     protected String name;
 
     /**
@@ -89,9 +103,20 @@ public class Resource implements Serializable {
      */
     protected Integer tabIndex;
 
-    /**
-     * customID
-     */
-    protected String customId;
+    /** 由ID组成的父子关系列表(正序)，之间用逗号分隔 */
+    protected String guidPath;
 
+    @Override
+    public int compareTo(Resource resource) {
+        // 排序时能保证同系统中同一层级（parentId 相同）的资源能按 tabIndex 升序排列
+        return Comparator.comparing(Resource::getSystemId)
+            .thenComparing(Resource::getParentId, Comparator.nullsFirst(String::compareTo))
+            .thenComparing(Resource::getTabIndex)
+            .compare(this, resource);
+    }
+
+    // public String getAppId();
+    public String getAppId() {
+        return null;
+    }
 }

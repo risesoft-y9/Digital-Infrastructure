@@ -15,9 +15,9 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.resource.Operation;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.y9public.entity.resource.Y9Operation;
 import net.risesoft.y9public.service.resource.Y9OperationService;
 
 /**
@@ -53,11 +53,11 @@ public class OperationResourceController {
      * 禁用操作按钮资源
      *
      * @param id 按钮资源id
-     * @return {@code Y9Result<Y9Operation>}
+     * @return {@code Y9Result<Operation>}
      */
     @RiseLog(operationName = "禁用操作按钮资源")
     @PostMapping(value = "/disable")
-    public Y9Result<Y9Operation> disable(@RequestParam @NotBlank String id) {
+    public Y9Result<Operation> disable(@RequestParam @NotBlank String id) {
         return Y9Result.success(y9OperationService.disable(id), "禁用操作按钮资源成功");
     }
 
@@ -65,11 +65,11 @@ public class OperationResourceController {
      * 启用操作按钮资源
      *
      * @param id 按钮资源id
-     * @return {@code Y9Result<Y9Operation>}
+     * @return {@code Y9Result<Operation>}
      */
     @RiseLog(operationName = "启用操作按钮资源")
     @PostMapping(value = "/enable")
-    public Y9Result<Y9Operation> enable(@RequestParam @NotBlank String id) {
+    public Y9Result<Operation> enable(@RequestParam @NotBlank String id) {
         return Y9Result.success(y9OperationService.enable(id), "启用操作按钮资源成功");
     }
 
@@ -77,26 +77,25 @@ public class OperationResourceController {
      * 根据id获取操作按钮资源详情
      *
      * @param id 按钮资源id
-     * @return {@code Y9Result<Y9Operation>}
+     * @return {@code Y9Result<Operation>}
      */
     @RiseLog(operationName = "根据id获取操作按钮资源详情")
     @GetMapping(value = "/{id}")
     @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
         ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
-    public Y9Result<Y9Operation> getById(@PathVariable @NotBlank String id) {
+    public Y9Result<Operation> getById(@PathVariable @NotBlank String id) {
         return Y9Result.success(y9OperationService.getById(id), "根据id获取操作按钮资源详情成功");
     }
 
     /**
      * 保存操作按钮资源
      *
-     * @param y9Operation 操作按钮资源
-     * @return {@code Y9Result<Y9Operation>}
+     * @param operation 操作按钮资源
+     * @return {@code Y9Result<Operation>}
      */
     @RiseLog(operationName = "保存操作按钮资源")
     @PostMapping(value = "/save")
-    public Y9Result<Y9Operation> save(@Validated Y9Operation y9Operation) {
-        Y9Operation savedOperation = y9OperationService.saveOrUpdate(y9Operation);
-        return Y9Result.success(savedOperation, "保存操作按钮资源成功");
+    public Y9Result<Operation> save(@Validated Operation operation) {
+        return Y9Result.success(y9OperationService.saveOrUpdate(operation), "保存操作按钮资源成功");
     }
 }

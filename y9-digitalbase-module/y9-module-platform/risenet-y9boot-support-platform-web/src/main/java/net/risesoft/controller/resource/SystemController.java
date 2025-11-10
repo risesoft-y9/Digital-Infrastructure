@@ -18,11 +18,11 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.System;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.vo.resource.SystemTreeNodeVO;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 
@@ -62,11 +62,11 @@ public class SystemController {
      * 禁用系统
      *
      * @param id 系统id
-     * @return {@code Y9Result<}{@link Y9System}{@code >}
+     * @return {@code Y9Result<}{@link System}{@code >}
      */
     @RiseLog(operationName = "禁用系统")
     @PostMapping(value = "/disable")
-    public Y9Result<Y9System> disable(@RequestParam @NotBlank String id) {
+    public Y9Result<System> disable(@RequestParam @NotBlank String id) {
         return Y9Result.success(y9SystemService.disable(id), "禁用系统成功");
     }
 
@@ -74,11 +74,11 @@ public class SystemController {
      * 启用系统
      *
      * @param id 系统id
-     * @return {@code Y9Result<}{@link Y9System}{@code >}
+     * @return {@code Y9Result<}{@link System}{@code >}
      */
     @RiseLog(operationName = "启用系统")
     @PostMapping(value = "/enable")
-    public Y9Result<Y9System> enable(@RequestParam @NotBlank String id) {
+    public Y9Result<System> enable(@RequestParam @NotBlank String id) {
         return Y9Result.success(y9SystemService.enable(id), "启用系统成功");
     }
 
@@ -86,11 +86,11 @@ public class SystemController {
      * 根据系统id获取系统详情
      *
      * @param id 系统id
-     * @return {@code Y9Result<}{@link Y9System}{@code >}
+     * @return {@code Y9Result<}{@link System}{@code >}
      */
     @RiseLog(operationName = "根据系统id获取系统详情")
     @GetMapping(value = "/{id}")
-    public Y9Result<Y9System> getById(@PathVariable @NotBlank String id) {
+    public Y9Result<System> getById(@PathVariable @NotBlank String id) {
         return Y9Result.success(y9SystemService.getById(id), "根据系统id获取系统详情成功");
     }
 
@@ -102,26 +102,25 @@ public class SystemController {
     @RiseLog(operationName = "获取系统列表")
     @GetMapping(value = "/list2")
     public Y9Result<List<SystemTreeNodeVO>> list2() {
-        List<Y9System> y9SystemList;
+        List<System> systemList;
         if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
-            y9SystemList = y9SystemService.listAll();
+            systemList = y9SystemService.listAll();
         } else {
-            y9SystemList = y9TenantSystemService.listSystemByTenantId(Y9LoginUserHolder.getTenantId());
+            systemList = y9TenantSystemService.listSystemByTenantId(Y9LoginUserHolder.getTenantId());
         }
-        return Y9Result.success(SystemTreeNodeVO.convertY9SystemList(y9SystemList), "获取系统列表成功");
+        return Y9Result.success(SystemTreeNodeVO.convertY9SystemList(systemList), "获取系统列表成功");
     }
 
     /**
      * 保存系统
      *
-     * @param y9System 系统
-     * @return {@code Y9Result<}{@link Y9System}{@code >}
+     * @param system 系统
+     * @return {@code Y9Result<}{@link System}{@code >}
      */
     @RiseLog(operationName = "保存系统")
     @PostMapping(value = "/save")
-    public Y9Result<Y9System> save(@Validated Y9System y9System) {
-        Y9System savedSystem = y9SystemService.saveAndRegister4Tenant(y9System);
-        return Y9Result.success(savedSystem, "保存系统成功");
+    public Y9Result<System> save(@Validated System system) {
+        return Y9Result.success(y9SystemService.saveAndRegister4Tenant(system), "保存系统成功");
     }
 
     /**

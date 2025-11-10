@@ -1,9 +1,8 @@
 package net.risesoft.model.platform.org;
 
 import java.io.Serializable;
-import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
 
@@ -37,12 +36,17 @@ public class CustomGroup implements Serializable {
     /**
      * 群组名称
      */
+    @NotBlank
     private String groupName;
 
-    /** 用户id */
+    /**
+     * 用户id
+     */
     private String personId;
 
-    /** 用户名称 */
+    /**
+     * 用户名称
+     */
     private String personName;
 
     /**
@@ -59,18 +63,6 @@ public class CustomGroup implements Serializable {
      * 分享人
      */
     private String shareName;
-
-    /**
-     * 创建时间
-     */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTime = new Date();
-
-    /**
-     * 修改时间
-     */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updateTime;
 
     /**
      * 排序字段

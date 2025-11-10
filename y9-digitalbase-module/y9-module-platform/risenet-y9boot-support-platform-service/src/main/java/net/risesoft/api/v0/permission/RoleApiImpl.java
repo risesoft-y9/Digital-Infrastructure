@@ -18,22 +18,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.api.platform.v0.permission.RoleApi;
-import net.risesoft.entity.org.Y9OrgBase;
-import net.risesoft.entity.org.Y9Person;
-import net.risesoft.entity.permission.Y9OrgBasesToRoles;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.model.platform.Role;
 import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.permission.OrgBasesToRoles;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
-import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9EnumUtil;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
-import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.role.Y9RoleService;
 
 /**
@@ -92,20 +87,19 @@ public class RoleApiImpl implements RoleApi {
     public Role createRole(@RequestParam("roleId") String roleId, @RequestParam("roleName") String roleName,
         @RequestParam("parentId") String parentId, @RequestParam("customId") String customId,
         @RequestParam("type") String type) {
-        Optional<Y9Role> y9RoleOptional = y9RoleService.findByCustomIdAndParentId(customId, parentId);
-        Y9Role roleNode;
+        Optional<Role> y9RoleOptional = y9RoleService.findByCustomIdAndParentId(customId, parentId);
+        Role role;
         if (y9RoleOptional.isEmpty()) {
-            roleNode = new Y9Role();
-            roleNode.setId(roleId);
-            roleNode.setCustomId(customId);
-            roleNode.setParentId(parentId);
-            roleNode.setType(Y9EnumUtil.valueOf(RoleTypeEnum.class, type));
+            role = new Role();
+            role.setId(roleId);
+            role.setCustomId(customId);
+            role.setParentId(parentId);
+            role.setType(Y9EnumUtil.valueOf(RoleTypeEnum.class, type));
         } else {
-            roleNode = y9RoleOptional.get();
+            role = y9RoleOptional.get();
         }
-        roleNode.setName(roleName);
-        roleNode = y9RoleService.saveOrUpdate(roleNode);
-        return ModelConvertUtil.y9RoleToRole(roleNode);
+        role.setName(roleName);
+        return y9RoleService.saveOrUpdate(role);
     }
 
     /**
@@ -132,8 +126,8 @@ public class RoleApiImpl implements RoleApi {
     @Override
     public Role findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
         @RequestParam("parentId") @NotBlank String parentId) {
-        Y9Role roleNode = y9RoleService.findByCustomIdAndParentId(customId, parentId).orElse(null);
-        return ModelConvertUtil.y9RoleToRole(roleNode);
+        Role role = y9RoleService.findByCustomIdAndParentId(customId, parentId).orElse(null);
+        return role;
     }
 
     /**
@@ -145,8 +139,8 @@ public class RoleApiImpl implements RoleApi {
      */
     @Override
     public Role getRole(@RequestParam("roleId") @NotBlank String roleId) {
-        Y9Role y9Role = y9RoleService.findById(roleId).orElse(null);
-        return ModelConvertUtil.y9RoleToRole(y9Role);
+        Role y9Role = y9RoleService.findById(roleId).orElse(null);
+        return y9Role;
     }
 
     /**
@@ -163,19 +157,19 @@ public class RoleApiImpl implements RoleApi {
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgType") @NotBlank String orgType) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9OrgBasesToRoles> roleMappingList = y9OrgBasesToRolesService.listByRoleId(roleId);
-        List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
-        for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
-            if (!Boolean.TRUE.equals(roleMapping.getNegative())) {
-                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
-                if (y9OrgBase == null || !orgType.equals(y9OrgBase.getOrgType().getEnName())) {
+        List<OrgBasesToRoles> orgBasesToRolesList = y9OrgBasesToRolesService.listByRoleId(roleId);
+        List<OrgUnit> orgUnitList = new ArrayList<>();
+        for (OrgBasesToRoles orgBasesToRoles : orgBasesToRolesList) {
+            if (!Boolean.TRUE.equals(orgBasesToRoles.getNegative())) {
+                OrgUnit orgUnit = compositeOrgBaseService.getOrgUnit(orgBasesToRoles.getOrgId());
+                if (!orgType.equals(orgUnit.getOrgType().getEnName())) {
                     continue;
                 }
-                y9OrgBaseList.add(y9OrgBase);
+                orgUnitList.add(orgUnit);
             }
         }
-        Collections.sort(y9OrgBaseList);
-        return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
+        Collections.sort(orgUnitList);
+        return orgUnitList;
     }
 
     /**
@@ -191,16 +185,15 @@ public class RoleApiImpl implements RoleApi {
         @RequestParam("roleId") @NotBlank String roleId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9OrgBasesToRoles> roleMappingList = y9OrgBasesToRolesService.listByRoleId(roleId);
+        List<OrgBasesToRoles> orgBasesToRolesList = y9OrgBasesToRolesService.listByRoleId(roleId);
         List<Person> persons = new ArrayList<>();
-        for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
-            if (!Boolean.TRUE.equals(roleMapping.getNegative())) {
-                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
-                if (y9OrgBase == null || !(OrgTypeEnum.PERSON.equals(y9OrgBase.getOrgType()))) {
+        for (OrgBasesToRoles orgBasesToRoles : orgBasesToRolesList) {
+            if (!Boolean.TRUE.equals(orgBasesToRoles.getNegative())) {
+                OrgUnit orgUnit = compositeOrgBaseService.getOrgUnit(orgBasesToRoles.getOrgId());
+                if (!(OrgTypeEnum.PERSON.equals(orgUnit.getOrgType()))) {
                     continue;
                 }
-                Y9Person y9Person = y9PersonService.getById(roleMapping.getOrgId());
-                persons.add(Y9ModelConvertUtil.convert(y9Person, Person.class));
+                persons.add((Person)orgUnit);
             }
         }
         return persons;
@@ -215,12 +208,7 @@ public class RoleApiImpl implements RoleApi {
      */
     @Override
     public List<Role> listRoleByParentId(@RequestParam("roleId") @NotBlank String roleId) {
-        List<Y9Role> y9RoleList = y9RoleService.listByParentId(roleId);
-        List<Role> roleList = new ArrayList<>();
-        for (Y9Role y9Role : y9RoleList) {
-            roleList.add(ModelConvertUtil.y9RoleToRole(y9Role));
-        }
-        return roleList;
+        return y9RoleService.listByParentId(roleId);
     }
 
     /**

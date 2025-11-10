@@ -2,6 +2,7 @@ package net.risesoft.manager.org.impl;
 
 import java.util.Optional;
 
+import net.risesoft.util.PlatformModelConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -27,7 +28,6 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
  * 组织 manager 实现类
@@ -100,7 +100,8 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
     @Override
     public Y9Organization update(Y9Organization organization) {
         Y9Organization currentOrganization = this.getById(organization.getId());
-        Y9Organization originY9Organization = Y9ModelConvertUtil.convert(currentOrganization, Y9Organization.class);
+        Y9Organization originY9Organization =
+            PlatformModelConvertUtil.convert(currentOrganization, Y9Organization.class);
 
         Y9BeanUtil.copyProperties(organization, currentOrganization, "tenantId");
         currentOrganization.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.ORGANIZATION, currentOrganization.getName(), null));
@@ -117,7 +118,7 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
     public Y9Organization updateTabIndex(String id, int tabIndex) {
         Y9Organization organization = this.getById(id);
 
-        Y9Organization updatedOrganization = Y9ModelConvertUtil.convert(organization, Y9Organization.class);
+        Y9Organization updatedOrganization = PlatformModelConvertUtil.convert(organization, Y9Organization.class);
         updatedOrganization.setTabIndex(tabIndex);
         return this.update(updatedOrganization);
     }

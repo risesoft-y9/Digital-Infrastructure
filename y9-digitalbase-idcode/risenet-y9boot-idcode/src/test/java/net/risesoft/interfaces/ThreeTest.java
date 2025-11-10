@@ -17,7 +17,7 @@ import org.springframework.core.env.Environment;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.IdCode;
+import net.risesoft.IdCodeConfig;
 import net.risesoft.model.OrganUnitResult;
 import net.risesoft.model.OrganUnitStatusInfo;
 import net.risesoft.model.RegistResult;
@@ -38,7 +38,7 @@ public class ThreeTest {
 
     @BeforeEach
     public void setUp() {
-        IdCode.init(environment.getProperty("idCode.api_code"), environment.getProperty("idCode.api_key"),
+        IdCodeConfig.init(environment.getProperty("idCode.api_code"), environment.getProperty("idCode.api_key"),
             environment.getProperty("idCode.idCode_url"), environment.getProperty("idCode.main_code"),
             environment.getProperty("idCode.analyze_url"), environment.getProperty("idCode.goto_url"),
             environment.getProperty("idCode.sample_url"));

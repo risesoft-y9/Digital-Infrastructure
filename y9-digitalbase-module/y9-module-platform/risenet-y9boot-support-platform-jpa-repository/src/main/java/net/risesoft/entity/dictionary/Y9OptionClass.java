@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
@@ -36,13 +35,11 @@ public class Y9OptionClass extends BaseEntity {
     @Id
     @Column(name = "TYPE", length = 255, nullable = false)
     @Comment("主键，类型名称")
-    @NotBlank
     private String type;
 
     /** 中文名称 */
     @Column(name = "NAME", length = 255, nullable = false)
     @Comment("中文名称")
-    @NotBlank
     private String name;
 
 }
