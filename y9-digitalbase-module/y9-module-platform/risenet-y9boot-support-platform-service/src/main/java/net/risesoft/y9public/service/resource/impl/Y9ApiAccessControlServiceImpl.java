@@ -17,11 +17,13 @@ import net.risesoft.enums.platform.ApiAccessControlType;
 import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.exception.ResourceErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.model.platform.ApiAccessControl;
 import net.risesoft.util.IpUtil;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
-import net.risesoft.y9public.entity.resource.Y9ApiAccessControl;
-import net.risesoft.y9public.repository.resource.Y9ApiAccessControlRepository;
+import net.risesoft.y9public.entity.Y9ApiAccessControl;
+import net.risesoft.y9public.repository.Y9ApiAccessControlRepository;
 import net.risesoft.y9public.service.resource.Y9ApiAccessControlService;
 
 import inet.ipaddr.AddressStringException;
@@ -41,74 +43,68 @@ public class Y9ApiAccessControlServiceImpl implements Y9ApiAccessControlService 
     private final Y9ApiAccessControlRepository y9ApiAccessControlRepository;
 
     @Override
-    public List<Y9ApiAccessControl> listByType(ApiAccessControlType type) {
-        return y9ApiAccessControlRepository.findByTypeOrderByCreateTime(type);
-    }
-
-    @Override
-    public List<Y9ApiAccessControl> listByTypeAndEnabled(ApiAccessControlType type) {
-        return y9ApiAccessControlRepository.findByTypeAndEnabledTrueOrderByCreateTime(type);
+    public List<ApiAccessControl> listByType(ApiAccessControlType type) {
+        List<Y9ApiAccessControl> y9ApiAccessControlList =
+            y9ApiAccessControlRepository.findByTypeOrderByCreateTime(type);
+        return entityToModel(y9ApiAccessControlList);
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9ApiAccessControl saveOrUpdate(Y9ApiAccessControl apiAccessControl) {
+    public ApiAccessControl saveOrUpdate(ApiAccessControl apiAccessControl) {
+        Y9ApiAccessControl y9ApiAccessControl =
+            PlatformModelConvertUtil.convert(apiAccessControl, Y9ApiAccessControl.class);
 
-        if (ApiAccessControlType.WHITE_LIST.equals(apiAccessControl.getType())
-            || ApiAccessControlType.BLACK_LIST.equals(apiAccessControl.getType())) {
-            checkIpValidity(apiAccessControl.getValue());
+        if (ApiAccessControlType.WHITE_LIST.equals(y9ApiAccessControl.getType())
+            || ApiAccessControlType.BLACK_LIST.equals(y9ApiAccessControl.getType())) {
+            checkIpValidity(y9ApiAccessControl.getValue());
         }
 
-        if (StringUtils.isBlank(apiAccessControl.getId())) {
-            apiAccessControl.setId(Y9IdGenerator.genId());
-            apiAccessControl.setTabIndex(this.getNextTabIndex(apiAccessControl.getType()));
-            return y9ApiAccessControlRepository.save(apiAccessControl);
+        if (StringUtils.isBlank(y9ApiAccessControl.getId())) {
+            y9ApiAccessControl.setId(Y9IdGenerator.genId());
+            y9ApiAccessControl.setTabIndex(this.getNextTabIndex(y9ApiAccessControl.getType()));
+            Y9ApiAccessControl savedApiAccessControl = y9ApiAccessControlRepository.save(y9ApiAccessControl);
+            return entityToModel(savedApiAccessControl);
         }
 
         Optional<Y9ApiAccessControl> y9ApiAccessControlOptional =
-            y9ApiAccessControlRepository.findById(apiAccessControl.getId());
+            y9ApiAccessControlRepository.findById(y9ApiAccessControl.getId());
         if (y9ApiAccessControlOptional.isPresent()) {
-            Y9ApiAccessControl y9ApiAccessControl = y9ApiAccessControlOptional.get();
-            Y9BeanUtil.copyProperties(apiAccessControl, y9ApiAccessControl);
-            return y9ApiAccessControlRepository.save(y9ApiAccessControl);
+            Y9ApiAccessControl originalApiAccessControl = y9ApiAccessControlOptional.get();
+            Y9BeanUtil.copyProperties(y9ApiAccessControl, originalApiAccessControl);
+            Y9ApiAccessControl savedApiAccessControl = y9ApiAccessControlRepository.save(originalApiAccessControl);
+            return entityToModel(savedApiAccessControl);
         }
-        apiAccessControl.setTabIndex(this.getNextTabIndex(apiAccessControl.getType()));
-        return y9ApiAccessControlRepository.save(apiAccessControl);
+        y9ApiAccessControl.setTabIndex(this.getNextTabIndex(y9ApiAccessControl.getType()));
+        Y9ApiAccessControl savedApiAccessControl = y9ApiAccessControlRepository.save(y9ApiAccessControl);
+        return entityToModel(savedApiAccessControl);
     }
 
-    @Override
-    public Y9ApiAccessControl getById(String id) {
+    public ApiAccessControl getById(String id) {
         return y9ApiAccessControlRepository.findById(id)
+            .map(Y9ApiAccessControlServiceImpl::entityToModel)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(GlobalErrorCodeEnum.ACCESS_CONTROL_NOT_FOUND, id));
-    }
-
-    @Override
-    public boolean isMatch(String key, String value, Boolean enabled) {
-        Optional<Y9ApiAccessControl> y9ApiAccessControlOptional = y9ApiAccessControlRepository.findById(key);
-        if (y9ApiAccessControlOptional.isPresent()) {
-            Y9ApiAccessControl y9ApiAccessControl = y9ApiAccessControlOptional.get();
-            return y9ApiAccessControl.getValue().equals(value) && y9ApiAccessControl.getEnabled().equals(enabled);
-        }
-        return false;
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(String id) {
+
         y9ApiAccessControlRepository.deleteById(id);
+
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9ApiAccessControl changeEnabled(String id) {
-        Y9ApiAccessControl y9ApiAccessControl = getById(id);
-        y9ApiAccessControl.setEnabled(!y9ApiAccessControl.getEnabled());
-        return saveOrUpdate(y9ApiAccessControl);
+    public ApiAccessControl changeEnabled(String id) {
+        ApiAccessControl apiAccessControl = getById(id);
+        apiAccessControl.setEnabled(!apiAccessControl.getEnabled());
+        return saveOrUpdate(apiAccessControl);
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9ApiAccessControl saveAppIdSecret(Y9ApiAccessControl apiAccessControl) {
+    public ApiAccessControl saveAppIdSecret(ApiAccessControl apiAccessControl) {
         if (StringUtils.isBlank(apiAccessControl.getId())) {
             apiAccessControl.setValue(RandomStringUtils.randomAlphanumeric(38));
         } else {
@@ -134,5 +130,13 @@ public class Y9ApiAccessControlServiceImpl implements Y9ApiAccessControlService 
         return y9ApiAccessControlRepository.findTopByTypeOrderByCreateTime(type)
             .map(Y9ApiAccessControl::getTabIndex)
             .orElse(-1) + 1;
+    }
+
+    private static List<ApiAccessControl> entityToModel(List<Y9ApiAccessControl> y9ApiAccessControlList) {
+        return PlatformModelConvertUtil.convert(y9ApiAccessControlList, ApiAccessControl.class);
+    }
+
+    private static ApiAccessControl entityToModel(Y9ApiAccessControl save) {
+        return PlatformModelConvertUtil.convert(save, ApiAccessControl.class);
     }
 }

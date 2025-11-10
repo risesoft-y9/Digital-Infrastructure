@@ -3,7 +3,6 @@ package net.risesoft.service.relation.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
@@ -20,11 +19,12 @@ import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9GroupManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.relation.Y9PersonsToGroupsManager;
+import net.risesoft.model.platform.org.PersonsGroups;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.relation.Y9PersonsToGroupsRepository;
 import net.risesoft.service.relation.Y9PersonsToGroupsService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
@@ -77,47 +77,28 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
         }
     }
 
-    @Override
-    @Transactional
-    public void deleteByPersonId(String personId) {
-        y9PersonsToGroupsManager.deleteByPersonId(personId);
-    }
-
-    @Override
-    public List<Y9PersonsToGroups> findByGroupId(String groupId) {
-        return y9PersonsToGroupsRepository.findByGroupId(groupId);
-    }
-
-    @Override
-    public Integer getNextGroupOrderByPersonId(String personId) {
+    private Integer getNextGroupOrderByPersonId(String personId) {
         return y9PersonsToGroupsRepository.findTopByPersonIdOrderByGroupOrderDesc(personId)
             .map(Y9PersonsToGroups::getGroupOrder)
             .orElse(-1) + 1;
     }
 
-    @Override
-    public Integer getNextPersonOrderByGroupId(String groupId) {
+    private Integer getNextPersonOrderByGroupId(String groupId) {
         return y9PersonsToGroupsRepository.findTopByGroupIdOrderByPersonOrderDesc(groupId)
             .map(Y9PersonsToGroups::getPersonOrder)
             .orElse(-1) + 1;
     }
 
     @Override
-    public List<Y9PersonsToGroups> listByGroupId(String groupId) {
-        return y9PersonsToGroupsRepository.findByGroupIdOrderByPersonOrder(groupId);
-    }
-
-    @Override
-    public List<String> listGroupIdsByPersonId(String personId) {
-        return y9PersonsToGroupsRepository.findByPersonIdOrderByGroupOrder(personId)
-            .stream()
-            .map(Y9PersonsToGroups::getGroupId)
-            .collect(Collectors.toList());
+    public List<PersonsGroups> listByGroupId(String groupId) {
+        List<Y9PersonsToGroups> y9PersonsToGroupsList =
+            y9PersonsToGroupsRepository.findByGroupIdOrderByPersonOrder(groupId);
+        return entityToModel(y9PersonsToGroupsList);
     }
 
     @Override
     @Transactional
-    public List<Y9PersonsToGroups> orderGroups(String personId, String[] groupIds) {
+    public List<PersonsGroups> orderGroups(String personId, String[] groupIds) {
         List<Y9PersonsToGroups> personsGroupsList = new ArrayList<>();
         for (int i = 0; i < groupIds.length; i++) {
 
@@ -136,12 +117,12 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
                 personsGroupsList.add(savedPersonToGroups);
             }
         }
-        return personsGroupsList;
+        return entityToModel(personsGroupsList);
     }
 
     @Override
     @Transactional
-    public List<Y9PersonsToGroups> orderPersons(String groupId, String[] personIds) {
+    public List<PersonsGroups> orderPersons(String groupId, String[] personIds) {
         List<Y9PersonsToGroups> personsGroupsList = new ArrayList<>();
         for (int i = 0; i < personIds.length; i++) {
 
@@ -160,7 +141,7 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
                 personsGroupsList.add(savedPersonToGroups);
             }
         }
-        return personsGroupsList;
+        return entityToModel(personsGroupsList);
     }
 
     @Override
@@ -180,15 +161,19 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     }
 
     @Override
-    public List<Y9PersonsToGroups> listByPersonId(String personId) {
-        return y9PersonsToGroupsRepository.findByPersonIdOrderByGroupOrder(personId);
+    public List<PersonsGroups> listByPersonId(String personId) {
+        List<Y9PersonsToGroups> y9PersonsToGroupsList =
+            y9PersonsToGroupsRepository.findByPersonIdOrderByGroupOrder(personId);
+        return entityToModel(y9PersonsToGroupsList);
     }
 
     @Transactional
     @Override
-    public Y9PersonsToGroups saveOrUpdate(Y9PersonsToGroups y9PersonsToGroups) {
-        checkPersonExists(y9PersonsToGroups.getPersonId());
-        checkGroupExists(y9PersonsToGroups.getGroupId());
+    public PersonsGroups saveOrUpdate(PersonsGroups personsGroups) {
+        Y9PersonsToGroups y9PersonsToGroups = PlatformModelConvertUtil.convert(personsGroups, Y9PersonsToGroups.class);
+
+        Y9Person person = y9PersonManager.getByIdFromCache(y9PersonsToGroups.getPersonId());
+        Y9Group group = y9GroupManager.getByIdFromCache(y9PersonsToGroups.getGroupId());
 
         if (StringUtils.isNotBlank(y9PersonsToGroups.getId())) {
             Optional<Y9PersonsToGroups> y9PersonsToGroupsOptional =
@@ -204,44 +189,6 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
 
         y9PersonsToGroups = y9PersonsToGroupsRepository.save(y9PersonsToGroups);
 
-        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9PersonsToGroups));
-
-        return y9PersonsToGroups;
-    }
-
-    /**
-     * 检查用户组是否存在
-     *
-     * @param groupId 用户组 id
-     * @throws Y9NotFoundException id 对应的记录不存在的情况
-     */
-    private void checkGroupExists(String groupId) {
-        y9GroupManager.getByIdFromCache(groupId);
-    }
-
-    /**
-     * 检查人员是否存在
-     *
-     * @param personId 人员 id
-     * @throws Y9NotFoundException id 对应的记录不存在的情况
-     */
-    private void checkPersonExists(String personId) {
-        y9PersonManager.getByIdFromCache(personId);
-    }
-
-    @Transactional
-    public Y9PersonsToGroups addY9PersonsToGroups(String personId, String groupId, Integer maxGroupsOrder,
-        Integer maxPersonsOrder) {
-        Y9Person person = y9PersonManager.getByIdFromCache(personId);
-        Y9Group group = y9GroupManager.getByIdFromCache(groupId);
-
-        Y9PersonsToGroups y9PersonsToGroups = new Y9PersonsToGroups();
-        y9PersonsToGroups.setGroupId(groupId);
-        y9PersonsToGroups.setPersonId(personId);
-        y9PersonsToGroups.setGroupOrder(maxGroupsOrder);
-        y9PersonsToGroups.setPersonOrder(maxPersonsOrder);
-        Y9PersonsToGroups savedPersonsToGroups = this.saveOrUpdate(y9PersonsToGroups);
-
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.GROUP_ADD_PERSON.getAction())
             .description(
@@ -252,7 +199,21 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedPersonsToGroups;
+        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9PersonsToGroups));
+
+        return entityToModel(y9PersonsToGroups);
+    }
+
+    @Transactional
+    public PersonsGroups addY9PersonsToGroups(String personId, String groupId, Integer maxGroupsOrder,
+        Integer maxPersonsOrder) {
+
+        PersonsGroups y9PersonsToGroups = new PersonsGroups();
+        y9PersonsToGroups.setGroupId(groupId);
+        y9PersonsToGroups.setPersonId(personId);
+        y9PersonsToGroups.setGroupOrder(maxGroupsOrder);
+        y9PersonsToGroups.setPersonOrder(maxPersonsOrder);
+        return saveOrUpdate(y9PersonsToGroups);
     }
 
     @EventListener
@@ -283,5 +244,13 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
                 .build();
             Y9Context.publishEvent(auditLogEvent);
         }
+    }
+
+    private List<PersonsGroups> entityToModel(List<Y9PersonsToGroups> y9PersonsToGroupsList) {
+        return PlatformModelConvertUtil.convert(y9PersonsToGroupsList, PersonsGroups.class);
+    }
+
+    private PersonsGroups entityToModel(Y9PersonsToGroups y9PersonsToGroups) {
+        return PlatformModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class);
     }
 }

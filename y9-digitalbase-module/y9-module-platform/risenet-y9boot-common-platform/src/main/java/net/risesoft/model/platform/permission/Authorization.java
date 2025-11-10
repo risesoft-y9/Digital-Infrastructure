@@ -1,12 +1,13 @@
 package net.risesoft.model.platform.permission;
 
-import java.io.Serializable;
+import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
 
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.enums.platform.permission.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
+import net.risesoft.model.BaseModel;
 
 /**
  * 授权配置
@@ -15,7 +16,8 @@ import net.risesoft.enums.platform.resource.ResourceTypeEnum;
  * @date 2022/09/14
  */
 @Data
-public class Authorization implements Serializable {
+public class Authorization extends BaseModel {
+
     private static final long serialVersionUID = -2921655307296670562L;
 
     /** 主键 */
@@ -25,10 +27,11 @@ public class Authorization implements Serializable {
     private String tenantId;
 
     /** 授权主体id */
+    @NotBlank
     private String principalId;
 
     /**
-     * 授权主体类型:0=角色；1=岗位；2=人员,3=组，4=部门，5=组织
+     * 授权主体类型
      *
      * {@link AuthorizationPrincipalTypeEnum}
      */
@@ -38,6 +41,7 @@ public class Authorization implements Serializable {
     private String principalName;
 
     /** 资源id */
+    @NotBlank
     private String resourceId;
 
     /**

@@ -15,15 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.dictionary.Y9OptionValue;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.dictionary.OptionValue;
 import net.risesoft.model.platform.resource.DataCatalog;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.vo.resource.DataCatalogTreeNodeVO;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9public.entity.resource.Y9DataCatalog;
 import net.risesoft.y9public.service.resource.Y9DataCatalogService;
 
 /**
@@ -45,8 +44,8 @@ public class DataCatalogController {
 
     @RiseLog(operationName = "或许数据目录树类型")
     @GetMapping(value = "/treeTypeList")
-    public Y9Result<List<Y9OptionValue>> getTreeTypeList() {
-        List<Y9OptionValue> treeTypeList = y9DataCatalogService.getTreeTypeList();
+    public Y9Result<List<OptionValue>> getTreeTypeList() {
+        List<OptionValue> treeTypeList = y9DataCatalogService.getTreeTypeList();
         return Y9Result.success(treeTypeList);
     }
 
@@ -75,22 +74,21 @@ public class DataCatalogController {
 
     @RiseLog(operationName = "保存数据目录")
     @PostMapping(value = "/save")
-    public Y9Result<Y9DataCatalog> save(Y9DataCatalog y9DataCatalog) {
-        Y9DataCatalog savedDataCatalog = y9DataCatalogService.saveOrUpdate(y9DataCatalog);
-        return Y9Result.success(savedDataCatalog, "成功保存数据目录");
+    public Y9Result<DataCatalog> save(DataCatalog dataCatalog) {
+        return Y9Result.success(y9DataCatalogService.saveOrUpdate(dataCatalog), "成功保存数据目录");
     }
 
     @RiseLog(operationName = "按年保存数据目录")
     @PostMapping(value = "/saveByYears")
-    public Y9Result<Y9DataCatalog> saveByYears(Y9DataCatalog y9DataCatalog, Integer startYear, Integer endYear) {
-        y9DataCatalogService.saveByYears(y9DataCatalog, startYear, endYear);
+    public Y9Result<DataCatalog> saveByYears(DataCatalog dataCatalog, Integer startYear, Integer endYear) {
+        y9DataCatalogService.saveByYears(dataCatalog, startYear, endYear);
         return Y9Result.successMsg("成功保存数据目录");
     }
 
     @RiseLog(operationName = "按类型保存数据目录")
     @PostMapping(value = "/saveByType")
-    public Y9Result<Y9DataCatalog> saveByType(Y9DataCatalog y9DataCatalog) {
-        y9DataCatalogService.saveByType(y9DataCatalog);
+    public Y9Result<DataCatalog> saveByType(DataCatalog dataCatalog) {
+        y9DataCatalogService.saveByType(dataCatalog);
         return Y9Result.successMsg("成功保存数据目录");
     }
 

@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.org.Y9Group;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.org.Group;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9GroupService;
@@ -64,9 +64,9 @@ public class GroupController {
      */
     @RiseLog(operationName = "禁用用户组", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/changeDisabled")
-    public Y9Result<Y9Group> changeDisabled(@NotBlank @RequestParam String id) {
-        Y9Group y9Group = y9GroupService.changeDisabled(id);
-        return Y9Result.success(y9Group, "用户组禁用状态修改成功");
+    public Y9Result<Group> changeDisabled(@NotBlank @RequestParam String id) {
+        Group group = y9GroupService.changeDisabled(id);
+        return Y9Result.success(group, "用户组禁用状态修改成功");
     }
 
     /**
@@ -86,10 +86,10 @@ public class GroupController {
      * 根据用户组id，获取用户组信息
      *
      * @param groupId 用户组id
-     * @return {@code Y9Result<Y9Group>}
+     * @return {@code Y9Result<Group>}
      */
     @RequestMapping(value = "/getGroupById")
-    public Y9Result<Y9Group> getGroupById(@RequestParam @NotBlank String groupId) {
+    public Y9Result<Group> getGroupById(@RequestParam @NotBlank String groupId) {
         return Y9Result.success(y9GroupService.getById(groupId), "获取用户组信息成功");
     }
 
@@ -97,12 +97,12 @@ public class GroupController {
      * 根据人员id，获取用户组列表
      *
      * @param personId 人员id
-     * @return {@code Y9Result<List<Y9Group>>}
+     * @return {@code Y9Result<List<Group>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "根据人员id，获取用户组列表")
     @RequestMapping(value = "/listGroupsByPersonId")
-    public Y9Result<List<Y9Group>> listGroupsByPersonId(@RequestParam @NotBlank String personId) {
+    public Y9Result<List<Group>> listGroupsByPersonId(@RequestParam @NotBlank String personId) {
         return Y9Result.success(y9GroupService.listByPersonId(personId, null), "根据人员id，获取用户组列表");
     }
 
@@ -111,13 +111,13 @@ public class GroupController {
      *
      * @param groupId 用户组id
      * @param parentId 父节点id
-     * @return {@code Y9Result<Y9Group>}
+     * @return {@code Y9Result<Group>}
      */
     @RiseLog(operationName = "移动用户组", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/move")
-    public Y9Result<Y9Group> move(@RequestParam @NotBlank String groupId, @RequestParam @NotBlank String parentId) {
-        Y9Group y9Group = y9GroupService.move(groupId, parentId);
-        return Y9Result.success(y9Group, "移动用户组成功");
+    public Y9Result<Group> move(@RequestParam @NotBlank String groupId, @RequestParam @NotBlank String parentId) {
+        Group group = y9GroupService.move(groupId, parentId);
+        return Y9Result.success(group, "移动用户组成功");
     }
 
     /**
@@ -159,21 +159,20 @@ public class GroupController {
     @PostMapping(value = "/saveExtendProperties")
     public Y9Result<String> saveExtendProperties(@RequestParam @NotBlank String groupId,
         @RequestParam String properties) {
-        Y9Group y9Group = y9GroupService.saveProperties(groupId, properties);
-        return Y9Result.success(y9Group.getProperties(), "新增扩展属性成功");
+        Group group = y9GroupService.saveProperties(groupId, properties);
+        return Y9Result.success(group.getProperties(), "新增扩展属性成功");
     }
 
     /**
      * 新建或者更新用户组信息
      *
      * @param group 用户组实体
-     * @return {@code Y9Result<Y9Group>}
+     * @return {@code Y9Result<Group>}
      */
     @RiseLog(operationName = "新建或者更新用户组信息", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")
-    public Y9Result<Y9Group> saveOrUpdate(@Validated Y9Group group) {
-        Y9Group returnGroup = y9GroupService.saveOrUpdate(group);
-        return Y9Result.success(returnGroup, "新建或者更新用户组信息成功");
+    public Y9Result<Group> saveOrUpdate(@Validated Group group) {
+        return Y9Result.success(y9GroupService.saveOrUpdate(group), "新建或者更新用户组信息成功");
     }
 
     /**

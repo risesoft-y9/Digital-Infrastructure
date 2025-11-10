@@ -1,8 +1,10 @@
 package net.risesoft.model.platform.dictionary;
 
-import java.io.Serializable;
+import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
+
+import net.risesoft.model.BaseModel;
 
 /**
  * 字典数据
@@ -14,7 +16,8 @@ import lombok.Data;
  * @date 2022/4/21
  */
 @Data
-public class OptionValue implements Serializable {
+public class OptionValue extends BaseModel {
+
     private static final long serialVersionUID = -3091695448276608201L;
 
     /**
@@ -25,11 +28,13 @@ public class OptionValue implements Serializable {
     /**
      * 数据代码
      */
+    @NotBlank
     private String code;
 
     /**
      * 名称
      */
+    @NotBlank
     private String name;
 
     /**
@@ -40,5 +45,6 @@ public class OptionValue implements Serializable {
     /**
      * 字典类型
      */
+    @NotBlank
     private String type;
 }

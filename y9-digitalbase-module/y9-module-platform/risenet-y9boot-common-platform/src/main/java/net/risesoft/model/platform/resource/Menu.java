@@ -1,5 +1,7 @@
 package net.risesoft.model.platform.resource;
 
+import javax.validation.constraints.NotBlank;
+
 import lombok.Data;
 
 /**
@@ -19,6 +21,7 @@ public class Menu extends Resource {
     /**
      * 应用id
      */
+    @NotBlank
     private String appId;
 
     /**
@@ -35,4 +38,14 @@ public class Menu extends Resource {
      * 元信息
      */
     private String meta;
+
+    /**
+     * 重定向
+     */
+    private String redirect;
+
+    // @Override
+    public String getAppId() {
+        return this.appId;
+    }
 }

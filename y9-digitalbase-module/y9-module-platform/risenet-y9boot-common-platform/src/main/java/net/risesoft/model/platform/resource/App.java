@@ -30,7 +30,7 @@ public class App extends Resource {
     private String aliasName;
 
     /**
-     * 分类 ，1、业务协同，2：事项办理，3：数据服务
+     * 分类：1、业务协同，2：事项办理，3：数据服务
      *
      * {@link AppTypeEnum}
      */
@@ -67,7 +67,7 @@ public class App extends Resource {
     private String resourceAdminUrl;
 
     /**
-     * 应用打开方式:0在桌面窗口打开；1在新浏览器窗口打开
+     * 应用打开方式：0在桌面窗口打开；1在新浏览器窗口打开
      *
      * {@link AppOpenTypeEnum}
      */
@@ -78,5 +78,13 @@ public class App extends Resource {
 
     /** 是否自动租用应用 */
     private Boolean autoInit;
+
+    /** 租用状态 */
+    private String tenancyStatus;
+
+    // @Override
+    public String getAppId() {
+        return this.id;
+    }
 
 }

@@ -6,7 +6,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
@@ -48,13 +47,11 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
     protected String customId;
 
     /** 系统id */
-    @NotBlank
     @Column(name = "SYSTEM_ID", length = 38, nullable = false)
     @Comment("系统id")
     protected String systemId;
 
     /** 名称 */
-    @NotBlank
     @Column(name = "NAME", length = 255, nullable = false)
     @Comment("名称")
     protected String name;

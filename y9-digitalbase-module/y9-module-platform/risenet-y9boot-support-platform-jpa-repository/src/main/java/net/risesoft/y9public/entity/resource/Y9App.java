@@ -101,10 +101,6 @@ public class Y9App extends Y9ResourceBase {
     @ColumnDefault("0")
     private Boolean autoInit = Boolean.FALSE;
 
-    /** 租用状态 */
-    @Transient
-    private String tenancyStatus;
-
     @Transient
     private String appId;
 

@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.v0.permission.AuthorizationApi;
-import net.risesoft.entity.org.Y9Person;
-import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.permission.Authorization;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.permission.Y9AuthorizationService;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -58,8 +58,8 @@ public class AuthorizationApiImpl implements AuthorizationApi {
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("authority") Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Person y9Person = y9PersonService.getById(personId);
-        Y9Authorization y9Authorization = new Y9Authorization();
+        Person y9Person = y9PersonService.getById(personId);
+        Authorization y9Authorization = new Authorization();
         y9Authorization.setAuthorizer(y9Person.getName());
         y9Authorization.setAuthority(Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
         y9Authorization.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));

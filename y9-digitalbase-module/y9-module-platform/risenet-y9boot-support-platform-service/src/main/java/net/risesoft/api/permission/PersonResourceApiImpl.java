@@ -21,11 +21,8 @@ import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.model.platform.resource.VueMenu;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.permission.cache.Y9PersonToResourceAndAuthorityService;
+import net.risesoft.service.permission.cache.Y9PersonToResourceService;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
-import net.risesoft.y9public.entity.resource.Y9Menu;
-import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 
 /**
  * 人员资源权限查看组件
@@ -43,7 +40,7 @@ import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 @RequiredArgsConstructor
 public class PersonResourceApiImpl implements PersonResourceApi {
 
-    private final Y9PersonToResourceAndAuthorityService y9PersonToResourceAndAuthorityService;
+    private final Y9PersonToResourceService y9PersonToResourceService;
     private final VueMenuBuilder vueMenuBuilder;
 
     /**
@@ -62,7 +59,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
         @RequestParam("authority") AuthorityEnum authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result.success(y9PersonToResourceAndAuthorityService.hasPermission(personId, resourceId, authority));
+        return Y9Result.success(y9PersonToResourceService.hasPermission(personId, resourceId, authority));
     }
 
     /**
@@ -81,8 +78,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
         @RequestParam("authority") AuthorityEnum authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result
-            .success(y9PersonToResourceAndAuthorityService.hasPermissionByCustomId(personId, customId, authority));
+        return Y9Result.success(y9PersonToResourceService.hasPermissionByCustomId(personId, customId, authority));
     }
 
     /**
@@ -123,8 +119,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
         @RequestParam("resourceId") @NotBlank String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Menu> y9MenuList = y9PersonToResourceAndAuthorityService.listSubMenus(personId, resourceId, authority);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9MenuList, Menu.class));
+        return Y9Result.success(y9PersonToResourceService.listSubMenus(personId, resourceId, authority));
     }
 
     /**
@@ -143,8 +138,6 @@ public class PersonResourceApiImpl implements PersonResourceApi {
         @RequestParam("resourceId") @NotBlank String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9ResourceBase> y9ResourceBaseList =
-            y9PersonToResourceAndAuthorityService.listSubResources(personId, resourceId, authority);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9ResourceBaseList, Resource.class));
+        return Y9Result.success(y9PersonToResourceService.listSubResources(personId, resourceId, authority));
     }
 }

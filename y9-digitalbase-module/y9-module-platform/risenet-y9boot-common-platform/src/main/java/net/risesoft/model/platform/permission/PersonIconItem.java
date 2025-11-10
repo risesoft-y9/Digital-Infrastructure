@@ -42,7 +42,7 @@ public class PersonIconItem implements Serializable {
     private String iconData;
 
     /** 是否显示数字 */
-    private Boolean showNumber = false;
+    private Boolean showNumber;
 
     /** 数字获取地址 */
     private String numberUrl;

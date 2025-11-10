@@ -39,16 +39,22 @@ public class SyncOrgUnits implements Serializable {
 
     /** 组织机构 */
     private Organization organization = null;
+
     /** 部门 */
     private List<Department> departments = new ArrayList<>();
+
     /** 人员 */
     private List<Person> persons = new ArrayList<>();
+
     /** 岗位 */
     private List<Position> positions = new ArrayList<>();
+
     /** 用户组 */
     private List<Group> groups = new ArrayList<>();
+
     /** 人员和岗位的绑定关系 */
     private List<PersonsPositions> personsPositions = new ArrayList<>();
+
     /** 人员和用户组的绑定关系 */
     private List<PersonsGroups> personsGroups = new ArrayList<>();
 

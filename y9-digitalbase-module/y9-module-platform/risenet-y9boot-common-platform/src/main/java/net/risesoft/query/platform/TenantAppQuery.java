@@ -24,11 +24,6 @@ public class TenantAppQuery {
     private String appName;
 
     /**
-     * 系统ids
-     */
-    private String systemIds;
-
-    /**
      * 审核状态，0：未审核；1：通过
      */
     private Boolean verify;

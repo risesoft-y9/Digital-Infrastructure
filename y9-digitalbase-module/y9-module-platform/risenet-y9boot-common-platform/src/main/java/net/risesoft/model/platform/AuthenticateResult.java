@@ -24,16 +24,24 @@ public class AuthenticateResult implements Serializable {
 
     private static final long serialVersionUID = 798527854696823939L;
 
-    /** 租户id */
+    /**
+     * 租户id
+     */
     private String tenantId;
 
-    /** 人员 */
+    /**
+     * 人员
+     */
     private Person person;
 
-    /** 部门名称 */
+    /**
+     * 部门名称
+     */
     private String deptName;
 
-    /** 委办局名称 */
+    /**
+     * 委办局名称
+     */
     private String bureauName;
 
 }

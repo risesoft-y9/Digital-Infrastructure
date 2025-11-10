@@ -3,6 +3,7 @@ package net.risesoft.service.org.impl;
 import java.util.List;
 import java.util.Optional;
 
+import net.risesoft.util.PlatformModelConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,8 @@ import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.relation.Y9CustomGroupMembersManager;
+import net.risesoft.model.platform.org.CustomGroup;
+import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.org.Y9CustomGroupRepository;
 import net.risesoft.repository.relation.Y9CustomGroupMembersRepository;
@@ -49,48 +52,56 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
     }
 
     @Override
-    public Optional<Y9CustomGroup> findByCustomId(String customId) {
-        return customGroupRepository.findByCustomId(customId);
+    public Optional<CustomGroup> findByCustomId(String customId) {
+        return customGroupRepository.findByCustomId(customId).map(Y9CustomGroupServiceImpl::entityToModel);
     }
 
     @Override
-    public Optional<Y9CustomGroup> findById(String id) {
-        return customGroupRepository.findById(id);
+    public Optional<CustomGroup> findById(String id) {
+        return customGroupRepository.findById(id).map(Y9CustomGroupServiceImpl::entityToModel);
     }
 
     @Override
-    public Y9CustomGroup getById(String id) {
+    public CustomGroup getById(String id) {
+        return entityToModel(get(id));
+    }
+
+    private Y9CustomGroup get(String id) {
         return customGroupRepository.findById(id)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.CUSTOM_GROUP_NOT_FOUND, id));
     }
 
     @Override
-    public List<Y9CustomGroup> listByPersonId(String personId) {
-        return customGroupRepository.findByPersonIdOrderByTabIndexAsc(personId);
+    public List<CustomGroup> listByPersonId(String personId) {
+        return entityToModel(customGroupRepository.findByPersonIdOrderByTabIndexAsc(personId));
     }
 
     @Override
-    public Page<Y9CustomGroup> pageByPersonId(String personId, Y9PageQuery pageQuery) {
+    public Y9Page<CustomGroup> pageByPersonId(String personId, Y9PageQuery pageQuery) {
         PageRequest pageable =
             PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.ASC, "tabIndex"));
-        return customGroupRepository.findByPersonId(personId, pageable);
+        Page<Y9CustomGroup> y9CustomGroupPage = customGroupRepository.findByPersonId(personId, pageable);
+        return Y9Page.success(pageQuery.getPage(), y9CustomGroupPage.getTotalPages(),
+            y9CustomGroupPage.getTotalElements(), entityToModel(y9CustomGroupPage.getContent()));
     }
 
     @Override
     @Transactional
-    public Y9CustomGroup save(Y9CustomGroup y9CustomGroup) {
+    public CustomGroup save(CustomGroup customGroup) {
+        Y9CustomGroup y9CustomGroup = PlatformModelConvertUtil.convert(customGroup, Y9CustomGroup.class);
+
         if (StringUtils.isBlank(y9CustomGroup.getId())) {
             y9CustomGroup.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
         y9CustomGroup.setTenantId(Y9LoginUserHolder.getTenantId());
-        return customGroupRepository.save(y9CustomGroup);
+        return entityToModel(customGroupRepository.save(y9CustomGroup));
     }
 
     @Override
     @Transactional
     public boolean saveCustomGroupOrder(List<String> sortIdList) {
         for (int i = 0; i < sortIdList.size(); i++) {
-            Y9CustomGroup customGroup = this.getById(sortIdList.get(i));
+            CustomGroup customGroup = this.getById(sortIdList.get(i));
             customGroup.setTabIndex(i);
             this.save(customGroup);
         }
@@ -99,16 +110,15 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
 
     @Override
     @Transactional
-    public Y9CustomGroup saveOrUpdate(String personId, List<String> personIdList, String groupId, String groupName) {
+    public CustomGroup saveOrUpdate(String personId, List<String> personIdList, String groupId, String groupName) {
         String tenantId = Y9LoginUserHolder.getTenantId();
-        Y9CustomGroup group = new Y9CustomGroup();
+        CustomGroup group = new CustomGroup();
         if (StringUtils.isBlank(groupId)) {
             String guid = Y9IdGenerator.genId(IdType.SNOWFLAKE);
             group.setId(guid);
             group.setTenantId(tenantId);
             group.setGroupName(groupName);
-            Integer tabIndex = customGroupRepository.getMaxTabIndex(personId).map(index -> index + 1).orElse(1);
-            group.setTabIndex(tabIndex);
+            group.setTabIndex(getNextTabIndex(personId));
             group.setPersonId(personId);
             group = this.save(group);
         } else {
@@ -120,12 +130,16 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
         return group;
     }
 
+    private Integer getNextTabIndex(String personId) {
+        return customGroupRepository.getMaxTabIndex(personId).map(index -> index + 1).orElse(1);
+    }
+
     @Override
     @Transactional
     public boolean share(List<String> personIds, List<String> groupIds) {
         for (String personId : personIds) {
             for (String groupId : groupIds) {
-                Y9CustomGroup y9CustomGroup = this.share(personId, groupId);
+                CustomGroup y9CustomGroup = this.share(personId, groupId);
                 y9CustomGroupMembersManager.share(groupId, y9CustomGroup.getId());
             }
         }
@@ -133,18 +147,25 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
     }
 
     @Transactional
-    public Y9CustomGroup share(String personId, String groupId) {
-        Y9CustomGroup customGroup = this.getById(groupId);
-        Y9CustomGroup group = new Y9CustomGroup();
+    public CustomGroup share(String personId, String groupId) {
+        Y9CustomGroup customGroup = get(groupId);
+        CustomGroup group = new CustomGroup();
         String id = Y9IdGenerator.genId(IdType.SNOWFLAKE);
         group.setId(id);
         group.setGroupName(customGroup.getGroupName());
-        Integer tabIndex = customGroupRepository.getMaxTabIndex(personId).map(index -> index + 1).orElse(1);
-        group.setTabIndex(tabIndex);
+        group.setTabIndex(getNextTabIndex(personId));
         group.setTenantId(customGroup.getTenantId());
         group.setShareId(customGroup.getPersonId());
         group.setPersonId(personId);
         return this.save(group);
+    }
+
+    private static CustomGroup entityToModel(Y9CustomGroup y9CustomGroup) {
+        return PlatformModelConvertUtil.convert(y9CustomGroup, CustomGroup.class);
+    }
+
+    private static List<CustomGroup> entityToModel(List<Y9CustomGroup> y9CustomGroupList) {
+        return PlatformModelConvertUtil.convert(y9CustomGroupList, CustomGroup.class);
     }
 
 }

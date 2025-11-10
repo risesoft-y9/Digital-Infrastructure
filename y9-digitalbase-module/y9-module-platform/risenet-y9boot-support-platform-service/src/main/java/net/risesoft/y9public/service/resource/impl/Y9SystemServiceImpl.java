@@ -18,19 +18,21 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.SystemErrorCodeEnum;
+import net.risesoft.model.platform.System;
 import net.risesoft.pojo.AuditLogEvent;
+import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.util.Y9Assert;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
-import net.risesoft.y9public.entity.resource.Y9System;
+import net.risesoft.y9public.entity.Y9System;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.resource.Y9SystemManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
-import net.risesoft.y9public.repository.resource.Y9SystemRepository;
+import net.risesoft.y9public.repository.Y9SystemRepository;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 
 /**
@@ -70,9 +72,9 @@ public class Y9SystemServiceImpl implements Y9SystemService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9System disable(String id) {
+    public System disable(String id) {
         Y9System currentSystem = y9SystemManager.getById(id);
-        Y9System originalSystem = Y9ModelConvertUtil.convert(currentSystem, Y9System.class);
+        Y9System originalSystem = PlatformModelConvertUtil.convert(currentSystem, Y9System.class);
 
         currentSystem.setEnabled(Boolean.FALSE);
         // TODO 禁用系统同时禁用应用
@@ -89,14 +91,14 @@ public class Y9SystemServiceImpl implements Y9SystemService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedSystem;
+        return entityToModel(savedSystem);
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9System enable(String id) {
+    public System enable(String id) {
         Y9System currentSystem = y9SystemManager.getById(id);
-        Y9System originalSystem = Y9ModelConvertUtil.convert(currentSystem, Y9System.class);
+        Y9System originalSystem = PlatformModelConvertUtil.convert(currentSystem, Y9System.class);
 
         currentSystem.setEnabled(Boolean.TRUE);
         // TODO 启用系统同时启用应用？
@@ -113,33 +115,35 @@ public class Y9SystemServiceImpl implements Y9SystemService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedSystem;
+        return entityToModel(savedSystem);
     }
 
     @Override
-    public Optional<Y9System> findById(String id) {
-        return y9SystemManager.findByIdFromCache(id);
+    public Optional<System> findById(String id) {
+        return y9SystemManager.findByIdFromCache(id).map(Y9SystemServiceImpl::entityToModel);
     }
 
     @Override
-    public Optional<Y9System> findByName(String name) {
-        return y9SystemRepository.findByName(name);
+    public Optional<System> findByName(String name) {
+        return y9SystemRepository.findByName(name).map(Y9SystemServiceImpl::entityToModel);
     }
 
     @Override
-    public Y9System getById(String id) {
-        return y9SystemManager.getByIdFromCache(id);
+    public System getById(String id) {
+        return entityToModel(y9SystemManager.getByIdFromCache(id));
     }
 
     @Override
-    public Y9System getByName(String systemName) {
+    public System getByName(String systemName) {
         return y9SystemRepository.findByName(systemName)
+            .map(Y9SystemServiceImpl::entityToModel)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(SystemErrorCodeEnum.SYSTEM_NOT_FOUND, systemName));
     }
 
     @Override
-    public List<Y9System> listAll() {
-        return y9SystemRepository.findAll(Sort.by(Sort.Direction.ASC, "tabIndex"));
+    public List<System> listAll() {
+        List<Y9System> y9SystemList = y9SystemRepository.findAll(Sort.by(Sort.Direction.ASC, "tabIndex"));
+        return entityToModel(y9SystemList);
     }
 
     @Override
@@ -149,38 +153,30 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     }
 
     @Override
-    public List<Y9System> listByCnNameContaining(String cnName) {
-        return y9SystemRepository.findByCnNameContainingOrderByTabIndexAsc(cnName);
+    public List<System> listByContextPath(String contextPath) {
+        return entityToModel(y9SystemRepository.findByContextPath(contextPath));
     }
 
     @Override
-    public List<Y9System> listByContextPath(String contextPath) {
-        return y9SystemRepository.findByContextPath(contextPath);
+    public List<System> listByIds(List<String> systemIdList) {
+        return entityToModel(y9SystemRepository.findAllById(systemIdList));
     }
 
     @Override
-    public List<Y9System> listByIds(List<String> systemIdList) {
-        return y9SystemRepository.findAllById(systemIdList);
-    }
-
-    @Override
-    public List<Y9System> listByTenantId(String tenantId) {
-        return y9SystemRepository.findByTenantIdOrderByTabIndexAsc(tenantId);
-    }
-
-    @Override
-    public Page<Y9System> page(Y9PageQuery pageQuery) {
+    public Y9Page<System> page(Y9PageQuery pageQuery) {
         Pageable pageable =
             PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.ASC, "tabIndex"));
-        return y9SystemRepository.findAll(pageable);
+        Page<Y9System> y9SystemPage = y9SystemRepository.findAll(pageable);
+        return Y9Page.success(pageQuery.getPage(), y9SystemPage.getTotalPages(), y9SystemPage.getTotalElements(),
+            entityToModel(y9SystemPage.getContent()));
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9System saveAndRegister4Tenant(Y9System y9System) {
+    public System saveAndRegister4Tenant(System y9System) {
         if (Y9LoginUserHolder.getUserInfo().getManagerLevel().isTenantManager()) {
             y9System.setTenantId(Y9LoginUserHolder.getTenantId());
-            Y9System savedSystem = this.saveOrUpdate(y9System);
+            System savedSystem = this.saveOrUpdate(y9System);
             y9TenantSystemManager.saveTenantSystem(savedSystem.getId(), Y9LoginUserHolder.getTenantId());
             return savedSystem;
         } else {
@@ -194,7 +190,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     public void saveOrder(String[] systemIds) {
         if (systemIds.length > 0) {
             for (int i = 0, len = systemIds.length; i < len; i++) {
-                Y9System system = getById(systemIds[i]);
+                Y9System system = y9SystemManager.getById(systemIds[i]);
                 system.setTabIndex(i + 1);
                 y9SystemManager.update(system);
             }
@@ -203,14 +199,15 @@ public class Y9SystemServiceImpl implements Y9SystemService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9System saveOrUpdate(Y9System y9System) {
+    public System saveOrUpdate(System system) {
+        Y9System y9System = PlatformModelConvertUtil.convert(system, Y9System.class);
         Y9Assert.isTrue(isNameAvailable(y9System.getId(), y9System.getName()),
             SystemErrorCodeEnum.SYSTEM_WITH_SPECIFIC_NAME_EXISTS, y9System.getName());
 
         if (StringUtils.isNotBlank(y9System.getId())) {
             Optional<Y9System> y9SystemOptional = y9SystemManager.findById(y9System.getId());
             if (y9SystemOptional.isPresent()) {
-                Y9System originalSystem = Y9ModelConvertUtil.convert(y9SystemOptional.get(), Y9System.class);
+                Y9System originalSystem = PlatformModelConvertUtil.convert(y9SystemOptional.get(), Y9System.class);
                 Y9System savedSystem = y9SystemManager.update(y9System);
 
                 AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -223,13 +220,14 @@ public class Y9SystemServiceImpl implements Y9SystemService {
                     .build();
                 Y9Context.publishEvent(auditLogEvent);
 
-                return savedSystem;
+                return entityToModel(savedSystem);
             }
         }
 
         if (y9System.getTabIndex() == null) {
-            Integer maxIndex =
-                y9SystemRepository.findTopByOrderByTabIndexDesc().map(system -> system.getTabIndex() + 1).orElse(0);
+            Integer maxIndex = y9SystemRepository.findTopByOrderByTabIndexDesc()
+                .map(y9System2 -> y9System2.getTabIndex() + 1)
+                .orElse(0);
             y9System.setTabIndex(maxIndex);
         }
         Y9System savedSystem = y9SystemManager.insert(y9System);
@@ -243,7 +241,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedSystem;
+        return entityToModel(savedSystem);
     }
 
     private boolean isNameAvailable(String id, String name) {
@@ -253,6 +251,14 @@ public class Y9SystemServiceImpl implements Y9SystemService {
         }
         // 修改系统时的检查也为可用
         return y9SystemOptional.get().getId().equals(id);
+    }
+
+    private static System entityToModel(Y9System savedSystem) {
+        return PlatformModelConvertUtil.convert(savedSystem, System.class);
+    }
+
+    private List<System> entityToModel(List<Y9System> y9SystemList) {
+        return PlatformModelConvertUtil.convert(y9SystemList, System.class);
     }
 
 }

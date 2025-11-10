@@ -14,17 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.org.OrgUnitApi;
-import net.risesoft.entity.org.Y9OrgBase;
-import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.enums.platform.org.OrgTreeTypeEnum;
 import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.org.Organization;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9OrganizationService;
-import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
  * 实体服务组件
@@ -57,8 +53,8 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     public Y9Result<OrgUnit> getBureau(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        Y9OrgBase y9OrgBase = compositeOrgBaseService.findOrgUnitBureau(orgUnitId).orElse(null);
-        return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBase));
+
+        return Y9Result.success(compositeOrgBaseService.findOrgUnitBureau(orgUnitId).orElse(null));
     }
 
     /**
@@ -73,8 +69,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     public Y9Result<OrgUnit> getOrgUnit(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        Y9OrgBase y9OrgBase = compositeOrgBaseService.findOrgUnit(orgUnitId).orElse(null);
-        return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBase));
+        return Y9Result.success(compositeOrgBaseService.findOrgUnit(orgUnitId).orElse(null));
     }
 
     /**
@@ -89,8 +84,8 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     public Y9Result<OrgUnit> getOrgUnitDeletedById(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        Y9OrgBase y9OrgBase = compositeOrgBaseService.findOrgUnitDeleted(orgUnitId).orElse(null);
-        return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBase));
+
+        return Y9Result.success(compositeOrgBaseService.findOrgUnitDeleted(orgUnitId).orElse(null));
     }
 
     /**
@@ -105,8 +100,8 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     public Y9Result<OrgUnit> getOrgUnitPersonOrPosition(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        Y9OrgBase y9OrgBase = compositeOrgBaseService.findOrgUnitPersonOrPosition(orgUnitId).orElse(null);
-        return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBase));
+
+        return Y9Result.success(compositeOrgBaseService.findOrgUnitPersonOrPosition(orgUnitId).orElse(null));
     }
 
     /**
@@ -122,8 +117,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnitOrganization(orgUnitId);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9OrgBase, Organization.class));
+        return Y9Result.success(compositeOrgBaseService.getOrgUnitOrganization(orgUnitId));
     }
 
     /**
@@ -140,8 +134,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9OrgBase parent = compositeOrgBaseService.findOrgUnitParent(orgUnitId).orElse(null);
-        return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(parent));
+        return Y9Result.success(compositeOrgBaseService.findOrgUnitParent(orgUnitId).orElse(null));
     }
 
     /**
@@ -158,8 +151,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("treeType") OrgTreeTypeEnum treeType) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.getTree(orgUnitId, treeType, Boolean.FALSE);
-        return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList));
+        return Y9Result.success(compositeOrgBaseService.getTree(orgUnitId, treeType, Boolean.FALSE));
     }
 
     /**
@@ -173,8 +165,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     public Y9Result<List<Organization>> treeRoot(@RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Organization> y9OrganizationList = y9OrganizationService.list(Boolean.FALSE, Boolean.FALSE);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9OrganizationList, Organization.class));
+        return Y9Result.success(y9OrganizationService.list(Boolean.FALSE, Boolean.FALSE));
     }
 
     /**
@@ -191,8 +182,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("name") @NotBlank String name, @RequestParam("treeType") OrgTreeTypeEnum treeType) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.treeSearch(name, treeType, Boolean.FALSE);
-        return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList));
+        return Y9Result.success(compositeOrgBaseService.treeSearch(name, treeType, Boolean.FALSE));
     }
 
     /**
@@ -211,7 +201,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("dnName") @NotBlank String dnName) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.treeSearch(name, treeType, dnName, Boolean.FALSE);
-        return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList));
+        return Y9Result.success(compositeOrgBaseService.treeSearch(name, treeType, dnName, Boolean.FALSE));
     }
 }

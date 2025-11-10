@@ -16,10 +16,10 @@ import net.risesoft.enums.platform.ApiAccessControlType;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.ApiAccessControl;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9public.entity.resource.Y9ApiAccessControl;
 import net.risesoft.y9public.service.resource.Y9ApiAccessControlService;
 
 import cn.hutool.core.util.DesensitizedUtil;
@@ -46,20 +46,20 @@ public class ApiAccessControlController {
      * 根据类型列出访问控制列表
      *
      * @param type 访问控制类型
-     * @return {@code Y9Result<List<Y9ApiAccessControl>> }
+     * @return {@code Y9Result<List<ApiAccessControl>> }
      */
     @RiseLog(operationName = "根据类型列出访问控制列表", operationType = OperationTypeEnum.BROWSE)
     @GetMapping("/list")
-    public Y9Result<List<Y9ApiAccessControl>> list(ApiAccessControlType type) {
-        List<Y9ApiAccessControl> y9ApiAccessControlList = y9ApiAccessControlService.listByType(type);
+    public Y9Result<List<ApiAccessControl>> list(ApiAccessControlType type) {
+        List<ApiAccessControl> apiAccessControlList = y9ApiAccessControlService.listByType(type);
         if (ApiAccessControlType.APP_ID_SECRET.equals(type) && (ManagerLevelEnum.SYSTEM_MANAGER
             .equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())
             || ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel()))) {
-            for (Y9ApiAccessControl y9ApiAccessControl : y9ApiAccessControlList) {
-                y9ApiAccessControl.setValue(DesensitizedUtil.password(y9ApiAccessControl.getValue()));
+            for (ApiAccessControl apiAccessControl : apiAccessControlList) {
+                apiAccessControl.setValue(DesensitizedUtil.password(apiAccessControl.getValue()));
             }
         }
-        return Y9Result.success(y9ApiAccessControlList, "查询成功");
+        return Y9Result.success(apiAccessControlList, "查询成功");
     }
 
     /**
@@ -70,36 +70,34 @@ public class ApiAccessControlController {
      */
     @RiseLog(operationName = "保存或修改访问控制记录", operationType = OperationTypeEnum.MODIFY)
     @PostMapping("/saveOrUpdate")
-    public Y9Result<Y9ApiAccessControl> saveOrUpdate(@Validated Y9ApiAccessControl apiAccessControl) {
-        Y9ApiAccessControl y9ApiAccessControl = y9ApiAccessControlService.saveOrUpdate(apiAccessControl);
-        return Y9Result.success(y9ApiAccessControl, "操作成功");
+    public Y9Result<ApiAccessControl> saveOrUpdate(@Validated ApiAccessControl apiAccessControl) {
+        return Y9Result.success(y9ApiAccessControlService.saveOrUpdate(apiAccessControl), "操作成功");
     }
 
     /**
      * 保存 appId appSecret 对
      *
      * @param apiAccessControl 访问控制
-     * @return {@code Y9Result<Y9ApiAccessControl> }
+     * @return {@code Y9Result<ApiAccessControl> }
      */
     @RiseLog(operationName = "保存 appId appSecret 对", operationType = OperationTypeEnum.MODIFY)
     @PostMapping("/saveAppIdSecret")
-    public Y9Result<Y9ApiAccessControl> saveAppIdSecret(@Validated Y9ApiAccessControl apiAccessControl) {
-        Y9ApiAccessControl y9ApiAccessControl = y9ApiAccessControlService.saveAppIdSecret(apiAccessControl);
-        return Y9Result.success(y9ApiAccessControl, "操作成功");
+    public Y9Result<ApiAccessControl> saveAppIdSecret(@Validated ApiAccessControl apiAccessControl) {
+        return Y9Result.success(y9ApiAccessControlService.saveAppIdSecret(apiAccessControl), "操作成功");
     }
 
     /**
      * 修改启用状态
      *
      * @param id ID
-     * @return {@code Y9Result<Y9ApiAccessControl> }
+     * @return {@code Y9Result<ApiAccessControl> }
      */
     @IsAnyManager({ManagerLevelEnum.SECURITY_MANAGER, ManagerLevelEnum.OPERATION_SECURITY_MANAGER})
     @RiseLog(operationName = "修改启用状态", operationType = OperationTypeEnum.MODIFY)
     @PostMapping("/changeEnabled")
-    public Y9Result<Y9ApiAccessControl> changeEnabled(String id) {
-        Y9ApiAccessControl y9ApiAccessControl = y9ApiAccessControlService.changeEnabled(id);
-        return Y9Result.success(y9ApiAccessControl, "操作成功");
+    public Y9Result<ApiAccessControl> changeEnabled(String id) {
+        ApiAccessControl apiAccessControl = y9ApiAccessControlService.changeEnabled(id);
+        return Y9Result.success(apiAccessControl, "操作成功");
     }
 
     /**

@@ -1,6 +1,5 @@
 package net.risesoft.service.setting;
 
-import net.risesoft.entity.setting.Y9Setting;
 import net.risesoft.service.setting.impl.TenantSetting;
 
 /**
@@ -12,8 +11,6 @@ import net.risesoft.service.setting.impl.TenantSetting;
 public interface Y9SettingService {
 
     String get(String key);
-
-    Y9Setting saveOrUpdate(Y9Setting y9Setting);
 
     TenantSetting getTenantSetting();
 

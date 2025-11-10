@@ -77,7 +77,7 @@ public interface CompositeOrgBaseManager {
      * @param orgUnitId 组织节点id
      * @return {@code Optional<Y9OrgBase>}
      */
-    Optional<Y9OrgBase> findOrgUnitPersonOrPosition(String orgUnitId);
+    Optional<Y9OrgBase> findPersonOrPosition(String orgUnitId);
 
     Y9OrgBase getPersonOrPosition(String orgUnitId);
 

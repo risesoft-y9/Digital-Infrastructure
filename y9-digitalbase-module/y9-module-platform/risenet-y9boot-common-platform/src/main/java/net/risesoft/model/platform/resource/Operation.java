@@ -27,4 +27,12 @@ public class Operation extends Resource {
      * 展示方式
      */
     private OperationDisplayTypeEnum displayType;
+
+    /** 按钮事件 */
+    private String eventName;
+
+    // @Override
+    public String getAppId() {
+        return this.appId;
+    }
 }

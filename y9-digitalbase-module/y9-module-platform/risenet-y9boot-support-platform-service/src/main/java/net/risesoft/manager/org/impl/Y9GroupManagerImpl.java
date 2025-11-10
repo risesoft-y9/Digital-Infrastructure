@@ -2,6 +2,7 @@ package net.risesoft.manager.org.impl;
 
 import java.util.Optional;
 
+import net.risesoft.util.PlatformModelConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -29,7 +30,6 @@ import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 @Service
 @CacheConfig(cacheNames = CacheNameConsts.ORG_GROUP)
@@ -103,7 +103,7 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
     public Y9Group update(Y9Group group) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(group.getParentId());
         Y9Group currentGroup = this.getById(group.getId());
-        Y9Group originalGroup = Y9ModelConvertUtil.convert(currentGroup, Y9Group.class);
+        Y9Group originalGroup = PlatformModelConvertUtil.convert(currentGroup, Y9Group.class);
 
         Y9BeanUtil.copyProperties(group, currentGroup, "tenantId");
         currentGroup.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.GROUP, group.getName(), parent.getDn()));
@@ -119,7 +119,7 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
     public Y9Group updateTabIndex(String id, int tabIndex) {
         Y9Group group = this.getById(id);
 
-        Y9Group updatedGroup = Y9ModelConvertUtil.convert(group, Y9Group.class);
+        Y9Group updatedGroup = PlatformModelConvertUtil.convert(group, Y9Group.class);
         updatedGroup.setTabIndex(tabIndex);
         return this.update(updatedGroup);
     }

@@ -20,15 +20,16 @@ import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9GroupManager;
 import net.risesoft.manager.relation.Y9PersonsToGroupsManager;
+import net.risesoft.model.platform.org.Group;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.org.Y9GroupRepository;
 import net.risesoft.repository.relation.Y9PersonsToGroupsRepository;
 import net.risesoft.service.org.Y9GroupService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 
 /**
@@ -50,9 +51,9 @@ public class Y9GroupServiceImpl implements Y9GroupService {
 
     @Override
     @Transactional
-    public Y9Group changeDisabled(String id) {
-        Y9Group currentGroup = this.getById(id);
-        Y9Group originalGroup = Y9ModelConvertUtil.convert(currentGroup, Y9Group.class);
+    public Group changeDisabled(String id) {
+        Y9Group currentGroup = y9GroupManager.getById(id);
+        Y9Group originalGroup = PlatformModelConvertUtil.convert(currentGroup, Y9Group.class);
         boolean disableStatusToUpdate = !currentGroup.getDisabled();
 
         currentGroup.setDisabled(disableStatusToUpdate);
@@ -68,13 +69,13 @@ public class Y9GroupServiceImpl implements Y9GroupService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedGroup;
+        return PlatformModelConvertUtil.y9GroupToGroup(savedGroup);
     }
 
     @Override
     @Transactional
     public void delete(String groupId) {
-        Y9Group y9Group = this.getById(groupId);
+        Y9Group y9Group = y9GroupManager.getById(groupId);
 
         // 删除用户组关联数据
         y9PersonsToGroupsManager.deleteByGroupId(groupId);
@@ -93,58 +94,53 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     @Override
     @Transactional
     public void deleteByParentId(String parentId) {
-        List<Y9Group> groupList = listByParentId(parentId, null);
-        for (Y9Group group : groupList) {
+        List<Group> groupList = listByParentId(parentId, null);
+        for (Group group : groupList) {
             delete(group.getId());
         }
     }
 
     @Override
-    public boolean existsById(String id) {
-        return y9GroupRepository.existsById(id);
+    public Optional<Group> findById(String id) {
+        return y9GroupManager.findByIdFromCache(id).map(PlatformModelConvertUtil::y9GroupToGroup);
     }
 
     @Override
-    public Optional<Y9Group> findById(String id) {
-        return y9GroupManager.findByIdFromCache(id);
+    public Group getById(String id) {
+        return PlatformModelConvertUtil.y9GroupToGroup(y9GroupManager.getByIdFromCache(id));
     }
 
     @Override
-    public Y9Group getById(String id) {
-        return y9GroupManager.getByIdFromCache(id);
-    }
-
-    @Override
-    public List<Y9Group> listAll() {
-        return y9GroupRepository.findAll();
-    }
-
-    @Override
-    public List<Y9Group> listByDn(String dn, Boolean disabled) {
+    public List<Group> listByDn(String dn, Boolean disabled) {
+        List<Y9Group> y9GroupList;
         if (disabled == null) {
-            return y9GroupRepository.findByDn(dn);
+            y9GroupList = y9GroupRepository.findByDn(dn);
         } else {
-            return y9GroupRepository.findByDnAndDisabled(dn, disabled);
+            y9GroupList = y9GroupRepository.findByDnAndDisabled(dn, disabled);
         }
+        return PlatformModelConvertUtil.y9GroupToGroup(y9GroupList);
     }
 
     @Override
-    public List<Y9Group> listByNameLike(String name) {
-        return y9GroupRepository.findByNameContainingOrderByTabIndexAsc(name);
+    public List<Group> listByNameLike(String name) {
+        List<Y9Group> y9GroupList = y9GroupRepository.findByNameContainingOrderByTabIndexAsc(name);
+        return PlatformModelConvertUtil.y9GroupToGroup(y9GroupList);
     }
 
     @Override
-    public List<Y9Group> listByParentId(String parentId, Boolean disabled) {
+    public List<Group> listByParentId(String parentId, Boolean disabled) {
+        List<Y9Group> y9GroupList;
         if (disabled == null) {
-            return y9GroupRepository.findByParentIdOrderByTabIndexAsc(parentId);
+            y9GroupList = y9GroupRepository.findByParentIdOrderByTabIndexAsc(parentId);
         } else {
-            return y9GroupRepository.findByParentIdAndDisabledOrderByTabIndexAsc(parentId, disabled);
+            y9GroupList = y9GroupRepository.findByParentIdAndDisabledOrderByTabIndexAsc(parentId, disabled);
         }
+        return PlatformModelConvertUtil.y9GroupToGroup(y9GroupList);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Y9Group> listByPersonId(String personId, Boolean disabled) {
+    public List<Group> listByPersonId(String personId, Boolean disabled) {
         List<Y9PersonsToGroups> y9PersonsToGroupsList =
             y9PersonsToGroupsRepository.findByPersonIdOrderByGroupOrder(personId);
         List<Y9Group> groupList = new ArrayList<>();
@@ -157,15 +153,15 @@ public class Y9GroupServiceImpl implements Y9GroupService {
                 }
             }
         }
-        return groupList;
+        return PlatformModelConvertUtil.y9GroupToGroup(groupList);
     }
 
     @Override
     @Transactional
-    public Y9Group move(String id, String parentId) {
-        Y9Group currentGroup = this.getById(id);
+    public Group move(String id, String parentId) {
+        Y9Group currentGroup = y9GroupManager.getById(id);
         Y9OrgBase parentToMove = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
-        Y9Group originalGroup = Y9ModelConvertUtil.convert(currentGroup, Y9Group.class);
+        Y9Group originalGroup = PlatformModelConvertUtil.convert(currentGroup, Y9Group.class);
 
         currentGroup.setParentId(parentId);
         currentGroup.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parentId));
@@ -181,28 +177,29 @@ public class Y9GroupServiceImpl implements Y9GroupService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedGroup;
+        return PlatformModelConvertUtil.y9GroupToGroup(savedGroup);
     }
 
     @Override
     @Transactional
-    public List<Y9Group> saveOrder(List<String> groupIds) {
-        List<Y9Group> groupList = new ArrayList<>();
+    public List<Group> saveOrder(List<String> groupIds) {
+        List<Y9Group> y9GroupList = new ArrayList<>();
         int tabIndex = 0;
         for (String groupId : groupIds) {
-            groupList.add(y9GroupManager.updateTabIndex(groupId, tabIndex++));
+            y9GroupList.add(y9GroupManager.updateTabIndex(groupId, tabIndex++));
         }
-        return groupList;
+        return PlatformModelConvertUtil.y9GroupToGroup(y9GroupList);
     }
 
     @Override
     @Transactional
-    public Y9Group saveOrUpdate(Y9Group group) {
-        if (StringUtils.isNotBlank(group.getId())) {
-            Optional<Y9Group> groupOptional = y9GroupManager.findById(group.getId());
+    public Group saveOrUpdate(Group group) {
+        Y9Group y9Group = PlatformModelConvertUtil.convert(group, Y9Group.class);
+        if (StringUtils.isNotBlank(y9Group.getId())) {
+            Optional<Y9Group> groupOptional = y9GroupManager.findById(y9Group.getId());
             if (groupOptional.isPresent()) {
-                Y9Group originalGroup = Y9ModelConvertUtil.convert(groupOptional.get(), Y9Group.class);
-                Y9Group savedGroup = y9GroupManager.update(group);
+                Y9Group originalGroup = PlatformModelConvertUtil.convert(groupOptional.get(), Y9Group.class);
+                Y9Group savedGroup = y9GroupManager.update(y9Group);
 
                 AuditLogEvent auditLogEvent = AuditLogEvent.builder()
                     .action(AuditLogEnum.GROUP_UPDATE.getAction())
@@ -213,11 +210,11 @@ public class Y9GroupServiceImpl implements Y9GroupService {
                     .build();
                 Y9Context.publishEvent(auditLogEvent);
 
-                return savedGroup;
+                return PlatformModelConvertUtil.y9GroupToGroup(savedGroup);
             }
         }
 
-        Y9Group savedGroup = y9GroupManager.insert(group);
+        Y9Group savedGroup = y9GroupManager.insert(y9Group);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.GROUP_CREATE.getAction())
@@ -228,14 +225,14 @@ public class Y9GroupServiceImpl implements Y9GroupService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedGroup;
+        return PlatformModelConvertUtil.y9GroupToGroup(savedGroup);
     }
 
     @Override
     @Transactional
-    public Y9Group saveProperties(String id, String properties) {
-        Y9Group currentGroup = this.getById(id);
-        Y9Group originalGroup = Y9ModelConvertUtil.convert(currentGroup, Y9Group.class);
+    public Group saveProperties(String id, String properties) {
+        Y9Group currentGroup = y9GroupManager.getById(id);
+        Y9Group originalGroup = PlatformModelConvertUtil.convert(currentGroup, Y9Group.class);
 
         currentGroup.setProperties(properties);
         Y9Group savedGroup = y9GroupManager.update(currentGroup);
@@ -250,7 +247,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedGroup;
+        return PlatformModelConvertUtil.y9GroupToGroup(savedGroup);
     }
 
     @EventListener

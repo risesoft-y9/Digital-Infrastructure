@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.risesoft.entity.permission.cache.position.Y9PositionToResourceAndAuthority;
+import net.risesoft.entity.permission.cache.position.Y9PositionToResource;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 
@@ -23,8 +23,7 @@ import net.risesoft.enums.platform.resource.ResourceTypeEnum;
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
-public interface Y9PositionToResourceAndAuthorityRepository
-    extends JpaRepository<Y9PositionToResourceAndAuthority, String> {
+public interface Y9PositionToResourceAndAuthorityRepository extends JpaRepository<Y9PositionToResource, String> {
 
     @Modifying
     @Transactional(readOnly = false)
@@ -50,29 +49,29 @@ public interface Y9PositionToResourceAndAuthorityRepository
     @Transactional(readOnly = false)
     void deleteByResourceId(String resourceId);
 
-    List<Y9PositionToResourceAndAuthority> findByPositionId(String positionId);
+    List<Y9PositionToResource> findByPositionId(String positionId);
 
-    Page<Y9PositionToResourceAndAuthority> findByPositionId(String positionId, Pageable pageable);
+    Page<Y9PositionToResource> findByPositionId(String positionId, Pageable pageable);
 
-    List<Y9PositionToResourceAndAuthority> findByPositionIdAndAuthorityAndResourceType(String positionId,
-        AuthorityEnum authority, ResourceTypeEnum resourceType);
+    List<Y9PositionToResource> findByPositionIdAndAuthorityAndResourceType(String positionId, AuthorityEnum authority,
+        ResourceTypeEnum resourceType);
 
-    List<Y9PositionToResourceAndAuthority> findByPositionIdAndParentResourceIdAndAuthority(String positionId,
+    List<Y9PositionToResource> findByPositionIdAndParentResourceIdAndAuthority(String positionId,
         String parentResourceId, AuthorityEnum authority);
 
-    List<Y9PositionToResourceAndAuthority> findByPositionIdAndParentResourceIdAndAuthorityAndResourceType(
-        String positionId, String parentResourceId, AuthorityEnum authority, ResourceTypeEnum resourceType);
+    List<Y9PositionToResource> findByPositionIdAndParentResourceIdAndAuthorityAndResourceType(String positionId,
+        String parentResourceId, AuthorityEnum authority, ResourceTypeEnum resourceType);
 
-    List<Y9PositionToResourceAndAuthority> findByPositionIdAndParentResourceIdIsNullAndAuthority(String positionId,
+    List<Y9PositionToResource> findByPositionIdAndParentResourceIdIsNullAndAuthority(String positionId,
         AuthorityEnum authority);
 
-    List<Y9PositionToResourceAndAuthority> findByPositionIdAndResourceIdAndAuthority(String positionId,
-        String resourceId, AuthorityEnum authority);
+    List<Y9PositionToResource> findByPositionIdAndResourceIdAndAuthority(String positionId, String resourceId,
+        AuthorityEnum authority);
 
-    Optional<Y9PositionToResourceAndAuthority> findByPositionIdAndResourceIdAndAuthorizationIdAndAuthority(
-        String positionId, String resourceId, String authorizationId, AuthorityEnum authority);
+    Optional<Y9PositionToResource> findByPositionIdAndResourceIdAndAuthorizationIdAndAuthority(String positionId,
+        String resourceId, String authorizationId, AuthorityEnum authority);
 
-    @Query("select distinct p.resourceId from Y9PositionToResourceAndAuthority p where p.positionId = ?1 and p.authority = ?2 and p.resourceType = ?3")
+    @Query("select distinct p.resourceId from Y9PositionToResource p where p.positionId = ?1 and p.authority = ?2 and p.resourceType = ?3")
     Page<String> findResourceIdByPositionIdAndAuthorityAndResourceType(String positionId, AuthorityEnum authority,
         ResourceTypeEnum resourceTypeEnum, Pageable pageable);
 }

@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.model.platform.resource.System;
+import net.risesoft.model.platform.System;
 import net.risesoft.model.platform.tenant.Tenant;
 import net.risesoft.pojo.Y9Result;
 

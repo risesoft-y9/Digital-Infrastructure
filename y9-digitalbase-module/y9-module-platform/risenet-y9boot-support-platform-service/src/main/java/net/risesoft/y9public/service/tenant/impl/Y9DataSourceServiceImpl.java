@@ -2,6 +2,7 @@ package net.risesoft.y9public.service.tenant.impl;
 
 import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentMap;
@@ -18,10 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.common.collect.Maps;
 import com.zaxxer.hikari.HikariDataSource;
 
+import lombok.RequiredArgsConstructor;
+
 import net.risesoft.enums.platform.DataSourceTypeEnum;
 import net.risesoft.exception.DataSourceErrorCodeEnum;
+import net.risesoft.model.platform.tenant.DataSourceInfo;
+import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
-import net.risesoft.y9.exception.util.Y9ExceptionUtil;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.util.Y9Assert;
 import net.risesoft.y9.util.base64.Y9Base64Util;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
@@ -36,6 +41,7 @@ import net.risesoft.y9public.service.tenant.Y9DataSourceService;
  * @date 2022/2/10
  */
 @Service(value = "dataSourceService")
+@RequiredArgsConstructor
 public class Y9DataSourceServiceImpl implements Y9DataSourceService {
 
     private static final String DEFAULT_PASSWORD = "111111";
@@ -48,13 +54,6 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     // 数据库连接是宝贵资源，dataSourceMap中的HikariDataSource在什么地方关闭？资源内存泄露？
     private final ConcurrentMap<String, HikariDataSource> dataSourceMap = Maps.newConcurrentMap();
     private final ConcurrentMap<String, Y9DataSource> y9DataSourceMap = Maps.newConcurrentMap();
-
-    public Y9DataSourceServiceImpl(
-        Y9DataSourceRepository datasourceRepository,
-        Y9DataSourceManager y9DataSourceManager) {
-        this.datasourceRepository = datasourceRepository;
-        this.y9DataSourceManager = y9DataSourceManager;
-    }
 
     private static boolean isY9DataSourceModified(Y9DataSource cachedY9DataSource, Y9DataSource queriedY9DataSource) {
         boolean modified = false;
@@ -92,25 +91,27 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void changePassword(String id, String oldPassword, String newPassword) {
-        Y9DataSource y9DataSource = this.getById(id);
+        Y9DataSource y9DataSource = y9DataSourceManager.getById(id);
         // 校验旧密码是否正确
         Y9Assert.isTrue(Objects.equals(Y9Base64Util.encode(oldPassword), y9DataSource.getPassword()),
             DataSourceErrorCodeEnum.DATA_SOURCE_OLD_PASSWORD_IS_WRONG);
 
         y9DataSource.setPassword(Y9Base64Util.encode(newPassword));
-        this.save(y9DataSource);
+        y9DataSourceManager.save(y9DataSource);
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9DataSource createTenantDefaultDataSource(String dbName) {
-        return y9DataSourceManager.createTenantDefaultDataSource(dbName);
+    public DataSourceInfo createTenantDefaultDataSource(String dbName) {
+        Y9DataSource y9DataSource = y9DataSourceManager.createTenantDefaultDataSourceWithId(dbName, null);
+        return entityToModel(y9DataSource);
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9DataSource createTenantDefaultDataSource(String dbName, String id) {
-        return y9DataSourceManager.createTenantDefaultDataSourceWithId(dbName, id);
+    public DataSourceInfo createTenantDefaultDataSource(String dbName, String id) {
+        Y9DataSource y9DataSource = y9DataSourceManager.createTenantDefaultDataSourceWithId(dbName, id);
+        return entityToModel(y9DataSource);
     }
 
     @Override
@@ -126,25 +127,20 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     }
 
     @Override
-    public Optional<Y9DataSource> findById(String id) {
-        return datasourceRepository.findById(id);
+    public Optional<DataSourceInfo> findById(String id) {
+        return datasourceRepository.findById(id).map(this::entityToModel);
     }
 
     @Override
-    public Optional<Y9DataSource> findByJndiName(String jndiName) {
-        return datasourceRepository.findByJndiName(jndiName);
-    }
-
-    @Override
-    public Y9DataSource getById(String id) {
-        return datasourceRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(DataSourceErrorCodeEnum.DATA_SOURCE_NOT_FOUND, id));
+    public DataSourceInfo getById(String id) {
+        Y9DataSource y9DataSource = y9DataSourceManager.getById(id);
+        return entityToModel(y9DataSource);
     }
 
     @Override
     public HikariDataSource getDataSource(String id) {
         HikariDataSource dataSource = this.dataSourceMap.get(id);
-        Y9DataSource queriedY9DataSource = this.getById(id);
+        Y9DataSource queriedY9DataSource = y9DataSourceManager.getById(id);
         Y9DataSource cachedY9DataSource = y9DataSourceMap.get(id);
 
         if (isY9DataSourceModified(cachedY9DataSource, queriedY9DataSource)) {
@@ -171,27 +167,38 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     }
 
     @Override
-    public Page<Y9DataSource> page(Y9PageQuery pageQuery) {
+    public Y9Page<DataSourceInfo> page(Y9PageQuery pageQuery) {
         Pageable pageable = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize());
-        return datasourceRepository.findAll(pageable);
+        Page<Y9DataSource> y9DataSourcePage = datasourceRepository.findAll(pageable);
+        return Y9Page.success(pageQuery.getPage(), y9DataSourcePage.getTotalPages(),
+            y9DataSourcePage.getTotalElements(), entityToModel(y9DataSourcePage.getContent()));
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void resetDefaultPassword(String id) {
-        Y9DataSource y9DataSource = this.getById(id);
+        Y9DataSource y9DataSource = y9DataSourceManager.getById(id);
         // 数据源类型不能为 jndi 才能修改密码
         Y9Assert.isNotTrue(Objects.equals(y9DataSource.getType(), DataSourceTypeEnum.JNDI),
             DataSourceErrorCodeEnum.JNDI_DATA_SOURCE_RESET_PASSWORD_NOT_ALLOWED);
 
         y9DataSource.setPassword(DEFAULT_PASSWORD);
-        this.save(y9DataSource);
+        y9DataSourceManager.save(y9DataSource);
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9DataSource save(Y9DataSource y9DataSource) {
-        return y9DataSourceManager.save(y9DataSource);
+    public DataSourceInfo save(DataSourceInfo dataSourceInfo) {
+        Y9DataSource y9DataSource = PlatformModelConvertUtil.convert(dataSourceInfo, Y9DataSource.class);
+        return entityToModel(y9DataSourceManager.save(y9DataSource));
+    }
+
+    private List<DataSourceInfo> entityToModel(List<Y9DataSource> y9DataSourceList) {
+        return PlatformModelConvertUtil.convert(y9DataSourceList, DataSourceInfo.class);
+    }
+
+    private DataSourceInfo entityToModel(Y9DataSource y9DataSource) {
+        return PlatformModelConvertUtil.convert(y9DataSource, DataSourceInfo.class);
     }
 
 }

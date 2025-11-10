@@ -13,14 +13,14 @@ import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.model.platform.Role;
+import net.risesoft.model.platform.System;
+import net.risesoft.model.platform.resource.App;
+import net.risesoft.model.platform.tenant.DataSourceInfo;
+import net.risesoft.model.platform.tenant.Tenant;
+import net.risesoft.model.platform.tenant.TenantSystem;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
-import net.risesoft.y9public.entity.resource.Y9App;
-import net.risesoft.y9public.entity.resource.Y9System;
-import net.risesoft.y9public.entity.role.Y9Role;
-import net.risesoft.y9public.entity.tenant.Y9DataSource;
-import net.risesoft.y9public.entity.tenant.Y9Tenant;
-import net.risesoft.y9public.entity.tenant.Y9TenantSystem;
 import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.role.Y9RoleService;
@@ -55,29 +55,29 @@ public class PlatformApplicationReadyListener implements ApplicationListener<App
 
     private void createApp(String appId, String systemId) {
         if (!y9AppService.existsById(appId)) {
-            Y9App y9App = new Y9App();
-            y9App.setId(appId);
-            y9App.setSystemId(systemId);
-            y9App.setName("数据目录");
-            y9App.setAliasName("数据目录");
-            y9App.setEnabled(true);
-            y9App.setHidden(false);
-            y9App.setUrl(y9Properties.getCommon().getOrgBaseUrl());
-            y9App.setInherit(false);
-            y9App.setChecked(false);
-            y9App.setShowNumber(false);
-            y9AppService.saveOrUpdate(y9App);
+            App app = new App();
+            app.setId(appId);
+            app.setSystemId(systemId);
+            app.setName("数据目录");
+            app.setAliasName("数据目录");
+            app.setEnabled(true);
+            app.setHidden(false);
+            app.setUrl(y9Properties.getCommon().getOrgBaseUrl());
+            app.setInherit(false);
+            app.setChecked(false);
+            app.setShowNumber(false);
+            y9AppService.saveOrUpdate(app);
         }
     }
 
-    private Y9DataSource createDataSource(String dbName, String datasourceId) {
+    private DataSourceInfo createDataSource(String dbName, String datasourceId) {
         return y9DataSourceService.createTenantDefaultDataSource(dbName, datasourceId);
     }
 
     private void createPublicRoleTopNode() {
-        Optional<Y9Role> y9RoleOptional = y9RoleService.findById(InitDataConsts.TOP_PUBLIC_ROLE_ID);
-        if (y9RoleOptional.isEmpty()) {
-            Y9Role publicRole = new Y9Role();
+        Optional<Role> roleOptional = y9RoleService.findById(InitDataConsts.TOP_PUBLIC_ROLE_ID);
+        if (roleOptional.isEmpty()) {
+            Role publicRole = new Role();
             publicRole.setId(InitDataConsts.TOP_PUBLIC_ROLE_ID);
             publicRole.setName("公共角色列表");
             publicRole.setType(RoleTypeEnum.FOLDER);
@@ -88,31 +88,31 @@ public class PlatformApplicationReadyListener implements ApplicationListener<App
     }
 
     private void createSystem(String systemId) {
-        Optional<Y9System> y9SystemOptional = y9SystemService.findById(systemId);
-        if (y9SystemOptional.isEmpty()) {
-            Y9System y9System = new Y9System();
-            y9System.setId(systemId);
-            y9System.setContextPath(y9Properties.getContextPath());
-            y9System.setName(y9Properties.getSystemName());
-            y9System.setCnName(y9Properties.getSystemCnName());
-            y9System.setEnabled(true);
-            y9System.setAutoInit(true);
-            y9System.setTabIndex(10000);
-            y9SystemService.saveOrUpdate(y9System);
+        Optional<System> systemOptional = y9SystemService.findById(systemId);
+        if (systemOptional.isEmpty()) {
+            System system = new System();
+            system.setId(systemId);
+            system.setContextPath(y9Properties.getContextPath());
+            system.setName(y9Properties.getSystemName());
+            system.setCnName(y9Properties.getSystemCnName());
+            system.setEnabled(true);
+            system.setAutoInit(true);
+            system.setTabIndex(10000);
+            y9SystemService.saveOrUpdate(system);
         }
     }
 
     private void createTenant(String tenantId, String dataSourceId) {
-        Optional<Y9Tenant> y9TenantOptional = y9TenantService.findById(tenantId);
-        if (y9TenantOptional.isEmpty()) {
-            Y9Tenant y9Tenant = new Y9Tenant();
-            y9Tenant.setId(tenantId);
-            y9Tenant.setDefaultDataSourceId(dataSourceId);
-            y9Tenant.setShortName(y9PlatformProperties.getInitTenantName());
-            y9Tenant.setName(y9PlatformProperties.getInitTenantName());
-            y9Tenant.setEnabled(true);
-            y9Tenant.setTabIndex(10000);
-            y9TenantService.saveOrUpdate(y9Tenant);
+        Optional<Tenant> tenantOptional = y9TenantService.findById(tenantId);
+        if (tenantOptional.isEmpty()) {
+            Tenant tenant = new Tenant();
+            tenant.setId(tenantId);
+            tenant.setDefaultDataSourceId(dataSourceId);
+            tenant.setShortName(y9PlatformProperties.getInitTenantName());
+            tenant.setName(y9PlatformProperties.getInitTenantName());
+            tenant.setEnabled(true);
+            tenant.setTabIndex(10000);
+            y9TenantService.saveOrUpdate(tenant);
         }
     }
 
@@ -121,16 +121,16 @@ public class PlatformApplicationReadyListener implements ApplicationListener<App
     }
 
     private void createTenantSystem(String tenantId, String systemId, String dataSourceId) {
-        Optional<Y9TenantSystem> y9TenantSystemOptional =
+        Optional<TenantSystem> tenantSystemOptional =
             y9TenantSystemService.getByTenantIdAndSystemId(tenantId, systemId);
-        if (y9TenantSystemOptional.isEmpty()) {
-            Y9TenantSystem y9TenantSystem = new Y9TenantSystem();
-            y9TenantSystem.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-            y9TenantSystem.setTenantId(tenantId);
-            y9TenantSystem.setTenantDataSource(dataSourceId);
-            y9TenantSystem.setSystemId(systemId);
-            y9TenantSystem.setInitialized(false);
-            y9TenantSystemService.save(y9TenantSystem);
+        if (tenantSystemOptional.isEmpty()) {
+            TenantSystem tenantSystem = new TenantSystem();
+            tenantSystem.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+            tenantSystem.setTenantId(tenantId);
+            tenantSystem.setTenantDataSource(dataSourceId);
+            tenantSystem.setSystemId(systemId);
+            tenantSystem.setInitialized(false);
+            y9TenantSystemService.save(tenantSystem);
         }
     }
 

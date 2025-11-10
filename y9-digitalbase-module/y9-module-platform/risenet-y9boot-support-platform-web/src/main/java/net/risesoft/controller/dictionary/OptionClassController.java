@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.dictionary.Y9OptionClass;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.dictionary.OptionClass;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.dictionary.Y9OptionClassService;
@@ -39,20 +39,19 @@ public class OptionClassController {
     private final Y9OptionClassService y9OptionClassService;
 
     /**
-     * 获取字曲类型列表
+     * 获取字典类型列表
      *
-     * @return {@code Y9Result<List<Y9OptionClass>>}
+     * @return {@code Y9Result<List<OptionClass>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取字典类型列表")
     @RequestMapping(value = "/listOptionClass")
-    public Y9Result<List<Y9OptionClass>> listOptionClass() {
-        List<Y9OptionClass> list = y9OptionClassService.list();
-        return Y9Result.success(list, "获取字典类型列表成功");
+    public Y9Result<List<OptionClass>> listOptionClass() {
+        return Y9Result.success(y9OptionClassService.list(), "获取字典类型列表成功");
     }
 
     /**
-     * 根据type删除字典类型，以及该类型对应的数据列表， type
+     * 根据type删除字典类型，以及该类型对应的数据列表
      *
      * @param type 类型名称
      * @return {@code Y9Result<String>}
@@ -65,15 +64,14 @@ public class OptionClassController {
     }
 
     /**
-     * 保存新增字典类型
+     * 新增或修改字典类型
      *
      * @param optionClass 字典类型实体
-     * @return {@code Y9Result<Y9OptionClass>}
+     * @return {@code Y9Result<OptionClass>}
      */
-    @RiseLog(operationName = "新增字典类型", operationType = OperationTypeEnum.ADD)
+    @RiseLog(operationName = "新增或修改字典类型", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOptionClass")
-    public Y9Result<Y9OptionClass> saveOptionClass(@Validated Y9OptionClass optionClass) {
-        Y9OptionClass y9OptionClass = y9OptionClassService.saveOptionClass(optionClass);
-        return Y9Result.success(y9OptionClass, "新增字典类型成功");
+    public Y9Result<OptionClass> saveOptionClass(@Validated OptionClass optionClass) {
+        return Y9Result.success(y9OptionClassService.saveOptionClass(optionClass), "新增字典类型成功");
     }
 }

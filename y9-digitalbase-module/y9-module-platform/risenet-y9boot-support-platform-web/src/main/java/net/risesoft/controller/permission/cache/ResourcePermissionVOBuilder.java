@@ -13,15 +13,15 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.org.Y9OrgBase;
-import net.risesoft.entity.permission.Y9Authorization;
-import net.risesoft.entity.permission.cache.Y9IdentityToResourceAndAuthorityBase;
 import net.risesoft.enums.platform.permission.AuthorizationPrincipalTypeEnum;
+import net.risesoft.model.platform.Role;
+import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.permission.Authorization;
+import net.risesoft.model.platform.permission.cache.IdentityToResourceBase;
+import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.permission.Y9AuthorizationService;
 import net.risesoft.vo.permission.ResourcePermissionVO;
-import net.risesoft.y9public.entity.resource.Y9ResourceBase;
-import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.resource.CompositeResourceService;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.role.Y9RoleService;
@@ -44,27 +44,27 @@ public class ResourcePermissionVOBuilder {
     private final Y9RoleService y9RoleService;
     private final Y9SystemService y9SystemService;
 
-    private List<ResourcePermissionVO.PermissionDetail> buildDetail(Y9ResourceBase y9ResourceBase,
-        List<Y9IdentityToResourceAndAuthorityBase> permissionList) {
+    private List<ResourcePermissionVO.PermissionDetail> buildDetail(Resource resource,
+        List<IdentityToResourceBase> permissionList) {
         return permissionList.stream()
-            .filter(permission -> permission.getResourceId().equals(y9ResourceBase.getId()))
+            .filter(permission -> permission.getResourceId().equals(resource.getId()))
             .map(permission -> {
                 ResourcePermissionVO.PermissionDetail detail = new ResourcePermissionVO.PermissionDetail();
                 detail.setAuthority(permission.getAuthority());
                 detail.setInherit(permission.getInherit());
-                Optional<Y9Authorization> y9AuthorizationOptional =
+                Optional<Authorization> authorizationOptional =
                     y9AuthorizationService.findById(permission.getAuthorizationId());
-                if (y9AuthorizationOptional.isPresent()) {
-                    Y9Authorization y9Authorization = y9AuthorizationOptional.get();
-                    detail.setPrincipalType(y9Authorization.getPrincipalType());
-                    if (AuthorizationPrincipalTypeEnum.ROLE.equals(y9Authorization.getPrincipalType())) {
-                        y9RoleService.findById(y9Authorization.getPrincipalId())
-                            .map(Y9Role::getName)
+                if (authorizationOptional.isPresent()) {
+                    Authorization authorization = authorizationOptional.get();
+                    detail.setPrincipalType(authorization.getPrincipalType());
+                    if (AuthorizationPrincipalTypeEnum.ROLE.equals(authorization.getPrincipalType())) {
+                        y9RoleService.findById(authorization.getPrincipalId())
+                            .map(Role::getName)
                             .ifPresent(detail::setPrincipalName);
                     } else {
-                        Optional<Y9OrgBase> y9OrgBaseOptional =
-                            compositeOrgBaseService.findOrgUnit(y9Authorization.getPrincipalId());
-                        y9OrgBaseOptional.map(Y9OrgBase::getName).ifPresent(detail::setPrincipalName);
+                        Optional<OrgUnit> orgUnitOptional =
+                            compositeOrgBaseService.findOrgUnit(authorization.getPrincipalId());
+                        orgUnitOptional.map(OrgUnit::getName).ifPresent(detail::setPrincipalName);
                     }
                 }
                 return detail;
@@ -72,77 +72,71 @@ public class ResourcePermissionVOBuilder {
             .collect(Collectors.toList());
     }
 
-    private ResourcePermissionVO buildPermissionVO(String systemId,
-        List<Y9IdentityToResourceAndAuthorityBase> permissionList) {
+    private ResourcePermissionVO buildPermissionVO(String systemId, List<IdentityToResourceBase> permissionList) {
         ResourcePermissionVO permissionVO = new ResourcePermissionVO();
         permissionVO.setSystemCnName(y9SystemService.getById(systemId).getCnName());
         permissionVO.setResourceList(buildResourceList(permissionList));
         return permissionVO;
     }
 
-    private void buildResourceList(List<Y9ResourceBase> y9ResourceBaseList, int level,
-        List<Y9IdentityToResourceAndAuthorityBase> permissionList, Set<Y9ResourceBase> allResourceBaseList,
-        List<ResourcePermissionVO.Resource> resourceList) {
+    private void buildResourceList(List<Resource> resourceList, int level, List<IdentityToResourceBase> permissionList,
+        Set<Resource> allResourceBaseList, List<ResourcePermissionVO.Resource> permittedResourceList) {
         level++;
-        for (Y9ResourceBase y9ResourceBase : y9ResourceBaseList) {
-            ResourcePermissionVO.Resource resource = new ResourcePermissionVO.Resource();
-            resource.setResourceName(y9ResourceBase.getName());
-            resource.setLevel(level);
-            resource.setResourceType(y9ResourceBase.getResourceType());
-            resource.setPermissionDetailList(buildDetail(y9ResourceBase, permissionList));
-            resource.setEnabled(y9ResourceBase.getEnabled());
-            resourceList.add(resource);
-            List<Y9ResourceBase> subResourceBaseList = allResourceBaseList.stream()
-                .filter(r -> y9ResourceBase.getId().equals(r.getParentId()))
+        for (Resource resource : resourceList) {
+            ResourcePermissionVO.Resource permittedResource = new ResourcePermissionVO.Resource();
+            permittedResource.setResourceName(resource.getName());
+            permittedResource.setLevel(level);
+            permittedResource.setResourceType(resource.getResourceType());
+            permittedResource.setPermissionDetailList(buildDetail(resource, permissionList));
+            permittedResource.setEnabled(resource.getEnabled());
+            permittedResourceList.add(permittedResource);
+            List<Resource> subResourceBaseList = allResourceBaseList.stream()
+                .filter(r -> resource.getId().equals(r.getParentId()))
                 .sorted()
                 .collect(Collectors.toList());
-            buildResourceList(subResourceBaseList, level, permissionList, allResourceBaseList, resourceList);
+            buildResourceList(subResourceBaseList, level, permissionList, allResourceBaseList, permittedResourceList);
         }
     }
 
-    private List<ResourcePermissionVO.Resource>
-        buildResourceList(List<Y9IdentityToResourceAndAuthorityBase> permissionList) {
+    private List<ResourcePermissionVO.Resource> buildResourceList(List<IdentityToResourceBase> permissionList) {
         // 根据人员权限记录递归获取所有相关的资源
-        Set<Y9ResourceBase> y9ResourceBaseList = getResourcesWithHierarchy(permissionList);
-        Set<String> idSet = y9ResourceBaseList.stream().map(Y9ResourceBase::getId).collect(Collectors.toSet());
-        List<Y9ResourceBase> topResourceList = y9ResourceBaseList.stream()
+        Set<Resource> resourceSet = getResourcesWithHierarchy(permissionList);
+        Set<String> idSet = resourceSet.stream().map(Resource::getId).collect(Collectors.toSet());
+        List<Resource> topResourceList = resourceSet.stream()
             .filter(r -> (r.getParentId() == null || !idSet.contains(r.getParentId())))
             .sorted()
             .collect(Collectors.toList());
 
-        List<ResourcePermissionVO.Resource> resourceList = new ArrayList<>();
-        buildResourceList(topResourceList, -1, permissionList, y9ResourceBaseList, resourceList);
-        return resourceList;
+        List<ResourcePermissionVO.Resource> permittedResourceList = new ArrayList<>();
+        buildResourceList(topResourceList, -1, permissionList, resourceSet, permittedResourceList);
+        return permittedResourceList;
     }
 
-    public List<ResourcePermissionVO>
-        buildResourcePermissionVOList(List<Y9IdentityToResourceAndAuthorityBase> y9PersonToResourceAndAuthorityList) {
+    public List<ResourcePermissionVO> buildResourcePermissionVOList(List<IdentityToResourceBase> permissionList) {
         List<ResourcePermissionVO> permissionVOList = new ArrayList<>();
         // 按系统分组
-        Map<String, List<Y9IdentityToResourceAndAuthorityBase>> systemIdPermissionListMap =
-            y9PersonToResourceAndAuthorityList.stream()
-                .collect(Collectors.groupingBy(Y9IdentityToResourceAndAuthorityBase::getSystemId));
-        for (Map.Entry<String, List<Y9IdentityToResourceAndAuthorityBase>> entry : systemIdPermissionListMap
-            .entrySet()) {
+        Map<String, List<IdentityToResourceBase>> systemIdPermissionListMap =
+            permissionList.stream().collect(Collectors.groupingBy(IdentityToResourceBase::getSystemId));
+        for (Map.Entry<String, List<IdentityToResourceBase>> entry : systemIdPermissionListMap.entrySet()) {
             permissionVOList.add(buildPermissionVO(entry.getKey(), entry.getValue()));
         }
         return permissionVOList;
     }
 
-    private Set<Y9ResourceBase> getResourcesWithHierarchy(List<Y9IdentityToResourceAndAuthorityBase> permissionList) {
-        Set<Y9ResourceBase> y9ResourceBaseSet = new HashSet<>();
-        for (Y9IdentityToResourceAndAuthorityBase y9PersonToResourceAndAuthority : permissionList) {
-            recursivelyGetResource(y9PersonToResourceAndAuthority.getResourceId(), y9ResourceBaseSet);
+    private Set<Resource> getResourcesWithHierarchy(List<IdentityToResourceBase> permissionList) {
+        Set<Resource> resourceSet = new HashSet<>();
+        for (IdentityToResourceBase identityToResourceBase : permissionList) {
+            recursivelyGetResource(identityToResourceBase.getResourceId(), resourceSet);
         }
-        return y9ResourceBaseSet;
+        return resourceSet;
     }
 
-    private void recursivelyGetResource(String resourceId, Set<Y9ResourceBase> y9ResourceBaseSet) {
+    private void recursivelyGetResource(String resourceId, Set<Resource> resourceSet) {
         if (StringUtils.isNotBlank(resourceId)) {
-            Y9ResourceBase y9ResourceBase = compositeResourceService.findById(resourceId);
-            if (y9ResourceBase != null) {
-                y9ResourceBaseSet.add(y9ResourceBase);
-                recursivelyGetResource(y9ResourceBase.getParentId(), y9ResourceBaseSet);
+            Resource resource = compositeResourceService.findById(resourceId);
+            if (resource != null) {
+                resourceSet.add(resource);
+                recursivelyGetResource(resource.getParentId(), resourceSet);
             }
         }
     }

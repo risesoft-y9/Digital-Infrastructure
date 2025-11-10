@@ -6,14 +6,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
@@ -56,7 +52,6 @@ public class Y9Manager extends Y9OrgBase {
     /**
      * 电子邮件
      */
-    @Email
     @Column(name = "EMAIL", length = 255)
     @Comment("电子邮箱")
     private String email;
@@ -64,7 +59,6 @@ public class Y9Manager extends Y9OrgBase {
     /**
      * 登录名
      */
-    @NotBlank
     @Column(name = "LOGIN_NAME", length = 255, nullable = false)
     @Comment("登录名")
     private String loginName;
@@ -123,7 +117,6 @@ public class Y9Manager extends Y9OrgBase {
     /**
      * 修改密码时间
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Comment("上一次密码修改时间")
     @Column(name = "LAST_MODIFY_PASSWORD_TIME")
     private Date lastModifyPasswordTime;
@@ -131,7 +124,6 @@ public class Y9Manager extends Y9OrgBase {
     /**
      * 上一次审查时间
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Comment(value = "上一次审查时间")
     @Column(name = "LAST_REVIEW_LOG_TIME")
     private Date lastReviewLogTime;

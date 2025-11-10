@@ -5,7 +5,6 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
@@ -48,7 +47,6 @@ public class Y9DataSource extends BaseEntity {
     private DataSourceTypeEnum type;
 
     /** 数据源名称 */
-    @NotBlank
     @Column(name = "JNDI_NAME", length = 100, nullable = false)
     @Comment("数据源名称")
     private String jndiName;

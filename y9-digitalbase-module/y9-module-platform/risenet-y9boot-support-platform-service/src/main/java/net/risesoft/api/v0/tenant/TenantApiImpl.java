@@ -15,8 +15,6 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.v0.tenant.TenantApi;
 import net.risesoft.model.platform.tenant.Tenant;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
-import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
 
 /**
@@ -47,8 +45,7 @@ public class TenantApiImpl implements TenantApi {
      */
     @Override
     public Tenant findByName(@RequestParam("tenantName") @NotBlank String tenantName) {
-        Y9Tenant y9Tenant = y9TenantService.findByTenantName(tenantName).orElse(null);
-        return Y9ModelConvertUtil.convert(y9Tenant, Tenant.class);
+        return y9TenantService.findByTenantName(tenantName).orElse(null);
     }
 
     /**
@@ -60,8 +57,7 @@ public class TenantApiImpl implements TenantApi {
      */
     @Override
     public Tenant findByShortName(@RequestParam("shortName") @NotBlank String shortName) {
-        Y9Tenant y9Tenant = y9TenantService.findByShortName(shortName).orElse(null);
-        return Y9ModelConvertUtil.convert(y9Tenant, Tenant.class);
+        return y9TenantService.findByShortName(shortName).orElse(null);
     }
 
     /**
@@ -73,8 +69,7 @@ public class TenantApiImpl implements TenantApi {
      */
     @Override
     public Tenant getById(@RequestParam("tenantId") @NotBlank String tenantId) {
-        Y9Tenant y9Tenant = y9TenantService.getById(tenantId);
-        return Y9ModelConvertUtil.convert(y9Tenant, Tenant.class);
+        return y9TenantService.getById(tenantId);
     }
 
     /**
@@ -85,8 +80,7 @@ public class TenantApiImpl implements TenantApi {
      */
     @Override
     public List<Tenant> listAllTenants() {
-        List<Y9Tenant> tenantEntityList = y9TenantService.listAll();
-        return Y9ModelConvertUtil.convert(tenantEntityList, Tenant.class);
+        return y9TenantService.listAll();
     }
 
     /**
@@ -97,8 +91,7 @@ public class TenantApiImpl implements TenantApi {
      */
     @Override
     public List<Tenant> listByTenantType() {
-        List<Y9Tenant> y9TenantList = y9TenantService.listAll();
-        return Y9ModelConvertUtil.convert(y9TenantList, Tenant.class);
+        return y9TenantService.listAll();
     }
 
 }

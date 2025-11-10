@@ -3,9 +3,9 @@ package net.risesoft.service.org;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.entity.org.Y9Job;
-import net.risesoft.entity.org.Y9Position;
-import net.risesoft.entity.relation.Y9PersonsToPositions;
+import net.risesoft.model.platform.org.Job;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.Position;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
@@ -20,10 +20,10 @@ public interface Y9PositionService {
      * 生成岗位名
      *
      * @param y9Job 职位
-     * @param personsToPositionsList 人员和岗位对应列表
+     * @param personList 人员和岗位对应列表
      * @return String
      */
-    String buildName(Y9Job y9Job, List<Y9PersonsToPositions> personsToPositionsList);
+    String buildName(Job y9Job, List<Person> personList);
 
     /**
      * 更改禁用状态
@@ -31,7 +31,7 @@ public interface Y9PositionService {
      * @param id ID
      * @return 岗位实体
      */
-    Y9Position changeDisabled(String id);
+    Position changeDisabled(String id);
 
     /**
      * 创建岗位
@@ -40,7 +40,7 @@ public interface Y9PositionService {
      * @param jobId 职位id
      * @return 岗位实体
      */
-    Y9Position create(String parentId, String jobId);
+    Position create(String parentId, String jobId);
 
     /**
      * 根据id数组删除岗位
@@ -64,28 +64,20 @@ public interface Y9PositionService {
     void deleteByParentId(String parentId);
 
     /**
-     * 根据id判断岗位是否存在
-     *
-     * @param id 唯一标识
-     * @return boolean
-     */
-    boolean existsById(String id);
-
-    /**
      * 根据id查找岗位
      *
      * @param id 唯一标识
-     * @return {@code Optional<Y9Position>} 岗位对象 或 null
+     * @return {@code Optional<Position>} 岗位对象 或 null
      */
-    Optional<Y9Position> findById(String id);
+    Optional<Position> findById(String id);
 
     /**
      * 根据职位id查找岗位
      *
      * @param jobId 职位id
-     * @return {@code List<Y9Position>}
+     * @return {@code List<Position>}
      */
-    List<Y9Position> findByJobId(String jobId);
+    List<Position> findByJobId(String jobId);
 
     /**
      * 查找 guidPath 包含传入参数的对应岗的 id
@@ -99,10 +91,10 @@ public interface Y9PositionService {
      * 根据主键id获取岗位实例
      *
      * @param id 唯一标识
-     * @return {@link Y9Position} 岗位对象
+     * @return {@link Position} 岗位对象
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
-    Y9Position getById(String id);
+    Position getById(String id);
 
     /**
      * 查询某人是否有某岗位
@@ -116,109 +108,68 @@ public interface Y9PositionService {
     /**
      * 获取所有岗位
      *
-     * @return {@code List<Y9Position>}
+     * @return {@code List<Position>}
      */
-    List<Y9Position> listAll();
-
-    /**
-     * 根据dn查询岗位
-     *
-     * @param dn dn
-     * @return {@code List<Y9Position>}
-     */
-    List<Y9Position> listByDn(String dn);
-
-    /**
-     * 根据名称查询
-     *
-     * @param name 岗位名
-     * @return {@code List<Y9Position>}
-     */
-    List<Y9Position> listByNameLike(String name);
-
-    /**
-     * 根据名称查询
-     *
-     * @param name 岗位名
-     * @param dn dn
-     * @return {@code List<Y9Position>}
-     */
-    List<Y9Position> listByNameLikeAndDn(String name, String dn);
+    List<Position> listAll();
 
     /**
      * 根据父节点id,获取本层级的岗位列表
      *
      * @param parentId 父节点id
      * @param disabled 是否包含禁用的岗位
-     * @return {@code List<Y9Position>}
+     * @return {@code List<Position>}
      */
-    List<Y9Position> listByParentId(String parentId, Boolean disabled);
+    List<Position> listByParentId(String parentId, Boolean disabled);
 
     /**
      * 根据人员id,获取本层级的岗位列
      *
      * @param personId 人员id
      * @param disabled 是否包含禁用的岗位
-     * @return {@code List<Y9Position>}
+     * @return {@code List<Position>}
      */
-    List<Y9Position> listByPersonId(String personId, Boolean disabled);
+    List<Position> listByPersonId(String personId, Boolean disabled);
 
     /**
      * 移动
      *
      * @param id 岗位id
      * @param parentId 父节点id
-     * @return {@link Y9Position}
+     * @return {@link Position}
      */
-    Y9Position move(String id, String parentId);
+    Position move(String id, String parentId);
 
     /**
      * 保存岗位
      *
      * @param position 岗位
-     * @return {@link Y9Position}
+     * @return {@link Position}
      */
-    Y9Position save(Y9Position position);
+    Position save(Position position);
 
     /**
      * 保存或者修改此岗位的信息
      *
      * @param position 岗位对象
-     * @return {@link Y9Position}
+     * @return {@link Position}
      */
-    Y9Position saveOrUpdate(Y9Position position);
+    Position saveOrUpdate(Position position);
 
     /**
      * 保存新的序号
      *
      * @param positionIds 岗位id数组
-     * @return {@code List<Y9Position>}
+     * @return {@code List<Position>}
      */
-    List<Y9Position> saveOrder(List<String> positionIds);
+    List<Position> saveOrder(List<String> positionIds);
 
     /**
      * 保存或者更新岗位扩展信息
      *
      * @param id 岗位id
      * @param properties 扩展属性
-     * @return {@link Y9Position}
+     * @return {@link Position}
      */
-    Y9Position saveProperties(String id, String properties);
+    Position saveProperties(String id, String properties);
 
-    /**
-     * 针对岗位树，根据岗位名字查找
-     *
-     * @param name 岗位名
-     * @return {@code List<Y9Position>}
-     */
-    List<Y9Position> treeSearch(String name);
-
-    /**
-     * 更新排序序列号
-     *
-     * @param id 唯一标识
-     * @param tabIndex 排序序列号
-     * @return {@link Y9Position}
-     */
-    Y9Position updateTabIndex(String id, int tabIndex);
 }

@@ -3,6 +3,7 @@ package net.risesoft.service.dictionary.impl;
 import java.util.List;
 import java.util.Optional;
 
+import net.risesoft.util.PlatformModelConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,13 +15,13 @@ import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.DictionaryErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.dictionary.Y9OptionValueManager;
+import net.risesoft.model.platform.dictionary.OptionValue;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.dictionary.Y9OptionValueRepository;
 import net.risesoft.service.dictionary.Y9OptionValueService;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 
 /**
@@ -38,8 +39,9 @@ public class Y9OptionValueServiceImpl implements Y9OptionValueService {
 
     @Override
     @Transactional
-    public Y9OptionValue create(String code, String name, String type) {
-        return y9OptionValueManager.create(code, name, type);
+    public OptionValue create(String code, String name, String type) {
+        Y9OptionValue y9OptionValue = y9OptionValueManager.create(code, name, type);
+        return entityToModel(y9OptionValue);
     }
 
     @Override
@@ -68,18 +70,20 @@ public class Y9OptionValueServiceImpl implements Y9OptionValueService {
     }
 
     @Override
-    public List<Y9OptionValue> listByType(String type) {
-        return y9OptionValueRepository.findByType(type);
+    public List<OptionValue> listByType(String type) {
+        List<Y9OptionValue> y9OptionValueList = y9OptionValueRepository.findByType(type);
+        return entityToModel(y9OptionValueList);
     }
 
     @Override
     @Transactional
-    public Y9OptionValue saveOptionValue(Y9OptionValue optionValue) {
+    public OptionValue saveOptionValue(OptionValue optionValue) {
         if (StringUtils.isNotBlank(optionValue.getId())) {
             Optional<Y9OptionValue> y9OptionValueOptional = y9OptionValueRepository.findById(optionValue.getId());
             if (y9OptionValueOptional.isPresent()) {
                 Y9OptionValue currentOptionValue = y9OptionValueOptional.get();
-                Y9OptionValue originalOptionValue = Y9ModelConvertUtil.convert(currentOptionValue, Y9OptionValue.class);
+                Y9OptionValue originalOptionValue =
+                    PlatformModelConvertUtil.convert(currentOptionValue, Y9OptionValue.class);
 
                 Y9BeanUtil.copyProperties(optionValue, currentOptionValue);
                 Y9OptionValue savedOptionValue = y9OptionValueRepository.save(currentOptionValue);
@@ -94,14 +98,15 @@ public class Y9OptionValueServiceImpl implements Y9OptionValueService {
                     .build();
                 Y9Context.publishEvent(auditLogEvent);
 
-                return savedOptionValue;
+                return entityToModel(savedOptionValue);
             }
         } else {
             optionValue.setId(Y9IdGenerator.genId());
         }
 
         optionValue.setTabIndex(this.getNextTabIndex(optionValue));
-        Y9OptionValue savedOptionValue = y9OptionValueRepository.save(optionValue);
+        Y9OptionValue newOptionValue = modelToEntity(optionValue);
+        Y9OptionValue savedOptionValue = y9OptionValueRepository.save(newOptionValue);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.DICTIONARY_VALUE_CREATE.getAction())
@@ -113,11 +118,23 @@ public class Y9OptionValueServiceImpl implements Y9OptionValueService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedOptionValue;
+        return entityToModel(savedOptionValue);
     }
 
-    private Integer getNextTabIndex(Y9OptionValue optionValue) {
+    private Integer getNextTabIndex(OptionValue optionValue) {
         Integer maxTabIndex = y9OptionValueManager.getMaxTabIndexByType(optionValue.getType());
         return maxTabIndex == null ? 0 : maxTabIndex + 1;
+    }
+
+    private static List<OptionValue> entityToModel(List<Y9OptionValue> y9OptionValueList) {
+        return PlatformModelConvertUtil.convert(y9OptionValueList, OptionValue.class);
+    }
+
+    private static OptionValue entityToModel(Y9OptionValue y9OptionValue) {
+        return PlatformModelConvertUtil.convert(y9OptionValue, OptionValue.class);
+    }
+
+    private static Y9OptionValue modelToEntity(OptionValue optionValue) {
+        return PlatformModelConvertUtil.convert(optionValue, Y9OptionValue.class);
     }
 }

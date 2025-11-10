@@ -3,6 +3,7 @@ package net.risesoft.service.dictionary.impl;
 import java.util.List;
 import java.util.Optional;
 
+import net.risesoft.util.PlatformModelConvertUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,13 +13,13 @@ import net.risesoft.entity.dictionary.Y9OptionClass;
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.DictionaryErrorCodeEnum;
 import net.risesoft.manager.dictionary.Y9OptionValueManager;
+import net.risesoft.model.platform.dictionary.OptionClass;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.dictionary.Y9OptionClassRepository;
 import net.risesoft.service.dictionary.Y9OptionClassService;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 
 /**
@@ -60,8 +61,8 @@ public class Y9OptionClassServiceImpl implements Y9OptionClassService {
     }
 
     @Override
-    public Optional<Y9OptionClass> findByType(String type) {
-        return y9OptionClassRepository.findById(type);
+    public Optional<OptionClass> findByType(String type) {
+        return y9OptionClassRepository.findById(type).map(Y9OptionClassServiceImpl::entityToModel);
     }
 
     @Override
@@ -72,17 +73,19 @@ public class Y9OptionClassServiceImpl implements Y9OptionClassService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Y9OptionClass> list() {
-        return y9OptionClassRepository.findAll();
+    public List<OptionClass> list() {
+        List<Y9OptionClass> y9OptionClassList = y9OptionClassRepository.findAll();
+        return entityToModel(y9OptionClassList);
     }
 
     @Override
     @Transactional
-    public Y9OptionClass saveOptionClass(Y9OptionClass optionClass) {
+    public OptionClass saveOptionClass(OptionClass optionClass) {
         Optional<Y9OptionClass> y9OptionClassOptional = y9OptionClassRepository.findById(optionClass.getType());
         if (y9OptionClassOptional.isPresent()) {
             Y9OptionClass currentOptionClass = y9OptionClassOptional.get();
-            Y9OptionClass originalOptionClass = Y9ModelConvertUtil.convert(currentOptionClass, Y9OptionClass.class);
+            Y9OptionClass originalOptionClass =
+                PlatformModelConvertUtil.convert(currentOptionClass, Y9OptionClass.class);
             Y9BeanUtil.copyProperties(optionClass, currentOptionClass);
 
             Y9OptionClass savedOptionClass = y9OptionClassRepository.save(currentOptionClass);
@@ -97,10 +100,11 @@ public class Y9OptionClassServiceImpl implements Y9OptionClassService {
                 .build();
             Y9Context.publishEvent(auditLogEvent);
 
-            return savedOptionClass;
+            return entityToModel(savedOptionClass);
         }
 
-        Y9OptionClass savedOptionClass = y9OptionClassRepository.save(optionClass);
+        Y9OptionClass newOptionClass = PlatformModelConvertUtil.convert(optionClass, Y9OptionClass.class);
+        Y9OptionClass savedOptionClass = y9OptionClassRepository.save(newOptionClass);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.DICTIONARY_TYPE_CREATE.getAction())
@@ -112,6 +116,14 @@ public class Y9OptionClassServiceImpl implements Y9OptionClassService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedOptionClass;
+        return entityToModel(savedOptionClass);
+    }
+
+    private static OptionClass entityToModel(Y9OptionClass y9OptionClass) {
+        return PlatformModelConvertUtil.convert(y9OptionClass, OptionClass.class);
+    }
+
+    private static List<OptionClass> entityToModel(List<Y9OptionClass> y9OptionClassList) {
+        return PlatformModelConvertUtil.convert(y9OptionClassList, OptionClass.class);
     }
 }

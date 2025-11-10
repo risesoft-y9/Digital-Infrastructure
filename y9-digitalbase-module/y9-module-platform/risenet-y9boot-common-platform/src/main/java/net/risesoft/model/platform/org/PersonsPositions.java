@@ -1,11 +1,13 @@
 package net.risesoft.model.platform.org;
 
-import java.io.Serializable;
+import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
 
+import net.risesoft.model.BaseModel;
+
 /**
- * 人员岗位关联
+ * 人员与岗位关联
  *
  * @author dingzhaojun
  * @author qinman
@@ -14,7 +16,7 @@ import lombok.Data;
  * @date 2022/4/21
  */
 @Data
-public class PersonsPositions implements Serializable {
+public class PersonsPositions extends BaseModel {
 
     private static final long serialVersionUID = 8926134052486805025L;
 
@@ -22,9 +24,11 @@ public class PersonsPositions implements Serializable {
     private String id;
 
     /** 岗位ID */
+    @NotBlank
     private String positionId;
 
     /** 人员ID */
+    @NotBlank
     private String personId;
 
     /** 岗位排序号 */

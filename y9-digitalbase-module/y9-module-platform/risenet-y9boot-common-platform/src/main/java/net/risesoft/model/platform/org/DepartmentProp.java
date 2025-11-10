@@ -2,6 +2,8 @@ package net.risesoft.model.platform.org;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotBlank;
+
 import lombok.Data;
 
 import net.risesoft.enums.platform.org.DepartmentPropCategoryEnum;
@@ -27,11 +29,13 @@ public class DepartmentProp implements Serializable {
     /**
      * 部门唯一标示
      */
+    @NotBlank
     private String deptId;
 
     /**
      * 组织唯一标示
      */
+    @NotBlank
     private String orgBaseId;
 
     /**
@@ -39,6 +43,7 @@ public class DepartmentProp implements Serializable {
      * 
      * {@link DepartmentPropCategoryEnum}
      */
+    @NotBlank
     private Integer category;
 
     /**

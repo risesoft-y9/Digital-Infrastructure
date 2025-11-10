@@ -25,7 +25,6 @@ import net.risesoft.base.BaseEntity;
 import net.risesoft.enums.platform.org.MaritalStatusEnum;
 import net.risesoft.persistence.EnumConverter;
 import net.risesoft.persistence.FieldBase64Converter;
-import net.risesoft.y9.validation.IdNumber;
 
 /**
  * 人员实体扩展信息表
@@ -102,7 +101,6 @@ public class Y9PersonExt extends BaseEntity {
     private String homePhone;
 
     /** 证件号码 */
-    @IdNumber
     @Convert(converter = FieldBase64Converter.class)
     @Column(name = "ID_NUM", length = 255)
     @Comment("证件号码")

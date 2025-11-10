@@ -15,9 +15,9 @@ import net.risesoft.exception.SystemErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
-import net.risesoft.y9public.entity.resource.Y9System;
+import net.risesoft.y9public.entity.Y9System;
 import net.risesoft.y9public.manager.resource.Y9SystemManager;
-import net.risesoft.y9public.repository.resource.Y9SystemRepository;
+import net.risesoft.y9public.repository.Y9SystemRepository;
 
 @Service
 @CacheConfig(cacheNames = CacheNameConsts.SYSTEM)

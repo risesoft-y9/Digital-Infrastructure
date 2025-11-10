@@ -17,12 +17,9 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.resource.ResourceApi;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
+import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.util.ModelConvertUtil;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
-import net.risesoft.y9public.entity.resource.Y9Menu;
-import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.service.resource.CompositeResourceService;
 import net.risesoft.y9public.service.resource.Y9MenuService;
 
@@ -60,29 +57,28 @@ public class ResourceApiImpl implements ResourceApi {
         @RequestParam("resourceName") @NotBlank String resourceName,
         @RequestParam("parentResourceId") @NotBlank String parentResourceId,
         @RequestParam("customId") @NotBlank String customId) {
-        Y9ResourceBase parentResource = compositeResourceService.findById(parentResourceId);
-        Y9Menu y9Menu;
-        Optional<Y9Menu> y9MenuOptional = y9MenuService.findById(resourceId);
-        if (y9MenuOptional.isEmpty()) {
-            y9Menu = new Y9Menu();
-            y9Menu.setId(resourceId);
+        Resource parentResource = compositeResourceService.findById(parentResourceId);
+        Menu menu;
+        Optional<Menu> menuOptional = y9MenuService.findById(resourceId);
+        if (menuOptional.isEmpty()) {
+            menu = new Menu();
+            menu.setId(resourceId);
         } else {
-            y9Menu = y9MenuOptional.get();
+            menu = menuOptional.get();
         }
         if (parentResource != null) {
-            y9Menu.setAppId(parentResource.getAppId());
-            y9Menu.setSystemId(parentResource.getSystemId());
-            y9Menu.setParentId(parentResourceId);
+            menu.setAppId(parentResource.getAppId());
+            menu.setSystemId(parentResource.getSystemId());
+            menu.setParentId(parentResourceId);
         }
-        y9Menu.setName(resourceName);
-        y9Menu.setInherit(Boolean.FALSE);
-        y9Menu.setHidden(Boolean.FALSE);
-        y9Menu.setEnabled(Boolean.TRUE);
+        menu.setName(resourceName);
+        menu.setInherit(Boolean.FALSE);
+        menu.setHidden(Boolean.FALSE);
+        menu.setEnabled(Boolean.TRUE);
         if (StringUtils.isNotBlank(customId)) {
-            y9Menu.setCustomId(customId);
+            menu.setCustomId(customId);
         }
-        y9Menu = y9MenuService.saveOrUpdate(y9Menu);
-        return Y9Result.success(ModelConvertUtil.resourceBaseToResource(y9Menu));
+        return Y9Result.success(y9MenuService.saveOrUpdate(menu));
     }
 
     /**
@@ -98,9 +94,9 @@ public class ResourceApiImpl implements ResourceApi {
     public Y9Result<Resource> findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
         @RequestParam("parentId") @NotBlank String parentId,
         @RequestParam("resourceType") ResourceTypeEnum resourceType) {
-        Y9ResourceBase y9ResourceBase =
+        Resource resource =
             compositeResourceService.findByCustomIdAndParentId(customId, parentId, resourceType).orElse(null);
-        return Y9Result.success(ModelConvertUtil.resourceBaseToResource(y9ResourceBase));
+        return Y9Result.success(resource);
     }
 
     /**
@@ -112,9 +108,7 @@ public class ResourceApiImpl implements ResourceApi {
      */
     @Override
     public Y9Result<Resource> getParentResource(@RequestParam("resourceId") @NotBlank String resourceId) {
-        Y9ResourceBase y9ResourceBase = compositeResourceService.findById(resourceId);
-        Y9ResourceBase parent = compositeResourceService.findById(y9ResourceBase.getParentId());
-        return Y9Result.success(ModelConvertUtil.resourceBaseToResource(parent));
+        return Y9Result.success(compositeResourceService.findResourceParent(resourceId));
     }
 
     /**
@@ -126,8 +120,7 @@ public class ResourceApiImpl implements ResourceApi {
      */
     @Override
     public Y9Result<Resource> getResource(@RequestParam("resourceId") @NotBlank String resourceId) {
-        Y9ResourceBase y9ResourceBase = compositeResourceService.findById(resourceId);
-        return Y9Result.success(ModelConvertUtil.resourceBaseToResource(y9ResourceBase));
+        return Y9Result.success(compositeResourceService.findById(resourceId));
     }
 
     /**
@@ -138,9 +131,8 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<List<Resource>> listSubMenus(@RequestParam("resourceId") @NotBlank String resourceId) {
-        List<Y9Menu> y9MenuList = y9MenuService.findByParentId(resourceId);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9MenuList, Resource.class));
+    public Y9Result<List<Menu>> listSubMenus(@RequestParam("resourceId") @NotBlank String resourceId) {
+        return Y9Result.success(y9MenuService.findByParentId(resourceId));
     }
 
     /**
@@ -152,8 +144,7 @@ public class ResourceApiImpl implements ResourceApi {
      */
     @Override
     public Y9Result<List<Resource>> listSubResources(@RequestParam("resourceId") @NotBlank String resourceId) {
-        List<Y9ResourceBase> y9ResourceBaseList = compositeResourceService.listRootResourceBySystemId(resourceId);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9ResourceBaseList, Resource.class));
+        return Y9Result.success(compositeResourceService.listByParentId(resourceId));
     }
 
 }

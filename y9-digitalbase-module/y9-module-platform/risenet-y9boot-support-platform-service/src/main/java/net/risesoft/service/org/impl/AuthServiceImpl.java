@@ -22,15 +22,15 @@ import net.risesoft.model.platform.org.Person;
 import net.risesoft.repository.org.Y9DepartmentRepository;
 import net.risesoft.repository.org.Y9PersonRepository;
 import net.risesoft.service.org.AuthService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.json.Y9JsonUtil;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.base64.Y9Base64Util;
 import net.risesoft.y9.util.signing.Y9MessageDigest;
-import net.risesoft.y9public.entity.user.Y9User;
-import net.risesoft.y9public.repository.user.Y9UserRepository;
+import net.risesoft.y9public.entity.Y9User;
+import net.risesoft.y9public.repository.Y9UserRepository;
 
 /**
  * 认证服务
@@ -162,7 +162,7 @@ public class AuthServiceImpl implements AuthService {
         Y9OrgBase department = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
         Y9OrgBase bureau = compositeOrgBaseManager.getOrgUnitBureau(person.getId());
 
-        authenticateResult.setPerson(Y9ModelConvertUtil.convert(person, Person.class));
+        authenticateResult.setPerson(PlatformModelConvertUtil.convert(person, Person.class));
         authenticateResult.setTenantId(Y9LoginUserHolder.getTenantId());
         authenticateResult.setDeptName(department.getName());
         authenticateResult.setBureauName(bureau.getName());
@@ -285,7 +285,7 @@ public class AuthServiceImpl implements AuthService {
         Y9OrgBase department = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
         Y9OrgBase bureau = compositeOrgBaseManager.getOrgUnitBureau(person.getId());
 
-        authenticateResult.setPerson(Y9ModelConvertUtil.convert(person, Person.class));
+        authenticateResult.setPerson(PlatformModelConvertUtil.convert(person, Person.class));
         authenticateResult.setTenantId(Y9LoginUserHolder.getTenantId());
         authenticateResult.setDeptName(department.getName());
         authenticateResult.setBureauName(bureau.getName());

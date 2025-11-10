@@ -13,7 +13,6 @@ import jakarta.validation.constraints.NotBlank;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,12 +23,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.api.platform.v0.org.PersonApi;
-import net.risesoft.entity.org.Y9Group;
-import net.risesoft.entity.org.Y9OrgBase;
-import net.risesoft.entity.org.Y9Person;
-import net.risesoft.entity.org.Y9PersonExt;
-import net.risesoft.entity.org.Y9Position;
-import net.risesoft.entity.permission.cache.person.Y9PersonToRole;
 import net.risesoft.model.platform.Role;
 import net.risesoft.model.platform.org.Group;
 import net.risesoft.model.platform.org.OrgUnit;
@@ -38,20 +31,18 @@ import net.risesoft.model.platform.org.PersonExt;
 import net.risesoft.model.platform.org.Position;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.query.platform.PersonQuery;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9GroupService;
 import net.risesoft.service.org.Y9PersonExtService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.service.permission.cache.Y9PersonToRoleService;
-import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.json.Y9JsonUtil;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.Y9FileStore;
-import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.Y9FileStoreService;
 import net.risesoft.y9public.service.role.Y9RoleService;
 
@@ -130,9 +121,8 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("personJson") @NotBlank String personJson) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Person y9Person = Y9JsonUtil.readValue(personJson, Y9Person.class);
-        y9Person = y9PersonService.saveOrUpdate(y9Person, null);
-        return Y9ModelConvertUtil.convert(y9Person, Person.class);
+        Person y9Person = Y9JsonUtil.readValue(personJson, Person.class);
+        return y9PersonService.saveOrUpdate(y9Person, null);
     }
 
     /**
@@ -165,8 +155,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9OrgBase bureau = compositeOrgBaseService.findOrgUnitBureau(personId).orElse(null);
-        return ModelConvertUtil.orgBaseToOrgUnit(bureau);
+        return compositeOrgBaseService.findOrgUnitBureau(personId).orElse(null);
     }
 
     /**
@@ -183,8 +172,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("loginName") @NotBlank String loginName, @RequestParam("parentId") @NotBlank String parentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Person person = y9PersonService.getByLoginNameAndParentId(loginName, parentId).orElse(null);
-        return Y9ModelConvertUtil.convert(person, Person.class);
+        return y9PersonService.getByLoginNameAndParentId(loginName, parentId).orElse(null);
     }
 
     /**
@@ -200,8 +188,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9OrgBase parent = compositeOrgBaseService.findOrgUnitParent(personId).orElse(null);
-        return ModelConvertUtil.orgBaseToOrgUnit(parent);
+        return compositeOrgBaseService.findOrgUnitParent(personId).orElse(null);
     }
 
     /**
@@ -217,8 +204,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Person y9Person = y9PersonService.findById(personId).orElse(null);
-        return Y9ModelConvertUtil.convert(y9Person, Person.class);
+        return y9PersonService.findById(personId).orElse(null);
     }
 
     /**
@@ -234,8 +220,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Person y9Person = y9PersonService.findByLoginName(loginName).orElse(null);
-        return Y9ModelConvertUtil.convert(y9Person, Person.class);
+        return y9PersonService.findByLoginName(loginName).orElse(null);
     }
 
     /**
@@ -251,8 +236,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9PersonExt y9PersonExt = y9PersonExtService.findByPersonId(personId).orElse(null);
-        return Y9ModelConvertUtil.convert(y9PersonExt, PersonExt.class);
+        return y9PersonExtService.findByPersonId(personId).orElse(null);
     }
 
     /**
@@ -282,9 +266,9 @@ public class PersonApiImpl implements PersonApi {
     public List<Person> listAllPersons(@RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.list(false);
+        List<Person> y9PersonList = y9PersonService.list(false);
         Collections.sort(y9PersonList);
-        return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
+        return y9PersonList;
     }
 
     /**
@@ -301,8 +285,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("idType") @NotBlank String idType, @RequestParam("idNum") @NotBlank String idNum) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByIdTypeAndIdNum(idType, idNum, false);
-        return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
+        return y9PersonService.listByIdTypeAndIdNum(idType, idNum, false);
     }
 
     /**
@@ -318,8 +301,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam(name = "name", required = false) String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByNameLike(name, false);
-        return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
+        return y9PersonService.listByNameLike(name, false);
     }
 
     /**
@@ -335,8 +317,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Group> y9GroupList = y9GroupService.listByPersonId(personId, Boolean.FALSE);
-        return Y9ModelConvertUtil.convert(y9GroupList, Group.class);
+        return y9GroupService.listByPersonId(personId, Boolean.FALSE);
     }
 
     /**
@@ -351,8 +332,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9OrgBase> parentList = y9PersonService.listParents(personId);
-        return ModelConvertUtil.orgBaseToOrgUnit(parentList);
+        return y9PersonService.listParents(personId);
     }
 
     /**
@@ -368,23 +348,22 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam(name = "name", required = false) String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByNameLike(name, false);
+        List<Person> y9PersonList = y9PersonService.listByNameLike(name, false);
         List<Map<String, Object>> infoList = new ArrayList<>();
         if (!y9PersonList.isEmpty()) {
-            for (Y9Person person : y9PersonList) {
+            for (Person person : y9PersonList) {
                 Map<String, Object> returnMap = new HashMap<>();
-                person.setPassword(null);
                 returnMap.put("person", person);
                 returnMap.put("personExt", y9PersonExtService.findByPersonId(person.getId()));
                 returnMap.put("avator", person.getAvator());
                 returnMap.put("disabled", person.getDisabled());
                 if (!Boolean.TRUE.equals(person.getDisabled())) {
-                    List<Y9Position> positions = y9PositionService.listByPersonId(person.getId(), Boolean.FALSE);
+                    List<Position> positions = y9PositionService.listByPersonId(person.getId(), Boolean.FALSE);
                     if (!positions.isEmpty()) {
 
                         StringBuilder ids = new StringBuilder();
                         StringBuilder names = new StringBuilder();
-                        for (Y9Position position : positions) {
+                        for (Position position : positions) {
                             ids.append(position.getId() + ",");
                             names.append(position.getName() + ",");
                         }
@@ -415,8 +394,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Position> y9PositionList = y9PositionService.listByPersonId(personId, Boolean.FALSE);
-        return Y9ModelConvertUtil.convert(y9PositionList, Position.class);
+        return y9PositionService.listByPersonId(personId, Boolean.FALSE);
     }
 
     /**
@@ -432,13 +410,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Role> roleList = new ArrayList<>();
-        List<Y9PersonToRole> y9PersonToRoleList = y9PersonToRoleService.listByPersonId(personId);
-        for (Y9PersonToRole y9PersonToRole : y9PersonToRoleList) {
-            Y9Role y9Role = y9RoleService.getById(y9PersonToRole.getRoleId());
-            roleList.add(ModelConvertUtil.y9RoleToRole(y9Role));
-        }
-        return roleList;
+        return y9PersonToRoleService.listRolesByPersonId(personId);
     }
 
     /**
@@ -456,8 +428,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("newPassword") @NotBlank String newPassword) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Person y9Person = y9PersonService.modifyPassword(personId, null, newPassword);
-        return Y9ModelConvertUtil.convert(y9Person, Person.class);
+        return y9PersonService.modifyPassword(personId, null, newPassword);
     }
 
     /**
@@ -474,10 +445,8 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam(required = false) String name, @RequestParam("page") int page, @RequestParam("rows") int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Page<Y9Person> persons = y9PersonService.pageByNameLike(name, new Y9PageQuery(page, rows));
-        List<Person> personList = Y9ModelConvertUtil.convert(persons.getContent(), Person.class);
-        return Y9Page.success(persons.getNumber(), persons.getTotalPages(), persons.getTotalElements(), personList,
-            "操作成功");
+        PersonQuery personQuery = PersonQuery.builder().name(name).build();
+        return y9PersonService.page(personQuery, new Y9PageQuery(page, rows));
     }
 
     /**
@@ -497,10 +466,8 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("page") int page, @RequestParam("rows") int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Page<Y9Person> persons = y9PersonService.pageByParentId(parentId, disabled, new Y9PageQuery(page, rows));
-        List<Person> personList = Y9ModelConvertUtil.convert(persons.getContent(), Person.class);
-        return Y9Page.success(persons.getNumber(), persons.getTotalPages(), persons.getTotalElements(), personList,
-            "操作成功");
+        PersonQuery personQuery = PersonQuery.builder().parentId(parentId).disabled(disabled).build();
+        return y9PersonService.page(personQuery, new Y9PageQuery(page, rows));
     }
 
     /**
@@ -522,11 +489,8 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("rows") int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Page<Y9Person> persons =
-            y9PersonService.pageByParentId(parentId, disabled, userName, new Y9PageQuery(page, rows));
-        List<Person> personList = Y9ModelConvertUtil.convert(persons.getContent(), Person.class);
-        return Y9Page.success(persons.getNumber(), persons.getTotalPages(), persons.getTotalElements(), personList,
-            "操作成功");
+        PersonQuery personQuery = PersonQuery.builder().parentId(parentId).disabled(disabled).name(userName).build();
+        return y9PersonService.page(personQuery, new Y9PageQuery(page, rows));
     }
 
     /**
@@ -542,10 +506,9 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("personJson") @NotBlank String personJson) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Person y9Person = Y9JsonUtil.readValue(personJson, Y9Person.class);
-        Y9PersonExt y9PersonExt = Y9JsonUtil.readValue(personJson, Y9PersonExt.class);
-        y9Person = y9PersonService.saveOrUpdate(y9Person, y9PersonExt);
-        return Y9ModelConvertUtil.convert(y9Person, Person.class);
+        Person y9Person = Y9JsonUtil.readValue(personJson, Person.class);
+        PersonExt y9PersonExt = Y9JsonUtil.readValue(personJson, PersonExt.class);
+        return y9PersonService.saveOrUpdate(y9Person, y9PersonExt);
     }
 
     /**
@@ -561,8 +524,7 @@ public class PersonApiImpl implements PersonApi {
     public Person savePersonAvator(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("avator") @NotBlank String avator) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        Y9Person y9Person = y9PersonService.saveAvator(personId, avator);
-        return Y9ModelConvertUtil.convert(y9Person, Person.class);
+        return y9PersonService.saveAvator(personId, avator);
     }
 
     /**
@@ -581,7 +543,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("fileExt") String fileExt) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Person y9Person = y9PersonService.getById(personId);
+        Person y9Person = y9PersonService.getById(personId);
         try {
             if (StringUtils.isNotBlank(picnote)) {
                 Base64 base64 = new Base64();
@@ -600,7 +562,7 @@ public class PersonApiImpl implements PersonApi {
                 String url =
                     y9conf.getCommon().getOrgBaseUrl() + "/s/" + y9FileStore.getId() + "." + y9FileStore.getFileExt();
                 y9Person = y9PersonService.saveAvator(personId, url);
-                return Y9ModelConvertUtil.convert(y9Person, Person.class);
+                return y9Person;
             }
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
@@ -622,7 +584,8 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("personId") @NotBlank String personId, @RequestParam("photo") @NotBlank String photo) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        y9PersonExtService.savePersonPhoto(personId, photo);
+        Person person = y9PersonService.getById(personId);
+        y9PersonExtService.savePersonPhoto(person, photo);
         return true;
     }
 
@@ -641,10 +604,9 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("personextJson") @NotBlank String personextJson) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Person y9Person = Y9JsonUtil.readValue(personJson, Y9Person.class);
-        Y9PersonExt y9PersonExt = Y9JsonUtil.readValue(personextJson, Y9PersonExt.class);
-        y9Person = y9PersonService.saveOrUpdate(y9Person, y9PersonExt);
-        return Y9ModelConvertUtil.convert(y9Person, Person.class);
+        Person y9Person = Y9JsonUtil.readValue(personJson, Person.class);
+        PersonExt y9PersonExt = Y9JsonUtil.readValue(personextJson, PersonExt.class);
+        return y9PersonService.saveOrUpdate(y9Person, y9PersonExt);
     }
 
     /**
@@ -660,8 +622,8 @@ public class PersonApiImpl implements PersonApi {
     public Person saveWeixinId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("weixinId") @NotBlank String weixinId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        Y9Person y9Person = y9PersonService.saveWeixinId(personId, weixinId);
-        return Y9ModelConvertUtil.convert(y9Person, Person.class);
+
+        return y9PersonService.saveWeixinId(personId, weixinId);
     }
 
 }

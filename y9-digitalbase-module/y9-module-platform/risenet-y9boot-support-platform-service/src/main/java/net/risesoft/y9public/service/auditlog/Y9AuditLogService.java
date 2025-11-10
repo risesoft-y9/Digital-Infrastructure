@@ -1,10 +1,9 @@
 package net.risesoft.y9public.service.auditlog;
 
-import org.springframework.data.domain.Page;
-
+import net.risesoft.model.platform.AuditLog;
+import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.query.platform.AuditLogQuery;
-import net.risesoft.y9public.entity.auditlog.Y9AuditLog;
 
 /**
  * 审计日志 Service
@@ -14,6 +13,6 @@ import net.risesoft.y9public.entity.auditlog.Y9AuditLog;
  */
 public interface Y9AuditLogService {
 
-    Page<Y9AuditLog> page(AuditLogQuery auditLogQuery, Y9PageQuery y9PageQuery);
+    Y9Page<AuditLog> page(AuditLogQuery auditLogQuery, Y9PageQuery y9PageQuery);
 
 }

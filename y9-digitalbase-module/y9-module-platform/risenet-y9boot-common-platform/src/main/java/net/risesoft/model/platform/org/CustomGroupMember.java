@@ -1,13 +1,11 @@
 package net.risesoft.model.platform.org;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
 
 import net.risesoft.enums.platform.org.OrgTypeEnum;
+import net.risesoft.model.BaseModel;
 
 /**
  * 自定义群组中的成员
@@ -19,7 +17,7 @@ import net.risesoft.enums.platform.org.OrgTypeEnum;
  * @date 2022/4/21
  */
 @Data
-public class CustomGroupMember implements Serializable {
+public class CustomGroupMember extends BaseModel {
 
     private static final long serialVersionUID = 1337171458162811639L;
 
@@ -36,11 +34,18 @@ public class CustomGroupMember implements Serializable {
     /**
      * 成员id
      */
+    @NotBlank
     private String memberId;
+
+    /**
+     * 成员类型为person时，人员的性别
+     */
+    private Integer sex;
 
     /**
      * 所在群组id
      */
+    @NotBlank
     private String groupId;
 
     /**
@@ -52,23 +57,6 @@ public class CustomGroupMember implements Serializable {
      * 成员类型
      */
     private OrgTypeEnum memberType;
-
-    /**
-     * 成员类型为person时，人员的性别
-     */
-    private Integer sex;
-
-    /**
-     * 创建时间
-     */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTime = new Date();
-
-    /**
-     * 修改时间
-     */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updateTime;
 
     /**
      * 排序

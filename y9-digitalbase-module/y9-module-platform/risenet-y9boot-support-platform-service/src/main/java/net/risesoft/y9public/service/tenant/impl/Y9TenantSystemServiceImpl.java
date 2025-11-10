@@ -16,8 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.model.platform.System;
+import net.risesoft.model.platform.tenant.Tenant;
+import net.risesoft.model.platform.tenant.TenantSystem;
+import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
-import net.risesoft.y9public.entity.resource.Y9System;
+import net.risesoft.util.PlatformModelConvertUtil;
+import net.risesoft.y9public.entity.Y9System;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.entity.tenant.Y9TenantSystem;
 import net.risesoft.y9public.manager.resource.Y9SystemManager;
@@ -69,18 +74,20 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     }
 
     @Override
-    public Optional<Y9TenantSystem> findById(String id) {
-        return y9TenantSystemRepository.findById(id);
+    public Optional<TenantSystem> findById(String id) {
+        return y9TenantSystemRepository.findById(id).map(Y9TenantSystemServiceImpl::entityToModel);
     }
 
     @Override
-    public Optional<Y9TenantSystem> getByTenantIdAndSystemId(String tenantId, String systemId) {
-        return y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
+    public Optional<TenantSystem> getByTenantIdAndSystemId(String tenantId, String systemId) {
+        return y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId)
+            .map(Y9TenantSystemServiceImpl::entityToModel);
     }
 
     @Override
-    public List<Y9TenantSystem> listBySystemId(String systemId) {
-        return y9TenantSystemRepository.findBySystemId(systemId);
+    public List<TenantSystem> listBySystemId(String systemId) {
+        List<Y9TenantSystem> y9TenantSystemList = y9TenantSystemRepository.findBySystemId(systemId);
+        return entityToModel(y9TenantSystemList);
     }
 
     @Override
@@ -102,27 +109,30 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     }
 
     @Override
-    public Page<Y9TenantSystem> pageByTenantId(String tenantId, Y9PageQuery pageQuery) {
+    public Y9Page<TenantSystem> pageByTenantId(String tenantId, Y9PageQuery pageQuery) {
         Pageable pageable = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize());
-        return y9TenantSystemRepository.findByTenantId(tenantId, pageable);
+        Page<Y9TenantSystem> y9TenantSystemPage = y9TenantSystemRepository.findByTenantId(tenantId, pageable);
+        return Y9Page.success(pageQuery.getPage(), y9TenantSystemPage.getTotalPages(),
+            y9TenantSystemPage.getTotalElements(), entityToModel(y9TenantSystemPage.getContent()));
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9TenantSystem save(Y9TenantSystem y9TenantSystem) {
-        return y9TenantSystemManager.save(y9TenantSystem);
+    public TenantSystem save(TenantSystem tenantSystem) {
+        Y9TenantSystem y9TenantSystem = PlatformModelConvertUtil.convert(tenantSystem, Y9TenantSystem.class);
+        return entityToModel(y9TenantSystemManager.save(y9TenantSystem));
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9TenantSystem saveTenantSystem(String systemId, String tenantId) {
-        return y9TenantSystemManager.saveTenantSystem(systemId, tenantId);
+    public TenantSystem saveTenantSystem(String systemId, String tenantId) {
+        return entityToModel(y9TenantSystemManager.saveTenantSystem(systemId, tenantId));
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public List<Y9TenantSystem> saveTenantSystems(String[] systemIds, String tenantId) {
-        List<Y9TenantSystem> y9TenantSystemList = new ArrayList<>();
+    public List<TenantSystem> saveTenantSystems(String[] systemIds, String tenantId) {
+        List<TenantSystem> y9TenantSystemList = new ArrayList<>();
         for (String systemId : systemIds) {
             y9TenantSystemList.add(saveTenantSystem(systemId, tenantId));
         }
@@ -130,7 +140,12 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     }
 
     @Override
-    public List<Y9Tenant> listTenantBySystemId(String systemId) {
+    public TenantSystem getById(String id) {
+        return entityToModel(y9TenantSystemManager.getById(id));
+    }
+
+    @Override
+    public List<Tenant> listTenantBySystemId(String systemId) {
         List<String> tenantIdList = this.listTenantIdBySystemId(systemId);
         List<Y9Tenant> y9TenantList = new ArrayList<>();
         if (!tenantIdList.isEmpty()) {
@@ -141,11 +156,11 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
                 }
             }
         }
-        return y9TenantList;
+        return PlatformModelConvertUtil.y9TenantToTenant(y9TenantList);
     }
 
     @Override
-    public List<Y9Tenant> listTenantBySystemName(String systemName) {
+    public List<Tenant> listTenantBySystemName(String systemName) {
         Optional<Y9System> y9SystemOptional = y9SystemManager.findByName(systemName);
         if (y9SystemOptional.isPresent()) {
             return this.listTenantBySystemId(y9SystemOptional.get().getId());
@@ -155,7 +170,7 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
-    public List<Y9System> listSystemByTenantId(String tenantId) {
+    public List<System> listSystemByTenantId(String tenantId) {
         List<String> systemIdList = this.listSystemIdByTenantId(tenantId);
         List<Y9System> y9SystemList = new ArrayList<>();
         if (!systemIdList.isEmpty()) {
@@ -163,6 +178,17 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
                 y9SystemManager.findByIdFromCache(systemId).ifPresent(y9SystemList::add);
             }
         }
-        return y9SystemList.stream().sorted().collect(Collectors.toList());
+        return y9SystemList.stream()
+            .sorted()
+            .map(y9System -> PlatformModelConvertUtil.convert(y9System, System.class))
+            .collect(Collectors.toList());
+    }
+
+    private static List<TenantSystem> entityToModel(List<Y9TenantSystem> y9TenantSystemList) {
+        return PlatformModelConvertUtil.convert(y9TenantSystemList, TenantSystem.class);
+    }
+
+    private static TenantSystem entityToModel(Y9TenantSystem y9TenantSystem) {
+        return PlatformModelConvertUtil.convert(y9TenantSystem, TenantSystem.class);
     }
 }

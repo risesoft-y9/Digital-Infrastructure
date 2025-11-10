@@ -17,11 +17,10 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.v0.resource.SystemApi;
 import net.risesoft.consts.InitDataConsts;
-import net.risesoft.model.platform.resource.System;
+import net.risesoft.model.platform.System;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
-import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 
@@ -55,8 +54,7 @@ public class SystemApiImpl implements SystemApi {
      */
     @Override
     public System getById(@RequestParam("id") @NotBlank String id) {
-        Y9System y9System = y9SystemService.getById(id);
-        return Y9ModelConvertUtil.convert(y9System, System.class);
+        return y9SystemService.getById(id);
     }
 
     /**
@@ -67,8 +65,7 @@ public class SystemApiImpl implements SystemApi {
      */
     @Override
     public System getByName(@RequestParam("name") @NotBlank String name) {
-        Y9System y9System = y9SystemService.findByName(name).orElse(null);
-        return Y9ModelConvertUtil.convert(y9System, System.class);
+        return y9SystemService.findByName(name).orElse(null);
     }
 
     /**
@@ -82,11 +79,11 @@ public class SystemApiImpl implements SystemApi {
      */
     @Override
     public Y9Result<System> registrySystem(String name, String cnName, String contextPath, String isvGuid) {
-        List<Y9System> y9Systems = y9SystemService.listByContextPath(contextPath);
+        List<System> y9Systems = y9SystemService.listByContextPath(contextPath);
         if (!y9Systems.isEmpty()) {
             return Y9Result.failure("该系统上下文已存在，请重新输入！");
         }
-        Optional<Y9System> y9SystemOptional = y9SystemService.findByName(name);
+        Optional<System> y9SystemOptional = y9SystemService.findByName(name);
         if (y9SystemOptional.isPresent()) {
             return Y9Result.failure("该系统名称已存在，请重新输入！");
         }
@@ -96,17 +93,17 @@ public class SystemApiImpl implements SystemApi {
         Y9LoginUserHolder.setTenantId(isvGuid);
 
         try {
-            Y9System y9System = new Y9System();
-            y9System.setTenantId(isvGuid);
-            y9System.setName(name);
-            y9System.setCnName(cnName);
-            y9System.setContextPath(contextPath);
-            Y9System system = y9SystemService.saveOrUpdate(y9System);
+            System system = new System();
+            system.setTenantId(isvGuid);
+            system.setName(name);
+            system.setCnName(cnName);
+            system.setContextPath(contextPath);
+            System savedSystem = y9SystemService.saveOrUpdate(system);
 
             // 自动租用
-            y9TenantSystemService.saveTenantSystem(system.getId(), Y9LoginUserHolder.getTenantId());
+            y9TenantSystemService.saveTenantSystem(savedSystem.getId(), Y9LoginUserHolder.getTenantId());
 
-            return Y9Result.success(Y9ModelConvertUtil.convert(system, System.class), "注册应用成功！");
+            return Y9Result.success(PlatformModelConvertUtil.convert(savedSystem, System.class), "注册应用成功！");
         } catch (Exception e) {
             e.printStackTrace();
             return Y9Result.failure("创建失败！");

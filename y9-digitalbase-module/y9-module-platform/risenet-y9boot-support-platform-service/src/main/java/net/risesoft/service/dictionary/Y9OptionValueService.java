@@ -2,7 +2,7 @@ package net.risesoft.service.dictionary;
 
 import java.util.List;
 
-import net.risesoft.entity.dictionary.Y9OptionValue;
+import net.risesoft.model.platform.dictionary.OptionValue;
 
 /**
  * @author dingzhaojun
@@ -18,9 +18,9 @@ public interface Y9OptionValueService {
      * @param code 代码
      * @param name 名字
      * @param type 字典类型
-     * @return {@link Y9OptionValue}
+     * @return {@link OptionValue}
      */
-    Y9OptionValue create(String code, String name, String type);
+    OptionValue create(String code, String name, String type);
 
     /**
      * 根据id数组，删除字典数据
@@ -35,13 +35,13 @@ public interface Y9OptionValueService {
      * @param type 字典类型
      * @return {@code List<Y9OptionValue>}
      */
-    List<Y9OptionValue> listByType(String type);
+    List<OptionValue> listByType(String type);
 
     /**
      * 保存新增字典数据
      *
      * @param optionValue 字典数据对象
-     * @return {@link Y9OptionValue}
+     * @return {@link OptionValue}
      */
-    Y9OptionValue saveOptionValue(Y9OptionValue optionValue);
+    OptionValue saveOptionValue(OptionValue optionValue);
 }

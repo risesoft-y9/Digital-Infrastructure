@@ -2,6 +2,7 @@ package net.risesoft.manager.org.impl;
 
 import java.util.Optional;
 
+import net.risesoft.util.PlatformModelConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -30,7 +31,6 @@ import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 @CacheConfig(cacheNames = CacheNameConsts.ORG_DEPARTMENT)
 @Service
@@ -101,7 +101,7 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
     public Y9Department update(Y9Department dept) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(dept.getParentId());
         Y9Department currentDepartment = this.getById(dept.getId());
-        Y9Department originalDepartment = Y9ModelConvertUtil.convert(currentDepartment, Y9Department.class);
+        Y9Department originalDepartment = PlatformModelConvertUtil.convert(currentDepartment, Y9Department.class);
 
         Y9BeanUtil.copyProperties(dept, currentDepartment, "tenantId");
         currentDepartment.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.DEPARTMENT, dept.getName(), parent.getDn()));
@@ -119,7 +119,7 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
     public Y9Department updateTabIndex(String id, int tabIndex) {
         final Y9Department department = this.getById(id);
 
-        Y9Department updatedDepartment = Y9ModelConvertUtil.convert(department, Y9Department.class);
+        Y9Department updatedDepartment = PlatformModelConvertUtil.convert(department, Y9Department.class);
         updatedDepartment.setTabIndex(tabIndex);
         return this.update(updatedDepartment);
     }

@@ -1,6 +1,5 @@
 package net.risesoft.api.permission;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
@@ -15,15 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.permission.cache.PositionRoleApi;
-import net.risesoft.entity.org.Y9Position;
 import net.risesoft.model.platform.Role;
 import net.risesoft.model.platform.org.Position;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.permission.cache.Y9PositionToRoleService;
-import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
-import net.risesoft.y9public.entity.role.Y9Role;
 
 /**
  * 岗位角色组件
@@ -125,8 +120,7 @@ public class PositionRoleApiImpl implements PositionRoleApi {
     public Y9Result<List<Position>> listPositionsByRoleId(String tenantId, String roleId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Position> y9PersonList = y9PositionToRoleService.listPositionsByRoleId(roleId, Boolean.FALSE);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Position.class));
+        return Y9Result.success(y9PositionToRoleService.listPositionsByRoleId(roleId, Boolean.FALSE));
     }
 
     /**
@@ -141,11 +135,6 @@ public class PositionRoleApiImpl implements PositionRoleApi {
     public Y9Result<List<Role>> listRolesByPositionId(String tenantId, String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Role> y9RoleList = y9PositionToRoleService.listRolesByPositionId(positionId);
-        List<Role> roleList = new ArrayList<>();
-        for (Y9Role y9Role : y9RoleList) {
-            roleList.add(ModelConvertUtil.y9RoleToRole(y9Role));
-        }
-        return Y9Result.success(roleList);
+        return Y9Result.success(y9PositionToRoleService.listRolesByPositionId(positionId));
     }
 }

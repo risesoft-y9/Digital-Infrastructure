@@ -16,12 +16,11 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.org.JobApi;
 import net.risesoft.dto.platform.CreateJobDTO;
-import net.risesoft.entity.org.Y9Job;
 import net.risesoft.model.platform.org.Job;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9JobService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
  * 职位服务组件
@@ -46,23 +45,21 @@ public class JobApiImpl implements JobApi {
      * 创建职位
      *
      * @param tenantId 租户id
-     * @param job 职位对象
+     * @param createJobDTO 职位对象
      * @return {@code Y9Result<Position>} 通用请求返回对象 - data 是保存的岗位对象
      * @since 9.6.0
      */
     @Override
     public Y9Result<Job> create(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestBody @Validated CreateJobDTO job) {
+        @RequestBody @Validated CreateJobDTO createJobDTO) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        Y9Job y9Job = Y9ModelConvertUtil.convert(job, Y9Job.class);
-        y9Job = y9JobService.saveOrUpdate(y9Job);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Job, Job.class));
+        Job job = PlatformModelConvertUtil.convert(createJobDTO, Job.class);
+        return Y9Result.success(y9JobService.saveOrUpdate(job));
     }
 
     @Override
     public Y9Result<List<Job>> listAll(@RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        List<Y9Job> jobList = y9JobService.listAll();
-        return Y9Result.success(Y9ModelConvertUtil.convert(jobList, Job.class));
+        return Y9Result.success(y9JobService.listAll());
     }
 }

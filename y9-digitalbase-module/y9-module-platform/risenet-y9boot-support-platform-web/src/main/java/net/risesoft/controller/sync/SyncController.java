@@ -10,13 +10,18 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.entity.org.Y9Manager;
-import net.risesoft.entity.org.Y9Organization;
-import net.risesoft.entity.org.Y9Person;
-import net.risesoft.entity.org.Y9Position;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.org.Manager;
+import net.risesoft.model.platform.org.Organization;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.Position;
+import net.risesoft.model.platform.resource.App;
+import net.risesoft.model.platform.resource.DataCatalog;
+import net.risesoft.model.platform.resource.Menu;
+import net.risesoft.model.platform.resource.Operation;
+import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.init.InitTenantDataService;
 import net.risesoft.service.org.CompositeOrgBaseService;
@@ -26,11 +31,6 @@ import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9public.entity.resource.Y9App;
-import net.risesoft.y9public.entity.resource.Y9DataCatalog;
-import net.risesoft.y9public.entity.resource.Y9Menu;
-import net.risesoft.y9public.entity.resource.Y9Operation;
-import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.service.resource.CompositeResourceService;
 import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.resource.Y9DataCatalogService;
@@ -111,17 +111,17 @@ public class SyncController {
         for (String tenantId : tenantIdList) {
             Y9LoginUserHolder.setTenantId(tenantId);
             LOGGER.debug("同步租户[{}]人员信息", tenantId);
-            List<Y9Organization> y9OrganizationList = y9OrganizationService.list();
-            for (Y9Organization organization : y9OrganizationList) {
-                List<Y9Person> persons = compositeOrgBaseService.listAllDescendantPersons(organization.getId());
-                for (Y9Person person : persons) {
+            List<Organization> organizationList = y9OrganizationService.list();
+            for (Organization organization : organizationList) {
+                List<Person> persons = compositeOrgBaseService.listAllDescendantPersons(organization.getId());
+                for (Person person : persons) {
                     if (person != null && person.getId() != null) {
                         y9PersonService.saveOrUpdate(person, null);
                     }
                 }
             }
-            List<Y9Manager> managerList = y9ManagerService.listAll();
-            for (Y9Manager manager : managerList) {
+            List<Manager> managerList = y9ManagerService.listAll();
+            for (Manager manager : managerList) {
                 y9ManagerService.saveOrUpdate(manager);
 
             }
@@ -139,15 +139,15 @@ public class SyncController {
     @RiseLog(operationName = "同步人员信息", operationType = OperationTypeEnum.MODIFY)
     public Y9Result<String> syncPersonByTenantId(@PathVariable String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        List<Y9Person> persons = y9PersonService.list(null);
-        for (Y9Person person : persons) {
+        List<Person> persons = y9PersonService.list(null);
+        for (Person person : persons) {
             if (person != null && person.getId() != null) {
                 y9PersonService.saveOrUpdate(person, null);
 
             }
         }
-        List<Y9Manager> managerList = y9ManagerService.listAll();
-        for (Y9Manager manager : managerList) {
+        List<Manager> managerList = y9ManagerService.listAll();
+        for (Manager manager : managerList) {
             y9ManagerService.saveOrUpdate(manager);
 
         }
@@ -166,7 +166,7 @@ public class SyncController {
     public Y9Result<String> syncPersonByTenantIdAndLoginName(@PathVariable String tenantId,
         @PathVariable String loginName) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        Y9Person person = y9PersonService.getPersonByLoginNameAndTenantId(loginName, tenantId);
+        Person person = y9PersonService.getPersonByLoginNameAndTenantId(loginName, tenantId);
         if (person != null && person.getId() != null) {
             y9PersonService.saveOrUpdate(person, null);
         }
@@ -185,8 +185,8 @@ public class SyncController {
         for (String tenantId : tenantIdList) {
             Y9LoginUserHolder.setTenantId(tenantId);
             LOGGER.debug("同步租户[{}]岗位信息", tenantId);
-            List<Y9Position> positions = y9PositionService.listAll();
-            for (Y9Position position : positions) {
+            List<Position> positions = y9PositionService.listAll();
+            for (Position position : positions) {
                 position.setTenantId(tenantId);
                 y9PositionService.saveOrUpdate(position);
             }
@@ -204,8 +204,8 @@ public class SyncController {
     @RiseLog(operationName = "同步岗位信息", operationType = OperationTypeEnum.MODIFY)
     public Y9Result<String> syncPositionByTenantId(@PathVariable String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        List<Y9Position> positions = y9PositionService.listAll();
-        for (Y9Position position : positions) {
+        List<Position> positionList = y9PositionService.listAll();
+        for (Position position : positionList) {
             position.setTenantId(tenantId);
             y9PositionService.saveOrUpdate(position);
         }
@@ -215,30 +215,30 @@ public class SyncController {
     @RequestMapping("/resourceGuidPath")
     @RiseLog(operationName = "同步资源的 guidPath", operationType = OperationTypeEnum.MODIFY)
     public Y9Result<String> syncResourceGuidPath() {
-        List<Y9App> y9Apps = compositeResourceService.listRootResourceList();
-        for (Y9App y9App : y9Apps) {
-            y9AppService.saveOrUpdate(y9App);
-            recursiveUpdate(y9App.getId());
+        List<App> appList = compositeResourceService.listRootResourceList();
+        for (App app : appList) {
+            y9AppService.saveOrUpdate(app);
+            recursiveUpdate(app.getId());
         }
-        List<Y9DataCatalog> y9DataCatalogs = y9DataCatalogService.listRoot();
-        for (Y9DataCatalog y9DataCatalog : y9DataCatalogs) {
-            y9DataCatalogService.saveOrUpdate(y9DataCatalog);
-            recursiveUpdate(y9DataCatalog.getId());
+        List<DataCatalog> dataCatalogList = y9DataCatalogService.listRoot();
+        for (DataCatalog dataCatalog : dataCatalogList) {
+            y9DataCatalogService.saveOrUpdate(dataCatalog);
+            recursiveUpdate(dataCatalog.getId());
         }
         return Y9Result.successMsg("同步资源的 guidPath 完成");
     }
 
     private void recursiveUpdate(String parentId) {
-        List<Y9ResourceBase> y9ResourceBases = compositeResourceService.listByParentId(parentId);
-        for (Y9ResourceBase y9ResourceBase : y9ResourceBases) {
-            if (ResourceTypeEnum.MENU.equals(y9ResourceBase.getResourceType())) {
-                y9MenuService.saveOrUpdate((Y9Menu)y9ResourceBase);
-            } else if (ResourceTypeEnum.OPERATION.equals(y9ResourceBase.getResourceType())) {
-                y9OperationService.saveOrUpdate((Y9Operation)y9ResourceBase);
-            } else if (ResourceTypeEnum.DATA_CATALOG.equals(y9ResourceBase.getResourceType())) {
-                y9DataCatalogService.saveOrUpdate((Y9DataCatalog)y9ResourceBase);
+        List<Resource> resourceList = compositeResourceService.listByParentId(parentId);
+        for (Resource resource : resourceList) {
+            if (ResourceTypeEnum.MENU.equals(resource.getResourceType())) {
+                y9MenuService.saveOrUpdate((Menu)resource);
+            } else if (ResourceTypeEnum.OPERATION.equals(resource.getResourceType())) {
+                y9OperationService.saveOrUpdate((Operation)resource);
+            } else if (ResourceTypeEnum.DATA_CATALOG.equals(resource.getResourceType())) {
+                y9DataCatalogService.saveOrUpdate((DataCatalog)resource);
             }
-            recursiveUpdate(y9ResourceBase.getId());
+            recursiveUpdate(resource.getId());
         }
     }
 

@@ -1,5 +1,6 @@
 package net.risesoft.service.org.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -23,10 +24,13 @@ import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9DepartmentManager;
+import net.risesoft.model.platform.org.Manager;
+import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.org.Y9ManagerRepository;
 import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.service.setting.Y9SettingService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -36,7 +40,6 @@ import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9.util.signing.Y9MessageDigest;
 
@@ -63,9 +66,9 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
 
     @Override
     @Transactional
-    public Y9Manager changeDisabled(String id) {
-        Y9Manager currentManager = this.getById(id);
-        Y9Manager originalManager = Y9ModelConvertUtil.convert(currentManager, Y9Manager.class);
+    public Manager changeDisabled(String id) {
+        Y9Manager currentManager = this.get(id);
+        Y9Manager originalManager = PlatformModelConvertUtil.convert(currentManager, Y9Manager.class);
         boolean disableStatusToUpdate = !currentManager.getDisabled();
 
         currentManager.setDisabled(disableStatusToUpdate);
@@ -81,14 +84,14 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedManager;
+        return entityToModel(savedManager);
     }
 
     @Override
     @Transactional
     public void changePassword(String id, String newPassword) {
-        Y9Manager currentManager = this.getById(id);
-        Y9Manager originalManager = Y9ModelConvertUtil.convert(currentManager, Y9Manager.class);
+        Y9Manager currentManager = this.get(id);
+        Y9Manager originalManager = PlatformModelConvertUtil.convert(currentManager, Y9Manager.class);
 
         currentManager.setPassword(Y9MessageDigest.bcrypt(newPassword));
         currentManager.setLastModifyPasswordTime(new Date());
@@ -107,7 +110,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
 
     @Override
     public boolean checkPassword(String personId, String password) {
-        Y9Manager manager = this.getById(personId);
+        Y9Manager manager = this.get(personId);
         return Y9MessageDigest.bcryptMatch(password, manager.getPassword());
     }
 
@@ -122,7 +125,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     @Override
     @Transactional
     public void delete(String id) {
-        Y9Manager y9Manager = this.getById(id);
+        Y9Manager y9Manager = this.get(id);
         y9ManagerRepository.delete(y9Manager);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -149,17 +152,22 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     }
 
     @Override
-    public Optional<Y9Manager> findById(String id) {
-        return y9ManagerRepository.findById(id);
+    public Optional<Manager> findById(String id) {
+        return y9ManagerRepository.findById(id).map(y9Manager -> entityToModel(y9Manager));
     }
 
     @Override
-    public Optional<Y9Manager> findByLoginName(String loginName) {
-        return y9ManagerRepository.findByLoginName(loginName);
+    public Optional<Manager> findByLoginName(String loginName) {
+        return y9ManagerRepository.findByLoginName(loginName).map(y9Manager -> entityToModel(y9Manager));
     }
 
     @Override
-    public Y9Manager getById(String id) {
+    public Manager getById(String id) {
+        Y9Manager y9Manager = this.get(id);
+        return entityToModel(y9Manager);
+    }
+
+    private Y9Manager get(String id) {
         return y9ManagerRepository.findById(id)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.MANAGER_NOT_FOUND, id));
     }
@@ -187,7 +195,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     @Override
     @Transactional(readOnly = true)
     public boolean isDeptManager(String managerId, String deptId) {
-        Y9Manager y9Manager = this.getById(managerId);
+        Y9Manager y9Manager = this.get(managerId);
         if (Boolean.TRUE.equals(y9Manager.getGlobalManager())) {
             return true;
         } else {
@@ -214,7 +222,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
 
     @Override
     public Boolean isPasswordExpired(String id) {
-        Y9Manager y9Manager = this.getById(id);
+        Y9Manager y9Manager = this.get(id);
         Date lastModifyPasswordTime = y9Manager.getLastModifyPasswordTime();
         if (lastModifyPasswordTime == null) {
             return true;
@@ -224,25 +232,28 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     }
 
     @Override
-    public List<Y9Manager> listAll() {
-        return y9ManagerRepository.findAll();
+    public List<Manager> listAll() {
+        List<Y9Manager> y9ManagerList = y9ManagerRepository.findAll();
+        return entityToModel(y9ManagerList);
     }
 
     @Override
-    public List<Y9Manager> listByGlobalManager(boolean globalManager) {
-        return y9ManagerRepository.findByGlobalManager(globalManager);
+    public List<Manager> listByGlobalManager(boolean globalManager) {
+        List<Y9Manager> y9ManagerList = y9ManagerRepository.findByGlobalManager(globalManager);
+        return entityToModel(y9ManagerList);
     }
 
     @Override
-    public List<Y9Manager> listByParentId(String parentId) {
-        return y9ManagerRepository.findByParentIdOrderByTabIndex(parentId);
+    public List<Manager> listByParentId(String parentId) {
+        List<Y9Manager> y9ManagerList = y9ManagerRepository.findByParentIdOrderByTabIndex(parentId);
+        return PlatformModelConvertUtil.convert(y9ManagerList, Manager.class);
     }
 
     @Override
     @Transactional
-    public Y9Manager resetDefaultPassword(String id) {
-        Y9Manager currentManager = this.getById(id);
-        Y9Manager originalManager = Y9ModelConvertUtil.convert(currentManager, Y9Manager.class);
+    public Manager resetDefaultPassword(String id) {
+        Y9Manager currentManager = this.get(id);
+        Y9Manager originalManager = PlatformModelConvertUtil.convert(currentManager, Y9Manager.class);
         String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
 
         currentManager.setPassword(Y9MessageDigest.bcrypt(defaultPassword));
@@ -258,7 +269,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedManager;
+        return entityToModel(savedManager);
     }
 
     @Transactional
@@ -285,8 +296,8 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
 
     @Transactional
     public Y9Manager update(Y9Manager y9Manager) {
-        Y9Manager currentManager = this.getById(y9Manager.getId());
-        Y9Manager originalManager = Y9ModelConvertUtil.convert(currentManager, Y9Manager.class);
+        Y9Manager currentManager = this.get(y9Manager.getId());
+        Y9Manager originalManager = PlatformModelConvertUtil.convert(currentManager, Y9Manager.class);
         Y9BeanUtil.copyProperties(y9Manager, currentManager);
         Y9Manager savedManager = y9ManagerRepository.save(currentManager);
 
@@ -297,11 +308,12 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
 
     @Override
     @Transactional
-    public Y9Manager saveOrUpdate(Y9Manager y9Manager) {
+    public Manager saveOrUpdate(Manager manager) {
+        Y9Manager y9Manager = modelToEntity(manager);
         if (StringUtils.isNotBlank(y9Manager.getId())) {
             Y9Manager oldManager = y9ManagerRepository.findById(y9Manager.getId()).orElse(null);
             if (oldManager != null) {
-                Y9Manager originalManager = Y9ModelConvertUtil.convert(oldManager, Y9Manager.class);
+                Y9Manager originalManager = PlatformModelConvertUtil.convert(oldManager, Y9Manager.class);
                 Y9Manager savedManager = this.update(y9Manager);
 
                 AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -314,7 +326,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
                     .build();
                 Y9Context.publishEvent(auditLogEvent);
 
-                return savedManager;
+                return entityToModel(savedManager);
             }
         }
 
@@ -329,15 +341,28 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedManager;
+        return entityToModel(savedManager);
     }
 
     @Override
     @Transactional
     public void updateCheckTime(String managerId, Date checkTime) {
-        Y9Manager y9Manager = this.getById(managerId);
+        Y9Manager y9Manager = this.get(managerId);
         y9Manager.setLastReviewLogTime(checkTime);
         y9ManagerRepository.save(y9Manager);
+    }
+
+    @Override
+    public List<OrgUnit> filterManagableOrgUnitList(String managerParentId, List<String> orgUnitIdList) {
+        List<OrgUnit> managableOrgUnitList = new ArrayList<>();
+        Y9OrgBase managerDept = compositeOrgBaseManager.getOrgUnitAsParent(managerParentId);
+        for (String orgUnitId : orgUnitIdList) {
+            Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(orgUnitId);
+            if (Y9OrgUtil.isSameOf(managerDept, y9OrgBase) || Y9OrgUtil.isAncestorOf(managerDept, y9OrgBase)) {
+                managableOrgUnitList.add(PlatformModelConvertUtil.orgBaseToOrgUnit(y9OrgBase));
+            }
+        }
+        return managableOrgUnitList;
     }
 
     @EventListener
@@ -350,9 +375,21 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
 
     @Transactional
     public void removeByParentId(String parentId) {
-        List<Y9Manager> y9ManagerList = listByParentId(parentId);
-        for (Y9Manager y9Manager : y9ManagerList) {
-            this.delete(y9Manager.getId());
+        List<Manager> managerList = listByParentId(parentId);
+        for (Manager manager : managerList) {
+            this.delete(manager.getId());
         }
+    }
+
+    private static Manager entityToModel(Y9Manager y9Manager) {
+        return PlatformModelConvertUtil.convert(y9Manager, Manager.class);
+    }
+
+    private static List<Manager> entityToModel(List<Y9Manager> y9ManagerList) {
+        return PlatformModelConvertUtil.convert(y9ManagerList, Manager.class);
+    }
+
+    private static Y9Manager modelToEntity(Manager manager) {
+        return PlatformModelConvertUtil.convert(manager, Y9Manager.class);
     }
 }

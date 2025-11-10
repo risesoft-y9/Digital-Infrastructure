@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,15 +16,13 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.org.OrganizationApi;
 import net.risesoft.dto.platform.CreateOrganizationDTO;
-import net.risesoft.entity.org.Y9Department;
-import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.model.platform.org.Department;
 import net.risesoft.model.platform.org.Organization;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9DepartmentService;
 import net.risesoft.service.org.Y9OrganizationService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
  * 机构服务组件
@@ -42,7 +41,7 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 public class OrganizationApiImpl implements OrganizationApi {
 
     private final Y9DepartmentService y9DepartmentService;
-    private final Y9OrganizationService orgOrganizationService;
+    private final Y9OrganizationService y9OrganizationService;
 
     /**
      * 根据id获得组织机构对象
@@ -57,17 +56,16 @@ public class OrganizationApiImpl implements OrganizationApi {
         @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Organization y9Organization = orgOrganizationService.findById(organizationId).orElse(null);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Organization, Organization.class));
+        return Y9Result.success(y9OrganizationService.findById(organizationId).orElse(null));
     }
 
     @Override
-    public Y9Result<Organization> create(String tenantId, CreateOrganizationDTO organization) {
+    public Y9Result<Organization> create(@RequestParam("tenantId") @NotBlank String tenantId,
+        @Validated @RequestBody CreateOrganizationDTO createOrganizationDTO) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Organization y9Organization = Y9ModelConvertUtil.convert(organization, Y9Organization.class);
-        y9Organization = orgOrganizationService.saveOrUpdate(y9Organization);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Organization, Organization.class));
+        Organization organization = PlatformModelConvertUtil.convert(createOrganizationDTO, Organization.class);
+        return Y9Result.success(y9OrganizationService.saveOrUpdate(organization));
     }
 
     /**
@@ -81,8 +79,7 @@ public class OrganizationApiImpl implements OrganizationApi {
     public Y9Result<List<Organization>> list(@RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Organization> y9OrganizationList = orgOrganizationService.list(Boolean.FALSE, Boolean.FALSE);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9OrganizationList, Organization.class));
+        return Y9Result.success(y9OrganizationService.list(Boolean.FALSE, Boolean.FALSE));
     }
 
     /**
@@ -98,8 +95,7 @@ public class OrganizationApiImpl implements OrganizationApi {
         @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Department> y9DepartmentList = y9DepartmentService.listBureau(organizationId, Boolean.FALSE);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentList, Department.class));
+        return Y9Result.success(y9DepartmentService.listBureau(organizationId, Boolean.FALSE));
     }
 
     /**
@@ -115,8 +111,7 @@ public class OrganizationApiImpl implements OrganizationApi {
         @RequestParam("virtual") Boolean virtual) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Organization> y9OrganizationList = orgOrganizationService.list(virtual, Boolean.FALSE);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9OrganizationList, Organization.class));
+        return Y9Result.success(y9OrganizationService.list(virtual, Boolean.FALSE));
     }
 
 }

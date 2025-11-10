@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.org.Y9Manager;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.org.Manager;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
@@ -50,9 +50,8 @@ public class DeptManagerController {
     @RiseLog(operationName = "禁用/解除禁用三员", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/changeDisabled")
     @IsAnyManager(ManagerLevelEnum.SECURITY_MANAGER)
-    public Y9Result<Y9Manager> changeDisabled(@RequestParam @NotBlank String id) {
-        Y9Manager y9Manager = y9ManagerService.changeDisabled(id);
-        return Y9Result.success(y9Manager, "禁用人员成功");
+    public Y9Result<Manager> changeDisabled(@RequestParam @NotBlank String id) {
+        return Y9Result.success(y9ManagerService.changeDisabled(id), "禁用人员成功");
     }
 
     /**
@@ -92,7 +91,7 @@ public class DeptManagerController {
     @RiseLog(operationName = "根据人员id，获取人员信息")
     @RequestMapping(value = "/getManagerById")
     @IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
-    public Y9Result<Y9Manager> getManagerById(@RequestParam @NotBlank String managerId) {
+    public Y9Result<Manager> getManagerById(@RequestParam @NotBlank String managerId) {
         return Y9Result.success(y9ManagerService.getById(managerId), "根据人员id，获取人员信息成功！");
     }
 
@@ -106,7 +105,7 @@ public class DeptManagerController {
     @RiseLog(operationName = "获取人员列表")
     @RequestMapping(value = "/listManagersByParentId")
     @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
-    public Y9Result<List<Y9Manager>> listManagersByParentId(@RequestParam @NotBlank String parentId) {
+    public Y9Result<List<Manager>> listManagersByParentId(@RequestParam @NotBlank String parentId) {
         return Y9Result.success(y9ManagerService.listByParentId(parentId), "获取人员列表成功！");
     }
 
@@ -142,13 +141,12 @@ public class DeptManagerController {
      * 新建或者更新部门管理员
      *
      * @param manager 部门管理员实体
-     * @return {@code Y9Result<Y9Manager>}
+     * @return {@code Y9Result<Manager>}
      */
     @RiseLog(operationName = "新建或者更新部门管理员信息", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")
     @IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
-    public Y9Result<Y9Manager> saveOrUpdate(Y9Manager manager) {
-        Y9Manager y9Manager = y9ManagerService.saveOrUpdate(manager);
-        return Y9Result.success(y9Manager, "保存人员信息成功");
+    public Y9Result<Manager> saveOrUpdate(Manager manager) {
+        return Y9Result.success(y9ManagerService.saveOrUpdate(manager), "保存人员信息成功");
     }
 }

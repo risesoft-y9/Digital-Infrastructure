@@ -23,12 +23,15 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.exception.ResourceErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.model.platform.AppIcon;
+import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
+import net.risesoft.y9public.entity.Y9AppIcon;
 import net.risesoft.y9public.entity.Y9FileStore;
-import net.risesoft.y9public.entity.resource.Y9AppIcon;
-import net.risesoft.y9public.repository.resource.Y9AppIconRepository;
+import net.risesoft.y9public.repository.Y9AppIconRepository;
 import net.risesoft.y9public.service.Y9FileStoreService;
 import net.risesoft.y9public.service.resource.Y9AppIconService;
 
@@ -48,59 +51,47 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
     }
 
     @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public void delete(Y9AppIcon appIcon) {
-        appIconRepository.delete(appIcon);
+    public Optional<AppIcon> findByNameAndColorType(String name, String colorType) {
+        return appIconRepository.findByNameAndColorType(name, colorType).map(Y9AppIconServiceImpl::entityToModel);
     }
 
     @Override
-    public Optional<Y9AppIcon> findById(String id) {
-        return appIconRepository.findById(id);
-    }
-
-    @Override
-    public Optional<Y9AppIcon> findByNameAndColorType(String name, String colorType) {
-        return appIconRepository.findByNameAndColorType(name, colorType);
-    }
-
-    @Override
-    public Y9AppIcon getById(String id) {
+    public AppIcon getById(String id) {
         return appIconRepository.findById(id)
+            .map(Y9AppIconServiceImpl::entityToModel)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.APP_ICON_NOT_FOUND, id));
     }
 
     @Override
-    public List<Y9AppIcon> listAll() {
-        return appIconRepository.findAll();
+    public List<AppIcon> listAll() {
+        List<Y9AppIcon> y9AppIconList = appIconRepository.findAll();
+        return entityToModel(y9AppIconList);
     }
 
     @Override
-    public List<Y9AppIcon> listByName(String name) {
-        return appIconRepository.findByName(name);
+    public List<AppIcon> listByName(String name) {
+        return entityToModel(appIconRepository.findByName(name));
     }
 
     @Override
-    public List<Y9AppIcon> listByNameLike(String name) {
-        return appIconRepository.findByNameContaining(name);
-    }
-
-    @Override
-    public Page<Y9AppIcon> pageAll(Y9PageQuery pageQuery) {
+    public Y9Page<AppIcon> pageAll(Y9PageQuery pageQuery) {
         Pageable pageable =
             PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "createTime"));
-        return appIconRepository.findAll(pageable);
+        Page<Y9AppIcon> y9AppIconPage = appIconRepository.findAll(pageable);
+        return Y9Page.success(pageQuery.getPage(), y9AppIconPage.getTotalPages(), y9AppIconPage.getTotalElements(),
+            entityToModel(y9AppIconPage.getContent()));
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void refreshAppIconData() {
         List<Y9AppIcon> apps = appIconRepository.findAll();
-        for (Y9AppIcon appicon : apps) {
+        for (Y9AppIcon y9AppIcon : apps) {
             try {
-                byte[] b = y9FileStoreService.downloadFileToBytes(appicon.getPath());
+                byte[] b = y9FileStoreService.downloadFileToBytes(y9AppIcon.getPath());
                 String iconData = Base64.getEncoder().encodeToString(b);
-                appicon.setIconData(iconData);
-                appIconRepository.save(appicon);
+                y9AppIcon.setIconData(iconData);
+                appIconRepository.save(y9AppIcon);
             } catch (Exception e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -109,7 +100,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9AppIcon save(MultipartFile iconFile, String remark) throws Y9BusinessException {
+    public AppIcon save(MultipartFile iconFile, String remark) throws Y9BusinessException {
         byte[] iconData = null;
         try {
             if (!iconFile.isEmpty()) {
@@ -140,7 +131,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
         try {
             appIcon.setPath(y9FileStoreService.uploadFile(iconFile, fullPath, imgName).getId());
             appIcon.setIconData(Base64.getEncoder().encodeToString(iconData));
-            return appIconRepository.save(appIcon);
+            return entityToModel(appIconRepository.save(appIcon));
         } catch (Exception e) {
             LOGGER.warn("上传文件异常", e);
             throw new Y9BusinessException(500, "上传文件异常,错误信息为：" + e.getMessage());
@@ -150,7 +141,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9AppIcon save(String name, String category, String colorType, String remark, MultipartFile iconFile)
+    public AppIcon save(String name, String category, String colorType, String remark, MultipartFile iconFile)
         throws Y9BusinessException {
         byte[] iconData = null;
         try {
@@ -167,7 +158,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
         // 文件类型
         String imgType = FilenameUtils.getExtension(iconFile.getOriginalFilename());
         Optional<Y9AppIcon> y9AppIconOptional = appIconRepository.findByNameAndColorType(name, colorType);
-        Y9AppIcon appIcon = null;
+        Y9AppIcon appIcon;
         if (y9AppIconOptional.isEmpty()) {
             appIcon = new Y9AppIcon();
             appIcon.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
@@ -183,7 +174,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
         try {
             appIcon.setPath(y9FileStoreService.uploadFile(iconFile, fullPath, name).getId());
             appIcon.setIconData(Base64.getEncoder().encodeToString(iconData));
-            return appIconRepository.save(appIcon);
+            return entityToModel(appIconRepository.save(appIcon));
         } catch (Exception e) {
             LOGGER.warn("上传文件异常", e);
             throw new Y9BusinessException(500, "上传文件异常,错误信息为：" + e.getMessage());
@@ -193,14 +184,25 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public void save(Y9AppIcon appIcon) {
-        appIconRepository.save(appIcon);
+    public void save(AppIcon appIcon) {
+        Y9AppIcon y9AppIcon = PlatformModelConvertUtil.convert(appIcon, Y9AppIcon.class);
+        appIconRepository.save(y9AppIcon);
     }
 
     @Override
-    public Page<Y9AppIcon> searchByName(String name, Y9PageQuery pageQuery) {
+    public Y9Page<AppIcon> pageByName(String name, Y9PageQuery pageQuery) {
         Pageable pageable =
             PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "createTime"));
-        return appIconRepository.findByNameContaining(name, pageable);
+        Page<Y9AppIcon> y9AppIconPage = appIconRepository.findByNameContaining(name, pageable);
+        return Y9Page.success(pageQuery.getPage(), y9AppIconPage.getTotalPages(), y9AppIconPage.getTotalElements(),
+            entityToModel(y9AppIconPage.getContent()));
+    }
+
+    private static AppIcon entityToModel(Y9AppIcon y9AppIcon) {
+        return PlatformModelConvertUtil.convert(y9AppIcon, AppIcon.class);
+    }
+
+    private static List<AppIcon> entityToModel(List<Y9AppIcon> y9AppIconList) {
+        return PlatformModelConvertUtil.convert(y9AppIconList, AppIcon.class);
     }
 }

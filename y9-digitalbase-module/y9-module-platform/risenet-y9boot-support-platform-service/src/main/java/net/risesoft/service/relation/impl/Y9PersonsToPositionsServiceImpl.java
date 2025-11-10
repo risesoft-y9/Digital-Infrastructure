@@ -11,10 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
+import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.PersonsPositions;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.service.relation.Y9PersonsToPositionsService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
@@ -33,9 +38,11 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
 
     private final Y9PersonsToPositionsManager y9PersonsToPositionsManager;
 
+    private final Y9PersonManager y9PersonManager;
+
     @Override
     @Transactional
-    public List<Y9PersonsToPositions> addPersons(String positionId, String[] personIds) {
+    public List<PersonsPositions> addPersons(String positionId, String[] personIds) {
         List<Y9PersonsToPositions> personsToPositionsList = new ArrayList<>();
         for (int i = 0; i < personIds.length; i++) {
             String personId = personIds[i];
@@ -44,12 +51,12 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
             }
             personsToPositionsList.add(y9PersonsToPositionsManager.save(personId, positionId));
         }
-        return personsToPositionsList;
+        return entityToModel(personsToPositionsList);
     }
 
     @Override
     @Transactional
-    public List<Y9PersonsToPositions> addPositions(String personId, String[] positionIds) {
+    public List<PersonsPositions> addPositions(String personId, String[] positionIds) {
         List<Y9PersonsToPositions> personsToPositionsList = new ArrayList<>();
         for (int i = 0; i < positionIds.length; i++) {
             String positionId = positionIds[i];
@@ -58,26 +65,7 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
             }
             personsToPositionsList.add(y9PersonsToPositionsManager.save(personId, positionId));
         }
-        return personsToPositionsList;
-    }
-
-    @Override
-    @Transactional
-    public void deleteByPersonId(String personId) {
-        List<Y9PersonsToPositions> y9PersonsToPositionsList = y9PersonsToPositionsRepository.findByPersonId(personId);
-        for (Y9PersonsToPositions y9PersonsToPositions : y9PersonsToPositionsList) {
-            y9PersonsToPositionsManager.delete(y9PersonsToPositions);
-        }
-    }
-
-    @Override
-    @Transactional
-    public void deleteByPositionId(String positionId) {
-        List<Y9PersonsToPositions> y9PersonsToPositionsList =
-            y9PersonsToPositionsRepository.findByPositionId(positionId);
-        for (Y9PersonsToPositions y9PersonsToPositions : y9PersonsToPositionsList) {
-            y9PersonsToPositionsManager.delete(y9PersonsToPositions);
-        }
+        return entityToModel(personsToPositionsList);
     }
 
     @Override
@@ -97,18 +85,16 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
     }
 
     @Override
-    public List<Y9PersonsToPositions> findByPositionId(String positionId) {
-        return y9PersonsToPositionsRepository.findByPositionId(positionId);
+    public List<PersonsPositions> listByPersonId(String personId) {
+        List<Y9PersonsToPositions> y9PersonsToPositionsList = y9PersonsToPositionsRepository.findByPersonId(personId);
+        return entityToModel(y9PersonsToPositionsList);
     }
 
     @Override
-    public List<Y9PersonsToPositions> listByPersonId(String personId) {
-        return y9PersonsToPositionsRepository.findByPersonId(personId);
-    }
-
-    @Override
-    public List<Y9PersonsToPositions> listByPositionId(String positionId) {
-        return y9PersonsToPositionsRepository.findByPositionIdOrderByPersonOrder(positionId);
+    public List<PersonsPositions> listByPositionId(String positionId) {
+        List<Y9PersonsToPositions> y9PersonsToPositionsList =
+            y9PersonsToPositionsRepository.findByPositionIdOrderByPersonOrder(positionId);
+        return entityToModel(y9PersonsToPositionsList);
     }
 
     @Override
@@ -120,8 +106,8 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
 
     @Override
     @Transactional
-    public List<Y9PersonsToPositions> orderPersons(String positionId, String[] personIds) {
-        List<Y9PersonsToPositions> orgPositionsPersonsList = new ArrayList<>();
+    public List<PersonsPositions> orderPersons(String positionId, String[] personIds) {
+        List<Y9PersonsToPositions> y9PersonsToPositionsList = new ArrayList<>();
         for (int i = 0; i < personIds.length; i++) {
             Optional<Y9PersonsToPositions> optionalY9PersonsToPositions =
                 y9PersonsToPositionsRepository.findByPositionIdAndPersonId(positionId, personIds[i]);
@@ -136,16 +122,16 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
 
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalPersonsToPositions, savedPersonsToPositions));
 
-                orgPositionsPersonsList.add(savedPersonsToPositions);
+                y9PersonsToPositionsList.add(savedPersonsToPositions);
             }
         }
-        return orgPositionsPersonsList;
+        return entityToModel(y9PersonsToPositionsList);
     }
 
     @Override
     @Transactional
-    public List<Y9PersonsToPositions> orderPositions(String personId, String[] positionIds) {
-        List<Y9PersonsToPositions> orgPositionsPersonsList = new ArrayList<>();
+    public List<PersonsPositions> orderPositions(String personId, String[] positionIds) {
+        List<Y9PersonsToPositions> y9PersonsToPositionsList = new ArrayList<>();
 
         for (int i = 0; i < positionIds.length; i++) {
             Optional<Y9PersonsToPositions> optionalY9PersonsToPositions =
@@ -160,21 +146,42 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
                     y9PersonsToPositionsRepository.save(updatedPersonsToPositions);
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalPersonsToPositions, savedPersonsToPositions));
 
-                orgPositionsPersonsList.add(savedPersonsToPositions);
+                y9PersonsToPositionsList.add(savedPersonsToPositions);
             }
         }
-        return orgPositionsPersonsList;
+        return entityToModel(y9PersonsToPositionsList);
     }
 
     @Override
     @Transactional
-    public void saveOrUpdate(Y9PersonsToPositions y9PersonsToPositions) {
+    public void saveOrUpdate(PersonsPositions personsPositions) {
+        Y9PersonsToPositions y9PersonsToPositions =
+            PlatformModelConvertUtil.convert(personsPositions, Y9PersonsToPositions.class);
         y9PersonsToPositionsManager.saveOrUpdate(y9PersonsToPositions);
+    }
+
+    @Override
+    public List<Person> listPersonByPositionId(String positionId) {
+        List<Y9PersonsToPositions> y9PersonsToPositionsList =
+            y9PersonsToPositionsRepository.findByPositionIdOrderByPersonOrder(positionId);
+        List<Y9Person> y9PersonList = new ArrayList<>();
+        for (Y9PersonsToPositions y9PersonsToPositions : y9PersonsToPositionsList) {
+            y9PersonList.add(y9PersonManager.getByIdFromCache(y9PersonsToPositions.getPersonId()));
+        }
+        return PlatformModelConvertUtil.y9PersonToPerson(y9PersonList);
     }
 
     @Override
     public String getPositionIdsByPersonId(String personId) {
         List<String> positionIdList = y9PersonsToPositionsRepository.listPositionIdsByPersonId(personId);
         return StringUtils.join(positionIdList, ",");
+    }
+
+    private List<PersonsPositions> entityToModel(List<Y9PersonsToPositions> personsToPositionsList) {
+        return PlatformModelConvertUtil.convert(personsToPositionsList, PersonsPositions.class);
+    }
+
+    private PersonsPositions entityToModel(Y9PersonsToPositions y9PersonsToPositions) {
+        return PlatformModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class);
     }
 }

@@ -16,16 +16,14 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.org.GroupApi;
 import net.risesoft.dto.platform.CreateGroupDTO;
-import net.risesoft.entity.org.Y9Group;
-import net.risesoft.entity.org.Y9Person;
 import net.risesoft.model.platform.org.Group;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9GroupService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.relation.Y9PersonsToGroupsService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
  * 用户组服务组件
@@ -78,9 +76,8 @@ public class GroupApiImpl implements GroupApi {
         @RequestBody @Validated CreateGroupDTO createGroupDTO) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Group y9Group = Y9ModelConvertUtil.convert(createGroupDTO, Y9Group.class);
-        y9Group = y9GroupService.saveOrUpdate(y9Group);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Group, Group.class));
+        Group group = PlatformModelConvertUtil.convert(createGroupDTO, Group.class);
+        return Y9Result.success(y9GroupService.saveOrUpdate(group));
     }
 
     /**
@@ -112,8 +109,7 @@ public class GroupApiImpl implements GroupApi {
     public Y9Result<Group> get(@RequestParam @NotBlank String tenantId, @RequestParam @NotBlank String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Group y9Group = y9GroupService.findById(groupId).orElse(null);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Group, Group.class));
+        return Y9Result.success(y9GroupService.findById(groupId).orElse(null));
     }
 
     /**
@@ -129,8 +125,7 @@ public class GroupApiImpl implements GroupApi {
         @RequestParam("parentId") @NotBlank String parentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Group> y9GroupList = y9GroupService.listByParentId(parentId, Boolean.FALSE);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9GroupList, Group.class));
+        return Y9Result.success(y9GroupService.listByParentId(parentId, Boolean.FALSE));
     }
 
     /**
@@ -146,8 +141,7 @@ public class GroupApiImpl implements GroupApi {
         @RequestParam("groupId") @NotBlank String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByGroupId(groupId, Boolean.FALSE);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
+        return Y9Result.success(y9PersonService.listByGroupId(groupId, Boolean.FALSE));
     }
 
     /**

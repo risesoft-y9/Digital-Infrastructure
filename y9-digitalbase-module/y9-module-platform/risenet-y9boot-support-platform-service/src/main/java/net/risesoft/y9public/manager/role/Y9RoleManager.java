@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import net.risesoft.y9.exception.Y9NotFoundException;
-import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.entity.Y9Role;
 
 /**
  * 角色管理 Y9RoleManager

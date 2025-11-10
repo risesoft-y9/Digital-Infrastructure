@@ -1,15 +1,21 @@
 package net.risesoft.model.platform.org;
 
 import java.io.Serializable;
+import java.util.Date;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.enums.platform.org.SexEnum;
-import net.risesoft.model.user.UserInfo;
+import net.risesoft.y9.validation.Mobile;
 
 /**
- * 人员
+ * 三员
  *
  * @author dingzhaojun
  * @author qinman
@@ -19,17 +25,8 @@ import net.risesoft.model.user.UserInfo;
  */
 @Data
 public class Manager extends OrgUnit implements Serializable {
+
     private static final long serialVersionUID = 1095290600488048717L;
-
-    /**
-     * 登录名称
-     */
-    private String loginName;
-
-    /**
-     * 密码
-     */
-    private String password;
 
     /**
      * 人员头像
@@ -39,17 +36,23 @@ public class Manager extends OrgUnit implements Serializable {
     /**
      * 邮箱
      */
+    @Email
     private String email;
 
     /**
-     * 性别
+     * 登录名称
      */
-    private SexEnum sex;
+    @NotBlank
+    private String loginName;
 
     /**
      * 手机号
      */
+    @Mobile
     private String mobile;
+
+    // FIXME 密码为敏感字段 不返回？
+    private String password;
 
     /**
      * 排序序列号
@@ -57,37 +60,35 @@ public class Manager extends OrgUnit implements Serializable {
     private String orderedPath;
 
     /**
-     * 是否全局管理员
+     * 性别
      */
-    private boolean globalManager;
+    private SexEnum sex;
 
     /**
      * 三员类别
      */
     private ManagerLevelEnum managerLevel;
 
-    public UserInfo toUserInfo() {
-        UserInfo userInfo = new UserInfo();
-        userInfo.setAvator(avator);
-        userInfo.setCaid(null);
-        userInfo.setDn(dn);
-        userInfo.setEmail(email);
-        userInfo.setGuidPath(guidPath);
-        userInfo.setLoginName(loginName);
-        userInfo.setMobile(mobile);
-        userInfo.setName(name);
-        userInfo.setOriginal(true);
-        userInfo.setOriginalId(null);
-        userInfo.setParentId(parentId);
-        userInfo.setPassword(password);
-        userInfo.setPersonId(id);
-        userInfo.setPositionId(null);
-        userInfo.setPositions(null);
-        userInfo.setSex(sex);
-        userInfo.setTenantId(tenantId);
-        userInfo.setGlobalManager(globalManager);
-        userInfo.setManagerLevel(managerLevel);
-        return userInfo;
-    }
+    /**
+     * 是否全局管理员
+     */
+    private boolean globalManager;
+
+    /**
+     * 允许访问的客户端IP
+     */
+    private String userHostIp;
+
+    /**
+     * 修改密码时间
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date lastModifyPasswordTime;
+
+    /**
+     * 上一次审查时间
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date lastReviewLogTime;
 
 }

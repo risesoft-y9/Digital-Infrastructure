@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.v0.org.GroupApi;
-import net.risesoft.entity.org.Y9Group;
-import net.risesoft.entity.org.Y9OrgBase;
-import net.risesoft.entity.org.Y9Person;
 import net.risesoft.model.platform.org.Group;
 import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.org.Person;
@@ -24,10 +21,8 @@ import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9GroupService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.relation.Y9PersonsToGroupsService;
-import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
  * 用户组服务组件
@@ -65,11 +60,8 @@ public class GroupApiImpl implements GroupApi {
         @RequestParam("groupId") @NotBlank String groupId, @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        if (y9GroupService.existsById(groupId) && y9PersonService.existsById(personId)) {
-            y9PersonsToGroupsService.addPersons(groupId, new String[] {personId});
-            return true;
-        }
-        return false;
+        y9PersonsToGroupsService.addPersons(groupId, new String[] {personId});
+        return true;
     }
 
     /**
@@ -85,9 +77,8 @@ public class GroupApiImpl implements GroupApi {
         @RequestParam("groupJson") @NotBlank String groupJson) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Group y9Group = Y9JsonUtil.readValue(groupJson, Y9Group.class);
-        y9Group = y9GroupService.saveOrUpdate(y9Group);
-        return Y9ModelConvertUtil.convert(y9Group, Group.class);
+        Group y9Group = Y9JsonUtil.readValue(groupJson, Group.class);
+        return y9GroupService.saveOrUpdate(y9Group);
     }
 
     /**
@@ -119,8 +110,7 @@ public class GroupApiImpl implements GroupApi {
     public Group getGroup(@RequestParam @NotBlank String tenantId, @RequestParam @NotBlank String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Group y9Group = y9GroupService.findById(groupId).orElse(null);
-        return Y9ModelConvertUtil.convert(y9Group, Group.class);
+        return y9GroupService.findById(groupId).orElse(null);
     }
 
     /**
@@ -136,8 +126,7 @@ public class GroupApiImpl implements GroupApi {
         @RequestParam("groupId") @NotBlank String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9OrgBase parent = compositeOrgBaseService.findOrgUnitParent(groupId).orElse(null);
-        return ModelConvertUtil.orgBaseToOrgUnit(parent);
+        return compositeOrgBaseService.findOrgUnitParent(groupId).orElse(null);
     }
 
     /**
@@ -153,8 +142,7 @@ public class GroupApiImpl implements GroupApi {
         @RequestParam("dn") @NotBlank String dn) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Group> y9GroupList = y9GroupService.listByDn(dn, false);
-        return Y9ModelConvertUtil.convert(y9GroupList, Group.class);
+        return y9GroupService.listByDn(dn, false);
     }
 
     /**
@@ -170,8 +158,7 @@ public class GroupApiImpl implements GroupApi {
         @RequestParam("groupId") @NotBlank String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByGroupId(groupId, Boolean.FALSE);
-        return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
+        return y9PersonService.listByGroupId(groupId, Boolean.FALSE);
     }
 
     /**
@@ -205,9 +192,8 @@ public class GroupApiImpl implements GroupApi {
         @RequestParam("groupJson") @NotBlank String groupJson) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Group y9Group = Y9JsonUtil.readValue(groupJson, Y9Group.class);
-        y9Group = y9GroupService.saveOrUpdate(y9Group);
-        return Y9ModelConvertUtil.convert(y9Group, Group.class);
+        Group y9Group = Y9JsonUtil.readValue(groupJson, Group.class);
+        return y9GroupService.saveOrUpdate(y9Group);
     }
 
 }

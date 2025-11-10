@@ -3,14 +3,13 @@ package net.risesoft.manager.org;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.entity.org.Y9Job;
 import net.risesoft.entity.org.Y9Position;
-import net.risesoft.entity.relation.Y9PersonsToPositions;
+import net.risesoft.model.platform.org.Person;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
 public interface Y9PositionManager {
 
-    String buildName(Y9Job y9Job, List<Y9PersonsToPositions> personsToPositionsList);
+    String buildName(String jobName, List<Person> personList);
 
     void delete(Y9Position y9Position);
 

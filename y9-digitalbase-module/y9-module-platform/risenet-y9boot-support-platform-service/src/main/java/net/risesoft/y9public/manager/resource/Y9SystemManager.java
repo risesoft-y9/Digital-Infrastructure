@@ -2,7 +2,7 @@ package net.risesoft.y9public.manager.resource;
 
 import java.util.Optional;
 
-import net.risesoft.y9public.entity.resource.Y9System;
+import net.risesoft.y9public.entity.Y9System;
 
 /**
  * 系统 Manager

@@ -15,9 +15,9 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.service.resource.Y9MenuService;
 
 /**
@@ -53,11 +53,11 @@ public class MenuResourceController {
      * 禁用菜单资源
      *
      * @param id 菜单资源Id
-     * @return {@code Y9Result<Y9Menu>}
+     * @return {@code Y9Result<Menu>}
      */
     @RiseLog(operationName = "禁用菜单资源")
     @PostMapping(value = "/disable")
-    public Y9Result<Y9Menu> disable(@RequestParam @NotBlank String id) {
+    public Y9Result<Menu> disable(@RequestParam @NotBlank String id) {
         return Y9Result.success(y9MenuService.disable(id), "禁用菜单资源成功");
     }
 
@@ -65,11 +65,11 @@ public class MenuResourceController {
      * 启用菜单资源
      *
      * @param id 菜单资源Id
-     * @return {@code Y9Result<Y9Menu>}
+     * @return {@code Y9Result<Menu>}
      */
     @RiseLog(operationName = "启用菜单资源")
     @PostMapping(value = "/enable")
-    public Y9Result<Y9Menu> enable(@RequestParam @NotBlank String id) {
+    public Y9Result<Menu> enable(@RequestParam @NotBlank String id) {
         return Y9Result.success(y9MenuService.enable(id), "启用菜单资源成功");
     }
 
@@ -77,13 +77,13 @@ public class MenuResourceController {
      * 根据id获取菜单资源详情
      *
      * @param id 菜单资源Id
-     * @return {@code Y9Result<Y9Menu>}
+     * @return {@code Y9Result<Menu>}
      */
     @RiseLog(operationName = "根据id获取菜单资源详情")
     @GetMapping(value = "/{id}")
     @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
         ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
-    public Y9Result<Y9Menu> getById(@PathVariable @NotBlank String id) {
+    public Y9Result<Menu> getById(@PathVariable @NotBlank String id) {
         return Y9Result.success(y9MenuService.getById(id), "根据id获取菜单资源详情成功");
     }
 
@@ -91,12 +91,12 @@ public class MenuResourceController {
      * 保存菜单资源
      *
      * @param appResource 菜单资源
-     * @return {@code Y9Result<Y9Menu>}
+     * @return {@code Y9Result<Menu>}
      */
     @RiseLog(operationName = "保存菜单资源")
     @PostMapping(value = "/save")
-    public Y9Result<Y9Menu> save(@Validated Y9Menu appResource) {
-        Y9Menu savedMenu = y9MenuService.saveOrUpdate(appResource);
+    public Y9Result<Menu> save(@Validated Menu appResource) {
+        Menu savedMenu = y9MenuService.saveOrUpdate(appResource);
         return Y9Result.success(savedMenu, "保存菜单资源成功");
     }
 

@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.org.Y9Position;
-import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.org.PersonsPositions;
+import net.risesoft.model.platform.org.Position;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9PositionService;
@@ -51,23 +51,21 @@ public class PositionController {
      */
     @RiseLog(operationName = "为岗位添加人员", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/addPersons")
-    public Y9Result<List<Y9PersonsToPositions>> addPersons(@RequestParam @NotBlank String positionId,
+    public Y9Result<List<PersonsPositions>> addPersons(@RequestParam @NotBlank String positionId,
         @RequestParam @NotEmpty String[] personIds) {
-        List<Y9PersonsToPositions> orgPersonList = y9PersonsToPositionsService.addPersons(positionId, personIds);
-        return Y9Result.success(orgPersonList, "为岗位添加人员成功");
+        return Y9Result.success(y9PersonsToPositionsService.addPersons(positionId, personIds), "为岗位添加人员成功");
     }
 
     /**
      * 根据id，改变岗位禁用状态
      *
      * @param id 岗位id
-     * @return {@code Y9Result<Y9Position>}
+     * @return {@code Y9Result<Position>}
      */
     @RiseLog(operationName = "禁用岗位", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/changeDisabled")
-    public Y9Result<Y9Position> changeDisabled(@NotBlank @RequestParam String id) {
-        Y9Position y9Position = y9PositionService.changeDisabled(id);
-        return Y9Result.success(y9Position, "岗位禁用状态修改成功");
+    public Y9Result<Position> changeDisabled(@NotBlank @RequestParam String id) {
+        return Y9Result.success(y9PositionService.changeDisabled(id), "岗位禁用状态修改成功");
     }
 
     /**
@@ -87,11 +85,11 @@ public class PositionController {
      * 根据岗位id，获取岗位信息
      *
      * @param positionId 岗位id
-     * @return {@code Y9Result<Y9Position>}
+     * @return {@code Y9Result<Position>}
      */
     @RiseLog(operationName = "根据岗位id，获取岗位信息信息")
     @RequestMapping(value = "/getPositionById")
-    public Y9Result<Y9Position> getPositionById(@RequestParam @NotBlank String positionId) {
+    public Y9Result<Position> getPositionById(@RequestParam @NotBlank String positionId) {
         return Y9Result.success(y9PositionService.getById(positionId), "根据岗位id，获取岗位信息成功");
     }
 
@@ -99,12 +97,12 @@ public class PositionController {
      * 根据父节点id，获取岗位列表
      *
      * @param parentId 父节点id
-     * @return {@code Y9Result<List<Y9Position>>}
+     * @return {@code Y9Result<List<Position>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "根据父节点id，获取岗位列表")
     @RequestMapping(value = "/listPositionsByParentId")
-    public Y9Result<List<Y9Position>> listPositionsByParentId(@RequestParam @NotBlank String parentId) {
+    public Y9Result<List<Position>> listPositionsByParentId(@RequestParam @NotBlank String parentId) {
         return Y9Result.success(y9PositionService.listByParentId(parentId, null), "根据父节点id，获取岗位列表成功");
     }
 
@@ -112,12 +110,12 @@ public class PositionController {
      * 根据人员id，获取岗位列表
      *
      * @param personId 人员id
-     * @return {@code Y9Result<List<Y9Position>>}
+     * @return {@code Y9Result<List<Position>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "根据人员id，获取岗位列表")
     @RequestMapping(value = "/listPositionsByPersonId")
-    public Y9Result<List<Y9Position>> listPositionsByPersonId(@RequestParam @NotBlank String personId) {
+    public Y9Result<List<Position>> listPositionsByPersonId(@RequestParam @NotBlank String personId) {
         return Y9Result.success(y9PositionService.listByPersonId(personId, null), "根据人员id，获取岗位列表成功");
     }
 
@@ -126,14 +124,13 @@ public class PositionController {
      *
      * @param positionId 岗位id
      * @param parentId 目标父节点id
-     * @return {@code Y9Result<Y9Position>}
+     * @return {@code Y9Result<Position>}
      */
     @RiseLog(operationName = "移动岗位", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/move")
-    public Y9Result<Y9Position> move(@RequestParam @NotBlank String positionId,
-        @RequestParam @NotBlank String parentId) {
-        Y9Position y9Position = y9PositionService.move(positionId, parentId);
-        return Y9Result.success(y9Position, "移动岗位成功");
+    public Y9Result<Position> move(@RequestParam @NotBlank String positionId, @RequestParam @NotBlank String parentId) {
+        Position position = y9PositionService.move(positionId, parentId);
+        return Y9Result.success(position, "移动岗位成功");
     }
 
     /**
@@ -175,21 +172,20 @@ public class PositionController {
     @PostMapping(value = "/saveExtendProperties")
     public Y9Result<String> saveExtendProperties(@RequestParam @NotBlank String positionId,
         @RequestParam String properties) {
-        Y9Position y9Position = y9PositionService.saveProperties(positionId, properties);
-        return Y9Result.success(y9Position.getProperties(), "保存扩展属性成成功");
+        Position position = y9PositionService.saveProperties(positionId, properties);
+        return Y9Result.success(position.getProperties(), "保存扩展属性成成功");
     }
 
     /**
      * 新建或者更新岗位信息
      *
      * @param position 岗位实体
-     * @return {@code Y9Result<Y9Position>}
+     * @return {@code Y9Result<Position>}
      */
     @RiseLog(operationName = "新建或者更新岗位信息", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")
-    public Y9Result<Y9Position> saveOrUpdate(@Validated Y9Position position) {
-        Y9Position returnPosition = y9PositionService.saveOrUpdate(position);
-        return Y9Result.success(returnPosition, "保存岗位信息成功");
+    public Y9Result<Position> saveOrUpdate(@Validated Position position) {
+        return Y9Result.success(y9PositionService.saveOrUpdate(position), "保存岗位信息成功");
     }
 
     /**

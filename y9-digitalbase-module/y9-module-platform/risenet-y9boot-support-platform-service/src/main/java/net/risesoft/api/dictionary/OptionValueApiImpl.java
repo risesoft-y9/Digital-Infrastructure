@@ -14,12 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.dictionary.OptionValueApi;
-import net.risesoft.entity.dictionary.Y9OptionValue;
 import net.risesoft.model.platform.dictionary.OptionValue;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.dictionary.Y9OptionValueService;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
  * 字典表管理组件
@@ -52,7 +50,6 @@ public class OptionValueApiImpl implements OptionValueApi {
         @RequestParam("type") @NotBlank String type) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9OptionValue> y9OptionValueList = optionValueService.listByType(type);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9OptionValueList, OptionValue.class));
+        return Y9Result.success(optionValueService.listByType(type));
     }
 }

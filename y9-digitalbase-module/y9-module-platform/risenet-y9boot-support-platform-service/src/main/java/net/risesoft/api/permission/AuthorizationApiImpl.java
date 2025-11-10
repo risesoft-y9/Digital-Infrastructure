@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.permission.AuthorizationApi;
-import net.risesoft.entity.org.Y9Person;
-import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.permission.Authorization;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.permission.Y9AuthorizationService;
@@ -58,16 +58,16 @@ public class AuthorizationApiImpl implements AuthorizationApi {
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("authority") AuthorityEnum authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Person y9Person = y9PersonService.getById(personId);
-        Y9Authorization y9Authorization = new Y9Authorization();
-        y9Authorization.setAuthorizer(y9Person.getName());
-        y9Authorization.setAuthority(authority);
-        y9Authorization.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        y9Authorization.setResourceId(resourceId);
-        y9Authorization.setPrincipalId(roleId);
-        y9Authorization.setTenantId(tenantId);
+        Person person = y9PersonService.getById(personId);
+        Authorization authorization = new Authorization();
+        authorization.setAuthorizer(person.getName());
+        authorization.setAuthority(authority);
+        authorization.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+        authorization.setResourceId(resourceId);
+        authorization.setPrincipalId(roleId);
+        authorization.setTenantId(tenantId);
 
-        y9AuthorizationService.saveOrUpdateRole(y9Authorization);
+        y9AuthorizationService.saveOrUpdateRole(authorization);
         return Y9Result.success();
     }
 

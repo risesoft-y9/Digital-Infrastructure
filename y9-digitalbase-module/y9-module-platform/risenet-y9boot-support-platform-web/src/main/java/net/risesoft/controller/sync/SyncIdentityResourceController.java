@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.org.Organization;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.service.permission.cache.IdentityResourceCalculator;
@@ -51,8 +51,8 @@ public class SyncIdentityResourceController {
         for (String tenantId : tenantIdList) {
             Y9LoginUserHolder.setTenantId(tenantId);
             LOGGER.info("更新人员与（资源、权限）关系表租户id---->>{}", tenantId);
-            for (Y9Organization y9Organization : y9OrganizationService.list()) {
-                this.identityResources(tenantId, y9Organization.getId());
+            for (Organization organization : y9OrganizationService.list()) {
+                this.identityResources(tenantId, organization.getId());
             }
         }
 
@@ -76,8 +76,8 @@ public class SyncIdentityResourceController {
         LOGGER.info("更新人员与（资源、权限）关系表开始时间---->>{},租户id---->>{}", fdf.format(new Date()), tenantId);
 
         Y9LoginUserHolder.setTenantId(tenantId);
-        for (Y9Organization y9Organization : y9OrganizationService.list()) {
-            this.identityResources(tenantId, y9Organization.getId());
+        for (Organization organization : y9OrganizationService.list()) {
+            this.identityResources(tenantId, organization.getId());
         }
 
         double end = System.currentTimeMillis();

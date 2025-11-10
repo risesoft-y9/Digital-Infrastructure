@@ -9,9 +9,9 @@ import lombok.Setter;
 import net.risesoft.enums.TreeTypeEnum;
 import net.risesoft.enums.platform.TreeNodeType;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
+import net.risesoft.model.platform.System;
+import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.vo.TreeNodeVO;
-import net.risesoft.y9public.entity.resource.Y9ResourceBase;
-import net.risesoft.y9public.entity.resource.Y9System;
 
 /**
  * 资源树节点vo
@@ -25,64 +25,73 @@ public class ResourceTreeNodeVO extends TreeNodeVO {
 
     private static final long serialVersionUID = 6086483154815612739L;
 
-    /** 应用id */
+    /**
+     * 应用id
+     */
     private String appId;
-    /** 系统id */
+    /**
+     * 系统id
+     */
     private String systemId;
-    /** 是否启用 */
+    /**
+     * 是否启用
+     */
     private Boolean enabled;
-    /** 租户id */
+    /**
+     * 租户id
+     */
     private String tenantId;
-    /** 授权是否继承 */
+    /**
+     * 授权是否继承
+     */
     private Boolean inherit;
 
-    public static ResourceTreeNodeVO convertY9ResourceBase(Y9ResourceBase y9ResourceBase) {
+    public static ResourceTreeNodeVO convertResource(Resource resource) {
         ResourceTreeNodeVO resourceTreeNodeVO = new ResourceTreeNodeVO();
-        resourceTreeNodeVO.setId(y9ResourceBase.getId());
-        resourceTreeNodeVO.setAppId(y9ResourceBase.getAppId());
-        resourceTreeNodeVO.setName(y9ResourceBase.getName());
-        if (ResourceTypeEnum.APP.equals(y9ResourceBase.getResourceType())) {
-            resourceTreeNodeVO.setParentId(y9ResourceBase.getSystemId());
+        resourceTreeNodeVO.setId(resource.getId());
+        resourceTreeNodeVO.setAppId(resource.getAppId());
+        resourceTreeNodeVO.setName(resource.getName());
+        if (ResourceTypeEnum.APP.equals(resource.getResourceType())) {
+            resourceTreeNodeVO.setParentId(resource.getSystemId());
         } else {
-            resourceTreeNodeVO.setParentId(y9ResourceBase.getParentId());
+            resourceTreeNodeVO.setParentId(resource.getParentId());
         }
-        resourceTreeNodeVO.setTabIndex(y9ResourceBase.getTabIndex());
+        resourceTreeNodeVO.setTabIndex(resource.getTabIndex());
         resourceTreeNodeVO.setHasChild(true);
-        resourceTreeNodeVO.setNodeType(y9ResourceBase.getResourceType().toString());
-        resourceTreeNodeVO.setSystemId(y9ResourceBase.getSystemId());
-        resourceTreeNodeVO.setEnabled(y9ResourceBase.getEnabled());
-        resourceTreeNodeVO.setInherit(y9ResourceBase.getInherit());
+        resourceTreeNodeVO.setNodeType(resource.getResourceType().toString());
+        resourceTreeNodeVO.setSystemId(resource.getSystemId());
+        resourceTreeNodeVO.setEnabled(resource.getEnabled());
+        resourceTreeNodeVO.setInherit(resource.getInherit());
         return resourceTreeNodeVO;
     }
 
-    public static List<ResourceTreeNodeVO>
-        convertY9ResourceBaseList(List<? extends Y9ResourceBase> y9ResourceBaseList) {
+    public static List<ResourceTreeNodeVO> convertResource(List<? extends Resource> resourceList) {
         List<ResourceTreeNodeVO> roleTreeNodeVOList = new ArrayList<>();
-        for (Y9ResourceBase y9ResourceBase : y9ResourceBaseList) {
-            roleTreeNodeVOList.add(convertY9ResourceBase(y9ResourceBase));
+        for (Resource resource : resourceList) {
+            roleTreeNodeVOList.add(convertResource(resource));
         }
         return roleTreeNodeVOList;
     }
 
-    public static ResourceTreeNodeVO convertY9System(Y9System y9System) {
+    public static ResourceTreeNodeVO convertSystem(System system) {
         ResourceTreeNodeVO resourceTreeNodeVO = new ResourceTreeNodeVO();
-        resourceTreeNodeVO.setId(y9System.getId());
+        resourceTreeNodeVO.setId(system.getId());
         resourceTreeNodeVO.setAppId(null);
-        resourceTreeNodeVO.setName(y9System.getCnName());
+        resourceTreeNodeVO.setName(system.getCnName());
         resourceTreeNodeVO.setParentId(null);
-        resourceTreeNodeVO.setTabIndex(y9System.getTabIndex());
+        resourceTreeNodeVO.setTabIndex(system.getTabIndex());
         resourceTreeNodeVO.setHasChild(true);
         resourceTreeNodeVO.setNodeType(TreeNodeType.SYSTEM.toString());
         resourceTreeNodeVO.setSystemId(null);
-        resourceTreeNodeVO.setEnabled(y9System.getEnabled());
-        resourceTreeNodeVO.setTenantId(y9System.getTenantId());
+        resourceTreeNodeVO.setEnabled(system.getEnabled());
+        resourceTreeNodeVO.setTenantId(system.getTenantId());
         return resourceTreeNodeVO;
     }
 
-    public static List<ResourceTreeNodeVO> convertY9SystemList(List<Y9System> y9SystemList) {
+    public static List<ResourceTreeNodeVO> convertSystem(List<System> systemList) {
         List<ResourceTreeNodeVO> resourceTreeNodeVOList = new ArrayList<>();
-        for (Y9System y9System : y9SystemList) {
-            resourceTreeNodeVOList.add(convertY9System(y9System));
+        for (System system : systemList) {
+            resourceTreeNodeVOList.add(convertSystem(system));
         }
         return resourceTreeNodeVOList;
     }

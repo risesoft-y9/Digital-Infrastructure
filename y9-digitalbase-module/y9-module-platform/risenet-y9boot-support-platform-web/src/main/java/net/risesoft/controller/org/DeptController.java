@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.org.Y9Department;
-import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.enums.platform.org.OrgTreeTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.org.Department;
+import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
@@ -48,26 +48,26 @@ public class DeptController {
      * 禁用/解除禁用部门
      *
      * @param id 部门id
-     * @return {@code Y9Result<Y9Department>}
+     * @return {@code Y9Result<Department>}
      */
     @RiseLog(operationName = "禁用/解除禁用部门", operationType = OperationTypeEnum.DELETE)
     @RequestMapping(value = "/changeDisabled")
-    public Y9Result<Y9Department> changeDisabled(@RequestParam @NotBlank String id) {
-        Y9Department dept = y9DepartmentService.changeDisable(id);
-        return Y9Result.success(dept, "部门禁用状态修改成功！");
+    public Y9Result<Department> changeDisabled(@RequestParam @NotBlank String id) {
+        Department department = y9DepartmentService.changeDisable(id);
+        return Y9Result.success(department, "部门禁用状态修改成功！");
     }
 
     /**
      * 获取部门信息
      *
      * @param deptId 部门id
-     * @return {@code Y9Result<Y9Department>}
+     * @return {@code Y9Result<Department>}
      */
     @RiseLog(operationName = "根据部门id，获取部门信息")
     @RequestMapping(value = "/getDepartmentById")
-    public Y9Result<Y9Department> getDepartmentById(@RequestParam @NotBlank String deptId) {
-        Y9Department dept = y9DepartmentService.getById(deptId);
-        return Y9Result.success(dept, "获取部门信息成功");
+    public Y9Result<Department> getDepartmentById(@RequestParam @NotBlank String deptId) {
+        Department department = y9DepartmentService.getById(deptId);
+        return Y9Result.success(department, "获取部门信息成功");
     }
 
     /**
@@ -93,7 +93,7 @@ public class DeptController {
      */
     @RiseLog(operationName = "获取部门属性对应组织节点列表")
     @RequestMapping(value = "/listDepartmentPropOrgUnits")
-    public Y9Result<List<Y9OrgBase>> listDepartmentPropOrgUnits(@RequestParam @NotBlank String deptId,
+    public Y9Result<List<OrgUnit>> listDepartmentPropOrgUnits(@RequestParam @NotBlank String deptId,
         @RequestParam Integer category) {
         return Y9Result.success(y9DepartmentService.listDepartmentPropOrgUnits(deptId, category, Boolean.FALSE, null),
             "获取部门领导列表成功");
@@ -109,7 +109,7 @@ public class DeptController {
      */
     @RiseLog(operationName = "获取可继承的部门属性对应组织节点列表")
     @RequestMapping(value = "/listInheritableDepartmentPropOrgUnits")
-    public Y9Result<List<Y9OrgBase>> listInheritableDepartmentPropOrgUnits(@RequestParam @NotBlank String deptId,
+    public Y9Result<List<OrgUnit>> listInheritableDepartmentPropOrgUnits(@RequestParam @NotBlank String deptId,
         @RequestParam Integer category) {
         return Y9Result.success(y9DepartmentService.listInheritableDepartmentPropOrgUnits(deptId, category, null),
             "获取部门领导列表成功");
@@ -125,10 +125,9 @@ public class DeptController {
     @RiseLog(operationName = "获取部门排序列表")
     @RequestMapping(value = "/listOrderDepts")
     public Y9Result<List<OrgTreeNodeVO>> listOrderDepts(@RequestParam @NotBlank String parentId) {
-        List<Y9OrgBase> deptList = compositeOrgBaseService.getTree(parentId, OrgTreeTypeEnum.TREE_TYPE_ORG, false);
-
+        List<OrgUnit> deptList = compositeOrgBaseService.getTree(parentId, OrgTreeTypeEnum.TREE_TYPE_ORG, false);
         return Y9Result.success(
-            OrgTreeNodeVO.convertY9OrgBaseList(deptList, OrgTreeTypeEnum.TREE_TYPE_ORG, false, compositeOrgBaseService),
+            OrgTreeNodeVO.convertOrgUnitList(deptList, OrgTreeTypeEnum.TREE_TYPE_ORG, false, compositeOrgBaseService),
             "获取机构树成功！");
     }
 
@@ -137,13 +136,13 @@ public class DeptController {
      *
      * @param deptId 部门id
      * @param parentId 新部门父节点id
-     * @return {@code Y9Result<Y9Department>}
+     * @return {@code Y9Result<Department>}
      */
     @RiseLog(operationName = "移动部门", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/move")
-    public Y9Result<Y9Department> move(@RequestParam @NotBlank String deptId, @RequestParam @NotBlank String parentId) {
-        Y9Department orgDept = y9DepartmentService.move(deptId, parentId);
-        return Y9Result.success(orgDept, "移动部门成功");
+    public Y9Result<Department> move(@RequestParam @NotBlank String deptId, @RequestParam @NotBlank String parentId) {
+        Department department = y9DepartmentService.move(deptId, parentId);
+        return Y9Result.success(department, "移动部门成功");
     }
 
     /**
@@ -186,21 +185,21 @@ public class DeptController {
     @PostMapping(value = "/saveExtendProperties")
     public Y9Result<String> saveExtendProperties(@RequestParam @NotBlank String deptId,
         @RequestParam String properties) {
-        Y9Department orgDept = y9DepartmentService.saveProperties(deptId, properties);
-        return Y9Result.success(orgDept.getProperties(), "新增扩展属性成功");
+        Department department = y9DepartmentService.saveProperties(deptId, properties);
+        return Y9Result.success(department.getProperties(), "新增扩展属性成功");
     }
 
     /**
      * 新建或者更新部门信息
      *
      * @param dept 部门实体
-     * @return {@code Y9Result<Y9Department>}
+     * @return {@code Y9Result<Department>}
      */
     @RiseLog(operationName = "保存部门信息", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")
-    public Y9Result<Y9Department> saveOrUpdate(@Validated Y9Department dept) {
-        Y9Department returnDept = y9DepartmentService.saveOrUpdate(dept);
-        return Y9Result.success(returnDept, "保存成功");
+    public Y9Result<Department> saveOrUpdate(@Validated Department dept) {
+        Department department = y9DepartmentService.saveOrUpdate(dept);
+        return Y9Result.success(department, "保存成功");
     }
 
     /**

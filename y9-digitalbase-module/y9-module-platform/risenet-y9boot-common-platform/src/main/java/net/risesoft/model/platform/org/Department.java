@@ -2,6 +2,8 @@ package net.risesoft.model.platform.org;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
@@ -36,14 +38,14 @@ public class Department extends OrgUnit {
     private String enName;
 
     /**
-     * 等级编码
-     */
-    private String gradeCode;
-
-    /**
      * 区域代码
      */
     private String divisionCode;
+
+    /**
+     * 等级编码
+     */
+    private String gradeCode;
 
     /**
      * 部门地址
@@ -73,12 +75,13 @@ public class Department extends OrgUnit {
     /**
      * 成立时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date establishDate;
 
     /**
      * 是否委办局
      */
-    private boolean bureau = false;
+    private boolean bureau;
 
 }

@@ -2,10 +2,12 @@ package net.risesoft.model.platform.org;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotBlank;
+
 import lombok.Data;
 
 /**
- * 人员与组管理
+ * 人员与组关联
  *
  * @author dingzhaojun
  * @author qinman
@@ -22,9 +24,11 @@ public class PersonsGroups implements Serializable {
     private String id;
 
     /** 用户组id */
+    @NotBlank
     private String groupId;
 
     /** 人员ID */
+    @NotBlank
     private String personId;
 
     /** 用户组排序号 */

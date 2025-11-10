@@ -2,10 +2,7 @@ package net.risesoft.y9public.service.tenant.impl;
 
 import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,9 +18,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.exception.TenantErrorCodeEnum;
-import net.risesoft.model.user.UserInfo;
+import net.risesoft.model.platform.tenant.TenantApp;
+import net.risesoft.pojo.Y9Page;
 import net.risesoft.query.platform.TenantAppQuery;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9public.entity.resource.Y9App;
@@ -73,19 +71,21 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     }
 
     @Override
-    public Optional<Y9TenantApp> findById(String id) {
-        return y9TenantAppRepository.findById(id);
+    public Optional<TenantApp> findById(String id) {
+        return y9TenantAppRepository.findById(id).map(Y9TenantAppServiceImpl::entityToModel);
     }
 
     @Override
-    public Y9TenantApp getById(String id) {
+    public TenantApp getById(String id) {
         return y9TenantAppRepository.findById(id)
+            .map(Y9TenantAppServiceImpl::entityToModel)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(TenantErrorCodeEnum.TENANT_APP_NOT_FOUND, id));
     }
 
     @Override
-    public Optional<Y9TenantApp> getByTenantIdAndAppIdAndTenancy(String tenantId, String appId, Boolean tenancy) {
-        return y9TenantAppManager.getByTenantIdAndAppIdAndTenancy(tenantId, appId, tenancy);
+    public Optional<TenantApp> findByTenantIdAndAppIdAndTenancy(String tenantId, String appId, Boolean tenancy) {
+        return y9TenantAppManager.getByTenantIdAndAppIdAndTenancy(tenantId, appId, tenancy)
+            .map(Y9TenantAppServiceImpl::entityToModel);
     }
 
     @Override
@@ -113,45 +113,26 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     }
 
     @Override
-    public List<Y9TenantApp> listByTenantIdAndTenancy(String tenantId, Boolean verify, Boolean tenancy) {
-        return y9TenantAppRepository.findByTenantIdAndVerifyAndTenancyOrderByCreateTimeDesc(tenantId, verify, tenancy);
-    }
-
-    @Override
-    public Page<Y9TenantApp> page(Integer page, Integer rows, Boolean verify, String tenantName, String createTime,
-        String verifyTime, Boolean tenancy, String systemId) {
-        Sort sort = Sort.by(Sort.Direction.ASC, "verify").and(Sort.by(Sort.Direction.DESC, "createTime"));
-        PageRequest pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, sort);
-        TenantAppQuery tenantAppQuery = TenantAppQuery.builder()
-            .verify(verify)
-            .tenantName(tenantName)
-            .createTime(createTime)
-            .verifyTime(verifyTime)
-            .tenancy(tenancy)
-            .systemIds(systemId)
-            .build();
-        Y9TenantAppSpecification spec = new Y9TenantAppSpecification(tenantAppQuery);
-        return y9TenantAppRepository.findAll(spec, pageable);
-    }
-
-    @Override
-    public Page<Y9TenantApp> page(Integer page, Integer rows, TenantAppQuery tenantAppQuery) {
+    public Y9Page<TenantApp> page(Integer page, Integer rows, TenantAppQuery tenantAppQuery) {
         Sort sort = Sort.by(Sort.Direction.DESC, "createTime").and(Sort.by(Sort.Direction.ASC, "verify"));
-        PageRequest pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, sort);
         Y9TenantAppSpecification spec = new Y9TenantAppSpecification(tenantAppQuery);
-        return y9TenantAppRepository.findAll(spec, pageable);
+        PageRequest pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, sort);
+        Page<Y9TenantApp> y9TenantAppPage = y9TenantAppRepository.findAll(spec, pageable);
+        return Y9Page.success(page, y9TenantAppPage.getTotalPages(), y9TenantAppPage.getTotalElements(),
+            entityToModel(y9TenantAppPage.getContent()));
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9TenantApp save(String appId, String tenantId, String applyReason) {
-        return y9TenantAppManager.save(appId, tenantId, applyReason);
+    public TenantApp save(String appId, String tenantId, String applyReason) {
+        return entityToModel(y9TenantAppManager.save(appId, tenantId, applyReason));
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9TenantApp save(Y9TenantApp y9TenantApp) {
-        return y9TenantAppManager.save(y9TenantApp);
+    public TenantApp save(TenantApp tenantApp) {
+        Y9TenantApp y9TenantApp = PlatformModelConvertUtil.convert(tenantApp, Y9TenantApp.class);
+        return entityToModel(y9TenantAppManager.save(y9TenantApp));
     }
 
     @Override
@@ -164,46 +145,18 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
         }
     }
 
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public int updateByAppIdAndTenantId(Boolean tenancy, String deletedName, Date deletedTime, String appId,
-        String tenantId, Boolean currentTenancy) {
-        try {
-            Optional<Y9TenantApp> y9TenantAppOptional =
-                y9TenantAppRepository.findByTenantIdAndAppIdAndTenancy(tenantId, appId, currentTenancy);
-            if (y9TenantAppOptional.isPresent()) {
-                Y9TenantApp ta = y9TenantAppOptional.get();
-                ta.setTenancy(tenancy);
-                ta.setDeletedName(deletedName);
-                ta.setDeletedTime(deletedTime);
-                y9TenantAppRepository.save(ta);
-            }
-            return 1;
-        } catch (Exception e) {
-            LOGGER.warn(e.getMessage(), e);
-            return 0;
-        }
-    }
-
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9TenantApp verify(Y9TenantApp y9TenantApp, String reason) {
-        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-        if (null != userInfo) {
-            y9TenantApp.setVerifyUserName(userInfo.getName());
-        } else {
-            y9TenantApp.setVerifyUserName("systemAdmin");
-        }
-        y9TenantApp.setVerify(Boolean.TRUE);
-        y9TenantApp.setVerifyTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        y9TenantApp.setReason(reason);
-        return save(y9TenantApp);
-    }
-
     @EventListener
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void onAppDeleted(Y9EntityDeletedEvent<Y9App> event) {
         Y9App y9App = event.getEntity();
         this.deleteByAppId(y9App.getAppId());
+    }
+
+    private static List<TenantApp> entityToModel(List<Y9TenantApp> y9TenantAppList) {
+        return PlatformModelConvertUtil.convert(y9TenantAppList, TenantApp.class);
+    }
+
+    private static TenantApp entityToModel(Y9TenantApp y9TenantApp) {
+        return PlatformModelConvertUtil.convert(y9TenantApp, TenantApp.class);
     }
 }

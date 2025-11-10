@@ -1,13 +1,13 @@
 package net.risesoft.model.platform;
 
-import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Map;
+
+import jakarta.validation.constraints.NotBlank;
 
 import lombok.Data;
 
 import net.risesoft.enums.platform.RoleTypeEnum;
+import net.risesoft.model.BaseModel;
 
 /**
  * 角色
@@ -19,10 +19,8 @@ import net.risesoft.enums.platform.RoleTypeEnum;
  * @date 2022/4/21
  */
 @Data
-@SuppressWarnings({"serial"})
-public class Role implements Serializable {
+public class Role extends BaseModel implements Serializable {
 
-    @Serial
     private static final long serialVersionUID = -7783526250811707188L;
 
     /**
@@ -35,35 +33,30 @@ public class Role implements Serializable {
      */
     private String appId;
 
+    /** 系统id 公共角色时为空 */
+    private String systemId;
+
     /**
      * 名称
      */
+    @NotBlank
     private String name;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
 
     /**
      * 描述
      */
     private String description;
 
+    /** 自定义id */
+    private String customId;
+
     /**
      * 继承关系
      */
     private String dn;
 
-    /**
-     * 类型
-     */
-    private RoleTypeEnum type;
-
-    /**
-     * 排序号
-     */
-    private Integer tabIndex;
+    /** 由ID组成的父子关系列表，之间用逗号分隔 */
+    private String guidPath;
 
     /**
      * 扩展属性
@@ -71,24 +64,9 @@ public class Role implements Serializable {
     private String properties;
 
     /**
-     * 父节点
+     * 类型
      */
-    private String parentId;
-
-    /**
-     * 承继节点
-     */
-    private String guidPath;
-
-    /**
-     * 系统标识
-     */
-    private String systemName;
-
-    /**
-     * 租户自定义
-     */
-    private Boolean tenantCustom;
+    private RoleTypeEnum type;
 
     /**
      * tenantCustom=true时的租户id
@@ -101,7 +79,17 @@ public class Role implements Serializable {
     private Boolean dynamic;
 
     /**
+     * 父节点
+     */
+    private String parentId;
+
+    /**
+     * 排序号
+     */
+    private Integer tabIndex;
+
+    /**
      * 扩展属性键值对
      */
-    private Map<String, String> values;
+    // private Map<String, String> values;
 }

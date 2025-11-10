@@ -2,11 +2,9 @@ package net.risesoft.service.relation;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-
-import net.risesoft.entity.org.Y9Person;
-import net.risesoft.entity.relation.Y9CustomGroupMember;
-import net.risesoft.enums.platform.org.OrgTypeEnum;
+import net.risesoft.model.platform.org.CustomGroupMember;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.query.platform.CustomGroupMemberQuery;
 
@@ -38,26 +36,7 @@ public interface Y9CustomGroupMembersService {
      * @param groupId 用户组id
      * @return {@code List<Y9Person>}
      */
-    List<Y9Person> listAllPersonsByGroupId(String groupId);
-
-    /**
-     * 根据自定义用户组id获取用户组成员
-     *
-     * @param groupId 自定义用户组id
-     * @param pageQuery 分页查询参数
-     * @return {@code Page<Y9CustomGroupMember>}
-     */
-    Page<Y9CustomGroupMember> pageByGroupId(String groupId, Y9PageQuery pageQuery);
-
-    /**
-     * 根据自定义用户组id和自定义用户组成员类型分页查询成员
-     *
-     * @param groupId 用户组id
-     * @param memberType 成员类型{@link OrgTypeEnum}
-     * @param pageQuery 分页查询参数
-     * @return {@code Page<Y9CustomGroupMember>}
-     */
-    Page<Y9CustomGroupMember> pageByGroupIdAndMemberType(String groupId, OrgTypeEnum memberType, Y9PageQuery pageQuery);
+    List<Person> listAllPersonsByGroupId(String groupId);
 
     /**
      * 保存自定义用户组成员
@@ -68,14 +47,6 @@ public interface Y9CustomGroupMembersService {
     void save(List<String> orgUnitList, String groupId);
 
     /**
-     * 保存一个群组成员
-     *
-     * @param member 群组成员
-     * @return {@link Y9CustomGroupMember}
-     */
-    Y9CustomGroupMember save(Y9CustomGroupMember member);
-
-    /**
      * 保存人员排序
      *
      * @param memberIdList 成员id列表
@@ -83,15 +54,7 @@ public interface Y9CustomGroupMembersService {
      */
     boolean saveOrder(List<String> memberIdList);
 
-    /**
-     * 分享的自定义用户组
-     *
-     * @param sourceGroupId 分享的用户组id
-     * @param targetGroupId 目标用户组id
-     */
-    void share(String sourceGroupId, String targetGroupId);
+    List<CustomGroupMember> list(CustomGroupMemberQuery customGroupMemberQuery);
 
-    List<Y9CustomGroupMember> list(CustomGroupMemberQuery customGroupMemberQuery);
-
-    Page<Y9CustomGroupMember> page(CustomGroupMemberQuery customGroupMemberQuery, Y9PageQuery pageQuery);
+    Y9Page<CustomGroupMember> page(CustomGroupMemberQuery customGroupMemberQuery, Y9PageQuery pageQuery);
 }

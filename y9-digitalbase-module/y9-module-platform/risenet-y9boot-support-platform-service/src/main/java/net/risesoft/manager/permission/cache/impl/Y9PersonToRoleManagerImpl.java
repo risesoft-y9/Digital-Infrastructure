@@ -12,7 +12,7 @@ import net.risesoft.entity.permission.cache.person.Y9PersonToRole;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.permission.cache.Y9PersonToRoleManager;
 import net.risesoft.repository.permission.cache.person.Y9PersonToRoleRepository;
-import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.entity.Y9Role;
 
 /**
  * 人员角色关联 Manager 实现类

@@ -34,11 +34,11 @@ import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9public.entity.Y9Role;
 import net.risesoft.y9public.entity.resource.Y9App;
-import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
-import net.risesoft.y9public.repository.role.Y9RoleRepository;
+import net.risesoft.y9public.repository.Y9RoleRepository;
 
 /**
  * 角色管理 Y9RoleManager 实现类

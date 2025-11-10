@@ -2,7 +2,6 @@ package net.risesoft.y9public.service.role.impl;
 
 import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -19,20 +18,21 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.exception.RoleErrorCodeEnum;
+import net.risesoft.model.platform.Role;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.permission.Y9OrgBasesToRolesRepository;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
+import net.risesoft.y9public.entity.Y9Role;
+import net.risesoft.y9public.entity.Y9System;
 import net.risesoft.y9public.entity.resource.Y9App;
-import net.risesoft.y9public.entity.resource.Y9System;
-import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.resource.Y9SystemManager;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
-import net.risesoft.y9public.repository.role.Y9RoleRepository;
+import net.risesoft.y9public.repository.Y9RoleRepository;
 import net.risesoft.y9public.service.role.Y9RoleService;
 
 /**
@@ -72,96 +72,37 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     }
 
     @Override
-    public Optional<Y9Role> findByCustomIdAndParentId(String customId, String parentId) {
-        return y9RoleRepository.findByCustomIdAndParentId(customId, parentId);
+    public Optional<Role> findByCustomIdAndParentId(String customId, String parentId) {
+        return y9RoleRepository.findByCustomIdAndParentId(customId, parentId).map(Y9RoleServiceImpl::entityToModel);
     }
 
     @Override
-    public Optional<Y9Role> findById(String id) {
-        return y9RoleManager.findByIdFromCache(id);
+    public Optional<Role> findById(String id) {
+        return y9RoleManager.findByIdFromCache(id).map(Y9RoleServiceImpl::entityToModel);
     }
 
     @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
-    public Y9Role findTopByRoleId(String id) {
-        Y9Role role = y9RoleManager.getByIdFromCache(id);
-        String parentId = role.getParentId();
-        if (parentId != null) {
-            role = findTopByRoleId(parentId);
-        }
-        return role;
+    public Role getById(String roleId) {
+        return entityToModel(y9RoleManager.getByIdFromCache(roleId));
     }
 
     @Override
-    public Y9Role getById(String roleId) {
-        return y9RoleManager.getByIdFromCache(roleId);
+    public List<Role> listByName(String name) {
+        List<Y9Role> y9RoleList = y9RoleRepository.findByNameContainingOrderByTabIndexAsc(name);
+        return entityToModel(y9RoleList);
     }
 
     @Override
-    public List<Y9Role> listAll() {
-        return y9RoleRepository.findAll();
+    public List<Role> listByParentId(String parentId) {
+        List<Y9Role> y9RoleList = y9RoleRepository.findByParentIdOrderByTabIndexAsc(parentId);
+        return entityToModel(y9RoleList);
     }
 
     @Override
-    public List<Y9Role> listByName(String name) {
-        return y9RoleRepository.findByNameContainingOrderByTabIndexAsc(name);
-    }
-
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
-    public List<Y9Role> listByOrgUnitId(String orgUnitId) {
-        List<String> roleIdList = y9OrgBasesToRolesRepository.findDistinctRoleIdByOrgId(orgUnitId);
-        List<Y9Role> roleList = new ArrayList<>();
-        for (String roleId : roleIdList) {
-            Y9Role role = y9RoleManager.getByIdFromCache(roleId);
-            roleList.add(role);
-        }
-        return roleList;
-    }
-
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
-    public List<Y9Role> listByOrgUnitIdWithoutNegative(String orgUnitId) {
-        List<String> roleIdList = y9OrgBasesToRolesRepository.findRoleIdsByOrgIdAndNegative(orgUnitId, Boolean.FALSE);
-        List<Y9Role> roleList = new ArrayList<>();
-        for (String roleId : roleIdList) {
-            Y9Role role = y9RoleManager.getByIdFromCache(roleId);
-            roleList.add(role);
-        }
-        return roleList;
-    }
-
-    @Override
-    public List<Y9Role> listByParentId(String parentId) {
-        return y9RoleRepository.findByParentIdOrderByTabIndexAsc(parentId);
-    }
-
-    @Override
-    public List<Y9Role> listByParentId4Tenant(String parentId, String tenantId) {
-        return y9RoleRepository.findByParentIdAndTenantIdOrParentIdAndTenantIdIsNullOrderByTabIndexAsc(parentId,
-            tenantId, parentId);
-    }
-
-    @Override
-    public List<Y9Role> listByParentIdAndName(String parentId, String roleName) {
-        return y9RoleRepository.findByParentIdAndName(parentId, roleName);
-    }
-
-    @Override
-    public List<Y9Role> listByParentIdIsNull() {
-        return y9RoleRepository.findByParentIdIsNullOrderByTabIndexAsc();
-    }
-
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
-    public List<String> listOrgUnitIdRecursively(String orgUnitId) {
-        return y9RoleManager.listOrgUnitIdRecursively(orgUnitId);
-    }
-
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
-    public List<Y9Role> listOrgUnitRelatedWithoutNegative(String orgUnitId) {
-        return y9RoleManager.listOrgUnitRelatedWithoutNegative(orgUnitId);
+    public List<Role> listByParentId4Tenant(String parentId, String tenantId) {
+        List<Y9Role> y9RoleList = y9RoleRepository
+            .findByParentIdAndTenantIdOrParentIdAndTenantIdIsNullOrderByTabIndexAsc(parentId, tenantId, parentId);
+        return entityToModel(y9RoleList);
     }
 
     @Override
@@ -169,7 +110,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     public void move(String id, String newParentId) {
         Y9Role currentRole = y9RoleManager.getByIdFromCache(id);
         String parentName = this.getRoleParent(newParentId);
-        Y9Role originalRole = Y9ModelConvertUtil.convert(currentRole, Y9Role.class);
+        Y9Role originalRole = PlatformModelConvertUtil.convert(currentRole, Y9Role.class);
 
         currentRole.setParentId(newParentId);
         Y9Role savedRole = y9RoleManager.update(currentRole);
@@ -184,7 +125,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        recursiveUpdateByDn(savedRole);
+        recursiveUpdateByDn(entityToModel(savedRole));
     }
 
     private String getRoleParent(String newParentId) {
@@ -208,11 +149,13 @@ public class Y9RoleServiceImpl implements Y9RoleService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9Role saveOrUpdate(Y9Role y9Role) {
+    public Role saveOrUpdate(Role role) {
+        Y9Role y9Role = PlatformModelConvertUtil.convert(role, Y9Role.class);
+
         if (StringUtils.isNotEmpty(y9Role.getId())) {
-            Optional<Y9Role> y9RoleOptional = this.findById(y9Role.getId());
+            Optional<Y9Role> y9RoleOptional = y9RoleManager.findById(y9Role.getId());
             if (y9RoleOptional.isPresent()) {
-                Y9Role originRole = Y9ModelConvertUtil.convert(y9RoleOptional.get(), Y9Role.class);
+                Y9Role originRole = PlatformModelConvertUtil.convert(y9RoleOptional.get(), Y9Role.class);
                 Y9Role savedRole = y9RoleManager.update(originRole);
 
                 AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -224,7 +167,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
                     .build();
                 Y9Context.publishEvent(auditLogEvent);
 
-                return savedRole;
+                return entityToModel(savedRole);
             }
         }
 
@@ -239,7 +182,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedRole;
+        return entityToModel(savedRole);
     }
 
     @Override
@@ -255,9 +198,9 @@ public class Y9RoleServiceImpl implements Y9RoleService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9Role saveProperties(String id, String properties) {
+    public Role saveProperties(String id, String properties) {
         Y9Role currentRole = y9RoleManager.getByIdFromCache(id);
-        Y9Role originalRole = Y9ModelConvertUtil.convert(currentRole, Y9Role.class);
+        Y9Role originalRole = PlatformModelConvertUtil.convert(currentRole, Y9Role.class);
 
         currentRole.setProperties(properties);
         Y9Role savedRole = y9RoleManager.update(currentRole);
@@ -272,29 +215,29 @@ public class Y9RoleServiceImpl implements Y9RoleService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedRole;
+        return entityToModel(savedRole);
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
-    public List<Y9Role> treeSearch(String name, String parentId) {
+    public List<Role> treeSearch(String name, String parentId) {
         List<Y9Role> roleList = y9RoleRepository.findByParentIdAndNameContainingOrderByTabIndexAsc(parentId, name);
         Set<Y9Role> roleSet = new HashSet<>(roleList);
         for (Y9Role role : roleList) {
             fillRolesRecursivelyToRoot(role.getParentId(), roleSet);
         }
-        return roleSet.stream().sorted().collect(Collectors.toList());
+        return roleSet.stream().sorted().map(Y9RoleServiceImpl::entityToModel).collect(Collectors.toList());
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
-    public List<Y9Role> treeSearch(String name) {
+    public List<Role> treeSearch(String name) {
         List<Y9Role> roleNodeList = y9RoleRepository.findByNameContainingOrderByTabIndexAsc(name);
         Set<Y9Role> roleSet = new HashSet<>(roleNodeList);
         for (Y9Role role : roleNodeList) {
             fillRolesRecursivelyToRoot(role.getParentId(), roleSet);
         }
-        return roleSet.stream().sorted().collect(Collectors.toList());
+        return roleSet.stream().sorted().map(Y9RoleServiceImpl::entityToModel).collect(Collectors.toList());
     }
 
     private void fillRolesRecursivelyToRoot(String parentId, Set<Y9Role> roleSet) {
@@ -302,7 +245,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
             return;
         }
         // parentId 可能为 appId
-        Optional<Y9Role> y9RoleOptional = this.findById(parentId);
+        Optional<Y9Role> y9RoleOptional = y9RoleManager.findById(parentId);
         if (y9RoleOptional.isPresent()) {
             Y9Role parentNode = y9RoleOptional.get();
             roleSet.add(parentNode);
@@ -311,11 +254,11 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     }
 
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public void recursiveUpdateByDn(Y9Role roleNode) {
+    public void recursiveUpdateByDn(Role roleNode) {
         // 调用向下递归改变DN的值
-        List<Y9Role> childrenList = listByParentId(roleNode.getId());
+        List<Role> childrenList = listByParentId(roleNode.getId());
         if (!childrenList.isEmpty()) {
-            for (Y9Role childrenRole : childrenList) {
+            for (Role childrenRole : childrenList) {
                 saveOrUpdate(childrenRole);
                 recursiveUpdateByDn(childrenRole);
             }
@@ -342,5 +285,13 @@ public class Y9RoleServiceImpl implements Y9RoleService {
                 delete(role.getId());
             }
         }
+    }
+
+    private static Role entityToModel(Y9Role y9Role) {
+        return PlatformModelConvertUtil.y9RoleToRole(y9Role);
+    }
+
+    private List<Role> entityToModel(List<Y9Role> y9RoleList) {
+        return PlatformModelConvertUtil.y9RoleToRole(y9RoleList);
     }
 }

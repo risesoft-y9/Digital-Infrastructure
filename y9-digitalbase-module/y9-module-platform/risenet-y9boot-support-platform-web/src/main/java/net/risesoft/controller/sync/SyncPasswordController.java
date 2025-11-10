@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.entity.org.Y9Manager;
-import net.risesoft.entity.org.Y9Organization;
-import net.risesoft.entity.org.Y9Person;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.org.Manager;
+import net.risesoft.model.platform.org.Organization;
+import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9ManagerService;
@@ -52,13 +52,13 @@ public class SyncPasswordController {
     @RiseLog(operationName = "修改", operationType = OperationTypeEnum.MODIFY)
     public Y9Result<String> resetAllPersonPwdByTenantId(@PathVariable String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        List<Y9Person> persons = y9PersonService.listAll();
-        for (Y9Person person : persons) {
+        List<Person> persons = y9PersonService.listAll();
+        for (Person person : persons) {
             y9PersonService.resetDefaultPassword(person.getId());
         }
 
-        List<Y9Manager> manageList = y9ManagerService.listAll();
-        for (Y9Manager manager : manageList) {
+        List<Manager> manageList = y9ManagerService.listAll();
+        for (Manager manager : manageList) {
             y9ManagerService.resetDefaultPassword(manager.getId());
         }
 
@@ -77,16 +77,16 @@ public class SyncPasswordController {
         for (String tenantId : tenantIdList) {
             Y9LoginUserHolder.setTenantId(tenantId);
             LOGGER.debug("同步租户[{}]人员密码", tenantId);
-            List<Y9Organization> y9OrganizationList = y9OrganizationService.list();
-            for (Y9Organization organization : y9OrganizationList) {
-                List<Y9Person> persons = compositeOrgBaseService.listAllDescendantPersons(organization.getId());
-                for (Y9Person person : persons) {
+            List<Organization> organizationList = y9OrganizationService.list();
+            for (Organization organization : organizationList) {
+                List<Person> persons = compositeOrgBaseService.listAllDescendantPersons(organization.getId());
+                for (Person person : persons) {
                     y9PersonService.resetDefaultPassword(person.getId());
                 }
             }
 
-            List<Y9Manager> manageList = y9ManagerService.listAll();
-            for (Y9Manager manager : manageList) {
+            List<Manager> manageList = y9ManagerService.listAll();
+            for (Manager manager : manageList) {
                 y9ManagerService.resetDefaultPassword(manager.getId());
             }
         }
@@ -105,7 +105,7 @@ public class SyncPasswordController {
     public Y9Result<String> resetPwdByTenantIdAndLoginName(@PathVariable String tenantId,
         @PathVariable String loginName) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        Y9Person person = y9PersonService.getPersonByLoginNameAndTenantId(loginName, tenantId);
+        Person person = y9PersonService.getPersonByLoginNameAndTenantId(loginName, tenantId);
         if (person != null) {
             y9PersonService.resetDefaultPassword(person.getId());
         }
@@ -123,8 +123,8 @@ public class SyncPasswordController {
     @RiseLog(operationName = "修改", operationType = OperationTypeEnum.MODIFY)
     public Y9Result<String> resetAllManagerPwdByTenantId(@PathVariable String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        List<Y9Manager> manageList = y9ManagerService.listAll();
-        for (Y9Manager manager : manageList) {
+        List<Manager> manageList = y9ManagerService.listAll();
+        for (Manager manager : manageList) {
             y9ManagerService.resetDefaultPassword(manager.getId());
         }
 
@@ -143,8 +143,8 @@ public class SyncPasswordController {
         for (String tenantId : tenantIdList) {
             Y9LoginUserHolder.setTenantId(tenantId);
             LOGGER.debug("同步租户管理员[{}]人员密码", tenantId);
-            List<Y9Manager> manageList = y9ManagerService.listAll();
-            for (Y9Manager manager : manageList) {
+            List<Manager> manageList = y9ManagerService.listAll();
+            for (Manager manager : manageList) {
                 y9ManagerService.resetDefaultPassword(manager.getId());
             }
         }

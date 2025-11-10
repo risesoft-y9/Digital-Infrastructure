@@ -17,19 +17,21 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.enums.AuditLogEnum;
+import net.risesoft.model.platform.resource.App;
 import net.risesoft.pojo.AuditLogEvent;
+import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
+import net.risesoft.y9public.entity.Y9System;
 import net.risesoft.y9public.entity.resource.Y9App;
-import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
+import net.risesoft.y9public.repository.Y9SystemRepository;
 import net.risesoft.y9public.repository.resource.Y9AppRepository;
-import net.risesoft.y9public.repository.resource.Y9SystemRepository;
 import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.specification.Y9AppSpecification;
 
@@ -51,37 +53,6 @@ public class Y9AppServiceImpl implements Y9AppService {
     private final Y9SystemRepository y9SystemRepository;
 
     @Override
-    public long countBySystemId(String systemId) {
-        return y9AppRepository.countBySystemId(systemId);
-    }
-
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public void disableBySystemId(String systemId) {
-        List<Y9App> list = y9AppRepository.findBySystemId(systemId);
-        for (Y9App y9App : list) {
-            boolean appEnabled = y9App.getEnabled();
-            if (appEnabled) {
-                y9App.setEnabled(false);
-                y9AppManager.update(y9App);
-            }
-        }
-    }
-
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public void enableBySystemId(String systemId) {
-        List<Y9App> list = y9AppRepository.findBySystemId(systemId);
-        for (Y9App y9App : list) {
-            boolean appEnabled = y9App.getEnabled();
-            if (!appEnabled) {
-                y9App.setEnabled(true);
-                y9AppManager.update(y9App);
-            }
-        }
-    }
-
-    @Override
     public boolean existBySystemIdAndName(final String systemId, final String appName) {
         List<Y9App> appList = y9AppRepository.findBySystemIdAndName(systemId, appName);
         return appList.isEmpty();
@@ -94,91 +65,97 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    public Optional<Y9App> findBySystemIdAndCustomId(String systemId, String customId) {
-        return y9AppRepository.findBySystemIdAndCustomId(systemId, customId);
+    public Optional<App> findBySystemIdAndCustomId(String systemId, String customId) {
+        return y9AppRepository.findBySystemIdAndCustomId(systemId, customId).map(PlatformModelConvertUtil::y9AppToApp);
     }
 
     @Override
-    public Optional<Y9App> findBySystemNameAndCustomId(String systemName, String customId) {
+    public Optional<App> findBySystemNameAndCustomId(String systemName, String customId) {
         Optional<Y9System> y9SystemOptional = y9SystemRepository.findByName(systemName);
         if (y9SystemOptional.isPresent()) {
-            return y9AppRepository.findBySystemIdAndCustomId(y9SystemOptional.get().getId(), customId);
+            return y9AppRepository.findBySystemIdAndCustomId(y9SystemOptional.get().getId(), customId)
+                .map(PlatformModelConvertUtil::y9AppToApp);
         }
         return Optional.empty();
     }
 
     @Override
-    public List<Y9App> findByUrlLike(String url) {
-        return y9AppRepository.findByUrlContaining(url);
+    public List<App> listAll() {
+        List<Y9App> y9AppList = y9AppRepository.findAll(Sort.by("systemId", "tabIndex"));
+        return PlatformModelConvertUtil.y9AppToApp(y9AppList);
     }
 
     @Override
-    public List<Y9App> listAll() {
-        return y9AppRepository.findAll(Sort.by("systemId", "tabIndex"));
+    public List<App> listByEnable() {
+        List<Y9App> y9AppList = y9AppRepository.findByEnabledOrderByTabIndex(true);
+        return PlatformModelConvertUtil.y9AppToApp(y9AppList);
     }
 
     @Override
-    public List<Y9App> listByEnable() {
-        return y9AppRepository.findByEnabledOrderByTabIndex(true);
+    public List<App> listByIds(List<String> appIdList) {
+        List<Y9App> y9AppList = y9AppRepository.findAllById(appIdList);
+        return entityToModel(y9AppList);
     }
 
     @Override
-    public List<Y9App> listByIds(List<String> appIdList) {
-        return y9AppRepository.findAllById(appIdList);
-    }
-
-    @Override
-    public List<Y9App> listByAppName(String appName) {
+    public List<App> listByAppName(String appName) {
         if (appName != null && !appName.isEmpty()) {
-            return y9AppRepository.findByName(appName);
+            return PlatformModelConvertUtil.y9AppToApp(y9AppRepository.findByName(appName));
         }
         return Collections.emptyList();
     }
 
     @Override
-    public List<Y9App> listByAutoInitAndChecked(Boolean autoInit, Boolean checked) {
-        return y9AppRepository.findByAutoInitAndCheckedOrderByCreateTime(autoInit, checked);
+    public List<App> listByAutoInitAndChecked(Boolean autoInit, Boolean checked) {
+        List<Y9App> y9AppList = y9AppRepository.findByAutoInitAndCheckedOrderByCreateTime(autoInit, checked);
+        return entityToModel(y9AppList);
     }
 
     @Override
-    public List<Y9App> listByChecked(boolean checked) {
-        return y9AppRepository.findByCheckedOrderByCreateTime(checked);
+    public List<App> listByChecked(boolean checked) {
+        List<Y9App> y9AppList = y9AppRepository.findByCheckedOrderByCreateTime(checked);
+        return entityToModel(y9AppList);
     }
 
     @Override
-    public List<Y9App> listByCustomId(String customId) {
-        return y9AppRepository.findByCustomId(customId);
+    public List<App> listByCustomId(String customId) {
+        List<Y9App> y9AppList = y9AppRepository.findByCustomId(customId);
+        return entityToModel(y9AppList);
     }
 
     @Override
-    public List<Y9App> listBySystemId(String systemId) {
-        return y9AppRepository.findBySystemIdOrderByTabIndex(systemId);
+    public List<App> listBySystemId(String systemId) {
+        List<Y9App> y9AppList = y9AppRepository.findBySystemIdOrderByTabIndex(systemId);
+        return entityToModel(y9AppList);
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
-    public List<Y9App> listBySystemName(String systemName) {
+    public List<App> listBySystemName(String systemName) {
         Optional<Y9System> y9SystemOptional = y9SystemRepository.findByName(systemName);
         if (y9SystemOptional.isPresent()) {
-            return y9AppRepository.findBySystemId(y9SystemOptional.get().getId());
+            List<Y9App> y9AppList = y9AppRepository.findBySystemId(y9SystemOptional.get().getId());
+            return entityToModel(y9AppList);
         }
         return new ArrayList<>();
     }
 
     @Override
-    public Page<Y9App> page(Y9PageQuery pageQuery, String systemId, String name) {
+    public Y9Page<App> page(Y9PageQuery pageQuery, String systemId, String name) {
         Y9AppSpecification specification = new Y9AppSpecification(systemId, name);
         PageRequest pageRequest = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(),
             Sort.by(Sort.Direction.ASC, "tabIndex").and(Sort.by(Sort.Direction.DESC, "createTime")));
-        return y9AppRepository.findAll(specification, pageRequest);
+        Page<Y9App> y9AppPage = y9AppRepository.findAll(specification, pageRequest);
+        return Y9Page.success(pageQuery.getPage(), y9AppPage.getTotalPages(), y9AppPage.getTotalElements(),
+            entityToModel(y9AppPage.getContent()));
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9App saveAndRegister4Tenant(Y9App y9App) {
-        Y9App savedApp = this.saveOrUpdate(y9App);
+    public App saveAndRegister4Tenant(App app) {
+        App savedApp = this.saveOrUpdate(app);
         // 审核应用
-        this.verifyApp(y9App.getId(), true, Y9LoginUserHolder.getUserInfo().getName());
+        this.verifyApp(savedApp.getId(), true, Y9LoginUserHolder.getUserInfo().getName());
         if (Y9LoginUserHolder.getUserInfo().getManagerLevel().isTenantManager()) {
             // 租用系统
             y9TenantSystemManager.saveTenantSystem(savedApp.getSystemId(), Y9LoginUserHolder.getTenantId());
@@ -190,7 +167,7 @@ public class Y9AppServiceImpl implements Y9AppService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9App saveIsvApp(Y9App app) {
+    public App saveIsvApp(App app) {
         if (app.getTabIndex() == null || app.getTabIndex() == 0) {
             Integer tabIndex =
                 y9AppRepository.findTopByOrderByTabIndexDesc().map(y9App -> y9App.getTabIndex() + 1).orElse(1);
@@ -205,7 +182,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     public void saveOrder(String[] appIds) {
         if (appIds.length > 0) {
             for (int i = 0, len = appIds.length; i < len; i++) {
-                Y9App app = getById(appIds[i]);
+                Y9App app = y9AppManager.getById(appIds[i]);
                 app.setTabIndex(i + 1);
                 y9AppManager.update(app);
             }
@@ -214,11 +191,11 @@ public class Y9AppServiceImpl implements Y9AppService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9App verifyApp(String id, boolean checked, String verifyUserName) {
-        Y9App y9App = this.getById(id);
+    public App verifyApp(String id, boolean checked, String verifyUserName) {
+        Y9App y9App = y9AppManager.getById(id);
         y9App.setChecked(checked);
         y9App.setVerifyUserName(verifyUserName);
-        return y9AppManager.update(y9App);
+        return entityToModel(y9AppManager.update(y9App));
     }
 
     @Override
@@ -247,8 +224,8 @@ public class Y9AppServiceImpl implements Y9AppService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public List<Y9App> disable(List<String> idList) {
-        List<Y9App> y9AppList = new ArrayList<>();
+    public List<App> disable(List<String> idList) {
+        List<App> y9AppList = new ArrayList<>();
         for (String id : idList) {
             y9AppList.add(this.disable(id));
         }
@@ -257,9 +234,9 @@ public class Y9AppServiceImpl implements Y9AppService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9App disable(String id) {
+    public App disable(String id) {
         Y9App currentApp = y9AppManager.getById(id);
-        Y9App originalApp = Y9ModelConvertUtil.convert(currentApp, Y9App.class);
+        Y9App originalApp = PlatformModelConvertUtil.convert(currentApp, Y9App.class);
 
         currentApp.setEnabled(Boolean.FALSE);
         Y9App savedApp = y9AppManager.update(currentApp);
@@ -273,13 +250,13 @@ public class Y9AppServiceImpl implements Y9AppService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedApp;
+        return entityToModel(savedApp);
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public List<Y9App> enable(List<String> idList) {
-        List<Y9App> y9AppList = new ArrayList<>();
+    public List<App> enable(List<String> idList) {
+        List<App> y9AppList = new ArrayList<>();
         for (String id : idList) {
             y9AppList.add(this.enable(id));
         }
@@ -288,9 +265,9 @@ public class Y9AppServiceImpl implements Y9AppService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9App enable(String id) {
+    public App enable(String id) {
         Y9App currentApp = y9AppManager.getById(id);
-        Y9App originalApp = Y9ModelConvertUtil.convert(currentApp, Y9App.class);
+        Y9App originalApp = PlatformModelConvertUtil.convert(currentApp, Y9App.class);
 
         currentApp.setEnabled(Boolean.TRUE);
         Y9App savedApp = y9AppManager.update(currentApp);
@@ -304,7 +281,7 @@ public class Y9AppServiceImpl implements Y9AppService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedApp;
+        return entityToModel(savedApp);
     }
 
     @Override
@@ -313,30 +290,32 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    public Optional<Y9App> findById(String id) {
-        return y9AppManager.findByIdFromCache(id);
+    public Optional<App> findById(String id) {
+        return y9AppManager.findByIdFromCache(id).map(y9App -> entityToModel(y9App));
     }
 
     @Override
-    public List<Y9App> findByNameLike(String name) {
-        return y9AppRepository.findByNameContainingOrderByTabIndex(name);
+    public List<App> findByNameLike(String name) {
+        List<Y9App> y9AppList = y9AppRepository.findByNameContainingOrderByTabIndex(name);
+        return entityToModel(y9AppList);
     }
 
     @Override
-    public Y9App getById(String id) {
-        return y9AppManager.getByIdFromCache(id);
+    public App getById(String id) {
+        return entityToModel(y9AppManager.getByIdFromCache(id));
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9App saveOrUpdate(Y9App y9App) {
+    public App saveOrUpdate(App app) {
+        Y9App y9App = PlatformModelConvertUtil.convert(app, Y9App.class);
         // 每次保存都更改审核状态为未审核
         y9App.setChecked(false);
 
         if (StringUtils.isNotBlank(y9App.getId())) {
             Optional<Y9App> y9AppOptional = y9AppManager.findById(y9App.getId());
             if (y9AppOptional.isPresent()) {
-                Y9App originApp = Y9ModelConvertUtil.convert(y9AppOptional.get(), Y9App.class);
+                Y9App originApp = PlatformModelConvertUtil.convert(y9AppOptional.get(), Y9App.class);
                 Y9App savedApp = y9AppManager.update(y9App);
 
                 AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -348,7 +327,7 @@ public class Y9AppServiceImpl implements Y9AppService {
                     .build();
                 Y9Context.publishEvent(auditLogEvent);
 
-                return savedApp;
+                return entityToModel(savedApp);
             }
         }
 
@@ -363,12 +342,20 @@ public class Y9AppServiceImpl implements Y9AppService {
             .build();
         Y9Context.publishEvent(auditLogEvent);
 
-        return savedApp;
+        return entityToModel(savedApp);
     }
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Y9App updateTabIndex(String id, int index) {
-        return y9AppManager.updateTabIndex(id, index);
+    public App updateTabIndex(String id, int index) {
+        return entityToModel(y9AppManager.updateTabIndex(id, index));
+    }
+
+    private static List<App> entityToModel(List<Y9App> y9AppList) {
+        return PlatformModelConvertUtil.convert(y9AppList, App.class);
+    }
+
+    private static App entityToModel(Y9App y9App) {
+        return PlatformModelConvertUtil.convert(y9App, App.class);
     }
 }

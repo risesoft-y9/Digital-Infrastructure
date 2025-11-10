@@ -1,10 +1,9 @@
 package net.risesoft.service.org;
 
 import java.util.List;
-import java.util.Optional;
 
-import net.risesoft.entity.org.Y9DepartmentProp;
 import net.risesoft.enums.platform.org.DepartmentPropCategoryEnum;
+import net.risesoft.model.platform.org.DepartmentProp;
 
 /**
  * @author dingzhaojun
@@ -31,35 +30,12 @@ public interface Y9DepartmentPropService {
     void deleteByDeptIdAndCategoryAndOrgBaseId(String deptId, DepartmentPropCategoryEnum category, String orgBaseId);
 
     /**
-     * 根据部门唯一标识查找
-     *
-     * @param id 唯一标识
-     * @return {@code Optional<Y9DepartmentProp>} 部门配置对象 或 null
-     */
-    Optional<Y9DepartmentProp> findById(String id);
-
-    /**
-     * 查找所有的部门管理员
-     *
-     * @return {@code List<Y9DepartmentProp>}
-     */
-    List<Y9DepartmentProp> listAll();
-
-    /**
-     * 根据部门唯一标识和类别查找部门配置信息
-     *
-     * @param {@link DepartmentPropCategoryEnum} category 类别
-     * @return {@code List<Y9DepartmentProp>}
-     */
-    List<Y9DepartmentProp> listByCategory(DepartmentPropCategoryEnum category);
-
-    /**
      * 根据部门唯一标识查找部门配置信息
      *
      * @param deptId 部门id
      * @return {@code List<Y9DepartmentProp>}
      */
-    List<Y9DepartmentProp> listByDeptId(String deptId);
+    List<DepartmentProp> listByDeptId(String deptId);
 
     /**
      * 根据部门唯一标识和类别查找部门配置信息
@@ -68,7 +44,7 @@ public interface Y9DepartmentPropService {
      * @param {@link DepartmentPropCategoryEnum} category 类别
      * @return {@code List<Y9DepartmentProp>}
      */
-    List<Y9DepartmentProp> listByDeptIdAndCategory(String deptId, DepartmentPropCategoryEnum category);
+    List<DepartmentProp> listByDeptIdAndCategory(String deptId, DepartmentPropCategoryEnum category);
 
     /**
      * 根据人员唯一标识查找管理的部门
@@ -77,13 +53,13 @@ public interface Y9DepartmentPropService {
      * @param {@link DepartmentPropCategoryEnum} category 类别
      * @return {@code List<Y9DepartmentProp>}
      */
-    List<Y9DepartmentProp> listByOrgBaseIdAndCategory(String orgBaseId, DepartmentPropCategoryEnum category);
+    List<DepartmentProp> listByOrgBaseIdAndCategory(String orgBaseId, DepartmentPropCategoryEnum category);
 
     /**
      * 保存或者更新
      *
      * @param y9DepartmentProp 部门属性对象
      */
-    void saveOrUpdate(Y9DepartmentProp y9DepartmentProp);
+    void saveOrUpdate(DepartmentProp y9DepartmentProp);
 
 }

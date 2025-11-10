@@ -97,9 +97,7 @@ public class Y9SettingServiceImpl implements Y9SettingService {
         }
     }
 
-    @Override
-    @Transactional
-    public Y9Setting saveOrUpdate(Y9Setting y9Setting) {
+    private Y9Setting saveOrUpdate(Y9Setting y9Setting) {
         return y9SettingManager.save(y9Setting);
     }
 

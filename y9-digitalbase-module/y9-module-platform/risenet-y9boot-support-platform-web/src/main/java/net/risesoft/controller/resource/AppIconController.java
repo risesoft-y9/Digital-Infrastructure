@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotBlank;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,13 +22,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.platform.AppIcon;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.vo.resource.AppIconDTO;
 import net.risesoft.y9.exception.Y9BusinessException;
-import net.risesoft.y9public.entity.resource.Y9AppIcon;
 import net.risesoft.y9public.service.Y9FileStoreService;
 import net.risesoft.y9public.service.resource.Y9AppIconService;
 
@@ -67,24 +66,23 @@ public class AppIconController {
      * 获取应用图标
      *
      * @param id 应用图标id
-     * @return {@code Y9Result<Y9AppIcon>}
+     * @return {@code Y9Result<AppIcon>}
      */
     @RiseLog(operationName = "获取应用图标")
     @RequestMapping("/getAppIconById")
-    public Y9Result<Y9AppIcon> getAppIconById(@RequestParam @NotBlank String id) {
-        Y9AppIcon entity = appIconService.getById(id);
-        return Y9Result.success(entity, "获取成功！");
+    public Y9Result<AppIcon> getAppIconById(@RequestParam @NotBlank String id) {
+        return Y9Result.success(appIconService.getById(id), "获取成功！");
     }
 
     /**
      * 图片文件读取
      *
-     * @return {@code Y9Result<List<Y9AppIcon>>}
+     * @return {@code Y9Result<List<AppIcon>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "图片列表的读取")
     @RequestMapping(value = "/listAll")
-    public Y9Result<List<Y9AppIcon>> listAll() {
+    public Y9Result<List<AppIcon>> listAll() {
         return Y9Result.success(appIconService.listAll(), "图片列表的读取！");
     }
 
@@ -93,12 +91,12 @@ public class AppIconController {
      *
      * @param name 图标名称
      *
-     * @return {@code Y9Result<List<Y9AppIcon>>}
+     * @return {@code Y9Result<List<AppIcon>>}
      * @since 9.6.8
      */
     @RiseLog(operationName = "根据名称，获取图片列表")
     @RequestMapping(value = "/listByName")
-    public Y9Result<List<Y9AppIcon>> listByName(@RequestParam @NotBlank String name) {
+    public Y9Result<List<AppIcon>> listByName(@RequestParam @NotBlank String name) {
         return Y9Result.success(appIconService.listByName(name), "图片列表的读取！");
     }
 
@@ -106,15 +104,13 @@ public class AppIconController {
      * 查询图标分页列表
      *
      * @param pageQuery 分页信息
-     * @return {@code Y9Page<Y9AppIcon>}
+     * @return {@code Y9Page<AppIcon>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "查看图标")
     @RequestMapping("/pageAppIcons")
-    public Y9Page<Y9AppIcon> pageAppIcons(Y9PageQuery pageQuery) {
-        Page<Y9AppIcon> pageList = appIconService.pageAll(pageQuery);
-        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(),
-            pageList.getContent(), "获取数据成功");
+    public Y9Page<AppIcon> pageAppIcons(Y9PageQuery pageQuery) {
+        return appIconService.pageAll(pageQuery);
     }
 
     /**
@@ -141,7 +137,7 @@ public class AppIconController {
     @PostMapping(value = "/saveIcon")
     public Y9Result<String> saveIcon(@RequestParam @NotBlank String name, @RequestParam String remark,
         @RequestParam @NotBlank String id) {
-        Y9AppIcon appIcon = appIconService.getById(id);
+        AppIcon appIcon = appIconService.getById(id);
         appIcon.setRemark(remark);
         appIcon.setName(name);
         if (appIcon.getIconData() == null) {
@@ -162,13 +158,12 @@ public class AppIconController {
      * 根据名称搜索图标
      *
      * @param name 图标名
-     * @return {@code Y9Result<List<Y9AppIcon>>}
+     * @return {@code Y9Result<List<AppIcon>>}
      */
     @RiseLog(operationName = "根据名称搜索图标")
     @RequestMapping(value = "/searchAppIcon")
-    public Y9Result<List<Y9AppIcon>> searchAppIcon(@RequestParam String name) {
-        List<Y9AppIcon> list = appIconService.listByName(name);
-        return Y9Result.success(list, "图标列表搜索成功");
+    public Y9Result<List<AppIcon>> searchAppIcon(@RequestParam String name) {
+        return Y9Result.success(appIconService.listByName(name), "图标列表搜索成功");
     }
 
     /**
@@ -176,14 +171,12 @@ public class AppIconController {
      *
      * @param pageQuery 分页信息
      * @param name 图标名称
-     * @return {@code Y9Page<Y9AppIcon>}
+     * @return {@code Y9Page<AppIcon>}
      */
     @RiseLog(operationType = OperationTypeEnum.BROWSE, operationName = "搜索图标")
     @RequestMapping("/searchIconPageByName")
-    public Y9Page<Y9AppIcon> searchIconPageByName(Y9PageQuery pageQuery, String name) {
-        Page<Y9AppIcon> pageList = appIconService.searchByName(name, pageQuery);
-        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(),
-            pageList.getContent(), "获取数据成功");
+    public Y9Page<AppIcon> searchIconPageByName(Y9PageQuery pageQuery, String name) {
+        return appIconService.pageByName(name, pageQuery);
     }
 
     /**
@@ -204,9 +197,9 @@ public class AppIconController {
             // 图片名称
             String imgName = FilenameUtils.getName(originalFilename);
             // 文件类型
-            List<Y9AppIcon> y9AppIconOptional = appIconService.listByName(imgName);
+            List<AppIcon> appIconList = appIconService.listByName(imgName);
             appIconService.save(iconFile, remark);
-            if (!y9AppIconOptional.isEmpty()) {
+            if (!appIconList.isEmpty()) {
                 return Y9Result.success("上传成功,文件重名，图标已被覆盖!");
             } else {
                 return Y9Result.success("上传成功");
@@ -243,11 +236,10 @@ public class AppIconController {
                         iconName = FilenameUtils.getName(originalFilename);
                     }
                     try {
-                        Optional<Y9AppIcon> y9AppIconOptional =
-                            appIconService.findByNameAndColorType(imgName, colors[i]);
+                        Optional<AppIcon> appIconOptional = appIconService.findByNameAndColorType(imgName, colors[i]);
                         appIconService.save(iconName, appIconDTO.getCategory(), colors[i], appIconDTO.getRemark(),
                             file);
-                        if (y9AppIconOptional.isPresent()) {
+                        if (appIconOptional.isPresent()) {
                             msgBuilder.append("上传颜色：" + colors[i] + "成功,文件重名，图标已被覆盖!").append(";");
                         }
                     } catch (Y9BusinessException e) {

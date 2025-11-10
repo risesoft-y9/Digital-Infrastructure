@@ -18,16 +18,20 @@ import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.permission.cache.person.Y9PersonToRole;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.manager.org.Y9PersonManager;
+import net.risesoft.model.platform.Role;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.permission.cache.PersonToRole;
 import net.risesoft.repository.permission.cache.person.Y9PersonToRoleRepository;
 import net.risesoft.service.permission.cache.Y9PersonToRoleService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
-import net.risesoft.y9public.entity.resource.Y9System;
-import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.entity.Y9Role;
+import net.risesoft.y9public.entity.Y9System;
 import net.risesoft.y9public.manager.resource.Y9SystemManager;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
-import net.risesoft.y9public.repository.role.Y9RoleRepository;
+import net.risesoft.y9public.repository.Y9RoleRepository;
 
 /**
  * @author dingzhaojun
@@ -50,12 +54,6 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
     @Override
     public long countByPersonId(String personId) {
         return y9PersonToRoleRepository.countByPersonId(personId);
-    }
-
-    @Override
-    public String getRoleIdsByPersonId(String personId) {
-        List<String> roleIdList = y9PersonToRoleRepository.findRoleIdByPersonId(personId);
-        return StringUtils.join(roleIdList, ",");
     }
 
     @Override
@@ -86,47 +84,36 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
     }
 
     @Override
-    public Boolean hasRoleByCustomId(String personId, String customId) {
+    public boolean hasRoleByCustomId(String personId, String customId) {
         List<Y9Role> y9RoleList = y9RoleRepository.findByCustomId(customId);
         return y9RoleList.stream().anyMatch(y9Role -> hasRole(personId, y9Role.getId()));
     }
 
     @Override
-    public List<Y9PersonToRole> listByPersonId(String personId) {
-        return y9PersonToRoleRepository.findByPersonId(personId);
+    public List<PersonToRole> listByPersonId(String personId) {
+        return entityToModel(y9PersonToRoleRepository.findByPersonId(personId));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Y9Person> listPersonsByRoleId(String roleId, Boolean disabled) {
+    public List<Person> listPersonsByRoleId(String roleId, Boolean personDisabled) {
         List<String> personIdList = y9PersonToRoleRepository.findPersonIdByRoleId(roleId);
         return personIdList.stream().map(y9PersonManager::getByIdFromCache).filter(p -> {
-            if (disabled == null) {
+            if (personDisabled == null) {
                 return true;
             } else {
-                return disabled.equals(p.getDisabled());
+                return personDisabled.equals(p.getDisabled());
             }
-        }).collect(Collectors.toList());
+        }).map(PlatformModelConvertUtil::y9PersonToPerson).collect(Collectors.toList());
     }
 
     @Override
-    public List<Y9Role> listRolesByPersonId(String personId) {
+    public List<Role> listRolesByPersonId(String personId) {
         List<String> roleIdList = y9PersonToRoleRepository.findRoleIdByPersonId(personId);
-        return roleIdList.stream().map(y9RoleManager::getByIdFromCache).collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional
-    public void removeByPersonId(String personId) {
-        List<Y9PersonToRole> y9PersonToRoleList = y9PersonToRoleRepository.findByPersonId(personId);
-        y9PersonToRoleRepository.deleteAll(y9PersonToRoleList);
-    }
-
-    @Override
-    @Transactional
-    public void removeByRoleId(String roleId) {
-        List<Y9PersonToRole> mappingList = y9PersonToRoleRepository.findByRoleId(roleId);
-        y9PersonToRoleRepository.deleteAll(mappingList);
+        return roleIdList.stream()
+            .map(y9RoleManager::getByIdFromCache)
+            .map(PlatformModelConvertUtil::y9RoleToRole)
+            .collect(Collectors.toList());
     }
 
     @EventListener
@@ -149,6 +136,10 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
         Y9LoginUserHolder.setTenantId(tenantId);
         y9PersonToRoleRepository.deleteByRoleId(entity.getId());
         LOGGER.debug("角色[{}]删除时同步删除租户[{}]的人员角色缓存数据", entity.getId(), tenantId);
+    }
+
+    private List<PersonToRole> entityToModel(List<Y9PersonToRole> y9PersonToRoleList) {
+        return PlatformModelConvertUtil.convert(y9PersonToRoleList, PersonToRole.class);
     }
 
 }

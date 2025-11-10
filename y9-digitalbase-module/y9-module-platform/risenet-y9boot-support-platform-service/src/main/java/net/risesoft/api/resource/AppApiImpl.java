@@ -23,15 +23,13 @@ import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.enums.platform.resource.AppOpenTypeEnum;
 import net.risesoft.enums.platform.resource.AppTypeEnum;
+import net.risesoft.model.platform.System;
 import net.risesoft.model.platform.resource.App;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.permission.cache.Y9PersonToResourceAndAuthorityService;
-import net.risesoft.service.permission.cache.Y9PositionToResourceAndAuthorityService;
+import net.risesoft.service.permission.cache.Y9PersonToResourceService;
+import net.risesoft.service.permission.cache.Y9PositionToResourceService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9BeanUtil;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
-import net.risesoft.y9public.entity.resource.Y9App;
-import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.tenant.Y9TenantAppService;
@@ -54,8 +52,8 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 @Slf4j
 public class AppApiImpl implements AppApi {
 
-    private final Y9PersonToResourceAndAuthorityService y9PersonToResourceAndAuthorityService;
-    private final Y9PositionToResourceAndAuthorityService y9PositionToResourceAndAuthorityService;
+    private final Y9PersonToResourceService y9PersonToResourceService;
+    private final Y9PositionToResourceService y9PositionToResourceService;
 
     private final Y9AppService y9AppService;
     private final Y9SystemService y9SystemService;
@@ -71,8 +69,8 @@ public class AppApiImpl implements AppApi {
      */
     @Override
     public Y9Result<App> findById(@RequestParam("appId") @NotBlank String appId) {
-        Y9App y9App = y9AppService.findById(appId).orElse(null);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9App, App.class));
+        App app = y9AppService.findById(appId).orElse(null);
+        return Y9Result.success(app);
     }
 
     /**
@@ -86,8 +84,8 @@ public class AppApiImpl implements AppApi {
     @Override
     public Y9Result<App> findBySystemIdAndCustomId(@RequestParam("systemId") @NotBlank String systemId,
         @RequestParam("customId") @NotBlank String customId) {
-        Y9App y9App = y9AppService.findBySystemIdAndCustomId(systemId, customId).orElse(null);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9App, App.class));
+        App app = y9AppService.findBySystemIdAndCustomId(systemId, customId).orElse(null);
+        return Y9Result.success(app);
     }
 
     /**
@@ -101,8 +99,8 @@ public class AppApiImpl implements AppApi {
     @Override
     public Y9Result<App> findBySystemNameAndCustomId(@RequestParam("systemName") @NotBlank String systemName,
         @RequestParam("customId") @NotBlank String customId) {
-        Y9App y9App = y9AppService.findBySystemNameAndCustomId(systemName, customId).orElse(null);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9App, App.class));
+        App app = y9AppService.findBySystemNameAndCustomId(systemName, customId).orElse(null);
+        return Y9Result.success(app);
     }
 
     /**
@@ -119,8 +117,7 @@ public class AppApiImpl implements AppApi {
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9App> appList = y9PersonToResourceAndAuthorityService.listAppsByAuthority(personId, authority);
-        return Y9Result.success(Y9ModelConvertUtil.convert(appList, App.class));
+        return Y9Result.success(y9PersonToResourceService.listAppsByAuthority(personId, authority));
     }
 
     /**
@@ -137,8 +134,7 @@ public class AppApiImpl implements AppApi {
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9App> appList = y9PositionToResourceAndAuthorityService.listAppsByAuthority(positionId, authority);
-        return Y9Result.success(Y9ModelConvertUtil.convert(appList, App.class));
+        return Y9Result.success(y9PositionToResourceService.listAppsByAuthority(positionId, authority));
     }
 
     /**
@@ -150,8 +146,7 @@ public class AppApiImpl implements AppApi {
      */
     @Override
     public Y9Result<List<App>> listByCustomId(@RequestParam("customId") @NotBlank String customId) {
-        List<Y9App> y9AppList = y9AppService.listByCustomId(customId);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9AppList, App.class));
+        return Y9Result.success(y9AppService.listByCustomId(customId));
     }
 
     /**
@@ -163,8 +158,8 @@ public class AppApiImpl implements AppApi {
      */
     @Override
     public Y9Result<List<App>> listBySystemId(@RequestParam("systemId") @NotBlank String systemId) {
-        List<Y9App> y9AppList = y9AppService.listBySystemId(systemId);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9AppList, App.class));
+        List<App> y9AppList = y9AppService.listBySystemId(systemId);
+        return Y9Result.success(y9AppList);
     }
 
     /**
@@ -176,8 +171,7 @@ public class AppApiImpl implements AppApi {
      */
     @Override
     public Y9Result<List<App>> listBySystemName(@RequestParam("systemName") @NotBlank String systemName) {
-        List<Y9App> y9AppList = y9AppService.listBySystemName(systemName);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9AppList, App.class));
+        return Y9Result.success(y9AppService.listBySystemName(systemName));
     }
 
     /**
@@ -195,32 +189,32 @@ public class AppApiImpl implements AppApi {
     public Y9Result<App> registerApp(@RequestParam("systemName") @NotBlank String systemName,
         @RequestParam("name") @NotBlank String name, @RequestParam("url") @NotBlank String url,
         @RequestParam("customId") String customId, @RequestParam("tenantGuid") String tenantGuid) {
-        Optional<Y9System> y9SystemOptional = y9SystemService.findByName(systemName);
-        if (y9SystemOptional.isEmpty()) {
+        Optional<System> systemOptional = y9SystemService.findByName(systemName);
+        if (systemOptional.isEmpty()) {
             return Y9Result.failure("该系统不存在，请重新输入！");
         }
         if (StringUtils.isBlank(tenantGuid)) {
             tenantGuid = InitDataConsts.TENANT_ID;
         }
         Y9LoginUserHolder.setTenantId(tenantGuid);
-        String systemId = y9SystemOptional.get().getId();
-        Y9App saveIsvApp = null;
+        String systemId = systemOptional.get().getId();
+        App saveIsvApp = null;
         String appId = null;
         String msg = "注册应用成功！";
         try {
             LOGGER.info("创建应用");
-            Y9App y9App = new Y9App();
-            y9App.setName(name);
-            y9App.setSystemId(systemId);
-            y9App.setUrl(url);
-            y9App.setEnabled(true);
+            App app = new App();
+            app.setName(name);
+            app.setSystemId(systemId);
+            app.setUrl(url);
+            app.setEnabled(true);
             if (StringUtils.isNotBlank(customId)) {
-                y9App.setCustomId(customId);
+                app.setCustomId(customId);
             }
-            y9App.setShowNumber(false);
-            y9App.setOpentype(AppOpenTypeEnum.DESKTOP);
-            y9App.setType(AppTypeEnum.BUSINESS_COLLABORATION);
-            saveIsvApp = y9AppService.saveIsvApp(y9App);
+            app.setShowNumber(false);
+            app.setOpentype(AppOpenTypeEnum.DESKTOP);
+            app.setType(AppTypeEnum.BUSINESS_COLLABORATION);
+            saveIsvApp = y9AppService.saveIsvApp(app);
             appId = saveIsvApp.getId();
             y9AppService.verifyApp(appId, true, ManagerLevelEnum.SYSTEM_MANAGER.getName());
         } catch (Exception e) {
@@ -240,7 +234,7 @@ public class AppApiImpl implements AppApi {
             LOGGER.info("系统、应用已创建成功！但自动应用租用失败，请收到进行租用！");
             msg = "系统、应用已创建成功！但自动应用租用失败，请收到进行租用！";
         }
-        return Y9Result.success(Y9ModelConvertUtil.convert(saveIsvApp, App.class), msg);
+        return Y9Result.success(PlatformModelConvertUtil.convert(saveIsvApp, App.class), msg);
     }
 
     /**
@@ -262,12 +256,12 @@ public class AppApiImpl implements AppApi {
         @RequestParam("contextPath") String contextPath, @RequestParam("appName") @NotBlank String appName,
         @RequestParam("url") @NotBlank String url, @RequestParam("customId") String customId) {
 
-        List<Y9System> y9Systems = y9SystemService.listByContextPath(contextPath);
-        if (!y9Systems.isEmpty()) {
+        List<System> systemList = y9SystemService.listByContextPath(contextPath);
+        if (!systemList.isEmpty()) {
             return Y9Result.failure("该系统上下文已存在，请重新输入！");
         }
-        Optional<Y9System> y9SystemOptional = y9SystemService.findByName(systemName);
-        if (y9SystemOptional.isPresent()) {
+        Optional<System> systemOptional = y9SystemService.findByName(systemName);
+        if (systemOptional.isPresent()) {
             return Y9Result.failure("该系统名称已存在，请重新输入！");
         }
         if (StringUtils.isBlank(isvGuid)) {
@@ -277,13 +271,13 @@ public class AppApiImpl implements AppApi {
         String systemId = null;
         String msg = "创建成功!";
         try {
-            Y9System y9System = new Y9System();
-            y9System.setTenantId(isvGuid);
-            y9System.setName(systemName);
-            y9System.setCnName(systemCnName);
-            y9System.setContextPath(contextPath);
-            Y9System system = y9SystemService.saveOrUpdate(y9System);
-            systemId = system.getId();
+            System system = new System();
+            system.setTenantId(isvGuid);
+            system.setName(systemName);
+            system.setCnName(systemCnName);
+            system.setContextPath(contextPath);
+            System savedSystem = y9SystemService.saveOrUpdate(system);
+            systemId = savedSystem.getId();
         } catch (Exception e) {
             e.printStackTrace();
             return Y9Result.failure("创建系统失败！");
@@ -296,20 +290,20 @@ public class AppApiImpl implements AppApi {
             return Y9Result.failure("租用系统失败！");
         }
         String appId = null;
-        Y9App saveIsvApp = null;
+        App saveIsvApp;
         try {
-            Y9App y9App = new Y9App();
-            y9App.setName(appName);
-            y9App.setSystemId(systemId);
-            y9App.setUrl(url);
-            y9App.setEnabled(true);
+            App app = new App();
+            app.setName(appName);
+            app.setSystemId(systemId);
+            app.setUrl(url);
+            app.setEnabled(true);
             if (StringUtils.isNotBlank(customId)) {
-                y9App.setCustomId(customId);
+                app.setCustomId(customId);
             }
-            y9App.setShowNumber(false);
-            y9App.setType(AppTypeEnum.BUSINESS_COLLABORATION);
+            app.setShowNumber(false);
+            app.setType(AppTypeEnum.BUSINESS_COLLABORATION);
 
-            saveIsvApp = y9AppService.saveIsvApp(y9App);
+            saveIsvApp = y9AppService.saveIsvApp(app);
             appId = saveIsvApp.getId();
             y9AppService.verifyApp(appId, true, ManagerLevelEnum.SYSTEM_MANAGER.getName());
         } catch (Exception e) {
@@ -327,7 +321,7 @@ public class AppApiImpl implements AppApi {
             e.printStackTrace();
             msg = "系统、应用已创建成功！但自动应用租用失败，请收到进行租用";
         }
-        return Y9Result.success(Y9ModelConvertUtil.convert(saveIsvApp, App.class), msg);
+        return Y9Result.success(PlatformModelConvertUtil.convert(saveIsvApp, App.class), msg);
     }
 
     /**
@@ -339,10 +333,7 @@ public class AppApiImpl implements AppApi {
      */
     @Override
     public Y9Result<App> saveIsvApp(@RequestBody App app) {
-        Y9App y9App = new Y9App();
-        Y9BeanUtil.copyProperties(app, y9App);
-        y9App = y9AppService.saveIsvApp(y9App);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9App, App.class));
+        return Y9Result.success(y9AppService.saveIsvApp(app));
     }
 
 }

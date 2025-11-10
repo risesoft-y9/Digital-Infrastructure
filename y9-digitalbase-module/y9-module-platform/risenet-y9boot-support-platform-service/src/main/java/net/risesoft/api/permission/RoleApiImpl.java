@@ -1,6 +1,5 @@
 package net.risesoft.api.permission;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -21,9 +20,7 @@ import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.model.platform.Role;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
-import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.role.Y9RoleService;
 
 /**
@@ -78,20 +75,19 @@ public class RoleApiImpl implements RoleApi {
     public Y9Result<Role> createRole(@RequestParam("roleId") String roleId, @RequestParam("roleName") String roleName,
         @RequestParam("parentId") String parentId, @RequestParam("customId") String customId,
         @RequestParam("type") RoleTypeEnum type) {
-        Optional<Y9Role> y9RoleOptional = y9RoleService.findByCustomIdAndParentId(customId, parentId);
-        Y9Role roleNode;
-        if (y9RoleOptional.isEmpty()) {
-            roleNode = new Y9Role();
+        Optional<Role> roleOptional = y9RoleService.findByCustomIdAndParentId(customId, parentId);
+        Role roleNode;
+        if (roleOptional.isEmpty()) {
+            roleNode = new Role();
             roleNode.setId(roleId);
             roleNode.setCustomId(customId);
             roleNode.setParentId(parentId);
             roleNode.setType(type);
         } else {
-            roleNode = y9RoleOptional.get();
+            roleNode = roleOptional.get();
         }
         roleNode.setName(roleName);
-        roleNode = y9RoleService.saveOrUpdate(roleNode);
-        return Y9Result.success(ModelConvertUtil.y9RoleToRole(roleNode));
+        return Y9Result.success(y9RoleService.saveOrUpdate(roleNode));
     }
 
     /**
@@ -118,8 +114,8 @@ public class RoleApiImpl implements RoleApi {
     @Override
     public Y9Result<Role> findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
         @RequestParam("parentId") @NotBlank String parentId) {
-        Y9Role roleNode = y9RoleService.findByCustomIdAndParentId(customId, parentId).orElse(null);
-        return Y9Result.success(ModelConvertUtil.y9RoleToRole(roleNode));
+        Role role = y9RoleService.findByCustomIdAndParentId(customId, parentId).orElse(null);
+        return Y9Result.success(role);
     }
 
     /**
@@ -131,8 +127,8 @@ public class RoleApiImpl implements RoleApi {
      */
     @Override
     public Y9Result<Role> getRole(@RequestParam("roleId") @NotBlank String roleId) {
-        Y9Role y9Role = y9RoleService.findById(roleId).orElse(null);
-        return Y9Result.success(ModelConvertUtil.y9RoleToRole(y9Role));
+        Role role = y9RoleService.findById(roleId).orElse(null);
+        return Y9Result.success(role);
     }
 
     /**
@@ -144,12 +140,7 @@ public class RoleApiImpl implements RoleApi {
      */
     @Override
     public Y9Result<List<Role>> listRoleByParentId(@RequestParam("roleId") @NotBlank String roleId) {
-        List<Y9Role> y9RoleList = y9RoleService.listByParentId(roleId);
-        List<Role> roleList = new ArrayList<>();
-        for (Y9Role y9Role : y9RoleList) {
-            roleList.add(ModelConvertUtil.y9RoleToRole(y9Role));
-        }
-        return Y9Result.success(roleList);
+        return Y9Result.success(y9RoleService.listByParentId(roleId));
     }
 
     /**

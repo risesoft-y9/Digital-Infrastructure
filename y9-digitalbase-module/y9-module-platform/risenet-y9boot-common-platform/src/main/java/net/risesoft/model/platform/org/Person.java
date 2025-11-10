@@ -2,9 +2,13 @@ package net.risesoft.model.platform.org;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
 import lombok.Data;
 
 import net.risesoft.enums.platform.org.SexEnum;
+import net.risesoft.y9.validation.Mobile;
 
 /**
  * 人员
@@ -17,22 +21,51 @@ import net.risesoft.enums.platform.org.SexEnum;
  */
 @Data
 public class Person extends OrgUnit implements Serializable {
+
     private static final long serialVersionUID = 1095290600488048717L;
-
-    /**
-     * 登录名称
-     */
-    private String loginName;
-
-    /**
-     * 密码
-     */
-    private String password;
 
     /**
      * 人员头像
      */
     private String avator;
+
+    /**
+     * CA认证码
+     */
+    private String caid;
+
+    /**
+     * 邮箱
+     */
+    @Email
+    private String email;
+
+    /**
+     * 登录名称
+     */
+    @NotBlank
+    private String loginName;
+
+    /**
+     * 手机号
+     */
+    @Mobile
+    private String mobile;
+
+    /**
+     * 办公室地址
+     */
+    private String officeAddress;
+
+    /**
+     * 电话传真
+     */
+    private String officeFax;
+
+    /**
+     * 办公室电话
+     */
+    private String officePhone;
 
     /**
      * 编制名称
@@ -44,60 +77,13 @@ public class Person extends OrgUnit implements Serializable {
      */
     private String officialType;
 
-    /**
-     * 职务
-     */
-    private String duty;
-
-    /**
-     * 职级
-     */
-    private Integer dutyLevel;
-
-    /**
-     * 职级名称
-     */
-    private String dutyLevelName;
-
-    /**
-     * CA认证码
-     */
-    private String caid;
-
-    /**
-     * 邮箱
-     */
-    private String email;
+    // FIXME 密码为敏感字段 不返回？
+    private String password;
 
     /**
      * 性别
      */
     private SexEnum sex;
-
-    /**
-     * 人员籍贯
-     */
-    private String province;
-
-    /**
-     * 办公室地址
-     */
-    private String officeAddress;
-
-    /**
-     * 办公室电话
-     */
-    private String officePhone;
-
-    /**
-     * 电话传真
-     */
-    private String officeFax;
-
-    /**
-     * 手机号
-     */
-    private String mobile;
 
     /**
      * 人员类型,管理员用户：adminPerson,单位用户：deptPerson,个人用户:userPerson,专家用户:expertPerson
