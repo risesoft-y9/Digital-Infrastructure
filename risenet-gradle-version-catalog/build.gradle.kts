@@ -1,11 +1,10 @@
-import com.vanniktech.maven.publish.SonatypeHost
 import com.vanniktech.maven.publish.VersionCatalog
 import java.util.*
 
 plugins {
     signing
     id("version-catalog")
-    id("com.vanniktech.maven.publish") version "0.32.0"
+    id("com.vanniktech.maven.publish") version "0.34.0"
 }
 
 repositories {
@@ -28,7 +27,7 @@ version = props.get("Y9PLUGIN_VERSION") as String? ?: "9.7.0-01"
 mavenPublishing {
     configure(VersionCatalog())
     coordinates(project.group.toString(), project.name, project.version.toString())
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = false)
+    publishToMavenCentral( automaticRelease = false)
     signAllPublications()
     pom {
         name = project.name
