@@ -11,9 +11,17 @@
     <artifactId>risenet-y9boot-starter-repeatsubmit</artifactId>
     <version>${revision}</version>
     <packaging>jar</packaging>
+    <name>risenet-y9boot-starter-repeatsubmit</name>
+    <description>RiseSoft/Digital Infrastructure repeatsubmit starter</description>
 
     <properties>
     </properties>
+
+    <scm>
+        <url>${gitee.url}</url>
+        <connection>${gitee.connection}</connection>
+        <developerConnection>${gitee.developerConnection}</developerConnection>
+    </scm>
 
     <dependencies>
         <dependency>

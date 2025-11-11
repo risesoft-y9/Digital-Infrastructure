@@ -110,7 +110,7 @@
                         <artifactId>central-publishing-maven-plugin</artifactId>
                         <configuration>
                             <excludeArtifacts>
-                                <artifact>risenet-y9boot-webapp-log</artifact>
+                                <artifact>risenet-y9boot-server-log</artifact>
                             </excludeArtifacts>
                         </configuration>
                     </plugin>
