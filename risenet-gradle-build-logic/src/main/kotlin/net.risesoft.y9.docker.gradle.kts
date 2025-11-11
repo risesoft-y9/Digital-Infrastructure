@@ -19,7 +19,7 @@ val extension = project.extensions.create<Y9DockerPluginExtension>("y9Docker")
 
 jib {
     from {
-        //image = "docker-internal.youshengyun.com/base/tomcat:10.1.48-jdk21-temurin"
+        image = "docker.youshengyun.com/base/tomcat:10.1.48-jdk21-temurin"
         platforms {
             platform {
                 architecture = "amd64"
