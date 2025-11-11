@@ -2,7 +2,7 @@ package net.risesoft.model.platform.org;
 
 import java.util.Comparator;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

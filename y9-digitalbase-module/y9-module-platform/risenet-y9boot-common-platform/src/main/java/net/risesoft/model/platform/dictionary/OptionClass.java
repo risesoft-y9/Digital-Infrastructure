@@ -1,6 +1,6 @@
 package net.risesoft.model.platform.dictionary;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import lombok.Data;
 
