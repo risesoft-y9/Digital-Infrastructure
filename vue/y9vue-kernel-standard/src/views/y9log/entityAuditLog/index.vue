@@ -1,13 +1,34 @@
 <template>
     <y9Card :title="`${$t('修改日志')}${currInfo.name ? ' - ' + currInfo.name : ''}`">
-        <y9Table :config="logTableConfig"></y9Table>
+        <y9Table
+            :config="logTableConfig"
+            @on-curr-page-change="handlerPageChange"
+            @on-page-size-change="handlerSizeChange"
+        >
+            <template #expandRowSlot="props">
+                <div class="expand-rows">
+                    <p><b>用户 id:</b> {{ props.row.userId }}</p>
+                    <p><b>客户端信息:</b> {{ props.row.userAgent }}</p>
+                    <p><b>操作对象 id:</b> {{ props.row.objectId }}</p>
+                    <p v-if="props.row.diff"><b>修改前后对比:</b></p>
+                    <el-table v-if="props.row.diff" :data="props.row.diff">
+                        <el-table-column label="字段" prop="filedName" />
+                        <el-table-column label="修改前" prop="oldValue" />
+                        <el-table-column label="修改后" prop="currentValue" />
+                    </el-table>
+                </div>
+            </template>
+        </y9Table>
     </y9Card>
 </template>
 
 <script lang="ts" setup>
     import { $deepAssignObject } from '@/utils/object';
-    import { getShadowRows, getShadowTitles } from '@/api/org';
-    import { onMounted, reactive, toRefs, watch } from 'vue';
+    import { computed, onMounted, reactive, toRefs, watch } from 'vue';
+    import { useI18n } from 'vue-i18n';
+    import { pageAuditLog } from '@/api/auditLog';
+
+    const { t } = useI18n();
 
     const props = defineProps({
         currTreeNodeInfo: {
@@ -24,10 +45,22 @@
         currInfo: props.currTreeNodeInfo,
         //表格配置
         logTableConfig: {
-            columns: [{}],
+            columns: [
+                { type: 'expand', width: 40, slot: 'expandRowSlot' },
+                { title: computed(() => t('序号')), showOverflowTooltip: false, type: 'index', width: 80 },
+                { title: computed(() => t('用户名')), key: 'userName', width: 130 },
+                { title: computed(() => t('用户IP')), key: 'userIp', width: 150 },
+                { title: computed(() => t('操作时间')), key: 'createTime', width: 180 },
+                { title: computed(() => t('操作类型')), key: 'action', align: 'left', width: 250 },
+                { title: computed(() => t('操作描述')), key: 'description', align: 'left' }
+            ],
             tableData: [],
             emptytext: '暂无修改信息',
-            pageConfig: false //取消分页
+            pageConfig: {
+                currentPage: 1, //当前页数，支持 v-model 双向绑定
+                pageSize: 10, //每页显示条目个数，支持 v-model 双向绑定
+                total: 0 //总条目数
+            }
         }
     });
 
@@ -45,71 +78,51 @@
     );
 
     async function getLogList() {
-        let entityClass = '';
-        if (currInfo.value.nodeType != undefined) {
-            switch (currInfo.value.nodeType) {
-                case 'Organization':
-                    entityClass = 'net.risesoft.entity.org.Y9Organization';
-                    break;
-                case 'Department':
-                    entityClass = 'net.risesoft.entity.org.Y9Department';
-                    break;
-                case 'Group':
-                    entityClass = 'net.risesoft.entity.org.Y9Group';
-                    break;
-                case 'Position':
-                    entityClass = 'net.risesoft.entity.org.Y9Position';
-                    break;
-                case 'Person':
-                    entityClass = 'net.risesoft.entity.org.Y9Person';
-                    break;
-                case 'role':
-                    entityClass = 'net.risesoft.y9public.entity.role.Y9Role';
-                    break;
-                case 'APP':
-                    entityClass = 'net.risesoft.y9public.entity.resource.Y9App';
-                    break;
-                case 'MENU':
-                    entityClass = 'net.risesoft.y9public.entity.resource.Y9Menu';
-                    break;
-                case 'OPERATION':
-                    entityClass = 'net.risesoft.y9public.entity.resource.Y9Operation';
-                    break;
-                case 'SYSTEM':
-                    entityClass = 'net.risesoft.y9public.entity.resource.Y9System';
-                    break;
-            }
+        let queryParams = { objectId: currInfo.value.id};
+        let res = await pageAuditLog(
+            queryParams,
+            logTableConfig.value.pageConfig.currentPage,
+            logTableConfig.value.pageConfig.pageSize
+        );
+        logTableConfig.value.tableData = res.rows || [];
+        logTableConfig.value.pageConfig.total = res.total || 0;
+        logTableConfig.value.pageConfig.currentPage = res.currPage || 1;
 
-            getShadowTitles(currInfo.value.id, entityClass)
-                .then((res) => {
-                    let column = res.data;
-                    let data = [
-                        {
-                            title: '操作信息',
-                            key: 'commitAuthor',
-                            minWidth: 400
-                        }
-                    ];
-                    for (let key in column) {
-                        data.push({
-                            title: column[key],
-                            key: column[key],
-                            minWidth: 200
+        fillObjectDiff();
+    }
+
+    function fillObjectDiff() {
+        let tableData = logTableConfig.value.tableData;
+        for (let row of tableData) {
+            let oldObject = JSON.parse(row.oldObjectJson);
+            let currentObject = JSON.parse(row.currentObjectJson);
+
+            if (oldObject && currentObject) {
+                const diff = [];
+                for (const key in currentObject) {
+                    if (oldObject[key] !== currentObject[key]) {
+                        diff.push({
+                            filedName: key,
+                            oldValue: oldObject[key],
+                            currentValue: currentObject[key]
                         });
                     }
-                    logTableConfig.value.columns = data;
-                    getShadowRows(currInfo.value.id, entityClass)
-                        .then((res) => {
-                            logTableConfig.value.tableData = res.data;
-                        })
-                        .catch(() => {
-                            logTableConfig.value.tableData = [];
-                        });
-                })
-                .catch(() => {
-                    logTableConfig.value.columns = [];
-                });
+                }
+                row.diff = diff;
+            }
         }
+    }
+
+    //当前页改变时触发
+    function handlerPageChange(currPage) {
+        logTableConfig.value.pageConfig.currentPage = currPage;
+        getLogList();
+    }
+
+    //每页条数改变时触发
+    function handlerSizeChange(pageSize) {
+        logTableConfig.value.pageConfig.pageSize = pageSize;
+        getLogList();
     }
 
     onMounted(() => {
