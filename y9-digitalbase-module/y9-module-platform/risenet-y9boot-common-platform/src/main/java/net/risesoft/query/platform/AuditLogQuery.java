@@ -14,6 +14,11 @@ import lombok.Data;
 public class AuditLogQuery {
 
     /**
+     * 对象id
+     */
+    private String objectId;
+
+    /**
      * 开始时间
      */
     private Date startTime;

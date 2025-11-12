@@ -18,10 +18,6 @@ server:
             force-request: true
             force-response: true
         context-path: /server-platform
-javers:
-    newObjectSnapshot: true
-    sqlSchemaManagementEnabled: false
-    springDataAuditableRepositoryAspectEnabled: false
 spring:
     application:
         name: platform
@@ -30,7 +26,6 @@ spring:
             - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
             - org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration
             - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
-            - org.javers.spring.boot.sql.JaversSqlAutoConfiguration
             # 需要使用 kafka 时注释掉让其能自动配置
             - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
     cloud:

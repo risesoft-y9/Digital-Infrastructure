@@ -3,6 +3,7 @@ package net.risesoft.y9public.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
@@ -23,7 +24,7 @@ import net.risesoft.base.BaseEntity;
  * @date 2025/08/06
  */
 @Entity
-@Table(name = "Y9_AUDIT_LOG")
+@Table(name = "Y9_AUDIT_LOG", indexes = {@Index(name = "IDX_OBJECT_ID", columnList = "OBJECT_ID")})
 @DynamicUpdate
 @org.hibernate.annotations.Table(comment = "审计日志", appliesTo = "Y9_AUDIT_LOG")
 @NoArgsConstructor

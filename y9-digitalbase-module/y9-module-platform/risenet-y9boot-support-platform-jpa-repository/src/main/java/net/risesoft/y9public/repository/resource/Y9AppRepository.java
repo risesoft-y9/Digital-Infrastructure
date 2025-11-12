@@ -3,7 +3,6 @@ package net.risesoft.y9public.repository.resource;
 import java.util.List;
 import java.util.Optional;
 
-import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -18,7 +17,6 @@ import net.risesoft.y9public.entity.resource.Y9App;
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
-@JaversSpringDataAuditable
 public interface Y9AppRepository extends JpaRepository<Y9App, String>, JpaSpecificationExecutor<Y9App> {
 
     long countBySystemId(String systemId);
