@@ -3,7 +3,6 @@ package net.risesoft.repository.org;
 import java.util.List;
 import java.util.Optional;
 
-import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,7 +17,6 @@ import net.risesoft.entity.org.Y9Group;
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
-@JaversSpringDataAuditable
 public interface Y9GroupRepository extends JpaRepository<Y9Group, String> {
 
     long countByDisabledAndGuidPathContaining(Boolean diabled, String guidPath);

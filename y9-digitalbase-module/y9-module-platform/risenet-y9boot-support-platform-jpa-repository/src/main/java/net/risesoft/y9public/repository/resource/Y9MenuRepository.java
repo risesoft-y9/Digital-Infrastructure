@@ -3,7 +3,6 @@ package net.risesoft.y9public.repository.resource;
 import java.util.List;
 import java.util.Optional;
 
-import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +16,6 @@ import net.risesoft.y9public.entity.resource.Y9Menu;
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
-@JaversSpringDataAuditable
 public interface Y9MenuRepository extends JpaRepository<Y9Menu, String> {
 
     List<Y9Menu> findByAppId(String appId);

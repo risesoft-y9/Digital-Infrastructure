@@ -3,6 +3,7 @@ package net.risesoft.y9public.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
@@ -23,7 +24,7 @@ import net.risesoft.base.BaseEntity;
  * @date 2025/08/06
  */
 @Entity
-@Table(name = "Y9_AUDIT_LOG")
+@Table(name = "Y9_AUDIT_LOG", indexes = {@Index(name = "IDX_OBJECT_ID", columnList = "OBJECT_ID")})
 @DynamicUpdate
 @Comment("审计日志")
 @NoArgsConstructor

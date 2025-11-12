@@ -32,6 +32,9 @@ public class Y9AuditLogSpecification implements Specification<Y9AuditLog> {
     @Override
     public Predicate toPredicate(Root<Y9AuditLog> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         List<Predicate> list = new ArrayList<>();
+        if (StringUtils.hasText(auditLogQuery.getObjectId())) {
+            list.add(criteriaBuilder.equal(root.get("objectId"), auditLogQuery.getObjectId()));
+        }
         if (StringUtils.hasText(auditLogQuery.getTenantId())) {
             list.add(criteriaBuilder.equal(root.get("tenantId"), auditLogQuery.getTenantId()));
         }

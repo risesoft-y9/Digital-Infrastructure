@@ -30,4 +30,15 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="1754533021663-2" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="Y9_AUDIT_LOG" columnNames="OBJECT_ID"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="IDX_OBJECT_ID" tableName="Y9_AUDIT_LOG">
+            <column name="OBJECT_ID"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>

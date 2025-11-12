@@ -3,7 +3,6 @@ package net.risesoft.repository.permission;
 import java.util.List;
 import java.util.Optional;
 
-import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,7 +24,6 @@ import net.risesoft.enums.platform.permission.AuthorizationPrincipalTypeEnum;
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
-@JaversSpringDataAuditable
 public interface Y9AuthorizationRepository extends JpaRepository<Y9Authorization, String> {
 
     @Modifying

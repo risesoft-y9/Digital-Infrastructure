@@ -3,7 +3,6 @@ package net.risesoft.repository.org;
 import java.util.List;
 import java.util.Optional;
 
-import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -19,7 +18,6 @@ import net.risesoft.entity.org.Y9Department;
  */
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
-@JaversSpringDataAuditable
 public interface Y9DepartmentRepository
     extends JpaRepository<Y9Department, String>, JpaSpecificationExecutor<Y9Department> {
 
