@@ -143,25 +143,6 @@ export const saveOrgExtendProperties = async (orgId, properties) => {
     });
 };
 
-//日志表头
-export const getShadowTitles = async (id, entity) => {
-    return await platformRequest({
-        url: '/history/getShadowTitles',
-        method: 'GET',
-        cType: false,
-        params: { id: id, entity: entity }
-    });
-};
-//日志数据
-export const getShadowRows = async (id, entity) => {
-    return await platformRequest({
-        url: '/history/getShadowRows',
-        method: 'GET',
-        cType: false,
-        params: { id: id, entity: entity }
-    });
-};
-
 // 根据组织机构id ，获取组织机构信息
 export const getOrganizationById = async (id) => {
     return await platformRequest({

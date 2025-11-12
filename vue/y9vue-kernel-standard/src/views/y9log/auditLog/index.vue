@@ -177,8 +177,8 @@
     // 表格 配置
     let auditLogsTable = ref({
         columns: [
-            { title: computed(() => t('序号')), showOverflowTooltip: false, type: 'index', width: 80 },
             { type: 'expand', width: 40, slot: 'expandRowSlot' },
+            { title: computed(() => t('序号')), showOverflowTooltip: false, type: 'index', width: 80 },
             { title: computed(() => t('用户名')), key: 'userName', width: 130 },
             { title: computed(() => t('用户IP')), key: 'userIp', width: 150 },
             { title: computed(() => t('操作时间')), key: 'createTime', width: 180 },

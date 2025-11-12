@@ -45,6 +45,7 @@
         model: {
             //表单属性
             id: '',
+            customId: '',
             parentId: props.currInfo.id,
             aliasName: '',
             bureau: false,
