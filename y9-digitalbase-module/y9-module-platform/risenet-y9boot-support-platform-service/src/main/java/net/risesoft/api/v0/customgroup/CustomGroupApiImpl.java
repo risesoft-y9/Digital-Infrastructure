@@ -160,7 +160,7 @@ public class CustomGroupApiImpl implements CustomGroupApi {
         @RequestParam("personId") @NotBlank String personId, @RequestParam("groupId") @NotBlank String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return customGroupMembersService.list(new CustomGroupMemberQuery(groupId));
+        return customGroupMembersService.list(new CustomGroupMemberQuery(groupId, null));
     }
 
     /**
@@ -218,7 +218,7 @@ public class CustomGroupApiImpl implements CustomGroupApi {
         @RequestParam("rows") int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        CustomGroupMemberQuery customGroupMemberQuery = new CustomGroupMemberQuery(groupId);
+        CustomGroupMemberQuery customGroupMemberQuery = new CustomGroupMemberQuery(groupId, null);
         return customGroupMembersService.page(customGroupMemberQuery, new Y9PageQuery(page, rows));
     }
 
