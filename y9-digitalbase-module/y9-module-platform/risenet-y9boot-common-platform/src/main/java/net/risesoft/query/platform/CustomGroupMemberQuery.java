@@ -2,10 +2,11 @@ package net.risesoft.query.platform;
 
 import jakarta.validation.constraints.NotBlank;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import net.risesoft.enums.platform.org.OrgTypeEnum;
 
@@ -17,15 +18,15 @@ import net.risesoft.enums.platform.org.OrgTypeEnum;
  */
 @Data
 @Builder
-@RequiredArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CustomGroupMemberQuery {
 
     /**
      * 用户组 id
      */
     @NotBlank
-    private final String groupId;
+    private String groupId;
 
     /**
      * 成员类型
