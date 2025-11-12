@@ -22,7 +22,8 @@ import net.risesoft.y9public.service.auditlog.Y9AuditLogService;
 @RequestMapping(value = "/api/rest/auditLog", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER,
-    ManagerLevelEnum.AUDIT_MANAGER, ManagerLevelEnum.OPERATION_AUDIT_MANAGER})
+    ManagerLevelEnum.AUDIT_MANAGER, ManagerLevelEnum.OPERATION_AUDIT_MANAGER,
+    ManagerLevelEnum.OPERATION_SECURITY_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
 public class AuditLogController {
 
     private final Y9AuditLogService y9AuditLogService;
