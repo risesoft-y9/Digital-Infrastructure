@@ -7,7 +7,6 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Transient;
-import jakarta.persistence.Version;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
@@ -60,7 +59,7 @@ public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBa
     /** 版本号,乐观锁 */
     @Column(name = "VERSION")
     @Comment("版本号,乐观锁")
-    @Version
+    // @Version
     protected Integer version;
 
     /** 是否禁用 */
