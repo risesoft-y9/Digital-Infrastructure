@@ -907,7 +907,7 @@
                                 <image>docker-registry-internal.youshengyun.com/${project.artifactId}</image>
                                 <tags>
                                     <tag>${project.version}</tag>
-                                    <tag>v9.7.x</tag>
+                                    <tag>9.7.x</tag>
                                     <tag>${project.version}-${maven.build.timestamp}</tag>
                                 </tags>
                             </to>
