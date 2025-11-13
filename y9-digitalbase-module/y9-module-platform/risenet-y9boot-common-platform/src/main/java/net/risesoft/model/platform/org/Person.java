@@ -103,7 +103,7 @@ public class Person extends OrgUnit implements Serializable {
     /**
      * 是否原始人员，0:添加的人员，1：新增的人员
      */
-    private boolean original;
+    private boolean original = true;
 
     /**
      * 原始人员id
