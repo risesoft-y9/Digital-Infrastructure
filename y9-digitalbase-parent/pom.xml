@@ -35,7 +35,7 @@
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
         <!-- Plugin versions -->
-        <jib-maven-plugin.version>3.4.0</jib-maven-plugin.version>
+        <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
         <smart-doc-maven-plugin.version>3.0.9</smart-doc-maven-plugin.version>
         <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
         <aspectj-maven-plugin.version>1.14</aspectj-maven-plugin.version>
@@ -54,7 +54,7 @@
         <buildnumber-maven-plugin.version>3.2.1</buildnumber-maven-plugin.version>
         <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
         <git-commit-id-maven-plugin.version>8.0.2</git-commit-id-maven-plugin.version>
-        <native-maven-plugin.version>0.10.1</native-maven-plugin.version>
+        <native-maven-plugin.version>0.11.1</native-maven-plugin.version>
 
         <docker.tag>${project.version}-${maven.build.timestamp}</docker.tag>
         <docker.name>svn.youshengyun.com:9923/${project.artifactId}-native:${project.version}</docker.name>

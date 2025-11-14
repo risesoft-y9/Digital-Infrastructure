@@ -5,9 +5,9 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.risesoft</groupId>
-    <artifactId>risenet-y9boot-webapp-sso-server</artifactId>
-    <packaging>jar</packaging>
-    <version>9.7.0-M1</version>
+    <artifactId>risenet-y9boot-webapp-sso</artifactId>
+    <packaging>war</packaging>
+    <version>9.7.0-SNAPSHOT</version>
 
     <repositories>
         <repository>
@@ -107,15 +107,28 @@
         <maven.deploy.skip>true</maven.deploy.skip>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <cas.version>7.2.2</cas.version>
+        <cas.version>7.3.1</cas.version>
         <start-class>org.apereo.cas.web.CasWebApplication</start-class>
-        <spring-boot.version>3.4.4</spring-boot.version>
-        <spring-framework.version>6.2.5</spring-framework.version>
-        <spring-cloud.version>2024.0.1</spring-cloud.version>
-        <lombok.version>1.18.38</lombok.version>
+        <spring-boot.version>3.5.6</spring-boot.version>
+        <spring-framework.version>6.2.11</spring-framework.version>
+        <spring-cloud.version>2025.0.0</spring-cloud.version>
+
+        <jBCrypt.version>0.4.3</jBCrypt.version>
+        <lombok.version>1.18.42</lombok.version>
 
         <!-- Plugin versions -->
-        <jib-maven-plugin.version>3.4.5</jib-maven-plugin.version>
+        <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+        <maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-jar-plugin.version>3.4.0</maven-jar-plugin.version>
+        <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
+        <buildnumber-maven-plugin.version>3.2.1</buildnumber-maven-plugin.version>
+        <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
+        <native-maven-plugin.version>0.11.1</native-maven-plugin.version>
+
+        <docker.tag>${project.version}-${maven.build.timestamp}</docker.tag>
     </properties>
 
     <dependencyManagement>
@@ -156,6 +169,7 @@
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-authentication-api</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-authentication</artifactId>
@@ -163,24 +177,34 @@
 
         <dependency>
             <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-person-directory</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-rest-api</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-web-api</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-util-api</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-services-api</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-services-registry</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.googlecode.cqengine</groupId>
             <artifactId>cqengine</artifactId>
@@ -191,6 +215,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr4-runtime</artifactId>
@@ -257,76 +282,25 @@
         </dependency>
 
         <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.antlr</groupId>
-                    <artifactId>antlr4-runtime</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-support-jpa-ticket-registry</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.integration</groupId>
-            <artifactId>spring-integration-jdbc</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.integration</groupId>
-                    <artifactId>spring-integration-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-api</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-tickets</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-core-monitor</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-core-configuration-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-core-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-core-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-core-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-core-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-core-api</artifactId>
-        </dependency>
 
+        <!-- <dependency>
+             <groupId>org.apereo.cas</groupId>
+             <artifactId>cas-server-support-jpa-ticket-registry</artifactId>
+         </dependency>-->
 
-        <!--<dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-support-redis-core</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-redis-ticket-registry</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-redis-modules</artifactId>
@@ -336,10 +310,6 @@
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-session-redis</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-redis</artifactId>
-        </dependency>-->
 
         <dependency>
             <groupId>org.apereo.cas</groupId>
@@ -379,10 +349,6 @@
         </dependency>
         <dependency>
             <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-support-oauth-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-oauth-services</artifactId>
         </dependency>
 
@@ -405,24 +371,87 @@
 
         <dependency>
             <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-core-monitor</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-core-configuration-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-pac4j-api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-webapp-init</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-webconfig</artifactId>
+        </dependency>
         <!--<dependency>
             <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-support-palantir</artifactId>
+            <artifactId>cas-server-support-jdbc-drivers</artifactId>
+        </dependency>-->
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-jpa-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-jpa-hibernate</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-webapp-starter-tomcat</artifactId>
             <exclusions>
                 <exclusion>
-                    <groupId>org.webjars.npm</groupId>
-                    <artifactId>npm-registry-client</artifactId>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-config-client</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
-            <groupId>org.webjars.npm</groupId>
-            <artifactId>npm-registry-client</artifactId>
-            <version>7.4.6-1</version>
-        </dependency>-->
+            <groupId>net.risesoft</groupId>
+            <artifactId>risenet-y9boot-common-nacos</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr4-runtime</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.integration</groupId>
+            <artifactId>spring-integration-jdbc</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.integration</groupId>
+                    <artifactId>spring-integration-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.nimbusds</groupId>
@@ -435,49 +464,14 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-webapp-init</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-support-webconfig</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-support-jdbc-drivers</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-support-jpa-util</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-support-jpa-hibernate</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-webapp-starter-tomcat</artifactId>
-        </dependency>
-
-        <!--<dependency>
-            <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-common-nacos</artifactId>
-            <version>${project.version}</version>
-        </dependency>-->
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
             <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
                 <exclusion>
                     <groupId>org.antlr</groupId>
                     <artifactId>antlr4-runtime</artifactId>
@@ -497,12 +491,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>cz.mallat.uasparser</groupId>
             <artifactId>uasparser</artifactId>
             <version>0.6.2</version>
@@ -511,7 +499,7 @@
         <dependency>
             <groupId>de.svenkubiak</groupId>
             <artifactId>jBCrypt</artifactId>
-            <version>0.4.3</version>
+            <version>${jBCrypt.version}</version>
         </dependency>
 
         <dependency>
@@ -532,6 +520,12 @@
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -564,7 +558,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.14.0</version>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <annotationProcessorPaths>
                         <path>
@@ -595,7 +589,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.2</version>
+                <version>${maven-jar-plugin.version}</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -608,7 +602,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.4.0</version>
+                <version>${maven-war-plugin.version}</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -622,7 +616,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.1.4</version>
+                <version>${maven-deploy-plugin.version}</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
@@ -630,7 +624,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>${maven-source-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -643,7 +637,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>${maven-resources-plugin.version}</version>
                 <configuration>
                     <propertiesEncoding>${project.build.sourceEncoding}</propertiesEncoding>
                     <delimiters>
@@ -855,7 +849,7 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.9.28</version>
+                        <version>${native-maven-plugin.version}</version>
                         <configuration>
                             <classesDirectory>${project.build.outputDirectory}</classesDirectory>
                             <metadataRepository>
@@ -904,11 +898,11 @@
                                 <appRoot>/usr/local/tomcat/webapps/${project.build.finalName}</appRoot>
                             </container>
                             <to>
-                                <image>docker-registry-internal.youshengyun.com/${project.artifactId}</image>
+                                <image>docker-internal.youshengyun.com/v97x/${project.artifactId}</image>
                                 <tags>
                                     <tag>${project.version}</tag>
                                     <tag>9.7.x</tag>
-                                    <tag>${project.version}-${maven.build.timestamp}</tag>
+                                    <tag>${docker.tag}</tag>
                                 </tags>
                             </to>
                         </configuration>
