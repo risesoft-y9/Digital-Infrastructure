@@ -128,4 +128,8 @@ public class Y9Department extends Y9OrgBase {
         super.setOrgType(OrgTypeEnum.DEPARTMENT);
     }
 
+    @Override
+    public String getParentId() {
+        return this.parentId;
+    }
 }

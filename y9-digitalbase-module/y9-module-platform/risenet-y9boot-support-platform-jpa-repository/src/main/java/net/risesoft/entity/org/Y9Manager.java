@@ -131,4 +131,9 @@ public class Y9Manager extends Y9OrgBase {
     public Y9Manager() {
         super.setOrgType(OrgTypeEnum.MANAGER);
     }
+
+    @Override
+    public String getParentId() {
+        return this.parentId;
+    }
 }

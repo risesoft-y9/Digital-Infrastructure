@@ -20,6 +20,11 @@ public class DataCatalog extends Resource {
     private static final long serialVersionUID = 6586860422866691019L;
 
     /**
+     * 父节点ID
+     */
+    private String parentId;
+
+    /**
      * 节点类型
      */
     public String nodeType;
@@ -45,8 +50,13 @@ public class DataCatalog extends Resource {
      */
     public DataCatalogTypeEnum type;
 
-    // @Override
+    @Override
     public String getAppId() {
         return InitDataConsts.APP_ID;
+    }
+
+    @Override
+    public String getParentId() {
+        return parentId;
     }
 }

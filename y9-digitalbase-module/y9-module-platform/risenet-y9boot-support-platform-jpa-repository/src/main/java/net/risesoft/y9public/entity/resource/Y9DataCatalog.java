@@ -69,12 +69,17 @@ public class Y9DataCatalog extends Y9ResourceBase {
     @Convert(converter = EnumConverter.DataCatalogTypeEnumConverter.class)
     private DataCatalogTypeEnum type = DataCatalogTypeEnum.CLASSIFICATION;
 
-    public Y9DataCatalog() {
-        super.setResourceType(ResourceTypeEnum.DATA_CATALOG);
-    }
-
     @Override
     public String getAppId() {
         return InitDataConsts.APP_ID;
+    }
+
+    @Override
+    public String getParentId() {
+        return this.parentId;
+    }
+
+    public Y9DataCatalog() {
+        super.setResourceType(ResourceTypeEnum.DATA_CATALOG);
     }
 }

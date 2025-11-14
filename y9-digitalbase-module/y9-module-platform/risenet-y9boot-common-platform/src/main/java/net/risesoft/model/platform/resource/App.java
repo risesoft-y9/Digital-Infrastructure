@@ -82,9 +82,14 @@ public class App extends Resource {
     /** 租用状态 */
     private String tenancyStatus;
 
-    // @Override
+    @Override
     public String getAppId() {
         return this.id;
+    }
+
+    @Override
+    public String getParentId() {
+        return null;
     }
 
 }

@@ -68,9 +68,9 @@ public class Y9DataCatalogManagerImpl implements Y9DataCatalogManager {
         y9DataCatalog.setTenantId(Y9LoginUserHolder.getTenantId());
         y9DataCatalog.setSystemId(InitDataConsts.SYSTEM_ID);
         y9DataCatalog.setInherit(Boolean.TRUE);
-        y9DataCatalog.setTabIndex(this.getNextTabIndex(y9DataCatalog.getParentId()));
 
         if (StringUtils.isNotBlank(y9DataCatalog.getParentId())) {
+            y9DataCatalog.setTabIndex(this.getNextTabIndex(y9DataCatalog.getParentId()));
             Y9DataCatalog parent = this.getById(y9DataCatalog.getParentId());
             y9DataCatalog.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), y9DataCatalog.getId()));
         } else {

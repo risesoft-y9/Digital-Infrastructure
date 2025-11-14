@@ -89,18 +89,18 @@ public class PersonIconServiceImpl implements PersonIconService {
         return Y9Page.success(pageQuery.getPage(), 0, 0, List.of());
     }
 
-    private List<PersonIconItem> convert(List<App> y9Apps) {
-        return y9Apps.stream().map(y9App -> {
+    private List<PersonIconItem> convert(List<App> appList) {
+        return appList.stream().map(app -> {
             PersonIconItem personIconItem = new PersonIconItem();
-            personIconItem.setAppId(y9App.getAppId());
-            personIconItem.setAppName(y9App.getName());
-            personIconItem.setUrl(y9App.getUrl());
-            personIconItem.setIconUrl(y9App.getIconUrl());
-            personIconItem.setIconData(y9App.getIconData());
-            personIconItem.setShowNumber(y9App.getShowNumber());
-            personIconItem.setNumberUrl(y9App.getNumberUrl());
-            personIconItem.setOpentype(y9App.getOpentype());
-            personIconItem.setTabIndex(y9App.getTabIndex());
+            personIconItem.setAppId(app.getId());
+            personIconItem.setAppName(app.getName());
+            personIconItem.setUrl(app.getUrl());
+            personIconItem.setIconUrl(app.getIconUrl());
+            personIconItem.setIconData(app.getIconData());
+            personIconItem.setShowNumber(app.getShowNumber());
+            personIconItem.setNumberUrl(app.getNumberUrl());
+            personIconItem.setOpentype(app.getOpentype());
+            personIconItem.setTabIndex(app.getTabIndex());
             return personIconItem;
         }).collect(Collectors.toList());
     }

@@ -166,4 +166,8 @@ public class Y9Person extends Y9OrgBase {
         super.setOrgType(OrgTypeEnum.PERSON);
     }
 
+    @Override
+    public String getParentId() {
+        return this.parentId;
+    }
 }

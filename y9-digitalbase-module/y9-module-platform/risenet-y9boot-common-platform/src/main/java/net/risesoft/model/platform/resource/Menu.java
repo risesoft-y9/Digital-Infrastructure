@@ -25,6 +25,11 @@ public class Menu extends Resource {
     private String appId;
 
     /**
+     * 父节点ID
+     */
+    private String parentId;
+
+    /**
      * 打开模式
      */
     private String target;
@@ -44,8 +49,13 @@ public class Menu extends Resource {
      */
     private String redirect;
 
-    // @Override
+    @Override
     public String getAppId() {
         return this.appId;
+    }
+
+    @Override
+    public String getParentId() {
+        return parentId;
     }
 }

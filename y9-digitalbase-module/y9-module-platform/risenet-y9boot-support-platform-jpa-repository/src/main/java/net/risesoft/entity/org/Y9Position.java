@@ -71,4 +71,9 @@ public class Y9Position extends Y9OrgBase {
     public Y9Position() {
         super.setOrgType(OrgTypeEnum.POSITION);
     }
+
+    @Override
+    public String getParentId() {
+        return this.parentId;
+    }
 }
