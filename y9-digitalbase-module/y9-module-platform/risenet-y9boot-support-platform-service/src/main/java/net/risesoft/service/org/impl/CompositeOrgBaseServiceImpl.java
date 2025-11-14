@@ -799,6 +799,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void sync(String syncId, OrgTypeEnum orgType, boolean needRecursion, String targetSystemName) {
         SyncOrgUnits syncOrgUnits = getSyncOrgUnits(syncId, orgType, needRecursion);
         Y9MessageOrg<SyncOrgUnits> event = new Y9MessageOrg<>(syncOrgUnits, Y9OrgEventTypeConst.SYNC, targetSystemName,
@@ -1001,6 +1002,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<OrgUnit> treeSearch4DeptManager(String name, OrgTreeTypeEnum treeType, Boolean disabled) {
         Y9Department y9Department = y9DepartmentManager.getByIdFromCache(Y9LoginUserHolder.getDeptId());
         return treeSearch(name, treeType, y9Department.getDn(), disabled);

@@ -50,4 +50,8 @@ public class Y9Group extends Y9OrgBase {
         super.setOrgType(OrgTypeEnum.GROUP);
     }
 
+    @Override
+    public String getParentId() {
+        return this.parentId;
+    }
 }

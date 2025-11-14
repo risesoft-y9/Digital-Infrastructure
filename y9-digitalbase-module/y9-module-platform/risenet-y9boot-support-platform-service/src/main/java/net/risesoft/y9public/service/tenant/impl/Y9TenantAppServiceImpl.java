@@ -149,7 +149,7 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void onAppDeleted(Y9EntityDeletedEvent<Y9App> event) {
         Y9App y9App = event.getEntity();
-        this.deleteByAppId(y9App.getAppId());
+        this.deleteByAppId(y9App.getId());
     }
 
     private static List<TenantApp> entityToModel(List<Y9TenantApp> y9TenantAppList) {

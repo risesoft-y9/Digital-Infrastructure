@@ -68,4 +68,9 @@ public class Y9Menu extends Y9ResourceBase {
     public String getAppId() {
         return this.appId;
     }
+
+    @Override
+    public String getParentId() {
+        return this.parentId;
+    }
 }

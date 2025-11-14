@@ -74,6 +74,11 @@ public class Y9DataCatalog extends Y9ResourceBase {
         return InitDataConsts.APP_ID;
     }
 
+    @Override
+    public String getParentId() {
+        return this.parentId;
+    }
+
     public Y9DataCatalog() {
         super.setResourceType(ResourceTypeEnum.DATA_CATALOG);
     }

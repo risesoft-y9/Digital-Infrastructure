@@ -150,6 +150,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Boolean hasPosition(String positionName, String personId) {
         List<Position> list = listByPersonId(personId, Boolean.FALSE);
         boolean exist = false;

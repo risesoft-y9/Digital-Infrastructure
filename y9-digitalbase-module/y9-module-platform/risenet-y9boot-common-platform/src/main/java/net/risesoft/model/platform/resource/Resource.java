@@ -26,7 +26,7 @@ import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "resourceType")
 @JsonSubTypes({@JsonSubTypes.Type(value = App.class, name = "0"), @JsonSubTypes.Type(value = Menu.class, name = "1"),
     @JsonSubTypes.Type(value = Operation.class, name = "2")})
-public class Resource implements Serializable, Comparable<Resource> {
+public abstract class Resource implements Serializable, Comparable<Resource> {
 
     private static final long serialVersionUID = 1680635528797868917L;
 
@@ -82,11 +82,6 @@ public class Resource implements Serializable, Comparable<Resource> {
     protected String url2;
 
     /**
-     * 父节点ID
-     */
-    protected String parentId;
-
-    /**
      * 资源类型
      *
      * {@link ResourceTypeEnum}
@@ -115,8 +110,7 @@ public class Resource implements Serializable, Comparable<Resource> {
             .compare(this, resource);
     }
 
-    // public String getAppId();
-    public String getAppId() {
-        return null;
-    }
+    public abstract String getAppId();
+
+    public abstract String getParentId();
 }

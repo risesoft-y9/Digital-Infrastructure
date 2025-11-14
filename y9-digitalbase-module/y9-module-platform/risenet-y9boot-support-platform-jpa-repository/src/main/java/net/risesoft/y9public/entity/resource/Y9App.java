@@ -5,7 +5,6 @@ import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
@@ -102,16 +101,13 @@ public class Y9App extends Y9ResourceBase {
     @ColumnDefault("0")
     private Boolean autoInit = Boolean.FALSE;
 
-    @Transient
-    private String appId;
-
     public Y9App() {
         super.setResourceType(ResourceTypeEnum.APP);
     }
 
     @Override
     public String getAppId() {
-        return this.id;
+        return id;
     }
 
     @Override

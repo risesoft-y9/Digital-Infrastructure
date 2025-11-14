@@ -6,7 +6,6 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.ColumnDefault;
@@ -48,10 +47,6 @@ public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBa
     @Column(name = "CUSTOM_ID", length = 255)
     @Comment("自定义id")
     protected String customId;
-
-    /** 父节点id 组织机构中不需要这个字段，其他组织节点的实体表中加入该字段，为了操作方便此处保留 */
-    @Transient
-    protected String parentId;
 
     /** 租户id */
     @Column(name = "TENANT_ID", length = 38)
@@ -114,4 +109,5 @@ public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBa
             .compare(this, o);
     }
 
+    public abstract String getParentId();
 }

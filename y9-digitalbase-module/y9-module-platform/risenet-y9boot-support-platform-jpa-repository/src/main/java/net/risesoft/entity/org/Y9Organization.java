@@ -58,4 +58,8 @@ public class Y9Organization extends Y9OrgBase {
         super.setOrgType(OrgTypeEnum.ORGANIZATION);
     }
 
+    @Override
+    public String getParentId() {
+        return null;
+    }
 }

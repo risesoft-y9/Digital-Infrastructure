@@ -24,6 +24,11 @@ public class Operation extends Resource {
     private String appId;
 
     /**
+     * 父节点ID
+     */
+    private String parentId;
+
+    /**
      * 展示方式
      */
     private OperationDisplayTypeEnum displayType;
@@ -31,8 +36,13 @@ public class Operation extends Resource {
     /** 按钮事件 */
     private String eventName;
 
-    // @Override
+    @Override
     public String getAppId() {
         return this.appId;
+    }
+
+    @Override
+    public String getParentId() {
+        return parentId;
     }
 }
