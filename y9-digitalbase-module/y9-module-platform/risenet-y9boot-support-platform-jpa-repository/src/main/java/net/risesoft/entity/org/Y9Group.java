@@ -9,6 +9,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
@@ -44,6 +45,7 @@ public class Y9Group extends Y9OrgBase {
     @Column(name = "TYPE", length = 10, nullable = false)
     @Comment("类型：position、person")
     @Convert(converter = EnumConverter.GroupTypeEnumConverter.class)
+    @Builder.Default
     private GroupTypeEnum type = GroupTypeEnum.PERSON;
 
     public Y9Group() {

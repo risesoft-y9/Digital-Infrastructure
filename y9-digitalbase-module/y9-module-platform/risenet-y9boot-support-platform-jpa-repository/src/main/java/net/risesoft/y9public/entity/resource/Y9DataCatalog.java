@@ -8,6 +8,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
@@ -67,6 +68,7 @@ public class Y9DataCatalog extends Y9ResourceBase {
     @Column(name = "DATA_CATALOG_TYPE", nullable = false)
     @Comment("数据目录类型")
     @Convert(converter = EnumConverter.DataCatalogTypeEnumConverter.class)
+    @Builder.Default
     private DataCatalogTypeEnum type = DataCatalogTypeEnum.CLASSIFICATION;
 
     @Override

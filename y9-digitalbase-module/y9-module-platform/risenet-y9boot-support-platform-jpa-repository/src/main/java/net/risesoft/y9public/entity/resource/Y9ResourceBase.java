@@ -11,6 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.Type;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -67,6 +68,7 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
     @ColumnDefault("1")
     @Column(name = "ENABLED", nullable = false)
     @Comment("是否启用:1=启用,0=禁用")
+    @Builder.Default
     protected Boolean enabled = Boolean.TRUE;
 
     /** 是否隐藏:1=隐藏,0=显示 */
@@ -74,6 +76,7 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
     @ColumnDefault("0")
     @Column(name = "HIDDEN", nullable = false)
     @Comment("是否隐藏:1=隐藏,0=显示")
+    @Builder.Default
     protected Boolean hidden = Boolean.FALSE;
 
     /** 图标地址 */
@@ -96,6 +99,7 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
     @Column(name = "RESOURCE_TYPE", nullable = false)
     @Comment("资源类型：0=应用，1=菜单，2=操作")
     @Convert(converter = EnumConverter.ResourceTypeEnumConverter.class)
+    @Builder.Default
     protected ResourceTypeEnum resourceType = ResourceTypeEnum.APP;
 
     /** 是否为继承上级节点的权限:1=继承,0=不继承 */
@@ -103,11 +107,13 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
     @ColumnDefault("0")
     @Column(name = "INHERIT", nullable = false)
     @Comment("是否为继承上级节点的权限:1=继承,0=不继承")
+    @Builder.Default
     protected Boolean inherit = Boolean.FALSE;
 
     /** 排序 */
     @Column(name = "TAB_INDEX", nullable = false)
     @Comment("排序")
+    @Builder.Default
     protected Integer tabIndex = DefaultConsts.TAB_INDEX;
 
     /** 由ID组成的父子关系列表(正序)，之间用逗号分隔 */

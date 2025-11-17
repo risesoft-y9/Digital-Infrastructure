@@ -16,6 +16,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
@@ -122,6 +123,7 @@ public class Y9Department extends Y9OrgBase {
     @Column(name = "BUREAU", nullable = false)
     @Comment("是否委办局")
     @ColumnDefault("0")
+    @Builder.Default
     private Boolean bureau = false;
 
     public Y9Department() {

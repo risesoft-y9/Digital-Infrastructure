@@ -12,6 +12,7 @@ import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
@@ -90,6 +91,7 @@ public class Y9Manager extends Y9OrgBase {
     @Column(name = "SEX", nullable = false)
     @Comment("性别")
     @Convert(converter = EnumConverter.SexEnumConverter.class)
+    @Builder.Default
     private SexEnum sex = SexEnum.MALE;
 
     /** 管理员类型 */
@@ -97,6 +99,7 @@ public class Y9Manager extends Y9OrgBase {
     @Comment("管理员类型")
     @ColumnDefault("0")
     @Convert(converter = EnumConverter.ManagerLevelEnumConverter.class)
+    @Builder.Default
     private ManagerLevelEnum managerLevel = ManagerLevelEnum.GENERAL_USER;
 
     /**
@@ -106,6 +109,7 @@ public class Y9Manager extends Y9OrgBase {
     @Column(name = "GLOBAL_MANAGER", nullable = false)
     @Comment("是否全局管理员")
     @ColumnDefault("0")
+    @Builder.Default
     private Boolean globalManager = false;
 
     /**

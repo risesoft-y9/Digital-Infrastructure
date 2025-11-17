@@ -27,6 +27,8 @@ import net.risesoft.base.BaseEntity;
 @Data
 public class Y9Setting extends BaseEntity {
 
+    private static final long serialVersionUID = -7685261553906860219L;
+
     @Id
     @Column(name = "SETTING_KEY")
     @Comment("设置key")
