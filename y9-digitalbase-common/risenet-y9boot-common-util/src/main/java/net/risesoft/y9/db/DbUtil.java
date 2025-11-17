@@ -15,10 +15,6 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class DbUtil {
 
-    private DbUtil() {
-        throw new IllegalStateException("Utility class");
-    }
-
     public static String getCatalog(DataSource dataSource) {
         try (Connection connection = dataSource.getConnection();) {
             String catalog = connection.getCatalog();
@@ -179,5 +175,9 @@ public class DbUtil {
         } catch (SQLException e) {
             return null;
         }
+    }
+
+    private DbUtil() {
+        throw new IllegalStateException("Utility class");
     }
 }

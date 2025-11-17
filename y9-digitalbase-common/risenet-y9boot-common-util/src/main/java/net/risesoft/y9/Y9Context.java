@@ -41,17 +41,6 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
     private static String hostName;
     private static String hostIp;
 
-    @PostConstruct
-    public void init() {
-        Y9Context.systemName = environment.getProperty("y9.systemName");
-        Y9Context.hostIp = InetAddressUtil.getLocalAddress(environment.getProperty("y9.internalIp")).getHostAddress();
-        try {
-            Y9Context.hostName = InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-    }
-
     /**
      * 如果BeanFactory包含一个与所给名称匹配的bean定义，则返回true
      *
@@ -73,8 +62,7 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
      *
      * @param name bean名字
      * @return String[] bean定义中别名
-     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException if there is no bean with the specified
-     *             name
+     * @throws NoSuchBeanDefinitionException if there is no bean with the specified name
      */
     public static String[] getAliases(String name) throws NoSuchBeanDefinitionException {
         return applicationContext.getAliases(name);
@@ -87,7 +75,7 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
      * @param clz 类型
      * @return T an instance of the single bean matching the required type
      * @param <T> type the bean must match; can be an interface or superclass
-     * @throws org.springframework.beans.BeansException if the bean could not be obtained
+     * @throws BeansException if the bean could not be obtained
      * @see BeansException
      */
 
@@ -102,7 +90,7 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
      * @param name bean名字
      * @return T 一个以所给名字注册的bean的实例
      * @param <T> 返回类型
-     * @throws org.springframework.beans.BeansException if the bean could not be obtained
+     * @throws BeansException if the bean could not be obtained
      */
     @SuppressWarnings("unchecked")
     public static <T> T getBean(String name) throws BeansException {
@@ -218,8 +206,7 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
      * @param name bean名字
      * @return Class the name of the bean to query
      *
-     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException if there is no bean with the specified
-     *             name
+     * @throws NoSuchBeanDefinitionException if there is no bean with the specified name
      */
     public static Class<?> getType(String name) throws NoSuchBeanDefinitionException {
         return applicationContext.getType(name);
@@ -235,8 +222,7 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
      *
      * @param name the name of the bean to query
      * @return boolean whether this bean corresponds to a singleton instance
-     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException if there is no bean with the specified
-     *             name
+     * @throws NoSuchBeanDefinitionException if there is no bean with the specified name
      */
     public static boolean isSingleton(String name) throws NoSuchBeanDefinitionException {
         return applicationContext.isSingleton(name);
@@ -248,6 +234,17 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
 
     public static void publishEvent(Object event) {
         applicationContext.publishEvent(event);
+    }
+
+    @PostConstruct
+    public void init() {
+        Y9Context.systemName = environment.getProperty("y9.systemName");
+        Y9Context.hostIp = InetAddressUtil.getLocalAddress(environment.getProperty("y9.internalIp")).getHostAddress();
+        try {
+            Y9Context.hostName = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            LOGGER.warn(e.getMessage(), e);
+        }
     }
 
     @Override

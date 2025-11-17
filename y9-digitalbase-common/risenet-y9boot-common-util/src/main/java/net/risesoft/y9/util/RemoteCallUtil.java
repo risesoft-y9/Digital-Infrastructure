@@ -10,11 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
-import org.apache.axis2.addressing.EndpointReference;
-import org.apache.axis2.client.Options;
-import org.apache.axis2.rpc.client.RPCServiceClient;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
@@ -56,10 +51,6 @@ import cn.hutool.json.JSONObject;
  */
 @Slf4j
 public class RemoteCallUtil {
-    enum MethodType {
-        GET, POST
-    }
-
     public static ObjectMapper objectMapper = new ObjectMapper();
 
     static {
@@ -296,33 +287,6 @@ public class RemoteCallUtil {
     public static <T> Y9Page<T> getPage(String url, List<NameValuePair> params, Class<T> clz) {
         JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Y9Page.class, clz);
         return sendRequest(MethodType.GET, url, params, null, javaType);
-    }
-
-    /**
-     * 双杨推送接口
-     *
-     * @param endpointURL
-     * @param methodName
-     * @param para
-     * @return
-     * @throws Exception
-     */
-    public static Object invoke(String endpointURL, String methodName, Object[] para) throws Exception {
-        // 使用RPC方式调用WebService
-        RPCServiceClient serviceClient = new RPCServiceClient();
-        Options options = serviceClient.getOptions();
-        // 指定调用WebService的URL
-        EndpointReference targetEPR = new EndpointReference(endpointURL);
-        options.setTo(targetEPR);
-        // 在创建QName对象时，QName类的构造方法的第一个参数表示WSDL文件的命名空间名，也就是<wsdl:definitions>元素的targetNamespace属性值
-        // // 指定要调用的getWorld方法及WSDL文件的命名空间.....
-        QName opAddEntry = new QName(endpointURL, methodName);
-        //
-        // 指定getGreeting方法的参数值，如果有多个，继续往后面增加即可，不用指定参数的名称
-        Class[] classes = new Class[] {Object.class};
-        // 调用getGreeting方法并输出该方法的返回值.......
-        Object result = serviceClient.invokeBlocking(opAddEntry, para, classes)[0];
-        return result;
     }
 
     public static List<NameValuePair> objectToNameValuePairList(Object object) {
@@ -708,5 +672,9 @@ public class RemoteCallUtil {
             ((SimpleHttpConnectionManager)client.getHttpConnectionManager()).shutdown();
         }
         return null;
+    }
+
+    enum MethodType {
+        GET, POST
     }
 }

@@ -17,8 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Y9ModelConvertUtil {
 
-    public Y9ModelConvertUtil() {}
-
     public static <T> List<T> convert(List<?> sourceList, Class<T> targetClass) {
         return convert(sourceList, targetClass, (String[])null);
     }
@@ -56,5 +54,7 @@ public class Y9ModelConvertUtil {
         }
         return null;
     }
+
+    public Y9ModelConvertUtil() {}
 
 }

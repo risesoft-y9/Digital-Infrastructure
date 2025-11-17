@@ -120,32 +120,5 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-spring</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-corba</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.sun.xml.bind</groupId>
-                    <artifactId>jaxb-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-jaxws</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.sun.xml.bind</groupId>
-                    <artifactId>jaxb-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
     </dependencies>
 </project>
