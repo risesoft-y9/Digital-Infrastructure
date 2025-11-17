@@ -67,9 +67,6 @@ dependencies {
         api(libs.postgresql)
         api(libs.auth0.jwt)
         api(libs.auth0.jwks)
-        api(libs.axis2.corba)
-        api(libs.axis2.jaxws)
-        api(libs.axis2.spring)
         api(libs.fastexcel)
     }
 }
