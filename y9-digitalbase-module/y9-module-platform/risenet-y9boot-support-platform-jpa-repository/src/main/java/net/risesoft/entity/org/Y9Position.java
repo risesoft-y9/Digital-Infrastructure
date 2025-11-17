@@ -8,6 +8,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
@@ -60,12 +61,14 @@ public class Y9Position extends Y9OrgBase {
     @ColumnDefault("1")
     @Column(name = "CAPACITY", nullable = false)
     @Comment("岗位容量，默认容量为1，即一人一岗")
+    @Builder.Default
     private Integer capacity = 1;
 
     /** 当前岗位人数，小于或等于岗位容量 */
     @ColumnDefault("0")
     @Column(name = "HEAD_COUNT", nullable = false)
     @Comment("岗位当前人数，小于或等于岗位容量")
+    @Builder.Default
     private Integer headCount = 0;
 
     public Y9Position() {

@@ -9,6 +9,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
@@ -122,6 +123,7 @@ public class Y9Person extends Y9OrgBase {
     @Column(name = "SEX", nullable = false)
     @Comment("性别")
     @Convert(converter = EnumConverter.SexEnumConverter.class)
+    @Builder.Default
     private SexEnum sex = SexEnum.MALE;
 
     /**
@@ -130,6 +132,7 @@ public class Y9Person extends Y9OrgBase {
     @ColumnDefault("'deptPerson'")
     @Column(name = "PERSON_TYPE", length = 255, nullable = false)
     @Comment("人员类型")
+    @Builder.Default
     private String personType = PersonTypeEnum.DEPARTMENT.getValue();
 
     /**
@@ -153,6 +156,7 @@ public class Y9Person extends Y9OrgBase {
     @ColumnDefault("1")
     @Column(name = "ORIGINAL", length = 10, nullable = false)
     @Comment("0:添加的人员，1：新增的人员")
+    @Builder.Default
     private Boolean original = true;
 
     /**

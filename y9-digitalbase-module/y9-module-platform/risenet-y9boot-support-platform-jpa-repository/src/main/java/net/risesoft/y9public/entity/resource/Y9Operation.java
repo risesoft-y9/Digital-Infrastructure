@@ -9,6 +9,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
@@ -49,6 +50,7 @@ public class Y9Operation extends Y9ResourceBase {
     @Column(name = "DISPLAY_TYPE", nullable = false)
     @Comment("按钮展示方式")
     @Convert(converter = EnumConverter.OperationDisplayTypeEnumConverter.class)
+    @Builder.Default
     private OperationDisplayTypeEnum displayType = OperationDisplayTypeEnum.ICON_TEXT;
 
     /** 按钮事件 */

@@ -9,6 +9,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
@@ -52,6 +53,7 @@ public class Y9Organization extends Y9OrgBase {
     @Column(name = "VIRTUALIZED", nullable = false)
     @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @Comment("类型:0=实体组织，1=虚拟组织")
+    @Builder.Default
     private Boolean virtual = false;
 
     public Y9Organization() {

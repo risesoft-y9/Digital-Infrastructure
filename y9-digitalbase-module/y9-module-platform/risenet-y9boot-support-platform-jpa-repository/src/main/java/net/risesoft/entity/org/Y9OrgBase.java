@@ -11,6 +11,7 @@ import jakarta.persistence.Version;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -63,6 +64,7 @@ public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBa
     @Column(name = "DISABLED", nullable = false)
     @Comment("是否禁用")
     @ColumnDefault("0")
+    @Builder.Default
     protected Boolean disabled = false;
 
     /** 描述 */
@@ -94,6 +96,7 @@ public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBa
     /** 排序号 */
     @Column(name = "TAB_INDEX", nullable = false)
     @Comment("排序号")
+    @Builder.Default
     protected Integer tabIndex = DefaultConsts.TAB_INDEX;
 
     /** 由ID组成的父子关系列表(正序)，之间用逗号分隔 */
