@@ -28,19 +28,11 @@ public interface Y9FileStoreService {
 
     Y9FileStore uploadFile(InputStream inputStream, String customPath, String fileName) throws Exception;
 
-    Y9FileStore uploadFileAsync(byte[] bytes, String customPath, String fileName) throws Exception;
+    Y9FileStore uploadFileReplace(String y9FileStoreId, byte[] bytes) throws Exception;
 
-    Y9FileStore uploadFileAsync(File file, String customPath, String fileName) throws Exception;
+    Y9FileStore uploadFileReplace(String y9FileStoreId, File file) throws Exception;
 
-    Y9FileStore uploadFileAsync(MultipartFile multipartFile, String customPath, String fileName) throws Exception;
+    Y9FileStore uploadFileReplace(String y9FileStoreId, MultipartFile multipartFile) throws Exception;
 
-    Y9FileStore uploadFileAsync(InputStream inputStream, String customPath, String fileName) throws Exception;
-
-    Y9FileStore uploadFileReplace(byte[] bytes, String y9FileStoreId) throws Exception;
-
-    Y9FileStore uploadFileReplace(File file, String y9FileStoreId) throws Exception;
-
-    Y9FileStore uploadFileReplace(MultipartFile multipartFile, String y9FileStoreId) throws Exception;
-
-    Y9FileStore uploadFileReplace(InputStream inputStream, String y9FileStoreId) throws Exception;
+    Y9FileStore uploadFileReplace(String y9FileStoreId, InputStream inputStream) throws Exception;
 }
