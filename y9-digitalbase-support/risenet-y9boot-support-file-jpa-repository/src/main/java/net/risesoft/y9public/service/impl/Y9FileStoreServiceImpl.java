@@ -92,7 +92,7 @@ public class Y9FileStoreServiceImpl implements Y9FileStoreService {
         if (decryptionRequired(y9FileStore)) {
             try {
                 String key = RsaUtil.decryptByPubKey(y9FileStore.getFileEnvelope(), this.publicKey);
-                bytes = AesUtil.decryptByte(bytes, key);
+                bytes = AesUtil.decryptByte(key, bytes);
             } catch (Exception e) {
                 LOGGER.warn(e.getMessage(), e);
             }
