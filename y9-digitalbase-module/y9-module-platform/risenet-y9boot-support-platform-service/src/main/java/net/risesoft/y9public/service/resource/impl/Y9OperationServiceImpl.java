@@ -43,6 +43,10 @@ public class Y9OperationServiceImpl implements Y9OperationService {
 
     private final Y9OperationManager y9OperationManager;
 
+    private static Operation entityToModel(Y9Operation savedOperation) {
+        return PlatformModelConvertUtil.convert(savedOperation, Operation.class);
+    }
+
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(List<String> idList) {
@@ -225,10 +229,6 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     public void onMenuDeleted(Y9EntityDeletedEvent<Y9Menu> event) {
         Y9Menu entity = event.getEntity();
         this.deleteByParentId(entity.getId());
-    }
-
-    private static Operation entityToModel(Y9Operation savedOperation) {
-        return PlatformModelConvertUtil.convert(savedOperation, Operation.class);
     }
 
     private List<Operation> entityToModel(List<Y9Operation> y9OperationList) {

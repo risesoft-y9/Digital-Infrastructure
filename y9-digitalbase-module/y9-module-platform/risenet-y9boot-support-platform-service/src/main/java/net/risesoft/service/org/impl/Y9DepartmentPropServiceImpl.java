@@ -3,7 +3,6 @@ package net.risesoft.service.org.impl;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.util.PlatformModelConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -22,6 +21,7 @@ import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.model.platform.org.DepartmentProp;
 import net.risesoft.repository.org.Y9DepartmentPropRepository;
 import net.risesoft.service.org.Y9DepartmentPropService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 
 /**

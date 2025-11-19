@@ -46,6 +46,14 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
 
     private final Y9TenantAppManager y9TenantAppManager;
 
+    private static List<TenantApp> entityToModel(List<Y9TenantApp> y9TenantAppList) {
+        return PlatformModelConvertUtil.convert(y9TenantAppList, TenantApp.class);
+    }
+
+    private static TenantApp entityToModel(Y9TenantApp y9TenantApp) {
+        return PlatformModelConvertUtil.convert(y9TenantApp, TenantApp.class);
+    }
+
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void deleteByAppId(String appId) {
@@ -150,13 +158,5 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     public void onAppDeleted(Y9EntityDeletedEvent<Y9App> event) {
         Y9App y9App = event.getEntity();
         this.deleteByAppId(y9App.getId());
-    }
-
-    private static List<TenantApp> entityToModel(List<Y9TenantApp> y9TenantAppList) {
-        return PlatformModelConvertUtil.convert(y9TenantAppList, TenantApp.class);
-    }
-
-    private static TenantApp entityToModel(Y9TenantApp y9TenantApp) {
-        return PlatformModelConvertUtil.convert(y9TenantApp, TenantApp.class);
     }
 }

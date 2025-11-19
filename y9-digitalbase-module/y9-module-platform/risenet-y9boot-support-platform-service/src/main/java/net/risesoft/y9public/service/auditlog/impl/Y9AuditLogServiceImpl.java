@@ -32,6 +32,10 @@ public class Y9AuditLogServiceImpl implements Y9AuditLogService {
 
     private final Y9AuditLogRepository y9AuditLogRepository;
 
+    private static List<AuditLog> entityToModel(Page<Y9AuditLog> y9AuditLogPage) {
+        return PlatformModelConvertUtil.convert(y9AuditLogPage.getContent(), AuditLog.class);
+    }
+
     @Override
     public Y9Page<AuditLog> page(AuditLogQuery auditLogQuery, Y9PageQuery y9PageQuery) {
         auditLogQuery.setTenantId(Y9LoginUserHolder.getTenantId());
@@ -39,10 +43,6 @@ public class Y9AuditLogServiceImpl implements Y9AuditLogService {
             PageRequest.of(y9PageQuery.getPage4Db(), y9PageQuery.getSize(), Sort.Direction.DESC, "createTime"));
         return Y9Page.success(y9PageQuery.getPage(), y9AuditLogPage.getTotalPages(), y9AuditLogPage.getTotalElements(),
             entityToModel(y9AuditLogPage));
-    }
-
-    private static List<AuditLog> entityToModel(Page<Y9AuditLog> y9AuditLogPage) {
-        return PlatformModelConvertUtil.convert(y9AuditLogPage.getContent(), AuditLog.class);
     }
 
 }

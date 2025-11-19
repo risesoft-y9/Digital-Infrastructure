@@ -42,6 +42,10 @@ public class Y9MenuServiceImpl implements Y9MenuService {
 
     private final Y9MenuManager y9MenuManager;
 
+    private static Menu entityToModel(Y9Menu savedMenu) {
+        return PlatformModelConvertUtil.convert(savedMenu, Menu.class);
+    }
+
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(List<String> idList) {
@@ -223,10 +227,6 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     public void onMenuDeleted(Y9EntityDeletedEvent<Y9Menu> event) {
         Y9Menu entity = event.getEntity();
         this.deleteByParentId(entity.getId());
-    }
-
-    private static Menu entityToModel(Y9Menu savedMenu) {
-        return PlatformModelConvertUtil.convert(savedMenu, Menu.class);
     }
 
     private List<Menu> entityToModel(List<Y9Menu> y9MenuList) {

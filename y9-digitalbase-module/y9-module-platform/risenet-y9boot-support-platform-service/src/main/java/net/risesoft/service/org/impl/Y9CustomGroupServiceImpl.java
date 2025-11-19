@@ -3,7 +3,6 @@ package net.risesoft.service.org.impl;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.util.PlatformModelConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +23,7 @@ import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.org.Y9CustomGroupRepository;
 import net.risesoft.repository.relation.Y9CustomGroupMembersRepository;
 import net.risesoft.service.org.Y9CustomGroupService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 
@@ -41,6 +41,14 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
     private final Y9CustomGroupMembersRepository customGroupMembersRepository;
 
     private final Y9CustomGroupMembersManager y9CustomGroupMembersManager;
+
+    private static CustomGroup entityToModel(Y9CustomGroup y9CustomGroup) {
+        return PlatformModelConvertUtil.convert(y9CustomGroup, CustomGroup.class);
+    }
+
+    private static List<CustomGroup> entityToModel(List<Y9CustomGroup> y9CustomGroupList) {
+        return PlatformModelConvertUtil.convert(y9CustomGroupList, CustomGroup.class);
+    }
 
     @Override
     @Transactional
@@ -158,14 +166,6 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
         group.setShareId(customGroup.getPersonId());
         group.setPersonId(personId);
         return this.save(group);
-    }
-
-    private static CustomGroup entityToModel(Y9CustomGroup y9CustomGroup) {
-        return PlatformModelConvertUtil.convert(y9CustomGroup, CustomGroup.class);
-    }
-
-    private static List<CustomGroup> entityToModel(List<Y9CustomGroup> y9CustomGroupList) {
-        return PlatformModelConvertUtil.convert(y9CustomGroupList, CustomGroup.class);
     }
 
 }

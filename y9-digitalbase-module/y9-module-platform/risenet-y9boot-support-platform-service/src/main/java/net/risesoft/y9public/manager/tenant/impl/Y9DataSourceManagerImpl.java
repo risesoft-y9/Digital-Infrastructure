@@ -54,12 +54,6 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         this.datasourceRepository = datasourceRepository;
     }
 
-    @Override
-    public Y9DataSource getById(String id) {
-        return datasourceRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(DataSourceErrorCodeEnum.DATA_SOURCE_NOT_FOUND, id));
-    }
-
     private static String replaceSchemaNameInJdbcUrlParam(String originalJdbcUrl, String newSchemaName) {
         int paramStart = originalJdbcUrl.indexOf("?") + 1;
 
@@ -77,6 +71,12 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         } else {
             return originalJdbcUrl + "?currentSchema=" + newSchemaName;
         }
+    }
+
+    @Override
+    public Y9DataSource getById(String id) {
+        return datasourceRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(DataSourceErrorCodeEnum.DATA_SOURCE_NOT_FOUND, id));
     }
 
     @Override

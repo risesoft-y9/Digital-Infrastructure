@@ -3,7 +3,6 @@ package net.risesoft.service.dictionary.impl;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.util.PlatformModelConvertUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +16,7 @@ import net.risesoft.model.platform.dictionary.OptionClass;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.dictionary.Y9OptionClassRepository;
 import net.risesoft.service.dictionary.Y9OptionClassService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
@@ -35,6 +35,14 @@ public class Y9OptionClassServiceImpl implements Y9OptionClassService {
     private final Y9OptionClassRepository y9OptionClassRepository;
 
     private final Y9OptionValueManager y9OptionValueManager;
+
+    private static OptionClass entityToModel(Y9OptionClass y9OptionClass) {
+        return PlatformModelConvertUtil.convert(y9OptionClass, OptionClass.class);
+    }
+
+    private static List<OptionClass> entityToModel(List<Y9OptionClass> y9OptionClassList) {
+        return PlatformModelConvertUtil.convert(y9OptionClassList, OptionClass.class);
+    }
 
     @Override
     @Transactional
@@ -117,13 +125,5 @@ public class Y9OptionClassServiceImpl implements Y9OptionClassService {
         Y9Context.publishEvent(auditLogEvent);
 
         return entityToModel(savedOptionClass);
-    }
-
-    private static OptionClass entityToModel(Y9OptionClass y9OptionClass) {
-        return PlatformModelConvertUtil.convert(y9OptionClass, OptionClass.class);
-    }
-
-    private static List<OptionClass> entityToModel(List<Y9OptionClass> y9OptionClassList) {
-        return PlatformModelConvertUtil.convert(y9OptionClassList, OptionClass.class);
     }
 }

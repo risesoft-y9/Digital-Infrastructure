@@ -3,7 +3,6 @@ package net.risesoft.service.dictionary.impl;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.util.PlatformModelConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +18,7 @@ import net.risesoft.model.platform.dictionary.OptionValue;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.dictionary.Y9OptionValueRepository;
 import net.risesoft.service.dictionary.Y9OptionValueService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
@@ -36,6 +36,18 @@ public class Y9OptionValueServiceImpl implements Y9OptionValueService {
 
     private final Y9OptionValueRepository y9OptionValueRepository;
     private final Y9OptionValueManager y9OptionValueManager;
+
+    private static List<OptionValue> entityToModel(List<Y9OptionValue> y9OptionValueList) {
+        return PlatformModelConvertUtil.convert(y9OptionValueList, OptionValue.class);
+    }
+
+    private static OptionValue entityToModel(Y9OptionValue y9OptionValue) {
+        return PlatformModelConvertUtil.convert(y9OptionValue, OptionValue.class);
+    }
+
+    private static Y9OptionValue modelToEntity(OptionValue optionValue) {
+        return PlatformModelConvertUtil.convert(optionValue, Y9OptionValue.class);
+    }
 
     @Override
     @Transactional
@@ -124,17 +136,5 @@ public class Y9OptionValueServiceImpl implements Y9OptionValueService {
     private Integer getNextTabIndex(OptionValue optionValue) {
         Integer maxTabIndex = y9OptionValueManager.getMaxTabIndexByType(optionValue.getType());
         return maxTabIndex == null ? 0 : maxTabIndex + 1;
-    }
-
-    private static List<OptionValue> entityToModel(List<Y9OptionValue> y9OptionValueList) {
-        return PlatformModelConvertUtil.convert(y9OptionValueList, OptionValue.class);
-    }
-
-    private static OptionValue entityToModel(Y9OptionValue y9OptionValue) {
-        return PlatformModelConvertUtil.convert(y9OptionValue, OptionValue.class);
-    }
-
-    private static Y9OptionValue modelToEntity(OptionValue optionValue) {
-        return PlatformModelConvertUtil.convert(optionValue, Y9OptionValue.class);
     }
 }

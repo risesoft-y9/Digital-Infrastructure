@@ -2,7 +2,6 @@ package net.risesoft.service.idcode.impl;
 
 import java.util.Optional;
 
-import net.risesoft.util.PlatformModelConvertUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +12,7 @@ import net.risesoft.entity.idcode.Y9IdCode;
 import net.risesoft.model.platform.IdCode;
 import net.risesoft.repository.idcode.Y9IdCodeRepository;
 import net.risesoft.service.idcode.Y9IdCodeService;
+import net.risesoft.util.PlatformModelConvertUtil;
 
 /**
  * 统一码服务实现
@@ -27,13 +27,13 @@ public class Y9IdCodeServiceImpl implements Y9IdCodeService {
 
     private final Y9IdCodeRepository y9IdCodeRepository;
 
+    private static IdCode entityToModel(Y9IdCode y9IdCode) {
+        return PlatformModelConvertUtil.convert(y9IdCode, IdCode.class);
+    }
+
     @Override
     public Optional<IdCode> findById(String id) {
         return y9IdCodeRepository.findById(id).map(Y9IdCodeServiceImpl::entityToModel);
-    }
-
-    private static IdCode entityToModel(Y9IdCode y9IdCode) {
-        return PlatformModelConvertUtil.convert(y9IdCode, IdCode.class);
     }
 
     @Override

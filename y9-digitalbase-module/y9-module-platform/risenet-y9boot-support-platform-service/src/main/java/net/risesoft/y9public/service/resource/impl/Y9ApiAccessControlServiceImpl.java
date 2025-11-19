@@ -42,6 +42,14 @@ public class Y9ApiAccessControlServiceImpl implements Y9ApiAccessControlService 
 
     private final Y9ApiAccessControlRepository y9ApiAccessControlRepository;
 
+    private static List<ApiAccessControl> entityToModel(List<Y9ApiAccessControl> y9ApiAccessControlList) {
+        return PlatformModelConvertUtil.convert(y9ApiAccessControlList, ApiAccessControl.class);
+    }
+
+    private static ApiAccessControl entityToModel(Y9ApiAccessControl save) {
+        return PlatformModelConvertUtil.convert(save, ApiAccessControl.class);
+    }
+
     @Override
     public List<ApiAccessControl> listByType(ApiAccessControlType type) {
         List<Y9ApiAccessControl> y9ApiAccessControlList =
@@ -130,13 +138,5 @@ public class Y9ApiAccessControlServiceImpl implements Y9ApiAccessControlService 
         return y9ApiAccessControlRepository.findTopByTypeOrderByCreateTime(type)
             .map(Y9ApiAccessControl::getTabIndex)
             .orElse(-1) + 1;
-    }
-
-    private static List<ApiAccessControl> entityToModel(List<Y9ApiAccessControl> y9ApiAccessControlList) {
-        return PlatformModelConvertUtil.convert(y9ApiAccessControlList, ApiAccessControl.class);
-    }
-
-    private static ApiAccessControl entityToModel(Y9ApiAccessControl save) {
-        return PlatformModelConvertUtil.convert(save, ApiAccessControl.class);
     }
 }

@@ -61,6 +61,14 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
     private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9RoleManager y9RoleManager;
 
+    private static List<OrgBasesToRoles> entityToModel(List<Y9OrgBasesToRoles> y9OrgBasesToRolesList) {
+        return PlatformModelConvertUtil.convert(y9OrgBasesToRolesList, OrgBasesToRoles.class);
+    }
+
+    private static OrgBasesToRoles entityToModel(Y9OrgBasesToRoles y9OrgBasesToRoles) {
+        return PlatformModelConvertUtil.convert(y9OrgBasesToRoles, OrgBasesToRoles.class);
+    }
+
     @Override
     @Transactional
     public List<OrgBasesToRoles> addOrgUnitsForRole(String roleId, List<String> orgIds, Boolean negative) {
@@ -283,13 +291,5 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
         Y9LoginUserHolder.setTenantId(tenantId);
         y9OrgBasesToRolesRepository.deleteByRoleId(entity.getId());
         LOGGER.debug("角色[{}]删除时同步删除租户[{}]的角色组织关联数据", entity.getId(), tenantId);
-    }
-
-    private static List<OrgBasesToRoles> entityToModel(List<Y9OrgBasesToRoles> y9OrgBasesToRolesList) {
-        return PlatformModelConvertUtil.convert(y9OrgBasesToRolesList, OrgBasesToRoles.class);
-    }
-
-    private static OrgBasesToRoles entityToModel(Y9OrgBasesToRoles y9OrgBasesToRoles) {
-        return PlatformModelConvertUtil.convert(y9OrgBasesToRoles, OrgBasesToRoles.class);
     }
 }

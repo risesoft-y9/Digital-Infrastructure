@@ -43,6 +43,9 @@ public enum OrgTypeEnum implements ValuedEnum<String> {
         ORG_TYPE_MAP.put(MANAGER.getEnName(), MANAGER.getName());
     }
 
+    private final String enName;
+    private final String name;
+
     public static OrgTypeEnum getByEnName(String enName) {
         for (OrgTypeEnum orgTypeEnum : OrgTypeEnum.values()) {
             if (orgTypeEnum.getEnName().equals(enName)) {
@@ -51,9 +54,6 @@ public enum OrgTypeEnum implements ValuedEnum<String> {
         }
         throw new IllegalArgumentException("enName is invalid");
     }
-
-    private final String enName;
-    private final String name;
 
     @Override
     public String getValue() {
