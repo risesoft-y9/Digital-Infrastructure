@@ -54,9 +54,9 @@ public interface CompositeResourceManager {
 
     /**
      * 获取应用下的所有资源（包括它本身）
-     * 
+     *
      * @param appId 应用 id
-     * @return
+     * @return {@code List<Y9ResourceBase> }
      */
     List<Y9ResourceBase> findByAppId(String appId);
 }

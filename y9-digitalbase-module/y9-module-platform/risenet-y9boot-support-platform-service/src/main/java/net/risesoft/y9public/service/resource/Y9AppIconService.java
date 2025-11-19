@@ -30,6 +30,7 @@ public interface Y9AppIconService {
      * 根据名字获取应用图标
      *
      * @param name 图标名称
+     * @param colorType 颜色类型
      * @return {@code Optional<AppIcon>}
      */
     Optional<AppIcon> findByNameAndColorType(String name, String colorType);

@@ -50,6 +50,7 @@ public interface Y9DepartmentService {
     /**
      * 查询部门
      *
+     * @param ids 部门ids
      * @return {@code List<Department>}
      */
 

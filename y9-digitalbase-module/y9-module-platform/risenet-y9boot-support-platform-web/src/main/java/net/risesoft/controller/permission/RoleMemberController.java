@@ -159,6 +159,7 @@ public class RoleMemberController {
      *
      * @param roleId 角色id
      * @param unitName 成员名称
+     * @param pageQuery 分页信息
      * @return {@code Y9Result<List<}{@link RoleMemberVO}{@code >>}
      */
     @RiseLog(operationName = "根据名称和所属部门查找角色成员")
