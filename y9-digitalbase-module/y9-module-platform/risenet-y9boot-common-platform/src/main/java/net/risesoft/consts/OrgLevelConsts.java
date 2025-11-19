@@ -1,5 +1,8 @@
 package net.risesoft.consts;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import net.risesoft.enums.platform.org.OrgTypeEnum;
 
 /**
@@ -11,6 +14,7 @@ import net.risesoft.enums.platform.org.OrgTypeEnum;
  * @author shidaobang
  * @date 2022/4/21
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrgLevelConsts extends LevelConsts {
 
     /** 机构层次 组织机构 */

@@ -48,6 +48,14 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     private final Y9TenantManager y9TenantManager;
     private final Y9TenantSystemManager y9TenantSystemManager;
 
+    private static List<TenantSystem> entityToModel(List<Y9TenantSystem> y9TenantSystemList) {
+        return PlatformModelConvertUtil.convert(y9TenantSystemList, TenantSystem.class);
+    }
+
+    private static TenantSystem entityToModel(Y9TenantSystem y9TenantSystem) {
+        return PlatformModelConvertUtil.convert(y9TenantSystem, TenantSystem.class);
+    }
+
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(String id) {
@@ -182,13 +190,5 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
             .sorted()
             .map(y9System -> PlatformModelConvertUtil.convert(y9System, System.class))
             .collect(Collectors.toList());
-    }
-
-    private static List<TenantSystem> entityToModel(List<Y9TenantSystem> y9TenantSystemList) {
-        return PlatformModelConvertUtil.convert(y9TenantSystemList, TenantSystem.class);
-    }
-
-    private static TenantSystem entityToModel(Y9TenantSystem y9TenantSystem) {
-        return PlatformModelConvertUtil.convert(y9TenantSystem, TenantSystem.class);
     }
 }

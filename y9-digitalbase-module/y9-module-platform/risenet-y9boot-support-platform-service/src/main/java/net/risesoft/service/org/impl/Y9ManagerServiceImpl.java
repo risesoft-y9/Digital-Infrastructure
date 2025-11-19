@@ -64,6 +64,18 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
 
     private final Y9PlatformProperties y9PlatformProperties;
 
+    private static Manager entityToModel(Y9Manager y9Manager) {
+        return PlatformModelConvertUtil.convert(y9Manager, Manager.class);
+    }
+
+    private static List<Manager> entityToModel(List<Y9Manager> y9ManagerList) {
+        return PlatformModelConvertUtil.convert(y9ManagerList, Manager.class);
+    }
+
+    private static Y9Manager modelToEntity(Manager manager) {
+        return PlatformModelConvertUtil.convert(manager, Y9Manager.class);
+    }
+
     @Override
     @Transactional
     public Manager changeDisabled(String id) {
@@ -379,17 +391,5 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         for (Manager manager : managerList) {
             this.delete(manager.getId());
         }
-    }
-
-    private static Manager entityToModel(Y9Manager y9Manager) {
-        return PlatformModelConvertUtil.convert(y9Manager, Manager.class);
-    }
-
-    private static List<Manager> entityToModel(List<Y9Manager> y9ManagerList) {
-        return PlatformModelConvertUtil.convert(y9ManagerList, Manager.class);
-    }
-
-    private static Y9Manager modelToEntity(Manager manager) {
-        return PlatformModelConvertUtil.convert(manager, Y9Manager.class);
     }
 }

@@ -52,6 +52,10 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     private final Y9AppManager y9AppManager;
     private final Y9SystemManager y9SystemManager;
 
+    private static Role entityToModel(Y9Role y9Role) {
+        return PlatformModelConvertUtil.y9RoleToRole(y9Role);
+    }
+
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     @Override
     public void delete(String id) {
@@ -285,10 +289,6 @@ public class Y9RoleServiceImpl implements Y9RoleService {
                 delete(role.getId());
             }
         }
-    }
-
-    private static Role entityToModel(Y9Role y9Role) {
-        return PlatformModelConvertUtil.y9RoleToRole(y9Role);
     }
 
     private List<Role> entityToModel(List<Y9Role> y9RoleList) {

@@ -70,6 +70,14 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     private final Y9AuthorizationManager y9AuthorizationManager;
     private final Y9RoleManager y9RoleManager;
 
+    private static List<Authorization> entityToModel(List<Y9Authorization> y9AuthorizationList) {
+        return PlatformModelConvertUtil.convert(y9AuthorizationList, Authorization.class);
+    }
+
+    private static Authorization entityToModel(Y9Authorization y9Authorization) {
+        return PlatformModelConvertUtil.convert(y9Authorization, Authorization.class);
+    }
+
     @Override
     @Transactional
     public void delete(String id) {
@@ -416,14 +424,6 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
             delete(y9Authorization.getId());
         }
         LOGGER.debug("角色[{}]删除时同步删除租户[{}]的角色授权数据", entity.getId(), tenantId);
-    }
-
-    private static List<Authorization> entityToModel(List<Y9Authorization> y9AuthorizationList) {
-        return PlatformModelConvertUtil.convert(y9AuthorizationList, Authorization.class);
-    }
-
-    private static Authorization entityToModel(Y9Authorization y9Authorization) {
-        return PlatformModelConvertUtil.convert(y9Authorization, Authorization.class);
     }
 
 }

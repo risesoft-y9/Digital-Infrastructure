@@ -52,6 +52,14 @@ public class Y9AppServiceImpl implements Y9AppService {
     private final Y9AppRepository y9AppRepository;
     private final Y9SystemRepository y9SystemRepository;
 
+    private static List<App> entityToModel(List<Y9App> y9AppList) {
+        return PlatformModelConvertUtil.convert(y9AppList, App.class);
+    }
+
+    private static App entityToModel(Y9App y9App) {
+        return PlatformModelConvertUtil.convert(y9App, App.class);
+    }
+
     @Override
     public boolean existBySystemIdAndName(final String systemId, final String appName) {
         List<Y9App> appList = y9AppRepository.findBySystemIdAndName(systemId, appName);
@@ -349,13 +357,5 @@ public class Y9AppServiceImpl implements Y9AppService {
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public App updateTabIndex(String id, int index) {
         return entityToModel(y9AppManager.updateTabIndex(id, index));
-    }
-
-    private static List<App> entityToModel(List<Y9App> y9AppList) {
-        return PlatformModelConvertUtil.convert(y9AppList, App.class);
-    }
-
-    private static App entityToModel(Y9App y9App) {
-        return PlatformModelConvertUtil.convert(y9App, App.class);
     }
 }

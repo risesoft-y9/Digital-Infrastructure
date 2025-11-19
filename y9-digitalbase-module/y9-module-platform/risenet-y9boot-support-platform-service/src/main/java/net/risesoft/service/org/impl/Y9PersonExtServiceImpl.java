@@ -3,7 +3,6 @@ package net.risesoft.service.org.impl;
 import java.util.Base64;
 import java.util.Optional;
 
-import net.risesoft.util.PlatformModelConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +15,7 @@ import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.org.PersonExt;
 import net.risesoft.repository.org.Y9PersonExtRepository;
 import net.risesoft.service.org.Y9PersonExtService;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 
 /**
@@ -29,6 +29,10 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 public class Y9PersonExtServiceImpl implements Y9PersonExtService {
 
     private final Y9PersonExtRepository y9PersonExtRepository;
+
+    private static PersonExt entityToModel(Y9PersonExt y9PersonExt) {
+        return PlatformModelConvertUtil.convert(y9PersonExt, PersonExt.class);
+    }
 
     @Override
     public Optional<PersonExt> findByPersonId(String personId) {
@@ -134,9 +138,5 @@ public class Y9PersonExtServiceImpl implements Y9PersonExtService {
         ext.setPersonId(person.getId());
         ext.setSign(s);
         return entityToModel(y9PersonExtRepository.save(ext));
-    }
-
-    private static PersonExt entityToModel(Y9PersonExt y9PersonExt) {
-        return PlatformModelConvertUtil.convert(y9PersonExt, PersonExt.class);
     }
 }

@@ -52,6 +52,10 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     private final Y9TenantSystemManager y9TenantSystemManager;
     private final Y9SystemManager y9SystemManager;
 
+    private static System entityToModel(Y9System savedSystem) {
+        return PlatformModelConvertUtil.convert(savedSystem, System.class);
+    }
+
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(String id) {
@@ -251,10 +255,6 @@ public class Y9SystemServiceImpl implements Y9SystemService {
         }
         // 修改系统时的检查也为可用
         return y9SystemOptional.get().getId().equals(id);
-    }
-
-    private static System entityToModel(Y9System savedSystem) {
-        return PlatformModelConvertUtil.convert(savedSystem, System.class);
     }
 
     private List<System> entityToModel(List<Y9System> y9SystemList) {

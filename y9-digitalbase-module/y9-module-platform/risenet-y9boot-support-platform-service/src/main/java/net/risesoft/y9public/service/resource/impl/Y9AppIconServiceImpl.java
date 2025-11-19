@@ -44,6 +44,14 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
 
     private final Y9FileStoreService y9FileStoreService;
 
+    private static AppIcon entityToModel(Y9AppIcon y9AppIcon) {
+        return PlatformModelConvertUtil.convert(y9AppIcon, AppIcon.class);
+    }
+
+    private static List<AppIcon> entityToModel(List<Y9AppIcon> y9AppIconList) {
+        return PlatformModelConvertUtil.convert(y9AppIconList, AppIcon.class);
+    }
+
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(String id) {
@@ -196,13 +204,5 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
         Page<Y9AppIcon> y9AppIconPage = appIconRepository.findByNameContaining(name, pageable);
         return Y9Page.success(pageQuery.getPage(), y9AppIconPage.getTotalPages(), y9AppIconPage.getTotalElements(),
             entityToModel(y9AppIconPage.getContent()));
-    }
-
-    private static AppIcon entityToModel(Y9AppIcon y9AppIcon) {
-        return PlatformModelConvertUtil.convert(y9AppIcon, AppIcon.class);
-    }
-
-    private static List<AppIcon> entityToModel(List<Y9AppIcon> y9AppIconList) {
-        return PlatformModelConvertUtil.convert(y9AppIconList, AppIcon.class);
     }
 }
