@@ -15,7 +15,11 @@
     <description>RiseSoft/Digital Infrastructure platform jpaRepository</description>
 
     <properties>
+        <mysql-driver.version>8.2.0</mysql-driver.version>
+        <HikariCP.version>4.0.3</HikariCP.version>
 
+        <!-- Plugin versions -->
+        <screw-maven-plugin.version>1.0.5</screw-maven-plugin.version>
     </properties>
 
     <scm>
@@ -30,7 +34,7 @@
             <artifactId>risenet-y9boot-common-platform</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-idgenerator</artifactId>
@@ -64,12 +68,12 @@
                     <plugin>
                         <groupId>cn.smallbun.screw</groupId>
                         <artifactId>screw-maven-plugin</artifactId>
-                        <version>1.0.5</version>
+                        <version>${screw-maven-plugin.version}</version>
                         <dependencies>
                             <dependency>
                                 <groupId>com.zaxxer</groupId>
                                 <artifactId>HikariCP</artifactId>
-                                <version>3.4.5</version>
+                                <version>${HikariCP.version}</version>
                             </dependency>
                             <dependency>
                                 <groupId>com.mysql</groupId>
