@@ -1,5 +1,5 @@
 {
-    "serverUrl": "https://vue.youshengyun.com",
+    "serverUrl": "https://test.youshengyun.com",
     //设置服务器地址,非必须
     "pathPrefix": "/server-platform",
     //设置path前缀,非必须。如配置Servlet ContextPath 。@since 2.2.3
@@ -115,7 +115,7 @@
         ////自smart-doc 2.1.4 起，支持设置RequestBodyAdvice统一请求包装类，非必须
         "className": "net.risesoft.pojo.Y9Result"
     },
-    "appToken": "60e47a93312749e7ab6289c047548ffa",
+    "appToken": "29706661e77f4a5cb81b932fb46649f7",
     "openUrl": "https://test.youshengyun.com/torna/api",
     "replace": true,
     "requestParamsTable": true,
