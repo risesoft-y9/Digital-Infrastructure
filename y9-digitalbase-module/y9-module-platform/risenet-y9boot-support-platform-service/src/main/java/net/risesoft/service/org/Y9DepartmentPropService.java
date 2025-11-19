@@ -24,7 +24,7 @@ public interface Y9DepartmentPropService {
      * 删除部门信息配置
      *
      * @param deptId 部门唯一标识
-     * @param {@link DepartmentPropCategoryEnum} category 类别
+     * @param category 类别
      * @param orgBaseId 组织唯一标示
      */
     void deleteByDeptIdAndCategoryAndOrgBaseId(String deptId, DepartmentPropCategoryEnum category, String orgBaseId);
@@ -41,7 +41,7 @@ public interface Y9DepartmentPropService {
      * 根据部门唯一标识和类别查找部门配置信息
      *
      * @param deptId 部门id
-     * @param {@link DepartmentPropCategoryEnum} category 类别
+     * @param category 类别
      * @return {@code List<Y9DepartmentProp>}
      */
     List<DepartmentProp> listByDeptIdAndCategory(String deptId, DepartmentPropCategoryEnum category);
@@ -50,7 +50,7 @@ public interface Y9DepartmentPropService {
      * 根据人员唯一标识查找管理的部门
      *
      * @param orgBaseId 组织节点id
-     * @param {@link DepartmentPropCategoryEnum} category 类别
+     * @param category 类别
      * @return {@code List<Y9DepartmentProp>}
      */
     List<DepartmentProp> listByOrgBaseIdAndCategory(String orgBaseId, DepartmentPropCategoryEnum category);

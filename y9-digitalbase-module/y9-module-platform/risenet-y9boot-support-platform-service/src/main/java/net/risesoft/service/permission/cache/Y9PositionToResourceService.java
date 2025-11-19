@@ -127,7 +127,7 @@ public interface Y9PositionToResourceService {
      * @param positionId 岗位 id
      * @param authority 权限类型
      * @param pageQuery 分页查询参数
-     * @return
+     * @return {@code Page<String>}
      */
     Page<String> pageAppIdByAuthority(String positionId, AuthorityEnum authority, Y9PageQuery pageQuery);
 }

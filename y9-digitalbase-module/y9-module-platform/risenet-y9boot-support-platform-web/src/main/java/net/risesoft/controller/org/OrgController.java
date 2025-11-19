@@ -124,6 +124,7 @@ public class OrgController {
      *
      * @param id 父节点id
      * @param treeType 树类型
+     * @param disabled 是否禁用，空则返回结果包含禁用成员
      * @return {@code Y9Result<List<OrgTreeNodeVO>>}
      */
     @RiseLog(operationName = "获取机构树子节点")
@@ -244,6 +245,7 @@ public class OrgController {
      *
      * @param name 名称
      * @param treeType 树类型
+     * @param disabled 是否禁用，空则返回结果包含禁用成员
      * @return {@code Y9Result<List<OrgTreeNodeVO>>}
      */
     @RiseLog(operationName = "查询机构主体")

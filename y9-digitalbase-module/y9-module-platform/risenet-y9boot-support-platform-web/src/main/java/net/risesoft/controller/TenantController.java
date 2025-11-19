@@ -43,7 +43,7 @@ public class TenantController {
      * 根据id，获取租户信息
      *
      * @param id 租户id
-     * @return
+     * @return {@code Y9Result<Tenant>}
      */
     @RiseLog(operationName = "获取租户信息")
     @RequestMapping(value = "getTenantById")
@@ -57,8 +57,8 @@ public class TenantController {
      *
      * @param tenantId 租户id
      * @param file logo文件
-     * @return
-     * @throws Exception
+     * @return {@code Y9Result<String>}
+     * @throws Exception IO异常
      */
     @RiseLog(operationType = OperationTypeEnum.LOGIN, operationName = "上传租户Logo信息")
     @PostMapping(value = "/uploadTenantLogoIcon")
@@ -74,8 +74,8 @@ public class TenantController {
     /**
      * 保存租户编辑的信息
      *
-     * @param tenant
-     * @return
+     * @param tenant 租户信息
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationType = OperationTypeEnum.ADD, operationName = "保存租户编辑的信息")
     @PostMapping(value = "/saveTenant")

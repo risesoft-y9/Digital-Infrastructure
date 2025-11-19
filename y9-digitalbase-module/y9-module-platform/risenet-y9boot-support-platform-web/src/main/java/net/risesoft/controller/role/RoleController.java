@@ -320,6 +320,7 @@ public class RoleController {
     /**
      * 获取应用角色树根节点（以应用为根节点）
      *
+     * @param appId 应用id
      * @return {@code Y9Result<List<}{@link RoleTreeNodeVO}{@code >>}
      * @since 9.6.8
      */

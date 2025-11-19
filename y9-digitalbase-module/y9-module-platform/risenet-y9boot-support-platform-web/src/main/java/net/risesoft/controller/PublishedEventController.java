@@ -37,6 +37,7 @@ public class PublishedEventController {
     /**
      * 获取操作事件分页列表
      *
+     * @param query 查询条件
      * @param pageQuery 分页
      * @return {@code Y9Page<Y9PublishedEvent>}
      *
