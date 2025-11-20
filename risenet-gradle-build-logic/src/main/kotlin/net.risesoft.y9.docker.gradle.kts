@@ -5,6 +5,9 @@ plugins {
     id("com.google.cloud.tools.jib")
 }
 
+group = "net.risesoft"
+version = providers.gradleProperty("Y9_VERSION").get()
+
 val myDateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm")
 val dateTimeStr = myDateTimeFormatter.format(LocalDateTime.now())
 
@@ -31,7 +34,7 @@ jib {
             username = findProperty("dockerUsername").toString()
             password = findProperty("dockerPassword").toString()
         }
-        tags = setOf("9.7.0-SNAPSHOT", "9.7.x", "9.7.0-SNAPSHOT-${dateTimeStr}")
+        tags = setOf("${project.version}", "9.7.x", "${project.version}-${dateTimeStr}")
     }
 //    container{
 //        appRoot = "/usr/local/tomcat/webapps/${extension.appName.get()}"
