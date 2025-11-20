@@ -11,12 +11,14 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.MGF1ParameterSpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.OAEPParameterSpec;
+import javax.crypto.spec.PSource;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -34,7 +36,12 @@ public class RsaUtil {
     /**
      * 数字签名，密钥算法
      */
-    private static final String RSA_KEY_ALGORITHM = "RSA";
+    private static final String RSA = "RSA";
+
+    public static final String RSA_OAEP_SHA256_PADDING = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding";
+
+    private static final OAEPParameterSpec OAEP_PARAMETER_SPEC =
+        new OAEPParameterSpec("SHA-256", "MGF1", new MGF1ParameterSpec("SHA-256"), PSource.PSpecified.DEFAULT);
 
     /**
      * 数字签名签名/验证算法
@@ -52,7 +59,7 @@ public class RsaUtil {
      * @param key 密钥
      * @return byte[] 密钥
      */
-    public static byte[] decodeBase64(String key) {
+    private static byte[] decodeBase64(String key) {
         return Base64.decodeBase64(key);
     }
 
@@ -65,12 +72,16 @@ public class RsaUtil {
      * @throws Exception 异常
      */
     public static byte[] decryptByPriKey(byte[] data, byte[] priKey) throws Exception {
-        PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(priKey);
-        KeyFactory keyFactory = KeyFactory.getInstance(RSA_KEY_ALGORITHM);
-        PrivateKey privateKey = keyFactory.generatePrivate(pkcs8KeySpec);
-        Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
-        cipher.init(Cipher.DECRYPT_MODE, privateKey);
+        Cipher cipher = Cipher.getInstance(RSA_OAEP_SHA256_PADDING);
+        cipher.init(Cipher.DECRYPT_MODE, byteArrayToPrivateKey(priKey), OAEP_PARAMETER_SPEC);
         return cipher.doFinal(data);
+    }
+
+    private static PrivateKey byteArrayToPrivateKey(byte[] priKey)
+        throws NoSuchAlgorithmException, InvalidKeySpecException {
+        PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(priKey);
+        KeyFactory keyFactory = KeyFactory.getInstance(RSA);
+        return keyFactory.generatePrivate(pkcs8KeySpec);
     }
 
     /**
@@ -82,8 +93,8 @@ public class RsaUtil {
      * @throws Exception 异常
      */
     public static String decryptByPriKey(String data, String privateKey) throws Exception {
-        byte[] priKey = RsaUtil.decodeBase64(privateKey);
-        byte[] design = decryptByPriKey(Base64.decodeBase64(data), priKey);
+        byte[] priKey = decodeBase64(privateKey);
+        byte[] design = decryptByPriKey(decodeBase64(data), priKey);
         return new String(design);
     }
 
@@ -96,12 +107,16 @@ public class RsaUtil {
      * @throws Exception 异常
      */
     public static byte[] decryptByPubKey(byte[] data, byte[] pubKey) throws Exception {
-        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(pubKey);
-        KeyFactory keyFactory = KeyFactory.getInstance(RSA_KEY_ALGORITHM);
-        PublicKey publicKey = keyFactory.generatePublic(x509KeySpec);
-        Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
-        cipher.init(Cipher.DECRYPT_MODE, publicKey);
+        Cipher cipher = Cipher.getInstance(RSA_OAEP_SHA256_PADDING);
+        cipher.init(Cipher.DECRYPT_MODE, byteArrayToPublicKey(pubKey), OAEP_PARAMETER_SPEC);
         return cipher.doFinal(data);
+    }
+
+    private static PublicKey byteArrayToPublicKey(byte[] pubKey)
+        throws NoSuchAlgorithmException, InvalidKeySpecException {
+        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(pubKey);
+        KeyFactory keyFactory = KeyFactory.getInstance(RSA);
+        return keyFactory.generatePublic(x509KeySpec);
     }
 
     /**
@@ -113,8 +128,8 @@ public class RsaUtil {
      * @throws Exception 异常
      */
     public static String decryptByPubKey(String data, String publicKey) throws Exception {
-        byte[] pubKey = RsaUtil.decodeBase64(publicKey);
-        byte[] design = decryptByPubKey(Base64.decodeBase64(data), pubKey);
+        byte[] pubKey = decodeBase64(publicKey);
+        byte[] design = decryptByPubKey(decodeBase64(data), pubKey);
         return new String(design);
     }
 
@@ -124,7 +139,7 @@ public class RsaUtil {
      * @param key 密钥
      * @return String 密钥转成的字符串
      */
-    public static String encodeBase64StringBase64String(byte[] key) {
+    private static String encodeBase64String(byte[] key) {
         return Base64.encodeBase64String(key);
     }
 
@@ -137,11 +152,8 @@ public class RsaUtil {
      * @throws Exception 异常
      */
     public static byte[] encryptByPriKey(byte[] data, byte[] priKey) throws Exception {
-        PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(priKey);
-        KeyFactory keyFactory = KeyFactory.getInstance(RSA_KEY_ALGORITHM);
-        PrivateKey privateKey = keyFactory.generatePrivate(pkcs8KeySpec);
-        Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
-        cipher.init(Cipher.ENCRYPT_MODE, privateKey);
+        Cipher cipher = Cipher.getInstance(RSA_OAEP_SHA256_PADDING);
+        cipher.init(Cipher.ENCRYPT_MODE, byteArrayToPrivateKey(priKey), OAEP_PARAMETER_SPEC);
         return cipher.doFinal(data);
     }
 
@@ -154,9 +166,9 @@ public class RsaUtil {
      * @throws Exception 异常
      */
     public static String encryptByPriKey(String data, String privateKey) throws Exception {
-        byte[] priKey = RsaUtil.decodeBase64(privateKey);
+        byte[] priKey = decodeBase64(privateKey);
         byte[] enSign = encryptByPriKey(data.getBytes(), priKey);
-        return Base64.encodeBase64String(enSign);
+        return encodeBase64String(enSign);
     }
 
     /**
@@ -168,11 +180,8 @@ public class RsaUtil {
      * @throws Exception 异常
      */
     public static byte[] encryptByPubKey(byte[] data, byte[] pubKey) throws Exception {
-        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(pubKey);
-        KeyFactory keyFactory = KeyFactory.getInstance(RSA_KEY_ALGORITHM);
-        PublicKey publicKey = keyFactory.generatePublic(x509KeySpec);
-        Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
-        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+        Cipher cipher = Cipher.getInstance(RSA_OAEP_SHA256_PADDING);
+        cipher.init(Cipher.ENCRYPT_MODE, byteArrayToPublicKey(pubKey), OAEP_PARAMETER_SPEC);
         return cipher.doFinal(data);
     }
 
@@ -185,38 +194,44 @@ public class RsaUtil {
      * @throws Exception 异常
      */
     public static String encryptByPubKey(String data, String publicKey) throws Exception {
-        byte[] pubKey = RsaUtil.decodeBase64(publicKey);
+        byte[] pubKey = decodeBase64(publicKey);
         byte[] enSign = encryptByPubKey(data.getBytes(), pubKey);
-        return Base64.encodeBase64String(enSign);
+        return encodeBase64String(enSign);
     }
 
     /**
-     * 生成密钥对
-     * 
-     * @return 密钥对
-     * @throws NoSuchAlgorithmException – if no Provider supports a KeyPairGeneratorSpi implementation for the specified
-     *             algorithm
-     * @throws NullPointerException – if algorithm is null
+     * 获取RSA公私钥匙对
      */
-    public static Map<String, String> initKey() throws Exception {
-        KeyPairGenerator keygen = KeyPairGenerator.getInstance(RSA_KEY_ALGORITHM);
-        /**
-         * 初始化密钥生成器
-         */
-        keygen.initialize(KEY_SIZE);
-        KeyPair keys = keygen.genKeyPair();
+    private static KeyPair getKeyPair() throws Exception {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(RSA);
+        keyPairGenerator.initialize(KEY_SIZE);
+        return keyPairGenerator.generateKeyPair();
+    }
 
-        byte[] pubKey = keys.getPublic().getEncoded();
-        String publicKeyString = Base64.encodeBase64String(pubKey);
+    /**
+     * 获取公钥(base64编码)
+     */
+    private static String getPublicKey(KeyPair keyPair) {
+        PublicKey publicKey = keyPair.getPublic();
+        byte[] bytes = publicKey.getEncoded();
+        return encodeBase64String(bytes);
+    }
 
-        byte[] priKey = keys.getPrivate().getEncoded();
-        String privateKeyString = Base64.encodeBase64String(priKey);
+    /**
+     * 获取私钥(Base64编码)
+     */
+    private static String getPrivateKey(KeyPair keyPair) {
+        PrivateKey privateKey = keyPair.getPrivate();
+        byte[] bytes = privateKey.getEncoded();
+        return encodeBase64String(bytes);
+    }
 
-        Map<String, String> keyPairMap = new HashMap<>();
-        keyPairMap.put("publicKeyString", publicKeyString);
-        keyPairMap.put("privateKeyString", privateKeyString);
-
-        return keyPairMap;
+    public static String[] genKeyPair() throws Exception {
+        KeyPair keyPair = getKeyPair();
+        String[] keyPairArr = new String[2];
+        keyPairArr[0] = getPublicKey(keyPair);
+        keyPairArr[1] = getPrivateKey(keyPair);
+        return keyPairArr;
     }
 
     /**
@@ -248,17 +263,14 @@ public class RsaUtil {
      */
     public static String sign(byte[] data, byte[] priKey) throws Exception {
         // 取得私钥
-        PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(priKey);
-        KeyFactory keyFactory = KeyFactory.getInstance(RSA_KEY_ALGORITHM);
-        // 生成私钥
-        PrivateKey privateKey = keyFactory.generatePrivate(pkcs8KeySpec);
+        PrivateKey privateKey = byteArrayToPrivateKey(priKey);
         // 实例化Signature
         Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
         // 初始化Signature
         signature.initSign(privateKey);
         // 更新
         signature.update(data);
-        return Base64.encodeBase64String(signature.sign());
+        return encodeBase64String(signature.sign());
     }
 
     /**
@@ -272,7 +284,7 @@ public class RsaUtil {
      */
     public boolean verify(byte[] data, byte[] sign, byte[] pubKey) throws Exception {
         // 实例化密钥工厂
-        KeyFactory keyFactory = KeyFactory.getInstance(RSA_KEY_ALGORITHM);
+        KeyFactory keyFactory = KeyFactory.getInstance(RSA);
         // 初始化公钥
         X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(pubKey);
         // 产生公钥
@@ -287,34 +299,19 @@ public class RsaUtil {
         return signature.verify(sign);
     }
 
-    // /**
-    // * 示例
-    // * @param args
-    // */
-    // public static void main(String[] args) {
-    // // 使用私钥加密的内容，只能通过公钥来解密
-    // // 使用公钥加密的内容，只能通过私钥来解密
-    // try {
-    // Map<String, String> keyMap = initKey();
-    // String publicKeyString = keyMap.get("publicKeyString");
-    // String privateKeyString = keyMap.get("privateKeyString");
-    // saveKeyForFile("/Users/liuyanzhao/code/FileSystem/Server/src/main/resources/public.key", publicKeyString);
-    // saveKeyForFile("/Users/liuyanzhao/code/FileSystem/Server/src/main/resources/private.key", privateKeyString);
-    // System.out.println("公钥:" + publicKeyString);
-    // System.out.println("私钥:" + privateKeyString);
-    //
-    // // 待加密数据
-    // String data = "admin123";
-    // // 私钥加密
-    // String encrypt = RSAUtil.encryptByPriKey(data, privateKeyString);
-    // // 公钥解密
-    // String decrypt = RSAUtil.decryptByPubKey(encrypt, publicKeyString);
-    //
-    // System.out.println("加密前:" + data);
-    // System.out.println("加密后:" + encrypt);
-    // System.out.println("解密后:" + decrypt);
-    // } catch (Exception e) {
-    // e.printStackTrace();
-    // }
-    // }
+    /**
+     * 示例
+     * 
+     * @param args
+     */
+    public static void main(String[] args) throws Exception {
+        String[] arr = genKeyPair();
+        System.out.println("publicKey:" + arr[0]);
+        System.out.println("privateKey:" + arr[1]);
+
+        String encryptString = encryptByPubKey("Risesoft@2023", arr[0]);
+        System.out.println("公钥加密后字符串:" + encryptString);
+        String decryptString = decryptByPriKey(encryptString, arr[1]);
+        System.out.println("私钥解密后字符串:" + decryptString);
+    }
 }

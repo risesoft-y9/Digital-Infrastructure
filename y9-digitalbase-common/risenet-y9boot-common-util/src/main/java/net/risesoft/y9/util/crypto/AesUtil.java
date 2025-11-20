@@ -38,8 +38,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AesUtil {
 
-    private static final String ALGORITHM = "AES";
-    // 不使用有填充的模式，填充模式有可能会导致解密后数据跟加密前数据不一致
+    private static final String AES = "AES";
+    // 其他模式有可能会导致解密后数据跟原始数据不一致
     private static final String AES_CTR_NOPADDING = "AES/CTR/NoPadding";
 
     private static final int KEY_BIT_NUMBER = 128;
@@ -113,7 +113,7 @@ public class AesUtil {
 
             private void initCipher() throws Exception {
                 Key k = toKey(Base64.decodeBase64(key));
-                SecretKeySpec secretKeySpec = new SecretKeySpec(k.getEncoded(), ALGORITHM);
+                SecretKeySpec secretKeySpec = new SecretKeySpec(k.getEncoded(), AES);
                 Cipher cipher = Cipher.getInstance(AES_CTR_NOPADDING);
                 cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(iv));
 
@@ -236,7 +236,7 @@ public class AesUtil {
         Key k = toKey(Base64.decodeBase64(key));
         byte[] iv = new SecureRandom().generateSeed(IV_BYTE_NUMBER);
 
-        SecretKeySpec secretKeySpec = new SecretKeySpec(k.getEncoded(), ALGORITHM);
+        SecretKeySpec secretKeySpec = new SecretKeySpec(k.getEncoded(), AES);
         Cipher cipher = Cipher.getInstance(AES_CTR_NOPADDING);
         cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(iv));
 
@@ -267,7 +267,7 @@ public class AesUtil {
      * @throws Exception 异常
      */
     public static String getSecretKey(String seed) throws Exception {
-        KeyGenerator keyGenerator = KeyGenerator.getInstance(ALGORITHM);
+        KeyGenerator keyGenerator = KeyGenerator.getInstance(AES);
         SecureRandom secureRandom;
         if (seed != null && !seed.isEmpty()) {
             secureRandom = new SecureRandom(seed.getBytes());
@@ -288,6 +288,6 @@ public class AesUtil {
      * @return String 密钥
      */
     private static Key toKey(byte[] key) {
-        return new SecretKeySpec(key, ALGORITHM);
+        return new SecretKeySpec(key, AES);
     }
 }
