@@ -33,7 +33,6 @@ import y9.service.Y9LoginUserService;
 import y9.service.Y9UserService;
 import y9.util.Y9Context;
 import y9.util.Y9MessageDigest;
-import y9.util.common.AESUtil;
 import y9.util.common.RSAUtil;
 
 @Slf4j
@@ -196,7 +195,8 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         }
     }
 
-    private List<Y9User> getUsers(String loginType, String deptId, String tenantShortName, String username) {
+    private List<Y9User> getUsers(String loginType, String deptId, String tenantShortName, String username)
+        throws Exception {
         if ("mobile".equals(loginType)) {
             if (StringUtils.isNotBlank(deptId)) {
                 return y9UserService.findByTenantShortNameAndMobileAndParentId(tenantShortName, username, deptId);
@@ -215,7 +215,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         }
 
         if ("qrCode".equals(loginType)) {
-            String userId = AESUtil.decrypt(y9Properties.getAesKey(), username);
+            String userId = RSAUtil.privateDecrypt(username, y9Properties.getRsaPrivateKey());
             if (StringUtils.isNotBlank(userId)) {
                 return y9UserService.findByPersonIdAndOriginal(userId, Boolean.TRUE);
             } else {
