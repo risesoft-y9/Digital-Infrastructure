@@ -1,6 +1,5 @@
 package y9.util;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.codec.binary.Base64;
@@ -26,7 +25,7 @@ public class Y9Base64 {
         return new String(Base64.encodeBase64(bytes));
     }
 
-    public static byte[] base64ToByte(String base64Key) throws IOException {
+    public static byte[] base64ToByte(String base64Key) {
         return Base64.decodeBase64(base64Key);
     }
 
