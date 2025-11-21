@@ -15,6 +15,8 @@ interface Y9DockerPluginExtension {
     val appName: Property<String>
     val fromImage: Property<String>
     val toImage: Property<String>
+    val toUsername: Property<String>
+    val toPassword: Property<String>
 }
 
 val extension = project.extensions.create<Y9DockerPluginExtension>("y9Docker")
@@ -22,11 +24,11 @@ val extension = project.extensions.create<Y9DockerPluginExtension>("y9Docker")
 
 jib {
     from {
-        image = "docker-internal.youshengyun.com/base/tomcat:10.1.48-jdk21-temurin"
-        auth {
+        image = "docker.youshengyun.com/base/tomcat:10.1.48-jdk21-temurin"
+        /*auth {
             username = findProperty("dockerUsername").toString()
             password = findProperty("dockerPassword").toString()
-        }
+        }*/
     }
     to {
         image = "docker-internal.youshengyun.com/v97x/${project.name}"
@@ -36,9 +38,6 @@ jib {
         }
         tags = setOf("${project.version}", "9.7.x", "${project.version}-${dateTimeStr}")
     }
-//    container{
-//        appRoot = "/usr/local/tomcat/webapps/${extension.appName.get()}"
-//    }
 }
 
 project.afterEvaluate {
@@ -53,5 +52,13 @@ project.afterEvaluate {
 
     if (extension.toImage.isPresent) {
         jib.to.image = extension.toImage.get()
+    }
+
+    if (extension.toUsername.isPresent) {
+        jib.to.auth.username = extension.toUsername.get()
+    }
+
+    if (extension.toPassword.isPresent) {
+        jib.to.auth.password = extension.toPassword.get()
     }
 }

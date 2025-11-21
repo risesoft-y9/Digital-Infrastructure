@@ -34,6 +34,9 @@ val finalName = "server-platform"
 
 y9Docker {
     appName = finalName
+    //toImage = "docker.dingzhaojun.xyz/v97x/${project.name}"
+    //toUsername = "admin"
+    //toPassword = "Y9admin@2021"
 }
 
 y9War {

@@ -1,0 +1,25 @@
+name: y9-dev-postgres-keycloak
+services:
+  nexus:
+    image: sonatype/nexus3:3.86.2-java17-alpine
+    container_name: nexus01
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8081:8081"
+      - "8443:8443"
+    networks:
+      - y9-share-net
+    volumes:
+      - d:/docker-data/nexus-data:/nexus-data
+      #- d:/docker-config/nexus/nexus.properties:/nexus-data/etc/nexus.properties
+      #- d:/docker-config/nexus/docker.dingzhaojun.xyz.jks:/opt/sonatype/nexus/etc/ssl/docker.dingzhaojun.xyz.jks
+      #- d:/docker-config/nexus/jetty-https.xml:/opt/sonatype/nexus/etc/jetty/jetty-https.xml
+    
+networks:
+  y9-share-net:
+    external: true
+
+# 在控制台的 settings->security->realms界面中，添加Docker Bearer Token Realm并保存
+# docker compose -f compose-nexus3.yml up -d
