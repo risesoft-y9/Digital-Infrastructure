@@ -1,0 +1,22 @@
+name: y9-dev-postgres-keycloak
+services:
+  certimate:
+    image: certimate/certimate:latest
+    container_name: certimate01
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8090:8090"
+    networks:
+      - y9-share-net
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - d:/docker-data/certimate:/app/pb_data
+    
+networks:
+  y9-share-net:
+    external: true
+    
+# docker compose -f compose-certimate.yml up -d
