@@ -5,9 +5,6 @@ plugins {
     id("com.google.cloud.tools.jib")
 }
 
-group = "net.risesoft"
-version = providers.gradleProperty("Y9_VERSION").get()
-
 val myDateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm")
 val dateTimeStr = myDateTimeFormatter.format(LocalDateTime.now())
 
@@ -15,8 +12,6 @@ interface Y9DockerPluginExtension {
     val appName: Property<String>
     val fromImage: Property<String>
     val toImage: Property<String>
-    val toUsername: Property<String>
-    val toPassword: Property<String>
 }
 
 val extension = project.extensions.create<Y9DockerPluginExtension>("y9Docker")
@@ -24,11 +19,17 @@ val extension = project.extensions.create<Y9DockerPluginExtension>("y9Docker")
 
 jib {
     from {
-        image = "docker.youshengyun.com/base/tomcat:10.1.48-jdk21-temurin"
-        /*auth {
-            username = findProperty("dockerUsername").toString()
-            password = findProperty("dockerPassword").toString()
-        }*/
+        //image = "docker-internal.youshengyun.com/base/tomcat:10.1.48-jdk21-temurin"
+        platforms {
+            platform {
+                architecture = "amd64"
+                os = "linux"
+            }
+            platform {
+                architecture = "arm64"
+                os = "linux"
+            }
+        }
     }
     to {
         image = "docker-internal.youshengyun.com/v97x/${project.name}"
@@ -36,8 +37,11 @@ jib {
             username = findProperty("dockerUsername").toString()
             password = findProperty("dockerPassword").toString()
         }
-        tags = setOf("${project.version}", "9.7.x", "${project.version}-${dateTimeStr}")
+        tags = setOf("9.7.0-SNAPSHOT", "9.7.x", "9.7.0-SNAPSHOT-${dateTimeStr}")
     }
+//    container{
+//        appRoot = "/usr/local/tomcat/webapps/${extension.appName.get()}"
+//    }
 }
 
 project.afterEvaluate {
@@ -52,13 +56,5 @@ project.afterEvaluate {
 
     if (extension.toImage.isPresent) {
         jib.to.image = extension.toImage.get()
-    }
-
-    if (extension.toUsername.isPresent) {
-        jib.to.auth.username = extension.toUsername.get()
-    }
-
-    if (extension.toPassword.isPresent) {
-        jib.to.auth.password = extension.toPassword.get()
     }
 }

@@ -18,5 +18,7 @@ services:
 networks:
   y9-share-net:
     external: true
-    
+
+# 账号: https://docs.certimate.me/   密码: https://docs.certimate.me/ ,参见: https://docs.certimate.me/docs/introduction
+# 类似软件: https://allinssl.com/ https://certifytheweb.com/
 # docker compose -f compose-certimate.yml up -d
