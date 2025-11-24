@@ -11,6 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.org.GroupTypeEnum;
@@ -31,9 +32,14 @@ import net.risesoft.persistence.EnumConverter;
 @org.hibernate.annotations.Table(comment = "用户组表", appliesTo = "Y9_ORG_GROUP")
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public class Y9Group extends Y9OrgBase {
 
     private static final long serialVersionUID = -8480745083494990707L;
+
+    {
+        super.setOrgType(OrgTypeEnum.GROUP);
+    }
 
     /** 父节点id */
     @Column(name = "PARENT_ID", length = 38, nullable = false)
@@ -47,10 +53,6 @@ public class Y9Group extends Y9OrgBase {
     @Convert(converter = EnumConverter.GroupTypeEnumConverter.class)
     @Builder.Default
     private GroupTypeEnum type = GroupTypeEnum.PERSON;
-
-    public Y9Group() {
-        super.setOrgType(OrgTypeEnum.GROUP);
-    }
 
     @Override
     public String getParentId() {

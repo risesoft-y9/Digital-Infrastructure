@@ -8,6 +8,7 @@ import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
@@ -26,9 +27,14 @@ import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 @org.hibernate.annotations.Table(comment = "应用的菜单表", appliesTo = "Y9_COMMON_MENU")
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public class Y9Menu extends Y9ResourceBase {
 
     private static final long serialVersionUID = 7952871346132443097L;
+
+    {
+        super.setResourceType(ResourceTypeEnum.MENU);
+    }
 
     /** 应用id */
     @Column(name = "APP_ID", length = 38, nullable = false)
@@ -59,10 +65,6 @@ public class Y9Menu extends Y9ResourceBase {
     @Column(name = "META", length = 500)
     @Comment("元信息")
     private String meta;
-
-    public Y9Menu() {
-        super.setResourceType(ResourceTypeEnum.MENU);
-    }
 
     @Override
     public String getAppId() {

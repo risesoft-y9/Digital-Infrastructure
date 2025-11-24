@@ -10,6 +10,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.org.OrgTypeEnum;
@@ -28,9 +29,14 @@ import net.risesoft.enums.platform.org.OrgTypeEnum;
 @org.hibernate.annotations.Table(comment = "岗位表", appliesTo = "Y9_ORG_POSITION")
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public class Y9Position extends Y9OrgBase {
 
     private static final long serialVersionUID = -5753173583033676828L;
+
+    {
+        super.setOrgType(OrgTypeEnum.POSITION);
+    }
 
     /** 父节点id */
     @Column(name = "PARENT_ID", length = 38, nullable = false)
@@ -70,10 +76,6 @@ public class Y9Position extends Y9OrgBase {
     @Comment("岗位当前人数，小于或等于岗位容量")
     @Builder.Default
     private Integer headCount = 0;
-
-    public Y9Position() {
-        super.setOrgType(OrgTypeEnum.POSITION);
-    }
 
     @Override
     public String getParentId() {

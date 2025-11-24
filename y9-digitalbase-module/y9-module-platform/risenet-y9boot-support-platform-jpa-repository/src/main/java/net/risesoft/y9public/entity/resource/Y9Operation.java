@@ -11,6 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.resource.OperationDisplayTypeEnum;
@@ -31,9 +32,14 @@ import net.risesoft.persistence.EnumConverter;
 @org.hibernate.annotations.Table(comment = "页面按钮操作表", appliesTo = "Y9_COMMON_OPERATION")
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public class Y9Operation extends Y9ResourceBase {
 
     private static final long serialVersionUID = -138076174688809730L;
+
+    {
+        super.setResourceType(ResourceTypeEnum.OPERATION);
+    }
 
     /** 应用id */
     @Column(name = "APP_ID", length = 38, nullable = false)
@@ -57,10 +63,6 @@ public class Y9Operation extends Y9ResourceBase {
     @Column(name = "EVENT_NAME", length = 50)
     @Comment("按钮事件")
     private String eventName;
-
-    public Y9Operation() {
-        super.setResourceType(ResourceTypeEnum.OPERATION);
-    }
 
     @Override
     public String getAppId() {
