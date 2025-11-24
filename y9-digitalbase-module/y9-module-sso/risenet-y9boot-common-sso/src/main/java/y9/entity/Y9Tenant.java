@@ -1,5 +1,6 @@
 package y9.entity;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 import javax.persistence.Column;
@@ -33,7 +34,7 @@ import lombok.NoArgsConstructor;
 @org.hibernate.annotations.Table(comment = "租户信息表", appliesTo = "Y9_COMMON_TENANT")
 @NoArgsConstructor
 @Data
-public class Y9Tenant {
+public class Y9Tenant implements Serializable {
 
     private static final long serialVersionUID = 2987678891147576268L;
 
@@ -96,6 +97,11 @@ public class Y9Tenant {
     @Column(name = "FOOTER", length = 150)
     @Comment("门户页尾显示信息")
     private String footer;
+
+    /** 默认的租户数据源id，对应Y9_COMMON_DATASOURCE表的id字段 */
+    @Column(name = "DEFAULT_DATA_SOURCE_ID", length = 38)
+    @Comment("默认的租户数据源id，对应Y9_COMMON_DATASOURCE表的id字段")
+    private String defaultDataSourceId;
 
     /** 由ID组成的父子关系列表，之间用逗号分隔 */
     @Column(name = "GUID_PATH", length = 800)
