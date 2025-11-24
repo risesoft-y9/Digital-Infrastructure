@@ -11,6 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.org.OrgTypeEnum;
@@ -32,9 +33,14 @@ import net.risesoft.persistence.EnumConverter;
 @Comment("人员表")
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public class Y9Person extends Y9OrgBase {
 
     private static final long serialVersionUID = -6531424704457510017L;
+
+    {
+        super.setOrgType(OrgTypeEnum.PERSON);
+    }
 
     /** 父节点id */
     @Column(name = "PARENT_ID", length = 38, nullable = false)
@@ -165,10 +171,6 @@ public class Y9Person extends Y9OrgBase {
     @Column(name = "ORIGINAL_ID", length = 255)
     @Comment("原始人员id")
     private String originalId;
-
-    public Y9Person() {
-        super.setOrgType(OrgTypeEnum.PERSON);
-    }
 
     @Override
     public String getParentId() {

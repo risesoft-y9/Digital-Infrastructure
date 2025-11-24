@@ -10,6 +10,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import net.risesoft.consts.InitDataConsts;
@@ -30,9 +31,14 @@ import net.risesoft.persistence.EnumConverter;
 @Comment("数据目录")
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public class Y9DataCatalog extends Y9ResourceBase {
 
     private static final long serialVersionUID = -5070637557179341250L;
+
+    {
+        super.setResourceType(ResourceTypeEnum.DATA_CATALOG);
+    }
 
     /**
      * 父节点ID
@@ -81,7 +87,4 @@ public class Y9DataCatalog extends Y9ResourceBase {
         return this.parentId;
     }
 
-    public Y9DataCatalog() {
-        super.setResourceType(ResourceTypeEnum.DATA_CATALOG);
-    }
 }

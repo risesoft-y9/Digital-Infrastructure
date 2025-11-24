@@ -12,6 +12,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.resource.AppOpenTypeEnum;
@@ -33,9 +34,14 @@ import net.risesoft.persistence.EnumConverter;
 @Comment("应用市场表")
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public class Y9App extends Y9ResourceBase {
 
     private static final long serialVersionUID = 1771730705695533602L;
+
+    {
+        super.setResourceType(ResourceTypeEnum.APP);
+    }
 
     /** 资源别名 */
     @Column(name = "ALIAS_NAME", length = 255)
@@ -105,10 +111,6 @@ public class Y9App extends Y9ResourceBase {
     @ColumnDefault("0")
     @Builder.Default
     private Boolean autoInit = Boolean.FALSE;
-
-    public Y9App() {
-        super.setResourceType(ResourceTypeEnum.APP);
-    }
 
     @Override
     public String getAppId() {

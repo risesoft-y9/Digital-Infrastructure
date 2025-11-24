@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.org.OrgTypeEnum;
@@ -36,9 +37,14 @@ import net.risesoft.enums.platform.org.OrgTypeEnum;
 @Comment("部门实体表")
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public class Y9Department extends Y9OrgBase {
 
     private static final long serialVersionUID = 231356577350213851L;
+
+    {
+        super.setOrgType(OrgTypeEnum.DEPARTMENT);
+    }
 
     /** 父节点id */
     @Column(name = "PARENT_ID", length = 38, nullable = false)
@@ -125,10 +131,6 @@ public class Y9Department extends Y9OrgBase {
     @ColumnDefault("0")
     @Builder.Default
     private Boolean bureau = false;
-
-    public Y9Department() {
-        super.setOrgType(OrgTypeEnum.DEPARTMENT);
-    }
 
     @Override
     public String getParentId() {

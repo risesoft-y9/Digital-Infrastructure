@@ -13,6 +13,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
@@ -34,9 +35,14 @@ import net.risesoft.persistence.EnumConverter;
 @Comment("三员表")
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public class Y9Manager extends Y9OrgBase {
 
     private static final long serialVersionUID = -6531424704457510017L;
+
+    {
+        super.setOrgType(OrgTypeEnum.MANAGER);
+    }
 
     /** 父节点id */
     @Column(name = "PARENT_ID", length = 38, nullable = false)
@@ -131,10 +137,6 @@ public class Y9Manager extends Y9OrgBase {
     @Comment(value = "上一次审查时间")
     @Column(name = "LAST_REVIEW_LOG_TIME")
     private Date lastReviewLogTime;
-
-    public Y9Manager() {
-        super.setOrgType(OrgTypeEnum.MANAGER);
-    }
 
     @Override
     public String getParentId() {
