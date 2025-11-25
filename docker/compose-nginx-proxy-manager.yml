@@ -1,0 +1,27 @@
+name: y9-dev-postgres-keycloak
+services:
+  npm:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: npm01
+    restart: always
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    networks:
+      - y9-share-net
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - /Users/dingzhaojun/docker-data/npm:/data
+      - /Users/dingzhaojun/docker-data/npm-letsencrypt:/etc/letsencrypt
+    
+networks:
+  y9-share-net:
+    external: true
+
+# 参见: https://github.com/NginxProxyManager/nginx-proxy-manager
+# 类似软件: nginxUI nginxWebUI
+# docker compose -f compose-nginx-proxy-manager.yml up -d

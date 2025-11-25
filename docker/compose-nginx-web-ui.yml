@@ -1,0 +1,24 @@
+name: y9-dev-postgres-keycloak
+services:
+  ngxwebui:
+    image: cym1102/nginxwebui:latest
+    container_name: ngxwebui01
+    restart: always
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    ports:
+      - '7002:8080'
+    networks:
+      - y9-share-net
+    environment:
+      - TZ=Asia/Shanghai
+      - BOOT_OPTIONS=--server.port=8080
+    volumes:
+      - /Users/dingzhaojun/docker-data/ngxwebui:/home/nginxWebUI
+    
+networks:
+  y9-share-net:
+    external: true
+
+# 参见: https://github.com/cym1102/nginxWebUI
+# docker compose -f compose-nginx-web-ui.yml up -d

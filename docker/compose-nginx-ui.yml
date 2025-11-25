@@ -1,0 +1,29 @@
+name: y9-dev-postgres-keycloak
+services:
+  ngxui:
+    stdin_open: true
+    tty: true
+    image: uozi/nginx-ui:latest
+    container_name: ngxui01
+    restart: always
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    ports:
+      - '7003:80'
+      - '8443:443'
+    networks:
+      - y9-share-net
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - /Users/dingzhaojun/docker-data/ngxui:/etc/nginx
+      - /Users/dingzhaojun/docker-data/ngxui-ui:/etc/nginx-ui
+      #- '/var/www:/var/www'
+    
+networks:
+  y9-share-net:
+    external: true
+
+# 参见: https://github.com/cym1102/nginxWebUI
+# docker compose -f compose-nginx-ui.yml up -d
