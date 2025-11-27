@@ -1,7 +1,5 @@
 package y9.autoconfiguration.pubsub.kafka;
 
-import jakarta.annotation.PostConstruct;
-
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -18,11 +16,6 @@ import net.risesoft.y9.pubsub.Y9PublishService;
 @ConditionalOnProperty(name = "y9.feature.publish.kafka.enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(Y9PublishProperties.class)
 public class Y9PublishKafkaConfiguration {
-
-    @PostConstruct
-    public void init() {
-        // System.out.println("init Y9PublishKafkaConfiguration...");
-    }
 
     @Bean("y9KafkaTemplate")
     @ConditionalOnMissingBean(name = "y9KafkaTemplate")

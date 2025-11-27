@@ -17,9 +17,10 @@ spring:
 y9:
     systemName: y9demo-sync
     feature:
-      listener:
-        kafka:
-          enabled: true
-      publish:
-        kafka:
-          enabled: true
+        listener:
+            kafka:
+                enabled: true
+                message-org-enabled: false
+        publish:
+            kafka:
+                enabled: true

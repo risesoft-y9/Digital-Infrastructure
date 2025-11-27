@@ -19,20 +19,11 @@ public class Y9ListenerKafkaProperties {
     /**
      * 是否启用
      */
-    private boolean enabled;
+    private boolean enabled = true;
 
     /**
-     * org消息主题
+     * org消息是否监听
      */
-    private String orgMessageTopic = "y9_org_event";
+    private boolean messageOrgEnabled = false;
 
-    /**
-     * 任务消息主题
-     */
-    private String taskMessageTopic = "y9_task_event";
-
-    /**
-     * 公共消息主题
-     */
-    private String commonMessageTopic = "y9_common_event";
 }
