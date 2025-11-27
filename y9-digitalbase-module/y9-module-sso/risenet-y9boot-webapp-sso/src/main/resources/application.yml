@@ -267,7 +267,7 @@ spring:
     autoconfigure:
         exclude:
             # 需要使用 kafka 时注释掉让其能自动配置
-#            - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+            # - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
     main:
         allow-bean-definition-overriding: true
         allow-circular-references: false

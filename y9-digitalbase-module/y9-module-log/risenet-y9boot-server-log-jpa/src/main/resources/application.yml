@@ -132,7 +132,6 @@ y9:
         org:
             directUrl: http://localhost:7055
     common:
-        kafkaEnabled: false
         logBaseUrl: http://localhost:7055/server-log
         orgBaseUrl: http://localhost:7055/server-platform
     feature:
@@ -149,13 +148,13 @@ y9:
             packagesToScanRepositoryPublic: net.risesoft.y9public.repository
         liquibase:
             public-enabled: true
-        multi-tenant:
-            # kafka, db
-            event-source: db
         log:
             enabled: true
             # kafka, api
             reportMethod: api
+        listener:
+            kafka:
+                enabled: false
         security:
             enabled: true
             csrf:

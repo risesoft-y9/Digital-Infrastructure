@@ -65,9 +65,8 @@ y9-digitalbase-starter -- 快速配置模块
  ├── risenet-y9boot-starter-jpa-dedicated -- 指定库 jpa 组件
  ├── risenet-y9boot-starter-jpa-public -- 公共库 jpa 组件
  ├── risenet-y9boot-starter-jpa-tenant -- 多租户库 jpa 组件
- ├── risenet-y9boot-starter-kafka -- kafka通用消息监听组件(y9_common_event队列)
  ├── risenet-y9boot-starter-liquibase -- 数据表结构版本化控制组件
- ├── risenet-y9boot-starter-listener-kafka -- kafka组织信息消息监听组件(y9_org_event队列)
+ ├── risenet-y9boot-starter-listener-kafka -- kafka消息监听组件
  ├── risenet-y9boot-starter-log -- 日志组件
  ├── risenet-y9boot-starter-multi-tenant -- 多租户相关组件
  ├── risenet-y9boot-starter-openfeign -- 远程调用组件

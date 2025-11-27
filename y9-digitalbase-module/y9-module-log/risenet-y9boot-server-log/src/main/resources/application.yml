@@ -20,7 +20,7 @@ spring:
         exclude:
             - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
             # 需要使用 kafka 时注释掉让其能自动配置
-            - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+            # - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
     cloud:
         nacos:
             server-addr: https://test.youshengyun.com:443
@@ -135,12 +135,11 @@ y9:
     app:
         log:
             #kafkaEnabled=true时才会初始化Kafka的事件监听（注意要将KafkaAutoConfiguration启用）
-            kafkaEnabled: false
+            kafkaEnabled: true
     service:
         org:
             directUrl: http://localhost:7055
     common:
-        kafkaEnabled: false
         logBaseUrl: http://localhost:7055/server-log
         orgBaseUrl: http://localhost:7055/server-platform
     feature:
@@ -155,18 +154,13 @@ y9:
         elasticsearch:
             packagesToScanEntityPublic: net.risesoft.y9public.entity
             packagesToScanRepositoryPublic: net.risesoft.y9public.repository
-        jpa:
-            packagesToScanEntityPublic: net.risesoft.y9public.entity
-            packagesToScanRepositoryPublic: net.risesoft.y9public.repository
-        liquibase:
-            public-enabled: true
-        multi-tenant:
-            # kafka, db
-            event-source: db
         log:
             enabled: true
             # kafka, api
-            reportMethod: api
+            reportMethod: kafka
+        listener:
+            kafka:
+                enabled: true
         security:
             enabled: true
             csrf:
