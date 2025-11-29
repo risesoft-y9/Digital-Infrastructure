@@ -40,7 +40,7 @@
 
 ```
 y9-digitalbase-common -- 系统公共模块
- ├── risenet-y9boot-3rd-jpa -- SpringDataJPA相关配置
+ ├── risenet-y9boot-3rd-jpa -- SpringDataJPA 相关配置
  ├── risenet-y9boot-common-model -- 公共对象模型
  ├── risenet-y9boot-common-nacos -- nacos加解密包
  ├── risenet-y9boot-common-sqlddl -- 数据库操作工具类
@@ -66,19 +66,19 @@ y9-digitalbase-starter -- 快速配置模块
  ├── risenet-y9boot-starter-jpa-public -- 公共库 jpa 组件
  ├── risenet-y9boot-starter-jpa-tenant -- 多租户库 jpa 组件
  ├── risenet-y9boot-starter-liquibase -- 数据表结构版本化控制组件
- ├── risenet-y9boot-starter-listener-kafka -- kafka消息监听组件
+ ├── risenet-y9boot-starter-listener-kafka -- kafka 消费消息组件
  ├── risenet-y9boot-starter-log -- 日志组件
  ├── risenet-y9boot-starter-multi-tenant -- 多租户相关组件
  ├── risenet-y9boot-starter-openfeign -- 远程调用组件
  ├── risenet-y9boot-starter-permission -- 权限组件
- ├── risenet-y9boot-starter-publish-kafka -- kafka发布消息组件
+ ├── risenet-y9boot-starter-publish-kafka -- kafka 发布消息组件
  ├── risenet-y9boot-starter-repeatsubmit -- 防重复请求组件
  ├── risenet-y9boot-starter-security -- 安全模块组件
- ├── risenet-y9boot-starter-sso-oauth2-resource -- OAuth2.0认证组件
+ ├── risenet-y9boot-starter-sso-oauth2-resource -- OAuth2.0 认证组件
  ├── risenet-y9boot-starter-web -- SpringMVC 相关配置组件
 y9-digitalbase-support -- 业务支撑模块
  ├── risenet-y9boot-support-file-jpa-repository -- 文件信息存储模块
- ├── risenet-y9boot-support-file-service-ftp -- ftp文件服务器支持
+ ├── risenet-y9boot-support-file-service-ftp -- ftp 文件服务器支持
  ├── risenet-y9boot-support-file-service-local -- 本地文件存储支持
  ├── risenet-y9boot-support-file-service-rest -- 远程文件存储支持，需结合 filemanager 使用
  ├── risenet-y9boot-support-history -- 实体审计日志组件
