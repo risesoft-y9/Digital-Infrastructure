@@ -19,7 +19,8 @@ public enum TenantErrorCodeEnum implements ErrorCode {
     MOVE_TO_SUB_TENANT_NOT_PERMITTED(3, "不能将租户移动到本身或子租户中"),
     NAME_HAS_BEEN_USED(4, "租户名[{}]已经被使用"),
     SHORT_NAME_HAS_BEEN_USED(5, "租户英文名[{}]已被使用"),
-    TENANT_SYSTEM_NOT_EXISTS(6, "租户系统[{}]不存在"),;
+    TENANT_SYSTEM_NOT_EXISTS(6, "租户系统[{}]不存在"),
+    TENANT_HAS_REGISTERED_SYSTEM(7, "租户无租用系统时才能删除");
 
     private final int moduleErrorCode;
     private final String description;

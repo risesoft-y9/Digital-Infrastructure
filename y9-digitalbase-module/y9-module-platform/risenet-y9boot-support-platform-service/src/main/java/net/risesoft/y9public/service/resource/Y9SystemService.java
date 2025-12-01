@@ -23,6 +23,8 @@ public interface Y9SystemService {
      */
     void delete(String id);
 
+    void deleteAfterCheck(String id);
+
     /**
      * 根据id禁用
      *

@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.enums.AuditLogEnum;
+import net.risesoft.exception.ResourceErrorCodeEnum;
 import net.risesoft.model.platform.resource.App;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9Page;
@@ -24,9 +25,11 @@ import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.util.Y9Assert;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.Y9System;
 import net.risesoft.y9public.entity.resource.Y9App;
+import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
@@ -228,6 +231,15 @@ public class Y9AppServiceImpl implements Y9AppService {
             .currentObject(null)
             .build();
         Y9Context.publishEvent(auditLogEvent);
+    }
+
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
+    @Override
+    public void deleteAfterCheck(String id) {
+        List<Y9TenantApp> y9TenantAppList = y9TenantAppManager.listByAppIdAndTenancy(id, Boolean.TRUE);
+        Y9Assert.isEmpty(y9TenantAppList, ResourceErrorCodeEnum.APP_IS_REGISTERED_BY_TENANT, id);
+
+        this.delete(id);
     }
 
     @Override
