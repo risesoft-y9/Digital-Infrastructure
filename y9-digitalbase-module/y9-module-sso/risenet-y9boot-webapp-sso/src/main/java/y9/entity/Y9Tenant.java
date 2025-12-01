@@ -1,5 +1,7 @@
 package y9.entity;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -27,7 +29,7 @@ import lombok.NoArgsConstructor;
 @Comment("租户信息表")
 @NoArgsConstructor
 @Data
-public class Y9Tenant {
+public class Y9Tenant implements Serializable {
 
     private static final long serialVersionUID = 2987678891147576268L;
 
