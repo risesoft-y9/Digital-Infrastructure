@@ -10,7 +10,6 @@ dependencies {
     api(project(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-api-interface-platform"))
     api(project(":y9-digitalbase-module:y9-module-log:risenet-y9boot-api-feignclient-log"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-cache-redis"))
-    api(project(":y9-digitalbase-starter:risenet-y9boot-starter-kafka"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-multi-tenant"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-publish-kafka"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-log"))
