@@ -33,6 +33,8 @@ import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.resource.Y9SystemManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
 import net.risesoft.y9public.repository.Y9SystemRepository;
+import net.risesoft.y9public.repository.resource.Y9AppRepository;
+import net.risesoft.y9public.repository.tenant.Y9TenantSystemRepository;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 
 /**
@@ -47,6 +49,8 @@ import net.risesoft.y9public.service.resource.Y9SystemService;
 public class Y9SystemServiceImpl implements Y9SystemService {
 
     private final Y9SystemRepository y9SystemRepository;
+    private final Y9AppRepository y9AppRepository;
+    private final Y9TenantSystemRepository y9TenantSystemRepository;
 
     private final Y9AppManager y9AppManager;
     private final Y9TenantSystemManager y9TenantSystemManager;
@@ -72,6 +76,20 @@ public class Y9SystemServiceImpl implements Y9SystemService {
             .currentObject(null)
             .build();
         Y9Context.publishEvent(auditLogEvent);
+    }
+
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
+    @Override
+    public void deleteAfterCheck(String id) {
+        // 没有关联的应用才能删除
+        long appCount = y9AppRepository.countBySystemId(id);
+        Y9Assert.isTrue(appCount == 0, SystemErrorCodeEnum.SYSTEM_HAS_APPS);
+
+        // 系统没有被租用才能删除
+        long tenantSystemCount = y9TenantSystemRepository.countBySystemId(id);
+        Y9Assert.isTrue(tenantSystemCount == 0, SystemErrorCodeEnum.SYSTEM_REGISTERED_BY_TENANT);
+
+        this.delete(id);
     }
 
     @Override

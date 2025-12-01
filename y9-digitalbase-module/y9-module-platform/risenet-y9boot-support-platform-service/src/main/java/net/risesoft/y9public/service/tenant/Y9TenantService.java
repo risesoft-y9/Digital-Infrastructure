@@ -39,6 +39,8 @@ public interface Y9TenantService {
      */
     void delete(String id);
 
+    void deleteAfterCheck(String id);
+
     /**
      * 根据id获取租户对象
      *

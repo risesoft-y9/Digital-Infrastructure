@@ -39,6 +39,8 @@ public interface Y9DataSourceService {
      */
     void delete(String id);
 
+    void deleteAfterCheck(String id);
+
     /**
      * 创建租户发生异常，删除对应的数据源和数据库
      *
@@ -94,4 +96,6 @@ public interface Y9DataSourceService {
      * @return {@link DataSourceInfo}
      */
     DataSourceInfo save(DataSourceInfo y9DataSource);
+
+    DataSourceInfo saveAndPublishMessage(DataSourceInfo y9DataSource);
 }

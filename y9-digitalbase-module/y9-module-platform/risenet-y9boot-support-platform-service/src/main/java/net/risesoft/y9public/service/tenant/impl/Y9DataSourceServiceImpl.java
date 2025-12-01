@@ -15,6 +15,8 @@ import org.springframework.jdbc.datasource.lookup.DataSourceLookup;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.google.common.collect.Maps;
 import com.zaxxer.hikari.HikariDataSource;
@@ -27,11 +29,17 @@ import net.risesoft.model.platform.tenant.DataSourceInfo;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.util.PlatformModelConvertUtil;
+import net.risesoft.util.Y9PublishServiceUtil;
+import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
+import net.risesoft.y9.pubsub.message.Y9MessageCommon;
 import net.risesoft.y9.util.Y9Assert;
 import net.risesoft.y9.util.base64.Y9Base64Util;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
+import net.risesoft.y9public.entity.tenant.Y9TenantSystem;
+import net.risesoft.y9public.manager.resource.Y9SystemManager;
 import net.risesoft.y9public.manager.tenant.Y9DataSourceManager;
 import net.risesoft.y9public.repository.tenant.Y9DataSourceRepository;
+import net.risesoft.y9public.repository.tenant.Y9TenantSystemRepository;
 import net.risesoft.y9public.service.tenant.Y9DataSourceService;
 
 /**
@@ -47,7 +55,10 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     private static final String DEFAULT_PASSWORD = "111111";
 
     private final Y9DataSourceRepository datasourceRepository;
+    private final Y9TenantSystemRepository y9TenantSystemRepository;
+
     private final Y9DataSourceManager y9DataSourceManager;
+    private final Y9SystemManager y9SystemManager;
 
     private final DataSourceLookup dataSourceLookup = new JndiDataSourceLookup();
 
@@ -118,6 +129,16 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(String id) {
         y9DataSourceManager.delete(id);
+    }
+
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
+    @Override
+    public void deleteAfterCheck(String id) {
+        List<Y9TenantSystem> tenantlist = y9TenantSystemRepository.findByTenantDataSource(id);
+        // 校验该数据源是否被使用
+        Y9Assert.isEmpty(tenantlist, DataSourceErrorCodeEnum.DATA_SOURCE_IS_USED);
+
+        this.delete(id);
     }
 
     @Override
@@ -191,6 +212,34 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     public DataSourceInfo save(DataSourceInfo dataSourceInfo) {
         Y9DataSource y9DataSource = PlatformModelConvertUtil.convert(dataSourceInfo, Y9DataSource.class);
         return entityToModel(y9DataSourceManager.save(y9DataSource));
+    }
+
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
+    @Override
+    public DataSourceInfo saveAndPublishMessage(DataSourceInfo y9DataSource) {
+        DataSourceInfo savedY9DataSource = this.save(y9DataSource);
+
+        // 只需要发送给使用了此数据源的系统
+        List<Y9TenantSystem> tenantSystemList =
+            y9TenantSystemRepository.findByTenantDataSource(savedY9DataSource.getId());
+
+        // 注册事务同步器，在事务提交后做某些操作
+        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    for (Y9TenantSystem y9TenantSystem : tenantSystemList) {
+                        Y9MessageCommon event = new Y9MessageCommon();
+                        event.setEventTarget(y9SystemManager.getByIdFromCache(y9TenantSystem.getSystemId()).getName());
+                        event.setEventObject(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
+                        event.setEventType(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
+                        Y9PublishServiceUtil.publishMessageCommon(event);
+                    }
+                }
+            });
+        }
+
+        return savedY9DataSource;
     }
 
     private List<DataSourceInfo> entityToModel(List<Y9DataSource> y9DataSourceList) {

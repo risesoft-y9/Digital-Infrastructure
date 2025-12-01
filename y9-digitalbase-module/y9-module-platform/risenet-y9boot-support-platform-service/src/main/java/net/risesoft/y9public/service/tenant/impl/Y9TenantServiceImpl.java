@@ -29,6 +29,7 @@ import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.manager.tenant.Y9DataSourceManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantManager;
 import net.risesoft.y9public.repository.tenant.Y9TenantRepository;
+import net.risesoft.y9public.repository.tenant.Y9TenantSystemRepository;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
 import net.risesoft.y9public.service.user.Y9UserService;
 
@@ -44,6 +45,7 @@ import net.risesoft.y9public.service.user.Y9UserService;
 public class Y9TenantServiceImpl implements Y9TenantService {
 
     private final Y9TenantRepository y9TenantRepository;
+    private final Y9TenantSystemRepository y9TenantSystemRepository;
 
     private final Y9UserService y9UserService;
 
@@ -74,6 +76,15 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     public void delete(String id) {
         y9UserService.deleteByTenantId(id);
         y9TenantRepository.deleteById(id);
+    }
+
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
+    @Override
+    public void deleteAfterCheck(String id) {
+        long appCount = y9TenantSystemRepository.countByTenantId(id);
+        Y9Assert.isTrue(appCount == 0, TenantErrorCodeEnum.TENANT_HAS_REGISTERED_SYSTEM);
+
+        this.delete(id);
     }
 
     @Override

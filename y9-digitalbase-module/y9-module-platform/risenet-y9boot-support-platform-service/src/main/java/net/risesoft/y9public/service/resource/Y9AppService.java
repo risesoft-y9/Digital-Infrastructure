@@ -147,4 +147,6 @@ public interface Y9AppService extends ResourceCommonService<App> {
      * @return {@link App}
      */
     App verifyApp(String id, boolean checked, String verifyUserName);
+
+    void deleteAfterCheck(String id);
 }
