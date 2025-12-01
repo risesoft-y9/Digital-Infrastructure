@@ -87,6 +87,7 @@
     </scm>
 
     <modules>
+        <module>y9-digitalbase-bom</module>
         <module>y9-digitalbase-common</module>
         <module>y9-digitalbase-dependencies</module>
         <module>y9-digitalbase-example</module>
@@ -98,6 +99,14 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>net.risesoft</groupId>
+                <artifactId>y9-digitalbase-bom</artifactId>
+                <version>${revision}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <dependency>
                 <groupId>net.risesoft</groupId>
                 <artifactId>y9-digitalbase-dependencies</artifactId>
