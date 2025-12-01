@@ -84,7 +84,6 @@
         <module>y9-digitalbase-starter/risenet-y9boot-starter-jpa-public</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-jpa-tenant</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-jpa-dedicated</module>
-        <module>y9-digitalbase-starter/risenet-y9boot-starter-kafka</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-liquibase</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-publish-kafka</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-listener-kafka</module>
