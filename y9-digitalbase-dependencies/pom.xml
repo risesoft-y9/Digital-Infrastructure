@@ -88,6 +88,10 @@
 
         <revision>v9.6.9-SNAPSHOT</revision>
 
+        <spring-boot.version>2.7.18</spring-boot.version>
+        <spring-cloud.version>2021.0.8</spring-cloud.version>
+        <cas.version>6.6.15.2</cas.version>
+
         <aspectj.version>1.9.20.1</aspectj.version>
         <antisamy.version>1.7.8</antisamy.version>
         <bcprov-ext-jdk15to18.version>1.78.1</bcprov-ext-jdk15to18.version>
@@ -153,6 +157,29 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apereo.cas</groupId>
+                <artifactId>cas-server-support-bom</artifactId>
+                <version>${cas.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
             <dependency>
                 <groupId>javax.ws.rs</groupId>
