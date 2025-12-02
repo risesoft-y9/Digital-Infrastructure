@@ -3,12 +3,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase-dependencies</artifactId>
-        <version>${revision}</version>
-        <relativePath>../y9-digitalbase-dependencies</relativePath>
-    </parent>
     <groupId>net.risesoft</groupId>
     <artifactId>y9-digitalbase-parent</artifactId>
     <packaging>pom</packaging>
@@ -97,6 +91,13 @@
             <dependency>
                 <groupId>net.risesoft</groupId>
                 <artifactId>y9-digitalbase-bom</artifactId>
+                <version>${revision}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.risesoft</groupId>
+                <artifactId>y9-digitalbase-dependencies</artifactId>
                 <version>${revision}</version>
                 <type>pom</type>
                 <scope>import</scope>
@@ -633,7 +634,7 @@
                             <goal>flatten</goal>
                         </goals>
                         <configuration>
-                            <updatePomFile>true</updatePomFile>
+                            <updatePomFile>false</updatePomFile>
                             <flattenMode>resolveCiFriendliesOnly</flattenMode>
                             <pomElements>
                                 <scm>expand</scm>
