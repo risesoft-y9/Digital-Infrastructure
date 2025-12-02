@@ -634,7 +634,7 @@
                             <goal>flatten</goal>
                         </goals>
                         <configuration>
-                            <updatePomFile>false</updatePomFile>
+                            <updatePomFile>true</updatePomFile>
                             <flattenMode>resolveCiFriendliesOnly</flattenMode>
                             <pomElements>
                                 <scm>expand</scm>
