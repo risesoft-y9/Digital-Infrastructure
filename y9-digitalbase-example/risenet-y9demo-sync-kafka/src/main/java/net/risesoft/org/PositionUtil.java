@@ -1,4 +1,4 @@
-package com.example;
+package net.risesoft.org;
 
 import java.util.List;
 import java.util.stream.Collectors;

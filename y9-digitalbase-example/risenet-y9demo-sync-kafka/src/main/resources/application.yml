@@ -12,7 +12,6 @@ spring:
     kafka:
         bootstrap-servers: localhost:9092
         consumer:
-            bootstrap-servers: localhost:9092
             group-id: y9demo-sync
 y9:
     systemName: y9demo-sync
@@ -20,7 +19,7 @@ y9:
         listener:
             kafka:
                 enabled: true
-                message-org-enabled: false
+                message-org-enabled: true
         publish:
             kafka:
                 enabled: true

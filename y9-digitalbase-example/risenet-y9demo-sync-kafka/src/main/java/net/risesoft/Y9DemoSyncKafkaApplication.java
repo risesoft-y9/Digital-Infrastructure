@@ -1,4 +1,4 @@
-package com.example;
+package net.risesoft;
 
 import java.util.List;
 
