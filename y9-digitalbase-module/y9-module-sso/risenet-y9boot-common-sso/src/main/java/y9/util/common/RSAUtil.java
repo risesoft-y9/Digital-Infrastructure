@@ -9,6 +9,7 @@ import java.security.PublicKey;
 import java.security.spec.MGF1ParameterSpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.OAEPParameterSpec;
@@ -100,6 +101,16 @@ public class RSAUtil {
         cipher.init(Cipher.DECRYPT_MODE, string2PrivateKey(privateKey), OAEP_PARAMETER_SPEC);
         byte[] bytesDecrypt = cipher.doFinal(Y9Base64.base64ToByte(contentBase64));
         return new String(bytesDecrypt, StandardCharsets.UTF_8);
+    }
+
+    public static String toPem(PrivateKey privateKey) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("-----BEGIN PRIVATE KEY-----\n");
+
+        String base64 = Base64.getMimeEncoder(64, "\n".getBytes()).encodeToString(privateKey.getEncoded());
+        sb.append(base64);
+        sb.append("\n-----END PRIVATE KEY-----");
+        return sb.toString();
     }
 
     public static void main(String[] args) {
