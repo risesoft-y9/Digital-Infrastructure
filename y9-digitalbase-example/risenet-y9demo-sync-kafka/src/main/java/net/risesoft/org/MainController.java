@@ -1,4 +1,4 @@
-package com.example;
+package net.risesoft.org;
 
 import javax.annotation.Resource;
 

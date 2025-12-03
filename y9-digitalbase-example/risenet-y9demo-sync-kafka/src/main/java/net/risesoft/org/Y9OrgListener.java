@@ -1,4 +1,4 @@
-package com.example;
+package net.risesoft.org;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,5 +144,4 @@ public class Y9OrgListener implements ApplicationListener<Y9EventOrg> {
             }
         }
     }
-
 }
