@@ -7,8 +7,10 @@ package net.risesoft.schema;
  * @date 2023/11/20
  * @since 9.6.3
  */
-public interface SchemaUpdaterOnTenantSystemEvent {
+public interface SchemaUpdater {
 
-    void doUpdate(String tenantId);
+    void updateByTenant(String tenantId);
+
+    void updateAllTenants();
 
 }

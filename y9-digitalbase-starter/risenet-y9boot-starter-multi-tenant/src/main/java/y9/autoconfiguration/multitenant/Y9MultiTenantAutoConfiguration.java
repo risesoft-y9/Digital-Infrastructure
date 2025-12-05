@@ -1,8 +1,7 @@
 package y9.autoconfiguration.multitenant;
 
-import java.util.Map;
-
 import org.hibernate.integrator.api.integrator.Y9TenantHibernateInfoHolder;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -10,9 +9,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -33,16 +30,13 @@ import net.risesoft.dao.MultiTenantDao;
 import net.risesoft.eventsource.DbScanner;
 import net.risesoft.eventsource.KafkaMessageCommon;
 import net.risesoft.liquibase.Y9MultiTenantSpringLiquibase;
-import net.risesoft.listener.MultiTenantApplicationReadyListener;
+import net.risesoft.listener.ApplicationReadyEventListener;
 import net.risesoft.listener.TenantAppEventListener;
 import net.risesoft.listener.TenantDataSourceEventListener;
 import net.risesoft.listener.TenantSystemRegisteredEventListener;
-import net.risesoft.schema.JpaSchemaUpdaterOnTenantSystemEvent;
-import net.risesoft.schema.LiquibaseSchemaUpdaterOnTenantSystemEvent;
-import net.risesoft.schema.NoneSchemaUpdaterOnTenantSystemEvent;
-import net.risesoft.schema.SchemaUpdaterOnTenantSystemEvent;
-import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.schema.JpaSchemaUpdater;
+import net.risesoft.schema.LiquibaseSchemaUpdater;
+import net.risesoft.schema.SchemaUpdater;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.feature.multitenant.Y9MultiTenantProperties;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
@@ -67,62 +61,35 @@ public class Y9MultiTenantAutoConfiguration {
         return new Y9TenantDataSourceLookup(ds, environment.getProperty("y9.systemName"));
     }
 
-    @Bean
-    public MultiTenantDao multiTenantDao(@Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public) {
-        return new MultiTenantDao(jdbcTemplate4Public);
-    }
-
     @Configuration(proxyBeanMethods = false)
-    public static class SchemaUpdaterOnTenantSystemEventConfiguration {
+    @ConditionalOnClass(value = Y9MultiTenantSpringLiquibase.class)
+    public static class LiquibaseSchemaUpdaterConfiguration {
         @Bean
-        @ConditionalOnBean(name = "y9MultiTenantSpringLiquibase")
-        public SchemaUpdaterOnTenantSystemEvent
-            liquibaseDbUpdater(Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase) {
-            return new LiquibaseSchemaUpdaterOnTenantSystemEvent(y9MultiTenantSpringLiquibase);
-        }
-
-        @Bean
-        @ConditionalOnMissingBean(name = "liquibaseDbUpdater")
-        @ConditionalOnClass(value = Y9TenantHibernateInfoHolder.class)
-        public SchemaUpdaterOnTenantSystemEvent jpaDbUpdater() {
-            return new JpaSchemaUpdaterOnTenantSystemEvent();
-        }
-
-        @Bean
-        @ConditionalOnMissingBean(SchemaUpdaterOnTenantSystemEvent.class)
-        public SchemaUpdaterOnTenantSystemEvent noneSchemaUpdater() {
-            return new NoneSchemaUpdaterOnTenantSystemEvent();
+        @Primary
+        public SchemaUpdater liquibaseSchemaUpdater(Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase,
+            Y9TenantDataSourceLookup y9TenantDataSourceLookup) {
+            return new LiquibaseSchemaUpdater(y9MultiTenantSpringLiquibase, y9TenantDataSourceLookup);
         }
     }
 
     @Configuration(proxyBeanMethods = false)
-    public static class SchemaUpdaterOnApplicationReadyEventConfiguration {
+    @ConditionalOnClass(value = Y9TenantHibernateInfoHolder.class)
+    public static class JpaSchemaUpdaterConfiguration {
         @Bean
-        @ConditionalOnMissingBean(name = "liquibaseDbUpdater")
-        @ConditionalOnClass(value = Y9TenantHibernateInfoHolder.class)
-        public ApplicationListener<ApplicationReadyEvent>
-            jpaSchemaUpdaterOnApplicationReadyEvent(Y9TenantDataSourceLookup y9TenantDataSourceLookup) {
-            return applicationReadyEvent -> {
-                Map<String, HikariDataSource> map = y9TenantDataSourceLookup.getDataSources();
-                for (String tenantId : map.keySet()) {
-                    Y9LoginUserHolder.setTenantId(tenantId);
-                    Y9TenantHibernateInfoHolder.schemaUpdate(Y9Context.getEnvironment());
-                }
-            };
-        }
-
-        @Bean
-        @ConditionalOnBean(name = "y9MultiTenantSpringLiquibase")
-        public ApplicationListener<ApplicationReadyEvent>
-            liquibaseSchemaUpdaterOnApplicationReadyEvent(Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase) {
-            return applicationReadyEvent -> {
-                y9MultiTenantSpringLiquibase.updateAll();
-            };
+        @ConditionalOnMissingBean(SchemaUpdater.class)
+        public SchemaUpdater jpaSchemaUpdater(Y9TenantDataSourceLookup y9TenantDataSourceLookup) {
+            return new JpaSchemaUpdater(y9TenantDataSourceLookup);
         }
     }
 
     @Configuration(proxyBeanMethods = false)
     public static class EventListenerConfiguration {
+        @Bean
+        public ApplicationReadyEventListener
+            applicationReadyEventListener(ObjectProvider<SchemaUpdater> schemaUpdater) {
+            return new ApplicationReadyEventListener(schemaUpdater);
+        }
+
         @Bean
         public TenantAppEventListener tenantAppEventListener(MultiTenantDao multiTenantDao) {
             return new TenantAppEventListener(multiTenantDao);
@@ -130,10 +97,9 @@ public class Y9MultiTenantAutoConfiguration {
 
         @Bean
         public TenantSystemRegisteredEventListener tenantSystemRegisteredEventListener(
-            Y9TenantDataSourceLookup y9TenantDataSourceLookup,
-            SchemaUpdaterOnTenantSystemEvent schemaUpdaterOnTenantSystemEvent, MultiTenantDao multiTenantDao) {
-            return new TenantSystemRegisteredEventListener(y9TenantDataSourceLookup, schemaUpdaterOnTenantSystemEvent,
-                multiTenantDao);
+            Y9TenantDataSourceLookup y9TenantDataSourceLookup, ObjectProvider<SchemaUpdater> schemaUpdater,
+            MultiTenantDao multiTenantDao) {
+            return new TenantSystemRegisteredEventListener(y9TenantDataSourceLookup, schemaUpdater, multiTenantDao);
         }
 
         @Bean
@@ -141,6 +107,11 @@ public class Y9MultiTenantAutoConfiguration {
             tenantDataSourceEventListener(Y9TenantDataSourceLookup y9TenantDataSourceLookup) {
             return new TenantDataSourceEventListener(y9TenantDataSourceLookup);
         }
+    }
+
+    @Bean
+    public MultiTenantDao multiTenantDao(@Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public) {
+        return new MultiTenantDao(jdbcTemplate4Public);
     }
 
     @AutoConfiguration(after = KafkaAutoConfiguration.class)
@@ -161,19 +132,15 @@ public class Y9MultiTenantAutoConfiguration {
             return new KafkaMessageCommon();
         }
 
-        @Bean
-        public MultiTenantApplicationReadyListener multiTenantApplicationReadyListener(MultiTenantDao multiTenantDao,
-            Y9Properties y9Properties) {
-            return new MultiTenantApplicationReadyListener(multiTenantDao, y9Properties);
-        }
     }
 
     @Configuration(proxyBeanMethods = false)
     @ConditionalOnProperty(prefix = "y9.feature.multi-tenant", name = "event-source", havingValue = "db")
     public static class DbConfiguration {
         @Bean
-        public DbScanner dbScanner(Y9TenantDataSourceLookup y9TenantDataSourceLookup, MultiTenantDao multiTenantDao) {
-            return new DbScanner(y9TenantDataSourceLookup, multiTenantDao);
+        public DbScanner dbScanner(Y9TenantDataSourceLookup y9TenantDataSourceLookup, MultiTenantDao multiTenantDao,
+            Y9Properties y9Properties) {
+            return new DbScanner(y9TenantDataSourceLookup, multiTenantDao, y9Properties);
         }
 
         @EnableScheduling
