@@ -1,5 +1,7 @@
 package y9.autoconfiguration.liquibase;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -10,12 +12,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
 
-import com.alibaba.druid.pool.DruidDataSource;
-
 import net.risesoft.liquibase.LiquibaseUtil;
 import net.risesoft.liquibase.Y9MultiTenantSpringLiquibase;
 import net.risesoft.y9.configuration.feature.liquibase.Y9LiquibaseProperties;
-import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 
 import liquibase.integration.spring.SpringLiquibase;
 
@@ -30,17 +29,16 @@ import liquibase.integration.spring.SpringLiquibase;
 public class Y9LiquibaseAutoConfiguration {
 
     @Bean
-    @ConditionalOnBean(name = "y9TenantDataSourceLookup")
     @ConditionalOnProperty(name = "y9.feature.liquibase.tenant-enabled", havingValue = "true")
-    public Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
-        Y9LiquibaseProperties properties, ResourceLoader resourceLoader) {
-        return new Y9MultiTenantSpringLiquibase(y9TenantDataSourceLookup, properties, resourceLoader);
+    public Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase(Y9LiquibaseProperties properties,
+        ResourceLoader resourceLoader) {
+        return new Y9MultiTenantSpringLiquibase(properties, resourceLoader);
     }
 
     @Bean
     @ConditionalOnBean(name = "y9PublicDS")
-    public SpringLiquibase liquibase(Y9LiquibaseProperties properties,
-        @Qualifier("y9PublicDS") DruidDataSource dataSource, ResourceLoader resourceLoader) {
+    public SpringLiquibase liquibase(Y9LiquibaseProperties properties, @Qualifier("y9PublicDS") DataSource dataSource,
+        ResourceLoader resourceLoader) {
         return LiquibaseUtil.getSpringLiquibase(dataSource, properties, resourceLoader, false);
     }
 

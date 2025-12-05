@@ -5,15 +5,13 @@ import javax.sql.DataSource;
 import org.springframework.boot.autoconfigure.liquibase.DataSourceClosingSpringLiquibase;
 import org.springframework.core.io.ResourceLoader;
 
-import com.alibaba.druid.pool.DruidDataSource;
-
 import net.risesoft.y9.configuration.feature.liquibase.Y9LiquibaseProperties;
 
 import liquibase.integration.spring.SpringLiquibase;
 
 public class LiquibaseUtil {
 
-    public static SpringLiquibase getSpringLiquibase(DruidDataSource dataSource, Y9LiquibaseProperties properties,
+    public static SpringLiquibase getSpringLiquibase(DataSource dataSource, Y9LiquibaseProperties properties,
         ResourceLoader resourceLoader, boolean isTenant) {
         DataSource migrateDataSource = getMigrateDataSource(dataSource);
         SpringLiquibase liquibase =
@@ -38,7 +36,7 @@ public class LiquibaseUtil {
         return liquibase;
     }
 
-    public static DataSource getMigrateDataSource(DruidDataSource dataSource) {
+    public static DataSource getMigrateDataSource(DataSource dataSource) {
         // String url = dataSource.getUrl();
         // if (url.contains("jdbc:kingbase8")) {
         // // 人大金仓数据库需特殊处理
