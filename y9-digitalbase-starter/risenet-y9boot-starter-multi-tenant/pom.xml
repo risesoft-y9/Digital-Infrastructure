@@ -60,6 +60,7 @@
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-liquibase</artifactId>
             <version>${project.version}</version>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
