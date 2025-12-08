@@ -93,7 +93,7 @@ public class RiseLogAdvice implements MethodInterceptor {
                     log.setLogLevel(LogLevelEnum.RSLOG.toString());
                     log.setLogTime(new Date());
                     log.setMethodName(method.getDeclaringClass().getName() + "." + method.getName());
-                    log.setElapsedTime(String.valueOf(elapsedTime));
+                    log.setElapsedTime(elapsedTime);
                     log.setSuccess(success);
                     log.setLogMessage(errorMessage);
                     log.setThrowable(throwable);
@@ -140,7 +140,7 @@ public class RiseLogAdvice implements MethodInterceptor {
                         log.setTenantName(Y9LoginUserHolder.getTenantName());
                         log.setDn(userInfo.getDn());
                         log.setGuidPath(userInfo.getGuidPath());
-                        log.setManagerLevel(String.valueOf(userInfo.getManagerLevel().getValue()));
+                        log.setManagerLevel(userInfo.getManagerLevel().getValue());
                     }
 
                     accessLogReporter.report(log);

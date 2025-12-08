@@ -24,6 +24,18 @@ public class Y9LogAccessLogDO implements Serializable {
     /** 主键，唯一标识 */
     private String id;
 
+    /** 日志时间 */
+    private Date logTime;
+
+    /** 系统名称 */
+    private String systemName;
+
+    /** 模块名称，比如：公文就转-发文-授权管理 */
+    private String modularName;
+
+    /** 方法类和名称 */
+    private String methodName;
+
     /** 日志级别 0=TRACE 1=DEBUG 2=INFO 3=WARN 4=ERROR */
     private String logLevel;
 
@@ -33,38 +45,8 @@ public class Y9LogAccessLogDO implements Serializable {
     /** 操作名称 */
     private String operateName;
 
-    /** 模块名称，比如：公文就转-发文-授权管理 */
-    private String modularName;
-
-    /** 方法类和名称 */
-    private String methodName;
-
-    /** 日志时间 */
-    private Date logTime;
-
     /** 用时 */
     private long elapsedTime;
-
-    /** 租户ID */
-    private String tenantId;
-
-    /** 用户id */
-    private String userId;
-
-    /** 登录名称 */
-    private String loginName;
-
-    /** 登录名 */
-    private String userName;
-
-    /** 登录用户机器IP */
-    private String userHostIp;
-
-    /** 租户名称 */
-    private String tenantName;
-
-    /** 系统名称 */
-    private String systemName;
 
     /** 访问服务器IP */
     private String serverIp;
@@ -84,11 +66,8 @@ public class Y9LogAccessLogDO implements Serializable {
     /** 异常信息 */
     private String throwable;
 
-    /** 由name组成的父子关系列表(倒序)，之间用逗号分隔 */
-    private String dn;
-
-    /** 由ID组成的父子关系列表(正序)，之间用逗号分隔 */
-    private String guidPath;
+    /** 登录用户机器IP */
+    private String userHostIp;
 
     /** 用户登录浏览器信息 */
     private String userAgent;
@@ -96,9 +75,30 @@ public class Y9LogAccessLogDO implements Serializable {
     /** 登录用户机器MAC */
     private String macAddress;
 
+    /** 租户ID */
+    private String tenantId;
+
+    /** 用户id */
+    private String userId;
+
+    /** 登录名称 */
+    private String loginName;
+
+    /** 登录名 */
+    private String userName;
+
+    /** 租户名称 */
+    private String tenantName;
+
+    /** 由name组成的父子关系列表(倒序)，之间用逗号分隔 */
+    private String dn;
+
+    /** 由ID组成的父子关系列表(正序)，之间用逗号分隔 */
+    private String guidPath;
+
     /**
      * 管理员类型 {@link ManagerLevelEnum}
      */
-    private String managerLevel;
+    private Integer managerLevel;
 
 }

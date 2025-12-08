@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.log.domain.Y9LogFlowableAccessLogDO;
 import net.risesoft.log.repository.Y9logFlowableAccessLogCustomRepository;
 import net.risesoft.model.log.FlowableAccessLog;
-import net.risesoft.model.log.LogInfoModel;
+import net.risesoft.model.log.FlowableAccessLogQuery;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.y9public.service.Y9logFlowableAccessLogService;
 
@@ -39,27 +39,26 @@ public class Y9logFlowableAccessLogServiceImpl implements Y9logFlowableAccessLog
     }
 
     @Override
-    public Y9Page<FlowableAccessLog> pageByCondition(LogInfoModel searchDto, String startTime, String endTime,
-        Integer page, Integer rows) {
-        return y9logFlowableAccessLogCustomRepository.pageByCondition(searchDto, startTime, endTime, page, rows);
+    public Y9Page<FlowableAccessLog> pageByCondition(FlowableAccessLogQuery searchDto, Integer page, Integer rows) {
+        return y9logFlowableAccessLogCustomRepository.pageByCondition(searchDto, page, rows);
     }
 
     @Override
-    public Page<Y9LogFlowableAccessLogDO> pageElapsedTimeByCondition(LogInfoModel searchDto, String startDay,
+    public Page<Y9LogFlowableAccessLogDO> pageElapsedTimeByCondition(FlowableAccessLogQuery searchDto, String startDay,
         String endDay, String sTime, String lTime, Integer page, Integer rows) throws ParseException {
         return y9logFlowableAccessLogCustomRepository.pageElapsedTimeByCondition(searchDto, startDay, endDay, sTime,
             lTime, page, rows);
     }
 
     @Override
-    public Page<Y9LogFlowableAccessLogDO> pageOperateStatusByOperateStatus(LogInfoModel searchDto, String operateStatus,
-        String date, String hour, Integer page, Integer rows) throws ParseException {
+    public Page<Y9LogFlowableAccessLogDO> pageOperateStatusByOperateStatus(FlowableAccessLogQuery searchDto,
+        String operateStatus, String date, String hour, Integer page, Integer rows) throws ParseException {
         return y9logFlowableAccessLogCustomRepository.pageOperateStatusByOperateStatus(searchDto, operateStatus, date,
             hour, page, rows);
     }
 
     @Override
-    public Page<Y9LogFlowableAccessLogDO> pageSearchByCondition(LogInfoModel searchDto, String startTime,
+    public Page<Y9LogFlowableAccessLogDO> pageSearchByCondition(FlowableAccessLogQuery searchDto, String startTime,
         String endTime, Integer page, Integer rows) {
         return y9logFlowableAccessLogCustomRepository.pageSearchByCondition(searchDto, startTime, endTime, page, rows);
     }

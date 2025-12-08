@@ -12,13 +12,15 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.log.domain.Y9LogAccessLogDO;
 import net.risesoft.log.repository.Y9logAccessLogCustomRepository;
 import net.risesoft.model.log.AccessLog;
-import net.risesoft.model.log.LogInfoModel;
+import net.risesoft.model.log.AccessLogQuery;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9public.service.Y9logAccessLogService;
 
 import y9.client.rest.platform.org.DepartmentApiClient;
@@ -88,24 +90,8 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
     }
 
     @Override
-    public List<String> listAccessLog(String startTime, String endTime, String loginName, String tenantId) {
-        return y9logAccessLogCustomRepository.listAccessLog(tenantId, loginName, startTime, endTime);
-    }
-
-    @Override
     public List<Long> listOperateTimeCount(String startDay, String endDay) {
         return y9logAccessLogCustomRepository.listOperateTimeCount(startDay, endDay);
-    }
-
-    @Override
-    public Page<Y9LogAccessLogDO> page(int page, int rows, String sort) {
-        return y9logAccessLogCustomRepository.page(page, rows, sort);
-    }
-
-    @Override
-    public Y9Page<AccessLog> pageByCondition(LogInfoModel searchDto, String startTime, String endTime, Integer page,
-        Integer rows) {
-        return y9logAccessLogCustomRepository.pageByCondition(searchDto, startTime, endTime, page, rows);
     }
 
     @Override
@@ -130,7 +116,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         for (Person p : allPersons) {
             ids.add(p.getId());
         }
-        return y9logAccessLogCustomRepository.pageByOrgType(tenantId, ids, operateType, page, rows);
+        return y9logAccessLogCustomRepository.pageByOrgType(ids, operateType, page, rows);
     }
 
     @Override
@@ -141,14 +127,14 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
     }
 
     @Override
-    public Page<Y9LogAccessLogDO> pageElapsedTimeByCondition(LogInfoModel searchDto, String startDay, String endDay,
+    public Page<Y9LogAccessLogDO> pageElapsedTimeByCondition(AccessLogQuery searchDto, String startDay, String endDay,
         String sTime, String lTime, Integer page, Integer rows) throws ParseException {
         return y9logAccessLogCustomRepository.pageElapsedTimeByCondition(searchDto, startDay, endDay, sTime, lTime,
             page, rows);
     }
 
     @Override
-    public Page<Y9LogAccessLogDO> pageOperateStatusByOperateStatus(LogInfoModel searchDto, String operateStatus,
+    public Page<Y9LogAccessLogDO> pageOperateStatusByOperateStatus(AccessLogQuery searchDto, String operateStatus,
         String date, String hour, Integer page, Integer rows) throws ParseException {
 
         return y9logAccessLogCustomRepository.pageOperateStatusByOperateStatus(searchDto, operateStatus, date, hour,
@@ -156,21 +142,20 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
     }
 
     @Override
-    public Page<Y9LogAccessLogDO> pageSearchByCondition(LogInfoModel searchDto, String startTime, String endTime,
-        Integer page, Integer rows) {
-        return y9logAccessLogCustomRepository.pageSearchByCondition(searchDto, startTime, endTime, page, rows);
+    public Y9Page<AccessLog> pageSearchByCondition(AccessLogQuery searchDto, Y9PageQuery pageQuery) {
+        return y9logAccessLogCustomRepository.pageSearchByCondition(searchDto, pageQuery);
     }
 
     @Override
     public void save(Y9LogAccessLogDO y9LogAccessLogDO) {
-        if (StringUtils.isBlank(y9LogAccessLogDO.getManagerLevel())) {
-            y9LogAccessLogDO.setManagerLevel("0");
+        if (y9LogAccessLogDO.getManagerLevel() == null) {
+            y9LogAccessLogDO.setManagerLevel(ManagerLevelEnum.GENERAL_USER.getValue());
         }
         y9logAccessLogCustomRepository.save(y9LogAccessLogDO);
     }
 
     @Override
-    public Page<Y9LogAccessLogDO> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel,
+    public Page<Y9LogAccessLogDO> searchQuery(String tenantId, String managerLevel, AccessLogQuery loginInfoModel,
         Integer page, Integer rows) {
         return y9logAccessLogCustomRepository.searchQuery(tenantId, managerLevel, loginInfoModel, page, rows);
     }

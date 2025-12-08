@@ -7,7 +7,7 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 
 import net.risesoft.log.domain.Y9LogUserLoginInfoDO;
-import net.risesoft.model.log.LogInfoModel;
+import net.risesoft.model.log.LoginLogQuery;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 
@@ -201,6 +201,6 @@ public interface Y9logUserLoginInfoService {
      * @param rows 条数
      * @return {@code Y9Page<Y9logUserLoginInfo>}
      */
-    Y9Page<Y9LogUserLoginInfoDO> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel,
+    Y9Page<Y9LogUserLoginInfoDO> searchQuery(String tenantId, String managerLevel, LoginLogQuery loginInfoModel,
         int page, int rows);
 }

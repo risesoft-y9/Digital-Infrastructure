@@ -19,7 +19,7 @@ public enum LogLevelEnum {
     INFO("信息日志"),
     /** 调试 */
     DEBUG("调试日志"),
-    /** 微量 */
+    /** 跟踪日志 */
     TRACE("跟踪日志");
 
     private final String value;

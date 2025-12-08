@@ -38,19 +38,9 @@ public class AccessLog implements Serializable {
     private Date logTime;
 
     /**
-     * 日志级别 0=TRACE 1=DEBUG 2=INFO 3=WARN 4=ERROR
+     * 系统名称
      */
-    private String logLevel;
-
-    /**
-     * 操作类别： 0=使用，1=登录，2=退出，3=查看，4=增加，5=修改，6=删除，7=发送，8=活动
-     */
-    private String operateType;
-
-    /**
-     * 操作名称
-     */
-    private String operateName;
+    private String systemName;
 
     /**
      * 模块名称，比如：公文就转-发文-授权管理
@@ -63,39 +53,24 @@ public class AccessLog implements Serializable {
     private String methodName;
 
     /**
+     * 日志级别： 普通日志、管理日志、错误日志、警告日志、信息日志、调试日志、跟踪日志
+     */
+    private String logLevel;
+
+    /**
+     * 操作类别： 查看，增加，修改，删除，发送，活动，登录，退出，检查
+     */
+    private String operateType;
+
+    /**
+     * 操作名称
+     */
+    private String operateName;
+
+    /**
      * 用时
      */
-    private String elapsedTime;
-
-    /**
-     * 用户id
-     */
-    private String userId;
-
-    /**
-     * 用户名称
-     */
-    private String userName;
-
-    /**
-     * 用户ip
-     */
-    private String userHostIp;
-
-    /**
-     * mac地址
-     */
-    private String macAddress;
-
-    /**
-     * 租户id
-     */
-    private String tenantId;
-
-    /**
-     * 租户名称
-     */
-    private String tenantName;
+    private long elapsedTime;
 
     /**
      * 服务器ip
@@ -128,6 +103,47 @@ public class AccessLog implements Serializable {
     private String throwable;
 
     /**
+     * 用户ip
+     */
+    private String userHostIp;
+
+    /**
+     * 浏览器信息
+     */
+    private String userAgent;
+
+    /**
+     * mac地址
+     */
+    private String macAddress;
+
+    /**
+     * 租户id
+     */
+    private String tenantId;
+
+    /**
+     * 租户名称
+     */
+    private String tenantName;
+
+    /**
+     * 用户id
+     */
+    private String userId;
+
+    /**
+     * 用户名称
+     */
+    private String userName;
+
+    /**
+     *
+     * 登录名称
+     */
+    private String loginName;
+
+    /**
      * 用户的承继关系
      */
     private String dn;
@@ -138,23 +154,7 @@ public class AccessLog implements Serializable {
     private String guidPath;
 
     /**
-     * 系统名称
+     * 三员级别：0：一般用户，1：系统管理员，2：安全保密员，3：安全审计员，4：云系统管理员，5：云安全保密员，6：云安全审计员
      */
-    private String systemName;
-
-    /**
-     * 浏览器信息
-     */
-    private String userAgent;
-
-    /**
-     *
-     * 登录名称
-     */
-    private String loginName;
-
-    /**
-     * 三员级别
-     */
-    private String managerLevel;
+    private Integer managerLevel;
 }
