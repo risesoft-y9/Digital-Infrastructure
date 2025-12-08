@@ -39,11 +39,11 @@ import net.risesoft.log.domain.Y9LogAccessLogDO;
 import net.risesoft.log.repository.Y9logAccessLogCustomRepository;
 import net.risesoft.log.repository.Y9logMappingCustomRepository;
 import net.risesoft.model.log.AccessLog;
-import net.risesoft.model.log.LogInfoModel;
+import net.risesoft.model.log.AccessLogQuery;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.util.AccessLogModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.Y9Day;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.Y9LogAccessLog;
@@ -267,45 +267,6 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public List<String> listAccessLog(String tenantId, String loginName, String startTime, String endTime) {
-        List<String> strList = new ArrayList<>();
-        List<Y9LogAccessLog> searchList = y9logAccessLogRepository.findAll(new Specification<>() {
-            private static final long serialVersionUID = -2210269486911993525L;
-
-            @Override
-            public Predicate toPredicate(Root<Y9LogAccessLog> root, CriteriaQuery<?> query,
-                CriteriaBuilder criteriaBuilder) {
-                List<Predicate> list = new ArrayList<>();
-                list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.USER_NAME).as(String.class), loginName));
-                if (StringUtils.isNotBlank(tenantId)) {
-                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
-                }
-                Date startDate = null;
-                Date endDate = null;
-                try {
-                    startDate = DATE_TIME_FORMAT.parse(startTime);
-                    endDate = DATE_TIME_FORMAT.parse(endTime);
-                    list.add(criteriaBuilder.between(root.get(Y9LogSearchConsts.LOG_TIME).as(Date.class), startDate,
-                        endDate));
-                } catch (ParseException e1) {
-                    LOGGER.warn(e1.getMessage(), e1);
-                }
-
-                // 如果没有条件，返回空查询
-                if (list.isEmpty()) {
-                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
-                }
-                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
-            }
-        });
-
-        searchList.stream().forEach(team -> {
-            strList.add(Y9JsonUtil.writeValueAsString(team));
-        });
-        return strList;
-    }
-
-    @Override
     public List<Long> listOperateTimeCount(String startDay, String endDay) {
         Date sDay = null;
         Date eDay = null;
@@ -340,105 +301,6 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public Page<Y9LogAccessLogDO> page(int page, int rows, String sort) {
-        Pageable pageable;
-        String tenantId = Y9LoginUserHolder.getTenantId();
-        if (StringUtils.isNoneBlank(sort)) {
-            pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, sort);
-        } else {
-            pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
-        }
-
-        Page<Y9LogAccessLog> y9LogAccessLogPage = y9logAccessLogRepository.findAll(new Specification<>() {
-            private static final long serialVersionUID = -2210269486911993525L;
-
-            @Override
-            public Predicate toPredicate(Root<Y9LogAccessLog> root, CriteriaQuery<?> query,
-                CriteriaBuilder criteriaBuilder) {
-                List<Predicate> list = new ArrayList<>();
-
-                if (StringUtils.isNotBlank(tenantId)) {
-                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
-                }
-
-                list.add(criteriaBuilder.isNotNull(root.get(Y9LogSearchConsts.USER_NAME).as(String.class)));
-                // 如果没有条件，返回空查询
-                if (list.isEmpty()) {
-                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
-                }
-                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
-            }
-        }, pageable);
-        return poPageToDoPage(y9LogAccessLogPage);
-    }
-
-    @Override
-    public Y9Page<AccessLog> pageByCondition(LogInfoModel searchDto, String startTime, String endTime, Integer page,
-        Integer rows) {
-
-        Pageable pageable =
-            PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.Direction.DESC, Y9LogSearchConsts.LOG_TIME);
-
-        Page<Y9LogAccessLog> pageInfo = y9logAccessLogRepository.findAll(new Specification<>() {
-            private static final long serialVersionUID = -2210269486911993525L;
-
-            @Override
-            public Predicate toPredicate(Root<Y9LogAccessLog> root, CriteriaQuery<?> query,
-                CriteriaBuilder criteriaBuilder) {
-                List<Predicate> list = new ArrayList<>();
-
-                if (StringUtils.isNotBlank(searchDto.getLogLevel())) {
-                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.LOG_LEVEL).as(String.class),
-                        searchDto.getLogLevel()));
-                }
-
-                if (StringUtils.isNotBlank(searchDto.getSuccess())) {
-                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.SUCCESS).as(String.class),
-                        searchDto.getSuccess()));
-                }
-                if (StringUtils.isNotBlank(searchDto.getOperateType())) {
-                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.OPERATE_TYPE).as(String.class),
-                        searchDto.getOperateType()));
-                }
-
-                if (StringUtils.isNotBlank(searchDto.getUserName())) {
-                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.USER_NAME).as(String.class),
-                        searchDto.getUserName()));
-                }
-                if (StringUtils.isNotBlank(searchDto.getUserHostIp())) {
-                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.USER_HOST_IP).as(String.class),
-                        searchDto.getUserHostIp()));
-                }
-                if (StringUtils.isNotEmpty(searchDto.getOperateName())) {
-                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.OPERATE_NAME).as(String.class),
-                        searchDto.getOperateName()));
-                }
-                if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-                    String sTime = startTime + " 00:00:00";
-                    String eTime = endTime + " 23:59:59";
-                    try {
-                        Date startDate = DATE_TIME_FORMAT.parse(sTime);
-                        Date endDate = DATE_TIME_FORMAT.parse(eTime);
-                        list.add(criteriaBuilder.between(root.get(Y9LogSearchConsts.LOG_TIME).as(Date.class), startDate,
-                            endDate));
-                    } catch (ParseException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                // 如果没有条件，返回空查询
-                if (list.isEmpty()) {
-                    return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
-                }
-                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
-            }
-        }, pageable);
-
-        return Y9Page.success(page, pageInfo.getTotalPages(), pageInfo.getTotalElements(),
-            AccessLogModelConvertUtil.logEsListToModels(pageInfo.getContent()));
-    }
-
-    @Override
     public Y9Page<AccessLog> pageByOperateType(String operateType, Integer page, Integer rows) {
         Pageable pageable =
             PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.Direction.DESC, Y9LogSearchConsts.LOG_TIME);
@@ -450,9 +312,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public Y9Page<AccessLog> pageByOrgType(String tenantId, List<String> personIds, String operateType, Integer page,
-        Integer rows) {
-
+    public Y9Page<AccessLog> pageByOrgType(List<String> personIds, String operateType, Integer page, Integer rows) {
         PageRequest pageable =
             PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
         Page<Y9LogAccessLog> pageInfo = y9logAccessLogRepository.findAll(new Specification<>() {
@@ -529,7 +389,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public Page<Y9LogAccessLogDO> pageElapsedTimeByCondition(LogInfoModel searchDto, String startDay, String endDay,
+    public Page<Y9LogAccessLogDO> pageElapsedTimeByCondition(AccessLogQuery searchDto, String startDay, String endDay,
         String sTime, String lTime, Integer page, Integer rows) throws ParseException {
         String tenantId = Y9LoginUserHolder.getTenantId();
 
@@ -593,7 +453,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public Page<Y9LogAccessLogDO> pageOperateStatusByOperateStatus(LogInfoModel searchDto, String operateStatus,
+    public Page<Y9LogAccessLogDO> pageOperateStatusByOperateStatus(AccessLogQuery searchDto, String operateStatus,
         String date, String hour, Integer page, Integer rows) throws ParseException {
         String tenantId = Y9LoginUserHolder.getTenantId();
 
@@ -617,13 +477,10 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
                 }
+
                 if (StringUtils.isNotBlank(searchDto.getUserName())) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.USER_NAME).as(String.class),
                         searchDto.getUserName()));
-                }
-                if (StringUtils.isNotBlank(searchDto.getTenantName())) {
-                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_NAME).as(String.class),
-                        searchDto.getTenantName()));
                 }
 
                 if (StringUtils.isNotBlank(searchDto.getLogLevel())) {
@@ -666,11 +523,10 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public Page<Y9LogAccessLogDO> pageSearchByCondition(LogInfoModel loginInfoModel, String startTime, String endTime,
-        Integer page, Integer rows) {
+    public Y9Page<AccessLog> pageSearchByCondition(AccessLogQuery loginInfoModel, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         PageRequest pageable =
-            PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Direction.DESC, Y9LogSearchConsts.LOG_TIME);
         Page<Y9LogAccessLog> y9LogAccessLogPage = y9logAccessLogRepository.findAll(new Specification<>() {
             private static final long serialVersionUID = -2210269486911993525L;
 
@@ -701,10 +557,6 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.USER_HOST_IP).as(String.class),
                         loginInfoModel.getUserHostIp()));
                 }
-                if (StringUtils.isNotBlank(loginInfoModel.getTenantName())) {
-                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_NAME).as(String.class),
-                        loginInfoModel.getTenantName()));
-                }
                 if (StringUtils.isNotBlank(loginInfoModel.getModularName())) {
                     list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.MODULAR_NAME).as(String.class),
                         "%" + loginInfoModel.getModularName() + "%"));
@@ -712,8 +564,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
                 if (StringUtils.isNotBlank(loginInfoModel.getStartTime())
                     && StringUtils.isNotBlank(loginInfoModel.getEndTime())) {
-                    String sTime = startTime + " 00:00:00";
-                    String eTime = endTime + " 23:59:59";
+                    String sTime = loginInfoModel.getStartTime() + " 00:00:00";
+                    String eTime = loginInfoModel.getEndTime() + " 23:59:59";
                     try {
                         Date startDate = DATE_TIME_FORMAT.parse(sTime);
                         Date endDate = DATE_TIME_FORMAT.parse(eTime);
@@ -731,7 +583,10 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
             }
         }, pageable);
-        return poPageToDoPage(y9LogAccessLogPage);
+
+        return Y9Page.success(pageQuery.getPage(), y9LogAccessLogPage.getTotalPages(),
+            y9LogAccessLogPage.getTotalElements(),
+            AccessLogModelConvertUtil.logEsListToModels(y9LogAccessLogPage.getContent()));
     }
 
     @Override
@@ -742,14 +597,9 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public Page<Y9LogAccessLogDO> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel,
+    public Page<Y9LogAccessLogDO> searchQuery(String tenantId, String managerLevel, AccessLogQuery loginInfoModel,
         Integer page, Integer rows) {
-        Pageable pageable = null;
-        if (StringUtils.isNotBlank(loginInfoModel.getSortName())) {
-            pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, loginInfoModel.getSortName());
-        } else {
-            pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
-        }
+        Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
 
         Page<Y9LogAccessLog> y9LogAccessLogPage = y9logAccessLogRepository.findAll(new Specification<>() {
             private static final long serialVersionUID = -2210269486911993525L;

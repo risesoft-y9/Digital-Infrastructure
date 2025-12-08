@@ -43,6 +43,17 @@ public class Y9LogAccessLog implements Serializable {
     @Field(type = FieldType.Date, index = true, store = true)
     private Date logTime;
 
+    @Field(type = FieldType.Keyword, index = true, store = true)
+    private String systemName;
+
+    /** 模块名称，比如：公文就转-发文-授权管理 */
+    @Field(type = FieldType.Keyword, index = true, store = true)
+    private String modularName;
+
+    /** 方法类和名称 */
+    @Field(type = FieldType.Keyword, index = true, store = true)
+    private String methodName;
+
     /** 日志级别 0=TRACE 1=DEBUG 2=INFO 3=WARN 4=ERROR */
     @Field(type = FieldType.Keyword, index = true, store = true)
     private String logLevel;
@@ -55,32 +66,9 @@ public class Y9LogAccessLog implements Serializable {
     @Field(type = FieldType.Keyword, index = true, store = true)
     private String operateName;
 
-    /** 模块名称，比如：公文就转-发文-授权管理 */
-    @Field(type = FieldType.Keyword, index = true, store = true)
-    private String modularName;
-
-    /** 方法类和名称 */
-    @Field(type = FieldType.Keyword, index = true, store = true)
-    private String methodName;
-
     /** 用时 */
     @Field(type = FieldType.Long, index = true, store = true)
     private long elapsedTime;
-
-    @Field(type = FieldType.Keyword, index = true, store = true)
-    private String userId;
-
-    @Field(type = FieldType.Keyword, index = true, store = true)
-    private String userName;
-
-    @Field(type = FieldType.Keyword, index = true, store = true)
-    private String userHostIp;
-
-    @Field(type = FieldType.Keyword, index = true, store = true)
-    private String tenantId;
-
-    @Field(type = FieldType.Keyword, index = true, store = true)
-    private String tenantName;
 
     @Field(type = FieldType.Keyword, index = true, store = true)
     private String serverIp;
@@ -101,13 +89,7 @@ public class Y9LogAccessLog implements Serializable {
     private String throwable;
 
     @Field(type = FieldType.Keyword, index = true, store = true)
-    private String dn;
-
-    @Field(type = FieldType.Keyword, index = true, store = true)
-    private String guidPath;
-
-    @Field(type = FieldType.Keyword, index = true, store = true)
-    private String systemName;
+    private String userHostIp;
 
     @Field(type = FieldType.Keyword, index = true, store = true)
     private String userAgent;
@@ -116,11 +98,29 @@ public class Y9LogAccessLog implements Serializable {
     private String macAddress;
 
     @Field(type = FieldType.Keyword, index = true, store = true)
+    private String tenantId;
+
+    @Field(type = FieldType.Keyword, index = true, store = true)
+    private String tenantName;
+
+    @Field(type = FieldType.Keyword, index = true, store = true)
+    private String userId;
+
+    @Field(type = FieldType.Keyword, index = true, store = true)
+    private String userName;
+
+    @Field(type = FieldType.Keyword, index = true, store = true)
     private String loginName;
+
+    @Field(type = FieldType.Keyword, index = true, store = true)
+    private String dn;
+
+    @Field(type = FieldType.Keyword, index = true, store = true)
+    private String guidPath;
 
     /**
      * 三员级别 {@link ManagerLevelEnum}
      */
     @Field(type = FieldType.Keyword, index = true, store = true)
-    private String managerLevel;
+    private Integer managerLevel;
 }

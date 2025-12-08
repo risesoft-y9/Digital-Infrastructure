@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.log.domain.Y9LogFlowableAccessLogDO;
-import net.risesoft.model.log.LogInfoModel;
+import net.risesoft.model.log.FlowableAccessLogQuery;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
@@ -50,7 +50,7 @@ public class FlowableAccessLogController {
     /**
      * 搜索操作用时列表
      *
-     * @param searchDto 搜索条件
+     * @param flowableAccessLogQuery 搜索条件
      * @param startDay 开始日期
      * @param endDay 结束日期
      * @param sTime 开始时间
@@ -60,11 +60,11 @@ public class FlowableAccessLogController {
      */
     @RiseLog(moduleName = "日志系统", operationName = "搜索操作用时列表", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/pageByElapsedTime")
-    public Y9Page<Y9LogFlowableAccessLogDO> pageByElapsedTime(LogInfoModel searchDto, String startDay, String endDay,
-        String sTime, String lTime, Y9PageQuery pageQuery) {
+    public Y9Page<Y9LogFlowableAccessLogDO> pageByElapsedTime(FlowableAccessLogQuery flowableAccessLogQuery,
+        String startDay, String endDay, String sTime, String lTime, Y9PageQuery pageQuery) {
         try {
-            Page<Y9LogFlowableAccessLogDO> pageResult = logService.pageElapsedTimeByCondition(searchDto, startDay,
-                endDay, sTime, lTime, pageQuery.getPage(), pageQuery.getSize());
+            Page<Y9LogFlowableAccessLogDO> pageResult = logService.pageElapsedTimeByCondition(flowableAccessLogQuery,
+                startDay, endDay, sTime, lTime, pageQuery.getPage(), pageQuery.getSize());
             return Y9Page.success(pageQuery.getPage(), pageResult.getTotalPages(), pageResult.getTotalElements(),
                 pageResult.getContent());
         } catch (Exception e) {
@@ -76,7 +76,7 @@ public class FlowableAccessLogController {
     /**
      * 获取操作状态列表数据
      *
-     * @param searchDto 搜索条件
+     * @param flowableAccessLogQuery 搜索条件
      * @param date 搜索时间
      * @param hour 分
      * @param operateStatus 操作状态
@@ -86,9 +86,9 @@ public class FlowableAccessLogController {
      */
     @RiseLog(moduleName = "日志系统", operationName = "获取操作状态列表数据", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/pageByOperateStatus")
-    public Y9Page<Y9LogFlowableAccessLogDO> pageByOperateStatus(LogInfoModel searchDto, String date, String hour,
-        String operateStatus, Y9PageQuery pageQuery) throws ParseException {
-        Page<Y9LogFlowableAccessLogDO> pageResult = logService.pageOperateStatusByOperateStatus(searchDto,
+    public Y9Page<Y9LogFlowableAccessLogDO> pageByOperateStatus(FlowableAccessLogQuery flowableAccessLogQuery,
+        String date, String hour, String operateStatus, Y9PageQuery pageQuery) throws ParseException {
+        Page<Y9LogFlowableAccessLogDO> pageResult = logService.pageOperateStatusByOperateStatus(flowableAccessLogQuery,
             operateStatus, date, hour, pageQuery.getPage(), pageQuery.getSize());
         return Y9Page.success(pageQuery.getPage(), pageResult.getTotalPages(), pageResult.getTotalElements(),
             pageResult.getContent());
@@ -112,7 +112,7 @@ public class FlowableAccessLogController {
     /**
      * 搜索日志信息
      *
-     * @param searchDto 搜索信息
+     * @param flowableAccessLogQuery 搜索信息
      * @param pageQuery 分页信息
      * @param startTime 开始时间
      * @param endTime 结束时间
@@ -120,10 +120,11 @@ public class FlowableAccessLogController {
      */
     @RiseLog(moduleName = "日志系统", operationName = "搜索日志信息", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/pageSearch")
-    public Y9Page<Y9LogFlowableAccessLogDO> pageSearch(LogInfoModel searchDto, Y9PageQuery pageQuery,
-        @RequestParam(required = false) String startTime, @RequestParam(required = false) String endTime) {
-        Page<Y9LogFlowableAccessLogDO> resultPage =
-            logService.pageSearchByCondition(searchDto, startTime, endTime, pageQuery.getPage(), pageQuery.getSize());
+    public Y9Page<Y9LogFlowableAccessLogDO> pageSearch(FlowableAccessLogQuery flowableAccessLogQuery,
+        Y9PageQuery pageQuery, @RequestParam(required = false) String startTime,
+        @RequestParam(required = false) String endTime) {
+        Page<Y9LogFlowableAccessLogDO> resultPage = logService.pageSearchByCondition(flowableAccessLogQuery, startTime,
+            endTime, pageQuery.getPage(), pageQuery.getSize());
         return Y9Page.success(pageQuery.getPage(), resultPage.getTotalPages(), resultPage.getTotalElements(),
             resultPage.getContent());
     }

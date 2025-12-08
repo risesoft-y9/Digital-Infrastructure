@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import net.risesoft.log.domain.Y9LogUserLoginInfoDO;
-import net.risesoft.model.log.LogInfoModel;
+import net.risesoft.model.log.LoginLogQuery;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 
@@ -46,7 +46,7 @@ public interface Y9logUserLoginInfoCustomRepository {
     Y9Page<Y9LogUserLoginInfoDO> pageByUserHostIpLikeAndLoginTimeBetweenAndSuccess(String userHostIp, Date startTime,
         Date endTime, String success, int page, int rows);
 
-    Y9Page<Y9LogUserLoginInfoDO> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel,
+    Y9Page<Y9LogUserLoginInfoDO> searchQuery(String tenantId, String managerLevel, LoginLogQuery loginInfoModel,
         int page, int rows);
 
     Integer countByUserId(String personId);

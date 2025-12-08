@@ -178,6 +178,6 @@ public class Y9LogAccessLog implements Serializable {
     @Column(name = "MANAGER_LEVEL", nullable = false)
     @Comment("管理员类型")
     @ColumnDefault("0")
-    private String managerLevel;
+    private Integer managerLevel;
 
 }

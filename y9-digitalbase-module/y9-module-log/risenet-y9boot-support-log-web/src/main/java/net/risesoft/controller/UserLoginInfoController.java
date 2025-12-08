@@ -11,7 +11,7 @@ import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.log.domain.Y9LogUserLoginInfoDO;
-import net.risesoft.model.log.LogInfoModel;
+import net.risesoft.model.log.LoginLogQuery;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -112,20 +112,20 @@ public class UserLoginInfoController {
     /**
      * 根据条件查询安全审计员登录日志
      *
-     * @param loginInfoModel 搜索条件
+     * @param loginLogQuery 搜索条件
      * @param pageQuery 分页信息
      * @return {@code Y9Page<Y9logUserLoginInfo>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询安全审计员登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchAuditManagers")
-    public Y9Page<Y9LogUserLoginInfoDO> searchAuditManagers(LogInfoModel loginInfoModel, Y9PageQuery pageQuery) {
+    public Y9Page<Y9LogUserLoginInfoDO> searchAuditManagers(LoginLogQuery loginLogQuery, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         Integer managerLevel = ManagerLevelEnum.AUDIT_MANAGER.getValue();
         if (InitDataConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_AUDIT_MANAGER.getValue();
         }
         Y9Page<Y9LogUserLoginInfoDO> pageList = userLoginInfoService.searchQuery(tenantId, String.valueOf(managerLevel),
-            loginInfoModel, pageQuery.getPage(), pageQuery.getSize());
+            loginLogQuery, pageQuery.getPage(), pageQuery.getSize());
         return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotal(), pageList.getRows(),
             "获取日志分页列表成功");
     }
@@ -133,20 +133,20 @@ public class UserLoginInfoController {
     /**
      * 根据条件查询安全保密员登录日志
      *
-     * @param loginInfoModel 搜索条件
+     * @param loginLogQuery 搜索条件
      * @param pageQuery 分页信息
      * @return {@code Y9Page<Y9logUserLoginInfo>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询安全保密员登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchSecurityManagers")
-    public Y9Page<Y9LogUserLoginInfoDO> searchSecurityManagers(LogInfoModel loginInfoModel, Y9PageQuery pageQuery) {
+    public Y9Page<Y9LogUserLoginInfoDO> searchSecurityManagers(LoginLogQuery loginLogQuery, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         Integer managerLevel = ManagerLevelEnum.SECURITY_MANAGER.getValue();
         if (InitDataConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_SECURITY_MANAGER.getValue();
         }
         Y9Page<Y9LogUserLoginInfoDO> pageList = userLoginInfoService.searchQuery(tenantId, String.valueOf(managerLevel),
-            loginInfoModel, pageQuery.getPage(), pageQuery.getSize());
+            loginLogQuery, pageQuery.getPage(), pageQuery.getSize());
         return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotal(), pageList.getRows(),
             "获取日志分页列表成功");
     }
@@ -154,20 +154,20 @@ public class UserLoginInfoController {
     /**
      * 根据条件查询系统管理员登录日志
      *
-     * @param loginInfoModel 搜索条件
+     * @param loginLogQuery 搜索条件
      * @param pageQuery 分页信息
      * @return {@code Y9Page<Y9logUserLoginInfo>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询系统管理员登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchSystemManagers")
-    public Y9Page<Y9LogUserLoginInfoDO> searchSystemManagers(LogInfoModel loginInfoModel, Y9PageQuery pageQuery) {
+    public Y9Page<Y9LogUserLoginInfoDO> searchSystemManagers(LoginLogQuery loginLogQuery, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         Integer managerLevel = ManagerLevelEnum.SYSTEM_MANAGER.getValue();
         if (InitDataConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.getValue();
         }
         Y9Page<Y9LogUserLoginInfoDO> pageList = userLoginInfoService.searchQuery(tenantId, String.valueOf(managerLevel),
-            loginInfoModel, pageQuery.getPage(), pageQuery.getSize());
+            loginLogQuery, pageQuery.getPage(), pageQuery.getSize());
         return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotal(), pageList.getRows(),
             "获取日志分页列表成功");
     }
@@ -175,15 +175,15 @@ public class UserLoginInfoController {
     /**
      * 根据条件查询普通用户登录日志
      *
-     * @param loginInfoModel 搜索条件
+     * @param loginLogQuery 搜索条件
      * @param pageQuery 分页信息
      * @return {@code Y9Page<Y9logUserLoginInfo>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询用户登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchUsers")
-    public Y9Page<Y9LogUserLoginInfoDO> searchUsers(LogInfoModel loginInfoModel, Y9PageQuery pageQuery) {
+    public Y9Page<Y9LogUserLoginInfoDO> searchUsers(LoginLogQuery loginLogQuery, Y9PageQuery pageQuery) {
         Y9Page<Y9LogUserLoginInfoDO> pageList = userLoginInfoService.searchQuery(Y9LoginUserHolder.getTenantId(),
-            String.valueOf(ManagerLevelEnum.GENERAL_USER.getValue()), loginInfoModel, pageQuery.getPage(),
+            String.valueOf(ManagerLevelEnum.GENERAL_USER.getValue()), loginLogQuery, pageQuery.getPage(),
             pageQuery.getSize());
         return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotal(), pageList.getRows(),
             "获取日志分页列表成功");

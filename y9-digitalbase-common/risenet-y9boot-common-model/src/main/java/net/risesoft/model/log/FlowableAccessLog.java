@@ -112,7 +112,7 @@ public class FlowableAccessLog implements Serializable {
     /**
      * 用时
      */
-    private String elapsedTime;
+    private long elapsedTime;
 
     /**
      * 用户ip

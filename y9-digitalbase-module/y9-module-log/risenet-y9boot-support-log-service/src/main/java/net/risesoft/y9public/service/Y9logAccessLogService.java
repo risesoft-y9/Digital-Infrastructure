@@ -9,8 +9,9 @@ import org.springframework.data.domain.Page;
 
 import net.risesoft.log.domain.Y9LogAccessLogDO;
 import net.risesoft.model.log.AccessLog;
-import net.risesoft.model.log.LogInfoModel;
+import net.risesoft.model.log.AccessLogQuery;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9PageQuery;
 
 /**
  * 日志管理
@@ -58,8 +59,6 @@ public interface Y9logAccessLogService {
      */
     Map<String, Object> getOperateStatusCount(String selectedDate);
 
-    List<String> listAccessLog(String startTime, String endTime, String loginName, String tenantId);
-
     /**
      * 获取操作用时的柱状图数据
      *
@@ -68,29 +67,6 @@ public interface Y9logAccessLogService {
      * @return {@code List<Long>} 操作用时的柱状图数据
      */
     List<Long> listOperateTimeCount(String startDay, String endDay);
-
-    /**
-     * 获取日志分页列表
-     *
-     * @param page 页数
-     * @param rows 条数
-     * @param sort 排序方式
-     * @return {@code Page<Y9logAccessLog>}
-     */
-    Page<Y9LogAccessLogDO> page(int page, int rows, String sort);
-
-    /**
-     * 多条件分页查询访问日志
-     *
-     * @param search 搜索结果
-     * @param startTime 开始时间
-     * @param endTime 结束时间
-     * @param page 页数
-     * @param rows 条数
-     * @return {@code Y9Page<AccessLog>}
-     */
-    Y9Page<AccessLog> pageByCondition(LogInfoModel search, String startTime, String endTime, Integer page,
-        Integer rows);
 
     /**
      * 根据操作类型分页查找访问日志
@@ -143,7 +119,7 @@ public interface Y9logAccessLogService {
      * @return {@code Page<Y9logAccessLog>}
      * @throws ParseException -an error has been reached unexpectedly while parsing.
      */
-    Page<Y9LogAccessLogDO> pageElapsedTimeByCondition(LogInfoModel search, String startDay, String endDay,
+    Page<Y9LogAccessLogDO> pageElapsedTimeByCondition(AccessLogQuery search, String startDay, String endDay,
         String startTime, String endTime, Integer page, Integer rows) throws ParseException;
 
     /**
@@ -158,21 +134,17 @@ public interface Y9logAccessLogService {
      * @return {@code Page<Y9logAccessLog>}
      * @throws ParseException -an error has been reached unexpectedly while parsing.
      */
-    Page<Y9LogAccessLogDO> pageOperateStatusByOperateStatus(LogInfoModel search, String operateStatus, String date,
+    Page<Y9LogAccessLogDO> pageOperateStatusByOperateStatus(AccessLogQuery search, String operateStatus, String date,
         String hour, Integer page, Integer rows) throws ParseException;
 
     /**
      * 搜索日志信息
      *
      * @param search 搜索条件
-     * @param startTime 日志开始时间
-     * @param endTime 日志结束时间
-     * @param page 页数
-     * @param rows 条数
+     * @param pageQuery 分页条件
      * @return {@code Page<Y9logAccessLog>}
      */
-    Page<Y9LogAccessLogDO> pageSearchByCondition(LogInfoModel search, String startTime, String endTime, Integer page,
-        Integer rows);
+    Y9Page<AccessLog> pageSearchByCondition(AccessLogQuery search, Y9PageQuery pageQuery);
 
     void save(Y9LogAccessLogDO y9LogAccessLogDO);
 
@@ -186,6 +158,6 @@ public interface Y9logAccessLogService {
      * @param rows 条数
      * @return {@code Page<Y9logAccessLog>}
      */
-    Page<Y9LogAccessLogDO> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel, Integer page,
-        Integer rows);
+    Page<Y9LogAccessLogDO> searchQuery(String tenantId, String managerLevel, AccessLogQuery loginInfoModel,
+        Integer page, Integer rows);
 }

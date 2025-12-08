@@ -31,7 +31,7 @@ import net.risesoft.log.constant.Y9LogSearchConsts;
 import net.risesoft.log.domain.Y9LogFlowableAccessLogDO;
 import net.risesoft.log.repository.Y9logFlowableAccessLogCustomRepository;
 import net.risesoft.model.log.FlowableAccessLog;
-import net.risesoft.model.log.LogInfoModel;
+import net.risesoft.model.log.FlowableAccessLogQuery;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.util.AccessLogModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -166,8 +166,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
     }
 
     @Override
-    public Y9Page<FlowableAccessLog> pageByCondition(LogInfoModel searchDto, String startTime, String endTime,
-        Integer page, Integer rows) {
+    public Y9Page<FlowableAccessLog> pageByCondition(FlowableAccessLogQuery searchDto, Integer page, Integer rows) {
         Pageable pageable =
             PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.Direction.DESC, Y9LogSearchConsts.LOG_TIME);
 
@@ -213,9 +212,10 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                     list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.ARGUMENTS).as(String.class),
                         "%" + searchDto.getArguments() + "%"));
                 }
-                if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-                    String sTime = startTime + " 00:00:00";
-                    String eTime = endTime + " 23:59:59";
+                if (StringUtils.isNotBlank(searchDto.getStartTime())
+                    && StringUtils.isNotBlank(searchDto.getEndTime())) {
+                    String sTime = searchDto.getStartTime() + " 00:00:00";
+                    String eTime = searchDto.getEndTime() + " 23:59:59";
                     try {
                         Date startDate = DATE_TIME_FORMAT.parse(sTime);
                         Date endDate = DATE_TIME_FORMAT.parse(eTime);
@@ -239,7 +239,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
     }
 
     @Override
-    public Page<Y9LogFlowableAccessLogDO> pageElapsedTimeByCondition(LogInfoModel searchDto, String startDay,
+    public Page<Y9LogFlowableAccessLogDO> pageElapsedTimeByCondition(FlowableAccessLogQuery searchDto, String startDay,
         String endDay, String sTime, String lTime, Integer page, Integer rows) throws ParseException {
         String tenantId = Y9LoginUserHolder.getTenantId();
 
@@ -309,8 +309,8 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
     }
 
     @Override
-    public Page<Y9LogFlowableAccessLogDO> pageOperateStatusByOperateStatus(LogInfoModel searchDto, String operateStatus,
-        String date, String hour, Integer page, Integer rows) throws ParseException {
+    public Page<Y9LogFlowableAccessLogDO> pageOperateStatusByOperateStatus(FlowableAccessLogQuery searchDto,
+        String operateStatus, String date, String hour, Integer page, Integer rows) throws ParseException {
         String tenantId = Y9LoginUserHolder.getTenantId();
 
         PageRequest pageable =
@@ -338,10 +338,6 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                     if (StringUtils.isNotBlank(searchDto.getUserName())) {
                         list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.USER_NAME).as(String.class),
                             searchDto.getUserName()));
-                    }
-                    if (StringUtils.isNotBlank(searchDto.getTenantName())) {
-                        list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_NAME).as(String.class),
-                            searchDto.getTenantName()));
                     }
 
                     if (StringUtils.isNotBlank(searchDto.getLogLevel())) {
@@ -386,7 +382,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
     }
 
     @Override
-    public Page<Y9LogFlowableAccessLogDO> pageSearchByCondition(LogInfoModel loginInfoModel, String startTime,
+    public Page<Y9LogFlowableAccessLogDO> pageSearchByCondition(FlowableAccessLogQuery loginInfoModel, String startTime,
         String endTime, Integer page, Integer rows) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         PageRequest pageable =
@@ -426,10 +422,6 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                     if (StringUtils.isNotBlank(loginInfoModel.getUserHostIp())) {
                         list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.USER_HOST_IP).as(String.class),
                             loginInfoModel.getUserHostIp()));
-                    }
-                    if (StringUtils.isNotBlank(loginInfoModel.getTenantName())) {
-                        list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_NAME).as(String.class),
-                            loginInfoModel.getTenantName()));
                     }
                     if (StringUtils.isNotBlank(loginInfoModel.getModularName())) {
                         list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.MODULAR_NAME).as(String.class),

@@ -20,7 +20,7 @@ import net.risesoft.api.log.FlowableAccessLogApi;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.log.domain.Y9LogFlowableAccessLogDO;
 import net.risesoft.model.log.FlowableAccessLog;
-import net.risesoft.model.log.LogInfoModel;
+import net.risesoft.model.log.FlowableAccessLogQuery;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.json.Y9JsonUtil;
@@ -83,14 +83,7 @@ public class FlowableAccessLogApiController implements FlowableAccessLogApi {
     /**
      * 多条件分页查询访问日志
      *
-     * @param logLevel 日志级别
-     * @param success 是否成功
-     * @param operateType 操作类型
-     * @param operateName 操作名称
-     * @param userName 用户名
-     * @param userHostIp 用户ip
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param query 查询条件
      * @param page 页码数
      * @param rows 每页条数
      * @return {@code Y9Page<AccessLog>} 通用分页请求返回对象 - data 是访问日志集合
@@ -98,23 +91,9 @@ public class FlowableAccessLogApiController implements FlowableAccessLogApi {
      */
     @Override
     @GetMapping("/search")
-    public Y9Page<FlowableAccessLog> search(@RequestParam(value = "logLevel", required = false) String logLevel,
-        @RequestParam(value = "success", required = false) String success,
-        @RequestParam(value = "operateType", required = false) String operateType,
-        @RequestParam(value = "operateName", required = false) String operateName,
-        @RequestParam(value = "userName", required = false) String userName,
-        @RequestParam(value = "userHostIp", required = false) String userHostIp,
-        @RequestParam(value = "startTime", required = false) String startTime,
-        @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") Integer page,
+    public Y9Page<FlowableAccessLog> search(FlowableAccessLogQuery query, @RequestParam("page") Integer page,
         @RequestParam("rows") Integer rows) {
-        LogInfoModel search = new LogInfoModel();
-        search.setLogLevel(logLevel);
-        search.setOperateName(operateName);
-        search.setSuccess(success);
-        search.setOperateType(operateType);
-        search.setUserName(userName);
-        search.setUserHostIp(userHostIp);
-        return y9logFlowableAccessLogService.pageByCondition(search, startTime, endTime, page, rows);
+        return y9logFlowableAccessLogService.pageByCondition(query, page, rows);
     }
 
 }

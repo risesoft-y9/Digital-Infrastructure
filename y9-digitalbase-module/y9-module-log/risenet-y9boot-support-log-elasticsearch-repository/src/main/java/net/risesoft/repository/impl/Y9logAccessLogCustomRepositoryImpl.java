@@ -45,11 +45,11 @@ import net.risesoft.log.domain.Y9LogAccessLogDO;
 import net.risesoft.log.repository.Y9logAccessLogCustomRepository;
 import net.risesoft.log.repository.Y9logMappingCustomRepository;
 import net.risesoft.model.log.AccessLog;
-import net.risesoft.model.log.LogInfoModel;
+import net.risesoft.model.log.AccessLogQuery;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.util.AccessLogModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.Y9Day;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.Y9LogAccessLog;
@@ -80,7 +80,6 @@ import co.elastic.clients.util.NamedValue;
 public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomRepository {
 
     private static final FastDateFormat DATETIME_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
-
     private static final FastDateFormat DATETIME_UTC_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     private final Y9logMappingCustomRepository y9logMappingService;
@@ -347,43 +346,6 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public List<String> listAccessLog(String startTime, String endTime, String loginName, String tenantId) {
-        List<String> strList = new ArrayList<>();
-        Criteria criteria =
-            new Criteria(Y9LogSearchConsts.USER_NAME).exists().and(Y9LogSearchConsts.USER_NAME).is(loginName);
-        if (tenantId != null) {
-            criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
-        }
-        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-            try {
-                Date startDate = DATETIME_FORMAT.parse(startTime);
-                Date endDate = DATETIME_FORMAT.parse(endTime);
-                String start = DATETIME_UTC_FORMAT.format(startDate);
-                String end = DATETIME_UTC_FORMAT.format(endDate);
-                criteria.subCriteria(new Criteria(Y9LogSearchConsts.LOG_TIME).between(start, end));
-            } catch (ParseException e) {
-                LOGGER.warn(e.getMessage(), e);
-            }
-        }
-        Query query = new CriteriaQuery(criteria);
-        query.setTrackTotalHits(true);
-        try {
-            IndexCoordinates index = IndexCoordinates.of(getCurrentYearIndexName());
-
-            SearchHits<Y9LogAccessLog> searchHits = elasticsearchOperations.search(query, Y9LogAccessLog.class, index);
-            List<Y9LogAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
-
-            list.forEach(hit -> {
-                String accesslogjson = Y9JsonUtil.writeValueAsString(hit);
-                strList.add(accesslogjson);
-            });
-        } catch (ElasticsearchException e1) {
-            LOGGER.warn(e1.getMessage(), e1);
-        }
-        return strList;
-    }
-
-    @Override
     public List<Long> listOperateTimeCount(String startDay, String endDay) {
         List<Long> list = new ArrayList<>();
         Builder builder = new Builder();
@@ -441,82 +403,6 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public Page<Y9LogAccessLogDO> page(int page, int rows, String sort) {
-        IndexCoordinates index = IndexCoordinates.of(getCurrentYearIndexName());
-        String tenantId = Y9LoginUserHolder.getTenantId();
-        Pageable pageable = null;
-        Criteria criteria = new Criteria(Y9LogSearchConsts.USER_NAME).exists();
-
-        if (tenantId != null) {
-            criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
-        }
-
-        if (StringUtils.isNoneBlank(sort)) {
-            pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, sort);
-        } else {
-            pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
-        }
-
-        Query query = new CriteriaQuery(criteria).setPageable(pageable);
-        query.setTrackTotalHits(true);
-        SearchHits<Y9LogAccessLog> searchHits = elasticsearchOperations.search(query, Y9LogAccessLog.class, index);
-        List<Y9LogAccessLogDO> list = searchHits.stream()
-            .map(SearchHit::getContent)
-            .map(y9AccessLog -> Y9ModelConvertUtil.convert(y9AccessLog, Y9LogAccessLogDO.class))
-            .collect(Collectors.toList());
-        return new PageImpl<>(list, pageable, searchHits.getTotalHits());
-    }
-
-    @Override
-    public Y9Page<AccessLog> pageByCondition(LogInfoModel search, String startTime, String endTime, Integer page,
-        Integer rows) {
-        IndexCoordinates index = IndexCoordinates.of(createIndexNames(startTime, endTime));
-        Criteria criteria = new Criteria(Y9LogSearchConsts.USER_NAME).exists();
-        if (StringUtils.isNotBlank(search.getLogLevel())) {
-            criteria.subCriteria(new Criteria(Y9LogSearchConsts.LOG_LEVEL).is(search.getLogLevel()));
-        }
-        if (StringUtils.isNotBlank(search.getSuccess())) {
-            criteria.subCriteria(new Criteria(Y9LogSearchConsts.SUCCESS).is(search.getSuccess()));
-        }
-        if (StringUtils.isNotBlank(search.getOperateType())) {
-            criteria.subCriteria(new Criteria(Y9LogSearchConsts.OPERATE_TYPE).is(search.getOperateType()));
-        }
-        if (StringUtils.isNotBlank(search.getUserName())) {
-            criteria.subCriteria(new Criteria(Y9LogSearchConsts.USER_NAME).is(search.getUserName()));
-        }
-        if (StringUtils.isNotBlank(search.getUserHostIp())) {
-            criteria.subCriteria(new Criteria(Y9LogSearchConsts.USER_HOST_IP).is(search.getUserHostIp()));
-        }
-        if (StringUtils.isNotEmpty(search.getOperateName())) {
-            criteria.subCriteria(new Criteria(Y9LogSearchConsts.OPERATE_NAME).is(search.getOperateName()));
-        }
-        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-            startTime = startTime + " 00:00:00";
-            endTime = endTime + " 23:59:59";
-            long startDate = 0;
-            long endDate = 0;
-            try {
-                startDate = DATETIME_FORMAT.parse(startTime).getTime();
-                endDate = DATETIME_FORMAT.parse(endTime).getTime();
-                criteria.subCriteria(new Criteria(Y9LogSearchConsts.LOG_TIME).between(startDate, endDate));
-            } catch (ParseException e) {
-                LOGGER.warn(e.getMessage(), e);
-            }
-        }
-        Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
-
-        Query query = new CriteriaQuery(criteria).setPageable(pageable);
-        query.setTrackTotalHits(true);
-
-        SearchHits<Y9LogAccessLog> searchHits = elasticsearchOperations.search(query, Y9LogAccessLog.class, index);
-        List<Y9LogAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
-        long total = searchHits.getTotalHits();
-        int totalPages = (int)total / rows;
-        return Y9Page.success(page, total % rows == 0 ? totalPages : totalPages + 1, total,
-            AccessLogModelConvertUtil.logEsListToModels(list));
-    }
-
-    @Override
     public Y9Page<AccessLog> pageByOperateType(String operateType, Integer page, Integer rows) {
         IndexCoordinates index = IndexCoordinates.of(getCurrentYearIndexName());
         Criteria criteria = new Criteria(Y9LogSearchConsts.OPERATE_TYPE).is(operateType);
@@ -533,8 +419,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public Y9Page<AccessLog> pageByOrgType(String tenantId, List<String> personIds, String operateType, Integer page,
-        Integer rows) {
+    public Y9Page<AccessLog> pageByOrgType(List<String> personIds, String operateType, Integer page, Integer rows) {
         IndexCoordinates index = IndexCoordinates.of(getCurrentYearIndexName());
         try {
             if (CollectionUtils.isNotEmpty(personIds)) {
@@ -592,7 +477,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public Page<Y9LogAccessLogDO> pageElapsedTimeByCondition(LogInfoModel search, String startDay, String endDay,
+    public Page<Y9LogAccessLogDO> pageElapsedTimeByCondition(AccessLogQuery search, String startDay, String endDay,
         String startTime, String endTime, Integer page, Integer rows) throws ParseException {
         String tenantId = Y9LoginUserHolder.getTenantId();
         Criteria criteria = new Criteria(Y9LogSearchConsts.USER_NAME).exists();
@@ -638,7 +523,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public Page<Y9LogAccessLogDO> pageOperateStatusByOperateStatus(LogInfoModel search, String operateStatus,
+    public Page<Y9LogAccessLogDO> pageOperateStatusByOperateStatus(AccessLogQuery search, String operateStatus,
         String date, String hour, Integer page, Integer rows) throws ParseException {
         String tenantId = Y9LoginUserHolder.getTenantId();
         Criteria criteria = new Criteria(Y9LogSearchConsts.USER_NAME).exists();
@@ -651,9 +536,6 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         }
         if (StringUtils.isNotBlank(search.getUserName())) {
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.USER_NAME).is(search.getUserName()));
-        }
-        if (StringUtils.isNotBlank(search.getTenantName())) {
-            criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_NAME).is(search.getTenantName()));
         }
         if (StringUtils.isNotBlank(search.getLogLevel())) {
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.LOG_LEVEL).is(search.getLogLevel()));
@@ -703,38 +585,35 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public Page<Y9LogAccessLogDO> pageSearchByCondition(LogInfoModel search, String startTime, String endTime,
-        Integer page, Integer rows) {
-        String tenantId = Y9LoginUserHolder.getTenantId();
+    public Y9Page<AccessLog> pageSearchByCondition(AccessLogQuery accessLogQuery, Y9PageQuery pageQuery) {
         Criteria criteria = new Criteria(Y9LogSearchConsts.USER_NAME).exists();
-
-        if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+        if (StringUtils.isNotBlank(accessLogQuery.getLogLevel())) {
+            criteria.subCriteria(new Criteria(Y9LogSearchConsts.LOG_LEVEL).is(accessLogQuery.getLogLevel()));
+        }
+        if (StringUtils.isNotBlank(accessLogQuery.getSuccess())) {
+            criteria.subCriteria(new Criteria(Y9LogSearchConsts.SUCCESS).is(accessLogQuery.getSuccess()));
+        }
+        if (StringUtils.isNotBlank(accessLogQuery.getOperateType())) {
+            criteria.subCriteria(new Criteria(Y9LogSearchConsts.OPERATE_TYPE).is(accessLogQuery.getOperateType()));
+        }
+        if (StringUtils.isNotBlank(accessLogQuery.getUserName())) {
+            criteria.subCriteria(new Criteria(Y9LogSearchConsts.USER_NAME).is(accessLogQuery.getUserName()));
+        }
+        if (StringUtils.isNotBlank(accessLogQuery.getUserHostIp())) {
+            criteria.subCriteria(new Criteria(Y9LogSearchConsts.USER_HOST_IP).is(accessLogQuery.getUserHostIp()));
+        }
+        if (StringUtils.isNotBlank(accessLogQuery.getModularName())) {
+            criteria.subCriteria(
+                new Criteria().or(Y9LogSearchConsts.MODULAR_NAME).contains(accessLogQuery.getModularName()));
+        }
+        String tenantId = Y9LoginUserHolder.getTenantId();
+        if (!InitDataConsts.OPERATION_TENANT_ID.equals(tenantId)) {
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
         }
-        if (StringUtils.isNotBlank(search.getLogLevel())) {
-            criteria.subCriteria(new Criteria(Y9LogSearchConsts.LOG_LEVEL).is(search.getLogLevel()));
-        }
-        if (StringUtils.isNotBlank(search.getSuccess())) {
-            criteria.subCriteria(new Criteria(Y9LogSearchConsts.SUCCESS).is(search.getSuccess()));
-        }
-        if (StringUtils.isNotBlank(search.getOperateType())) {
-            criteria.subCriteria(new Criteria(Y9LogSearchConsts.OPERATE_TYPE).is(search.getOperateType()));
-        }
-        if (StringUtils.isNotBlank(search.getUserName())) {
-            criteria.subCriteria(new Criteria(Y9LogSearchConsts.USER_NAME).is(search.getUserName()));
-        }
-        if (StringUtils.isNotBlank(search.getUserHostIp())) {
-            criteria.subCriteria(new Criteria(Y9LogSearchConsts.USER_HOST_IP).is(search.getUserHostIp()));
-        }
-        if (StringUtils.isNotBlank(search.getTenantName())) {
-            criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_NAME).is(search.getTenantName()));
-        }
-        if (StringUtils.isNotBlank(search.getModularName())) {
-            criteria.subCriteria(new Criteria().or(Y9LogSearchConsts.MODULAR_NAME).contains(search.getModularName()));
-        }
-        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-            startTime = startTime + " 00:00:00";
-            endTime = endTime + " 23:59:59";
+        if (StringUtils.isNotBlank(accessLogQuery.getStartTime())
+            && StringUtils.isNotBlank(accessLogQuery.getEndTime())) {
+            String startTime = accessLogQuery.getStartTime() + " 00:00:00";
+            String endTime = accessLogQuery.getEndTime() + " 23:59:59";
             try {
                 long startDate = DATETIME_FORMAT.parse(startTime).getTime();
                 long endDate = DATETIME_FORMAT.parse(endTime).getTime();
@@ -745,17 +624,21 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         }
 
         PageRequest pageable =
-            PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Direction.DESC, Y9LogSearchConsts.LOG_TIME);
         Query query = new CriteriaQuery(criteria).setPageable(pageable);
         query.setTrackTotalHits(true);
 
-        IndexCoordinates index = IndexCoordinates.of(createIndexNames(startTime, endTime));
+        IndexCoordinates index =
+            IndexCoordinates.of(createIndexNames(accessLogQuery.getStartTime(), accessLogQuery.getEndTime()));
         SearchHits<Y9LogAccessLog> searchHits = elasticsearchOperations.search(query, Y9LogAccessLog.class, index);
-        List<Y9LogAccessLogDO> list = searchHits.stream()
+        List<AccessLog> list = searchHits.stream()
             .map(SearchHit::getContent)
-            .map(y9AccessLog -> Y9ModelConvertUtil.convert(y9AccessLog, Y9LogAccessLogDO.class))
+            .map(y9AccessLog -> Y9ModelConvertUtil.convert(y9AccessLog, AccessLog.class))
             .collect(Collectors.toList());
-        return new PageImpl<>(list, pageable, searchHits.getTotalHits());
+        long total = searchHits.getTotalHits();
+        int totalPages = (int)total / pageQuery.getSize();
+        return Y9Page.success(pageQuery.getPage(), total % pageQuery.getSize() == 0 ? totalPages : totalPages + 1,
+            total, list);
     }
 
     @Override
@@ -774,10 +657,9 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public Page<Y9LogAccessLogDO> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel,
+    public Page<Y9LogAccessLogDO> searchQuery(String tenantId, String managerLevel, AccessLogQuery loginInfoModel,
         Integer page, Integer rows) {
         Criteria criteria = new Criteria();
-        Pageable pageable;
 
         if (StringUtils.isNotBlank(tenantId)) {
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
@@ -824,11 +706,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             }
         }
 
-        if (StringUtils.isNotBlank(loginInfoModel.getSortName())) {
-            pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, loginInfoModel.getSortName());
-        } else {
-            pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
-        }
+        Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
 
         Query criteriaQuery = new CriteriaQuery(criteria).setPageable(pageable);
         criteriaQuery.setTrackTotalHits(true);

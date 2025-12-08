@@ -88,7 +88,7 @@ public class LogFilter implements Filter {
             log.setLogTime(new Date());
             log.setRequestUrl(url);
             // log.setMethodName(url);
-            log.setElapsedTime(String.valueOf(elapsedTime));
+            log.setElapsedTime(elapsedTime);
             log.setSuccess(success);
             log.setLogMessage(errorMessage);
             log.setThrowable(throwable);
@@ -106,7 +106,7 @@ public class LogFilter implements Filter {
                 log.setTenantId(userInfo.getTenantId());
                 log.setTenantName(userInfo.getTenantName());
                 log.setGuidPath(userInfo.getGuidPath());
-                log.setManagerLevel(String.valueOf(userInfo.getManagerLevel().getValue()));
+                log.setManagerLevel(userInfo.getManagerLevel().getValue());
             }
             accessLogReporter.report(log);
         } catch (Exception e) {

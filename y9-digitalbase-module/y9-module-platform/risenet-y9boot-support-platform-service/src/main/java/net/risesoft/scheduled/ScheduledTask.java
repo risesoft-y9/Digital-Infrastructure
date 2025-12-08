@@ -83,9 +83,9 @@ public class ScheduledTask {
                         AccessLog log = new AccessLog();
                         log.setLogLevel(LogLevelEnum.MANAGERLOG.toString());
                         log.setLogTime(new Date());
-                        log.setElapsedTime(String.valueOf(elapsedTime));
+                        log.setElapsedTime(elapsedTime);
                         log.setSuccess("成功");
-                        log.setManagerLevel(manager.getManagerLevel().getValue().toString());
+                        log.setManagerLevel(manager.getManagerLevel().getValue());
                         log.setLogMessage(manager.getName() + "已超过" + reviewLogCycle + "天未登录系统审查。");
                         log.setTenantId(tenantId);
                         log.setId(Y9IdGenerator.genId());
@@ -148,9 +148,9 @@ public class ScheduledTask {
                     AccessLog accessLog = new AccessLog();
                     accessLog.setLogLevel(LogLevelEnum.MANAGERLOG.toString());
                     accessLog.setLogTime(new Date());
-                    accessLog.setElapsedTime(String.valueOf(elapsedTime));
+                    accessLog.setElapsedTime(elapsedTime);
                     accessLog.setSuccess("成功");
-                    accessLog.setManagerLevel(manager.getManagerLevel().getValue().toString());
+                    accessLog.setManagerLevel(manager.getManagerLevel().getValue());
                     accessLog.setLogMessage(manager.getName() + "已超过" + modifyPasswordCycle + "天未修改密码。");
                     accessLog.setTenantId(tenantId);
                     accessLog.setId(Y9IdGenerator.genId());

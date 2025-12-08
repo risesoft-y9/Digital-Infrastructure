@@ -32,7 +32,7 @@ import net.risesoft.consts.InitDataConsts;
 import net.risesoft.log.constant.Y9LogSearchConsts;
 import net.risesoft.log.domain.Y9LogUserLoginInfoDO;
 import net.risesoft.log.repository.Y9logUserLoginInfoCustomRepository;
-import net.risesoft.model.log.LogInfoModel;
+import net.risesoft.model.log.LoginLogQuery;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -429,7 +429,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
     }
 
     @Override
-    public Y9Page<Y9LogUserLoginInfoDO> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel,
+    public Y9Page<Y9LogUserLoginInfoDO> searchQuery(String tenantId, String managerLevel, LoginLogQuery loginInfoModel,
         int page, int rows) {
         Pageable pageable =
             PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.by(Sort.Direction.DESC, Y9LogSearchConsts.LOGIN_TIME));
