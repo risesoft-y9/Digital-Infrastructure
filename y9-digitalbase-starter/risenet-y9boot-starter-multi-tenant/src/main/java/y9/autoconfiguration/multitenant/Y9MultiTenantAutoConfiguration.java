@@ -62,7 +62,7 @@ public class Y9MultiTenantAutoConfiguration {
     }
 
     @Configuration(proxyBeanMethods = false)
-    @ConditionalOnClass(value = Y9MultiTenantSpringLiquibase.class)
+    @ConditionalOnBean(value = Y9MultiTenantSpringLiquibase.class)
     public static class LiquibaseSchemaUpdaterConfiguration {
         @Bean
         @Primary
