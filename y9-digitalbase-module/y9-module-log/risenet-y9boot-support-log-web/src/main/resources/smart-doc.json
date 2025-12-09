@@ -1,8 +1,8 @@
 {
-  "serverUrl": "https://demo.youshengyun.com",
+  "serverUrl": "https://vue.youshengyun.com",
   "pathPrefix": "/server-log",
   "isStrict": false,
-  "allInOne": false,
+  "allInOne": true,
   "outPath": "../../../../y9-digitalbase-pro/docs/smart-docs/log/api",
   "coverOld": true,
   "createDebugPage": false,
@@ -59,9 +59,6 @@
       "excludePathPatterns": "/app/page/**"
     }
   ],
-  "responseBodyAdvice": {
-    "className": "net.risesoft.pojo.Y9Result"
-  },
   "appToken": "f6bb275d703d4122b35f6b75bf1b66e7",
   "openUrl": "https://dev.youshengyun.com/torna/api",
   "replace": true,
