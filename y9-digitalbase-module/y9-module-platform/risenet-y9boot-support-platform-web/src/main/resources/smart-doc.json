@@ -106,15 +106,6 @@
             //请看https://smart-doc-group.github.io/#/zh-cn/diy/advancedFeatures?id=公共请求头
         }
     ],
-    "responseBodyAdvice": {
-        //自smart-doc 1.9.8起，非必须项，ResponseBodyAdvice统一返回设置(不要随便配置根据项目的技术来配置)，可用ignoreResponseBodyAdvice tag来忽略
-        "className": "net.risesoft.pojo.Y9Result"
-        //通用响应体
-    },
-    "requestBodyAdvice": {
-        ////自smart-doc 2.1.4 起，支持设置RequestBodyAdvice统一请求包装类，非必须
-        "className": "net.risesoft.pojo.Y9Result"
-    },
     "appToken": "29706661e77f4a5cb81b932fb46649f7",
     "openUrl": "https://test.youshengyun.com/torna/api",
     "replace": true,
