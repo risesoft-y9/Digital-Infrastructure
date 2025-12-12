@@ -48,7 +48,7 @@ import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
  * @date 2023/12/05
  * @since 9.6.3
  */
-@EnableConfigurationProperties(Y9MultiTenantProperties.class)
+@EnableConfigurationProperties({Y9MultiTenantProperties.class, Y9Properties.class})
 @RequiredArgsConstructor
 @Slf4j
 @AutoConfiguration
