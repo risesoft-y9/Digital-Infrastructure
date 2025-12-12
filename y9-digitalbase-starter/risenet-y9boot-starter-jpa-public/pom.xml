@@ -45,13 +45,7 @@
 
         <dependency>
             <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-common-model</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-common-util</artifactId>
+            <artifactId>risenet-y9boot-3rd-jpa</artifactId>
             <version>${project.version}</version>
         </dependency>
 
