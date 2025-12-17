@@ -25,7 +25,7 @@ import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 // Jackson框架下的多态反序列化
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "resourceType")
 @JsonSubTypes({@JsonSubTypes.Type(value = App.class, name = "0"), @JsonSubTypes.Type(value = Menu.class, name = "1"),
-    @JsonSubTypes.Type(value = Operation.class, name = "2")})
+    @JsonSubTypes.Type(value = Operation.class, name = "2"), @JsonSubTypes.Type(value = DataCatalog.class, name = "3")})
 public abstract class Resource implements Serializable, Comparable<Resource> {
 
     private static final long serialVersionUID = 1680635528797868917L;
