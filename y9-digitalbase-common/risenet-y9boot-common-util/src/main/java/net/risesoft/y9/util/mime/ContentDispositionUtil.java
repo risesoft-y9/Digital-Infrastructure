@@ -1,13 +1,14 @@
 package net.risesoft.y9.util.mime;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Content-Disposition 响应头下载文件名工具类
+ * Content-Disposition 响应头工具类
  *
  * @author dingzhaojun
  * @author qinman
@@ -15,16 +16,25 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022/2/10
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ContentDispositionUtil {
 
-    private ContentDispositionUtil() {
-        throw new IllegalStateException("ContentDispositionUtil Utility class");
-    }
-
+    /**
+     * 标准化附件下载文件名
+     * 
+     * @param fileName 文件名
+     * @return String 标准化的Content-Disposition头部值
+     */
     public static String standardizeAttachment(String fileName) {
         return standardize(fileName, "attachment");
     }
 
+    /**
+     * 标准化内联显示文件名
+     * 
+     * @param fileName 文件名
+     * @return String 标准化的Content-Disposition头部值
+     */
     public static String standardizeInline(String fileName) {
         return standardize(fileName, "inline");
     }

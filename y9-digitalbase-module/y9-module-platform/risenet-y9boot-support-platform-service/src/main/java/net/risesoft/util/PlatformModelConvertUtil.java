@@ -3,6 +3,9 @@ package net.risesoft.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import net.risesoft.entity.org.Y9Department;
 import net.risesoft.entity.org.Y9Group;
 import net.risesoft.entity.org.Y9Manager;
@@ -41,6 +44,7 @@ import net.risesoft.y9public.entity.tenant.Y9Tenant;
  * @author mengjuhua
  * @date 2022/2/10
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PlatformModelConvertUtil extends Y9ModelConvertUtil {
 
     public static List<OrgUnit> orgBaseToOrgUnit(List<? extends Y9OrgBase> y9OrgBaseList) {

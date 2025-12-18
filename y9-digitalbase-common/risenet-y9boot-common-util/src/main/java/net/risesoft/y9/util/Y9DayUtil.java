@@ -3,6 +3,9 @@ package net.risesoft.y9.util;
 import java.util.Calendar;
 import java.util.Date;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 /**
  * 日期工具类
  * 
@@ -11,8 +14,15 @@ import java.util.Date;
  * @author mengjuhua
  * @date 2022/2/10
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Y9DayUtil {
 
+    /**
+     * 获取指定日期当天的结束时间（23:59:59.999）
+     * 
+     * @param day 指定日期
+     * @return Date 当天的结束时间
+     */
     public static Date getEndOfDay(Date day) {
         Calendar endOfDay = Calendar.getInstance();
         endOfDay.setTime(day);
@@ -23,6 +33,12 @@ public class Y9DayUtil {
         return endOfDay.getTime();
     }
 
+    /**
+     * 获取指定时间毫秒数对应的当天结束时间（23:59:59.999）
+     * 
+     * @param timeInMillis 时间毫秒数
+     * @return Calendar 当天的结束时间
+     */
     public static Calendar getEndOfDay(long timeInMillis) {
         Calendar endOfDay = Calendar.getInstance();
         endOfDay.setTimeInMillis(timeInMillis);
@@ -33,6 +49,12 @@ public class Y9DayUtil {
         return endOfDay;
     }
 
+    /**
+     * 获取指定日期当天的开始时间（00:00:00.000）
+     * 
+     * @param day 指定日期
+     * @return Date 当天的开始时间
+     */
     public static Date getStartOfDay(Date day) {
         Calendar startOfDay = Calendar.getInstance();
         startOfDay.setTime(day);
@@ -43,6 +65,12 @@ public class Y9DayUtil {
         return startOfDay.getTime();
     }
 
+    /**
+     * 获取指定时间毫秒数对应的当天开始时间（00:00:00.000）
+     * 
+     * @param timeInMillis 时间毫秒数
+     * @return Calendar 当天的开始时间
+     */
     public static Calendar getStartOfDay(long timeInMillis) {
         Calendar startOfDay = Calendar.getInstance();
         startOfDay.setTimeInMillis(timeInMillis);

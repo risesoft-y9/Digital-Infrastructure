@@ -24,6 +24,8 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -36,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2012-5-18
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AesUtil {
 
     private static final String AES = "AES";
@@ -44,10 +47,6 @@ public class AesUtil {
 
     private static final int KEY_BIT_NUMBER = 128;
     private static final int IV_BYTE_NUMBER = 16;
-
-    private AesUtil() {
-        throw new IllegalStateException("Utility class");
-    }
 
     /**
      * <p>

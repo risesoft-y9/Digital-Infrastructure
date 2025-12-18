@@ -18,6 +18,8 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.pojo.Y9Result;
@@ -31,6 +33,7 @@ import net.risesoft.pojo.Y9Result;
  * @date 2022/2/10
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Y9JsonUtil {
 
     /** jackson的objectMapper 设计为单例，其他地方使用时，不要重复创建 */
@@ -40,52 +43,6 @@ public class Y9JsonUtil {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         Y9DateFormat sdf = new Y9DateFormat();
         objectMapper.setDateFormat(sdf);
-    }
-
-    public static void main(String[] args) {
-        String s = "[\"aaa\",\"bbb\"]";
-
-        String[] ss = Y9JsonUtil.readValue(s, String[].class);
-        for (String item : ss) {
-            System.out.println("array item==" + item);
-        }
-
-        ss = Y9JsonUtil.readArray(s, String.class);
-        for (String item : ss) {
-            System.out.println("array2 item==" + item);
-        }
-
-        List<String> list = Y9JsonUtil.readList(s, String.class);
-        for (String item : list) {
-            System.out.println("list item==" + item);
-        }
-
-        String s1 = "{\"aaa\":\"111\",\"bbb\":\"222\"}";
-        HashMap<String, String> map1 = Y9JsonUtil.readHashMap(s1, String.class, String.class);
-        System.out.println("aaa==" + map1.get("aaa"));
-
-        String s2 = "[{\"aaa\":\"1a\",\"bbb\":\"1b\"},{\"aaa\":\"2a\",\"bbb\":\"2b\"}]";
-        List<Map<String, Object>> list2 = Y9JsonUtil.readListOfMap(s2);
-        for (Map<String, Object> map : list2) {
-            System.out.println("bbb==" + map.get("bbb"));
-        }
-
-        List<Map<String, Object>> list3 = Y9JsonUtil.readListOfMap(s2, String.class, Object.class);
-        for (Map<String, Object> map : list3) {
-            System.out.println("bbb==" + map.get("bbb"));
-        }
-
-        String s3 = "{\"aaa\":\"111\",\"bbb\":[{\"q\":\"q1111\",\"t\":\"t1111\"},{\"q\":\"q2222\",\"t\":\"t2222\"}]}";
-        HashMap<String, Object> map2 = Y9JsonUtil.readHashMap(s3, String.class, Object.class);
-        System.out.println("aaa==" + map2.get("aaa"));
-        System.out.println("bbb==" + map2.get("bbb"));
-
-        List<Map<String, Object>> list4 =
-            Y9JsonUtil.readListOfMap(Y9JsonUtil.writeValueAsString(map2.get("bbb")), String.class, Object.class);
-        for (Map<String, Object> map : list4) {
-            System.out.println("q==" + map.get("q"));
-        }
-
     }
 
     public static <T> T[] readArray(String content, Class<T> valueType) {

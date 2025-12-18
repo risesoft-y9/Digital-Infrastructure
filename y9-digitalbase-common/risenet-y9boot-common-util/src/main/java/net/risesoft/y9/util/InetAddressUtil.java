@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 
 import org.springframework.util.StringUtils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -22,11 +24,12 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022/2/10
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class InetAddressUtil {
 
     public static final String LOCALHOST = "127.0.0.1";
-
     public static final String ANYHOST = "0.0.0.0";
+
     private static final Pattern LOCAL_IP_PATTERN = Pattern.compile("127(\\.\\d{1,3}){3}$");
     private static final Pattern ADDRESS_PATTERN = Pattern.compile("^\\d{1,3}(\\.\\d{1,3}){3}\\:\\d{1,5}$");
     private static final Pattern IP_PATTERN = Pattern.compile("\\d{1,3}(\\.\\d{1,3}){3,5}$");

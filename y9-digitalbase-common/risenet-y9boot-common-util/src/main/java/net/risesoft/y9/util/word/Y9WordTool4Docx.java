@@ -40,6 +40,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Y9WordTool4Docx {
 
+    /**
+     * 在指定书签位置填充表格内容
+     * 
+     * @param is 输入流
+     * @param bookMarkName 书签名称
+     * @param content 表格内容
+     */
     public static void fillTableAtBookMark(InputStream is, String bookMarkName, List<Map<String, String>> content) {
         try {
             XWPFDocument document = new XWPFDocument(is);
@@ -142,6 +149,12 @@ public class Y9WordTool4Docx {
         }
     }
 
+    /**
+     * 获取书签列表
+     * 
+     * @param templatePath 模板路径
+     * @return Collection<Y9BookMark4Docx> 书签列表
+     */
     public static Collection<Y9BookMark4Docx> getBookmarkList(String templatePath) {
         Collection<Y9BookMark4Docx> coll = null;
         try {
@@ -154,6 +167,12 @@ public class Y9WordTool4Docx {
         return coll;
     }
 
+    /**
+     * 获取书签名称列表
+     * 
+     * @param is 输入流
+     * @return List<String> 书签名称列表
+     */
     public static List<String> getBookMarkNameList(InputStream is) {
         List<String> list = new ArrayList<>();
         Collection<Y9BookMark4Docx> coll = null;
@@ -198,6 +217,13 @@ public class Y9WordTool4Docx {
         }
     }
 
+    /**
+     * 替换文本内容
+     * 
+     * @param is 输入流
+     * @param bookmarkMap 书签映射
+     * @param bookMarkName 书签名称
+     */
     public static void replaceText(InputStream is, Map<String, String> bookmarkMap, String bookMarkName) {
         try {
             XWPFDocument document = new XWPFDocument(is);

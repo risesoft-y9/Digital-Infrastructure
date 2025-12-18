@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -17,10 +19,17 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022/2/10
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Y9MessageDigestUtil {
 
     public static final Pattern BCRYPT_PATTERN = Pattern.compile("^\\$2[abxy]?\\$\\d{2}\\$[./A-Za-z0-9]{53}$");
 
+    /**
+     * 将字节数组转换为十六进制字符串，以冒号分隔
+     * 
+     * @param bytes 字节数组
+     * @return String 十六进制字符串
+     */
     private static String byte2hexSplitWithColon(byte[] bytes) {
         String hs = "";
         String stmp = "";
@@ -38,6 +47,12 @@ public class Y9MessageDigestUtil {
         return hs.toUpperCase();
     }
 
+    /**
+     * 将字节数组转换为十六进制字符串
+     * 
+     * @param content 字节数组
+     * @return String 十六进制字符串
+     */
     private static String byte2hex(byte[] content) {
         StringBuilder sb = new StringBuilder(2 * content.length);
         for (byte b : content) {
@@ -48,16 +63,6 @@ public class Y9MessageDigestUtil {
             sb.append(Integer.toHexString(val));
         }
         return sb.toString();
-    }
-
-    public static void main(String[] args) {
-        try {
-            String str = "111111";
-            String enc = sha1(str);
-            System.out.println(enc);// 3D:4F:2B:F0:7D:C1:BE:38:B2:0C:D6:E4:69:49:A1:07:1F:9D:0E:3D
-        } catch (Exception e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
     }
 
     /**
@@ -87,6 +92,12 @@ public class Y9MessageDigestUtil {
         return md5(encryptStr.getBytes());
     }
 
+    /**
+     * SHA1加密
+     * 
+     * @param content 内容字节数组
+     * @return String SHA1加密后的字符串
+     */
     public static String sha1(byte[] content) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
@@ -119,6 +130,12 @@ public class Y9MessageDigestUtil {
         return str;
     }
 
+    /**
+     * SHA256加密
+     * 
+     * @param content 内容字节数组
+     * @return String SHA256加密后的字符串
+     */
     public static String sha256(byte[] content) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -130,6 +147,12 @@ public class Y9MessageDigestUtil {
         return byte2hex(content);
     }
 
+    /**
+     * SHA256加密
+     * 
+     * @param str 需加密的字符串
+     * @return String SHA256加密后的字符串
+     */
     public static String sha256(String str) {
         if (str == null || str.length() == 0) {
             return "";
@@ -137,6 +160,12 @@ public class Y9MessageDigestUtil {
         return sha256(str.getBytes());
     }
 
+    /**
+     * SHA512加密
+     * 
+     * @param content 内容字节数组
+     * @return String SHA512加密后的字符串
+     */
     public static String sha512(byte[] content) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
@@ -148,6 +177,12 @@ public class Y9MessageDigestUtil {
         return byte2hex(content);
     }
 
+    /**
+     * SHA512加密
+     * 
+     * @param str 需加密的字符串
+     * @return String SHA512加密后的字符串
+     */
     public static String sha512(String str) {
         if (str == null || str.isEmpty()) {
             return "";
@@ -155,10 +190,23 @@ public class Y9MessageDigestUtil {
         return sha512(str.getBytes());
     }
 
+    /**
+     * BCrypt加密
+     * 
+     * @param password 密码
+     * @return String 加密后的密码
+     */
     public static String bcrypt(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
+    /**
+     * BCrypt密码匹配验证
+     * 
+     * @param plaintext 明文
+     * @param hashed 加密后的密文
+     * @return boolean 是否匹配
+     */
     public static boolean bcryptMatch(String plaintext, String hashed) {
         return BCrypt.checkpw(plaintext, hashed);
     }

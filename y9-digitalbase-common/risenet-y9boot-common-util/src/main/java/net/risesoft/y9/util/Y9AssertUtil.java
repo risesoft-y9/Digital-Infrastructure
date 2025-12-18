@@ -4,6 +4,9 @@ import java.util.Collection;
 
 import org.apache.commons.collections4.CollectionUtils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import net.risesoft.exception.ErrorCode;
 import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.exception.Y9NotFoundException;
@@ -16,6 +19,7 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
  * @date 2022/09/21
  * @since 9.6.2
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Y9AssertUtil {
 
     /**

@@ -32,6 +32,8 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.pojo.Y9Page;
@@ -50,6 +52,7 @@ import cn.hutool.json.JSONObject;
  * @date 2022/2/10
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RemoteCallUtil {
     public static ObjectMapper objectMapper = new ObjectMapper();
 
@@ -675,6 +678,7 @@ public class RemoteCallUtil {
     }
 
     enum MethodType {
-        GET, POST
+        GET,
+        POST
     }
 }

@@ -1,6 +1,5 @@
 package net.risesoft.y9.util;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -16,6 +15,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.util.StringUtils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -26,23 +27,8 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022/2/10
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Y9Util {
-
-    /**
-     * Closes the object quietly, catching rather than throwing IOException. Intended for use from finally blocks.
-     *
-     * @param closeable the object to close, may be {@code null}
-     * @since 3.0
-     */
-    public static void closeQuietly(final Closeable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (final IOException e) {
-                // Ignored
-            }
-        }
-    }
 
     /**
      * Returns a String where those characters that QueryParser expects to be escaped are escaped by a preceding
@@ -67,7 +53,10 @@ public class Y9Util {
     }
 
     /**
-     * 生成自定义的字符串，例如a,b,c 其中str是要生成的字符串 addNew是添加的字符串
+     * 字符串拼接，中间用英文逗号分隔 例：<br/>
+     * genCustomStr("a,b", "c,d") -> a,b,c,d <br/>
+     * genCustomStr(null, "c,d") -> c,d <br/>
+     * genCustomStr("", "c,d") -> c,d <br/>
      * 
      * @param str 字符串
      * @param addNew 添加的字符串
@@ -86,7 +75,10 @@ public class Y9Util {
     }
 
     /**
-     * 生成自定义的字符串,用指定的分隔符
+     * 字符串拼接，用指定的分隔符 例：<br/>
+     * genCustomStr("a,b", "c,d", "|") -> a,b|c,d <br/>
+     * genCustomStr(null, "c,d", "|") -> c,d <br/>
+     * genCustomStr("", "c,d", "|") -> c,d <br/>
      *
      * @param str 字符串
      * @param addNew 添加的字符串
@@ -105,6 +97,14 @@ public class Y9Util {
         return str;
     }
 
+    /**
+     * 字符串拼接，用指定的分隔符
+     * 
+     * @param stringBuffer StringBuffer对象
+     * @param addNew 添加的字符串
+     * @param delimiter 分隔符
+     * @return StringBuffer 拼接后的StringBuffer对象
+     */
     public static StringBuffer genCustomStr(StringBuffer stringBuffer, String addNew, String delimiter) {
         if (stringBuffer.length() == 0) {
             stringBuffer.append(addNew);
@@ -114,19 +114,41 @@ public class Y9Util {
         return stringBuffer;
     }
 
-    public static StringBuilder genCustomStr(StringBuilder stringBuffer, String addNew, String delimiter) {
-        if (stringBuffer.length() == 0) {
-            stringBuffer.append(addNew);
+    /**
+     * 字符串拼接，用指定的分隔符
+     * 
+     * @param stringBuilder StringBuilder对象
+     * @param addNew 添加的字符串
+     * @param delimiter 分隔符
+     * @return StringBuilder 拼接后的StringBuilder对象
+     */
+    public static StringBuilder genCustomStr(StringBuilder stringBuilder, String addNew, String delimiter) {
+        if (stringBuilder.length() == 0) {
+            stringBuilder.append(addNew);
         } else {
-            stringBuffer.append(delimiter).append(addNew);
+            stringBuilder.append(delimiter).append(addNew);
         }
-        return stringBuffer;
+        return stringBuilder;
     }
 
+    /**
+     * 获取Bean对象的属性名称数组，排除指定的属性
+     * 
+     * @param bean Bean对象
+     * @param exclude 需要排除的属性名称，多个属性用逗号分隔
+     * @return String[] 属性名称数组
+     */
     public static String[] getBeanPropertyNames(Object bean, String exclude) {
         return getBeanPropertyNames(bean, exclude.split(","));
     }
 
+    /**
+     * 获取Bean对象的属性名称数组，排除指定的属性
+     * 
+     * @param bean Bean对象
+     * @param exclude 需要排除的属性名称数组
+     * @return String[] 属性名称数组
+     */
     public static String[] getBeanPropertyNames(Object bean, String[] exclude) {
         List<String> list = new ArrayList<String>();
         try {
@@ -154,6 +176,13 @@ public class Y9Util {
         return list.toArray(new String[0]);
     }
 
+    /**
+     * 使用指定分隔符连接集合中的元素
+     * 
+     * @param list 字符串集合
+     * @param delimiter 分隔符
+     * @return String 连接后的字符串
+     */
     public static String join(Collection<String> list, String delimiter) {
         StringBuilder sb = new StringBuilder();
         for (String s : list) {
@@ -168,9 +197,16 @@ public class Y9Util {
         return sb.toString();
     }
 
-    public static String join(String[] aray, String delimiter) {
+    /**
+     * 使用指定分隔符连接数组中的元素
+     * 
+     * @param array 字符串数组
+     * @param delimiter 分隔符
+     * @return String 连接后的字符串
+     */
+    public static String join(String[] array, String delimiter) {
         StringBuilder sb = new StringBuilder();
-        for (String s : aray) {
+        for (String s : array) {
             sb.append(s).append(delimiter);
         }
 
@@ -179,18 +215,6 @@ public class Y9Util {
             sb.setLength(length - delimiter.length());
         }
 
-        return sb.toString();
-    }
-
-    public static String listToSqlIn(List<String> list) {
-        StringBuilder sb = new StringBuilder().append("(");
-        for (String s : list) {
-            if (StringUtils.hasText(s)) {
-                sb.append("'").append(s.trim()).append("',");
-            }
-        }
-        sb.setLength(sb.length() - 1);
-        sb.append(")");
         return sb.toString();
     }
 
@@ -213,6 +237,12 @@ public class Y9Util {
         }
     }
 
+    /**
+     * 发送HTML内容。使用UTF-8编码。
+     *
+     * @param response 响应信息
+     * @param text 发送内容
+     */
     public static void renderHtml(HttpServletResponse response, String text) {
         render(response, "text/html;charset=UTF-8", text);
     }
@@ -237,9 +267,15 @@ public class Y9Util {
         render(response, "text/xml;charset=UTF-8", text);
     }
 
-    public static Set<String> stringArrayToSet(String[] arry) {
+    /**
+     * 将字符串数组转换为Set集合
+     * 
+     * @param array 字符串数组
+     * @return Set<String> 字符串Set集合
+     */
+    public static Set<String> stringArrayToSet(String[] array) {
         Set<String> retSet = new HashSet<String>();
-        for (String s : arry) {
+        for (String s : array) {
             if (StringUtils.hasText(s)) {
                 retSet.add(s);
             }
@@ -248,14 +284,21 @@ public class Y9Util {
         return retSet;
     }
 
+    /**
+     * 将字符串按照指定分隔符拆分并转换为集合
+     * 
+     * @param str 字符串
+     * @param delimiter 分隔符
+     * @return Collection<String> 字符串集合
+     */
     public static Collection<String> stringToCollection(String str, String delimiter) {
         Collection<String> ret = new ArrayList<String>();
         if (null == str || str.isEmpty()) {
             return ret;
         }
 
-        String[] arry = str.split(delimiter);
-        for (String s : arry) {
+        String[] array = str.split(delimiter);
+        for (String s : array) {
             if (StringUtils.hasText(s)) {
                 ret.add(s);
             }
@@ -264,37 +307,27 @@ public class Y9Util {
         return ret;
     }
 
+    /**
+     * 将字符串按照指定分隔符拆分并转换为列表
+     * 
+     * @param str 字符串
+     * @param delimiter 分隔符
+     * @return List<String> 字符串列表
+     */
     public static List<String> stringToList(String str, String delimiter) {
         List<String> ret = new ArrayList<String>();
         if (null == str || str.isEmpty()) {
             return ret;
         }
 
-        String[] arry = str.split(delimiter);
-        for (String s : arry) {
+        String[] array = str.split(delimiter);
+        for (String s : array) {
             if (StringUtils.hasText(s)) {
                 ret.add(s);
             }
         }
 
         return ret;
-    }
-
-    public static String stringToSqlIn(String str, String delimiter) {
-        List<String> list = stringToList(str, delimiter);
-        StringBuilder sb = new StringBuilder().append("(");
-        if (null == str || str.isEmpty()) {
-            sb.append(")");
-            return sb.toString();
-        }
-        for (String s : list) {
-            if (StringUtils.hasText(s)) {
-                sb.append("'").append(s.trim()).append("',");
-            }
-        }
-        sb.setLength(sb.length() - 1);
-        sb.append(")");
-        return sb.toString();
     }
 
     /**

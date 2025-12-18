@@ -1,5 +1,8 @@
 package net.risesoft.y9.exception.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import net.risesoft.exception.ErrorCode;
 import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.exception.Y9NotFoundException;
@@ -14,6 +17,7 @@ import cn.hutool.core.util.StrUtil;
  * @date 2023/06/06
  * @since 9.6.2
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Y9ExceptionUtil {
 
     public static Y9NotFoundException notFoundException(ErrorCode errorCode, Object... arguments) {

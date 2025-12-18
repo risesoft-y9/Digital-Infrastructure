@@ -14,6 +14,9 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.util.Assert;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 /**
  * 在更新实体类的时候用来复制实体属性到之前的实体类中
  * 
@@ -22,6 +25,7 @@ import org.springframework.util.Assert;
  * @author 安一伟
  * @date 2022/2/10
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Y9BeanUtil {
     /**
      * 将更新过字段的实体类拷贝到老的数据库查出的实体类中： <br>
