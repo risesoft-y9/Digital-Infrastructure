@@ -22,6 +22,8 @@ import javax.crypto.spec.PSource;
 
 import org.apache.commons.codec.binary.Base64;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -31,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2020/2/29 2:56 下午
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RsaUtil {
 
     /**
@@ -299,19 +302,4 @@ public class RsaUtil {
         return signature.verify(sign);
     }
 
-    /**
-     * 示例
-     * 
-     * @param args
-     */
-    public static void main(String[] args) throws Exception {
-        String[] arr = genKeyPair();
-        System.out.println("publicKey:" + arr[0]);
-        System.out.println("privateKey:" + arr[1]);
-
-        String encryptString = encryptByPubKey("Risesoft@2023", arr[0]);
-        System.out.println("公钥加密后字符串:" + encryptString);
-        String decryptString = decryptByPriKey(encryptString, arr[1]);
-        System.out.println("私钥解密后字符串:" + decryptString);
-    }
 }

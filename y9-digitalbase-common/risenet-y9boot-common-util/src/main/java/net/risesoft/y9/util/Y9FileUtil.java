@@ -27,6 +27,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.y9.Y9Context;
@@ -40,6 +42,7 @@ import net.risesoft.y9.Y9Context;
  * @date 2022/2/10
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Y9FileUtil {
 
     private static final long KB = 1024;

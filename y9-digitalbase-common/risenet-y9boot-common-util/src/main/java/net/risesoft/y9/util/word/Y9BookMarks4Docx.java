@@ -154,6 +154,11 @@ public class Y9BookMarks4Docx {
         }
     }
 
+    /**
+     * 解析表格单元格中的段落标签
+     * 
+     * @param cell 表格单元格
+     */
     private void procParaList(XWPFTableCell cell) {
         List<XWPFParagraph> paragraphList = cell.getParagraphs();
         for (XWPFParagraph paragraph : paragraphList) {

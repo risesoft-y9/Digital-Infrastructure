@@ -116,6 +116,11 @@ public class Y9BookMark4Docx {
 
     }
 
+    /**
+     * 删除子节点
+     * 
+     * @param nodeStack 节点栈
+     */
     private void deleteChildNodes(Stack<Node> nodeStack) {
         Node toDelete = null;
         int bookmarkStartId = 0;
@@ -141,10 +146,21 @@ public class Y9BookMark4Docx {
         }
     }
 
+    /**
+     * 获取书签名称
+     * 
+     * @return String 书签名称
+     */
     public String getBookmarkName() {
         return this.bookmarkName;
     }
 
+    /**
+     * 获取书签文本内容
+     * 
+     * @return String 书签文本内容
+     * @throws XmlException XML异常
+     */
     public String getBookmarkText() throws XmlException {
         StringBuilder builder = null;
         if (this.tableCell != null) {
@@ -155,14 +171,30 @@ public class Y9BookMark4Docx {
         return (builder == null ? null : builder.toString());
     }
 
+    /**
+     * 获取容器表格
+     * 
+     * @return XWPFTable 容器表格
+     */
     public XWPFTable getContainerTable() {
         return this.tableCell.getTableRow().getTable();
     }
 
+    /**
+     * 获取容器表格行
+     * 
+     * @return XWPFTableRow 容器表格行
+     */
     public XWPFTableRow getContainerTableRow() {
         return this.tableCell.getTableRow();
     }
 
+    /**
+     * 获取样式节点
+     * 
+     * @param parentNode 父节点
+     * @return Node 样式节点
+     */
     private Node getStyleNode(Node parentNode) {
         Node childNode = null;
         Node styleNode = null;
@@ -186,6 +218,12 @@ public class Y9BookMark4Docx {
         return (styleNode);
     }
 
+    /**
+     * 从书签中获取文本
+     * 
+     * @return StringBuilder 文本内容
+     * @throws XmlException XML异常
+     */
     private StringBuilder getTextFromBookmark() throws XmlException {
         int startBookmarkId = 0;
         int endBookmarkId = -1;
@@ -214,6 +252,13 @@ public class Y9BookMark4Docx {
         return (builder);
     }
 
+    /**
+     * 从子节点获取文本
+     * 
+     * @param node 节点
+     * @return String 文本内容
+     * @throws XmlException XML异常
+     */
     private String getTextFromChildNodes(Node node) throws XmlException {
         NodeList childNodes = null;
         Node childNode = null;
@@ -239,6 +284,12 @@ public class Y9BookMark4Docx {
         return (builder.toString());
     }
 
+    /**
+     * 处理表格中的书签
+     * 
+     * @param bookmarkValue 书签值
+     * @param where 位置
+     */
     private void handleBookmarkedCells(String bookmarkValue, int where) {
         List<XWPFParagraph> paraList = null;
         XWPFParagraph para = null;
@@ -250,6 +301,18 @@ public class Y9BookMark4Docx {
         para.createRun().setText(bookmarkValue);
     }
 
+    /**
+     * 处理表格中的图片书签
+     * 
+     * @param pictureData 图片数据流
+     * @param pictureType 图片类型
+     * @param filename 文件名
+     * @param width 宽度
+     * @param height 高度
+     * @param where 位置
+     * @throws InvalidFormatException 非法格式异常
+     * @throws IOException IO异常
+     */
     private void handleBookmarkedCells4pic(InputStream pictureData, int pictureType, String filename, int width,
         int height, int where) throws InvalidFormatException, IOException {
         List<XWPFParagraph> paraList = null;
@@ -262,6 +325,11 @@ public class Y9BookMark4Docx {
         para.createRun().addPicture(pictureData, pictureType, filename, width, height);
     }
 
+    /**
+     * 在书签后插入
+     * 
+     * @param run XWPFRun对象
+     */
     private void insertAfterBookmark(XWPFRun run) {
         Node nextNode = null;
         Node insertBeforeNode = null;
@@ -298,6 +366,11 @@ public class Y9BookMark4Docx {
         }
     }
 
+    /**
+     * 在书签前插入
+     * 
+     * @param run XWPFRun对象
+     */
     private void insertBeforeBookmark(XWPFRun run) {
         Node insertBeforeNode = null;
         Node childNode = null;
@@ -315,6 +388,12 @@ public class Y9BookMark4Docx {
         this.para.getCTP().getDomNode().insertBefore(run.getCTR().getDomNode(), insertBeforeNode);
     }
 
+    /**
+     * 在书签位置插入文本
+     * 
+     * @param bookmarkValue 书签值
+     * @param where 位置
+     */
     public void insertTextAtBookMark(String bookmarkValue, int where) {
         // 根据标签的类型，进行不同的操作
         if (this.isCell) {
@@ -338,6 +417,18 @@ public class Y9BookMark4Docx {
         }
     }
 
+    /**
+     * 在书签位置插入图片
+     * 
+     * @param pictureData 图片数据流
+     * @param pictureType 图片类型
+     * @param filename 文件名
+     * @param width 宽度
+     * @param height 高度
+     * @param where 位置
+     * @throws InvalidFormatException 非法格式异常
+     * @throws IOException IO异常
+     */
     public void insertPicAtBookMark(InputStream pictureData, int pictureType, String filename, int width, int height,
         int where) throws InvalidFormatException, IOException {
         // 根据标签的类型，进行不同的操作
@@ -362,10 +453,20 @@ public class Y9BookMark4Docx {
         }
     }
 
+    /**
+     * 判断是否在表格中
+     * 
+     * @return boolean 是否在表格中
+     */
     public boolean isInTable() {
         return this.isCell;
     }
 
+    /**
+     * 替换书签
+     * 
+     * @param run XWPFRun对象
+     */
     private void replaceBookmark(XWPFRun run) {
         Node nextNode = null;
         Node styleNode = null;
