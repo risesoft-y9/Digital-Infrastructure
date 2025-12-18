@@ -16,7 +16,7 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
  * @date 2022/09/21
  * @since 9.6.2
  */
-public class Y9Assert {
+public class Y9AssertUtil {
 
     /**
      * 当前值需小于或等于最大值 反之则抛出异常 {@link Y9BusinessException}

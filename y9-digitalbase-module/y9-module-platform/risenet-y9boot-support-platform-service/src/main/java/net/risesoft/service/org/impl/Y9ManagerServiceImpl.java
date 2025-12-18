@@ -41,7 +41,7 @@ import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9StringUtil;
-import net.risesoft.y9.util.signing.Y9MessageDigest;
+import net.risesoft.y9.util.signing.Y9MessageDigestUtil;
 
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
@@ -105,7 +105,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         Y9Manager currentManager = this.get(id);
         Y9Manager originalManager = PlatformModelConvertUtil.convert(currentManager, Y9Manager.class);
 
-        currentManager.setPassword(Y9MessageDigest.bcrypt(newPassword));
+        currentManager.setPassword(Y9MessageDigestUtil.bcrypt(newPassword));
         currentManager.setLastModifyPasswordTime(new Date());
         Y9Manager savedManager = this.update(currentManager);
 
@@ -123,7 +123,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     @Override
     public boolean checkPassword(String personId, String password) {
         Y9Manager manager = this.get(personId);
-        return Y9MessageDigest.bcryptMatch(password, manager.getPassword());
+        return Y9MessageDigestUtil.bcryptMatch(password, manager.getPassword());
     }
 
     @Override
@@ -268,7 +268,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         Y9Manager originalManager = PlatformModelConvertUtil.convert(currentManager, Y9Manager.class);
         String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
 
-        currentManager.setPassword(Y9MessageDigest.bcrypt(defaultPassword));
+        currentManager.setPassword(Y9MessageDigestUtil.bcrypt(defaultPassword));
         Y9Manager savedManager = this.update(currentManager);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -296,7 +296,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         y9Manager.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(y9Manager.getParentId()));
         // 系统管理员新建的子域三员默认禁用 需安全管理员启用
         y9Manager.setDisabled(!y9Manager.getGlobalManager());
-        y9Manager.setPassword(Y9MessageDigest.bcrypt(defaultPassword));
+        y9Manager.setPassword(Y9MessageDigestUtil.bcrypt(defaultPassword));
         y9Manager.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.MANAGER, y9Manager.getName(), parent.getDn()));
         y9Manager.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), y9Manager.getId()));
         y9Manager.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(y9Manager));

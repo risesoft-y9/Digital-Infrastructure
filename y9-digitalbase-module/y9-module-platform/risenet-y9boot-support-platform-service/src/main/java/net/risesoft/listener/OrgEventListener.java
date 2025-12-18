@@ -32,7 +32,7 @@ import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 import net.risesoft.y9.util.Y9StringUtil;
-import net.risesoft.y9.util.signing.Y9MessageDigest;
+import net.risesoft.y9.util.signing.Y9MessageDigestUtil;
 
 /**
  * 组织事件监听器
@@ -165,7 +165,7 @@ public class OrgEventListener {
                     eventName = "修改密码";
                     eventDescription = Y9StringUtil.format("修改[{}]密码", updatedOrgUnit.getName());
                     String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
-                    if (Y9MessageDigest.bcryptMatch(defaultPassword, updatedPerson.getPassword())) {
+                    if (Y9MessageDigestUtil.bcryptMatch(defaultPassword, updatedPerson.getPassword())) {
                         eventName = "重置密码";
                         eventDescription = Y9StringUtil.format("重置[{}]密码", updatedOrgUnit.getName());
                     }

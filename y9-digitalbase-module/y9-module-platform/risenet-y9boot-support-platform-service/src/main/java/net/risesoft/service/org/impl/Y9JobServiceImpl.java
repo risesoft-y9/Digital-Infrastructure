@@ -27,7 +27,7 @@ import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.service.org.Y9JobService;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.util.Y9Assert;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 
 /**
@@ -47,7 +47,7 @@ public class Y9JobServiceImpl implements Y9JobService {
     private final Y9PositionManager y9PositionManager;
 
     private void checkIfRelatedPositionExists(String id) {
-        Y9Assert.lessThanOrEqualTo(y9PositionRepository.countByJobId(id), 0,
+        Y9AssertUtil.lessThanOrEqualTo(y9PositionRepository.countByJobId(id), 0,
             OrgUnitErrorCodeEnum.RELATED_POSITION_EXISTS);
     }
 
@@ -146,8 +146,8 @@ public class Y9JobServiceImpl implements Y9JobService {
         Y9Job y9Job = PlatformModelConvertUtil.convert(job, Y9Job.class);
 
         // 检查名称是否可用
-        Y9Assert.isTrue(y9JobManager.isNameAvailable(y9Job.getName(), y9Job.getId()), OrgUnitErrorCodeEnum.JOB_EXISTS,
-            y9Job.getName());
+        Y9AssertUtil.isTrue(y9JobManager.isNameAvailable(y9Job.getName(), y9Job.getId()),
+            OrgUnitErrorCodeEnum.JOB_EXISTS, y9Job.getName());
 
         if (StringUtils.isNotBlank(y9Job.getId())) {
             // 修改职位

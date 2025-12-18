@@ -44,7 +44,7 @@ import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.util.AccessLogModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9Day;
+import net.risesoft.y9.util.Y9DayUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.Y9LogAccessLog;
 import net.risesoft.y9public.repository.Y9LogAccessLogRepository;
@@ -107,8 +107,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             Date sDay = new Date();
             Date eDay = new Date();
             try {
-                sDay = Y9Day.getStartOfDay(DATE_FORMAT.parse(startDay));
-                eDay = Y9Day.getEndOfDay(DATE_FORMAT.parse(endDay));
+                sDay = Y9DayUtil.getStartOfDay(DATE_FORMAT.parse(startDay));
+                eDay = Y9DayUtil.getEndOfDay(DATE_FORMAT.parse(endDay));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -153,8 +153,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             Date sDay = new Date();
             Date eDay = new Date();
             try {
-                sDay = Y9Day.getStartOfDay(DATE_FORMAT.parse(startDay));
-                eDay = Y9Day.getEndOfDay(DATE_FORMAT.parse(endDay));
+                sDay = Y9DayUtil.getStartOfDay(DATE_FORMAT.parse(startDay));
+                eDay = Y9DayUtil.getEndOfDay(DATE_FORMAT.parse(endDay));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -197,7 +197,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
-            Date startOfTime = Y9Day.getStartOfDay(day);
+            Date startOfTime = Y9DayUtil.getStartOfDay(day);
             Date endOfTime = null;
             for (int i = 0; i < 24; i++) {
                 Calendar cal = Calendar.getInstance();
@@ -279,7 +279,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         if (StringUtils.isNotBlank(startDay)) {
             try {
                 Date day = DATE_FORMAT.parse(startDay);
-                sDay = Y9Day.getStartOfDay(day);
+                sDay = Y9DayUtil.getStartOfDay(day);
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -287,7 +287,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         if (StringUtils.isNotBlank(endDay)) {
             try {
                 Date day = DATE_FORMAT.parse(endDay);
-                eDay = Y9Day.getEndOfDay(day);
+                eDay = Y9DayUtil.getEndOfDay(day);
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -423,8 +423,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 }
                 if (StringUtils.isNotBlank(startDay) && StringUtils.isNotBlank(endDay)) {
                     try {
-                        Date sDay = Y9Day.getStartOfDay(DATE_FORMAT.parse(startDay));
-                        Date eDay = Y9Day.getEndOfDay(DATE_FORMAT.parse(endDay));
+                        Date sDay = Y9DayUtil.getStartOfDay(DATE_FORMAT.parse(startDay));
+                        Date eDay = Y9DayUtil.getEndOfDay(DATE_FORMAT.parse(endDay));
                         list.add(
                             criteriaBuilder.between(root.get(Y9LogSearchConsts.LOG_TIME).as(Date.class), sDay, eDay));
                     } catch (ParseException e) {
@@ -501,7 +501,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                     Calendar cal = Calendar.getInstance();
                     try {
                         Date day = DATE_FORMAT.parse(date);
-                        Date dat = Y9Day.getStartOfDay(day);
+                        Date dat = Y9DayUtil.getStartOfDay(day);
                         cal.setTime(dat);
                         cal.add(Calendar.HOUR_OF_DAY, h);
                         Date startOfTime = cal.getTime();

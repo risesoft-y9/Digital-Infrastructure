@@ -34,7 +34,7 @@ import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
 import net.risesoft.y9.pubsub.message.Y9MessageCommon;
-import net.risesoft.y9.util.Y9Assert;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.base64.Y9Base64Util;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
 import net.risesoft.y9public.entity.tenant.Y9TenantSystem;
@@ -105,7 +105,7 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     public void changePassword(String id, String oldPassword, String newPassword) {
         Y9DataSource y9DataSource = y9DataSourceManager.getById(id);
         // 校验旧密码是否正确
-        Y9Assert.isTrue(Objects.equals(Y9Base64Util.encode(oldPassword), y9DataSource.getPassword()),
+        Y9AssertUtil.isTrue(Objects.equals(Y9Base64Util.encode(oldPassword), y9DataSource.getPassword()),
             DataSourceErrorCodeEnum.DATA_SOURCE_OLD_PASSWORD_IS_WRONG);
 
         y9DataSource.setPassword(Y9Base64Util.encode(newPassword));
@@ -137,7 +137,7 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     public void deleteAfterCheck(String id) {
         List<Y9TenantSystem> tenantlist = y9TenantSystemRepository.findByTenantDataSource(id);
         // 校验该数据源是否被使用
-        Y9Assert.isEmpty(tenantlist, DataSourceErrorCodeEnum.DATA_SOURCE_IS_USED);
+        Y9AssertUtil.isEmpty(tenantlist, DataSourceErrorCodeEnum.DATA_SOURCE_IS_USED);
 
         this.delete(id);
     }
@@ -209,7 +209,7 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     public void resetDefaultPassword(String id) {
         Y9DataSource y9DataSource = y9DataSourceManager.getById(id);
         // 数据源类型不能为 jndi 才能修改密码
-        Y9Assert.isNotTrue(Objects.equals(y9DataSource.getType(), DataSourceTypeEnum.JNDI),
+        Y9AssertUtil.isNotTrue(Objects.equals(y9DataSource.getType(), DataSourceTypeEnum.JNDI),
             DataSourceErrorCodeEnum.JNDI_DATA_SOURCE_RESET_PASSWORD_NOT_ALLOWED);
 
         y9DataSource.setPassword(DEFAULT_PASSWORD);

@@ -50,10 +50,10 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
-import net.risesoft.y9.util.Y9Assert;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9StringUtil;
-import net.risesoft.y9.util.signing.Y9MessageDigest;
+import net.risesoft.y9.util.signing.Y9MessageDigestUtil;
 
 /**
  * @author dingzhaojun
@@ -347,12 +347,12 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
         if (StringUtils.isNotBlank(oldPassword)) {
             // 兼容旧接口，无 oldPassword
-            Y9Assert.isTrue(Y9MessageDigest.bcryptMatch(oldPassword, currentPerson.getPassword()),
+            Y9AssertUtil.isTrue(Y9MessageDigestUtil.bcryptMatch(oldPassword, currentPerson.getPassword()),
                 OrgUnitErrorCodeEnum.OLD_PASSWORD_IS_INCORRECT);
         }
 
         Y9Person originalPerson = PlatformModelConvertUtil.convert(currentPerson, Y9Person.class);
-        currentPerson.setPassword(Y9MessageDigest.bcrypt(newPassword));
+        currentPerson.setPassword(Y9MessageDigestUtil.bcrypt(newPassword));
         Y9Person savedPerson = y9PersonManager.update(currentPerson);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -411,7 +411,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Person originalPerson = PlatformModelConvertUtil.convert(currentPerson, Y9Person.class);
 
         String password = y9SettingService.getTenantSetting().getUserDefaultPassword();
-        currentPerson.setPassword(Y9MessageDigest.bcrypt(password));
+        currentPerson.setPassword(Y9MessageDigestUtil.bcrypt(password));
         Y9Person savedPerson = y9PersonManager.update(currentPerson);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()

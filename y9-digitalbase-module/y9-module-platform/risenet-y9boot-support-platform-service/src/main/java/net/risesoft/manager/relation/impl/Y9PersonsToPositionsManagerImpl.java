@@ -24,7 +24,7 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
-import net.risesoft.y9.util.Y9Assert;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 
@@ -123,7 +123,7 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
         Y9Person y9Person = y9PersonManager.getByIdFromCache(personId);
 
         // 校验岗位容量是否已满
-        Y9Assert.lessThanOrEqualTo(countByPositionId(positionId) + 1, y9Position.getCapacity(),
+        Y9AssertUtil.lessThanOrEqualTo(countByPositionId(positionId) + 1, y9Position.getCapacity(),
             OrgUnitErrorCodeEnum.POSITION_IS_FULL);
 
         Y9PersonsToPositions y9PersonsToPositions = new Y9PersonsToPositions();

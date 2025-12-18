@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.y9.util.Y9Assert;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.mime.ContentDispositionUtil;
-import net.risesoft.y9.util.mime.MediaTypeUtils;
+import net.risesoft.y9.util.mime.MediaTypeUtil;
 import net.risesoft.y9public.entity.Y9FileStore;
 import net.risesoft.y9public.exception.Y9FileErrorCodeEnum;
 import net.risesoft.y9public.service.Y9FileStoreService;
@@ -35,13 +35,13 @@ public class Y9FileController {
         String id = FilenameUtils.getBaseName(realStoreFileName);
         Y9FileStore y9FileStore = y9FileStoreService.getById(id);
 
-        Y9Assert.notNull(y9FileStore, Y9FileErrorCodeEnum.FILE_NOT_FOUND, id);
+        Y9AssertUtil.notNull(y9FileStore, Y9FileErrorCodeEnum.FILE_NOT_FOUND, id);
 
         try (ServletOutputStream out = response.getOutputStream()) {
             response.setHeader("Content-disposition",
                 ContentDispositionUtil.standardizeAttachment(y9FileStore.getFileName()));
             response.setContentType(
-                MediaTypeUtils.getMediaTypeForFileName(servletContext, y9FileStore.getFileName()).toString());
+                MediaTypeUtil.getMediaTypeForFileName(servletContext, y9FileStore.getFileName()).toString());
 
             // 流式的处理可能导致返回的 Content-Length 跟实际不一样导致下载有问题
             // response.setContentLengthLong(y9FileStore.getFileSize());

@@ -22,7 +22,7 @@ import net.risesoft.model.platform.tenant.Tenant;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.util.Y9Assert;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
@@ -82,7 +82,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     @Override
     public void deleteAfterCheck(String id) {
         long appCount = y9TenantSystemRepository.countByTenantId(id);
-        Y9Assert.isTrue(appCount == 0, TenantErrorCodeEnum.TENANT_HAS_REGISTERED_SYSTEM);
+        Y9AssertUtil.isTrue(appCount == 0, TenantErrorCodeEnum.TENANT_HAS_REGISTERED_SYSTEM);
 
         this.delete(id);
     }
@@ -140,7 +140,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
             Set<String> tenantIdSet = tenants.stream().map(Tenant::getId).collect(Collectors.toSet());
 
             // 不能将租户移动到本身或子租户中
-            Y9Assert.notNull(tenantIdSet.contains(parentId), TenantErrorCodeEnum.MOVE_TO_SUB_TENANT_NOT_PERMITTED);
+            Y9AssertUtil.notNull(tenantIdSet.contains(parentId), TenantErrorCodeEnum.MOVE_TO_SUB_TENANT_NOT_PERMITTED);
         }
 
         y9Tenant.setParentId(parentId);
@@ -152,9 +152,9 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     public Tenant saveOrUpdate(Tenant tenant) {
         Y9Tenant y9Tenant = PlatformModelConvertUtil.convert(tenant, Y9Tenant.class);
 
-        Y9Assert.isTrue(isNameAvailable(y9Tenant.getName(), y9Tenant.getId()), TenantErrorCodeEnum.NAME_HAS_BEEN_USED,
-            y9Tenant.getName());
-        Y9Assert.isTrue(isShortNameAvailable(y9Tenant.getShortName(), y9Tenant.getId()),
+        Y9AssertUtil.isTrue(isNameAvailable(y9Tenant.getName(), y9Tenant.getId()),
+            TenantErrorCodeEnum.NAME_HAS_BEEN_USED, y9Tenant.getName());
+        Y9AssertUtil.isTrue(isShortNameAvailable(y9Tenant.getShortName(), y9Tenant.getId()),
             TenantErrorCodeEnum.SHORT_NAME_HAS_BEEN_USED, y9Tenant.getShortName());
 
         if (StringUtils.isNotBlank(y9Tenant.getId())) {

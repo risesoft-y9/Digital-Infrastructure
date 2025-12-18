@@ -28,7 +28,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.base64.Y9Base64Util;
-import net.risesoft.y9.util.signing.Y9MessageDigest;
+import net.risesoft.y9.util.signing.Y9MessageDigestUtil;
 import net.risesoft.y9public.entity.Y9User;
 import net.risesoft.y9public.repository.Y9UserRepository;
 
@@ -73,7 +73,7 @@ public class AuthServiceImpl implements AuthService {
         }
         Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByLoginNameAndOriginalTrue(loginName);
         if (y9PersonOptional.isEmpty()
-            || !(Y9MessageDigest.bcryptMatch(newpassword, y9PersonOptional.get().getPassword()))) {
+            || !(Y9MessageDigestUtil.bcryptMatch(newpassword, y9PersonOptional.get().getPassword()))) {
             message.setStatus(Message.STATUS_FAIL);
             message.setMsg("loginName or password is incorrect");
             return message;
@@ -110,7 +110,7 @@ public class AuthServiceImpl implements AuthService {
         }
         Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByLoginNameAndOriginalTrue(loginName);
         if (y9PersonOptional.isEmpty()
-            || !(Y9MessageDigest.bcryptMatch(newpassword, y9PersonOptional.get().getPassword()))) {
+            || !(Y9MessageDigestUtil.bcryptMatch(newpassword, y9PersonOptional.get().getPassword()))) {
             message.setStatus(Message.STATUS_FAIL);
             message.setMsg("loginName or password is incorrect");
             return message;
@@ -145,7 +145,7 @@ public class AuthServiceImpl implements AuthService {
                 y9UserRepository.findByLoginNameAndTenantIdAndOriginalTrue(fakeLoginName, tenantId);
             Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByLoginNameAndOriginalTrue(realLoginName);
             if (y9UserOptional.isEmpty()
-                || !(Y9MessageDigest.bcryptMatch(newpassword, y9UserOptional.get().getPassword()))
+                || !(Y9MessageDigestUtil.bcryptMatch(newpassword, y9UserOptional.get().getPassword()))
                 || y9PersonOptional.isEmpty()) {
                 throw Y9ExceptionUtil.businessException(AuthenticationErrorCodeEnum.LOGINNAME_PASSWORD_INCORRECT);
             }
@@ -153,7 +153,7 @@ public class AuthServiceImpl implements AuthService {
         } else {
             Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByLoginNameAndOriginalTrue(loginName);
             if (y9PersonOptional.isEmpty()
-                || !(Y9MessageDigest.bcryptMatch(newpassword, y9PersonOptional.get().getPassword()))) {
+                || !(Y9MessageDigestUtil.bcryptMatch(newpassword, y9PersonOptional.get().getPassword()))) {
                 throw Y9ExceptionUtil.businessException(AuthenticationErrorCodeEnum.LOGINNAME_PASSWORD_INCORRECT);
             }
             person = y9PersonOptional.get();
@@ -208,7 +208,7 @@ public class AuthServiceImpl implements AuthService {
             Optional<Y9User> y9UserOptional =
                 y9UserRepository.findByLoginNameAndTenantIdAndOriginalTrue(fakeLoginName, tenantId);
             if (y9UserOptional.isEmpty()
-                || !(Y9MessageDigest.bcryptMatch(newpassword, y9UserOptional.get().getPassword()))) {
+                || !(Y9MessageDigestUtil.bcryptMatch(newpassword, y9UserOptional.get().getPassword()))) {
                 message.setStatus(Message.STATUS_FAIL);
                 message.setMsg("loginName or password is incorrect");
                 return message;
@@ -218,7 +218,7 @@ public class AuthServiceImpl implements AuthService {
         } else {
             Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByLoginNameAndOriginalTrue(loginName);
             if (y9PersonOptional.isEmpty()
-                || !(Y9MessageDigest.bcryptMatch(newpassword, y9PersonOptional.get().getPassword()))) {
+                || !(Y9MessageDigestUtil.bcryptMatch(newpassword, y9PersonOptional.get().getPassword()))) {
                 message.setStatus(Message.STATUS_FAIL);
                 message.setMsg("loginName or password is incorrect");
                 return message;
@@ -276,7 +276,7 @@ public class AuthServiceImpl implements AuthService {
         Optional<Y9Person> optionalY9Person =
             y9PersonRepository.findByDisabledFalseAndMobileAndOriginal(mobile, Boolean.TRUE);
         if (optionalY9Person.isEmpty()
-            || !(Y9MessageDigest.bcryptMatch(password, optionalY9Person.get().getPassword()))) {
+            || !(Y9MessageDigestUtil.bcryptMatch(password, optionalY9Person.get().getPassword()))) {
             throw Y9ExceptionUtil.businessException(AuthenticationErrorCodeEnum.LOGINNAME_PASSWORD_INCORRECT);
         }
 
@@ -316,7 +316,7 @@ public class AuthServiceImpl implements AuthService {
         Optional<Y9Person> optionalY9Person =
             y9PersonRepository.findByDisabledFalseAndMobileAndOriginal(mobile, Boolean.TRUE);
         if (optionalY9Person.isEmpty()
-            || !(Y9MessageDigest.bcryptMatch(newpassword, optionalY9Person.get().getPassword()))) {
+            || !(Y9MessageDigestUtil.bcryptMatch(newpassword, optionalY9Person.get().getPassword()))) {
             message.setStatus(Message.STATUS_FAIL);
             message.setMsg("mobile or password is incorrect");
             return message;
@@ -374,7 +374,7 @@ public class AuthServiceImpl implements AuthService {
             Optional<Y9User> y9UserOptional =
                 y9UserRepository.findByLoginNameAndTenantIdAndOriginalTrue(fakeLoginName, tenantId);
             if (y9UserOptional.isEmpty()
-                || !(Y9MessageDigest.bcryptMatch(newpassword, y9UserOptional.get().getPassword()))) {
+                || !(Y9MessageDigestUtil.bcryptMatch(newpassword, y9UserOptional.get().getPassword()))) {
                 message.setStatus(Message.STATUS_FAIL);
                 message.setMsg("loginName or password is incorrect");
                 return message;
@@ -384,7 +384,7 @@ public class AuthServiceImpl implements AuthService {
         } else {
             Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByLoginNameAndOriginalTrue(loginName);
             if (y9PersonOptional.isEmpty()
-                || !(Y9MessageDigest.bcryptMatch(newpassword, y9PersonOptional.get().getPassword()))) {
+                || !(Y9MessageDigestUtil.bcryptMatch(newpassword, y9PersonOptional.get().getPassword()))) {
                 message.setStatus(Message.STATUS_FAIL);
                 message.setMsg("loginName or password is incorrect");
                 return message;

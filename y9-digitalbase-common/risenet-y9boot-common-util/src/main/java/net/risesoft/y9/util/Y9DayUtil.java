@@ -11,7 +11,7 @@ import java.util.Date;
  * @author mengjuhua
  * @date 2022/2/10
  */
-public class Y9Day {
+public class Y9DayUtil {
 
     public static Date getEndOfDay(Date day) {
         Calendar endOfDay = Calendar.getInstance();

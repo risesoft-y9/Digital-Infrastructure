@@ -40,7 +40,7 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
-import net.risesoft.y9.util.signing.Y9MessageDigest;
+import net.risesoft.y9.util.signing.Y9MessageDigestUtil;
 
 @Service
 @CacheConfig(cacheNames = CacheNameConsts.ORG_PERSON)
@@ -141,11 +141,11 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
 
         if (StringUtils.isEmpty(person.getPassword())) {
             String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
-            person.setPassword(Y9MessageDigest.bcrypt(defaultPassword));
+            person.setPassword(Y9MessageDigestUtil.bcrypt(defaultPassword));
         } else {
-            if (!Y9MessageDigest.BCRYPT_PATTERN.matcher(person.getPassword()).matches()) {
+            if (!Y9MessageDigestUtil.BCRYPT_PATTERN.matcher(person.getPassword()).matches()) {
                 // 避免重复加密（导入的情况直接使用原密文）
-                person.setPassword(Y9MessageDigest.bcrypt(person.getPassword()));
+                person.setPassword(Y9MessageDigestUtil.bcrypt(person.getPassword()));
             }
         }
 

@@ -34,7 +34,7 @@ import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
-import net.risesoft.y9.util.Y9Assert;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 
@@ -358,7 +358,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     private void checkHeadCountAvailability(Y9Position position) {
         Integer personCount = y9PersonsToPositionsRepository.countByPositionId(position.getId());
-        Y9Assert.lessThanOrEqualTo(personCount, position.getCapacity(), OrgUnitErrorCodeEnum.POSITION_IS_FULL,
+        Y9AssertUtil.lessThanOrEqualTo(personCount, position.getCapacity(), OrgUnitErrorCodeEnum.POSITION_IS_FULL,
             position.getName());
     }
 }
