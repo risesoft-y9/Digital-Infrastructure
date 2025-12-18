@@ -12,7 +12,7 @@ import org.springframework.http.MediaType;
  * @author mengjuhua
  * @date 2022/2/10
  */
-public class MediaTypeUtils {
+public class MediaTypeUtil {
 
     // abc.zip
     // abc.pdf,..

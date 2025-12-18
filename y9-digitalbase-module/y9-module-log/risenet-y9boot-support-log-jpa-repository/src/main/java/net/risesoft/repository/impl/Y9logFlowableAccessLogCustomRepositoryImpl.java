@@ -35,7 +35,7 @@ import net.risesoft.model.log.FlowableAccessLogQuery;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.util.AccessLogModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9Day;
+import net.risesoft.y9.util.Y9DayUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.Y9LogFlowableAccessLog;
 import net.risesoft.y9public.repository.Y9LogFlowableAccessLogRepository;
@@ -110,7 +110,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
         if (StringUtils.isNotBlank(startDay)) {
             try {
                 Date day = DATE_FORMAT.parse(startDay);
-                sDay = Y9Day.getStartOfDay(day);
+                sDay = Y9DayUtil.getStartOfDay(day);
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -118,7 +118,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
         if (StringUtils.isNotBlank(endDay)) {
             try {
                 Date day = DATE_FORMAT.parse(endDay);
-                eDay = Y9Day.getEndOfDay(day);
+                eDay = Y9DayUtil.getEndOfDay(day);
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -280,8 +280,8 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                     }
                     if (StringUtils.isNotBlank(startDay) && StringUtils.isNotBlank(endDay)) {
                         try {
-                            Date sDay = Y9Day.getStartOfDay(DATE_FORMAT.parse(startDay));
-                            Date eDay = Y9Day.getEndOfDay(DATE_FORMAT.parse(endDay));
+                            Date sDay = Y9DayUtil.getStartOfDay(DATE_FORMAT.parse(startDay));
+                            Date eDay = Y9DayUtil.getEndOfDay(DATE_FORMAT.parse(endDay));
                             list.add(criteriaBuilder.between(root.get(Y9LogSearchConsts.LOG_TIME).as(Date.class), sDay,
                                 eDay));
                         } catch (ParseException e) {
@@ -361,7 +361,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                         Calendar cal = Calendar.getInstance();
                         try {
                             Date day = DATE_FORMAT.parse(date);
-                            Date dat = Y9Day.getStartOfDay(day);
+                            Date dat = Y9DayUtil.getStartOfDay(day);
                             cal.setTime(dat);
                             cal.add(Calendar.HOUR_OF_DAY, h);
                             Date startOfTime = cal.getTime();

@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022/2/10
  */
 @Slf4j
-public class Y9MessageDigest {
+public class Y9MessageDigestUtil {
 
     public static final Pattern BCRYPT_PATTERN = Pattern.compile("^\\$2[abxy]?\\$\\d{2}\\$[./A-Za-z0-9]{53}$");
 

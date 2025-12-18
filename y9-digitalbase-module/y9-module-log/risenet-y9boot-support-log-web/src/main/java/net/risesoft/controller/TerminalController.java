@@ -29,7 +29,7 @@ import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.query.platform.PersonQuery;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9Day;
+import net.risesoft.y9.util.Y9DayUtil;
 import net.risesoft.y9public.service.Y9logIpDeptMappingService;
 import net.risesoft.y9public.service.Y9logUserHostIpInfoService;
 import net.risesoft.y9public.service.Y9logUserLoginInfoService;
@@ -247,12 +247,12 @@ public class TerminalController {
             if (StringUtils.isNotBlank(startTime)) {
                 start = formater.parse(startTime);
             } else {
-                start = Y9Day.getStartOfDay(new Date());
+                start = Y9DayUtil.getStartOfDay(new Date());
             }
             if (StringUtils.isNotBlank(endTime)) {
                 end = formater.parse(endTime);
             } else {
-                end = Y9Day.getEndOfDay(new Date());
+                end = Y9DayUtil.getEndOfDay(new Date());
             }
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);

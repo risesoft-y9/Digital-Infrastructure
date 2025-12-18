@@ -26,7 +26,7 @@ import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
-import net.risesoft.y9.util.Y9Assert;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.Y9System;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
@@ -83,11 +83,11 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     public void deleteAfterCheck(String id) {
         // 没有关联的应用才能删除
         long appCount = y9AppRepository.countBySystemId(id);
-        Y9Assert.isTrue(appCount == 0, SystemErrorCodeEnum.SYSTEM_HAS_APPS);
+        Y9AssertUtil.isTrue(appCount == 0, SystemErrorCodeEnum.SYSTEM_HAS_APPS);
 
         // 系统没有被租用才能删除
         long tenantSystemCount = y9TenantSystemRepository.countBySystemId(id);
-        Y9Assert.isTrue(tenantSystemCount == 0, SystemErrorCodeEnum.SYSTEM_REGISTERED_BY_TENANT);
+        Y9AssertUtil.isTrue(tenantSystemCount == 0, SystemErrorCodeEnum.SYSTEM_REGISTERED_BY_TENANT);
 
         this.delete(id);
     }
@@ -223,7 +223,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public System saveOrUpdate(System system) {
         Y9System y9System = PlatformModelConvertUtil.convert(system, Y9System.class);
-        Y9Assert.isTrue(isNameAvailable(y9System.getId(), y9System.getName()),
+        Y9AssertUtil.isTrue(isNameAvailable(y9System.getId(), y9System.getName()),
             SystemErrorCodeEnum.SYSTEM_WITH_SPECIFIC_NAME_EXISTS, y9System.getName());
 
         if (StringUtils.isNotBlank(y9System.getId())) {

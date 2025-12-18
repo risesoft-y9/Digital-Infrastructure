@@ -21,7 +21,7 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.json.Y9JsonUtil;
-import net.risesoft.y9.util.signing.Y9MessageDigest;
+import net.risesoft.y9.util.signing.Y9MessageDigestUtil;
 
 /**
  * 防重复提交 Advice
@@ -58,7 +58,7 @@ public class RepeatSubmitAdvice implements MethodBeforeAdvice {
         String personId = Y9LoginUserHolder.getPersonId();
         String params = Y9JsonUtil.writeValueAsString(args);
         String url = request.getRequestURI();
-        String requestSha = Y9MessageDigest.sha256(ipAddr + userAgent + personId + params + url);
+        String requestSha = Y9MessageDigestUtil.sha256(ipAddr + userAgent + personId + params + url);
 
         String cacheKey =
             StringUtils.join(new Object[] {REPEAT_REQUEST_PREFIX, Y9Context.getSystemName(), requestSha}, ":");

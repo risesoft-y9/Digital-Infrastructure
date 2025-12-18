@@ -39,7 +39,7 @@ import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.mime.ContentDispositionUtil;
-import net.risesoft.y9.util.mime.MediaTypeUtils;
+import net.risesoft.y9.util.mime.MediaTypeUtil;
 import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 
@@ -85,7 +85,7 @@ public class ImportExportController {
                 app.getName() + "-应用信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".json";
 
             response.setHeader("Content-disposition", ContentDispositionUtil.standardizeAttachment(filename));
-            response.setContentType(MediaTypeUtils.getMediaTypeForFileName(servletContext, filename).toString());
+            response.setContentType(MediaTypeUtil.getMediaTypeForFileName(servletContext, filename).toString());
 
             systemDataHandler.exportApp(appId, outStream);
 
@@ -101,7 +101,7 @@ public class ImportExportController {
             OrgUnit orgUnit = compositeOrgBaseService.getOrgUnit(orgId);
             String filename =
                 orgUnit.getName() + "-组织架构-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".json";
-            response.setContentType(MediaTypeUtils.getMediaTypeForFileName(servletContext, filename).toString());
+            response.setContentType(MediaTypeUtil.getMediaTypeForFileName(servletContext, filename).toString());
             response.setHeader("Content-Disposition", ContentDispositionUtil.standardizeAttachment(filename));
 
             y9OrgTreeDataHandler.exportOrgTree(orgId, outStream);
@@ -123,7 +123,7 @@ public class ImportExportController {
             OrgUnit orgUnit = compositeOrgBaseService.getOrgUnit(orgBaseId);
             String filename =
                 orgUnit.getName() + "-组织架构-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx";
-            response.setContentType(MediaTypeUtils.getMediaTypeForFileName(servletContext, filename).toString());
+            response.setContentType(MediaTypeUtil.getMediaTypeForFileName(servletContext, filename).toString());
             response.setHeader("Content-Disposition", ContentDispositionUtil.standardizeAttachment(filename));
 
             y9PersonDataHandler.exportPerson(outStream, orgBaseId);
@@ -147,7 +147,7 @@ public class ImportExportController {
             String filename =
                 system.getCnName() + "-系统信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".json";
             response.setHeader("Content-Disposition", ContentDispositionUtil.standardizeAttachment(filename));
-            response.setContentType(MediaTypeUtils.getMediaTypeForFileName(servletContext, filename).toString());
+            response.setContentType(MediaTypeUtil.getMediaTypeForFileName(servletContext, filename).toString());
 
             systemDataHandler.exportSystem(systemId, outStream);
 

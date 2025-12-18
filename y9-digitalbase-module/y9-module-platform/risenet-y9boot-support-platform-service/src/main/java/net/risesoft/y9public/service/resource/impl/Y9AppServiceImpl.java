@@ -25,7 +25,7 @@ import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9Assert;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.Y9System;
 import net.risesoft.y9public.entity.resource.Y9App;
@@ -237,7 +237,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     @Override
     public void deleteAfterCheck(String id) {
         List<Y9TenantApp> y9TenantAppList = y9TenantAppManager.listByAppIdAndTenancy(id, Boolean.TRUE);
-        Y9Assert.isEmpty(y9TenantAppList, ResourceErrorCodeEnum.APP_IS_REGISTERED_BY_TENANT, id);
+        Y9AssertUtil.isEmpty(y9TenantAppList, ResourceErrorCodeEnum.APP_IS_REGISTERED_BY_TENANT, id);
 
         this.delete(id);
     }

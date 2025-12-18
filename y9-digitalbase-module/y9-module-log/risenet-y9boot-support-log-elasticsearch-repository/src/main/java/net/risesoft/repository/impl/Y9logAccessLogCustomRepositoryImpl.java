@@ -50,7 +50,7 @@ import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.util.AccessLogModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9Day;
+import net.risesoft.y9.util.Y9DayUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.Y9LogAccessLog;
 import net.risesoft.y9public.repository.Y9LogAccessLogRepository;
@@ -127,8 +127,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
         if (StringUtils.isNotBlank(startDay) && StringUtils.isNotBlank(endDay)) {
             try {
-                Date sDay = Y9Day.getStartOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(startDay));
-                Date eDay = Y9Day.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
+                Date sDay = Y9DayUtil.getStartOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(startDay));
+                Date eDay = Y9DayUtil.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
                 build.must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME)
                     .from(String.valueOf(sDay.getTime()))
                     .to(String.valueOf(eDay.getTime())))));
@@ -194,8 +194,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
         if (StringUtils.isNotBlank(startDay) && StringUtils.isNotBlank(endDay)) {
             try {
-                Date sDay = Y9Day.getStartOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(startDay));
-                Date eDay = Y9Day.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
+                Date sDay = Y9DayUtil.getStartOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(startDay));
+                Date eDay = Y9DayUtil.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
                 builder.must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOGIN_TIME)
                     .from(String.valueOf(sDay.getTime()))
                     .to(String.valueOf(eDay.getTime())))));
@@ -256,8 +256,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         } catch (ParseException e) {
             LOGGER.error(e.getMessage(), e);
         }
-        Date startOfTime = Y9Day.getStartOfDay(day);
-        Date endOfTime = Y9Day.getEndOfDay(day);
+        Date startOfTime = Y9DayUtil.getStartOfDay(day);
+        Date endOfTime = Y9DayUtil.getEndOfDay(day);
 
         String startTimeStr = DATETIME_UTC_FORMAT.format(startOfTime.getTime());
         String etartTimeStr = DATETIME_UTC_FORMAT.format(endOfTime.getTime());
@@ -482,8 +482,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         String tenantId = Y9LoginUserHolder.getTenantId();
         Criteria criteria = new Criteria(Y9LogSearchConsts.USER_NAME).exists();
         if (StringUtils.isNotBlank(startDay) && StringUtils.isNotBlank(endDay)) {
-            Date sDay = Y9Day.getStartOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(startDay));
-            Date eDay = Y9Day.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
+            Date sDay = Y9DayUtil.getStartOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(startDay));
+            Date eDay = Y9DayUtil.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.LOG_TIME).between(sDay.getTime(), eDay.getTime()));
         }
         if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
