@@ -54,9 +54,9 @@ public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBa
     @Comment("租户id")
     protected String tenantId;
 
-    /** 版本号,乐观锁 */
+    /** 用来支持乐观锁，可以不用手动设置 */
     @Column(name = "VERSION")
-    @Comment("版本号,乐观锁")
+    @Comment("用来支持乐观锁，可以不用手动设置")
     @Version
     protected Integer version;
 
@@ -110,6 +110,11 @@ public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBa
         return Comparator.comparing(Y9OrgBase::getParentId, Comparator.nullsFirst(String::compareTo))
             .thenComparing(Y9OrgBase::getTabIndex)
             .compare(this, o);
+    }
+
+    // 会自动设值
+    private void setVersion(Integer version) {
+        this.version = version;
     }
 
     public abstract String getParentId();

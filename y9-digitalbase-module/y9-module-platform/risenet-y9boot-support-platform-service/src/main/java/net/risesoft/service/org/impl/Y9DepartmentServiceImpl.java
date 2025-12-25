@@ -328,6 +328,12 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         }
     }
 
+    /**
+     * 递归获取指定部门的所有上级组织节点
+     * 
+     * @param parentId 父级组织ID
+     * @param parentSet 用于存储上级组织节点的集合
+     */
     private void recursionParent(String parentId, Set<Y9OrgBase> parentSet) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
         parentSet.add(parent);
