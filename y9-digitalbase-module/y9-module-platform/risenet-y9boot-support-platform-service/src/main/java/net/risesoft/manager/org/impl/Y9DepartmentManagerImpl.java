@@ -84,7 +84,6 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
                 ? compositeOrgBaseManager.getNextSubTabIndex(parent.getId()) : dept.getTabIndex());
         }
         dept.setTenantId(Y9LoginUserHolder.getTenantId());
-        dept.setVersion(InitDataConsts.Y9_VERSION);
         dept.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.DEPARTMENT, dept.getName(), parent.getDn()));
         dept.setParentId(parent.getId());
         dept.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), dept.getId()));

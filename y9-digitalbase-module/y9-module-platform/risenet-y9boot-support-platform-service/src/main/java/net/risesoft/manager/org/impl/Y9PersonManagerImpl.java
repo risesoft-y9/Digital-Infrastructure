@@ -150,7 +150,6 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
         }
 
         person.setTenantId(Y9LoginUserHolder.getTenantId());
-        person.setVersion(InitDataConsts.Y9_VERSION);
         person.setOfficial(1);
         person.setParentId(parent.getId());
         person.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, person.getName(), parent.getDn()));
