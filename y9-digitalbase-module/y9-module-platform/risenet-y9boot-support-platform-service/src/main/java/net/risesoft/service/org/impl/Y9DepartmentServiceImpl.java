@@ -228,7 +228,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
         for (DepartmentProp prop : y9DepartmentPropList) {
             Y9OrgBase y9OrgBase = compositeOrgBaseManager.getPersonOrPosition(prop.getOrgBaseId());
-            if (disabled.equals(y9OrgBase.getDisabled())) {
+            if (disabled == null || disabled.equals(y9OrgBase.getDisabled())) {
                 y9OrgBaseList.add(y9OrgBase);
             }
         }
