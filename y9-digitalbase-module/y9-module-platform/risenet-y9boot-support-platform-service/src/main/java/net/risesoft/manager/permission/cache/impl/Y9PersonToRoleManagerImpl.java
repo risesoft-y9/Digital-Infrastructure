@@ -48,7 +48,6 @@ public class Y9PersonToRoleManagerImpl implements Y9PersonToRoleManager {
         if (personToRoleOptional.isEmpty()) {
             Y9PersonToRole y9PersonToRole = new Y9PersonToRole();
             y9PersonToRole.setId(Y9IdGenerator.genId());
-            y9PersonToRole.setTenantId(person.getTenantId());
             y9PersonToRole.setPersonId(person.getId());
             y9PersonToRole.setRoleId(role.getId());
             y9PersonToRole.setAppId(role.getAppId());

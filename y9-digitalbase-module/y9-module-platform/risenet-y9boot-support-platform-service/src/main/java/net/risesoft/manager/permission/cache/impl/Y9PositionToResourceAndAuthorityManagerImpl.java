@@ -58,7 +58,6 @@ public class Y9PositionToResourceAndAuthorityManagerImpl implements Y9PositionTo
         if (optionalY9PositionToResourceAndAuthority.isEmpty()) {
             y9PositionToResource = new Y9PositionToResource();
             y9PositionToResource.setId(Y9IdGenerator.genId());
-            y9PositionToResource.setTenantId(y9Position.getTenantId());
             y9PositionToResource.setPositionId(y9Position.getId());
             y9PositionToResource.setResourceId(y9ResourceBase.getId());
             y9PositionToResource.setAuthority(y9Authorization.getAuthority());

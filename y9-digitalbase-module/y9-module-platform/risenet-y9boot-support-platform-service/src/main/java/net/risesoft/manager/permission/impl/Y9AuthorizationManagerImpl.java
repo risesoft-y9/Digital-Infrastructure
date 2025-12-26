@@ -42,7 +42,6 @@ public class Y9AuthorizationManagerImpl implements Y9AuthorizationManager {
         Y9ResourceBase y9ResourceBase = compositeResourceManager.getById(y9Authorization.getResourceId());
         y9Authorization.setResourceName(y9ResourceBase.getName());
         y9Authorization.setResourceType(y9ResourceBase.getResourceType());
-        y9Authorization.setTenantId(Y9LoginUserHolder.getTenantId());
         y9Authorization
             .setAuthorizer(Optional.ofNullable(Y9LoginUserHolder.getUserInfo()).map(UserInfo::getName).orElse(null));
         Y9Authorization savedY9Authorization = y9AuthorizationRepository.save(y9Authorization);

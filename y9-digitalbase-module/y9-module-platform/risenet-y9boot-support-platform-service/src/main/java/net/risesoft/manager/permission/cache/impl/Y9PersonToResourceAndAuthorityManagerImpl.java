@@ -57,7 +57,6 @@ public class Y9PersonToResourceAndAuthorityManagerImpl implements Y9PersonToReso
         if (optionalY9PersonToResourceAndAuthority.isEmpty()) {
             y9PersonToResource = new Y9PersonToResource();
             y9PersonToResource.setId(Y9IdGenerator.genId());
-            y9PersonToResource.setTenantId(person.getTenantId());
             y9PersonToResource.setPersonId(person.getId());
             y9PersonToResource.setResourceId(y9ResourceBase.getId());
             y9PersonToResource.setAuthority(y9Authorization.getAuthority());

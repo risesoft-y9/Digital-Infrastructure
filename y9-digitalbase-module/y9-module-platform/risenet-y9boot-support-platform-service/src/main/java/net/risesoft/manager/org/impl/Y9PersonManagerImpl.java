@@ -149,7 +149,6 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
             }
         }
 
-        person.setTenantId(Y9LoginUserHolder.getTenantId());
         person.setOfficial(1);
         person.setParentId(parent.getId());
         person.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, person.getName(), parent.getDn()));
@@ -172,7 +171,7 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
         Y9Person originPerson = PlatformModelConvertUtil.convert(currentPerson, Y9Person.class);
 
         Y9BeanUtil.copyProperties(person, currentPerson, "tenantId");
-        currentPerson.setTenantId(Y9LoginUserHolder.getTenantId());
+        // currentPerson.setTenantId(Y9LoginUserHolder.getTenantId());
         currentPerson.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), currentPerson.getId()));
         currentPerson.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, currentPerson.getName(), parent.getDn()));
         currentPerson.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(currentPerson));

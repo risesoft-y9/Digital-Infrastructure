@@ -10,7 +10,7 @@ import org.hibernate.annotations.Comment;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import net.risesoft.base.BaseEntity;
+import net.risesoft.base.BaseTenantEntity;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.persistence.EnumConverter;
@@ -27,7 +27,7 @@ import net.risesoft.persistence.EnumConverter;
 @MappedSuperclass
 @NoArgsConstructor
 @Data
-public abstract class Y9IdentityToResourceBase extends BaseEntity {
+public abstract class Y9IdentityToResourceBase extends BaseTenantEntity {
 
     private static final long serialVersionUID = 5073573498005834150L;
 
@@ -36,11 +36,6 @@ public abstract class Y9IdentityToResourceBase extends BaseEntity {
     @Column(name = "ID")
     @Comment("主键id")
     protected String id;
-
-    /** 租户id */
-    @Column(name = "TENANT_ID", length = 38)
-    @Comment("租户id")
-    protected String tenantId;
 
     /** 权限配置id 方便找到权限来源及权限缓存的处理 */
     @Column(name = "AUTHORIZATION_ID", length = 38)

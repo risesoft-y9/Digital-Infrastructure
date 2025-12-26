@@ -101,7 +101,6 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
         if (StringUtils.isBlank(y9CustomGroup.getId())) {
             y9CustomGroup.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
-        y9CustomGroup.setTenantId(Y9LoginUserHolder.getTenantId());
         return entityToModel(customGroupRepository.save(y9CustomGroup));
     }
 
