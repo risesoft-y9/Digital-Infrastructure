@@ -292,7 +292,6 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         if (StringUtils.isBlank(y9Manager.getId())) {
             y9Manager.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
-        y9Manager.setTenantId(Y9LoginUserHolder.getTenantId());
         y9Manager.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(y9Manager.getParentId()));
         // 系统管理员新建的子域三员默认禁用 需安全管理员启用
         y9Manager.setDisabled(!y9Manager.getGlobalManager());

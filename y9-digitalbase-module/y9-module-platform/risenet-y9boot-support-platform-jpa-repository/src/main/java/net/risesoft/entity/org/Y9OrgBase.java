@@ -17,7 +17,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import net.risesoft.base.BaseEntity;
+import net.risesoft.base.BaseTenantEntity;
 import net.risesoft.consts.DefaultConsts;
 import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.persistence.EnumConverter;
@@ -34,7 +34,7 @@ import net.risesoft.persistence.EnumConverter;
 @NoArgsConstructor
 @Data
 @SuperBuilder
-public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBase> {
+public abstract class Y9OrgBase extends BaseTenantEntity implements Comparable<Y9OrgBase> {
 
     private static final long serialVersionUID = 4564661506322616943L;
 
@@ -48,11 +48,6 @@ public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBa
     @Column(name = "CUSTOM_ID", length = 255)
     @Comment("自定义id")
     protected String customId;
-
-    /** 租户id */
-    @Column(name = "TENANT_ID", length = 38)
-    @Comment("租户id")
-    protected String tenantId;
 
     /** 用来支持乐观锁，可以不用手动设置 */
     @Column(name = "VERSION")
@@ -110,11 +105,6 @@ public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBa
         return Comparator.comparing(Y9OrgBase::getParentId, Comparator.nullsFirst(String::compareTo))
             .thenComparing(Y9OrgBase::getTabIndex)
             .compare(this, o);
-    }
-
-    // 会自动设值
-    private void setVersion(Integer version) {
-        this.version = version;
     }
 
     public abstract String getParentId();

@@ -140,7 +140,6 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
         }
         position.setTabIndex((null == position.getTabIndex() || DefaultConsts.TAB_INDEX.equals(position.getTabIndex()))
             ? compositeOrgBaseManager.getNextSubTabIndex(parent.getId()) : position.getTabIndex());
-        position.setTenantId(Y9LoginUserHolder.getTenantId());
         position.setJobName(y9Job.getName());
         position.setName(this.buildName(y9Job.getName(), Collections.emptyList()));
         position.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.POSITION, position.getName(), parent.getDn()));

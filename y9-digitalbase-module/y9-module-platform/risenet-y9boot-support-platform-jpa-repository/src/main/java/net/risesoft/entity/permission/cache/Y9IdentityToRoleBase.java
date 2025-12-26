@@ -9,7 +9,7 @@ import org.hibernate.annotations.Comment;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import net.risesoft.base.BaseEntity;
+import net.risesoft.base.BaseTenantEntity;
 
 /**
  * 人或岗位与角色关系表基类
@@ -23,7 +23,7 @@ import net.risesoft.base.BaseEntity;
 @MappedSuperclass
 @NoArgsConstructor
 @Data
-public class Y9IdentityToRoleBase extends BaseEntity {
+public class Y9IdentityToRoleBase extends BaseTenantEntity {
 
     private static final long serialVersionUID = -1406915289962175747L;
 
@@ -32,11 +32,6 @@ public class Y9IdentityToRoleBase extends BaseEntity {
     @Column(name = "ID")
     @Comment("主键id")
     protected String id;
-
-    /** 租户id */
-    @Column(name = "TENANT_ID", length = 38)
-    @Comment("租户id")
-    protected String tenantId;
 
     /** 角色id */
     @Column(name = "ROLE_ID", length = 38, nullable = false)

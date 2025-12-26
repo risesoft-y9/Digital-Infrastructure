@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 
 import org.hibernate.annotations.Comment;
@@ -13,6 +14,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * 实体基类
@@ -24,6 +28,10 @@ import lombok.EqualsAndHashCode;
  */
 @MappedSuperclass
 @EqualsAndHashCode
+@NoArgsConstructor
+@Getter
+@SuperBuilder
+@EntityListeners(BaseTenantEntityListener.class)
 public class BaseTenantEntity implements Serializable {
 
     private static final long serialVersionUID = 7442864321155282821L;
@@ -52,29 +60,30 @@ public class BaseTenantEntity implements Serializable {
     @Column(name = "UPDATE_TIME")
     protected Date updateTime;
 
-    public Date getCreateTime() {
-        return createTime;
+    /**
+     * 会自动设值
+     *
+     * @param tenantId
+     */
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 
     /**
      * 创建时会自动设值
-     * 
+     *
      * @param createTime
      */
-    private void setCreateTime(Date createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
     }
 
     /**
      * 更新时会自动设值
-     * 
+     *
      * @param updateTime
      */
-    private void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 }

@@ -83,7 +83,6 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
             organization.setId(Y9IdGenerator.genId());
         }
 
-        organization.setTenantId(Y9LoginUserHolder.getTenantId());
         organization.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.ORGANIZATION, organization.getName(), null));
         organization.setTabIndex(
             (null == organization.getTabIndex() || DefaultConsts.TAB_INDEX.equals(organization.getTabIndex()))

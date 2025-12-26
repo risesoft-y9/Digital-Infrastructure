@@ -83,7 +83,6 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
             dept.setTabIndex((null == dept.getTabIndex() || DefaultConsts.TAB_INDEX.equals(dept.getTabIndex()))
                 ? compositeOrgBaseManager.getNextSubTabIndex(parent.getId()) : dept.getTabIndex());
         }
-        dept.setTenantId(Y9LoginUserHolder.getTenantId());
         dept.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.DEPARTMENT, dept.getName(), parent.getDn()));
         dept.setParentId(parent.getId());
         dept.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), dept.getId()));

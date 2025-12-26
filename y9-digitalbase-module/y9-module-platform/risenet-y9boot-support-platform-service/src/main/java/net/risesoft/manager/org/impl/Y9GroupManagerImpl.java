@@ -84,7 +84,6 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
             group.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
 
-        group.setTenantId(Y9LoginUserHolder.getTenantId());
         group.setDisabled(false);
         group.setParentId(parent.getId());
         group.setTabIndex((null == group.getTabIndex() || DefaultConsts.TAB_INDEX.equals(group.getTabIndex()))

@@ -44,7 +44,6 @@ public class Y9PositionToRoleManagerImpl implements Y9PositionToRoleManager {
         if (optionalY9PositionToRole.isEmpty()) {
             Y9PositionToRole y9PositionToRole = new Y9PositionToRole();
             y9PositionToRole.setId(Y9IdGenerator.genId());
-            y9PositionToRole.setTenantId(y9Position.getTenantId());
             y9PositionToRole.setPositionId(y9Position.getId());
             y9PositionToRole.setRoleId(role.getId());
             y9PositionToRole.setAppId(role.getAppId());

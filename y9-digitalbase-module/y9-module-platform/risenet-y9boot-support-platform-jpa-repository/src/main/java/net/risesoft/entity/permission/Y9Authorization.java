@@ -14,7 +14,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import net.risesoft.base.BaseEntity;
+import net.risesoft.base.BaseTenantEntity;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.enums.platform.permission.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
@@ -38,7 +38,7 @@ import net.risesoft.persistence.EnumConverter;
 @org.hibernate.annotations.Table(comment = "权限配置表", appliesTo = "Y9_ORG_AUTHORIZATION")
 @NoArgsConstructor
 @Data
-public class Y9Authorization extends BaseEntity {
+public class Y9Authorization extends BaseTenantEntity {
 
     private static final long serialVersionUID = 6269521087994988054L;
 
@@ -47,11 +47,6 @@ public class Y9Authorization extends BaseEntity {
     @Column(name = "ID", length = 38)
     @Comment("主键")
     private String id;
-
-    /** 租户id */
-    @Column(name = "TENANT_ID", length = 38)
-    @Comment("租户id")
-    private String tenantId;
 
     /** 授权主体id */
     @Column(name = "PRINCIPAL_ID", length = 38, nullable = false)

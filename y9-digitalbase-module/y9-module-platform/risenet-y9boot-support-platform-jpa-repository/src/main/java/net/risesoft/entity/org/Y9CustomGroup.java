@@ -11,7 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import net.risesoft.base.BaseEntity;
+import net.risesoft.base.BaseTenantEntity;
 import net.risesoft.consts.DefaultConsts;
 
 /**
@@ -28,7 +28,7 @@ import net.risesoft.consts.DefaultConsts;
 @org.hibernate.annotations.Table(comment = "自定义群组", appliesTo = "Y9_ORG_CUSTOM_GROUP")
 @NoArgsConstructor
 @Data
-public class Y9CustomGroup extends BaseEntity {
+public class Y9CustomGroup extends BaseTenantEntity {
 
     private static final long serialVersionUID = -1149700156942236281L;
 
@@ -52,11 +52,6 @@ public class Y9CustomGroup extends BaseEntity {
     @Comment("用户id")
     @Column(name = "USER_ID", length = 38)
     private String personId;
-
-    /** 租户id */
-    @Comment("租户id")
-    @Column(name = "TENANT_ID", length = 38)
-    private String tenantId;
 
     /** 分享人Id */
     @Comment("分享人Id")

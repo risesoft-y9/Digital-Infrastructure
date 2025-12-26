@@ -13,6 +13,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -27,6 +28,7 @@ import lombok.experimental.SuperBuilder;
 @MappedSuperclass
 @EqualsAndHashCode
 @NoArgsConstructor
+@Getter
 @SuperBuilder
 public class BaseEntity implements Serializable {
 
@@ -52,10 +54,6 @@ public class BaseEntity implements Serializable {
     @Column(name = "UPDATE_TIME")
     protected Date updateTime;
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
     /**
      * 创建时会自动设值
      * 
@@ -63,10 +61,6 @@ public class BaseEntity implements Serializable {
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
     }
 
     /**
