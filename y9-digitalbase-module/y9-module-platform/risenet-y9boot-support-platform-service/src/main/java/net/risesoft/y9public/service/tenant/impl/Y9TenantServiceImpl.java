@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.TenantErrorCodeEnum;
+import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.model.platform.tenant.Tenant;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.util.PlatformModelConvertUtil;
@@ -177,6 +178,9 @@ public class Y9TenantServiceImpl implements Y9TenantService {
             }
         }
 
+        if (StringUtils.isNotBlank(y9Tenant.getId())) {
+            y9Tenant.setId(Y9IdGenerator.genId());
+        }
         Y9Tenant savedTenant = y9TenantManager.insert(y9Tenant);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -193,23 +197,30 @@ public class Y9TenantServiceImpl implements Y9TenantService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Tenant saveAndInitDataSource(Tenant y9Tenant) {
-        Tenant savedY9Tenant = this.saveOrUpdate(y9Tenant);
+    public Tenant saveAndInitDataSource(Tenant tenant) {
+        String tenantDataSourceId = null;
+        if (StringUtils.isNotBlank(tenant.getId())) {
+            Optional<Y9Tenant> y9TenantOptional = y9TenantRepository.findById(tenant.getId());
+            if (y9TenantOptional.map(Y9Tenant::getDefaultDataSourceId).isPresent()) {
+                tenantDataSourceId = y9TenantOptional.get().getDefaultDataSourceId();
+            }
+        }
 
-        if (StringUtils.isBlank(savedY9Tenant.getDefaultDataSourceId())) {
+        if (StringUtils.isBlank(tenantDataSourceId)) {
             Y9DataSource y9DataSource = null;
             try {
-                y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(y9Tenant.getShortName(), null);
-                y9Tenant.setDefaultDataSourceId(y9DataSource.getId());
+                y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(tenant.getShortName(), null);
+                tenantDataSourceId = y9DataSource.getId();
             } catch (Exception e) {
                 LOGGER.warn(e.getMessage(), e);
                 if (y9DataSource != null) {
-                    y9DataSourceManager.dropTenantDefaultDataSource(y9DataSource.getId(), y9Tenant.getShortName());
+                    y9DataSourceManager.dropTenantDefaultDataSource(y9DataSource.getId(), tenant.getShortName());
                 }
             }
-            return this.saveOrUpdate(y9Tenant);
         }
-        return savedY9Tenant;
+        tenant.setDefaultDataSourceId(tenantDataSourceId);
+
+        return this.saveOrUpdate(tenant);
     }
 
     @Override
