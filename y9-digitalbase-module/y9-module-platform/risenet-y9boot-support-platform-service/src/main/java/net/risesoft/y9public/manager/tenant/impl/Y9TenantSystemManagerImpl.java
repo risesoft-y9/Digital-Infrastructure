@@ -117,20 +117,20 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
         Y9System y9System = y9SystemManager.getByIdFromCache(y9TenantSystem.getSystemId());
         TenantSystem tenantSystem = PlatformModelConvertUtil.convert(y9TenantSystem, TenantSystem.class);
 
-        if (Objects.equals(Y9Context.getSystemName(), y9System.getName())) {
-            // 对于租用数字底座的，立即发送租用事件，用于集成测试
-            Y9EventCommon tenantSystemRegisteredEvent = new Y9EventCommon();
-            tenantSystemRegisteredEvent.setEventObject(tenantSystem);
-            tenantSystemRegisteredEvent.setTarget(y9System.getName());
-            tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_SYSTEM_REGISTERED);
-            Y9Context.publishEvent(tenantSystemRegisteredEvent);
-        }
-
         // 注册事务同步器，在事务提交后做某些操作
         if (TransactionSynchronizationManager.isActualTransactionActive()) {
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
                 @Override
                 public void afterCommit() {
+                    if (Objects.equals(Y9Context.getSystemName(), y9System.getName())) {
+                        // 对于租用数字底座的，立即发送租用事件，用于集成测试
+                        Y9EventCommon tenantSystemRegisteredEvent = new Y9EventCommon();
+                        tenantSystemRegisteredEvent.setEventObject(tenantSystem);
+                        tenantSystemRegisteredEvent.setTarget(y9System.getName());
+                        tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_SYSTEM_REGISTERED);
+                        Y9Context.publishEvent(tenantSystemRegisteredEvent);
+                    }
+
                     // 租户租用系统事件，应用可监听做对应租户的初始化的工作
                     Y9MessageCommon tenantSystemRegisteredEvent = new Y9MessageCommon();
                     tenantSystemRegisteredEvent.setEventObject(tenantSystem);

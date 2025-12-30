@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.TenantErrorCodeEnum;
-import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.model.platform.tenant.Tenant;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.util.PlatformModelConvertUtil;
@@ -178,9 +177,6 @@ public class Y9TenantServiceImpl implements Y9TenantService {
             }
         }
 
-        if (StringUtils.isNotBlank(y9Tenant.getId())) {
-            y9Tenant.setId(Y9IdGenerator.genId());
-        }
         Y9Tenant savedTenant = y9TenantManager.insert(y9Tenant);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
