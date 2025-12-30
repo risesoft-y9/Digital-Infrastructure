@@ -1,10 +1,13 @@
 package net.risesoft.initializer;
 
+import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
+
 import java.util.Optional;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -135,6 +138,7 @@ public class PlatformApplicationReadyListener implements ApplicationListener<App
     }
 
     @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void onApplicationEvent(ApplicationReadyEvent event) {
         LOGGER.info("platform ApplicationReady...");
 
