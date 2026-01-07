@@ -1,5 +1,33 @@
+<!--
+ * @version: 
+ * @Author: zhangchongjie
+ * @Date: 2022-06-16 10:16:08
+ * @LastEditors: mengjuhua
+ * @LastEditTime: 2025-12-24 09:28:35
+ * @Descripttion: 数据目录基本信息
+-->
 <template>
-    <y9Card :title="`${$t('基本信息')} - ${currTreeNodeInfo.name ? currTreeNodeInfo.name : ''}`">
+    <y9Card>
+        <template #header>
+            <div class="slot-header">
+                <span>{{ $t('基本信息') }}{{ currTreeNodeInfo.name ? ' - ' + currTreeNodeInfo.name : '' }}</span>
+
+                <div class="expand-btns-div">
+                    <div class="expand-btns">
+                        <el-button
+                            :size="fontSizeObj.buttonSize"
+                            :style="{ fontSize: fontSizeObj.baseFontSize }"
+                            class="global-btn-second"
+                            @click="onActions('exportXls')"
+                        >
+                            <i class="ri-file-upload-line"></i>
+                            <span>{{ $t('导出XLS') }}</span>
+                        </el-button>
+                    </div>
+                </div>
+            </div>
+        </template>
+
         <template v-slot>
             <div v-show="managerLevel === 1" class="basic-btns">
                 <div v-if="currTreeNodeInfo.nodeType === 'DATA_CATALOG'">
@@ -105,12 +133,12 @@
 
 <script lang="ts" setup>
     import { computed, h, inject, onMounted, ref, watch } from 'vue';
-    import { ElNotification } from 'element-plus';
     import { useI18n } from 'vue-i18n';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { $validCheck } from '@/utils/validate';
     import { getDataCatalog, saveDataCatalog, saveDataCatalogByType, saveDataCatalogByYears } from '@/api/dataCatalog';
     import y9_storage from '@/utils/storage';
+    import settings from '@/settings';
 
     const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
     const settingStore = useSettingStore();
@@ -485,13 +513,16 @@
             prop: 'inherit',
             props: {
                 radioType: 'radio',
-                options: [{
-                    label: '是',
-                    value: true
-                }, {
-                    label: '否',
-                    value: false
-                }],
+                options: [
+                    {
+                        label: '是',
+                        value: true
+                    },
+                    {
+                        label: '否',
+                        value: false
+                    }
+                ],
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.inherit ? t('是') : t('否'));
@@ -622,10 +653,60 @@
                 saveBtnLoading.value = false;
                 changeY9FormType(false);
             }
+        } else if (type == 'exportXls') {
+            const aDom = document.createElement('a');
+            aDom.href =
+                import.meta.env.VUE_APP_CONTEXT +
+                'api/rest/impExp/exportDataCatalogXls?treeType=' +
+                props.treeType +
+                '&id=' +
+                props.currTreeNodeInfo.id +
+                '&access_token=' +
+                y9_storage.getObjectItem(settings.siteTokenKey, 'access_token');
+            aDom.target = '_blank';
+            aDom.click();
         }
     }
 </script>
 <style lang="scss" scoped>
+    .slot-header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 16px 16px 0;
+
+        .expand-btns-div {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 70%;
+
+            .ri-add-box-line,
+            .ri-checkbox-indeterminate-line {
+                margin-left: 10px;
+                color: var(--el-color-primary);
+                font-size: v-bind('fontSizeObj.largeFontSize');
+                cursor: pointer;
+                line-height: v-bind('fontSizeObj.lineHeight');
+            }
+
+            & > .expand-btns {
+                animation: v-bind(expandAddBtnsAnimation) 1.5s;
+                animation-fill-mode: forwards;
+                flex: 1;
+                text-align: right;
+
+                :deep(.el-button) {
+                    margin-bottom: 10px;
+                }
+            }
+
+            .ri-checkbox-indeterminate-line,
+            .ri-add-box-line {
+                margin-bottom: 16px;
+            }
+        }
+    }
+
     .basic-btns {
         display: flex;
         justify-content: space-between;

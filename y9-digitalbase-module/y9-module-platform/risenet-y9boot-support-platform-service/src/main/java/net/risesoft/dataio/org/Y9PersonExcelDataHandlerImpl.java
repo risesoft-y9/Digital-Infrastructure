@@ -23,7 +23,7 @@ import net.risesoft.model.platform.org.Department;
 import net.risesoft.model.platform.org.Job;
 import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.org.Person;
-import net.risesoft.pojo.PersonInformation;
+import net.risesoft.pojo.Person4Excel;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
@@ -57,24 +57,24 @@ public class Y9PersonExcelDataHandlerImpl implements Y9PersonDataHandler {
 
     @Override
     public void exportPerson(OutputStream outputStream, String orgBaseId) {
-        FastExcel.write(outputStream, PersonInformation.class).sheet().doWrite(getPersonList(orgBaseId));
+        FastExcel.write(outputStream, Person4Excel.class).sheet().doWrite(getPersonList(orgBaseId));
     }
 
-    private List<PersonInformation> getPersonList(String orgBaseId) {
+    private List<Person4Excel> getPersonList(String orgBaseId) {
         List<Person> persons = compositeOrgBaseService.listAllDescendantPersons(orgBaseId);
-        List<PersonInformation> personList = new ArrayList<>();
+        List<Person4Excel> personList = new ArrayList<>();
         for (Person person : persons) {
-            PersonInformation personInformation = new PersonInformation();
+            Person4Excel person4Excel = new Person4Excel();
 
-            personInformation.setName(person.getName());
-            personInformation.setDepartmentNamePath(getDepartmentNamePath(person));
-            personInformation.setEmail(person.getEmail());
-            personInformation.setLoginName(person.getLoginName());
-            personInformation.setMobile(person.getMobile());
-            personInformation.setSex(person.getSex().getDescription());
+            person4Excel.setName(person.getName());
+            person4Excel.setDepartmentNamePath(getDepartmentNamePath(person));
+            person4Excel.setEmail(person.getEmail());
+            person4Excel.setLoginName(person.getLoginName());
+            person4Excel.setMobile(person.getMobile());
+            person4Excel.setSex(person.getSex().getDescription());
             List<Job> y9JobList = y9JobService.findByPersonId(person.getId());
-            personInformation.setJobs(y9JobList.stream().map(Job::getName).collect(Collectors.joining(SPLITTER)));
-            personList.add(personInformation);
+            person4Excel.setJobs(y9JobList.stream().map(Job::getName).collect(Collectors.joining(SPLITTER)));
+            personList.add(person4Excel);
         }
         return personList;
     }
@@ -96,9 +96,9 @@ public class Y9PersonExcelDataHandlerImpl implements Y9PersonDataHandler {
     @Override
     public Y9Result<Object> importPerson(InputStream dataInputStream, String orgId) {
         List<ExcelImportError> excelImportErrorList = new ArrayList<>();
-        FastExcel.read(dataInputStream, PersonInformation.class, new ReadListener<PersonInformation>() {
+        FastExcel.read(dataInputStream, Person4Excel.class, new ReadListener<Person4Excel>() {
             @Override
-            public void invoke(PersonInformation data, AnalysisContext context) {
+            public void invoke(Person4Excel data, AnalysisContext context) {
                 try {
                     impData2Db(data, orgId);
                 } catch (Exception e) {
@@ -120,10 +120,10 @@ public class Y9PersonExcelDataHandlerImpl implements Y9PersonDataHandler {
         }
     }
 
-    private void impData2Db(PersonInformation pi, String orgId) {
-        String personName = StringUtils.trim(pi.getName());
-        String personLoginName = StringUtils.trim(pi.getLoginName());
-        String personMobile = StringUtils.trim(pi.getMobile());
+    private void impData2Db(Person4Excel person4Excel, String orgId) {
+        String personName = StringUtils.trim(person4Excel.getName());
+        String personLoginName = StringUtils.trim(person4Excel.getLoginName());
+        String personMobile = StringUtils.trim(person4Excel.getMobile());
 
         if (StringUtils.isBlank(personName)) {
             throw new IllegalArgumentException("人员中文名称不能为空");
@@ -146,7 +146,7 @@ public class Y9PersonExcelDataHandlerImpl implements Y9PersonDataHandler {
             throw new IllegalArgumentException("该登录名已被使用");
         }
 
-        String fullPath = Optional.ofNullable(pi.getDepartmentNamePath()).orElse("");
+        String fullPath = Optional.ofNullable(person4Excel.getDepartmentNamePath()).orElse("");
         String[] departments = fullPath.split(SPLITTER);
 
         OrgUnit orgUnit = compositeOrgBaseService.getOrgUnit(orgId);
@@ -173,13 +173,13 @@ public class Y9PersonExcelDataHandlerImpl implements Y9PersonDataHandler {
 
         Person y9Person = new Person();
         y9Person.setName(personName);
-        y9Person.setEmail(pi.getEmail());
+        y9Person.setEmail(person4Excel.getEmail());
         y9Person.setMobile(personMobile);
         y9Person.setLoginName(personLoginName);
-        y9Person.setSex(SexEnum.MALE.getDescription().equals(pi.getSex()) ? SexEnum.MALE : SexEnum.FEMALE);
+        y9Person.setSex(SexEnum.MALE.getDescription().equals(person4Excel.getSex()) ? SexEnum.MALE : SexEnum.FEMALE);
         y9Person.setParentId(parentId);
 
-        String jobs = pi.getJobs();
+        String jobs = person4Excel.getJobs();
         if (StringUtils.isNotBlank(jobs)) {
             String[] jobArray = jobs.split(SPLITTER);
             List<String> y9JobIdList = new ArrayList<>();

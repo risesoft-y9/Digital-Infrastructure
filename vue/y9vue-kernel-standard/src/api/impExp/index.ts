@@ -58,3 +58,17 @@ export const impOrgTreeExcel = async (file, orgId) => {
         data: data
     });
 };
+
+
+//上传组织机构XLS
+export const impDataCatalogExcel = async (file, treeType) => {
+    var data = new FormData();
+    data.append('file', file);
+    data.append('treeType', treeType);
+    return await platformRequest({
+        url: '/api/rest/impExp/importDataCatalogXls',
+        method: 'POST',
+        cType: false,
+        data: data
+    });
+};

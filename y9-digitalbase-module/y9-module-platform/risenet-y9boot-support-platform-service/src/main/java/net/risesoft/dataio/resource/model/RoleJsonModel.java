@@ -1,4 +1,4 @@
-package net.risesoft.dataio.system.model;
+package net.risesoft.dataio.resource.model;
 
 import java.util.List;
 

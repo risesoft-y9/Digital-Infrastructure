@@ -243,6 +243,30 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
         return PlatformModelConvertUtil.convert(y9DataCatalogList, DataCatalog.class);
     }
 
+    @Override
+    public Optional<Y9DataCatalog> findByTreeTypeAndParentIdAndName(String treeType, String parentId,
+        String dataCatalogName) {
+        if (StringUtils.isBlank(parentId)) {
+            return y9DataCatalogRepository.findByTenantIdAndTreeTypeAndParentIdIsNullAndName(
+                Y9LoginUserHolder.getTenantId(), treeType, dataCatalogName);
+        }
+
+        return y9DataCatalogRepository.findByTenantIdAndParentIdAndName(Y9LoginUserHolder.getTenantId(), parentId,
+            dataCatalogName);
+    }
+
+    @Override
+    public List<DataCatalog> getAncestorList(String parentId) {
+        List<DataCatalog> dataCatalogList = new ArrayList<>();
+        String currentId = parentId;
+        while (StringUtils.isNotBlank(currentId)) {
+            DataCatalog dataCatalog = this.getDataCatalogById(currentId);
+            dataCatalogList.add(dataCatalog);
+            currentId = dataCatalog.getParentId();
+        }
+        return dataCatalogList;
+    }
+
     private void recursivelySaveOrgUnitDataCatalog(String parentDataCatalogId, String treeType,
         String parentOrgUnitId) {
         List<OrgUnit> y9OrgBaseList = compositeOrgBaseService.listOrgUnitsAsParentByParentId(parentOrgUnitId);

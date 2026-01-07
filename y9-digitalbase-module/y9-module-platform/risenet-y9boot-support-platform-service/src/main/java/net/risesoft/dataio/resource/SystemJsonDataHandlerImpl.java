@@ -1,4 +1,4 @@
-package net.risesoft.dataio.system;
+package net.risesoft.dataio.resource;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.dataio.system.model.AppJsonModel;
-import net.risesoft.dataio.system.model.MenuJsonModel;
-import net.risesoft.dataio.system.model.OperationJsonModel;
-import net.risesoft.dataio.system.model.RoleJsonModel;
-import net.risesoft.dataio.system.model.SystemJsonModel;
+import net.risesoft.dataio.resource.model.AppJsonModel;
+import net.risesoft.dataio.resource.model.MenuJsonModel;
+import net.risesoft.dataio.resource.model.OperationJsonModel;
+import net.risesoft.dataio.resource.model.RoleJsonModel;
+import net.risesoft.dataio.resource.model.SystemJsonModel;
 import net.risesoft.model.platform.Role;
 import net.risesoft.model.platform.System;
 import net.risesoft.model.platform.resource.App;
