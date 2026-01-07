@@ -91,7 +91,12 @@
 
         <y9Dialog v-model:config="dialogConfig">
             <y9Form v-if="dialogConfig.type == 'addDataCatalog'" ref="ruleRef" :config="formSystem"></y9Form>
-            <ImportDataCatalog v-if="dialogConfig.type == 'importXls'" :tree-type="currentTreeType"></ImportDataCatalog>
+            <ImportDataCatalog
+                v-if="dialogConfig.type == 'importXls'"
+                :tree-type="currentTreeType"
+                :refresh="refreshTree"
+                @update="dialogConfig.show = false"
+            ></ImportDataCatalog>
         </y9Dialog>
 
         <!-- 制造loading效果 -->
@@ -301,6 +306,10 @@
     //隐藏气泡框时触发
     function onHidePopover() {
         y9ListRef.value && y9ListRef.value.removeHighlight(); //清空高亮
+    }
+
+    function refreshTree() {
+        fixedTreeRef.value.onRefreshTree();
     }
 
     // 删除资源
