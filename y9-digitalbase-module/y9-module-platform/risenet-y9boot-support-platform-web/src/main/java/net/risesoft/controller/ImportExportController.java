@@ -25,9 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.dataio.org.Y9OrgTreeDataHandler;
 import net.risesoft.dataio.org.Y9PersonDataHandler;
 import net.risesoft.dataio.org.model.OrganizationJsonModel;
-import net.risesoft.dataio.system.SystemDataHandler;
-import net.risesoft.dataio.system.model.AppJsonModel;
-import net.risesoft.dataio.system.model.SystemJsonModel;
+import net.risesoft.dataio.resource.DataCatalogHandler;
+import net.risesoft.dataio.resource.SystemDataHandler;
+import net.risesoft.dataio.resource.model.AppJsonModel;
+import net.risesoft.dataio.resource.model.SystemJsonModel;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
@@ -62,6 +63,7 @@ public class ImportExportController {
     private final Y9PersonDataHandler y9PersonDataHandler;
     private final SystemDataHandler systemDataHandler;
     private final Y9OrgTreeDataHandler y9OrgTreeDataHandler;
+    private final DataCatalogHandler dataCatalogHandler;
 
     private final Y9SystemService y9SystemService;
     private final Y9AppService y9AppService;
@@ -127,6 +129,27 @@ public class ImportExportController {
             response.setHeader("Content-Disposition", ContentDispositionUtil.standardizeAttachment(filename));
 
             y9PersonDataHandler.exportPerson(outStream, orgBaseId);
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 导出数据目录XLS
+     *
+     * @param treeType 数据目录树类型
+     * @param response 响应
+     */
+    @RiseLog(operationName = "导出数据目录XLS", operationType = OperationTypeEnum.ADD)
+    @GetMapping(value = "/exportDataCatalogXls")
+    public void exportDataCatalogXls(@RequestParam @NotBlank String treeType, @RequestParam(required = false) String id,
+        HttpServletResponse response) {
+        try (OutputStream outStream = response.getOutputStream()) {
+            String filename = "数据目录-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx";
+            response.setContentType(MediaTypeUtil.getMediaTypeForFileName(servletContext, filename).toString());
+            response.setHeader("Content-Disposition", ContentDispositionUtil.standardizeAttachment(filename));
+
+            dataCatalogHandler.exportData(outStream, treeType, id);
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
         }
@@ -201,6 +224,23 @@ public class ImportExportController {
     public Y9Result<Object> importPersonXls(@RequestParam MultipartFile file, @RequestParam String orgId) {
         try (InputStream fileInputStream = file.getInputStream()) {
             return y9PersonDataHandler.importPerson(fileInputStream, orgId);
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage(), e);
+            return Y9Result.failure("上传失败:" + e.getMessage());
+        }
+    }
+
+    /**
+     * 导入数据目录 xls
+     *
+     * @param file 文件
+     * @return {@code Y9Result<Object>}
+     */
+    @RiseLog(operationName = "导入人员 xls", operationType = OperationTypeEnum.ADD)
+    @RequestMapping(value = "/importDataCatalogXls")
+    public Y9Result<Object> importDataCatalogXls(@RequestParam MultipartFile file, String treeType) {
+        try (InputStream fileInputStream = file.getInputStream()) {
+            return dataCatalogHandler.importData(fileInputStream, treeType);
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
             return Y9Result.failure("上传失败:" + e.getMessage());

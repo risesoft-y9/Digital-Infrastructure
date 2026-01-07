@@ -1,3 +1,11 @@
+<!--
+ * @version: 
+ * @Author: zhangchongjie
+ * @Date: 2022-06-16 10:16:08
+ * @LastEditors: mengjuhua
+ * @LastEditTime: 2025-12-24 09:28:09
+ * @Descripttion: 数据目录管理/数据目录授权
+-->
 <template>
     <div>
         <fixedTreeModule
@@ -13,17 +21,21 @@
                     <el-option v-for="item in treeTypeList" :key="item.code" :label="item.name" :value="item.code" />
                 </el-select>
 
-                <el-button
-                    v-if="managerLevel === 1"
-                    :size="fontSizeObj.buttonSize"
-                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                    class="global-btn-main"
-                    type="primary"
-                    @click="showAddDialog()"
-                >
-                    <i class="ri-add-line"></i>
-                    <span>{{ $t('分类') }}</span>
-                </el-button>
+                <el-popover v-if="managerLevel === 1" placement="bottom" trigger="hover" @hide="onHidePopover">
+                    <template #reference>
+                        <el-button
+                            :size="fontSizeObj.buttonSize"
+                            :style="{ fontSize: fontSizeObj.baseFontSize }"
+                            class="global-btn-main"
+                            type="primary"
+                        >
+                            <i class="ri-menu-line"></i>
+                            <span>{{ $t('数据目录') }}</span>
+                        </el-button>
+                    </template>
+
+                    <y9List ref="y9ListRef" :config="actionListConfig" @on-click-row="onActionPopListClick"></y9List>
+                </el-popover>
             </template>
             <template v-slot:rightContainer>
                 <!-- 右边卡片 -->
@@ -78,7 +90,8 @@
         </fixedTreeModule>
 
         <y9Dialog v-model:config="dialogConfig">
-            <y9Form ref="ruleRef" :config="formSystem"></y9Form>
+            <y9Form v-if="dialogConfig.type == 'addDataCatalog'" ref="ruleRef" :config="formSystem"></y9Form>
+            <ImportDataCatalog v-if="dialogConfig.type == 'importXls'" :tree-type="currentTreeType"></ImportDataCatalog>
         </y9Dialog>
 
         <!-- 制造loading效果 -->
@@ -89,7 +102,6 @@
 <script lang="ts" setup>
     import y9_storage from '@/utils/storage';
     import { computed, inject, onMounted, ref } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import {
         dataCatalogTree,
         dataCatalogTreeSearch,
@@ -104,6 +116,8 @@
     import RelationOrg from '@/views/grantAuthorize/comps/RelationOrg.vue';
     import InheritRole from '@/views/grantAuthorize/comps/InheritRole.vue';
     import InheritOrg from '@/views/grantAuthorize/comps/InheritOrg.vue';
+    import ImportDataCatalog from '@/views/dataCatalog/dialogContent/importDataCatalog.vue';
+    import settings from '@/settings';
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
     const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
@@ -148,6 +162,25 @@
         }
     });
 
+    //气泡操作列表配置
+    const actionListConfig = ref({
+        padding: '0px',
+        listData: [
+            {
+                id: 'addDataCatalog',
+                name: computed(() => t('新增根分类'))
+            },
+            {
+                id: 'importXls',
+                name: computed(() => t('导入 XLS'))
+            },
+            {
+                id: 'exportXls',
+                name: computed(() => t('导出 XLS'))
+            }
+        ]
+    });
+
     async function initTreeTypeList() {
         if (!currentTreeType.value) {
             let result = await getTreeTypeList();
@@ -160,6 +193,7 @@
         // initTreeTypeList();
     });
 
+    let y9ListRef = ref(); //气泡框的列表实例
     const ruleRef = ref();
     let dataCatalogForm = ref({});
     const formSystem = ref({
@@ -212,42 +246,44 @@
 
     let dialogConfig = ref({
         show: false,
-        title: '新增数据分类',
+        title: '',
         width: '40%',
         onOkLoading: true,
         type: '',
         onOk: (newConfig) => {
             return new Promise(async (resolve, reject) => {
-                const ruleFormRef = ruleRef.value.elFormRef;
-                if (!ruleFormRef) return;
-                await ruleFormRef.validate(async (valid, fields) => {
-                    if (valid) {
-                        // 通过验证
-                        // 请求 新增系统 接口
-                        let res = { success: false, msg: '' } as any;
+                if (newConfig.value.type == 'addDataCatalog') {
+                    const ruleFormRef = ruleRef.value.elFormRef;
+                    if (!ruleFormRef) return;
+                    await ruleFormRef.validate(async (valid, fields) => {
+                        if (valid) {
+                            // 通过验证
+                            // 请求 新增系统 接口
+                            let res = { success: false, msg: '' } as any;
 
-                        let dataCatalog = {
-                            ...ruleRef.value.model,
-                            treeType: currentTreeType.value
-                        };
-                        res = await saveDataCatalog(dataCatalog);
-                        if (res.success) {
-                            fixedTreeRef.value.onRefreshTree();
+                            let dataCatalog = {
+                                ...ruleRef.value.model,
+                                treeType: currentTreeType.value
+                            };
+                            res = await saveDataCatalog(dataCatalog);
+                            if (res.success) {
+                                fixedTreeRef.value.onRefreshTree();
+                            }
+                            // 清空表单 数据
+                            dataCatalogForm.value = { enabled: true };
+                            ElNotification({
+                                title: res.success ? t('成功') : t('失败'),
+                                message: res.success ? t('保存成功') : res.msg,
+                                type: res.success ? 'success' : 'error',
+                                duration: 2000,
+                                offset: 80
+                            });
+                            resolve();
+                        } else {
+                            reject();
                         }
-                        // 清空表单 数据
-                        dataCatalogForm.value = { enabled: true };
-                        ElNotification({
-                            title: res.success ? t('成功') : t('失败'),
-                            message: res.success ? t('保存成功') : res.msg,
-                            type: res.success ? 'success' : 'error',
-                            duration: 2000,
-                            offset: 80
-                        });
-                        resolve();
-                    } else {
-                        reject();
-                    }
-                });
+                    });
+                }
             });
         }
     });
@@ -260,6 +296,11 @@
         currentTreeType.value = value;
         currData.value = { id: null };
         fixedTreeRef.value.onRefreshTree();
+    }
+
+    //隐藏气泡框时触发
+    function onHidePopover() {
+        y9ListRef.value && y9ListRef.value.removeHighlight(); //清空高亮
     }
 
     // 删除资源
@@ -310,6 +351,30 @@
                     offset: 65
                 });
             });
+    }
+
+    //操作列表点击事件
+    function onActionPopListClick(currRow) {
+        if (currRow.id === 'exportXls') {
+            const aDom = document.createElement('a');
+            aDom.href =
+                import.meta.env.VUE_APP_CONTEXT +
+                'api/rest/impExp/exportDataCatalogXls?treeType=' +
+                currentTreeType.value +
+                '&access_token=' +
+                y9_storage.getObjectItem(settings.siteTokenKey, 'access_token');
+            aDom.target = '_blank';
+            aDom.click();
+        } else {
+            Object.assign(dialogConfig.value, {
+                show: true,
+                title: t(`${currRow.name}`),
+                type: currRow.id,
+                showFooter: currRow.id === 'addDataCatalog',
+                width: '40%',
+                columns: []
+            });
+        }
     }
 
     //获取tree数据
