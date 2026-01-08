@@ -136,8 +136,8 @@
             {
                 type: 'input',
                 value: '',
-                key: 'modularName',
-                label: computed(() => t('模块名称')),
+                key: 'systemName',
+                label: computed(() => t('系统名称')),
                 labelWidth: '82px',
                 span: settingStore.device === 'mobile' ? 24 : 6
             },
@@ -328,10 +328,10 @@
     // 表格 配置
     let operationLogsTable = ref({
         columns: [
-            { title: computed(() => t('序号')), showOverflowTooltip: false, type: 'index', width: 80 },
+            { title: computed(() => t('序号')), showOverflowTooltip: false, type: 'index', width: 60 },
             { title: computed(() => t('用户名称')), key: 'userName', width: 130 },
             { title: computed(() => t('客户端IP')), key: 'userHostIp', width: 150 },
-            { title: computed(() => t('模块名称')), key: 'modularName', width: 120 },
+            { title: computed(() => t('系统名称')), key: 'systemName', width: 120 },
             { title: computed(() => t('操作方法')), key: 'methodName' },
             { title: computed(() => t('操作名称')), key: 'operateName' },
             { title: computed(() => t('操作类型')), key: 'operateType', width: 100 },
@@ -359,7 +359,7 @@
                     }
                 }
             },
-            { title: computed(() => t('操作用时')), key: 'elapsedTime', formatter: elapsedTimeFormat, width: 150 },
+            { title: computed(() => t('操作用时')), key: 'elapsedTime', formatter: elapsedTimeFormat, width: 120 },
             {
                 title: computed(() => t('操作时间')),
                 key: 'logTime',

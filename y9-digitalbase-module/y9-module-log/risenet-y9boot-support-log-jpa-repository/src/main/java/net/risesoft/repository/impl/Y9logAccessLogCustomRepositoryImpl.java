@@ -627,6 +627,10 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                     list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.USER_HOST_IP).as(String.class),
                         "%" + loginInfoModel.getUserHostIp() + "%"));
                 }
+                if (StringUtils.isNotBlank(loginInfoModel.getSystemName())) {
+                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.SYSTEM_NAME).as(String.class),
+                        loginInfoModel.getSystemName()));
+                }
                 if (StringUtils.isNotBlank(loginInfoModel.getModularName())) {
                     list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.MODULAR_NAME).as(String.class),
                         "%" + loginInfoModel.getModularName() + "%"));

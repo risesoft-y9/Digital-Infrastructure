@@ -117,8 +117,6 @@ public class RiseLogAdvice implements MethodInterceptor {
 
                     if (StringUtils.hasText(riseLog.moduleName())) {
                         log.setModularName(riseLog.moduleName());
-                    } else {
-                        log.setModularName("数字底座");
                     }
                     if (StringUtils.hasText(riseLog.operationName())) {
                         log.setOperateName(riseLog.operationName());
