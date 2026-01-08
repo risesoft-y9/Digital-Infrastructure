@@ -3,25 +3,29 @@ package net.risesoft.id;
 import net.risesoft.id.impl.SnowflakeIdGenerator;
 import net.risesoft.id.impl.TimeBasedUuidGenerator;
 
-public interface Y9IdGenerator {
+public class Y9IdGenerator {
+
+    private static IdGenerator snowflakeIdGenerator = new SnowflakeIdGenerator();
+    private static IdGenerator timeBasedUuidGenerator = new TimeBasedUuidGenerator();
+
+    protected void setSnowflakeIdGenerator(IdGenerator snowflakeIdGenerator) {
+        Y9IdGenerator.snowflakeIdGenerator = snowflakeIdGenerator;
+    }
+
     /**
      * 默认使用雪花算法生成id
      *
      * @return {@link String}
      */
-    static String genId() {
+    public static String genId() {
         return genId(IdType.SNOWFLAKE);
     }
 
-    static String genId(IdType idType) {
+    public static String genId(IdType idType) {
         if (IdType.SNOWFLAKE.equals(idType)) {
-            SnowflakeIdGenerator idGenerator = Y9SpringContext.getBean(SnowflakeIdGenerator.class);
-            return idGenerator.getNextId();
+            return snowflakeIdGenerator.getNextId();
         } else {
-            TimeBasedUuidGenerator idGenerator = Y9SpringContext.getBean(TimeBasedUuidGenerator.class);
-            return idGenerator.getNextId();
+            return timeBasedUuidGenerator.getNextId();
         }
     }
-
-    String getNextId();
 }

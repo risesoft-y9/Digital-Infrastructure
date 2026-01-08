@@ -4,9 +4,9 @@ import com.fasterxml.uuid.EthernetAddress;
 import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.impl.TimeBasedGenerator;
 
-import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.id.IdGenerator;
 
-public class TimeBasedUuidGenerator implements Y9IdGenerator {
+public class TimeBasedUuidGenerator implements IdGenerator {
 
     // different ProcessEngines on the same classloader share one generator.
     protected static volatile TimeBasedGenerator timeBasedGenerator;

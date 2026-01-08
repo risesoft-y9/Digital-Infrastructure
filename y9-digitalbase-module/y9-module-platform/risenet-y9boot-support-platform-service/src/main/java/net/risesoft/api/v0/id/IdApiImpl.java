@@ -24,12 +24,6 @@ import net.risesoft.id.Y9IdGenerator;
 @Deprecated
 public class IdApiImpl implements IdApi {
 
-    private final Y9IdGenerator y9IdGenerator;
-
-    public IdApiImpl(@Qualifier("snowflakeIdGenerator") Y9IdGenerator y9IdGenerator) {
-        this.y9IdGenerator = y9IdGenerator;
-    }
-
     /**
      * 获取 snowflake id
      *
@@ -38,7 +32,7 @@ public class IdApiImpl implements IdApi {
      */
     @Override
     public String getNextId() {
-        return y9IdGenerator.getNextId();
+        return Y9IdGenerator.genId();
     }
 
 }
