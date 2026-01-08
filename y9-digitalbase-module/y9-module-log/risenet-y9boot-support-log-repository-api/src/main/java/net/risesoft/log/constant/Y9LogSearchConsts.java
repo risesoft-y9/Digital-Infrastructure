@@ -26,6 +26,8 @@ public class Y9LogSearchConsts {
     public static final String METHOD_NAME = "methodName";
     /** 模块名称 */
     public static final String MODULAR_NAME = "modularName";
+    /** 模块名称 */
+    public static final String SYSTEM_NAME = "systemName";
     /** 日志时间 */
     public static final String LOG_TIME = "logTime";
     /** 日志级别 */

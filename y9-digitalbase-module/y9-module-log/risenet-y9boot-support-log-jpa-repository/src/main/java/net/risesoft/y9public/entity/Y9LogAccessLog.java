@@ -46,6 +46,29 @@ public class Y9LogAccessLog implements Serializable {
     @Comment("主键")
     private String id;
 
+    /** 日志时间 */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "LOG_TIME")
+    @Temporal(TemporalType.TIMESTAMP)
+    @Comment("日志时间")
+    private Date logTime;
+
+    /** 系统名称 */
+    @Column(name = "SYSTEM_NAME", length = 50)
+    @Comment(value = "系统名称")
+    private String systemName;
+
+    /** 模块名称，比如：公文就转-发文-授权管理 */
+    @Column(name = "MODULAR_NAME", length = 200)
+    @Comment(value = "模块名称，比如：公文就转-发文-授权管理")
+    private String modularName;
+
+    /** 方法类和名称 */
+    @Column(name = "METHOD_NAME", length = 200)
+    @Comment(value = "方法类和名称")
+    private String methodName;
+
     /** 日志级别 0=TRACE 1=DEBUG 2=INFO 3=WARN 4=ERROR */
     @Column(name = "LOG_LEVEL", length = 38)
     @Comment(value = "日志级别 0=TRACE 1=DEBUG 2=INFO 3=WARN 4=ERROR")
@@ -61,63 +84,10 @@ public class Y9LogAccessLog implements Serializable {
     @Comment(value = "操作名称")
     private String operateName;
 
-    /** 模块名称，比如：公文就转-发文-授权管理 */
-    @Column(name = "MODULAR_NAME", length = 200)
-    @Comment(value = "模块名称，比如：公文就转-发文-授权管理")
-    private String modularName;
-
-    /** 方法类和名称 */
-    @Column(name = "METHOD_NAME", length = 200)
-    @Comment(value = "方法类和名称")
-    private String methodName;
-
-    /** 日志时间 */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "LOG_TIME")
-    @Temporal(TemporalType.TIMESTAMP)
-    @Comment("日志时间")
-    private Date logTime;
-
     /** 用时 */
     @Column(name = "ELAPSED_TIME")
     @Comment(value = "用时")
     private long elapsedTime;
-
-    /** 租户ID */
-    @Column(name = "TENANT_ID", length = 38)
-    @Comment(value = "租户ID")
-    private String tenantId;
-
-    /** 用户id */
-    @Column(name = "USER_ID", length = 38)
-    @Comment(value = "用户id")
-    private String userId;
-
-    /** 登录名称 */
-    @Column(name = "LOGIN_NAME", length = 50)
-    @Comment(value = "登录名称")
-    private String loginName;
-
-    /** 登录名 */
-    @Column(name = "USER_NAME", length = 100)
-    @Comment(value = "登录名")
-    private String userName;
-
-    /** 登录用户机器IP */
-    @Column(name = "USER_HOST_IP", length = 50)
-    @Comment(value = "登录用户机器IP")
-    private String userHostIp;
-
-    /** 租户名称 */
-    @Column(name = "TENANT_NAME", length = 50)
-    @Comment(value = "租户名称")
-    private String tenantName;
-
-    /** 系统名称 */
-    @Column(name = "SYSTEM_NAME", length = 50)
-    @Comment(value = "系统名称")
-    private String systemName;
 
     /** 访问服务器IP */
     @Column(name = "SERVER_IP", length = 50)
@@ -152,15 +122,10 @@ public class Y9LogAccessLog implements Serializable {
     @Comment(value = "异常信息")
     private String throwable;
 
-    /** 由name组成的父子关系列表(倒序)，之间用逗号分隔 */
-    @Column(name = "DN", length = 2000)
-    @Comment("由name组成的父子关系列表(倒序)，之间用逗号分隔")
-    private String dn;
-
-    /** 由ID组成的父子关系列表(正序)，之间用逗号分隔 */
-    @Column(name = "GUID_PATH", length = 400)
-    @Comment("由ID组成的父子关系列表(正序)，之间用逗号分隔")
-    private String guidPath;
+    /** 登录用户机器IP */
+    @Column(name = "USER_HOST_IP", length = 50)
+    @Comment(value = "登录用户机器IP")
+    private String userHostIp;
 
     /** 用户登录浏览器信息 */
     @Column(name = "USER_AGENT", length = 200)
@@ -171,6 +136,41 @@ public class Y9LogAccessLog implements Serializable {
     @Column(name = "MAC_ADDRESS", length = 100)
     @Comment(value = "登录用户机器MAC")
     private String macAddress;
+
+    /** 租户ID */
+    @Column(name = "TENANT_ID", length = 38)
+    @Comment(value = "租户ID")
+    private String tenantId;
+
+    /** 租户名称 */
+    @Column(name = "TENANT_NAME", length = 50)
+    @Comment(value = "租户名称")
+    private String tenantName;
+
+    /** 用户id */
+    @Column(name = "USER_ID", length = 38)
+    @Comment(value = "用户id")
+    private String userId;
+
+    /** 登录名 */
+    @Column(name = "USER_NAME", length = 100)
+    @Comment(value = "登录名")
+    private String userName;
+
+    /** 登录名称 */
+    @Column(name = "LOGIN_NAME", length = 50)
+    @Comment(value = "登录名称")
+    private String loginName;
+
+    /** 由name组成的父子关系列表(倒序)，之间用逗号分隔 */
+    @Column(name = "DN", length = 2000)
+    @Comment("由name组成的父子关系列表(倒序)，之间用逗号分隔")
+    private String dn;
+
+    /** 由ID组成的父子关系列表(正序)，之间用逗号分隔 */
+    @Column(name = "GUID_PATH", length = 400)
+    @Comment("由ID组成的父子关系列表(正序)，之间用逗号分隔")
+    private String guidPath;
 
     /**
      * 管理员类型 {@link ManagerLevelEnum}

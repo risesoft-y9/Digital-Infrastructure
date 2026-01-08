@@ -30,6 +30,8 @@ public class AccessLogQuery implements Serializable {
     /** 结束时间 */
     protected String endTime;
 
+    protected String systemName;
+
     /** 模块名称 */
     protected String modularName;
 
