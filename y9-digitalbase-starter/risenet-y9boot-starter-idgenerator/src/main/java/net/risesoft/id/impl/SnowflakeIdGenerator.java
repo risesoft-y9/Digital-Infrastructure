@@ -2,7 +2,7 @@ package net.risesoft.id.impl;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.id.IdGenerator;
 
 import cn.hutool.core.util.IdUtil;
 
@@ -29,7 +29,7 @@ import cn.hutool.core.util.IdUtil;
  * @date 2019/10/24
  */
 @Slf4j
-public class SnowflakeIdGenerator implements Y9IdGenerator {
+public class SnowflakeIdGenerator implements IdGenerator {
     /**
      * 起始的时间戳
      */

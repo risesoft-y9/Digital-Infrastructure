@@ -24,12 +24,6 @@ import net.risesoft.pojo.Y9Result;
 @RequestMapping(value = "/services/rest/v1/id", produces = MediaType.APPLICATION_JSON_VALUE)
 public class IdApiImpl implements IdApi {
 
-    private final Y9IdGenerator y9IdGenerator;
-
-    public IdApiImpl(@Qualifier("snowflakeIdGenerator") Y9IdGenerator y9IdGenerator) {
-        this.y9IdGenerator = y9IdGenerator;
-    }
-
     /**
      * 生成一个 id
      *
@@ -38,7 +32,7 @@ public class IdApiImpl implements IdApi {
      */
     @Override
     public Y9Result<String> getNextId() {
-        return Y9Result.success(y9IdGenerator.getNextId());
+        return Y9Result.success(Y9IdGenerator.genId());
     }
 
 }
