@@ -25,7 +25,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 日志过滤器 <br>
- * 仅当方法上没有{@link net.risesoft.log.annotation.RiseLog}注解记录日志时，这个过滤器才会记录，避免重复记录
+ * 目前没有使用，以前放在 starter-sso 中，如果没有引入 starter-log 就用这个过滤器记录日志
  *
  * @author shidaobang
  * @date 2024/11/14

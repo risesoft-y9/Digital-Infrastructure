@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.ConditionalOnMissingFilterBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.task.TaskExecutorBuilder;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.filter.OrderedRequestContextFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,8 +25,6 @@ import com.alibaba.ttl.threadpool.TtlExecutors;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.FilterOrderConsts;
-import net.risesoft.log.LogFilter;
 import net.risesoft.log.aop.RiseLogAdvice;
 import net.risesoft.log.aop.RiseLogAdvisor;
 import net.risesoft.log.service.AccessLogReporter;
@@ -37,7 +34,6 @@ import net.risesoft.log.service.impl.AccessLogKafkaReporter;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.feature.log.Y9LogProperties;
-import net.risesoft.y9.util.InetAddressUtil;
 
 /**
  * @author dzj
@@ -126,21 +122,6 @@ public class Y9LogConfiguration {
             return new AccessLogConsoleReporter();
         }
 
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(name = "y9LogFilter")
-    public FilterRegistrationBean<LogFilter> y9LogFilter(AccessLogReporter accessLogReporter,
-        Y9Properties y9Properties) {
-        String serverIp = InetAddressUtil.getLocalAddress(y9Properties.getInternalIp()).getHostAddress();
-
-        final FilterRegistrationBean<LogFilter> filterBean = new FilterRegistrationBean<>();
-        filterBean.setFilter(new LogFilter(accessLogReporter, serverIp));
-        filterBean.setAsyncSupported(false);
-        filterBean.addUrlPatterns("/*");
-        filterBean.setOrder(FilterOrderConsts.LOG_ORDER);
-
-        return filterBean;
     }
 
     @Bean(name = {"y9ThreadPoolTaskExecutor"})

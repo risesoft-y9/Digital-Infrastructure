@@ -32,7 +32,7 @@ public @interface RiseLog {
      * 
      * @return {@code LogLevelEnum} 操作类型 日志级别
      */
-    LogLevelEnum logLevel() default LogLevelEnum.MANAGERLOG;
+    LogLevelEnum logLevel() default LogLevelEnum.RSLOG;
 
     /**
      * 模块名称
