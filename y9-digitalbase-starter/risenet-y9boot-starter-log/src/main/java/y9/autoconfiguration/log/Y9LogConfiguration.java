@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.ConditionalOnMissingFilterBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.task.ThreadPoolTaskExecutorBuilder;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.filter.OrderedRequestContextFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,8 +25,6 @@ import com.alibaba.ttl.threadpool.TtlExecutors;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.FilterOrderConsts;
-import net.risesoft.log.LogFilter;
 import net.risesoft.log.aop.RiseLogAdvice;
 import net.risesoft.log.aop.RiseLogAdvisor;
 import net.risesoft.log.service.AccessLogReporter;
@@ -37,7 +34,6 @@ import net.risesoft.log.service.impl.AccessLogKafkaReporter;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.feature.log.Y9LogProperties;
-import net.risesoft.y9.util.InetAddressUtil;
 
 /**
  * @author dzj
@@ -86,19 +82,46 @@ public class Y9LogConfiguration {
         return new Y9Context();
     }
 
-    @Bean
-    @ConditionalOnMissingBean(name = "y9LogFilter")
-    public FilterRegistrationBean<LogFilter> y9LogFilter(AccessLogReporter accessLogReporter,
-        Y9Properties y9Properties) {
-        String serverIp = InetAddressUtil.getLocalAddress(y9Properties.getInternalIp()).getHostAddress();
+    @Configuration
+    @AutoConfigureAfter(KafkaAutoConfiguration.class)
+    @ConditionalOnProperty(value = "y9.feature.log.reportMethod", havingValue = "kafka", matchIfMissing = true)
+    @Slf4j
+    static class Y9LogKafkaConfiguration {
 
-        final FilterRegistrationBean<LogFilter> filterBean = new FilterRegistrationBean<>();
-        filterBean.setFilter(new LogFilter(accessLogReporter, serverIp));
-        filterBean.setAsyncSupported(false);
-        filterBean.addUrlPatterns("/*");
-        filterBean.setOrder(FilterOrderConsts.LOG_ORDER);
+        @Bean("y9KafkaTemplate")
+        @ConditionalOnMissingBean(name = "y9KafkaTemplate")
+        public KafkaTemplate<?, ?> y9KafkaTemplate(ProducerFactory<Object, Object> kafkaProducerFactory) {
+            LOGGER.info("Y9LogKafkaConfiguration y9KafkaTemplate init ......");
+            return new KafkaTemplate<>(kafkaProducerFactory);
+        }
 
-        return filterBean;
+        @Bean
+        public AccessLogReporter accessLogKafkaPusher(KafkaTemplate<String, Object> y9KafkaTemplate) {
+            return new AccessLogKafkaReporter(y9KafkaTemplate);
+        }
+
+    }
+
+    @Configuration
+    @ConditionalOnProperty(value = "y9.feature.log.reportMethod", havingValue = "api")
+    static class Y9LogApiConfiguration {
+
+        @Bean
+        public AccessLogReporter accessLogApiPusher(Y9Properties y9Properties) {
+            return new AccessLogApiReporter(y9Properties);
+        }
+
+    }
+
+    @Configuration
+    @ConditionalOnProperty(value = "y9.feature.log.reportMethod", havingValue = "console")
+    static class Y9LogConsoleConfiguration {
+
+        @Bean
+        public AccessLogReporter accessLogApiPusher() {
+            return new AccessLogConsoleReporter();
+        }
+
     }
 
     @Bean(name = {"y9ThreadPoolTaskExecutor"})
@@ -115,47 +138,5 @@ public class Y9LogConfiguration {
         taskExecutor.setThreadNamePrefix("y9Log-");
         taskExecutor.initialize();
         return TtlExecutors.getTtlExecutor(taskExecutor);
-    }
-
-    @Configuration
-    @AutoConfigureAfter(KafkaAutoConfiguration.class)
-    @ConditionalOnProperty(value = "y9.feature.log.reportMethod", havingValue = "kafka", matchIfMissing = true)
-    @Slf4j
-    static class Y9LogKafkaConfiguration {
-
-        @Bean("y9KafkaTemplate")
-        @ConditionalOnMissingBean(name = "y9KafkaTemplate")
-        public KafkaTemplate<?, ?> y9KafkaTemplate(ProducerFactory<Object, Object> kafkaProducerFactory) {
-            LOGGER.info("Y9LogKafkaConfiguration y9KafkaTemplate init ......");
-            return new KafkaTemplate<>(kafkaProducerFactory);
-        }
-
-        @Bean
-        public AccessLogReporter accessLogKafkaReporter(KafkaTemplate<String, Object> y9KafkaTemplate) {
-            return new AccessLogKafkaReporter(y9KafkaTemplate);
-        }
-
-    }
-
-    @Configuration
-    @ConditionalOnProperty(value = "y9.feature.log.reportMethod", havingValue = "api")
-    static class Y9LogApiConfiguration {
-
-        @Bean
-        public AccessLogReporter accessLogApiReporter(Y9Properties y9Properties) {
-            return new AccessLogApiReporter(y9Properties);
-        }
-
-    }
-
-    @Configuration
-    @ConditionalOnProperty(value = "y9.feature.log.reportMethod", havingValue = "console")
-    static class Y9LogConsoleConfiguration {
-
-        @Bean
-        public AccessLogReporter accessLogApiPusher() {
-            return new AccessLogConsoleReporter();
-        }
-
     }
 }
