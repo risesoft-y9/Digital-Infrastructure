@@ -45,14 +45,5 @@ public interface Y9OrganizationManager {
 
     Y9Organization insert(Y9Organization organization);
 
-    Y9Organization update(Y9Organization organization);
-
-    /**
-     * 更新组织机构排序
-     *
-     * @param id 组织机构id
-     * @param tabIndex 排序
-     * @return {@link Y9Organization}
-     */
-    Y9Organization updateTabIndex(String id, int tabIndex);
+    Y9Organization update(Y9Organization organization, Y9Organization originalOrganization);
 }

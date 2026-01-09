@@ -3,8 +3,6 @@ package net.risesoft.repository.org;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -26,19 +24,13 @@ public interface Y9PersonRepository extends JpaRepository<Y9Person, String>, Jpa
 
     List<Y9Person> findByDisabled(Boolean disabled);
 
-    Page<Y9Person> findByDisabledAndNameContaining(Boolean disabled, String userName, Pageable pageable);
-
-    Page<Y9Person> findByDisabledAndParentId(Boolean disabled, String parentId, Pageable pageable);
-
     Optional<Y9Person> findByDisabledFalseAndMobileAndOriginal(String mobile, Boolean original);
 
     Optional<Y9Person> findByLoginNameAndOriginalTrue(String loginName);
 
-    Optional<Y9Person> findByCaidAndOriginalTrue(String caId);
+    Optional<Y9Person> findByCaidAndOriginalTrue(String caid);
 
     Optional<Y9Person> findByLoginNameAndParentId(String loginName, String parentId);
-
-    List<Y9Person> findByLoginNameAndTenantIdAndOriginal(String loginName, String tenantId, Boolean original);
 
     List<Y9Person> findByNameContaining(String name);
 
@@ -53,9 +45,6 @@ public interface Y9PersonRepository extends JpaRepository<Y9Person, String>, Jpa
     List<Y9Person> findByOriginalIdAndDisabled(String originalId, Boolean disable);
 
     Optional<Y9Person> findByOriginalIdAndParentId(String originalId, String parentId);
-
-    Page<Y9Person> findByParentIdAndDisabledAndNameContaining(String parentId, Boolean disabled, String userName,
-        Pageable pageable);
 
     List<Y9Person> findByParentIdAndDisabledAndNameContainingOrderByTabIndex(String parentId, Boolean disabled,
         String name);

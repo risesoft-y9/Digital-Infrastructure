@@ -176,19 +176,6 @@ public class GroupController {
     }
 
     /**
-     * 保存新的序号
-     *
-     * @param groupIds 用户组ids
-     * @return {@code Y9Result<String>}
-     */
-    @RiseLog(operationName = "保存用户组排序", operationType = OperationTypeEnum.MODIFY)
-    @PostMapping(value = "/saveOrder")
-    public Y9Result<String> saveOrder(@RequestParam(value = "groupIds") @NotEmpty List<String> groupIds) {
-        y9GroupService.saveOrder(groupIds);
-        return Y9Result.successMsg("保存用户组排序成功");
-    }
-
-    /**
      * 保存人员的用户组排序
      *
      * @param personId 人员id

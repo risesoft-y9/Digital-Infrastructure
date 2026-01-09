@@ -26,7 +26,7 @@ public enum OrgUnitErrorCodeEnum implements ErrorCode {
     MANAGER_NOT_FOUND(10, "管理员[{}]不存在"),
     PERSON_NOT_FOUND(11, "人员[{}]不存在"),
     PERSON_EXT_NOT_FOUND(12, "人员扩展信息[{}]不存在"),
-    POSITION_IS_FULL(13, "岗位[{}]已满员，不能减小岗位容量"),
+    POSITION_IS_FULL(13, "岗位[{}]已满员，增加岗位容量或减少岗位关联人员"),
     POSITION_NOT_FOUND(14, "岗位[{}]不存在"),
     ORGANIZATION_NOT_FOUND(15, "组织[{}]不存在"),
     CUSTOM_GROUP_NOT_FOUND(16, "自定义用户组[{}]不存在"),
@@ -35,6 +35,7 @@ public enum OrgUnitErrorCodeEnum implements ErrorCode {
     NOT_ALL_POSITIONS_DISABLED(19, "存在未禁用的岗位，禁止禁用当前节点"),
     NOT_ALL_GROUPS_DISABLED(20, "存在未禁用的用户组，禁止禁用当前节点"),
     NOT_ALL_DEPARTMENTS_DISABLED(21, "存在未禁用的部门，禁止禁用当前节点"),
+    NOT_ALL_DESCENDENTS_DISABLED(23, "存在未禁用的后代组织节点，不能禁用当前节点"),
     PERSON_OR_POSITION_NOT_FOUND(22, "人员或岗位[{}]不存在"),;
 
     private final int moduleErrorCode;

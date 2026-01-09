@@ -167,15 +167,6 @@ public interface Y9DepartmentService {
     void setDepartmentPropOrgUnits(String deptId, Integer category, List<String> orgBaseIds);
 
     /**
-     * 更新部门排列序号
-     *
-     * @param id 部门唯一标识
-     * @param tabIndex 排列序号
-     * @return {@link Department}
-     */
-    Department updateTabIndex(String id, int tabIndex);
-
-    /**
      * 获取可继承的部门属性对应组织节点列表
      *
      * @param deptId 部门唯一标识

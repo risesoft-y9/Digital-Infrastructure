@@ -2,7 +2,6 @@ package net.risesoft.manager.org.impl;
 
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -11,25 +10,16 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
-import net.risesoft.consts.DefaultConsts;
 import net.risesoft.entity.org.Y9Group;
-import net.risesoft.entity.org.Y9OrgBase;
-import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
-import net.risesoft.id.IdType;
-import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9GroupManager;
 import net.risesoft.repository.org.Y9GroupRepository;
 import net.risesoft.util.PlatformModelConvertUtil;
-import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
-import net.risesoft.y9.util.Y9BeanUtil;
 
 @Service
 @CacheConfig(cacheNames = CacheNameConsts.ORG_GROUP)
@@ -37,8 +27,6 @@ import net.risesoft.y9.util.Y9BeanUtil;
 public class Y9GroupManagerImpl implements Y9GroupManager {
 
     private final Y9GroupRepository y9GroupRepository;
-
-    private final CompositeOrgBaseManager compositeOrgBaseManager;
 
     @Override
     @CacheEvict(key = "#y9Group.id")
@@ -78,19 +66,6 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
 
     @Override
     public Y9Group insert(Y9Group group) {
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(group.getParentId());
-
-        if (StringUtils.isBlank(group.getId())) {
-            group.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        }
-
-        group.setDisabled(false);
-        group.setParentId(parent.getId());
-        group.setTabIndex((null == group.getTabIndex() || DefaultConsts.TAB_INDEX.equals(group.getTabIndex()))
-            ? compositeOrgBaseManager.getNextSubTabIndex(parent.getId()) : group.getTabIndex());
-        group.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.GROUP, group.getName(), parent.getDn()));
-        group.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), group.getId()));
-
         Y9Group savedGroup = this.save(group);
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedGroup));
@@ -99,27 +74,11 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
     }
 
     @Override
-    public Y9Group update(Y9Group group) {
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(group.getParentId());
-        Y9Group currentGroup = this.getById(group.getId());
-        Y9Group originalGroup = PlatformModelConvertUtil.convert(currentGroup, Y9Group.class);
-
-        Y9BeanUtil.copyProperties(group, currentGroup, "tenantId");
-        currentGroup.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.GROUP, group.getName(), parent.getDn()));
-        currentGroup.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), group.getId()));
-        Y9Group savedGroup = this.save(currentGroup);
+    public Y9Group update(Y9Group group, Y9Group originalGroup) {
+        Y9Group savedGroup = this.save(group);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalGroup, savedGroup));
+
         return savedGroup;
-    }
-
-    @Override
-    @CacheEvict(key = "#id")
-    public Y9Group updateTabIndex(String id, int tabIndex) {
-        Y9Group group = this.getById(id);
-
-        Y9Group updatedGroup = PlatformModelConvertUtil.convert(group, Y9Group.class);
-        updatedGroup.setTabIndex(tabIndex);
-        return this.update(updatedGroup);
     }
 }

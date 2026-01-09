@@ -105,7 +105,7 @@ public class SyncPasswordController {
     public Y9Result<String> resetPwdByTenantIdAndLoginName(@PathVariable String tenantId,
         @PathVariable String loginName) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        Person person = y9PersonService.getPersonByLoginNameAndTenantId(loginName, tenantId);
+        Person person = y9PersonService.getPersonByLoginName(loginName);
         if (person != null) {
             y9PersonService.resetDefaultPassword(person.getId());
         }

@@ -18,10 +18,7 @@ import net.risesoft.entity.org.Y9Manager;
 import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
-import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
-import net.risesoft.id.IdType;
-import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9DepartmentManager;
 import net.risesoft.model.platform.org.Manager;
@@ -33,7 +30,6 @@ import net.risesoft.service.setting.Y9SettingService;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
@@ -72,24 +68,19 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         return PlatformModelConvertUtil.convert(y9ManagerList, Manager.class);
     }
 
-    private static Y9Manager modelToEntity(Manager manager) {
-        return PlatformModelConvertUtil.convert(manager, Y9Manager.class);
-    }
-
     @Override
     @Transactional
     public Manager changeDisabled(String id) {
         Y9Manager currentManager = this.get(id);
         Y9Manager originalManager = PlatformModelConvertUtil.convert(currentManager, Y9Manager.class);
-        boolean disableStatusToUpdate = !currentManager.getDisabled();
 
-        currentManager.setDisabled(disableStatusToUpdate);
-        Y9Manager savedManager = this.update(currentManager);
+        Boolean disableStatus = currentManager.changeDisabled();
+        Y9Manager savedManager = this.update(currentManager, originalManager);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.MANAGER_UPDATE_DISABLED.getAction())
             .description(Y9StringUtil.format(AuditLogEnum.MANAGER_UPDATE_DISABLED.getDescription(),
-                savedManager.getManagerLevel().getName(), savedManager.getName(), disableStatusToUpdate ? "禁用" : "启用"))
+                savedManager.getManagerLevel().getName(), savedManager.getName(), disableStatus ? "禁用" : "启用"))
             .objectId(id)
             .oldObject(originalManager)
             .currentObject(savedManager)
@@ -105,9 +96,8 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         Y9Manager currentManager = this.get(id);
         Y9Manager originalManager = PlatformModelConvertUtil.convert(currentManager, Y9Manager.class);
 
-        currentManager.setPassword(Y9MessageDigestUtil.bcrypt(newPassword));
-        currentManager.setLastModifyPasswordTime(new Date());
-        Y9Manager savedManager = this.update(currentManager);
+        currentManager.changePassword(newPassword);
+        Y9Manager savedManager = this.update(currentManager, originalManager);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.MANAGER_UPDATE_PASSWORD.getAction())
@@ -121,9 +111,9 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     }
 
     @Override
-    public boolean checkPassword(String personId, String password) {
+    public boolean isPasswordCorrect(String personId, String password) {
         Y9Manager manager = this.get(personId);
-        return Y9MessageDigestUtil.bcryptMatch(password, manager.getPassword());
+        return manager.isPasswordCorrect(password);
     }
 
     @Override
@@ -208,18 +198,10 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     @Transactional(readOnly = true)
     public boolean isDeptManager(String managerId, String deptId) {
         Y9Manager y9Manager = this.get(managerId);
-        if (Boolean.TRUE.equals(y9Manager.getGlobalManager())) {
-            return true;
-        } else {
-            if (Objects.equals(deptId, y9Manager.getParentId())) {
-                // deptId 对应部门的三员
-                return true;
-            }
-            Y9Department targetDepartment = y9DepartmentManager.getByIdFromCache(deptId);
-            Y9Department managerDept = y9DepartmentManager.getByIdFromCache(y9Manager.getParentId());
-            // 部门三员管理 parentId 对应的部门及其后代部门
-            return Y9OrgUtil.isDescendantOf(targetDepartment, managerDept);
-        }
+        Y9OrgBase targetOrgBase = compositeOrgBaseManager.getOrgUnitAsParent(deptId);
+        Y9OrgBase managerParent = compositeOrgBaseManager.getOrgUnitAsParent(y9Manager.getParentId());
+
+        return y9Manager.isDeptManagerOf(managerParent, targetOrgBase);
     }
 
     @Override
@@ -235,12 +217,8 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     @Override
     public Boolean isPasswordExpired(String id) {
         Y9Manager y9Manager = this.get(id);
-        Date lastModifyPasswordTime = y9Manager.getLastModifyPasswordTime();
-        if (lastModifyPasswordTime == null) {
-            return true;
-        }
-        long daysBetween = DateUtil.between(lastModifyPasswordTime, new Date(), DateUnit.DAY);
-        return daysBetween >= this.getPasswordModifiedCycle(y9Manager.getManagerLevel());
+        int passwordModifiedCycle = this.getPasswordModifiedCycle(y9Manager.getManagerLevel());
+        return y9Manager.isPasswordExpired(passwordModifiedCycle);
     }
 
     @Override
@@ -268,8 +246,8 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         Y9Manager originalManager = PlatformModelConvertUtil.convert(currentManager, Y9Manager.class);
         String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
 
-        currentManager.setPassword(Y9MessageDigestUtil.bcrypt(defaultPassword));
-        Y9Manager savedManager = this.update(currentManager);
+        currentManager.changePassword(defaultPassword);
+        Y9Manager savedManager = this.update(currentManager, originalManager);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.MANAGER_RESET_PASSWORD.getAction())
@@ -286,31 +264,16 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
 
     @Transactional
     public Y9Manager insert(Y9Manager y9Manager) {
-        String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(y9Manager.getParentId());
+        Y9Manager savedManager = y9ManagerRepository.save(y9Manager);
 
-        if (StringUtils.isBlank(y9Manager.getId())) {
-            y9Manager.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        }
-        y9Manager.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(y9Manager.getParentId()));
-        // 系统管理员新建的子域三员默认禁用 需安全管理员启用
-        y9Manager.setDisabled(!y9Manager.getGlobalManager());
-        y9Manager.setPassword(Y9MessageDigestUtil.bcrypt(defaultPassword));
-        y9Manager.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.MANAGER, y9Manager.getName(), parent.getDn()));
-        y9Manager.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), y9Manager.getId()));
-        y9Manager.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(y9Manager));
-        y9Manager = y9ManagerRepository.save(y9Manager);
-
-        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9Manager));
-        return y9Manager;
+        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedManager));
+        
+        return savedManager;
     }
 
     @Transactional
-    public Y9Manager update(Y9Manager y9Manager) {
-        Y9Manager currentManager = this.get(y9Manager.getId());
-        Y9Manager originalManager = PlatformModelConvertUtil.convert(currentManager, Y9Manager.class);
-        Y9BeanUtil.copyProperties(y9Manager, currentManager);
-        Y9Manager savedManager = y9ManagerRepository.save(currentManager);
+    public Y9Manager update(Y9Manager y9Manager, Y9Manager originalManager) {
+        Y9Manager savedManager = y9ManagerRepository.save(y9Manager);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalManager, savedManager));
 
@@ -320,12 +283,15 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     @Override
     @Transactional
     public Manager saveOrUpdate(Manager manager) {
-        Y9Manager y9Manager = modelToEntity(manager);
-        if (StringUtils.isNotBlank(y9Manager.getId())) {
-            Y9Manager oldManager = y9ManagerRepository.findById(y9Manager.getId()).orElse(null);
-            if (oldManager != null) {
-                Y9Manager originalManager = PlatformModelConvertUtil.convert(oldManager, Y9Manager.class);
-                Y9Manager savedManager = this.update(y9Manager);
+        if (StringUtils.isNotBlank(manager.getId())) {
+            Optional<Y9Manager> y9ManagerOptional = y9ManagerRepository.findById(manager.getId());
+            if (y9ManagerOptional.isPresent()) {
+                Y9Manager originalManager = PlatformModelConvertUtil.convert(y9ManagerOptional.get(), Y9Manager.class);
+                Y9Manager y9Manager = y9ManagerOptional.get();
+                
+                Y9BeanUtil.copyProperties(manager, y9Manager);
+                
+                Y9Manager savedManager = this.update(y9Manager, originalManager);
 
                 AuditLogEvent auditLogEvent = AuditLogEvent.builder()
                     .action(AuditLogEnum.MANAGER_UPDATE.getAction())
@@ -341,6 +307,13 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
             }
         }
 
+
+        String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(manager.getParentId());
+        Integer nextSubTabIndex = compositeOrgBaseManager.getNextSubTabIndex(manager.getParentId());
+        List<Y9OrgBase> ancestorList = compositeOrgBaseManager.listOrgUnitAndAncestor(manager.getParentId());
+
+        Y9Manager y9Manager = new Y9Manager(manager, parent, nextSubTabIndex, ancestorList, defaultPassword);
         Y9Manager savedManager = this.insert(y9Manager);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()

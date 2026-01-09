@@ -3,7 +3,6 @@ package net.risesoft.service.org;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.model.platform.org.Job;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.org.Position;
 import net.risesoft.y9.exception.Y9NotFoundException;
@@ -15,15 +14,6 @@ import net.risesoft.y9.exception.Y9NotFoundException;
  * @date 2022/2/10
  */
 public interface Y9PositionService {
-
-    /**
-     * 生成岗位名
-     *
-     * @param y9Job 职位
-     * @param personList 人员和岗位对应列表
-     * @return String
-     */
-    String buildName(Job y9Job, List<Person> personList);
 
     /**
      * 更改禁用状态

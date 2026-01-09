@@ -40,7 +40,7 @@ public interface Y9ManagerService {
      * @param password 密码
      * @return boolean
      */
-    boolean checkPassword(String personId, String password);
+    boolean isPasswordCorrect(String personId, String password);
 
     /**
      * 根据管理员id数组删除管理员信息

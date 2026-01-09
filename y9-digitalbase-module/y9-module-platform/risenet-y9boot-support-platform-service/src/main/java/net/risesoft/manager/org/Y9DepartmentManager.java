@@ -45,14 +45,6 @@ public interface Y9DepartmentManager {
 
     Y9Department insert(Y9Department dept);
 
-    Y9Department update(Y9Department dept);
+    Y9Department update(Y9Department dept, Y9Department originalDepartment);
 
-    /**
-     * 保存或者更新部门扩展信息
-     *
-     * @param id 部门唯一标识
-     * @param tabIndex 排序
-     * @return {@link Y9Department}
-     */
-    Y9Department updateTabIndex(String id, int tabIndex);
 }

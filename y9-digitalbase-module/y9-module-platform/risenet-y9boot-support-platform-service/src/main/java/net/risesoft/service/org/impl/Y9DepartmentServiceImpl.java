@@ -1,10 +1,8 @@
 package net.risesoft.service.org.impl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
@@ -19,8 +17,6 @@ import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.enums.platform.org.DepartmentPropCategoryEnum;
-import net.risesoft.enums.platform.org.OrgTypeEnum;
-import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9DepartmentManager;
 import net.risesoft.model.platform.org.Department;
@@ -33,7 +29,6 @@ import net.risesoft.service.org.Y9DepartmentService;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9EnumUtil;
@@ -63,19 +58,14 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         Y9Department currentDepartment = y9DepartmentManager.getById(id);
         Y9Department originalDepartment = PlatformModelConvertUtil.convert(currentDepartment, Y9Department.class);
 
-        Boolean disableStatusToUpdate = !currentDepartment.getDisabled();
-        if (disableStatusToUpdate) {
-            // 检查所有子节点是否都禁用了，只有所有子节点都禁用了，当前部门才能禁用
-            compositeOrgBaseManager.checkAllDescendantsDisabled(id);
-        }
-
-        currentDepartment.setDisabled(disableStatusToUpdate);
-        Y9Department savedDepartment = y9DepartmentManager.update(currentDepartment);
+        boolean allDescendantsDisabled = compositeOrgBaseManager.isAllDescendantsDisabled(id);
+        Boolean disableStatus =  currentDepartment.changeDisabled(allDescendantsDisabled);
+        Y9Department savedDepartment = y9DepartmentManager.update(currentDepartment, originalDepartment);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.DEPARTMENT_UPDATE_DISABLED.getAction())
             .description(Y9StringUtil.format(AuditLogEnum.DEPARTMENT_UPDATE_DISABLED.getDescription(),
-                currentDepartment.getName(), disableStatusToUpdate ? "禁用" : "启用"))
+                currentDepartment.getName(), disableStatus ? "禁用" : "启用"))
             .objectId(id)
             .oldObject(originalDepartment)
             .currentObject(savedDepartment)
@@ -83,21 +73,6 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         Y9Context.publishEvent(auditLogEvent);
 
         return (Department)PlatformModelConvertUtil.orgBaseToOrgUnit(savedDepartment);
-    }
-
-    /**
-     * 判断是否移动到自己，或者自己的子节点里面，这种情况要排除，不让移动
-     *
-     * @param dept
-     * @param parentId
-     */
-    private void checkMoveTarget(Y9Department dept, String parentId) {
-        Set<Y9OrgBase> parentSet = new HashSet<>();
-        recursionParent(parentId, parentSet);
-        if (parentSet.contains(dept)) {
-            throw new Y9BusinessException(OrgUnitErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getCode(),
-                OrgUnitErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getDescription());
-        }
     }
 
     @Override
@@ -269,20 +244,19 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional
     public Department move(String id, String parentId) {
-        Y9OrgBase parentToMove = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
         Y9Department currentDepartment = y9DepartmentManager.getById(id);
         Y9Department originalDepartment = PlatformModelConvertUtil.convert(currentDepartment, Y9Department.class);
 
-        checkMoveTarget(currentDepartment, parentId);
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
+        Integer nextSubTabIndex = compositeOrgBaseManager.getNextSubTabIndex(parentId);
+        currentDepartment.changeParent(parent, nextSubTabIndex);
 
-        currentDepartment.setParentId(parentId);
-        currentDepartment.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parentId));
-        Y9Department savedDepartment = y9DepartmentManager.update(currentDepartment);
+        Y9Department savedDepartment = y9DepartmentManager.update(currentDepartment, originalDepartment);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.DEPARTMENT_UPDATE_PARENTID.getAction())
             .description(Y9StringUtil.format(AuditLogEnum.DEPARTMENT_UPDATE_PARENTID.getDescription(),
-                originalDepartment.getName(), parentToMove.getName()))
+                originalDepartment.getName(), parent.getName()))
             .objectId(id)
             .oldObject(originalDepartment)
             .currentObject(savedDepartment)
@@ -323,23 +297,11 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         if (Y9OrgUtil.isCurrentOrAncestorChanged(originOrgBase, updatedOrgBase)) {
             List<Y9Department> deptList = y9DepartmentRepository.findByParentId(updatedOrgBase.getId());
             for (Y9Department dept : deptList) {
-                y9DepartmentManager.update(dept);
-            }
-        }
-    }
+                Y9Department originalDepartment = PlatformModelConvertUtil.convert(dept, Y9Department.class);
 
-    /**
-     * 递归获取指定部门的所有上级组织节点
-     * 
-     * @param parentId 父级组织ID
-     * @param parentSet 用于存储上级组织节点的集合
-     */
-    private void recursionParent(String parentId, Set<Y9OrgBase> parentSet) {
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
-        parentSet.add(parent);
-        if (parent.getOrgType().equals(OrgTypeEnum.DEPARTMENT)) {
-            Y9Department dept = (Y9Department)parent;
-            recursionParent(dept.getParentId(), parentSet);
+                dept.update(new Department(), updatedOrgBase);
+                y9DepartmentManager.update(dept, originalDepartment);
+            }
         }
     }
 
@@ -361,14 +323,17 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional
     public Department saveOrUpdate(Department department) {
-        Y9Department y9Department = PlatformModelConvertUtil.convert(department, Y9Department.class);
-
-        if (StringUtils.isNotBlank(y9Department.getId())) {
-            Optional<Y9Department> departmentOptional = y9DepartmentManager.findById(y9Department.getId());
+        if (StringUtils.isNotBlank(department.getId())) {
+            Optional<Y9Department> departmentOptional = y9DepartmentManager.findById(department.getId());
             if (departmentOptional.isPresent()) {
                 Y9Department originalDepartment =
                     PlatformModelConvertUtil.convert(departmentOptional.get(), Y9Department.class);
-                Y9Department savedDepartment = y9DepartmentManager.update(y9Department);
+
+                Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(department.getParentId());
+                Y9Department y9Department = departmentOptional.get();
+                y9Department.update(department, parent);
+
+                Y9Department savedDepartment = y9DepartmentManager.update(y9Department, originalDepartment);
 
                 AuditLogEvent auditLogEvent = AuditLogEvent.builder()
                     .action(AuditLogEnum.DEPARTMENT_UPDATE.getAction())
@@ -384,12 +349,17 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
             }
         }
 
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(department.getParentId());
+        Integer nextSubTabIndex = compositeOrgBaseManager.getNextSubTabIndex(parent.getId());
+        Y9Department y9Department = new Y9Department(department, parent, nextSubTabIndex);
+
         Y9Department savedDepartment = y9DepartmentManager.insert(y9Department);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.DEPARTMENT_CREATE.getAction())
-            .description(Y9StringUtil.format(AuditLogEnum.DEPARTMENT_CREATE.getDescription(), y9Department.getName()))
-            .objectId(y9Department.getId())
+            .description(
+                Y9StringUtil.format(AuditLogEnum.DEPARTMENT_CREATE.getDescription(), savedDepartment.getName()))
+            .objectId(savedDepartment.getId())
             .oldObject(null)
             .currentObject(savedDepartment)
             .build();
@@ -404,8 +374,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         Y9Department currentDepartment = y9DepartmentManager.getById(id);
         Y9Department originalDepartment = PlatformModelConvertUtil.convert(currentDepartment, Y9Department.class);
 
-        currentDepartment.setProperties(properties);
-        Y9Department savedDepartment = y9DepartmentManager.update(currentDepartment);
+        currentDepartment.changeProperties(properties);
+        Y9Department savedDepartment = y9DepartmentManager.update(currentDepartment, originalDepartment);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.DEPARTMENT_UPDATE_PROPERTIES.getAction())
@@ -430,26 +400,6 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
             y9DepartmentProp.setCategory(category);
             y9DepartmentPropService.saveOrUpdate(y9DepartmentProp);
         }
-    }
-
-    @Override
-    @Transactional
-    public Department updateTabIndex(String id, int tabIndex) {
-        Y9Department originalDepartment =
-            PlatformModelConvertUtil.convert(y9DepartmentManager.getById(id), Y9Department.class);
-        Y9Department savedDepartment = y9DepartmentManager.updateTabIndex(id, tabIndex);
-
-        AuditLogEvent auditLogEvent = AuditLogEvent.builder()
-            .action(AuditLogEnum.DEPARTMENT_UPDATE_TABINDEX.getAction())
-            .description(Y9StringUtil.format(AuditLogEnum.DEPARTMENT_UPDATE_TABINDEX.getDescription(),
-                originalDepartment.getName(), savedDepartment.getTabIndex()))
-            .objectId(id)
-            .oldObject(originalDepartment)
-            .currentObject(savedDepartment)
-            .build();
-        Y9Context.publishEvent(auditLogEvent);
-
-        return PlatformModelConvertUtil.y9DepartmentToDepartment(savedDepartment);
     }
 
 }

@@ -113,14 +113,14 @@ public class PersonController {
      * 判断CA认证码是否可用（同一个租户）
      *
      * @param personId 人员id
-     * @param caid CA认证码
+     * @param CAID CA认证码
      * @return {@code Y9Result<Boolean>}
      */
     @RiseLog(operationName = "判断同一个租户CA认证码是否重复")
     @RequestMapping(value = "/checkCaid")
     public Y9Result<Boolean> checkCaid(@RequestParam(required = false) String personId,
-        @NotBlank @RequestParam String caid) {
-        return Y9Result.success(y9PersonService.isCaidAvailable(personId, caid), "判断同一个租户CA认证码是否重复操作成功");
+        @NotBlank @RequestParam String CAID) {
+        return Y9Result.success(y9PersonService.isCaidAvailable(personId, CAID), "判断同一个租户CA认证码是否重复操作成功");
     }
 
     /**

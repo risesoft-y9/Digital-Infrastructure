@@ -4,12 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import net.risesoft.entity.org.Y9Position;
-import net.risesoft.model.platform.org.Person;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
 public interface Y9PositionManager {
-
-    String buildName(String jobName, List<Person> personList);
 
     void delete(Y9Position y9Position);
 
@@ -44,7 +41,7 @@ public interface Y9PositionManager {
 
     Y9Position insert(Y9Position position);
 
-    Y9Position update(Y9Position position);
+    Y9Position update(Y9Position position, Y9Position originalPosition);
 
-    Y9Position updateTabIndex(String id, int tabIndex);
+    List<Y9Position> listByPersonId(String personId, Boolean disabled);
 }

@@ -1,5 +1,6 @@
 package net.risesoft.manager.org;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,28 +17,12 @@ import net.risesoft.entity.org.Y9Position;
 public interface CompositeOrgBaseManager {
 
     /**
-     * 递归得到 guid路径
-     *
-     * @param y9OrgBase 组织节点
-     * @return String
-     */
-    String buildGuidPath(Y9OrgBase y9OrgBase);
-
-    /**
-     * 递归向上获取排序序列号
-     *
-     * @param y9OrgBase 组织节点
-     * @return String
-     */
-    String buildOrderedPath(Y9OrgBase y9OrgBase);
-
-    /**
      * 检查所有后代组织节点是否都已禁用
      *
      * @param orgUnitId 组织节点id
-     * @throws net.risesoft.y9.exception.Y9BusinessException 如果有后代组织节点未禁用，则抛出异常
+     * @return 所有后代组织节点都已禁用返回true，否则返回false
      */
-    void checkAllDescendantsDisabled(String orgUnitId);
+    boolean isAllDescendantsDisabled(String orgUnitId);
 
     /**
      * 根据指定id获取ORGBase对象(可以是org的任意类型)
@@ -79,6 +64,12 @@ public interface CompositeOrgBaseManager {
      */
     Optional<Y9OrgBase> findPersonOrPosition(String orgUnitId);
 
+    /**
+     * 获得人员或岗位的组织节点
+     *
+     * @param orgUnitId 组织节点id
+     * @return {@code Y9OrgBase }
+     */
     Y9OrgBase getPersonOrPosition(String orgUnitId);
 
     /**
@@ -153,4 +144,20 @@ public interface CompositeOrgBaseManager {
      * @return {@code List<String> }
      */
     List<String> listOrgUnitIdByName(String name);
+
+    /**
+     * 填充组织节点及其祖先节点到集合中
+     *
+     * @param orgUnitId 组织节点 id
+     * @param orgBaseCollection 组织节点集合
+     */
+    void fillWithOrgUnitAndAncestor(String orgUnitId, Collection<Y9OrgBase> orgBaseCollection);
+
+    /**
+     * 获取组织节点和及其祖先的列表（有序）
+     *
+     * @param orgUnitId 组织节点 id
+     * @return {@code List<Y9OrgBase> }
+     */
+    List<Y9OrgBase> listOrgUnitAndAncestor(String orgUnitId);
 }

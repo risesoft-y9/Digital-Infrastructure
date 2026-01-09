@@ -166,7 +166,7 @@ public class SyncController {
     public Y9Result<String> syncPersonByTenantIdAndLoginName(@PathVariable String tenantId,
         @PathVariable String loginName) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        Person person = y9PersonService.getPersonByLoginNameAndTenantId(loginName, tenantId);
+        Person person = y9PersonService.getPersonByLoginName(loginName);
         if (person != null && person.getId() != null) {
             y9PersonService.saveOrUpdate(person, null);
         }

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
@@ -44,20 +45,15 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         Y9Organization currentOrganization = y9OrganizationManager.getById(id);
         Y9Organization originalOrganization =
             PlatformModelConvertUtil.convert(currentOrganization, Y9Organization.class);
-        Boolean disableStatusToUpdate = !currentOrganization.getDisabled();
 
-        if (disableStatusToUpdate) {
-            // 禁用时检查所有子节点是否都禁用了，只有所有子节点都禁用了，当前组织才能禁用
-            compositeOrgBaseManager.checkAllDescendantsDisabled(id);
-        }
-
-        currentOrganization.setDisabled(disableStatusToUpdate);
-        Y9Organization savedOrganization = y9OrganizationManager.update(currentOrganization);
+        boolean allDescendantsDisabled = compositeOrgBaseManager.isAllDescendantsDisabled(id);
+        Boolean disableStatus = currentOrganization.changeDisabled(allDescendantsDisabled);
+        Y9Organization savedOrganization = y9OrganizationManager.update(currentOrganization, originalOrganization);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.ORGANIZATION_UPDATE_DISABLED.getAction())
             .description(Y9StringUtil.format(AuditLogEnum.ORGANIZATION_UPDATE_DISABLED.getDescription(),
-                savedOrganization.getName(), disableStatusToUpdate ? "禁用" : "启用"))
+                savedOrganization.getName(), disableStatus ? "禁用" : "启用"))
             .objectId(id)
             .oldObject(originalOrganization)
             .currentObject(savedOrganization)
@@ -121,14 +117,17 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     @Transactional(readOnly = true)
     public List<Organization> list(Boolean virtual, Boolean disabled) {
         List<Y9Organization> y9OrganizationList;
-        if (null == virtual) {
-            y9OrganizationList = list(disabled);
-        }
-        if (null == disabled) {
+
+        if (virtual == null && disabled == null) {
+            y9OrganizationList = y9OrganizationRepository.findByOrderByTabIndexAsc();
+        } else if (virtual == null) {
+            y9OrganizationList = y9OrganizationRepository.findByDisabledOrderByTabIndexAsc(disabled);
+        } else if (disabled == null) {
             y9OrganizationList = y9OrganizationRepository.findByVirtualOrderByTabIndexAsc(virtual);
         } else {
             y9OrganizationList = y9OrganizationRepository.findByVirtualAndDisabledOrderByTabIndexAsc(virtual, disabled);
         }
+
         return PlatformModelConvertUtil.y9OrganizationToOrganization(y9OrganizationList);
     }
 
@@ -141,13 +140,15 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     @Override
     @Transactional
     public Organization saveOrUpdate(Organization organization) {
-        Y9Organization y9Organization = PlatformModelConvertUtil.convert(organization, Y9Organization.class);
-        if (StringUtils.isNotBlank(y9Organization.getId())) {
-            Optional<Y9Organization> organizationOptional = y9OrganizationManager.findById(y9Organization.getId());
+        if (StringUtils.isNotBlank(organization.getId())) {
+            Optional<Y9Organization> organizationOptional = y9OrganizationManager.findById(organization.getId());
             if (organizationOptional.isPresent()) {
                 Y9Organization originalOrganization =
                     PlatformModelConvertUtil.convert(organizationOptional.get(), Y9Organization.class);
-                Y9Organization savedOrganization = y9OrganizationManager.update(y9Organization);
+                Y9Organization y9Organization = organizationOptional.get();
+
+                y9Organization.update(organization);
+                Y9Organization savedOrganization = y9OrganizationManager.update(y9Organization, originalOrganization);
 
                 AuditLogEvent auditLogEvent = AuditLogEvent.builder()
                     .action(AuditLogEnum.ORGANIZATION_UPDATE.getAction())
@@ -163,6 +164,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
             }
         }
 
+        Y9Organization y9Organization = new Y9Organization(organization, getNextTabIndex());
         Y9Organization savedOrganization = y9OrganizationManager.insert(y9Organization);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -185,7 +187,11 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
 
         int tabIndex = 0;
         for (String orgId : orgIds) {
-            y9OrganizationList.add(y9OrganizationManager.updateTabIndex(orgId, tabIndex++));
+            Y9Organization organization = y9OrganizationManager.getById(orgId);
+            Y9Organization originalOrganization = PlatformModelConvertUtil.convert(organization, Y9Organization.class);
+
+            organization.changeTabIndex(tabIndex);
+            y9OrganizationList.add(y9OrganizationManager.update(organization, originalOrganization));
         }
         return PlatformModelConvertUtil.y9OrganizationToOrganization(y9OrganizationList);
     }
@@ -197,8 +203,8 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         Y9Organization originalOrganization =
             PlatformModelConvertUtil.convert(currentOrganization, Y9Organization.class);
 
-        currentOrganization.setProperties(properties);
-        Y9Organization savedOrganization = y9OrganizationManager.update(currentOrganization);
+        currentOrganization.changeProperties(properties);
+        Y9Organization savedOrganization = y9OrganizationManager.update(currentOrganization, originalOrganization);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.ORGANIZATION_UPDATE_PROPERTIES.getAction())
@@ -213,12 +219,8 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         return PlatformModelConvertUtil.y9OrganizationToOrganization(savedOrganization);
     }
 
-    private List<Y9Organization> list(Boolean disabled) {
-        if (disabled == null) {
-            return y9OrganizationRepository.findByOrderByTabIndexAsc();
-        } else {
-            return y9OrganizationRepository.findByDisabledOrderByTabIndexAsc(disabled);
-        }
+    private Integer getNextTabIndex() {
+        return y9OrganizationRepository.findTopByOrderByTabIndexDesc().map(Y9OrgBase::getTabIndex).orElse(-1) + 1;
     }
 
 }

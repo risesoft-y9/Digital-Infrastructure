@@ -21,8 +21,4 @@ public class IpUtil {
         return new IPAddressString(subnet).contains(new IPAddressString(ip));
     }
 
-    public static void main(String[] args) {
-        IPAddressString str = new IPAddressString("*");
-        System.out.println(str.contains(new IPAddressString("192.168.21.100")));
-    }
 }
