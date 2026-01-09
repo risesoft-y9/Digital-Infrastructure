@@ -138,11 +138,10 @@ public interface Y9PersonService {
     /**
      * 根据登录名、租户id获取人员
      *
-     * @param tenantId 租户id
      * @param loginName tenantId
      * @return {@link Person}
      */
-    Person getPersonByLoginNameAndTenantId(String loginName, String tenantId);
+    Person getPersonByLoginName(String loginName);
 
     /**
      * 判断用户名是否可用

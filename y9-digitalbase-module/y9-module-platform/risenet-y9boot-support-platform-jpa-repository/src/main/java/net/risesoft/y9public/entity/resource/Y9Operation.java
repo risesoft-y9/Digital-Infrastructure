@@ -9,10 +9,8 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.resource.OperationDisplayTypeEnum;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
@@ -31,7 +29,6 @@ import net.risesoft.persistence.EnumConverter;
 @DynamicUpdate
 @Comment("页面按钮操作表")
 @Data
-@SuperBuilder
 @NoArgsConstructor
 public class Y9Operation extends Y9ResourceBase {
 
@@ -56,7 +53,6 @@ public class Y9Operation extends Y9ResourceBase {
     @Column(name = "DISPLAY_TYPE", nullable = false)
     @Comment("按钮展示方式")
     @Convert(converter = EnumConverter.OperationDisplayTypeEnumConverter.class)
-    @Builder.Default
     private OperationDisplayTypeEnum displayType = OperationDisplayTypeEnum.ICON_TEXT;
 
     /** 按钮事件 */

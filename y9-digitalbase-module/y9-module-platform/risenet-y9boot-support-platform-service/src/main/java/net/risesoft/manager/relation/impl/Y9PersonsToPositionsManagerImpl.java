@@ -124,7 +124,7 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
 
         // 校验岗位容量是否已满
         Y9AssertUtil.lessThanOrEqualTo(countByPositionId(positionId) + 1, y9Position.getCapacity(),
-            OrgUnitErrorCodeEnum.POSITION_IS_FULL);
+            OrgUnitErrorCodeEnum.POSITION_IS_FULL, positionId);
 
         Y9PersonsToPositions y9PersonsToPositions = new Y9PersonsToPositions();
         y9PersonsToPositions.setId(Y9IdGenerator.genId());

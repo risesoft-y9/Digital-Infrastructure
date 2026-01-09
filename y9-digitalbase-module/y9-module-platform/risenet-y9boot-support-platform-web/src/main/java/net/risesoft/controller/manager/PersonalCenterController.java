@@ -52,7 +52,7 @@ public class PersonalCenterController {
     @RequestMapping("/checkPassword")
     public Y9Result<Boolean> checkPassword(@RequestParam @NotBlank String personId,
         @RequestParam @NotBlank String password) {
-        return Y9Result.success(y9ManagerService.checkPassword(personId, password), "校验密码操作成功");
+        return Y9Result.success(y9ManagerService.isPasswordCorrect(personId, password), "校验密码操作成功");
     }
 
     /**

@@ -9,7 +9,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 
@@ -26,7 +25,6 @@ import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 @DynamicUpdate
 @Comment("应用的菜单表")
 @Data
-@SuperBuilder
 @NoArgsConstructor
 public class Y9Menu extends Y9ResourceBase {
 

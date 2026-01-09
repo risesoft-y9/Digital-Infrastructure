@@ -1,6 +1,7 @@
 package net.risesoft.manager.org.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,109 +48,27 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
 
     private final Y9ManagerRepository y9ManagerRepository;
 
-    private void buildGuidPath(StringBuilder sb, Y9OrgBase y9OrgBase) {
-        if (OrgTypeEnum.PERSON.equals(y9OrgBase.getOrgType())) {
-            // 遍历开始是person，尾部的逗号不用加
-            sb.insert(0, y9OrgBase.getId());
-
-            Y9Person person = (Y9Person)y9OrgBase;
-            Y9OrgBase parent = this.getOrgUnitAsParent(person.getParentId());
-            buildGuidPath(sb, parent);
-        } else if (OrgTypeEnum.POSITION.equals(y9OrgBase.getOrgType())) {
-            // 遍历开始时，一定是position，尾部的逗号不用加
-            sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()));
-
-            Y9Position position = (Y9Position)y9OrgBase;
-            Y9OrgBase parent = this.getOrgUnitAsParent(position.getParentId());
-            buildGuidPath(sb, parent);
-        } else if (OrgTypeEnum.MANAGER.equals(y9OrgBase.getOrgType())) {
-            // 遍历开始是person，尾部的逗号不用加
-            sb.insert(0, y9OrgBase.getId());
-
-            Y9Manager person = (Y9Manager)y9OrgBase;
-            Y9OrgBase parent = this.getOrgUnitAsParent(person.getParentId());
-            buildGuidPath(sb, parent);
-        } else if (OrgTypeEnum.DEPARTMENT.equals(y9OrgBase.getOrgType())) {
-            sb.insert(0, y9OrgBase.getId() + ",");
-
-            Y9Department dept = (Y9Department)y9OrgBase;
-            Y9OrgBase parent = this.getOrgUnitAsParent(dept.getParentId());
-            buildGuidPath(sb, parent);
-        } else if (OrgTypeEnum.ORGANIZATION.equals(y9OrgBase.getOrgType())) {
-            Y9Organization org = (Y9Organization)y9OrgBase;
-            // 遍历结束时，一定是org
-            sb.insert(0, org.getId() + ",");
-        }
-    }
-
     @Override
-    public String buildGuidPath(Y9OrgBase y9OrgBase) {
-        StringBuilder sb = new StringBuilder();
-        buildGuidPath(sb, y9OrgBase);
-        return sb.toString();
-    }
-
-    @Override
-    public String buildOrderedPath(Y9OrgBase y9OrgBase) {
-        StringBuilder sb = new StringBuilder();
-        buildOrderedPath(sb, y9OrgBase);
-        return sb.toString();
-    }
-
-    private void buildOrderedPath(StringBuilder sb, Y9OrgBase y9OrgBase) {
-        if (OrgTypeEnum.PERSON.equals(y9OrgBase.getOrgType())) {
-            // 遍历开始时，一定是person，尾部的逗号不用加
-            sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()));
-
-            Y9Person person = (Y9Person)y9OrgBase;
-            Y9OrgBase parent = this.getOrgUnitAsParent(person.getParentId());
-            buildOrderedPath(sb, parent);
-        } else if (OrgTypeEnum.POSITION.equals(y9OrgBase.getOrgType())) {
-            // 遍历开始时，一定是manager，尾部的逗号不用加
-            sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()));
-
-            Y9Position y9Position = (Y9Position)y9OrgBase;
-            Y9OrgBase parent = this.getOrgUnitAsParent(y9Position.getParentId());
-            buildOrderedPath(sb, parent);
-        } else if (OrgTypeEnum.MANAGER.equals(y9OrgBase.getOrgType())) {
-            // 遍历开始时，一定是manager，尾部的逗号不用加
-            sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()));
-
-            Y9Manager y9Manager = (Y9Manager)y9OrgBase;
-            Y9OrgBase parent = this.getOrgUnitAsParent(y9Manager.getParentId());
-            buildOrderedPath(sb, parent);
-        } else if (OrgTypeEnum.DEPARTMENT.equals(y9OrgBase.getOrgType())) {
-            sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()) + ",");
-
-            Y9Department dept = (Y9Department)y9OrgBase;
-            Y9OrgBase parent = this.getOrgUnitAsParent(dept.getParentId());
-            buildOrderedPath(sb, parent);
-        } else if (OrgTypeEnum.ORGANIZATION.equals(y9OrgBase.getOrgType())) {
-            // 遍历结束时，一定是org
-            sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()) + ",");
-        }
-    }
-
-    @Override
-    public void checkAllDescendantsDisabled(String orgUnitId) {
+    public boolean isAllDescendantsDisabled(String orgUnitId) {
         Y9OrgBase orgUnit = getOrgUnit(orgUnitId);
         String guidPathPrefix = orgUnit.getGuidPath() + ",";
 
         if (y9PersonRepository.countByDisabledAndGuidPathContaining(Boolean.FALSE, guidPathPrefix) > 0) {
-            throw Y9ExceptionUtil.businessException(OrgUnitErrorCodeEnum.NOT_ALL_PERSONS_DISABLED);
+            return false;
         }
 
         if (y9PositionRepository.countByDisabledAndGuidPathContaining(Boolean.FALSE, guidPathPrefix) > 0) {
-            throw Y9ExceptionUtil.businessException(OrgUnitErrorCodeEnum.NOT_ALL_POSITIONS_DISABLED);
+            return false;
         }
 
         if (y9GroupRepository.countByDisabledAndGuidPathContaining(Boolean.FALSE, guidPathPrefix) > 0) {
-            throw Y9ExceptionUtil.businessException(OrgUnitErrorCodeEnum.NOT_ALL_GROUPS_DISABLED);
+            return false;
         }
 
         if (y9DepartmentRepository.countByDisabledAndGuidPathContaining(Boolean.FALSE, guidPathPrefix) > 0) {
-            throw Y9ExceptionUtil.businessException(OrgUnitErrorCodeEnum.NOT_ALL_DEPARTMENTS_DISABLED);
+            return false;
         }
+        return true;
     }
 
     private void fillPersonsRecursivelyToLeaf(String parentId, List<Y9Person> personList) {
@@ -413,4 +332,20 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
         return orgUnitIdList;
     }
 
+    @Override
+    public void fillWithOrgUnitAndAncestor(String orgUnitId, Collection<Y9OrgBase> orgBaseCollection) {
+        Y9OrgBase y9OrgBase = this.getOrgUnit(orgUnitId);
+        orgBaseCollection.add(y9OrgBase);
+        if (y9OrgBase.getOrgType().equals(OrgTypeEnum.DEPARTMENT)) {
+            Y9Department departmentParent = (Y9Department)y9OrgBase;
+            this.fillWithOrgUnitAndAncestor(departmentParent.getParentId(), orgBaseCollection);
+        }
+    }
+
+    @Override
+    public List<Y9OrgBase> listOrgUnitAndAncestor(String orgUnitId) {
+        List<Y9OrgBase> orgBaseList = new ArrayList<>();
+        this.fillWithOrgUnitAndAncestor(orgUnitId, orgBaseList);
+        return orgBaseList;
+    }
 }

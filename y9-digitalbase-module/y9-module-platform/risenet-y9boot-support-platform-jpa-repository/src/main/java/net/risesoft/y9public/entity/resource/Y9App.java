@@ -10,10 +10,8 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.resource.AppOpenTypeEnum;
 import net.risesoft.enums.platform.resource.AppTypeEnum;
@@ -33,7 +31,6 @@ import net.risesoft.persistence.EnumConverter;
 @DynamicUpdate
 @Comment("应用市场表")
 @Data
-@SuperBuilder
 @NoArgsConstructor
 public class Y9App extends Y9ResourceBase {
 
@@ -53,7 +50,6 @@ public class Y9App extends Y9ResourceBase {
     @ColumnDefault("0")
     @Column(name = "CHECKED", nullable = false)
     @Comment("是否审核通过")
-    @Builder.Default
     private Boolean checked = Boolean.FALSE;
 
     /** 审核人 */
@@ -66,7 +62,6 @@ public class Y9App extends Y9ResourceBase {
     @ColumnDefault("0")
     @Column(name = "SHOW_NUMBER", nullable = false)
     @Comment("是否显示右上角数字，0=不显示，1=显示")
-    @Builder.Default
     private Boolean showNumber = Boolean.FALSE;
 
     /** 获取数字的URL */
@@ -88,14 +83,12 @@ public class Y9App extends Y9ResourceBase {
     @Column(name = "TYPE", nullable = false)
     @Comment("分类")
     @Convert(converter = EnumConverter.AppTypeEnumConverter.class)
-    @Builder.Default
     private AppTypeEnum type = AppTypeEnum.WORKFLOW;
 
     /** 应用打开方式:0在桌面窗口打开；1在新浏览器窗口打开 */
     @Column(name = "OPEN_TYPE", nullable = false)
     @Comment(value = "应用打开方式:0在桌面窗口打开；1在新浏览器窗口打开")
     @Convert(converter = EnumConverter.AppOpenTypeEnumConverter.class)
-    @Builder.Default
     private AppOpenTypeEnum opentype = AppOpenTypeEnum.BROWSE;
 
     /** 图标图片的base64 */
@@ -109,7 +102,6 @@ public class Y9App extends Y9ResourceBase {
     @Column(name = "AUTO_INIT", nullable = false)
     @Comment("是否自动租用应用")
     @ColumnDefault("0")
-    @Builder.Default
     private Boolean autoInit = Boolean.FALSE;
 
     @Override

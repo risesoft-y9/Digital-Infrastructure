@@ -8,10 +8,8 @@ import jakarta.persistence.Table;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.resource.DataCatalogTypeEnum;
@@ -30,7 +28,6 @@ import net.risesoft.persistence.EnumConverter;
 @DynamicUpdate
 @Comment("数据目录")
 @Data
-@SuperBuilder
 @NoArgsConstructor
 public class Y9DataCatalog extends Y9ResourceBase {
 
@@ -74,7 +71,6 @@ public class Y9DataCatalog extends Y9ResourceBase {
     @Column(name = "DATA_CATALOG_TYPE", nullable = false)
     @Comment("数据目录类型")
     @Convert(converter = EnumConverter.DataCatalogTypeEnumConverter.class)
-    @Builder.Default
     private DataCatalogTypeEnum type = DataCatalogTypeEnum.CLASSIFICATION;
 
     @Override

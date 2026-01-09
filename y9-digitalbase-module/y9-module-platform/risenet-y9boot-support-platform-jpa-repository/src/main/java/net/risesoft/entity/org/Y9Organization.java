@@ -5,16 +5,23 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
+import net.risesoft.consts.DefaultConsts;
 import net.risesoft.enums.platform.org.OrgTypeEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
+import net.risesoft.id.IdType;
+import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.model.platform.org.Organization;
+import net.risesoft.util.Y9OrgUtil;
+import net.risesoft.y9.exception.util.Y9ExceptionUtil;
+import net.risesoft.y9.util.Y9BeanUtil;
 
 /**
  * 组织机构实体
@@ -29,7 +36,6 @@ import net.risesoft.enums.platform.org.OrgTypeEnum;
 @DynamicUpdate
 @Comment("组织机构实体表")
 @Data
-@SuperBuilder
 @NoArgsConstructor
 public class Y9Organization extends Y9OrgBase {
 
@@ -59,11 +65,47 @@ public class Y9Organization extends Y9OrgBase {
     @Column(name = "VIRTUALIZED", nullable = false)
     @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @Comment("类型:0=实体组织，1=虚拟组织")
-    @Builder.Default
     private Boolean virtual = false;
+
+    public Y9Organization(Organization organization, Integer nextTabIndex) {
+        Y9BeanUtil.copyProperties(organization, this);
+
+        if (StringUtils.isBlank(this.id)) {
+            this.id = Y9IdGenerator.genId(IdType.SNOWFLAKE);
+        }
+        if (DefaultConsts.TAB_INDEX.equals(this.tabIndex)) {
+            this.tabIndex = nextTabIndex;
+        }
+        this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.ORGANIZATION, this.name, null);
+        this.guidPath = Y9OrgUtil.buildGuidPath(null, this.id);
+    }
 
     @Override
     public String getParentId() {
         return null;
+    }
+
+    public void changeProperties(String properties) {
+        this.properties = properties;
+    }
+
+    public Boolean changeDisabled(boolean isAllDescendantsDisabled) {
+        boolean targetStatus = !this.disabled;
+        if (targetStatus && !isAllDescendantsDisabled) {
+            throw Y9ExceptionUtil.businessException(OrgUnitErrorCodeEnum.NOT_ALL_DESCENDENTS_DISABLED);
+        }
+        this.disabled = targetStatus;
+        return targetStatus;
+    }
+
+    public void update(Organization organization) {
+        Y9BeanUtil.copyProperties(organization, this);
+
+        this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.ORGANIZATION, this.name, null);
+        this.guidPath = Y9OrgUtil.buildGuidPath(null, this.id);
+    }
+
+    public void changeTabIndex(int tabIndex) {
+        this.tabIndex = tabIndex;
     }
 }

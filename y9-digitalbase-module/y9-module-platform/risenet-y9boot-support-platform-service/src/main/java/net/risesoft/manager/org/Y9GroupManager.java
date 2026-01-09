@@ -38,7 +38,5 @@ public interface Y9GroupManager {
 
     Y9Group insert(Y9Group group);
 
-    Y9Group update(Y9Group group);
-
-    Y9Group updateTabIndex(String id, int tabIndex);
+    Y9Group update(Y9Group group, Y9Group originalGroup);
 }

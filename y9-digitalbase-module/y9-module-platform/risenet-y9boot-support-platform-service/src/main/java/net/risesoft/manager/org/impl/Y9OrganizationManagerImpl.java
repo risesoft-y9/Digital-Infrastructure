@@ -2,7 +2,6 @@ package net.risesoft.manager.org.impl;
 
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -11,23 +10,15 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
-import net.risesoft.consts.DefaultConsts;
-import net.risesoft.consts.InitDataConsts;
-import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.org.Y9Organization;
-import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
-import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9OrganizationManager;
 import net.risesoft.repository.org.Y9OrganizationRepository;
 import net.risesoft.util.PlatformModelConvertUtil;
-import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
-import net.risesoft.y9.util.Y9BeanUtil;
 
 /**
  * 组织 manager 实现类
@@ -79,15 +70,6 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
 
     @Override
     public Y9Organization insert(Y9Organization organization) {
-        if (StringUtils.isBlank(organization.getId())) {
-            organization.setId(Y9IdGenerator.genId());
-        }
-
-        organization.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.ORGANIZATION, organization.getName(), null));
-        organization.setTabIndex(
-            (null == organization.getTabIndex() || DefaultConsts.TAB_INDEX.equals(organization.getTabIndex()))
-                ? getNextTabIndex() : organization.getTabIndex());
-        organization.setGuidPath(Y9OrgUtil.buildGuidPath(null, organization.getId()));
         final Y9Organization savedOrganization = this.save(organization);
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedOrganization));
@@ -96,32 +78,12 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
     }
 
     @Override
-    public Y9Organization update(Y9Organization organization) {
-        Y9Organization currentOrganization = this.getById(organization.getId());
-        Y9Organization originY9Organization =
-            PlatformModelConvertUtil.convert(currentOrganization, Y9Organization.class);
+    public Y9Organization update(Y9Organization organization, Y9Organization originalOrganization) {
+        final Y9Organization savedOrganization = this.save(organization);
 
-        Y9BeanUtil.copyProperties(organization, currentOrganization, "tenantId");
-        currentOrganization.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.ORGANIZATION, currentOrganization.getName(), null));
-        currentOrganization.setGuidPath(Y9OrgUtil.buildGuidPath(null, currentOrganization.getId()));
-        final Y9Organization savedOrganization = this.save(currentOrganization);
-
-        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Organization, savedOrganization));
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalOrganization, savedOrganization));
 
         return savedOrganization;
     }
 
-    @Override
-    @CacheEvict(key = "#id")
-    public Y9Organization updateTabIndex(String id, int tabIndex) {
-        Y9Organization organization = this.getById(id);
-
-        Y9Organization updatedOrganization = PlatformModelConvertUtil.convert(organization, Y9Organization.class);
-        updatedOrganization.setTabIndex(tabIndex);
-        return this.update(updatedOrganization);
-    }
-
-    private Integer getNextTabIndex() {
-        return y9OrganizationRepository.findTopByOrderByTabIndexDesc().map(Y9OrgBase::getTabIndex).orElse(-1) + 1;
-    }
 }

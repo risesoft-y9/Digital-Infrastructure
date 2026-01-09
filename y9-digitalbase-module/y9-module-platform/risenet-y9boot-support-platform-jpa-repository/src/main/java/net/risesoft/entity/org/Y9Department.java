@@ -9,6 +9,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
@@ -16,12 +17,19 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
+import net.risesoft.consts.DefaultConsts;
 import net.risesoft.enums.platform.org.OrgTypeEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
+import net.risesoft.id.IdType;
+import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.model.platform.org.Department;
+import net.risesoft.util.Y9OrgUtil;
+import net.risesoft.y9.exception.Y9BusinessException;
+import net.risesoft.y9.exception.util.Y9ExceptionUtil;
+import net.risesoft.y9.util.Y9BeanUtil;
 
 /**
  * 部门实体
@@ -36,7 +44,6 @@ import net.risesoft.enums.platform.org.OrgTypeEnum;
 @DynamicUpdate
 @Comment("部门实体表")
 @Data
-@SuperBuilder
 @NoArgsConstructor
 public class Y9Department extends Y9OrgBase {
 
@@ -129,11 +136,61 @@ public class Y9Department extends Y9OrgBase {
     @Column(name = "BUREAU", nullable = false)
     @Comment("是否委办局")
     @ColumnDefault("0")
-    @Builder.Default
     private Boolean bureau = false;
+
+    public Y9Department(Department department, Y9OrgBase parent, Integer nextSubTabIndex) {
+        Y9BeanUtil.copyProperties(department, this);
+
+        if (StringUtils.isBlank(this.id)) {
+            this.id = Y9IdGenerator.genId(IdType.SNOWFLAKE);
+        }
+        if (DefaultConsts.TAB_INDEX.equals(this.tabIndex)) {
+            this.tabIndex = nextSubTabIndex;
+        }
+        this.parentId = parent.getId();
+        this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.DEPARTMENT, this.name, parent.getDn());
+        this.guidPath = Y9OrgUtil.buildGuidPath(parent.getGuidPath(), this.id);
+    }
 
     @Override
     public String getParentId() {
         return this.parentId;
+    }
+
+    public void changeParent(Y9OrgBase parent, Integer nextSubTabIndex) {
+        if (parent.getGuidPath().contains(this.id)) {
+            // 判断是否移动到自己，或者自己的子节点里面，这种情况要排除，不让移动
+            throw new Y9BusinessException(OrgUnitErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getCode(),
+                OrgUnitErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getDescription());
+        }
+        this.parentId = parent.getId();
+        this.tabIndex = nextSubTabIndex;
+        this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.DEPARTMENT, this.name, parent.getDn());
+        this.guidPath = Y9OrgUtil.buildGuidPath(parent.getGuidPath(), this.id);
+    }
+
+    public void update(Department department, Y9OrgBase parent) {
+        Y9BeanUtil.copyProperties(department, this);
+        
+        this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.DEPARTMENT, this.name, parent.getDn());
+        this.guidPath = Y9OrgUtil.buildGuidPath(parent.getGuidPath(), this.id);
+    }
+
+    public void changeTabIndex(int tabIndex) {
+        this.tabIndex = tabIndex;
+    }
+
+    public void changeProperties(String properties) {
+        this.properties = properties;
+    }
+
+    public Boolean changeDisabled(boolean isAllDescendantsDisabled) {
+        boolean targetStatus = !this.disabled;
+        if (targetStatus && !isAllDescendantsDisabled) {
+            // 检查所有后代节点是否都禁用了，只有所有后代节点都禁用了，当前部门才能禁用
+            throw Y9ExceptionUtil.businessException(OrgUnitErrorCodeEnum.NOT_ALL_DESCENDENTS_DISABLED);
+        }
+        this.disabled = targetStatus;
+        return targetStatus;
     }
 }

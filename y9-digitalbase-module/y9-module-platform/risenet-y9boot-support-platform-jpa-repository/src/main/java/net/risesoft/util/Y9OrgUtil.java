@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -84,7 +85,7 @@ public class Y9OrgUtil {
      * @return boolean
      */
     public static boolean isSameOf(Y9OrgBase a, Y9OrgBase b) {
-        return Objects.equals(a, b);
+        return a.getId() != null && b.getId() != null && Objects.equals(a.getId(), b.getId());
     }
 
     /**
@@ -128,6 +129,12 @@ public class Y9OrgUtil {
         return parentGuidPath + OrgLevelConsts.SEPARATOR + id;
     }
 
+    /**
+     * dn 转换为名称路径（正序，也就是从根节点往下）
+     *
+     * @param dn dn
+     * @return {@code String }
+     */
     public static String dnToNamePath(String dn) {
         return dnToNamePath(dn, OrgLevelConsts.NAME_SEPARATOR);
     }
@@ -154,5 +161,23 @@ public class Y9OrgUtil {
         Collections.reverse(nameList);
 
         return StringUtils.join(nameList, separator);
+    }
+
+    /**
+     * 构建排序序列号路径
+     *
+     * @param orgBase 组织节点
+     * @param ancestorList 组织节点的祖先节点列表（有序）
+     * @return {@code String }
+     */
+    public static String buildOrderedPath(Y9OrgBase orgBase, List<Y9OrgBase> ancestorList) {
+        List<Y9OrgBase> y9OrgBaseList =
+            Stream.concat(Stream.of(orgBase), ancestorList.stream()).collect(Collectors.toList());
+
+        Collections.reverse(y9OrgBaseList);
+
+        return y9OrgBaseList.stream()
+            .map(o -> String.format("%05d", o.getTabIndex()))
+            .collect(Collectors.joining(OrgLevelConsts.SEPARATOR));
     }
 }

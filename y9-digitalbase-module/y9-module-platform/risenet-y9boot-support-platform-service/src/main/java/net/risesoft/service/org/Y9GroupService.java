@@ -99,14 +99,6 @@ public interface Y9GroupService {
     Group saveOrUpdate(Group group);
 
     /**
-     * 保存新的序号
-     *
-     * @param groupIds 用户组id数组
-     * @return {@code List<Group>}
-     */
-    List<Group> saveOrder(List<String> groupIds);
-
-    /**
      * 保存或者更新用户组扩展信息
      *
      * @param id 用户组id

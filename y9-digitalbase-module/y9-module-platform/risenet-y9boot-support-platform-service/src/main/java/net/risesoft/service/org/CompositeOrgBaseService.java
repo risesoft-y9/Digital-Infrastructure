@@ -11,7 +11,6 @@ import net.risesoft.model.platform.SyncOrgUnits;
 import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.org.Organization;
 import net.risesoft.model.platform.org.Person;
-import net.risesoft.model.platform.org.Position;
 
 /**
  * 组合的组织节点 service
@@ -32,7 +31,7 @@ public interface CompositeOrgBaseService {
     long countByGuidPath(String guidPath, OrgTreeTypeEnum orgTreeTypeEnum);
 
     /**
-     * 根据指定id获取ORGBase对象(可以是org的任意类型)
+     * 根据指定id获取组织节点对象(可以是org的任意类型)
      *
      * @param orgUnitId 组织节点id
      * @return {@code Optional<OrgUnit>}
@@ -88,7 +87,7 @@ public interface CompositeOrgBaseService {
     Optional<OrgUnit> findOrgUnitPersonOrPosition(String orgUnitId);
 
     /**
-     * 根据指定id获取ORGBase对象(可以是org的任意类型)
+     * 根据指定id获取组织节点对象(可以是org的任意类型)
      *
      * @param orgUnitId 组织节点id
      * @return {@link OrgUnit}
@@ -193,22 +192,6 @@ public interface CompositeOrgBaseService {
     List<Person> listAllDescendantPersons(String parentId, Boolean disabled);
 
     /**
-     * 根据组织节点id向下递归获取所有组织节点
-     *
-     * @param orgId 组织节点id
-     * @return {@code List<OrgUnit>}
-     */
-    List<OrgUnit> listAllOrgUnits(String orgId);
-
-    /**
-     * 根据父节点id，递归获取其下所有岗位
-     *
-     * @param parentId 父节点id
-     * @return {@code List<Y9Position>}
-     */
-    List<Position> listAllPositionsRecursionDownward(String parentId);
-
-    /**
      * 根据父节点id,人员姓名，是否禁用，递归获取其下所有人员
      *
      * @param parentId 父节点id
@@ -265,14 +248,6 @@ public interface CompositeOrgBaseService {
      * @return {@code List<OrgUnit>}
      */
     List<OrgUnit> treeSearch4DeptManager(String name, OrgTreeTypeEnum treeType, Boolean disabled);
-
-    /**
-     * 列出所有祖先节点
-     *
-     * @param parentId 父id
-     * @return {@code List<OrgUnit> }
-     */
-    List<OrgUnit> listAllAncestors(String parentId);
 
     /**
      * 通过父节点 id 获取作为可作为父亲节点的节点（只可能是组织机构和部门）

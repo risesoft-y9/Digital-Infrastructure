@@ -19,16 +19,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.entity.org.Y9Department;
+import net.risesoft.entity.org.Y9Job;
 import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.org.Y9PersonExt;
 import net.risesoft.entity.org.Y9Position;
 import net.risesoft.enums.AuditLogEnum;
-import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
+import net.risesoft.manager.org.Y9JobManager;
 import net.risesoft.manager.org.Y9PersonExtManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.org.Y9PositionManager;
@@ -36,6 +37,7 @@ import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
 import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.org.PersonExt;
+import net.risesoft.model.platform.org.Position;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
@@ -50,10 +52,8 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
-import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9StringUtil;
-import net.risesoft.y9.util.signing.Y9MessageDigestUtil;
 
 /**
  * @author dingzhaojun
@@ -72,6 +72,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     private final Y9PersonExtManager y9PersonExtManager;
     private final Y9PersonManager y9PersonManager;
     private final Y9PositionManager y9PositionManager;
+    private final Y9JobManager y9JobManager;
     private final Y9PersonsToPositionsManager y9PersonsToPositionsManager;
 
     private final Y9SettingService y9SettingService;
@@ -106,7 +107,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
                 currentPerson.setEmail(originalPerson.getEmail());
                 currentPerson.setMobile(originalPerson.getMobile());
                 currentPerson.setDescription(originalPerson.getDescription());
-                final Y9Person savedPerson = y9PersonManager.update(currentPerson);
+                final Y9Person savedPerson = y9PersonManager.update(currentPerson, originalPerson);
                 personList.add(savedPerson);
                 continue;
             }
@@ -131,14 +132,13 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Person currentPerson = y9PersonManager.getById(id);
         Y9Person originalPerson = PlatformModelConvertUtil.convert(currentPerson, Y9Person.class);
 
-        boolean disableStatusToUpdate = !originalPerson.getDisabled();
-        currentPerson.setDisabled(disableStatusToUpdate);
-        Y9Person savedPerson = y9PersonManager.update(currentPerson);
+        Boolean disableStatus = currentPerson.changeDisabled();
+        Y9Person savedPerson = y9PersonManager.update(currentPerson, originalPerson);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.PERSON_UPDATE_DISABLED.getAction())
             .description(Y9StringUtil.format(AuditLogEnum.PERSON_UPDATE_DISABLED.getDescription(),
-                savedPerson.getName(), disableStatusToUpdate ? "禁用" : "启用"))
+                savedPerson.getName(), disableStatus ? "禁用" : "启用"))
             .objectId(id)
             .oldObject(originalPerson)
             .currentObject(savedPerson)
@@ -240,18 +240,10 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = true)
-    public Person getPersonByLoginNameAndTenantId(String loginName, String tenantId) {
-        List<Y9Person> personList = new ArrayList<>();
-        try {
-            personList = y9PersonRepository.findByLoginNameAndTenantIdAndOriginal(loginName, tenantId, Boolean.TRUE);
-        } catch (Exception e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-
-        if (personList.isEmpty()) {
-            return null;
-        }
-        return PlatformModelConvertUtil.y9PersonToPerson(personList.get(0));
+    public Person getPersonByLoginName(String loginName) {
+        return y9PersonRepository.findByLoginNameAndOriginalTrue(loginName)
+            .map(PlatformModelConvertUtil::y9PersonToPerson)
+            .orElse(null);
     }
 
     @Override
@@ -344,16 +336,10 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Transactional
     public Person modifyPassword(String id, String oldPassword, String newPassword) {
         Y9Person currentPerson = y9PersonManager.getById(id);
-
-        if (StringUtils.isNotBlank(oldPassword)) {
-            // 兼容旧接口，无 oldPassword
-            Y9AssertUtil.isTrue(Y9MessageDigestUtil.bcryptMatch(oldPassword, currentPerson.getPassword()),
-                OrgUnitErrorCodeEnum.OLD_PASSWORD_IS_INCORRECT);
-        }
-
         Y9Person originalPerson = PlatformModelConvertUtil.convert(currentPerson, Y9Person.class);
-        currentPerson.setPassword(Y9MessageDigestUtil.bcrypt(newPassword));
-        Y9Person savedPerson = y9PersonManager.update(currentPerson);
+
+        currentPerson.changePassword(oldPassword, newPassword);
+        Y9Person savedPerson = y9PersonManager.update(currentPerson, originalPerson);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.PERSON_UPDATE_PASSWORD.getAction())
@@ -372,17 +358,20 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Transactional
     public Person move(String id, String parentId) {
         Y9Person currentPerson = y9PersonManager.getById(id);
-        Y9OrgBase parentToMove = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
         Y9Person originalPerson = PlatformModelConvertUtil.convert(currentPerson, Y9Person.class);
 
-        currentPerson.setParentId(parentId);
-        currentPerson.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parentId));
-        Y9Person savedPerson = y9PersonManager.update(currentPerson);
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
+        Integer nextSubTabIndex = compositeOrgBaseManager.getNextSubTabIndex(parentId);
+        List<Y9OrgBase> ancestorList = compositeOrgBaseManager.listOrgUnitAndAncestor(parentId);
+
+        currentPerson.changeParent(parent, nextSubTabIndex, ancestorList);
+
+        Y9Person savedPerson = y9PersonManager.update(currentPerson, originalPerson);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.PERSON_UPDATE_PARENTID.getAction())
             .description(Y9StringUtil.format(AuditLogEnum.PERSON_UPDATE_PARENTID.getDescription(),
-                savedPerson.getName(), parentToMove.getName()))
+                savedPerson.getName(), parent.getName()))
             .objectId(id)
             .oldObject(originalPerson)
             .currentObject(savedPerson)
@@ -411,8 +400,8 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Person originalPerson = PlatformModelConvertUtil.convert(currentPerson, Y9Person.class);
 
         String password = y9SettingService.getTenantSetting().getUserDefaultPassword();
-        currentPerson.setPassword(Y9MessageDigestUtil.bcrypt(password));
-        Y9Person savedPerson = y9PersonManager.update(currentPerson);
+        currentPerson.changePassword(null, password);
+        Y9Person savedPerson = y9PersonManager.update(currentPerson, originalPerson);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.PERSON_RESET_PASSWORD.getAction())
@@ -428,25 +417,30 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional
     public Person saveAvator(String id, String avatorUrl) {
-        final Y9Person person = y9PersonManager.getById(id);
+        final Y9Person y9Person = y9PersonManager.getById(id);
+        Y9Person updatedPerson = PlatformModelConvertUtil.convert(y9Person, Y9Person.class);
 
-        Person updatedPerson = PlatformModelConvertUtil.convert(person, Person.class);
-        updatedPerson.setAvator(avatorUrl);
-        return this.saveOrUpdate(updatedPerson, null);
+        updatedPerson.changeAvatar(avatorUrl);
+        Y9Person savedPerson = y9PersonManager.update(y9Person, updatedPerson);
+        return PlatformModelConvertUtil.y9PersonToPerson(savedPerson);
     }
 
     @Override
     @Transactional
     public Person saveOrUpdate(Person person, PersonExt personExt) {
-        Y9Person y9Person = PlatformModelConvertUtil.convert(person, Y9Person.class);
         Y9PersonExt y9PersonExt = PlatformModelConvertUtil.convert(personExt, Y9PersonExt.class);
 
-        if (StringUtils.isNotBlank(y9Person.getId())) {
-            Optional<Y9Person> personOptional = y9PersonManager.findById(y9Person.getId());
+        if (StringUtils.isNotBlank(person.getId())) {
+            Optional<Y9Person> personOptional = y9PersonManager.findById(person.getId());
             if (personOptional.isPresent()) {
                 Y9Person originalPerson = PlatformModelConvertUtil.convert(personOptional.get(), Y9Person.class);
+                Y9Person y9Person = personOptional.get();
 
-                Y9Person savedPerson = y9PersonManager.update(y9Person);
+                Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(y9Person.getParentId());
+                List<Y9OrgBase> ancestorList = compositeOrgBaseManager.listOrgUnitAndAncestor(person.getParentId());
+                y9Person.update(person, parent, ancestorList);
+                Y9Person savedPerson = y9PersonManager.update(y9Person, originalPerson);
+
                 y9PersonExtManager.saveOrUpdate(y9PersonExt, savedPerson);
                 y9PersonManager.updatePersonByOriginalId(savedPerson, y9PersonExt);
 
@@ -464,6 +458,12 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             }
         }
 
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
+        Integer nextSubTabIndex = compositeOrgBaseManager.getNextSubTabIndex(parent.getId());
+        String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
+        List<Y9OrgBase> ancestorList = compositeOrgBaseManager.listOrgUnitAndAncestor(person.getParentId());
+
+        Y9Person y9Person = new Y9Person(person, parent, ancestorList, nextSubTabIndex, defaultPassword);
         Y9Person savedPerson = y9PersonManager.insert(y9Person);
         y9PersonExtManager.saveOrUpdate(y9PersonExt, savedPerson);
 
@@ -493,9 +493,14 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             // 根据职位初始化新岗位并关联
             List<String> newPositionIdList = new ArrayList<>();
             for (String jobId : jobIds) {
-                Y9Position y9Position = new Y9Position();
-                y9Position.setJobId(jobId);
-                y9Position.setParentId(person.getParentId());
+                Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
+                Integer nextSubTabIndex = compositeOrgBaseManager.getNextSubTabIndex(person.getParentId());
+                List<Y9OrgBase> ancestorList = compositeOrgBaseManager.listOrgUnitAndAncestor(person.getParentId());
+                Y9Job y9Job = y9JobManager.getById(jobId);
+                String positionNameTemplate = y9SettingService.getTenantSetting().getPositionNameTemplate();
+
+                Y9Position y9Position =
+                    new Y9Position(new Position(), y9Job, positionNameTemplate, parent, ancestorList, nextSubTabIndex);
 
                 Y9Position newPosition = y9PositionManager.insert(y9Position);
                 newPositionIdList.add(newPosition.getId());
@@ -511,8 +516,8 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Person currentPerson = y9PersonManager.getById(id);
         Y9Person originalPerson = PlatformModelConvertUtil.convert(currentPerson, Y9Person.class);
 
-        currentPerson.setProperties(properties);
-        Y9Person savedPerson = y9PersonManager.update(currentPerson);
+        currentPerson.changeProperties(properties);
+        Y9Person savedPerson = y9PersonManager.update(currentPerson, originalPerson);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.PERSON_UPDATE_PROPERTIES.getAction())
@@ -531,8 +536,10 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Transactional
     public Person saveWeixinId(String id, String weixinId) {
         Y9Person currentPerson = y9PersonManager.getById(id);
-        currentPerson.setWeixinId(weixinId);
-        Y9Person savedPerson = y9PersonManager.update(currentPerson);
+        Y9Person originalPerson = PlatformModelConvertUtil.convert(currentPerson, Y9Person.class);
+
+        currentPerson.changeWeixinId(weixinId);
+        Y9Person savedPerson = y9PersonManager.update(currentPerson, originalPerson);
         return PlatformModelConvertUtil.y9PersonToPerson(savedPerson);
 
     }
@@ -543,9 +550,9 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Person currentPerson = y9PersonManager.getById(id);
         Y9Person originalPerson = PlatformModelConvertUtil.convert(currentPerson, Y9Person.class);
 
-        currentPerson.setTabIndex(tabIndex);
-        currentPerson.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(currentPerson));
-        Y9Person savedPerson = y9PersonManager.update(currentPerson);
+        List<Y9OrgBase> ancestorList = compositeOrgBaseManager.listOrgUnitAndAncestor(currentPerson.getParentId());
+        currentPerson.changeTabIndex(tabIndex, ancestorList);
+        Y9Person savedPerson = y9PersonManager.update(currentPerson, originalPerson);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.PERSON_UPDATE_TABINDEX.getAction())
@@ -620,13 +627,22 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
         if (Y9OrgUtil.isCurrentOrAncestorChanged(originOrgBase, updatedOrgBase)) {
             List<Y9Person> personList = y9PersonRepository.findByParentIdOrderByTabIndex(updatedOrgBase.getId());
-            for (Y9Person person : personList) {
-                y9PersonManager.update(person);
+            for (Y9Person y9Person : personList) {
+                Y9Person originalPerson = PlatformModelConvertUtil.convert(y9Person, Y9Person.class);
+
+                List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseManager.listOrgUnitAndAncestor(updatedOrgBase.getId());
+                y9Person.update(new Person(), updatedOrgBase, y9OrgBaseList);
+                y9PersonManager.update(y9Person, originalPerson);
             }
         } else if (Y9OrgUtil.isTabIndexChanged(originOrgBase, updatedOrgBase)) {
             List<Y9Person> personList = compositeOrgBaseManager.listAllDescendantPersons(updatedOrgBase.getId());
             for (Y9Person y9Person : personList) {
-                y9PersonManager.update(y9Person);
+                Y9Person originalPerson = PlatformModelConvertUtil.convert(y9Person, Y9Person.class);
+
+                Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(y9Person.getParentId());
+                List<Y9OrgBase> ancestorList = compositeOrgBaseManager.listOrgUnitAndAncestor(updatedOrgBase.getId());
+                y9Person.update(new Person(), parent, ancestorList);
+                y9PersonManager.update(y9Person, originalPerson);
             }
         }
     }
