@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.consts.DefaultConsts;
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.ResourceErrorCodeEnum;
 import net.risesoft.model.platform.resource.App;
@@ -179,7 +180,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public App saveIsvApp(App app) {
-        if (app.getTabIndex() == null || app.getTabIndex() == 0) {
+        if (app.getTabIndex() == null || DefaultConsts.TAB_INDEX.equals(app.getTabIndex())) {
             Integer tabIndex =
                 y9AppRepository.findTopByOrderByTabIndexDesc().map(y9App -> y9App.getTabIndex() + 1).orElse(1);
             app.setTabIndex(tabIndex);

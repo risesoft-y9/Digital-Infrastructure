@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.consts.DefaultConsts;
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.SystemErrorCodeEnum;
 import net.risesoft.model.platform.System;
@@ -246,7 +247,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
             }
         }
 
-        if (y9System.getTabIndex() == null) {
+        if (y9System.getTabIndex() == null || DefaultConsts.TAB_INDEX.equals(y9System.getTabIndex())) {
             Integer maxIndex = y9SystemRepository.findTopByOrderByTabIndexDesc()
                 .map(y9System2 -> y9System2.getTabIndex() + 1)
                 .orElse(0);
