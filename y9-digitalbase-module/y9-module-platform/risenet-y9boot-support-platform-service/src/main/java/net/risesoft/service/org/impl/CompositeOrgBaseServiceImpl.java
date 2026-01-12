@@ -710,6 +710,12 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             .y9PersonToPerson(compositeOrgBaseManager.listAllDescendantPersons(parentId, disabled));
     }
 
+    @Override
+    public List<Position> listAllDescendantPositions(String parentId) {
+        return PlatformModelConvertUtil
+            .y9PositionToPosition(compositeOrgBaseManager.listAllDescendantPositions(parentId));
+    }
+
     /**
      * 递归获取所有人员
      *

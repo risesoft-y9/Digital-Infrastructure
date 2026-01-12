@@ -11,6 +11,7 @@ import net.risesoft.model.platform.SyncOrgUnits;
 import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.org.Organization;
 import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.Position;
 
 /**
  * 组合的组织节点 service
@@ -190,6 +191,14 @@ public interface CompositeOrgBaseService {
      * @return {@code List<OrgUnit>}
      */
     List<Person> listAllDescendantPersons(String parentId, Boolean disabled);
+
+    /**
+     * 根据父节点id，递归获取其下所有岗位
+     *
+     * @param parentId 父节点id
+     * @return {@code List<Y9Position>}
+     */
+    List<Position> listAllDescendantPositions(String parentId);
 
     /**
      * 根据父节点id,人员姓名，是否禁用，递归获取其下所有人员
