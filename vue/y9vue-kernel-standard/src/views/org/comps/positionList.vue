@@ -2,7 +2,7 @@
  * @Author: fuyu
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-01-11 17:32:40
+ * @LastEditTime: 2025-12-24 10:34:45
  * @Description: 组织架构-岗位列表
 -->
 <template>
@@ -77,7 +77,6 @@
 
 <script lang="ts" setup>
     import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { getJobList } from '@/api/dictionary/index';
     import { $dictionary, $dictionaryFunc } from '@/utils/data';
     import { useI18n } from 'vue-i18n';

@@ -2,7 +2,7 @@
  * @Author: fuyu
  * @Date: 2022-06-06 11:47:27
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-11-08 14:40:48
+ * @LastEditTime: 2025-12-24 09:22:22
  * @Description: 应用资源授权
 -->
 <template>
@@ -68,7 +68,6 @@
 
 <script lang="ts" setup>
     import { reactive, ref, toRefs } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { useI18n } from 'vue-i18n';
     import { menuDelete, operationDel, resourceTree, treeSearch } from '@/api/resource/index';
     import { applicationDel } from '@/api/system/index';

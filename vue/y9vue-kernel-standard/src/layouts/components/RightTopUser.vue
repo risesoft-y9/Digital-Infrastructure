@@ -28,33 +28,9 @@
                         <i class="ri-user-line"></i>{{ $t('个人中心') }}
                     </div>
                 </el-dropdown-item>
-                <!-- <el-dropdown-item command="signIn">
-                    <div class="el-dropdown-item" :style="{'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight}">
-                        <i class="ri-calendar-check-line"></i>{{ $t("已签到") }}
-                    </div>
-                </el-dropdown-item>
-                <el-dropdown-item command="signOut">
-                    <div class="el-dropdown-item" :style="{'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight}">
-                        <i class="ri-bookmark-line"></i>{{ $t("已签退") }}
-                    </div>
-                </el-dropdown-item>
-                <el-divider style="padding-bottom: 12px;margin: 0px;margin-top: 6px;"></el-divider>
-                <el-dropdown-item command="changeDept">
-                    <div class="el-dropdown-item" :style="{'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight}">
-                        <i class="ri-route-line"></i>{{ $t("选择切换部门") }}
-                    </div>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                    <div
-                        class="el-dropdown-item"
-                        :style="{'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight}"
-                        v-for="item in departmentMapList"
-                        :key="item.departmentId"
-                        style="text-align: center"
-                        @click="changeDept(item.departmentId)"
-                    >{{ item.departmentName }}</div>
-                </el-dropdown-item>
-                <el-divider style="padding-bottom: 5px;margin: 0px;"></el-divider> -->
+                <!--  
+                    <el-divider style="padding-bottom: 5px;margin: 0px;"></el-divider> 
+                -->
                 <el-dropdown-item command="logout">
                     <div
                         :style="{ 'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight }"
@@ -73,7 +49,6 @@
     import { useSettingStore } from '@/store/modules/settingStore';
     import y9_storage from '@/utils/storage';
     import { $y9_SSO } from '@/main';
-    import { ElMessage } from 'element-plus';
 
     interface RightTopUserSetupData {
         settingStore?: any;
@@ -93,7 +68,6 @@
     const userInfo = JSON.parse(sessionStorage.getItem('ssoUserInfo'));
 
     const initInfo = y9_storage.getObjectItem('initInfo');
-    const departmentMapList = y9_storage.getObjectItem('departmentMapList');
     // 点击菜单
     const onMenuClick = async (command: string) => {
         switch (command) {

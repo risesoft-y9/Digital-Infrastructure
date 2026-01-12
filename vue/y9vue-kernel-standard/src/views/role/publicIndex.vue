@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2025-05-27 14:04:33
+ * @LastEditTime: 2025-12-24 10:41:17
  * @Description: 公共角色管理
 -->
 <template>
@@ -127,8 +127,14 @@
 <script lang="ts" setup>
     import y9_storage from '@/utils/storage';
     import { computed, inject, ref, watch } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { useI18n } from 'vue-i18n';
+    import { useSettingStore } from '@/store/modules/settingStore';
+
+    // 基本信息
+    import BasicInfo from './comps/BasicInfo.vue';
+    import OrgBasesToRoles from './comps/OrgBasesToRoles.vue';
+    import Authorization from './comps/Authorization.vue';
+    import auditLog from '@/views/y9log/entityAuditLog/index.vue';
     import {
         deleteRoleById,
         getPublicRoleTree,
@@ -137,12 +143,6 @@
         saveOrder,
         saveOrUpdate
     } from '@/api/role/index';
-    // 基本信息
-    import BasicInfo from './comps/BasicInfo.vue';
-    import OrgBasesToRoles from './comps/OrgBasesToRoles.vue';
-    import Authorization from './comps/Authorization.vue';
-    import auditLog from '@/views/y9log/entityAuditLog/index.vue';
-    import { useSettingStore } from '@/store/modules/settingStore';
 
     const settingStore = useSettingStore();
     const { t } = useI18n();

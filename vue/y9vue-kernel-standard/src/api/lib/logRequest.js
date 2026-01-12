@@ -4,16 +4,15 @@
  * @Author: zhangchongjie
  * @Date: 2022-05-05 14:56:33
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 10:26:53
- * @FilePath: \vue-frontend-9.6.x\y9vue-kernel\src\api\lib\logRequest.js
+ * @LastEditTime: 2025-12-24 10:47:04
+ * @FilePath: \y9-vue\y9vue-kernel-standard\src\api\lib\logRequest.js
  */
 import settings from '@/settings';
 import y9_storage from '@/utils/storage';
 import axios from 'axios'; // 考虑CDN
-import {ElMessage} from 'element-plus';
 import i18n from '@/language/index';
-import {isExternal} from '@/utils/validate.ts';
-import {$y9_SSO} from '@/main';
+import { isExternal } from '@/utils/validate.ts';
+import { $y9_SSO } from '@/main';
 
 const { t } = i18n.global;
 // 创建一个axios实例

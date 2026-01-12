@@ -2,7 +2,7 @@
  * @Author: fuyu
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-11-11 15:32:19
+ * @LastEditTime: 2025-12-24 09:41:25
  * @Description: 组织架构-基本信息
 -->
 <template>
@@ -320,8 +320,19 @@
 </template>
 
 <script lang="ts" setup>
-    import { computed, inject, reactive, toRefs, watch } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
+    import { computed, inject, reactive, toRefs, watch, ref } from 'vue';
+    import { $dictionaryFunc } from '@/utils/data';
+    import { $deeploneObject } from '@/utils/object';
+    import y9_storage from '@/utils/storage';
+    import settings from '@/settings';
+    import orgForm from '../comps/baseInfoForm/orgForm.vue';
+    import departmentForm from '../comps/baseInfoForm/departmentForm.vue';
+    import personForm from '../comps/baseInfoForm/personForm.vue';
+    import addPersonForm from '../comps/baseInfoForm/addPersonForm.vue';
+    import groupForm from '../comps/baseInfoForm/groupForm.vue';
+    import extendAttr from '../comps/dialogContent/extendAttr.vue';
+    import Sync from '../comps/dialogContent/sync.vue';
+    import uploadOrgInfo from '../comps/dialogContent/uploadOrgInfo.vue';
     import {
         changeDisabledOrganization,
         getAllPersonsCount,
@@ -336,17 +347,6 @@
         treeInterface
     } from '@/api/org/index';
     import { changeDisabledDept, deptSaveOrUpdate, getOrderDepts, moveDept, saveOrder } from '@/api/dept/index';
-    import { $deeploneObject } from '@/utils/object';
-    import y9_storage from '@/utils/storage';
-    import settings from '@/settings';
-    import orgForm from '../comps/baseInfoForm/orgForm.vue';
-    import departmentForm from '../comps/baseInfoForm/departmentForm.vue';
-    import personForm from '../comps/baseInfoForm/personForm.vue';
-    import addPersonForm from '../comps/baseInfoForm/addPersonForm.vue';
-    import groupForm from '../comps/baseInfoForm/groupForm.vue';
-    import extendAttr from '../comps/dialogContent/extendAttr.vue';
-    import Sync from '../comps/dialogContent/sync.vue';
-    import uploadOrgInfo from '../comps/dialogContent/uploadOrgInfo.vue';
     import {
         changeDisabledPerson,
         movePerson,
@@ -355,8 +355,6 @@
         savePersons
     } from '@/api/person/index';
     import { changeDisabledGroup, groupSaveOrUpdate, moveGroup } from '@/api/group/index';
-    import { $dictionaryFunc } from '@/utils/data';
-    import { ref } from '@vue/reactivity';
     import { listByType } from '@/api/dictionary/index';
     import { useI18n } from 'vue-i18n';
     // 注入 字体变量

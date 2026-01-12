@@ -1,3 +1,10 @@
+<!--
+ * @Author: shidaobang
+ * @Date: 2024-12-20 10:55:02
+ * @LastEditors: mengjuhua
+ * @LastEditTime: 2025-12-24 09:48:14
+ * @Description: 组织架构-设置部门领导
+-->
 <template>
     <y9Card :title="`${$t('可继承的部门属性')}${currInfo.name ? ' - ' + currInfo.name : ''}`">
         <y9Table :config="setDepartmentPropTableConfig" :filterConfig="filterConfig">
@@ -13,7 +20,6 @@
     import { useI18n } from 'vue-i18n';
     import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
     import { $deepAssignObject } from '@/utils/object';
-    import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
     import { getInheritableDepartmentPropOrgUnits } from '@/api/dept/index';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { $dictionary, $dictionaryFunc } from '@/utils/data';
@@ -109,8 +115,7 @@
         }
     });
 
-    let { currInfo, setDepartmentPropTableConfig, filterConfig, loading, departmentPropFormLine } =
-        toRefs(data);
+    let { currInfo, setDepartmentPropTableConfig, filterConfig, loading, departmentPropFormLine } = toRefs(data);
 
     watch(
         () => props.currTreeNodeInfo,

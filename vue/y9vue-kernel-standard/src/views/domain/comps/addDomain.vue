@@ -4,7 +4,7 @@
  * @Author: zhangchongjie
  * @Date: 2022-06-28 10:03:00
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-01-12 10:51:59
+ * @LastEditTime: 2025-12-24 09:21:20
 -->
 <template>
     <y9Card :title="`${currInfo.name ? currInfo.name : ''}`">
@@ -54,7 +54,6 @@
 
 <script lang="ts" setup>
     import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { $deepAssignObject } from '@/utils/object';
     import {
         changeDisabled,

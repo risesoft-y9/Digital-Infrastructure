@@ -39,6 +39,7 @@
                     :data="alreadyLoadTreeData"
                     :lazy="lazy"
                     :load="onTreeLazyLoad"
+                    :paginationConfig="paginationConfig"
                     @node-click="onNodeClick"
                     @node-expand="onNodeExpand"
                 >
@@ -67,6 +68,7 @@
     import { useSettingStore } from '@/store/modules/settingStore';
     import { computed, inject, nextTick, onMounted, ref, watch } from 'vue';
     import y9_storage from '@/utils/storage';
+    // import y9Tree from './y9Tree';
 
     const props = defineProps({
         treeApiObj: {
@@ -109,6 +111,11 @@
             //是否显示删除icon
             type: Boolean,
             default: true
+        },
+        virtualScroll: {
+            // 树组件是否开启虚拟滚动
+            type: Boolean,
+            default: false
         }
     });
 
@@ -360,8 +367,73 @@
         }
     }
 
-    //tree实例
+    // tree实例
     const y9TreeRef = ref();
+    // tree分页配置
+    const paginationConfig = ref({
+        pagination: true,
+        row: 30,
+        total: {},
+        bug: true, // 控制台是否打印数据分析bug
+        interface: false, // 接口方式：false-虚拟加载分页数据，true-接口加载分页数据
+        childNodeWrapperHeight: 420, // 子节点容器高度，必须小于实际高度才有滚动效果，才能触发分页加载
+        // getChildNodes: getChildNodes, // 必填，接口加载分页方式示例
+        getChildNodes: getChildNodes // 必填，虚拟加载分页方式示例
+    });
+    // 缓存所有二级节点数据
+    const allChildNodesCache = new Map();
+
+    async function getChildNodes(params, node, isCache = true) {
+        // 先从缓存中获取数据
+        if (isCache && paginationConfig.value.pagination && allChildNodesCache.has(params.id)) {
+            let start = (params.page - 1) * params.row;
+            let end = start + params.row;
+            // 打印分页加载信息
+            paginationConfig.value.bug
+                ? console.log(
+                      `获取${params.id}的第${params.page}页数据，共${paginationConfig.value.total[params.id]}页`
+                  )
+                : null;
+            let res = allChildNodesCache.get(params.id).slice(start, end);
+            return res;
+        }
+        // 如果缓存中没有数据，从接口获取数据
+        //整合参数
+        params.parentId = params.id;
+        let data = [];
+        const childLevelParams = props.treeApiObj?.childLevel?.params;
+        if (childLevelParams) {
+            Object.assign(params, childLevelParams);
+        }
+        if (node.nodeType) {
+            params.parentNodeType = node.nodeType;
+        }
+        if (node.dataCatalogTreeType) {
+            params.treeType = node.dataCatalogTreeType;
+        }
+        //请求接口
+        const res = await props.treeApiObj?.childLevel?.api(params);
+        data = res.data || res;
+        // 计算总页数
+        paginationConfig.value.total[params.id] = Math.ceil(data.length / params.row);
+        //2.格式化数据
+        await formatLazyTreeData(data, false);
+        // 缓存二级节点数据
+        if (paginationConfig.value.pagination) {
+            allChildNodesCache.set(params.id, data);
+        }
+        // 分页返回数据
+        if (!paginationConfig.value.pagination) {
+            return data;
+        } else {
+            if (data.length && data.length > 0) {
+                return data.slice(0, paginationConfig.value.row); //返回二级节点数据
+            } else {
+                console.log(`未获取到${node.id}的二级节点数据`);
+                return [];
+            }
+        }
+    }
 
     //懒加载
     const onTreeLazyLoad = async (node, resolve: () => void) => {
@@ -370,8 +442,14 @@
             let data = [];
             const topLevelParams = props.treeApiObj?.topLevel?.params;
             if (topLevelParams) {
+                // 组织架构使用分页配置，测试分页效果
+                if (props.virtualScroll) {
+                    paginationConfig.value.pagination = true;
+                } else {
+                    paginationConfig.value.pagination = false;
+                }
                 let params = {};
-                params = topLevelParams;
+                Object.assign(params, topLevelParams);
                 const res = await props.treeApiObj?.topLevel?.api(params);
                 data = res.data || res;
             } else {
@@ -401,27 +479,18 @@
                 data = node.children;
             } else {
                 //如果没有则取接口数据
-                //整合参数
-                let params = {};
-                const childLevelParams = props.treeApiObj?.childLevel?.params;
-                if (childLevelParams) {
-                    params = childLevelParams;
+                let params = {
+                    id: node.id,
+                    page: 1,
+                    row: paginationConfig.value.row
+                };
+                params.id = node.id;
+                if (node._isCache_) {
+                    data = await getChildNodes(params, node);
+                } else {
+                    data = await getChildNodes(params, node, false);
                 }
-                params.parentId = node.id;
-                if (node.nodeType) {
-                    params.parentNodeType = node.nodeType;
-                }
-                if (node.dataCatalogTreeType) {
-                    params.treeType = node.dataCatalogTreeType;
-                }
-                //请求接口
-                const res = await props.treeApiObj?.childLevel?.api(params);
-                data = res.data || res;
             }
-
-            //2.格式化数据
-            await formatLazyTreeData(data, false);
-
             return resolve(data); //返回二级三级...节点数据
         }
     };
@@ -431,7 +500,22 @@
 
     //搜索关键字
     const apiSearchKey = ref('');
-
+    // 监听是否为搜索场景
+    watch(apiSearchKey, (newVal, oldVal) => {
+        // 如果没有配置分页，则不需要该监听
+        if (!paginationConfig.value.pagination) {
+            return;
+        } else {
+            // 如果配置了分页，在搜索场景下，不使用分页
+            if (apiSearchKey.value) {
+                // 搜索场景，不使用分页
+                paginationConfig.value.pagination = false;
+            } else {
+                // 非搜索场景，使用分页
+                paginationConfig.value.pagination = true;
+            }
+        }
+    });
     //防抖定时器
     let timer;
     const onSearchChange = (searchkey) => {

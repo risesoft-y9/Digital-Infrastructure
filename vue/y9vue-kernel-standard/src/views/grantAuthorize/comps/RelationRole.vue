@@ -1,8 +1,8 @@
 <!--
  * @Author:  
  * @Date: 2022-06-06 11:47:27
- * @LastEditors: mengjuhua 
- * @LastEditTime: 2024-11-08 14:41:29
+ * @LastEditors: mengjuhua
+ * @LastEditTime: 2025-12-24 09:22:06
  * @Description: 应用资源授权 - 角色关联
 -->
 <template>
@@ -80,7 +80,6 @@
 
 <script lang="ts" setup>
     import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { getRelationRoleList, removeRole, saveOrUpdateRole } from '@/api/grantAuthorize/index';
     import { appRoleTree, getPublicRoleTree, listPrincipalIdByResourceId, roleTreeList } from '@/api/role/index';
     import { useI18n } from 'vue-i18n';

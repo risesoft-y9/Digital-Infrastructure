@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-01-12 10:45:46
+ * @LastEditTime: 2026-01-12 14:39:13
  * @Description: 组织岗位
 -->
 <template>
@@ -10,6 +10,7 @@
         ref="fixedTreeRef"
         :treeApiObj="treeApiObj"
         nodeLabel="newName"
+        :virtualScroll="false"
         @onDeleteTree="onDeleteTree"
         @onTreeClick="onTreeClick"
     >
@@ -53,7 +54,6 @@
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
     import { reactive, ref, toRefs } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import baseInfo from './comps/baseInfo.vue';
     import positionRelation from './comps/positionRelation.vue';
     import personList from './comps/personList.vue';

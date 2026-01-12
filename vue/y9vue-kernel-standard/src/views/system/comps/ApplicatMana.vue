@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-11-08 13:53:16
+ * @LastEditTime: 2025-12-24 10:42:00
  * @Description: 应用管理
 -->
 <template>
@@ -115,7 +115,8 @@
 
 <script lang="ts" setup>
     import { computed, h, inject, onMounted, reactive, ref, watch } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
+    import settings from '@/settings';
+    import y9_storage from '@/utils/storage';
     import { useI18n } from 'vue-i18n';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { $validCheck } from '@/utils/validate';
@@ -132,8 +133,7 @@
 
     // 应用图标列表 搜索接口
     import { getAppIconPageList, searchIconPageByName } from '@/api/appIcon/index';
-    import settings from '@/settings';
-    import y9_storage from '@/utils/storage';
+
     import { importAppJSON } from '@/api/impExp';
     import IconList from '@/views/iconManager/comps/IconList.vue';
 

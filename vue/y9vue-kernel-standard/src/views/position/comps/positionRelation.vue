@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-12-26 11:25:38
+ * @LastEditTime: 2025-12-24 10:37:48
  * @Description: 岗位列表
 -->
 <template>
@@ -70,7 +70,6 @@
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
     import { computed, h, inject, onMounted, reactive, toRefs, watch } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { $deepAssignObject } from '@/utils/object';
     import { getPositionsByParentId, removePosition, saveOrder } from '@/api/position/index';
 

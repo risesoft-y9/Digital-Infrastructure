@@ -1,3 +1,11 @@
+<!--
+ * @version: 
+ * @Author: zhangchongjie
+ * @Date: 2022-06-16 10:16:08
+ * @LastEditors: mengjuhua
+ * @LastEditTime: 2025-12-24 09:27:20
+ * @Descripttion: 部门
+-->
 <template>
     <y9Form ref="y9FormRef" :config="y9FormConfig"></y9Form>
 </template>

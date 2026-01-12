@@ -1,6 +1,6 @@
 <script lang="ts" setup>
     import { computed, onMounted, reactive, ref, watch } from 'vue';
-    import { useSettingStore } from '@/store/modules/settingStore';
+    import { useSettingStore } from '@/store/modules/settingStore'; // 数据响应
 
     // 数据响应
     const settingStore = useSettingStore();
@@ -77,7 +77,8 @@
     const themeOptions = [
         { value: 'theme-default', label: '默认' },
         { value: 'theme-green', label: '绿' },
-        { value: 'theme-blue', label: '蓝' }
+        { value: 'theme-blue', label: '蓝' },
+        { value: 'theme-red', label: '红', disabled: true }
     ];
 
     // 菜单移入方向控制
@@ -112,12 +113,7 @@
         { key: 'bg2', src: menuBgs[1] },
         { key: 'bg3', src: menuBgs[2] },
         { key: 'bg4', src: menuBgs[3] },
-        { key: 'bg5', src: menuBgs[4] },
-        { key: 'bg6', src: menuBgs[5] },
-        { key: 'bg7', src: menuBgs[6] },
-        { key: 'bg8', src: menuBgs[7] },
-        { key: 'bg9', src: menuBgs[8] },
-        { key: 'bg10', src: menuBgs[9] }
+        { key: 'bg5', src: menuBgs[4] }
     ];
     const menuBgChange = () => {
         settingStore.$patch({
@@ -228,7 +224,55 @@
         });
     };
     // 重置表单
-    const resetFunc = () => {};
+    const resetFunc = () => {
+        // 恢复默认值
+        form.pcLayout = 'Y9Default'; //布局
+        form.webLanguage = 'zh'; // 语言
+        form.fontSize = 'default'; // 字号大小
+        form.themeName = 'theme-default'; //主题
+        form.menuAnimation = 'rtl'; //菜单动画
+        form.menuWidth = '25%'; //菜单宽度
+        form.showLabel = false; //标签显示
+        form.showLabelIcon = false; //标签图标
+        form.labelStyle = 'top'; //标签位置
+        form.settingAnimation = 'rtl'; //设置动画
+        form.fixedHeader = true; //头部固定
+        form.progress = true; //进度条
+        form.refresh = true; //刷新
+        form.search = true; //搜索
+        form.notify = true; //通知
+        form.fullScreeen = true; //全屏
+        form.lock = true; //锁屏功能
+        form.lockScreen = false; //锁屏
+        form.unlockScreenPwd = '123456'; // 重置密码为默认值
+        form.pageAnimation = true; //页面动画
+        form.settingWidth = '20%'; //设置宽度
+
+        // 更新store中的值
+        settingStore.$patch({
+            pcLayout: form.pcLayout,
+            webLanguage: form.webLanguage,
+            fontSize: form.fontSize,
+            themeName: form.themeName,
+            menuAnimation: form.menuAnimation,
+            menuWidth: form.menuWidth,
+            menuBg: '',
+            showLabel: form.showLabel,
+            showLabelIcon: form.showLabelIcon,
+            labelStyle: form.labelStyle,
+            fixedHeader: form.fixedHeader,
+            progress: form.progress,
+            refresh: form.refresh,
+            search: form.search,
+            notify: form.notify,
+            fullScreeen: form.fullScreeen,
+            lock: form.lock,
+            lockScreen: form.lockScreen,
+            unlockScreenPwd: form.unlockScreenPwd,
+            pageAnimation: form.pageAnimation,
+            settingWidth: form.settingWidth
+        });
+    };
     // 提交表单
     const submit = () => {
         settingStore.$patch({
@@ -236,7 +280,7 @@
             webName: form.webName,
             logoSvgName: form.logoSvgName,
             webLanguage: form.webLanguage,
-            fontSize: settingStore.getFontSize,
+            fontSize: form.fontSize,
             themeName: form.themeName,
             menuAnimation: form.menuAnimation,
             menuStyle: form.menuStyle,
@@ -244,7 +288,6 @@
             showLabel: form.showLabel,
             showLabelIcon: form.showLabelIcon,
             labelStyle: form.labelStyle,
-            // separateStyle: form.separateStyle,
             fixedHeader: form.fixedHeader,
             progress: form.progress,
             refresh: form.refresh,
@@ -304,17 +347,13 @@
                     />
                 </el-select>
             </el-form-item>
-            <!--          <el-form-item :label="$t('布局影响')" :rules="[ { required: true }]">-->
-            <!--            <el-radio-group v-model="form.allPcLayout" @change="settingChange('allPcLayout')">-->
-            <!--              <el-radio-->
-            <!--                  v-for="item in allLayoutOptions"-->
-            <!--                  :label="item.label"-->
-            <!--                  :key="item.label"-->
-            <!--                  size="large"-->
-            <!--              >{{ item.value }}-->
-            <!--              </el-radio>-->
-            <!--            </el-radio-group>-->
-            <!--          </el-form-item>-->
+            <!--            <el-form-item :label="$t('布局影响')" :rules="[{ required: true }]">-->
+            <!--                <el-radio-group v-model="form.allPcLayout" @change="settingChange('allPcLayout')">-->
+            <!--                    <el-radio v-for="item in allLayoutOptions" :key="item.label" :label="item.label" size="large"-->
+            <!--                        >{{ $t(item.value) }}-->
+            <!--                    </el-radio>-->
+            <!--                </el-radio-group>-->
+            <!--            </el-form-item>-->
             <el-form-item
                 :label="$t('语言')"
                 :rules="[
@@ -324,8 +363,8 @@
                 ]"
             >
                 <el-radio-group v-model="form.webLanguage" @change="settingChange('webLanguage')">
-                    <el-radio v-for="item in webLanguageOptions" :key="item.label" :label="item.label" size="large"
-                        >{{ item.value }}
+                    <el-radio v-for="item in webLanguageOptions" :key="item.value" :label="item.label" size="large"
+                        >{{ $t(`${item.value}`) }}
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
@@ -527,7 +566,7 @@
     </el-drawer>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
     #webSettingForm {
         .el-form-item--default .el-form-item__content {
             justify-content: end;

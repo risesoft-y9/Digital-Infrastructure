@@ -40,7 +40,7 @@
 <script lang="ts" setup>
     import { getTenantById, saveY9Tenant, uploadTenantLogoIcon } from '@/api/tenant/index';
     import { h, inject, onMounted, ref } from 'vue';
-    import { ElMessage, ElNotification, type UploadInstance, type UploadProps, type UploadRawFile } from 'element-plus';
+    import { type UploadInstance, type UploadProps, type UploadRawFile } from 'element-plus';
     import { useI18n } from 'vue-i18n';
     import { useSettingStore } from '@/store/modules/settingStore';
     import y9_storage from '@/utils/storage';

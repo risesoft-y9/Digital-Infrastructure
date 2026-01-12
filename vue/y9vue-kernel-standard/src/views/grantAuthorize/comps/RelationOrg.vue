@@ -2,7 +2,7 @@
  * @Author:  
  * @Date: 2022-06-06 11:47:27
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-01-12 10:48:01
+ * @LastEditTime: 2025-12-24 09:21:49
  * @Description: 应用资源授权 - 组织关联
 -->
 <template>
@@ -91,7 +91,6 @@
     import { getRelationOrgList, removeRole, saveOrUpdateOrg } from '@/api/grantAuthorize/index';
     import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
     import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { useSettingStore } from '@/store/modules/settingStore';
 
     import { useI18n } from 'vue-i18n';

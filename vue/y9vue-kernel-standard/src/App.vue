@@ -8,6 +8,8 @@
 -->
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
+    import y9_zhCn from 'y9plugin-components-auto/dist/locale/zh-cn.mjs'; //默认的y9组件插件中文包
+    import y9_en from 'y9plugin-components-auto/dist/locale/en.mjs'; //默认的y9组件插件英文包
     import watermark from 'y9plugin-watermark/lib/index';
     import { computed, onMounted, onUnmounted, provide, ref, watch } from 'vue';
     // 引入字体调整的方法
@@ -16,6 +18,13 @@
     import { useSettingStore } from '@/store/modules/settingStore';
 
     const settingStore = useSettingStore();
+
+    // 获取element-plus组件的当前语言设置
+    const currentLocale = ref({
+        name: 'zh-cn',
+        el: y9_zhCn.el
+    });
+
     const { t } = useI18n();
 
     interface watermarkData {
@@ -36,11 +45,14 @@
         () => useSettingStore().getWebLanguage, //监听语言变化，传入对应的水印语句
         (newLang) => {
             setTimeout(() => {
+                currentLocale.value =
+                    newLang === 'en' ? { name: 'en', el: y9_en.el } : { name: 'zh-cn', el: y9_zhCn.el };
                 watermarkValue.value.name = t(userInfo.name);
                 watermarkValue.value.deptName = t(dept);
                 watermark(watermarkValue, sizeObjInfo.value.baseFontSize);
             });
-        }
+        },
+        { immediate: true }
     );
     watch(
         () => useSettingStore().getFontSize, //监听大小变化，传入对应水印文字大小
@@ -121,5 +133,7 @@
 </script>
 
 <template>
-    <router-view></router-view>
+    <el-config-provider :locale="currentLocale">
+        <router-view />
+    </el-config-provider>
 </template>

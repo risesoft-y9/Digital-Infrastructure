@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-11-11 15:34:57
+ * @LastEditTime: 2025-12-24 10:37:10
  * @Description: 岗位基本信息
 -->
 <template>
@@ -199,8 +199,6 @@
 l
 <script lang="ts" setup>
     import { computed, inject, reactive, ref, toRefs, watch } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
-    import { changeDisabledDept, deptSaveOrUpdate, getOrderDepts, moveDept, saveOrder } from '@/api/dept/index';
     import { $deeploneObject } from '@/utils/object';
     import orgForm from '../../org/comps/baseInfoForm/orgForm.vue';
     import departmentForm from '../../org/comps/baseInfoForm/departmentForm.vue';
@@ -217,6 +215,7 @@ l
         sync,
         treeInterface
     } from '@/api/org/index';
+    import { changeDisabledDept, deptSaveOrUpdate, getOrderDepts, moveDept, saveOrder } from '@/api/dept/index';
     import { changeDisabledPosition, getPositionById, movePosition, positionSaveOrUpdate } from '@/api/position/index';
     import { useI18n } from 'vue-i18n';
     import { changeDisabledGroup } from '@/api/group';

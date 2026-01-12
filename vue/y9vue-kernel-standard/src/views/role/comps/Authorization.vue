@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2025-05-30 14:23:00
+ * @LastEditTime: 2025-12-24 10:39:22
  * @Description: 角色关联-资源授权
 -->
 <template>
@@ -162,7 +162,6 @@
 
 <script lang="ts" setup>
     import { computed, inject, onMounted, ref, watch } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import y9_storage from '@/utils/storage';
     import {
         getRelateResourceList,

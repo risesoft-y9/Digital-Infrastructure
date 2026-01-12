@@ -1,3 +1,11 @@
+<!--
+ * @Author: mengjuhua
+ * @Date: 2025-09-17 09:47:06
+ * @LastEditors: mengjuhua
+ * @LastEditTime: 2025-12-24 10:34:59
+ * @FilePath: \y9-vue\y9vue-kernel-standard\src\views\org\comps\QRcode.vue
+ * @Description: 
+-->
 <template>
     <y9Card :title="`${$t('统一码')}${currInfo.name ? ' - ' + currInfo.name : ''}`">
         <el-button
@@ -19,7 +27,6 @@
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
     import { inject, onMounted, reactive, toRefs, watch } from 'vue';
-    import { ElNotification } from 'element-plus';
     import { $deepAssignObject } from '@/utils/object';
     import { createPersonQRcode, getPersonQRcode } from '@/api/org';
 

@@ -1,18 +1,17 @@
 /*
  * @Author: your name
  * @Date: 2021-04-15 10:16:53
- * @LastEditTime: 2024-04-01 10:53:57
+ * @LastEditTime: 2025-12-24 09:19:08
  * @LastEditors: mengjuhua
  * @Description: In User Settings Edit
- * @FilePath: \workspace-y9boot-9.5-vuee:\workspace-y9boot-9.6-vue\y9vue-kernel-dcat-style\src\api\lib\request.js
+ * @FilePath: \y9-vue\y9vue-kernel-standard\src\api\lib\request.js
  */
 import settings from '@/settings';
 import y9_storage from '@/utils/storage';
 import axios from 'axios'; // 考虑CDN
-import {ElMessage} from 'element-plus';
 import i18n from '@/language/index';
-import {isExternal} from '@/utils/validate.ts';
-import {$y9_SSO} from '@/main';
+import { isExternal } from '@/utils/validate.ts';
+import { $y9_SSO } from '@/main';
 
 const { t } = i18n.global;
 

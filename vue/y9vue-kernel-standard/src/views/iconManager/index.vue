@@ -2,7 +2,7 @@
  * @Author: fuyu
  * @Date: 2022-06-06 11:47:27
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-01-12 10:52:51
+ * @LastEditTime: 2025-12-24 09:25:02
  * @Description: 图标管理
 -->
 <template>
@@ -13,12 +13,8 @@
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
-    import { computed, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
-    import { $keyNameAssign, $tableHandleRender } from '@/utils/object';
-    import { deleteIcon, getAppIconPageList, saveIcon, searchIconPageByName, uploadIcon } from '@/api/appIcon/index';
+    import { inject } from 'vue';
     import { useSettingStore } from '@/store/modules/settingStore';
-    import { Search } from '@element-plus/icons';
     import IconList from './comps/IconList.vue';
 
     const settingStore = useSettingStore();

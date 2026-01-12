@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-11-11 09:13:09
+ * @LastEditTime: 2025-12-24 10:39:03
  * @Description: 应用资源管理
 -->
 <template>
@@ -60,7 +60,6 @@
 
 <script lang="ts" setup>
     import { inject, ref } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { menuDelete, operationDel, resourceTree, treeSearch } from '@/api/resource/index';
     import { applicationDel } from '@/api/system/index';
     // 基本信息

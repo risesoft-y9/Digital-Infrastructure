@@ -2,7 +2,7 @@
  * @Author: fuyu
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-12-26 11:23:34
+ * @LastEditTime: 2025-12-24 09:26:00
  * @Description: 组织架构-职位管理
 -->
 <template>
@@ -101,7 +101,7 @@
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
     import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification, FormInstance } from 'element-plus';
+    import { FormInstance } from 'element-plus';
     import { $keyNameAssign } from '@/utils/object';
     import {
         deleteByIds,
