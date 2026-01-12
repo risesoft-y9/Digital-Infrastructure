@@ -1,3 +1,10 @@
+<!--
+ * @Author: mengjuhua
+ * @Date: 2023-08-02 16:04:02
+ * @LastEditors: mengjuhua
+ * @LastEditTime: 2025-12-24 09:39:29
+ * @Description: 扩展属性
+-->
 <template>
     <!-- 扩展属性 -->
     <div v-if="loading" class="loading">
@@ -33,7 +40,6 @@
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
     import { computed, h, inject, onMounted, reactive, toRefs } from 'vue';
-    import { ElMessage, ElMessageBox } from 'element-plus';
     import { $keyNameAssign, $tableHandleRender } from '@/utils/object';
     import { saveDeptExtendProperties } from '@/api/dept/index';
     import { savePersonExtendProperties } from '@/api/person/index';

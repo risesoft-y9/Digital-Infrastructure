@@ -66,7 +66,6 @@
     import { useI18n } from 'vue-i18n';
     import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
     import type { UploadProps } from 'element-plus';
-    import { ElNotification } from 'element-plus';
     import { $keyNameAssign } from '@/utils/object';
     import { getPersonExtById, getPersonExtByIdWithEncry, loginNameCheck } from '@/api/person/index';
     import moment from 'moment';

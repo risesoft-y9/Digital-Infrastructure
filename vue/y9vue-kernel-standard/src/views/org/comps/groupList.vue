@@ -2,7 +2,7 @@
  * @Author: fuyu
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-01-11 17:35:20
+ * @LastEditTime: 2025-12-24 09:45:57
  * @Description: 组织架构-用户组列表
 -->
 <template>
@@ -78,7 +78,6 @@
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
     import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { $deepAssignObject } from '@/utils/object';
     import { getGroupsByPersonId, orderGroups } from '@/api/group/index';
     import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';

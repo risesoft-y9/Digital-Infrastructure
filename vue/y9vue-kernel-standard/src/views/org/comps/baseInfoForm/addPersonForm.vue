@@ -1,3 +1,11 @@
+<!--
+ * @version: 
+ * @Author: zhangchongjie
+ * @Date: 2022-06-16 10:16:08
+ * @LastEditors: mengjuhua
+ * @LastEditTime: 2025-12-24 09:26:59
+ * @Descripttion: 新增人员
+-->
 <template>
     <div v-show="step === 1" v-loading="loading" class="person-form-div">
         <div class="person-form-title-base">{{ $t('基本信息') }}</div>

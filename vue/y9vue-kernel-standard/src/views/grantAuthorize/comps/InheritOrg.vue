@@ -1,3 +1,11 @@
+<!--
+ * @version: 
+ * @Author: shidaobang
+ * @Date: 2025-06-16 10:16:08
+ * @LastEditors: mengjuhua
+ * @LastEditTime: 2025-12-24 09:28:09
+ * @Descripttion: 组织关联授权继承
+-->
 <template>
     <div>
         <!-- 表格 -->
@@ -50,7 +58,7 @@
                 { title: computed(() => t('组织节点名称')), align: 'left', key: 'orgUnitName' },
                 { title: computed(() => t('组织节点类型')), key: 'orgType', width: 150 },
                 { title: computed(() => t('权限来自的资源名称')), key: 'resourceName' },
-                { title: computed(() => t('权限类型')), key: 'authorityStr', width: 100, slot: 'authoritySlot' },
+                { title: computed(() => t('权限类型')), key: 'authorityStr', width: 100, slot: 'authoritySlot' }
             ],
             tableData: [],
             pageConfig: false

@@ -6,7 +6,7 @@
  * @Description:   搜索
 -->
 <script lang="ts" setup>
-    import { Search } from '@element-plus/icons';
+    import { Search } from '@element-plus/icons-vue';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { onMounted, ref } from 'vue';
 

@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-11-11 15:39:03
+ * @LastEditTime: 2025-12-24 10:38:38
  * @Description: 应用资源详情
 -->
 <template>
@@ -131,7 +131,6 @@
 
 <script lang="ts" setup>
     import { computed, h, inject, onMounted, ref, watch } from 'vue';
-    import { ElNotification } from 'element-plus';
     import y9_storage from '@/utils/storage';
     import { useI18n } from 'vue-i18n';
     import { getMenuInfo, getOperationInfo, menuAdd, operationAdd, resourceTreeRoot, sort } from '@/api/resource/index';

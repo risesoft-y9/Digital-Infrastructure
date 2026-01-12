@@ -2,7 +2,7 @@
  * @Author: shidaobang
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-11-11 16:27:04
+ * @LastEditTime: 2025-12-24 10:38:49
  * @Description: 资源权限树
 -->
 <template>
@@ -66,7 +66,6 @@
         getPositionResourcePermissionList,
         identityResources
     } from '@/api/permission';
-    import { ElNotification } from 'element-plus';
     import y9_storage from '@/utils/storage';
 
     // 重新获取个人信息（登陆返回的个人信息有缺失的属性）

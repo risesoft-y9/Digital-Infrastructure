@@ -3,8 +3,8 @@
  * @version: 
  * @Author:  
  * @Date: 2022-06-28 10:03:00
- * @LastEditors: chensiwen cikl777@163.com
- * @LastEditTime: 2025-01-11 17:12:57
+ * @LastEditors: mengjuhua
+ * @LastEditTime: 2025-12-24 09:20:54
 -->
 <template>
     <y9Table v-model:selectedVal="tableCurrSelectedVal" :config="tableConfig" :filterConfig="filterConfig">
@@ -44,7 +44,6 @@
     import { getOptionClassList, listByType, removeByIds, saveOptionValue } from '@/api/dictionary/index';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { computed, h, inject, onMounted, reactive, watch } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
 
     const settingStore = useSettingStore();
     // 注入 字体对象

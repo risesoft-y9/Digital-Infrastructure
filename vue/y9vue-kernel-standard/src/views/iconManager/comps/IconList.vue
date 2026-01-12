@@ -2,7 +2,7 @@
  * @Author: fuyu
  * @Date: 2022-06-06 11:47:27
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-01-12 10:52:51
+ * @LastEditTime: 2025-12-24 09:32:06
  * @Description: 图标管理
 -->
 <template>
@@ -72,8 +72,8 @@
             </div>
         </div>
     </div>
-    <y9Dialog v-model:config="dialogConfig"
-        ><UploadForm
+    <y9Dialog v-model:config="dialogConfig">
+        <UploadForm
             :iconData="IconData"
             :name="IconName"
             :remark="IconRemark"
@@ -88,13 +88,10 @@
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
     import { computed, inject, nextTick, onMounted, reactive, ref, toRefs, watch } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
-    import { $keyNameAssign, $tableHandleRender } from '@/utils/object';
     import { deleteIcon, getAppIconPageList, saveIcon, searchIconPageByName, uploadIcon } from '@/api/appIcon/index';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useIconStore } from '@/store/modules/iconStore';
-    import { Search } from '@element-plus/icons';
-    import UploadForm from './uploadForm.vue';
+    import UploadForm from './UploadForm.vue';
     import { cloneDeep } from 'lodash';
 
     const settingStore = useSettingStore();

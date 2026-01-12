@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-01-11 17:28:38
+ * @LastEditTime: 2026-01-12 14:39:00
  * @Description: 组织架构
 -->
 <template>
@@ -10,6 +10,7 @@
         ref="fixedTreeRef"
         :treeApiObj="treeApiObj"
         nodeLabel="newName"
+        :virtualScroll="false"
         @onDeleteTree="onDeleteTree"
         @onTreeClick="onTreeClick"
     >
@@ -99,7 +100,6 @@
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
     import { computed, inject, reactive, ref, toRefs } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import orgForm from './comps/baseInfoForm/orgForm.vue';
     import baseInfo from './comps/baseInfo.vue';
     import personList from './comps/personList.vue';
@@ -398,10 +398,10 @@
      */
     async function handAssginNode(obj, targetId, postChildId, isRePostPersonCount) {
         if (postChildId) {
-            const childData = await postNode({ id: postChildId }); //重新请求当前节点的子节点，获取格式化后的子节点信息
+            const childData = await postNode({ id: postChildId, _isCache_: false }); //重新请求当前节点的子节点，获取格式化后的子节点信息
             obj.children = childData;
         }
-
+        // console.log(obj, targetId, postChildId, isRePostPersonCount);
         //1.更新当前节点的信息
         const currNode = findNode(getTreeData(), targetId); //找到树节点对应的节点信息
         if (currNode) {
@@ -410,7 +410,6 @@
                 currNode.personCount = res.data; //人员数量
             }
             Object.assign(currNode, obj); //合并节点信息
-
             if (currNode.nodeType === 'Organization' || currNode.nodeType === 'Department') {
                 //修改显示名称
                 currNode.newName = currNode.name + `(${currNode.personCount})`;

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-    import { reactive, watch } from 'vue';
+    import { computed, inject, reactive, ref, watch } from 'vue';
     import { useI18n } from 'vue-i18n';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useIconStore } from '@/store/modules/iconStore';
     import { Plus } from '@element-plus/icons-vue';
-    import type { UploadProps, UploadUserFile, UploadFile } from 'element-plus';
+    import type { UploadProps, UploadRawFile, UploadStatus, UploadUserFile } from 'element-plus';
     import { base64ToFile } from '@/utils/file';
     // import TestForm from './y9Form/index.vue';
 

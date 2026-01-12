@@ -21,7 +21,6 @@
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
     import { computed, inject, reactive, ref } from 'vue';
-    import { ElMessage, ElNotification } from 'element-plus';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { getTenantSetting, saveTenantSetting } from '@/api/setting';
 
@@ -81,7 +80,7 @@
                 prop: 'positionNameTemplate',
                 props: {
                     placeholder:
-                        '默认格式为：#jobName + \'（\' + #personNames + \'）\'，#jobName 会替换为职位名，#personNames 会替换为人员名称'
+                        "默认格式为：#jobName + '（' + #personNames + '）'，#jobName 会替换为职位名，#personNames 会替换为人员名称"
                 }
             },
             {

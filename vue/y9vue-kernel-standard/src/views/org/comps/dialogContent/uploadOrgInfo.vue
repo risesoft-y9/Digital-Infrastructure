@@ -1,3 +1,11 @@
+<!--
+ * @version:
+ * @Author: zhangchongjie
+ * @Date: 2022-06-20 09:35:38
+ * @LastEditors: mengjuhua
+ * @LastEditTime: 2025-12-24 09:39:43
+ * @Descripttion: 上传组织机构信息
+-->
 <template>
     <!-- 上传组织机构信息application/vnd.ms-excel -->
     <div style="min-height: 200px">
@@ -40,13 +48,11 @@
     import { useI18n } from 'vue-i18n';
     import { inject, onMounted, reactive, ref, toRefs } from 'vue';
     import type { UploadInstance } from 'element-plus';
-    import { ElNotification } from 'element-plus';
     import { importOrgTreeJSON, impOrgTreeExcel } from '@/api/impExp/index';
     import settings from '@/settings';
     import y9_storage from '@/utils/storage';
     import { useSettingStore } from '@/store/modules/settingStore';
 
-    const settingStore = useSettingStore();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
     const { t } = useI18n();

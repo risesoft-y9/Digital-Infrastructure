@@ -1,3 +1,11 @@
+<!--
+ * @version: 
+ * @Author: shidaobang
+ * @Date: 2025-06-16 10:16:08
+ * @LastEditors: mengjuhua
+ * @LastEditTime: 2025-12-24 09:31:03
+ * @Descripttion: 角色关联授权继承
+-->
 <template>
     <div>
         <!-- 表格 -->

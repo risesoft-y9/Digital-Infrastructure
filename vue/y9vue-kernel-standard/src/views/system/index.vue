@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-11-11 16:13:31
+ * @LastEditTime: 2025-12-24 10:42:56
  * @Description: 应用系统管理
 -->
 <template>
@@ -155,7 +155,6 @@
 
 <script lang="ts" setup>
     import type { FormRules } from 'element-plus';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { inject, reactive, ref } from 'vue';
     import { useI18n } from 'vue-i18n';
     import y9_storage from '@/utils/storage';

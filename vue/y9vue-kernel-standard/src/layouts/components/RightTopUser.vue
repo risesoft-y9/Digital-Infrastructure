@@ -1,5 +1,5 @@
 <template>
-    <el-dropdown @command="onMenuClick" :hide-on-click="true" class="user-el-dropdown">
+    <el-dropdown :hide-on-click="true" class="user-el-dropdown" @command="onMenuClick">
         <div class="name" @click="(e) => e.preventDefault()">
             <!-- show & if 的vue指令 仅用于适配移动端 -->
             <div v-show="settingStore.getWindowWidth > 425">
@@ -8,12 +8,12 @@
             </div>
             <el-avatar
                 v-if="settingStore.device === 'mobile'"
+                :src="userInfo.avator ? userInfo.avator : ''"
                 :style="{
                     'font-size': fontSizeObj.baseFontSize,
                     'background-color': 'var(--el-color-primary)',
                     'margin-top': '8px'
                 }"
-                :src="userInfo.avator ? userInfo.avator : ''"
             >
                 {{ userInfo.loginName }}
             </el-avatar>
@@ -22,43 +22,19 @@
             <el-dropdown-menu>
                 <el-dropdown-item command="personalCenter">
                     <div
-                        class="el-dropdown-item"
                         :style="{ 'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight }"
+                        class="el-dropdown-item"
                     >
                         <i class="ri-user-line"></i>{{ $t('个人中心') }}
                     </div>
                 </el-dropdown-item>
-                <!-- <el-dropdown-item command="signIn">
-                    <div class="el-dropdown-item" :style="{'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight}">
-                        <i class="ri-calendar-check-line"></i>{{ $t("已签到") }}
-                    </div>
-                </el-dropdown-item>
-                <el-dropdown-item command="signOut">
-                    <div class="el-dropdown-item" :style="{'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight}">
-                        <i class="ri-bookmark-line"></i>{{ $t("已签退") }}
-                    </div>
-                </el-dropdown-item>
-                <el-divider style="padding-bottom: 12px;margin: 0px;margin-top: 6px;"></el-divider>
-                <el-dropdown-item command="changeDept">
-                    <div class="el-dropdown-item" :style="{'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight}">
-                        <i class="ri-route-line"></i>{{ $t("选择切换部门") }}
-                    </div>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                    <div
-                        class="el-dropdown-item"
-                        :style="{'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight}"
-                        v-for="item in departmentMapList"
-                        :key="item.departmentId"
-                        style="text-align: center"
-                        @click="changeDept(item.departmentId)"
-                    >{{ item.departmentName }}</div>
-                </el-dropdown-item>
-                <el-divider style="padding-bottom: 5px;margin: 0px;"></el-divider> -->
+                <!--  
+                    <el-divider style="padding-bottom: 5px;margin: 0px;"></el-divider> 
+                -->
                 <el-dropdown-item command="logout">
                     <div
-                        class="el-dropdown-item"
                         :style="{ 'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight }"
+                        class="el-dropdown-item"
                     >
                         <i class="ri-logout-box-r-line"></i>{{ $t('退出') }}
                     </div>
@@ -68,12 +44,12 @@
     </el-dropdown>
 </template>
 <script lang="ts" setup>
-    import { ref, watch, inject, defineComponent } from 'vue';
+    import { inject } from 'vue';
     import { useRouter } from 'vue-router';
     import { useSettingStore } from '@/store/modules/settingStore';
     import y9_storage from '@/utils/storage';
     import { $y9_SSO } from '@/main';
-    import { ElMessage } from 'element-plus';
+
     interface RightTopUserSetupData {
         settingStore?: any;
         userInfo: Object;
@@ -92,7 +68,6 @@
     const userInfo = JSON.parse(sessionStorage.getItem('ssoUserInfo'));
 
     const initInfo = y9_storage.getObjectItem('initInfo');
-    const departmentMapList = y9_storage.getObjectItem('departmentMapList');
     // 点击菜单
     const onMenuClick = async (command: string) => {
         switch (command) {
@@ -128,6 +103,7 @@
 </script>
 <style lang="scss" scoped>
     @import '@/theme/global-vars.scss';
+
     .user-el-dropdown {
         z-index: 9999;
         height: $headerHeight;
@@ -138,19 +114,24 @@
             align-items: center;
         }
     }
+
     .name {
         color: var(--el-text-color-primary);
         font-size: v-bind('fontSizeObj.baseFontSize');
         display: flex;
+        outline: none;
+
         & > div {
             display: flex;
             flex-direction: column;
             justify-content: center;
+
             span {
                 line-height: 20px;
                 text-align: center;
             }
         }
+
         i {
             color: var(--el-color-primary);
             font-size: 48px;
