@@ -13,6 +13,9 @@
     <artifactId>y9-module-sso</artifactId>
     <packaging>pom</packaging>
 
+    <properties>
+        <cas.version>6.6.15.2</cas.version>
+    </properties>
     <modules>
         <module>risenet-y9boot-common-sso</module>
 
@@ -20,4 +23,15 @@
         <module>risenet-y9boot-webapp-sso-jpa</module>
     </modules>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apereo.cas</groupId>
+                <artifactId>cas-server-support-bom</artifactId>
+                <version>${cas.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
