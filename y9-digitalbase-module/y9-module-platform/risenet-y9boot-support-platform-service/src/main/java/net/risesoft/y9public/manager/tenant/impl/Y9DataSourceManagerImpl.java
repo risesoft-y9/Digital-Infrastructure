@@ -1,16 +1,13 @@
 package net.risesoft.y9public.manager.tenant.impl;
 
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.druid.DbType;
 import com.alibaba.druid.pool.DruidDataSource;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +17,14 @@ import net.risesoft.exception.DataSourceErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
+import net.risesoft.y9.db.DbType;
+import net.risesoft.y9.db.DbUtil;
 import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
-import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9.util.base64.Y9Base64Util;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
+import net.risesoft.y9public.manager.database.AbstractDatabaseManager;
+import net.risesoft.y9public.manager.database.CreatedDataSource;
 import net.risesoft.y9public.manager.tenant.Y9DataSourceManager;
 import net.risesoft.y9public.repository.tenant.Y9DataSourceRepository;
 
@@ -42,45 +42,27 @@ import cn.hutool.core.util.RandomUtil;
 public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
 
     private final JdbcTemplate jdbcTemplate4Public;
-    private final Y9PlatformProperties y9PlatformProperties;
-    private final Y9DataSourceRepository datasourceRepository;
+    private final Y9DataSourceRepository y9DataSourceRepository;
+
+    private final List<AbstractDatabaseManager> databaseManagerList;
 
     public Y9DataSourceManagerImpl(
         @Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public,
         Y9PlatformProperties y9PlatformProperties,
-        Y9DataSourceRepository datasourceRepository) {
+        Y9DataSourceRepository y9DataSourceRepository,
+        List<AbstractDatabaseManager> databaseManagerList) {
         this.jdbcTemplate4Public = jdbcTemplate4Public;
-        this.y9PlatformProperties = y9PlatformProperties;
-        this.datasourceRepository = datasourceRepository;
-    }
-
-    private static String replaceSchemaNameInJdbcUrlParam(String originalJdbcUrl, String newSchemaName) {
-        int paramStart = originalJdbcUrl.indexOf("?") + 1;
-
-        if (paramStart > 0) {
-            String jdbcUrl = originalJdbcUrl.substring(0, paramStart);
-            String originalParams = originalJdbcUrl.substring(paramStart);
-            String newParams = Arrays.stream(StringUtils.split(originalParams, "&")).map(param -> {
-                if (param.startsWith("currentSchema=")) {
-                    return "currentSchema=" + newSchemaName;
-                } else {
-                    return param;
-                }
-            }).collect(Collectors.joining("&"));
-            return jdbcUrl + newParams;
-        } else {
-            return originalJdbcUrl + "?currentSchema=" + newSchemaName;
-        }
+        this.y9DataSourceRepository = y9DataSourceRepository;
+        this.databaseManagerList = databaseManagerList;
     }
 
     @Override
     public Y9DataSource getById(String id) {
-        return datasourceRepository.findById(id)
+        return y9DataSourceRepository.findById(id)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(DataSourceErrorCodeEnum.DATA_SOURCE_NOT_FOUND, id));
     }
 
-    @Override
-    public String buildDataSourceName(String tenantShortName, String systemName) {
+    private String buildDataSourceName(String tenantShortName, String systemName) {
         String dataSourceName = tenantShortName;
         if (!"default".equals(tenantShortName)) {
             dataSourceName = "yt_" + tenantShortName + "_" + RandomUtil.randomStringUpper(4);
@@ -92,142 +74,46 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
     }
 
     @Override
-    public Y9DataSource createTenantDefaultDataSource(String shortName, String systemName) {
-        String dataSourceName = this.buildDataSourceName(shortName, systemName);
-        return this.createTenantDefaultDataSourceWithId(dataSourceName, null);
+    public Y9DataSource createDataSourceIfNotExists(String tenantShortName, String systemName, String specifyId) {
+        String dataSourceName = this.buildDataSourceName(tenantShortName, systemName);
+        return this.createDataSourceIfNotExists(dataSourceName, specifyId);
     }
 
     @Override
-    public Y9DataSource createTenantDefaultDataSourceWithId(String dbName, String specifyId) {
+    public Y9DataSource createDataSourceIfNotExists(String dbName, String specifyId) {
         if (StringUtils.isNotBlank(specifyId)) {
-            Optional<Y9DataSource> y9DataSourceOptional = datasourceRepository.findById(specifyId);
+            Optional<Y9DataSource> y9DataSourceOptional = y9DataSourceRepository.findById(specifyId);
             if (y9DataSourceOptional.isPresent()) {
                 return y9DataSourceOptional.get();
             }
         }
 
-        Optional<Y9DataSource> y9DataSourceOptional = datasourceRepository.findByJndiName(dbName);
+        Optional<Y9DataSource> y9DataSourceOptional = y9DataSourceRepository.findByJndiName(dbName);
         if (y9DataSourceOptional.isPresent()) {
             return y9DataSourceOptional.get();
         }
 
         DruidDataSource dds = (DruidDataSource)jdbcTemplate4Public.getDataSource();
-        String dbType = dds.getDbType();
+        DbType dbType = DbUtil.getDbType(jdbcTemplate4Public.getDataSource());
 
-        String url = null;
-        String username = null;
-        String password = null;
-
-        if (Objects.equals(DbType.mysql.name(), dbType) || Objects.equals(DbType.mariadb.name(), dbType)) {
-            url = replaceDatabaseNameInJdbcUrl(dds.getUrl(), dbName);
-            username = dds.getUsername();
-            password = dds.getPassword();
-
-            String sql = Y9StringUtil
-                .format("CREATE DATABASE IF NOT EXISTS {} DEFAULT CHARACTER SET UTF8 COLLATE UTF8_BIN", dbName);
-
-            jdbcTemplate4Public.update(sql);
+        CreatedDataSource createdDataSource = null;
+        AbstractDatabaseManager databaseManager =
+            databaseManagerList.stream().filter(dm -> dm.support(dbType)).findFirst().orElse(null);
+        if (databaseManager != null) {
+            createdDataSource = databaseManager.createSchema(dbName, jdbcTemplate4Public);
         }
 
-        if (DbType.oracle.name().equals(dbType)) {
-            url = dds.getUrl();
-            username = dbName.toUpperCase();
-            password = dds.getPassword();
-
-            String tableSpace = username + "_DATA";
-            String dataFile = y9PlatformProperties.getNewTableSpacePath() + tableSpace + ".DBF";
-
-            // 创建表空间
-            String sql1 = Y9StringUtil.format(
-                "CREATE TABLESPACE {} DATAFILE '{}' SIZE 100M AUTOEXTEND ON NEXT 10M MAXSIZE UNLIMITED EXTENT MANAGEMENT LOCAL",
-                tableSpace, dataFile);
-            // 创建用户
-            String sql2 = Y9StringUtil.format(
-                "CREATE USER {} IDENTIFIED BY {} ACCOUNT UNLOCK DEFAULT TABLESPACE {} TEMPORARY TABLESPACE TEMP PROFILE DEFAULT",
-                username, password, tableSpace);
-            // 给用户授权
-            String sql3 = Y9StringUtil.format("GRANT DBA TO {} WITH ADMIN OPTION", username);
-            // 修改权限
-            String sql4 = Y9StringUtil.format("ALTER USER {} DEFAULT ROLE DBA", username);
-
-            jdbcTemplate4Public.update(sql1);
-            jdbcTemplate4Public.update(sql2);
-            jdbcTemplate4Public.update(sql3);
-            jdbcTemplate4Public.update(sql4);
-        }
-
-        if (DbType.postgresql.name().equals(dbType)) {
-            url = replaceDatabaseNameInJdbcUrl(dds.getUrl(), dbName);
-            username = dds.getUsername();
-            password = dds.getPassword();
-            dbName = dbName.toLowerCase();
-
-            String sql1 = Y9StringUtil.format("CREATE DATABASE {} WITH ENCODING = 'UTF8' OWNER = {}", dbName, username);
-            String sql2 = Y9StringUtil.format("GRANT ALL PRIVILEGES ON DATABASE {} TO {}", dbName, username);
-            jdbcTemplate4Public.update(sql1);
-            jdbcTemplate4Public.update(sql2);
-        }
-
-        if (DbType.dm.equals(dbType)) {
-            url = dds.getUrl();
-            String upperCaseDbName = dbName.toUpperCase();
-            username = upperCaseDbName;
-            password = dds.getPassword();
-
-            String tableSpace = upperCaseDbName + "_DATA";
-            String dataFile = y9PlatformProperties.getNewTableSpacePath() + tableSpace + ".DBF";
-
-            // 创建表空间
-            String sql1 =
-                Y9StringUtil.format("create tablespace {} datafile '{}' size 128 autoextend on next 32 CACHE = NORMAL;",
-                    tableSpace, dataFile);
-            // 创建用户
-            String sql2 = Y9StringUtil.format(
-                "create user {} identified by \"{}\" password_policy 15 PROFILE \"DEFAULT\" default tablespace \"{}\"",
-                username, password, tableSpace);
-
-            // 给用户授权
-            String sql3 = Y9StringUtil.format("grant \"DBA\" to {}", username);
-
-            jdbcTemplate4Public.update(sql1);
-            jdbcTemplate4Public.update(sql2);
-            jdbcTemplate4Public.update(sql3);
-        }
-
-        if (DbType.kingbase.name().equals(dbType)) {
-            url = replaceSchemaNameInJdbcUrlParam(dds.getUrl(), dbName);
-            username = dds.getUsername();
-            password = dds.getPassword();
-            // 创建模式
-            String sql1 = Y9StringUtil.format("CREATE SCHEMA {}", dbName);
-            jdbcTemplate4Public.update(sql1);
-            // url = replaceDatabaseNameInJdbcUrl(dds.getUrl(), dbName);
-            // username = dds.getUsername();
-            // password = dds.getPassword();
-            // String sql1 = Y9StringUtil.format(
-            // "CREATE DATABASE {} WITH OWNER = \"{}\" ENCODING 'UTF8' TEMPLATE template0 lc_ctype = 'C' lc_collate =
-            // 'C';",
-            // dbName, username);
-            // jdbcTemplate4Public.update(sql1);
-        }
-
-        if (DbType.h2.name().equals(dbType)) {
-            url = "jdbc:h2:mem:" + dbName;
-            username = dds.getUsername();
-            password = dds.getPassword();
-        }
-
-        if (url == null) {
+        if (createdDataSource == null) {
             throw new Y9BusinessException(DataSourceErrorCodeEnum.DATABASE_NOT_FULLY_SUPPORTED.getCode(),
                 DataSourceErrorCodeEnum.DATABASE_NOT_FULLY_SUPPORTED.getDescription());
         }
 
         Y9DataSource y9DataSource = new Y9DataSource();
         y9DataSource.setJndiName(dbName);
-        y9DataSource.setUrl(url);
+        y9DataSource.setUrl(createdDataSource.getUrl());
         y9DataSource.setType(DataSourceTypeEnum.DRUID);
-        y9DataSource.setUsername(username);
-        y9DataSource.setPassword(password);
+        y9DataSource.setUsername(createdDataSource.getUsername());
+        y9DataSource.setPassword(createdDataSource.getPassword());
         y9DataSource.setInitialSize(dds.getInitialSize());
         y9DataSource.setMaxActive(dds.getMaxActive());
         y9DataSource.setMinIdle(dds.getMinIdle());
@@ -237,36 +123,21 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
 
     @Override
     public void delete(String id) {
-        datasourceRepository.deleteById(id);
+        y9DataSourceRepository.deleteById(id);
     }
 
     @Override
-    public void dropTenantDefaultDataSource(String dataSourceId, String dbName) {
-        if (StringUtils.isNotBlank(dataSourceId)) {
-            this.delete(dataSourceId);
-        }
+    public void dropTenantDefaultDataSource(String dataSourceId) {
+        Y9DataSource y9DataSource = getById(dataSourceId);
+        String dbName = y9DataSource.getJndiName();
+
         if (StringUtils.isNotBlank(dbName)) {
-            DruidDataSource dds = (DruidDataSource)jdbcTemplate4Public.getDataSource();
-            if (dds != null) {
-                if (DbType.mysql.name().equals(dds.getDbType())) {
-                    String sql = "DROP DATABASE IF EXISTS " + dbName;
-                    jdbcTemplate4Public.execute(sql);
-                } else if (DbType.oracle.name().equals(dds.getDbType())) {
-                    String username = dbName.toUpperCase();
-                    String sql1 = "DROP USER " + username + " CASCADE";
-                    String sql2 = "DROP TABLESPACE " + username + "_DATA INCLUDING CONTENTS AND DATAFILES";
-                    jdbcTemplate4Public.execute(sql1);
-                    jdbcTemplate4Public.execute(sql2);
-                } else if (DbType.kingbase.name().equals(dds.getDbType())) {
-                    String username = dbName.toUpperCase();
-                    String sql1 = "DROP SCHEMA " + username + " CASCADE;";
-                    jdbcTemplate4Public.execute(sql1);
-                } else if (DbType.postgresql.name().equals(dds.getDbType())) {
-                    String username = dbName.toUpperCase();
-                    String sql1 = "DROP DATABASE IF EXISTS " + username;
-                    jdbcTemplate4Public.execute(sql1);
-                }
-            }
+            DbType dbType = DbUtil.getDbType(jdbcTemplate4Public.getDataSource());
+            databaseManagerList.stream()
+                .filter(dm -> dm.support(dbType))
+                .findFirst()
+                .ifPresent(dm -> dm.dropSchema(dbName, jdbcTemplate4Public));
+
         }
     }
 
@@ -278,36 +149,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         if (y9DataSource.getPassword() != null) {
             y9DataSource.setPassword(Y9Base64Util.encode(y9DataSource.getPassword()));
         }
-        return datasourceRepository.save(y9DataSource);
-    }
-
-    /**
-     * 替换 jdbc url 中的数据库名称 <br>
-     *
-     * 例如：replaceDatabaseNameInJdbcUrl("jdbc:mysql://localhost:3306/y9_public?allowPublicKeyRetrieval=true",
-     * "y9_default") -> "jdbc:mysql://localhost:3306/y9_default?allowPublicKeyRetrieval=true"
-     *
-     * @param originalJdbcUrl 原始 jdbc url
-     * @param newDatabaseName 新数据库名称
-     * @return {@code String }
-     */
-    private String replaceDatabaseNameInJdbcUrl(String originalJdbcUrl, String newDatabaseName) {
-        int dbNameStart = originalJdbcUrl.lastIndexOf("/") + 1;
-        int dbNameEnd = originalJdbcUrl.indexOf("?");
-
-        if (dbNameStart > 0) {
-            String oldDatabaseName;
-            if (dbNameEnd > dbNameStart) {
-                // jdbc url 后不带参数
-                oldDatabaseName = originalJdbcUrl.substring(dbNameStart, dbNameEnd);
-            } else {
-                oldDatabaseName = originalJdbcUrl.substring(dbNameStart);
-            }
-            return originalJdbcUrl.replace(oldDatabaseName, newDatabaseName);
-        } else {
-            // 如果无法提取数据库名称部分或者替换失败，返回原始的 JDBC URL
-            return originalJdbcUrl;
-        }
+        return y9DataSourceRepository.save(y9DataSource);
     }
 
 }

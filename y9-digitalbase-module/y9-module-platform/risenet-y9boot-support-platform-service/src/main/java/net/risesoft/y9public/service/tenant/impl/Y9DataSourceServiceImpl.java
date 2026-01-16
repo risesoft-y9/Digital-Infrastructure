@@ -96,11 +96,6 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     }
 
     @Override
-    public String buildDataSourceNameWithSystemName(String shortName, String systemName) {
-        return y9DataSourceManager.buildDataSourceName(shortName, systemName);
-    }
-
-    @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void changePassword(String id, String oldPassword, String newPassword) {
         Y9DataSource y9DataSource = y9DataSourceManager.getById(id);
@@ -114,15 +109,8 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public DataSourceInfo createTenantDefaultDataSource(String dbName) {
-        Y9DataSource y9DataSource = y9DataSourceManager.createTenantDefaultDataSourceWithId(dbName, null);
-        return entityToModel(y9DataSource);
-    }
-
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public DataSourceInfo createTenantDefaultDataSource(String dbName, String id) {
-        Y9DataSource y9DataSource = y9DataSourceManager.createTenantDefaultDataSourceWithId(dbName, id);
+        Y9DataSource y9DataSource = y9DataSourceManager.createDataSourceIfNotExists(dbName, id);
         return entityToModel(y9DataSource);
     }
 
@@ -140,12 +128,6 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
         Y9AssertUtil.isEmpty(tenantlist, DataSourceErrorCodeEnum.DATA_SOURCE_IS_USED);
 
         this.delete(id);
-    }
-
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public void dropTenantDefaultDataSource(String dataSourceId, String dbName) {
-        y9DataSourceManager.dropTenantDefaultDataSource(dataSourceId, dbName);
     }
 
     @Override

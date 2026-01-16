@@ -4,7 +4,6 @@ import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -167,12 +166,6 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     public List<System> listAll() {
         List<Y9System> y9SystemList = y9SystemRepository.findAll(Sort.by(Sort.Direction.ASC, "tabIndex"));
         return entityToModel(y9SystemList);
-    }
-
-    @Override
-    public List<String> listByAutoInit(Boolean autoInit) {
-        List<Y9System> systems = y9SystemRepository.findByAutoInit(autoInit);
-        return systems.stream().map(Y9System::getId).collect(Collectors.toList());
     }
 
     @Override

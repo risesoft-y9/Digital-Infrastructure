@@ -1,6 +1,8 @@
 package net.risesoft.y9public.manager.resource.impl;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
@@ -78,5 +80,11 @@ public class Y9SystemManagerImpl implements Y9SystemManager {
     @CacheEvict(key = "#id")
     public void delete(String id) {
         y9SystemRepository.deleteById(id);
+    }
+
+    @Override
+    public List<String> listByAutoInit(Boolean autoInit) {
+        List<Y9System> systems = y9SystemRepository.findByAutoInit(autoInit);
+        return systems.stream().map(Y9System::getId).collect(Collectors.toList());
     }
 }

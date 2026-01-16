@@ -12,22 +12,30 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.TenantErrorCodeEnum;
+import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.model.platform.tenant.Tenant;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
-import net.risesoft.y9public.entity.tenant.Y9DataSource;
+import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
+import net.risesoft.y9public.entity.tenant.Y9TenantSystem;
+import net.risesoft.y9public.manager.resource.Y9SystemManager;
 import net.risesoft.y9public.manager.tenant.Y9DataSourceManager;
+import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantManager;
+import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
+import net.risesoft.y9public.repository.resource.Y9AppRepository;
 import net.risesoft.y9public.repository.tenant.Y9TenantRepository;
 import net.risesoft.y9public.repository.tenant.Y9TenantSystemRepository;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
@@ -46,11 +54,15 @@ public class Y9TenantServiceImpl implements Y9TenantService {
 
     private final Y9TenantRepository y9TenantRepository;
     private final Y9TenantSystemRepository y9TenantSystemRepository;
+    private final Y9AppRepository y9AppRepository;
 
     private final Y9UserService y9UserService;
 
     private final Y9DataSourceManager y9DataSourceManager;
     private final Y9TenantManager y9TenantManager;
+    private final Y9SystemManager y9SystemManager;
+    private final Y9TenantSystemManager y9TenantSystemManager;
+    private final Y9TenantAppManager y9TenantAppManager;
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
@@ -203,20 +215,15 @@ public class Y9TenantServiceImpl implements Y9TenantService {
         }
 
         if (StringUtils.isBlank(tenantDataSourceId)) {
-            Y9DataSource y9DataSource = null;
-            try {
-                y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(tenant.getShortName(), null);
-                tenantDataSourceId = y9DataSource.getId();
-            } catch (Exception e) {
-                LOGGER.warn(e.getMessage(), e);
-                if (y9DataSource != null) {
-                    y9DataSourceManager.dropTenantDefaultDataSource(y9DataSource.getId(), tenant.getShortName());
-                }
-            }
+            tenantDataSourceId = Y9IdGenerator.genId();
+            tenant.setDefaultDataSourceId(tenantDataSourceId);
         }
-        tenant.setDefaultDataSourceId(tenantDataSourceId);
 
-        return this.saveOrUpdate(tenant);
+        Tenant savedTenant = this.saveOrUpdate(tenant);
+
+        y9DataSourceManager.createDataSourceIfNotExists(savedTenant.getShortName(), null, tenantDataSourceId);
+
+        return savedTenant;
     }
 
     @Override
@@ -226,6 +233,46 @@ public class Y9TenantServiceImpl implements Y9TenantService {
             Y9Tenant y9Tenant = y9TenantManager.getById(tenantIds[i]);
             y9Tenant.setTabIndex(i);
             y9TenantRepository.save(y9Tenant);
+        }
+    }
+
+    @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
+    public void register(String cnName, String enName) {
+        String dataSourceId = Y9IdGenerator.genId();
+
+        LOGGER.info("创建租户{}", cnName);
+        Tenant tenant = this.createTenant(cnName, enName, dataSourceId);
+        String tenantId = tenant.getId();
+
+        LOGGER.info("创建数据库和数据源{}", enName);
+        y9DataSourceManager.createDataSourceIfNotExists(tenant.getShortName(), null, dataSourceId);
+
+        LOGGER.info("租用可自动租用的系统和应用");
+        this.subscribeSystemsAndApps(tenantId);
+
+        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCompletion(int status) {
+                    if (status == TransactionSynchronization.STATUS_ROLLED_BACK) {
+                        y9DataSourceManager.dropTenantDefaultDataSource(dataSourceId);
+                    }
+                }
+            });
+        }
+    }
+
+    private void subscribeSystemsAndApps(String tenantId) {
+        List<String> systemIds = y9SystemManager.listByAutoInit(true);
+        String[] ids = systemIds.toArray(new String[systemIds.size()]);
+        List<Y9TenantSystem> y9TenantSystems = y9TenantSystemManager.saveTenantSystems(ids, tenantId);
+        for (Y9TenantSystem y9TenantSystem : y9TenantSystems) {
+            List<Y9App> y9AppList = y9AppRepository
+                .findBySystemIdAndAutoInitAndCheckedOrderByCreateTime(y9TenantSystem.getSystemId(), true, true);
+            for (Y9App y9App : y9AppList) {
+                y9TenantAppManager.save(y9App.getId(), tenantId, "默认租用");
+            }
         }
     }
 

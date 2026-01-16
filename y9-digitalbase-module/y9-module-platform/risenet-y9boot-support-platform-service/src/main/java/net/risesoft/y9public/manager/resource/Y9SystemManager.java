@@ -1,5 +1,6 @@
 package net.risesoft.y9public.manager.resource;
 
+import java.util.List;
 import java.util.Optional;
 
 import net.risesoft.y9public.entity.Y9System;
@@ -31,4 +32,11 @@ public interface Y9SystemManager {
 
     Y9System update(Y9System y9System);
 
+    /**
+     * 获取系统id列表
+     *
+     * @param autoInit 是否自动租用系统
+     * @return {@code List<System>}
+     */
+    List<String> listByAutoInit(Boolean autoInit);
 }
