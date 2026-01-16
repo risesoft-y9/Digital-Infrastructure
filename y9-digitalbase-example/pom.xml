@@ -13,6 +13,8 @@
     <artifactId>y9-digitalbase-example</artifactId>
     <packaging>pom</packaging>
     <version>${revision}</version>
+    <name>y9-digitalbase-example</name>
+    <description>RiseSoft/Digital Infrastructure webapp parent</description>
 
     <modules>
         <module>risenet-y9demo-cache</module>

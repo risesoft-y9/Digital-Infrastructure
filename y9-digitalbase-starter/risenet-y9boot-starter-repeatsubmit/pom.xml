@@ -11,7 +11,9 @@
     <artifactId>risenet-y9boot-starter-repeatsubmit</artifactId>
     <version>${revision}</version>
     <packaging>jar</packaging>
-
+    <name>risenet-y9boot-starter-repeatsubmit</name>
+    <description>RiseSoft/Digital Infrastructure openfeign starter</description>
+    
     <properties>
     </properties>
 
