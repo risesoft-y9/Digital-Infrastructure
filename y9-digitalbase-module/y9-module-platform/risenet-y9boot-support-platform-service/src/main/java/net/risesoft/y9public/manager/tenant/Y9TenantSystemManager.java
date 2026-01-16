@@ -1,5 +1,7 @@
 package net.risesoft.y9public.manager.tenant;
 
+import java.util.List;
+
 import net.risesoft.y9public.entity.tenant.Y9TenantSystem;
 
 /**
@@ -21,4 +23,6 @@ public interface Y9TenantSystemManager {
     Y9TenantSystem save(Y9TenantSystem y9TenantSystem);
 
     Y9TenantSystem saveTenantSystem(String systemId, String tenantId);
+
+    List<Y9TenantSystem> saveTenantSystems(String[] systemIds, String tenantId);
 }

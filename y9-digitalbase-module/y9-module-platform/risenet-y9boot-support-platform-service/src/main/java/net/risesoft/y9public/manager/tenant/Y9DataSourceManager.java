@@ -13,15 +13,13 @@ public interface Y9DataSourceManager {
 
     Y9DataSource getById(String id);
 
-    String buildDataSourceName(String tenantShortName, String systemName);
+    Y9DataSource createDataSourceIfNotExists(String tenantShortName, String systemName, String specifyId);
 
-    Y9DataSource createTenantDefaultDataSource(String shortName, String systemName);
-
-    Y9DataSource createTenantDefaultDataSourceWithId(String dbName, String specifyId);
+    Y9DataSource createDataSourceIfNotExists(String dbName, String specifyId);
 
     void delete(String id);
 
-    void dropTenantDefaultDataSource(String dataSourceId, String dbName);
+    void dropTenantDefaultDataSource(String dataSourceId);
 
     Y9DataSource save(Y9DataSource y9DataSource);
 

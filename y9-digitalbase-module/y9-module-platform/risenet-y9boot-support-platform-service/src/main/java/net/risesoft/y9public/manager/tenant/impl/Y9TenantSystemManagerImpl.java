@@ -1,5 +1,6 @@
 package net.risesoft.y9public.manager.tenant.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -166,7 +167,7 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
             String datasoureId = tenant.getDefaultDataSourceId();
             try {
                 Y9DataSource y9DataSource =
-                    y9DataSourceManager.createTenantDefaultDataSource(tenant.getShortName(), y9System.getName());
+                    y9DataSourceManager.createDataSourceIfNotExists(tenant.getShortName(), y9System.getName(), null);
                 datasoureId = y9DataSource.getId();
             } catch (Exception e) {
                 LOGGER.warn(e.getMessage(), e);
@@ -175,4 +176,14 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
         }
         return this.save(y9TenantSystem);
     }
+
+    @Override
+    public List<Y9TenantSystem> saveTenantSystems(String[] systemIds, String tenantId) {
+        List<Y9TenantSystem> y9TenantSystemList = new ArrayList<>();
+        for (String systemId : systemIds) {
+            y9TenantSystemList.add(saveTenantSystem(systemId, tenantId));
+        }
+        return y9TenantSystemList;
+    }
+
 }

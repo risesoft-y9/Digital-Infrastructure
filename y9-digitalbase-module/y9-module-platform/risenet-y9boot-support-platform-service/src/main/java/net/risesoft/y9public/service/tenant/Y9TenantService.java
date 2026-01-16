@@ -128,4 +128,11 @@ public interface Y9TenantService {
      */
     void saveTenantOrders(String[] tenantIds);
 
+    /**
+     * 租户一键生成
+     *
+     * @param cnName 中文名
+     * @param enName 英文名
+     */
+    void register(String cnName, String enName);
 }

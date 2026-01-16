@@ -119,8 +119,7 @@ public class Y9AppServiceImpl implements Y9AppService {
 
     @Override
     public List<App> listByAutoInitAndChecked(Boolean autoInit, Boolean checked) {
-        List<Y9App> y9AppList = y9AppRepository.findByAutoInitAndCheckedOrderByCreateTime(autoInit, checked);
-        return entityToModel(y9AppList);
+        return entityToModel(y9AppRepository.findByAutoInitAndCheckedOrderByCreateTime(autoInit, checked));
     }
 
     @Override

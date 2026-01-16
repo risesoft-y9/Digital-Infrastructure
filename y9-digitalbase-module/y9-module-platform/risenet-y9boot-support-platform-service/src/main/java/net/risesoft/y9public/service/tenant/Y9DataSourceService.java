@@ -17,8 +17,6 @@ import net.risesoft.y9.exception.Y9NotFoundException;
  */
 public interface Y9DataSourceService {
 
-    String buildDataSourceNameWithSystemName(String shortName, String systemName);
-
     /**
      * 修改密码
      *
@@ -27,8 +25,6 @@ public interface Y9DataSourceService {
      * @param newPassword 新密码
      */
     void changePassword(String id, String oldPassword, String newPassword);
-
-    DataSourceInfo createTenantDefaultDataSource(String dbName);
 
     DataSourceInfo createTenantDefaultDataSource(String dbName, String id);
 
@@ -40,14 +36,6 @@ public interface Y9DataSourceService {
     void delete(String id);
 
     void deleteAfterCheck(String id);
-
-    /**
-     * 创建租户发生异常，删除对应的数据源和数据库
-     *
-     * @param dataSourceId 数据源id
-     * @param dbName 数据库名称
-     */
-    void dropTenantDefaultDataSource(String dataSourceId, String dbName);
 
     /**
      * 根据ID获取数据源

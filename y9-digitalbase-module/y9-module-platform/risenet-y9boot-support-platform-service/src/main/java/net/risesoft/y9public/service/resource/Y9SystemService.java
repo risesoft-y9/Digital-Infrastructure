@@ -83,14 +83,6 @@ public interface Y9SystemService {
     List<System> listAll();
 
     /**
-     * 获取系统id列表
-     *
-     * @param autoInit 是否自动租用系统
-     * @return {@code List<System>}
-     */
-    List<String> listByAutoInit(Boolean autoInit);
-
-    /**
      * 根据contextPath获取系统实体
      *
      * @param contextPath 上下文路径
