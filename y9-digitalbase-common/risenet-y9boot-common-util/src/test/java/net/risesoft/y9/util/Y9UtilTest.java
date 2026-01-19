@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.junit.jupiter.api.Test;
 
@@ -55,7 +55,7 @@ class Y9UtilTest {
         assertEquals("a,b,c,d", result);
 
         // 测试第一个参数为null
-        result = Y9Util.genCustomStr((String)null, "c,d");
+        result = Y9Util.genCustomStr(null, "c,d");
         assertEquals("c,d", result);
 
         // 测试第一个参数为空字符串

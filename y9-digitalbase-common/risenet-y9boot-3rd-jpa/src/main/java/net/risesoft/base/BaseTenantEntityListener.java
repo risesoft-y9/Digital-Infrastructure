@@ -1,9 +1,9 @@
 package net.risesoft.base;
 
-import net.risesoft.y9.Y9LoginUserHolder;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 租户实体监听器基类

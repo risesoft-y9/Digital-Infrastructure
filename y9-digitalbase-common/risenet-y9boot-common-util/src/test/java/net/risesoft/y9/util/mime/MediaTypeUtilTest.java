@@ -2,7 +2,7 @@ package net.risesoft.y9.util.mime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
