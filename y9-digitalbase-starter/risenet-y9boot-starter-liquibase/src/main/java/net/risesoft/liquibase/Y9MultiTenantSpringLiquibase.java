@@ -1,9 +1,8 @@
 package net.risesoft.liquibase;
 
-import javax.sql.DataSource;
+import org.springframework.core.io.ResourceLoader;
 
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.core.io.ResourceLoader;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

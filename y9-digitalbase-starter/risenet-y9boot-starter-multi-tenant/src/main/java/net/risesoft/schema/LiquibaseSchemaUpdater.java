@@ -1,6 +1,6 @@
 package net.risesoft.schema;
 
-import javax.sql.DataSource;
+import com.zaxxer.hikari.HikariDataSource;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,14 +24,14 @@ public class LiquibaseSchemaUpdater implements SchemaUpdater {
 
     @Override
     public void updateByTenant(String tenantId) {
-        DataSource dataSource = y9TenantDataSourceLookup.getDataSource(tenantId);
+        HikariDataSource dataSource = y9TenantDataSourceLookup.getDataSource(tenantId);
         y9MultiTenantSpringLiquibase.update(dataSource);
     }
 
     @Override
     public void updateAllTenants() {
         for (String tenantId : y9TenantDataSourceLookup.getDataSources().keySet()) {
-            DataSource dataSource = y9TenantDataSourceLookup.getDataSources().get(tenantId);
+            HikariDataSource dataSource = y9TenantDataSourceLookup.getDataSources().get(tenantId);
             y9MultiTenantSpringLiquibase.update(dataSource);
         }
     }

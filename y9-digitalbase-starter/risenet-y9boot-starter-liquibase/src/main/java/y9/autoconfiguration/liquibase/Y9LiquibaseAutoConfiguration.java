@@ -1,7 +1,5 @@
 package y9.autoconfiguration.liquibase;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -39,8 +37,8 @@ public class Y9LiquibaseAutoConfiguration {
 
     @Bean
     @ConditionalOnBean(name = "y9PublicDS")
-    public SpringLiquibase liquibase(Y9LiquibaseProperties properties, @Qualifier("y9PublicDS") HikariDataSource dataSource,
-        ResourceLoader resourceLoader) {
+    public SpringLiquibase liquibase(Y9LiquibaseProperties properties,
+        @Qualifier("y9PublicDS") HikariDataSource dataSource, ResourceLoader resourceLoader) {
         return LiquibaseUtil.getSpringLiquibase(dataSource, properties, resourceLoader, false);
     }
 

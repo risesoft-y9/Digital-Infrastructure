@@ -9,8 +9,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import javax.sql.DataSource;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -145,7 +143,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
     }
 
     @Override
-    public DataSource getDataSource(String dataSourceName) throws DataSourceLookupFailureException {
+    public HikariDataSource getDataSource(String dataSourceName) throws DataSourceLookupFailureException {
         if (!loaded) {
             loadDataSources();
             loaded = true;
@@ -168,7 +166,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         return Collections.unmodifiableMap(this.loadedTenantIdDataSourceMap);
     }
 
-    public DataSource getPublicDataSource() {
+    public HikariDataSource getPublicDataSource() {
         return publicDataSource;
     }
 
