@@ -4,7 +4,8 @@ plugins {
 }
 
 dependencies {
-    api(project(":y9-digitalbase-common:risenet-y9boot-common-util"))
+    api(project(":y9-digitalbase-common:risenet-y9boot-properties"))
+    api(project(":y9-digitalbase-common:risenet-y9boot-3rd-jpa"))
     api(platform(libs.spring.boot.bom))
     api(platform(libs.ojdbc.bom))
     api("org.springframework.boot:spring-boot")
