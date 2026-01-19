@@ -159,71 +159,6 @@
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>${maven-javadoc-plugin.version}</version>
-                    <configuration>
-                        <charset>UTF-8</charset>
-                        <encoding>UTF-8</encoding>
-                        <docencoding>UTF-8</docencoding>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>attach-javadocs</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>${maven-source-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <goals>
-                                <goal>jar-no-fork</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>flatten-maven-plugin</artifactId>
-                    <version>${flatten-maven-plugin.version}</version>
-                    <inherited>true</inherited>
-                    <executions>
-                        <execution>
-                            <id>flatten</id>
-                            <phase>process-resources</phase>
-                            <goals>
-                                <goal>flatten</goal>
-                            </goals>
-                            <configuration>
-                                <updatePomFile>true</updatePomFile>
-                                <flattenMode>resolveCiFriendliesOnly</flattenMode>
-                                <pomElements>
-                                    <parent>expand</parent>
-                                    <scm>expand</scm>
-                                    <url>expand</url>
-                                    <developers>expand</developers>
-                                </pomElements>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>flatten.clean</id>
-                            <phase>clean</phase>
-                            <goals>
-                                <goal>clean</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-
-                <!-- y9-digitablBase-->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven-compiler-plugin.version}</version>
                     <configuration>
@@ -249,28 +184,9 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>${maven-jar-plugin.version}</version>
-                    <configuration>
-                        <archive>
-                            <manifest>
-                                <mainClass>${start-class}</mainClass>
-                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            </manifest>
-                        </archive>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
                     <version>${maven-war-plugin.version}</version>
                     <configuration>
-                        <archive>
-                            <manifest>
-                                <mainClass>${start-class}</mainClass>
-                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            </manifest>
-                        </archive>
                         <failOnMissingWebXml>false</failOnMissingWebXml>
                     </configuration>
                 </plugin>
@@ -284,7 +200,6 @@
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>${maven-resources-plugin.version}</version>
                     <configuration>
-                        <propertiesEncoding>${project.build.sourceEncoding}</propertiesEncoding>
                         <delimiters>
                             <delimiter>${resource.delimiter}</delimiter>
                         </delimiters>
@@ -307,6 +222,42 @@
                                 <outputDirectory>${project.build.outputDirectory}</outputDirectory>
                                 <overwrite>true</overwrite>
                             </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                    <configuration>
+                        <charset>UTF-8</charset>
+                        <encoding>UTF-8</encoding>
+                        <docencoding>UTF-8</docencoding>
+                        <tags>
+                            <tag>
+                                <name>date</name>
+                            </tag>
+                        </tags>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven-source-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
                         </execution>
                     </executions>
                 </plugin>
@@ -404,9 +355,6 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
-                    <configuration>
-                        <mainClass>${start-class}</mainClass>
-                    </configuration>
                     <executions>
                         <execution>
                             <id>package</id>
@@ -423,22 +371,26 @@
                     </executions>
                 </plugin>
 
+                <!-- https://github.com/smart-doc-group/smart-doc -->
                 <plugin>
-                    <groupId>org.graalvm.buildtools</groupId>
-                    <artifactId>native-maven-plugin</artifactId>
-                    <version>${native-maven-plugin.version}</version>
+                    <groupId>com.ly.smart-doc</groupId>
+                    <artifactId>smart-doc-maven-plugin</artifactId>
+                    <version>${smart-doc-maven-plugin.version}</version>
                     <configuration>
-                        <classesDirectory>${project.build.outputDirectory}</classesDirectory>
-                        <metadataRepository>
-                            <enabled>true</enabled>
-                        </metadataRepository>
-                        <requiredVersion>22.3</requiredVersion>
+                        <configFile>./src/main/resources/smart-doc.json</configFile>
+                        <excludes>
+                            <exclude>com.alibaba:fastjson</exclude>
+                        </excludes>
+                        <includes>
+                            <include>net.risesoft:risenet-y9boot-common-model</include>
+                        </includes>
                     </configuration>
                     <executions>
                         <execution>
-                            <id>add-reachability-metadata</id>
+                            <phase>compile</phase>
                             <goals>
-                                <goal>add-reachability-metadata</goal>
+                                <goal>html</goal>
+                                <goal>markdown</goal>
                             </goals>
                         </execution>
                     </executions>
@@ -451,8 +403,8 @@
                     <configuration>
                         <skip>false</skip>
                         <from>
-                            <!--<image>eclipse-temurin:21-jre</image>-->
-                            <image>docker-internal.youshengyun.com/base/tomcat:10.1.48-jdk21-temurin</image>
+                            <!--<image>eclipse-temurin:11-jre</image>-->
+                            <image>docker-internal.youshengyun.com/base/tomcat:9.0.107-jdk11-temurin</image>
                             <platforms>
                                 <platform>
                                     <architecture>amd64</architecture>
@@ -485,6 +437,133 @@
                         </execution>
                     </executions>
                 </plugin>
+
+                <!--This plugin's configuration is used to store Eclipse m2e settings
+                    only. It has no influence on the Maven build itself. -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            cn.smallbun.screw
+                                        </groupId>
+                                        <artifactId>
+                                            screw-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [1.0.5,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>run</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            com.ly.smart-doc
+                                        </groupId>
+                                        <artifactId>
+                                            smart-doc-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [2.4.8,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>html</goal>
+                                            <goal>docx</goal>
+                                            <goal>markdown</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>dev.aspectj</groupId>
+                                        <artifactId>aspectj-maven-plugin</artifactId>
+                                        <versionRange>[1,)</versionRange>
+                                        <goals>
+                                            <goal>compile</goal>
+                                            <goal>test-compile</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore/>
+                                    </action>
+                                </pluginExecution>
+
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-dependency-plugin</artifactId>
+                                        <versionRange>[1,)</versionRange>
+                                        <goals>
+                                            <goal>copy-dependencies</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore/>
+                                    </action>
+                                </pluginExecution>
+
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-enforcer-plugin</artifactId>
+                                        <versionRange>[1,)</versionRange>
+                                        <goals>
+                                            <goal>enforce</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore/>
+                                    </action>
+                                </pluginExecution>
+
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.codehaus.mojo</groupId>
+                                        <artifactId>flatten-maven-plugin</artifactId>
+                                        <versionRange>[1,)</versionRange>
+                                        <goals>
+                                            <goal>flatten</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore/>
+                                    </action>
+                                </pluginExecution>
+
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.springframework.boot</groupId>
+                                        <artifactId>spring-boot-maven-plugin</artifactId>
+                                        <versionRange>[1,)</versionRange>
+                                        <goals>
+                                            <goal>build-info</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore/>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
@@ -498,7 +577,6 @@
                             </goals>
                             <configuration>
                                 <rules>
-
                                     <requireJavaVersion>
                                         <version>${java.version}</version>
                                     </requireJavaVersion>
@@ -507,24 +585,7 @@
                         </execution>
                     </executions>
                 </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>${build-helper-maven-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>timestamp-property</id>
-                            <goals>
-                                <goal>timestamp-property</goal>
-                            </goals>
-                            <configuration>
-                                <name>buildDate</name>
-                                <pattern>yyyyMMddHHmm</pattern>
-                                <timeZone>GMT+8</timeZone>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
+
                 <plugin>
                     <groupId>io.github.git-commit-id</groupId>
                     <artifactId>git-commit-id-maven-plugin</artifactId>
@@ -550,56 +611,46 @@
                         <commitIdGenerationMode>full</commitIdGenerationMode>
                     </configuration>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-gpg-plugin</artifactId>
-                    <version>${maven-gpg-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>sign-artifacts</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>sign</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.sonatype.central</groupId>
-                    <artifactId>central-publishing-maven-plugin</artifactId>
-                    <version>${central-publishing-maven-plugin.version}</version>
-                </plugin>
 
-                <!-- https://github.com/smart-doc-group/smart-doc -->
                 <plugin>
-                    <groupId>com.ly.smart-doc</groupId>
-                    <artifactId>smart-doc-maven-plugin</artifactId>
-                    <version>${smart-doc-maven-plugin.version}</version>
+                    <groupId>org.graalvm.buildtools</groupId>
+                    <artifactId>native-maven-plugin</artifactId>
+                    <version>${native-maven-plugin.version}</version>
                     <configuration>
-                        <configFile>./src/main/resources/smart-doc.json</configFile>
-                        <excludes>
-                            <exclude>com.alibaba:fastjson</exclude>
-                        </excludes>
-                        <includes>
-                            <include>net.risesoft:risenet-y9boot-common-model</include>
-                        </includes>
+                        <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+                        <metadataRepository>
+                            <enabled>true</enabled>
+                        </metadataRepository>
+                        <requiredVersion>22.3</requiredVersion>
                     </configuration>
                     <executions>
                         <execution>
-                            <phase>compile</phase>
+                            <id>add-reachability-metadata</id>
                             <goals>
-                                <goal>html</goal>
+                                <goal>add-reachability-metadata</goal>
                             </goals>
                         </execution>
                     </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
+
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>io.github.git-commit-id</groupId>
+                <artifactId>git-commit-id-maven-plugin</artifactId>
+            </plugin>
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
-                <inherited>false</inherited>
+                <version>${flatten-maven-plugin.version}</version>
+                <inherited>true</inherited>
                 <executions>
                     <execution>
                         <id>flatten</id>
@@ -626,23 +677,75 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-                <groupId>io.github.git-commit-id</groupId>
-                <artifactId>git-commit-id-maven-plugin</artifactId>
-            </plugin>
         </plugins>
+
+        <!-- 动态编译环境配置 -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>profiles/*</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources/profiles/${dir}</directory>
+            </resource>
+        </resources>
+
     </build>
 
     <profiles>
+        <profile>
+            <!-- 本机个人开发环境 -->
+            <id>env-local</id>
+            <properties>
+                <dir>local</dir>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <!-- 本地团队开发环境 -->
+            <id>env-dev</id>
+            <properties>
+                <dir>dev</dir>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <!-- 测试环境 -->
+            <id>env-test</id>
+            <properties>
+                <dir>test</dir>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <!-- 生产环境 -->
+            <id>env-prod</id>
+            <properties>
+                <dir>prod</dir>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <!-- demo测试环境 -->
+            <id>env-demo</id>
+            <properties>
+                <dir>demo</dir>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+
         <profile>
             <id>deploy-private-repo</id>
             <activation>
@@ -657,14 +760,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>flatten-maven-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>flatten-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>
@@ -696,12 +791,9 @@
                         <artifactId>maven-source-plugin</artifactId>
                     </plugin>
                     <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>flatten-maven-plugin</artifactId>
-                    </plugin>
-                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -715,11 +807,13 @@
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central-publishing-maven-plugin.version}</version>
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>mvn-central</publishingServerId>
                             <centralBaseUrl>https://central.sonatype.com</centralBaseUrl>
                             <deploymentName>${project.artifactId}-${project.version}</deploymentName>
+                            <!-- <ignorePublishedComponents>true</ignorePublishedComponents> -->
                             <skipPublishing>false</skipPublishing>
                             <autoPublish>true</autoPublish>
                             <waitUntil>uploaded</waitUntil><!--validated uploaded-->
@@ -864,7 +958,5 @@
                 </plugins>
             </build>
         </profile>
-
     </profiles>
-
 </project>
