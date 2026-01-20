@@ -404,7 +404,7 @@
                         <skip>false</skip>
                         <from>
                             <!--<image>eclipse-temurin:11-jre</image>-->
-                            <image>docker-internal.youshengyun.com/base/tomcat:9.0.107-jdk11-temurin</image>
+                            <image>docker-internal.youshengyun.com/base/tomcat:10.1.48-jdk21-temurin</image>
                             <platforms>
                                 <platform>
                                     <architecture>amd64</architecture>
