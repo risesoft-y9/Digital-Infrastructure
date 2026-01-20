@@ -1,7 +1,6 @@
 package y9.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.security.auth.login.FailedLoginException;
@@ -9,7 +8,6 @@ import javax.security.auth.login.FailedLoginException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.CentralAuthenticationService;
 import org.apereo.cas.authentication.AuthenticationSystemSupport;
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
@@ -33,13 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
-import y9.entity.Y9User;
 import y9.service.Y9UserService;
-import y9.util.Y9Context;
-import y9.util.Y9MessageDigest;
-import y9.util.common.Base64Util;
-import y9.util.common.CheckPassWord;
-import y9.util.common.RSAUtil;
 
 /**
  * @author dingzhaojun
@@ -74,54 +66,6 @@ public class LogonController {
         LOGGER.info("LoginController created.");
     }
 
-    public Map<String, Object> checkSsoLoginInfo(String tenantShortName, String username, String password,
-        String rsaPublicKey, String loginType, final HttpServletRequest request, final HttpServletResponse response) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        try {
-            username = Base64Util.decode(username, "Unicode");
-            if (StringUtils.isNotBlank(rsaPublicKey)) {
-                String privateKey = Y9Context.getProperty("y9.rsaPrivateKey");
-                password = RSAUtil.privateDecrypt(password, privateKey);
-            }
-            password = Base64Util.decode(password, "Unicode");
-            if (username.contains("&")) {
-                username = username.substring(username.indexOf("&") + 1);
-                tenantShortName = "operation";
-            }
-            List<Y9User> users = null;
-            if ("mobile".equals(loginType)) {
-                users = y9UserService.findByTenantShortNameAndMobile(tenantShortName, username);
-            } else {
-                users = y9UserService.findByTenantShortNameAndLoginName(tenantShortName, username);
-            }
-
-            if (users.isEmpty()) {
-                map.put("msg", "该账号不存在，请检查账号输入是否正确！");
-                map.put("success", false);
-                return map;
-            }
-
-            Y9User y9User = users.get(0);
-            String hashed = y9User.getPassword();
-            if (!Y9MessageDigest.bcryptMatch(password, hashed)) {
-                map.put("msg", "密码错误!");
-                map.put("success", false);
-                return map;
-            }
-
-            boolean isSimplePassWord = CheckPassWord.isSimplePassWord(password);
-            if (isSimplePassWord) {
-                map.put("msg", "密码过于简单,请重新设置密码！");
-            }
-            map.put("success", true);
-        } catch (Exception e) {
-            map.put("success", false);
-            map.put("msg", "认证失败!");
-            LOGGER.warn(e.getMessage(), e);
-        }
-        return map;
-    }
-
     @PostMapping(value = "/logon", consumes = MediaType.ALL_VALUE)
     public final ResponseEntity<Map<String, Object>> logon(RememberMeUsernamePasswordCredential credential,
         @RequestBody(required = false) final MultiValueMap<String, String> requestBody,
@@ -143,10 +87,6 @@ public class LogonController {
             String tenantShortName = (String)customFields.get("tenantShortName");
             String loginType = (String)customFields.get("loginType");
             String rsaPublicKey = request.getParameter("rsaPublicKey");
-            retMap = checkSsoLoginInfo(tenantShortName, username, password, rsaPublicKey, loginType, request, response);
-            if (retMap.get("success").toString().equals("false")) {
-                return new ResponseEntity<>(retMap, headers, HttpStatus.UNAUTHORIZED);
-            }
 
             final Service service = this.webApplicationServiceFactory.createService(request);
             val authenticationResult =

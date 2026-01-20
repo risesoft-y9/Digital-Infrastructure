@@ -3,6 +3,7 @@ package y9.util;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -33,8 +34,8 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
 
     /**
      * 如果BeanFactory包含一个与所给名称匹配的bean定义，则返回true
-     * 
-     * 
+     *
+     *
      * @param name
      * @return boolean
      */
@@ -48,8 +49,8 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
 
     /**
      * 如果给定的bean名字在bean定义中有别名，则返回这些别名
-     * 
-     * 
+     *
+     *
      * @param name
      * @return
      * @throws NoSuchBeanDefinitionException
@@ -60,8 +61,8 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
 
     /**
      * 获取类型为requiredType的对象
-     * 
-     * 
+     *
+     *
      * @param clz
      * @return
      * @throws BeansException
@@ -72,11 +73,11 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
 
     /**
      * 获取对象
-     * 
-     * 
+     *
+     *
      * @param name
      * @return Object 一个以所给名字注册的bean的实例
-     * 
+     *
      * @throws BeansException
      */
     @SuppressWarnings("unchecked")
@@ -98,31 +99,20 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
     }
 
     public static String getHostIp() {
-        if (Y9Context.hostIp == null) {
-            Y9Context.hostIp = InetAddressUtil.getLocalAddress().getHostAddress();
-        }
         return Y9Context.hostIp;
     }
 
     public static String getHostName() {
-        if (Y9Context.hostName == null) {
-            try {
-                Y9Context.hostName = InetAddress.getLocalHost().getHostName();
-            } catch (UnknownHostException e) {
-                LOGGER.warn(e.getMessage(), e);
-            }
-        }
-
         return Y9Context.hostName;
     }
 
     /**
      * 获取访问者IP
-     *
+     * 
      * 在一般情况下使用Request.getRemoteAddr()即可，但是经过nginx等反向代理软件后，这个方法会失效。
-     *
+     * 
      * 本方法先从Header中获取X-Real-IP，如果不存在再从X-Forwarded-For获得第一个IP(用,分割)， 如果还不存在则调用Request .getRemoteAddr()。
-     *
+     * 
      * @param request
      * @return
      */
@@ -176,7 +166,7 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
     }
 
     public static String getSystemName() {
-        return getProperty("systemName");
+        return getProperty("y9.systemName");
     }
 
     /**
@@ -207,6 +197,16 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
 
     public static void publishEvent(ApplicationEvent event) {
         applicationContext.publishEvent(event);
+    }
+
+    @PostConstruct
+    public void init() {
+        Y9Context.hostIp = InetAddressUtil.getLocalAddress(environment.getProperty("y9.internalIp")).getHostAddress();
+        try {
+            Y9Context.hostName = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            LOGGER.warn(e.getMessage(), e);
+        }
     }
 
     @Override

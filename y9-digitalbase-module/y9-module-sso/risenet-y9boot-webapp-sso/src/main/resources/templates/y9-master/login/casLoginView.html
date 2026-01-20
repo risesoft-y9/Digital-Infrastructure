@@ -19,7 +19,7 @@
     <script charset="utf-8" th:src="@{/y9static/js/base64.js}" type="text/javascript"></script>
     <script charset="utf-8" th:src="@{/y9static/js/jquery/jquery-3.7.1.min.js}" type="text/javascript"></script>
     <script charset="utf-8" th:src="@{/y9static/js/jquery/jquery.cookie.js}" type="text/javascript"></script>
-    <script charset="utf-8" th:src="@{/y9static/js/jsencrypt.min.js}" type="text/javascript"></script>
+    <script charset="utf-8" th:src="@{/y9static/js/forge.min.js}" type="text/javascript"></script>
     <script charset="utf-8" th:src="@{/y9static/js/layui/layui.js}" type="text/javascript"></script>
     <script charset="utf-8" th:src="@{/y9static/js/layerMsg.js}" type="text/javascript"></script>
     <style>
@@ -161,10 +161,16 @@
     });
 
     //加密
-    function rsaEncrypt(publicKey, pwd) {
-        var encrypt = new JSEncrypt();
-        encrypt.setPublicKey(publicKey);
-        return encrypt.encrypt(pwd);
+    function rsaEncrypt(base64PublicKey, message) {
+        const derBinary = forge.util.decode64(base64PublicKey);
+        const asn1Obj = forge.asn1.fromDer(derBinary);
+        const publicKey = forge.pki.publicKeyFromAsn1(asn1Obj);
+        const messageBytes = forge.util.encodeUtf8(message);
+
+        const encryptedBytes = publicKey.encrypt(messageBytes, 'RSA-OAEP', {
+            md: forge.md.sha256.create()
+        })
+        return forge.util.encode64(encryptedBytes)
     }
 
     var open = 0;

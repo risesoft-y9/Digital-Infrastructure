@@ -33,6 +33,7 @@ import y9.service.impl.Y9LoginUserKafkaServiceImpl;
 import y9.util.Y9Context;
 
 @Lazy(false)
+@EnableConfigurationProperties(Y9Properties.class)
 @Configuration(proxyBeanMethods = true)
 public class Y9Configuration {
 
@@ -47,7 +48,7 @@ public class Y9Configuration {
      * 此过滤器更多是为了减少外部 servlet 容器的配置 <br/>
      *
      * @return {@code FilterRegistrationBean<ForwardedHeaderFilter> }
-     * @see <a href="https://docs.spring.io/spring-security/reference/servlet/appendix/proxy-server.html">Proxy Server
+     * @see <a href= "https://docs.spring.io/spring-security/reference/servlet/appendix/proxy-server.html">Proxy Server
      *      Configuration</a>
      */
     @Bean
@@ -83,7 +84,6 @@ public class Y9Configuration {
         @Override
         @Scheduled(cron = "0 * * * * *")
         public void run() {
-            // Y9KeyValueService y9KeyValueService = Y9Context.getBean(Y9KeyValueService.class);
             y9KeyValueService.cleanUpExpiredKeyValue();
         }
     }
@@ -114,7 +114,7 @@ public class Y9Configuration {
     static class Y9UserLoginJpaConfiguration {
         @Bean
         public Y9LoginUserService y9LoginUserServiceImpl(Y9LoginUserRepository y9LoginUserRepository,
-            Y9UserRepository y9UserRepository) {
+                                                         Y9UserRepository y9UserRepository) {
             return new Y9LoginUserJpaServiceImpl(y9LoginUserRepository, y9UserRepository);
         }
 

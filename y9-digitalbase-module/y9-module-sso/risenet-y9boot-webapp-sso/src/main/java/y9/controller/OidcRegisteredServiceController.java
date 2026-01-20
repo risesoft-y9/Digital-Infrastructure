@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.authentication.principal.DefaultPrincipalAttributesRepository;
@@ -17,6 +18,7 @@ import org.apereo.cas.services.OidcRegisteredService;
 import org.apereo.cas.services.RegisteredService;
 import org.apereo.cas.services.RegisteredServiceProperty;
 import org.apereo.cas.services.ReturnAllAttributeReleasePolicy;
+import org.apereo.cas.services.ServiceRegistryListener;
 import org.apereo.cas.services.ServicesManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
@@ -44,6 +46,7 @@ public class OidcRegisteredServiceController {
 
     private final ServicesManager servicesManager;
     private final CasConfigurationProperties casConfigurationProperties;
+    private final Collection<ServiceRegistryListener> serviceRegistryListeners;
 
     @PostMapping(value = "/delete")
     public Y9Result<RegisteredService> delete(long id) {
@@ -89,9 +92,11 @@ public class OidcRegisteredServiceController {
             svc.setServiceId(serviceId);
             svc.setName(name);
             svc.setDescription(description);
-            svc.setTheme(theme.isBlank() ? casConfigurationProperties.getTheme().getDefaultThemeName() : theme);
+            svc.setTheme(
+                StringUtils.isBlank(theme) ? casConfigurationProperties.getTheme().getDefaultThemeName() : theme);
             svc.setEvaluationOrder(100);
             svc.setLogoutUrl(logoutUrl);
+            svc.setScopes(Set.of("openid", "y9"));
             ReturnAllAttributeReleasePolicy returnAllAttributeReleasePolicy = new ReturnAllAttributeReleasePolicy();
             returnAllAttributeReleasePolicy.setAuthorizedToReleaseCredentialPassword(true);
             returnAllAttributeReleasePolicy.setAuthorizedToReleaseProxyGrantingTicket(true);
@@ -106,11 +111,16 @@ public class OidcRegisteredServiceController {
             svc.setBypassApprovalPrompt(true);
             svc.setGenerateRefreshToken(true);
             svc.setRenewRefreshToken(true);
-            svc.setJwtAccessToken(false);
+            svc.setJwtAccessToken(true);
             if (StringUtils.isNotBlank(systemId)) {
                 Map<String, RegisteredServiceProperty> propertyMap = new HashMap<>();
                 propertyMap.put(SYSTEM_KEY, new DefaultRegisteredServiceProperty(systemId));
                 svc.setProperties(propertyMap);
+            }
+            if (serviceRegistryListeners != null) {
+                for (ServiceRegistryListener serviceRegistryListener : serviceRegistryListeners) {
+                    serviceRegistryListener.postLoad(svc);
+                }
             }
             servicesManager.save(svc);
 
@@ -145,8 +155,13 @@ public class OidcRegisteredServiceController {
                 BaseMultifactorAuthenticationProviderProperties.MultifactorAuthenticationProviderFailureModes.CLOSED);
             defaultRegisteredServiceMultifactorPolicy.setBypassEnabled(false);
             regexRegisteredService.setMultifactorAuthenticationPolicy(defaultRegisteredServiceMultifactorPolicy);
-            servicesManager.save(regexRegisteredService);
+            if (serviceRegistryListeners != null) {
+                for (ServiceRegistryListener serviceRegistryListener : serviceRegistryListeners) {
+                    serviceRegistryListener.postLoad(regexRegisteredService);
+                }
+            }
 
+            servicesManager.save(regexRegisteredService);
             servicesManager.load();
             return Y9Result.successMsg("刷新成功,总共：" + servicesManager.count() + " 条记录");
         } catch (Exception e) {

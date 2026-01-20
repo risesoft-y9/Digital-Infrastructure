@@ -1,5 +1,6 @@
 package y9.authen;
 
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -130,21 +131,22 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
             String plainUsername = RSAUtil.privateDecrypt(encryptedUsername, rsaPrivateKey);
             String plainPassword = RSAUtil.privateDecrypt(encryptedPassword, rsaPrivateKey);
             if (plainUsername.contains("&")) {
-                plainUsername = plainUsername.substring(0, plainUsername.indexOf("&"));
                 String agentUserName = plainUsername.substring(plainUsername.indexOf("&") + 1);
                 String agentTenantShortName = "operation";
 
-                updateCredential(request, riseCredential, plainUsername, plainPassword, null);
+                plainUsername = plainUsername.substring(0, plainUsername.indexOf("&"));
+
+                updateCredential(request, riseCredential, plainUsername, plainPassword, tenantShortName);
 
                 List<Y9User> agentUsers = getAgentUsers(deptId, agentTenantShortName, agentUserName);
                 if (agentUsers == null || agentUsers.isEmpty()) {
-                    loginMsg = "没有找到这个代理用户";
+                    loginMsg = "没有找到这个代理用户。";
                     throw new AccountNotFoundException("没有找到这个代理用户。");
                 } else {
                     y9User = agentUsers.getFirst();
                     String hashed = y9User.getPassword();
                     if (!Y9MessageDigest.bcryptMatch(plainPassword, hashed)) {
-                        loginMsg = "代理用户密码错误";
+                        loginMsg = "代理用户密码错误。";
                         throw new FailedLoginException("代理用户密码错误。");
                     } else {
                         List<Y9User> realUsers = getAgentUsers(deptId, tenantShortName, plainUsername);
@@ -158,7 +160,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
                 }
 
             } else {
-                updateCredential(request, riseCredential, plainUsername, plainPassword, null);
+                updateCredential(request, riseCredential, plainUsername, plainPassword, tenantShortName);
 
                 List<Y9User> users = getUsers(loginType, deptId, tenantShortName, plainUsername);
                 if (users == null || users.isEmpty()) {
@@ -183,8 +185,11 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
             val attributes = buildAttributes(riseCredential, y9User);
             val principal = this.principalFactory.createPrincipal(plainUsername, attributes);
             return new DefaultAuthenticationHandlerExecutionResult(this, riseCredential, principal);
-        } catch (Exception e) {
+        } catch (GeneralSecurityException e) {
             y9LoginUserService.save(riseCredential, "false", loginMsg);
+            throw e;
+        } catch (Exception e) {
+            y9LoginUserService.save(riseCredential, "false", "登录失败,错误：" + e.getMessage());
             throw new FailedLoginException(e.getMessage());
         }
 
@@ -219,8 +224,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         }
 
         if ("qrCode".equals(loginType)) {
-            String rsaPrivateKey = y9Properties.getRsaPrivateKey();
-            String userId = RSAUtil.privateDecrypt(username, rsaPrivateKey);
+            String userId = RSAUtil.privateDecrypt(username, y9Properties.getRsaPrivateKey());
             if (StringUtils.isNotBlank(userId)) {
                 return y9UserService.findByPersonIdAndOriginal(userId, Boolean.TRUE);
             } else {
@@ -264,6 +268,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         attributes.put("avator", toArrayList(y9User.getAvator()));
         attributes.put("personType", toArrayList(y9User.getPersonType()));
 
+        // FIXME 密码为敏感字段 不返回？
         attributes.put("password", toArrayList(y9User.getPassword()));
         attributes.put("original", Lists.newArrayList(y9User.getOriginal() == null || y9User.getOriginal()));
         attributes.put("originalId", toArrayList(y9User.getOriginalId()));

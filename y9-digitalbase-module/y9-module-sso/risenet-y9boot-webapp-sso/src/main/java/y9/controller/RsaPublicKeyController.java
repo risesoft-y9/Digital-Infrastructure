@@ -6,15 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import lombok.extern.slf4j.Slf4j;
-
 import y9.util.Y9Context;
 import y9.util.Y9Result;
 
 @Lazy(false)
 @Controller
 @RequestMapping(value = "/api")
-@Slf4j
 public class RsaPublicKeyController {
 
     @ResponseBody
