@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.alibaba.druid.pool.DruidDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 
 import net.risesoft.y9.db.DbType;
 
@@ -26,8 +26,8 @@ public abstract class AbstractDatabaseManager {
     abstract public void dropSchema(String dbName, JdbcTemplate jdbcTemplate);
 
     public CreatedDataSource createSchema(String dbName, JdbcTemplate jdbcTemplate) {
-        DruidDataSource dds = (DruidDataSource)jdbcTemplate.getDataSource();
-        return createSchemaInternal(jdbcTemplate, dbName, dds.getUrl(), dds.getUsername(), dds.getPassword());
+        HikariDataSource dds = (HikariDataSource)jdbcTemplate.getDataSource();
+        return createSchemaInternal(jdbcTemplate, dbName, dds.getJdbcUrl(), dds.getUsername(), dds.getPassword());
     }
 
     /**
