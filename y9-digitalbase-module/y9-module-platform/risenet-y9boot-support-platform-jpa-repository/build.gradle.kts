@@ -10,6 +10,8 @@ dependencies {
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-jpa-tenant"))
     api(project(":y9-digitalbase-support:risenet-y9boot-support-history"))
     api(libs.hibernate.validator)
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 description = "risenet-y9boot-support-platform-jpa-repository"

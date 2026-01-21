@@ -27,6 +27,10 @@ dependencies {
     api(libs.bcprov.ext.jdk18on)
 
     compileOnly("jakarta.servlet:jakarta.servlet-api")
+    
+    testImplementation("jakarta.servlet:jakarta.servlet-api")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
 description = "risenet-y9boot-common-util"
