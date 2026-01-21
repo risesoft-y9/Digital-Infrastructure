@@ -18,11 +18,11 @@ import net.risesoft.y9public.entity.Y9User;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 public interface Y9UserRepository extends JpaRepository<Y9User, String>, JpaSpecificationExecutor<Y9User> {
-    
+
     List<Y9User> findByLoginName(String loginName);
 
     List<Y9User> findByTenantId(String tenantId);
-    
+
     Optional<Y9User> findByLoginNameAndTenantIdAndOriginalTrue(String loginName, String tenantId);
 
     Optional<Y9User> findByPersonIdAndTenantId(String personId, String tenantId);

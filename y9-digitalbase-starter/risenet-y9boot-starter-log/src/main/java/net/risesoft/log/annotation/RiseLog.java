@@ -35,7 +35,7 @@ public @interface RiseLog {
     LogLevelEnum logLevel() default LogLevelEnum.RSLOG;
 
     /**
-     * 模块名称
+     * 模块名称，比如：公文就转-发文-授权管理
      * 
      * @return String 模块名称
      */

@@ -143,9 +143,14 @@ public class Y9Manager extends Y9OrgBase {
     @Column(name = "LAST_REVIEW_LOG_TIME")
     private Date lastReviewLogTime;
 
-    public Y9Manager(Manager manager, Y9OrgBase parent, Integer nextSubTabIndex, List<Y9OrgBase> ancestorList, String defaultPassword) {
+    public Y9Manager(
+        Manager manager,
+        Y9OrgBase parent,
+        Integer nextSubTabIndex,
+        List<Y9OrgBase> ancestorList,
+        String defaultPassword) {
         Y9BeanUtil.copyProperties(manager, this);
-        
+
         if (StringUtils.isBlank(this.id)) {
             this.id = Y9IdGenerator.genId(IdType.SNOWFLAKE);
         }

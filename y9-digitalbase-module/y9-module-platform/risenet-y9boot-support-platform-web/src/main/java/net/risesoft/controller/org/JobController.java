@@ -59,7 +59,7 @@ public class JobController {
      * @param id 唯一标识
      * @return {@code Y9Result<Y9Job>}
      */
-    @RiseLog(operationName = "根据id查找职位", operationType = OperationTypeEnum.BROWSE)
+    @RiseLog(operationName = "根据id查找职位")
     @GetMapping("/getJobById/{id}")
     public Y9Result<Job> getJobById(@PathVariable("id") @NotBlank String id) {
         return Y9Result.success(y9JobService.getById(id), "操作成功");
@@ -71,7 +71,7 @@ public class JobController {
      * @return {@code Y9Result<List<Y9Job>>}
      * @since 9.6.1
      */
-    @RiseLog(operationName = "查找所有职位", operationType = OperationTypeEnum.BROWSE)
+    @RiseLog(operationName = "查找所有职位")
     @GetMapping("/listAll")
     public Y9Result<List<Job>> listAll() {
         return Y9Result.success(y9JobService.listAll(), "查询成功");
@@ -109,7 +109,7 @@ public class JobController {
      * @return {@code Y9Result<List<Y9Job>>}
      * @since 9.6.1
      */
-    @RiseLog(operationName = "根据名称获取职位", operationType = OperationTypeEnum.BROWSE)
+    @RiseLog(operationName = "根据名称获取职位")
     @GetMapping("/searchByName")
     public Y9Result<List<Job>> searchByName(@RequestParam String name) {
         List<Job> jobList = y9JobService.listByNameLike(name);

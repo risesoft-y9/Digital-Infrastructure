@@ -39,7 +39,7 @@ public class SortTest {
         organization1.setId(organization1Id);
         organization1.setName("组织1");
         organization1.setTabIndex(0);
-        
+
         Y9Organization organization2 = new Y9Organization();
         organization2.setId(organization2Id);
         organization2.setName("组织2");
@@ -56,19 +56,19 @@ public class SortTest {
         organization1Department1.setParentId(organization1Id);
         organization1Department1.setName("组织1部门1");
         organization1Department1.setTabIndex(4);
-        
+
         Y9Person organization1Department1Person = new Y9Person();
         organization1Department1Person.setId(organization1PersonId);
         organization1Department1Person.setParentId(organization1Id);
         organization1Department1Person.setName("组织1人员");
         organization1Department1Person.setTabIndex(3);
-        
+
         Y9Position organization1Department1Position = new Y9Position();
         organization1Department1Position.setId(organization1PositionId);
         organization1Department1Position.setParentId(organization1Id);
         organization1Department1Position.setName("组织1岗位");
         organization1Department1Position.setTabIndex(2);
-        
+
         Y9Group organization1Department1Group = new Y9Group();
         organization1Department1Group.setId(organization1GroupId);
         organization1Department1Group.setParentId(organization1Id);
@@ -110,13 +110,13 @@ public class SortTest {
         system1App1.setSystemId(system1Id);
         system1App1.setName("系统1应用1");
         system1App1.setTabIndex(3);
-        
+
         Y9App system1App2 = new Y9App();
         system1App2.setId(system1App2Id);
         system1App2.setSystemId(system1Id);
         system1App2.setName("系统1应用2");
         system1App2.setTabIndex(2);
-        
+
         Y9App system2App1 = new Y9App();
         system2App1.setId(system2App1Id);
         system2App1.setSystemId(system2Id);
@@ -137,7 +137,7 @@ public class SortTest {
         system1App1Menu1.setSystemId(system1Id);
         system1App1Menu1.setName("系统1应用1菜单1");
         system1App1Menu1.setTabIndex(2);
-        
+
         Y9Menu system1App1Menu2 = new Y9Menu();
         system1App1Menu2.setId(system1App1Menu2Id);
         system1App1Menu2.setParentId(system1App1Id);
@@ -159,7 +159,7 @@ public class SortTest {
         system1App1Menu1Operation1.setSystemId(system1Id);
         system1App1Menu1Operation1.setName("系统1应用1菜单1操作1");
         system1App1Menu1Operation1.setTabIndex(0);
-        
+
         Y9Operation system1App1Menu1Operation2 = new Y9Operation();
         system1App1Menu1Operation2.setId(system1App1Menu1Operation2Id);
         system1App1Menu1Operation2.setParentId(system1App1Menu1Id);

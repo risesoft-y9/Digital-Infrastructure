@@ -3,7 +3,6 @@ package net.risesoft.service.org.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -37,10 +36,6 @@ import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9StringUtil;
-import net.risesoft.y9.util.signing.Y9MessageDigestUtil;
-
-import cn.hutool.core.date.DateUnit;
-import cn.hutool.core.date.DateUtil;
 
 /**
  * @author dingzhaojun
@@ -267,7 +262,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         Y9Manager savedManager = y9ManagerRepository.save(y9Manager);
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedManager));
-        
+
         return savedManager;
     }
 
@@ -288,9 +283,9 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
             if (y9ManagerOptional.isPresent()) {
                 Y9Manager originalManager = PlatformModelConvertUtil.convert(y9ManagerOptional.get(), Y9Manager.class);
                 Y9Manager y9Manager = y9ManagerOptional.get();
-                
+
                 Y9BeanUtil.copyProperties(manager, y9Manager);
-                
+
                 Y9Manager savedManager = this.update(y9Manager, originalManager);
 
                 AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -306,7 +301,6 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
                 return entityToModel(savedManager);
             }
         }
-
 
         String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(manager.getParentId());

@@ -41,6 +41,6 @@ public interface Y9PersonManager {
     Y9Person insert(Y9Person person);
 
     Y9Person update(Y9Person person, Y9Person originalPerson);
-    
+
     void updatePersonByOriginalId(Y9Person originalPerson, Y9PersonExt originalExt);
 }

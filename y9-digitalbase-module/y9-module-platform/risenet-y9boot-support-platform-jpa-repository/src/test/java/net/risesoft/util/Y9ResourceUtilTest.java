@@ -51,20 +51,17 @@ class Y9ResourceUtilTest {
         // 两个资源的inherit都为null的情况
         originResource.setInherit(null);
         updateResource.setInherit(null);
-        assertFalse(Y9ResourceUtil.isInheritanceChanged(originResource, updateResource), 
-            "两个资源inherit都为null时应该返回false");
+        assertFalse(Y9ResourceUtil.isInheritanceChanged(originResource, updateResource), "两个资源inherit都为null时应该返回false");
 
         // 一个为null，另一个为false的情况
         originResource.setInherit(null);
         updateResource.setInherit(Boolean.FALSE);
-        assertTrue(Y9ResourceUtil.isInheritanceChanged(originResource, updateResource), 
-            "null和false应该被认为是不同的");
+        assertTrue(Y9ResourceUtil.isInheritanceChanged(originResource, updateResource), "null和false应该被认为是不同的");
 
         // 一个为null，另一个为true的情况
         originResource.setInherit(null);
         updateResource.setInherit(Boolean.TRUE);
-        assertTrue(Y9ResourceUtil.isInheritanceChanged(originResource, updateResource), 
-            "null和true应该被认为是不同的");
+        assertTrue(Y9ResourceUtil.isInheritanceChanged(originResource, updateResource), "null和true应该被认为是不同的");
     }
 
     @Test
@@ -76,14 +73,13 @@ class Y9ResourceUtilTest {
         // 两个资源的inherit都为false的情况
         originResource.setInherit(Boolean.FALSE);
         updateResource.setInherit(Boolean.FALSE);
-        assertFalse(Y9ResourceUtil.isInheritanceChanged(originResource, updateResource), 
+        assertFalse(Y9ResourceUtil.isInheritanceChanged(originResource, updateResource),
             "两个资源inherit都为false时应该返回false");
 
         // 两个资源的inherit都为true的情况
         originResource.setInherit(Boolean.TRUE);
         updateResource.setInherit(Boolean.TRUE);
-        assertFalse(Y9ResourceUtil.isInheritanceChanged(originResource, updateResource), 
-            "两个资源inherit都为true时应该返回false");
+        assertFalse(Y9ResourceUtil.isInheritanceChanged(originResource, updateResource), "两个资源inherit都为true时应该返回false");
     }
 
     @Test
@@ -95,13 +91,13 @@ class Y9ResourceUtilTest {
         // origin为false，update为true的情况
         originResource.setInherit(Boolean.FALSE);
         updateResource.setInherit(Boolean.TRUE);
-        assertTrue(Y9ResourceUtil.isInheritanceChanged(originResource, updateResource), 
+        assertTrue(Y9ResourceUtil.isInheritanceChanged(originResource, updateResource),
             "origin为false，update为true时应该返回true");
 
         // origin为true，update为false的情况
         originResource.setInherit(Boolean.TRUE);
         updateResource.setInherit(Boolean.FALSE);
-        assertTrue(Y9ResourceUtil.isInheritanceChanged(originResource, updateResource), 
+        assertTrue(Y9ResourceUtil.isInheritanceChanged(originResource, updateResource),
             "origin为true，update为false时应该返回true");
     }
 }
