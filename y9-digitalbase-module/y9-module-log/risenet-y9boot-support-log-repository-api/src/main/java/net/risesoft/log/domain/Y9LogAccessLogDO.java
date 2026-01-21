@@ -36,6 +36,9 @@ public class Y9LogAccessLogDO implements Serializable {
     /** 方法类和名称 */
     private String methodName;
 
+    /** 请求参数 JSON */
+    private String paramsJson;
+
     /** 日志级别 0=TRACE 1=DEBUG 2=INFO 3=WARN 4=ERROR */
     private String logLevel;
 

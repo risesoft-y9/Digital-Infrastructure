@@ -55,4 +55,10 @@ public @interface RiseLog {
      */
     OperationTypeEnum operationType() default OperationTypeEnum.BROWSE;
 
+    /**
+     * 是否保存请求参数
+     *
+     * @return boolean
+     */
+    boolean saveParams() default false;
 }

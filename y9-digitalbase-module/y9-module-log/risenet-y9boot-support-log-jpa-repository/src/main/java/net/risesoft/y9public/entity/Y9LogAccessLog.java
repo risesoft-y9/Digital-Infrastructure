@@ -69,6 +69,12 @@ public class Y9LogAccessLog implements Serializable {
     @Comment(value = "方法类和名称")
     private String methodName;
 
+    /** 请求参数 JSON */
+    @Lob
+    @Column(name = "PARAMS_JSON")
+    @Comment(value = "请求参数 JSON")
+    private String paramsJson;
+
     /** 日志级别 0=TRACE 1=DEBUG 2=INFO 3=WARN 4=ERROR */
     @Column(name = "LOG_LEVEL", length = 38)
     @Comment(value = "日志级别 0=TRACE 1=DEBUG 2=INFO 3=WARN 4=ERROR")
