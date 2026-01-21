@@ -53,6 +53,11 @@ public class AccessLog implements Serializable {
     private String methodName;
 
     /**
+     * 参数
+     */
+    private String paramsJson;
+
+    /**
      * 日志级别： 普通日志、管理日志、错误日志、警告日志、信息日志、调试日志、跟踪日志
      */
     private String logLevel;

@@ -3,7 +3,9 @@ package net.risesoft.log.aop;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,6 +20,7 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,6 +32,7 @@ import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.json.Y9JsonUtil;
 
 /**
  *
@@ -121,6 +125,21 @@ public class RiseLogAdvice implements MethodInterceptor {
                     if (requestUrl != null) {
                         log.setRequestUrl(requestUrl);
                     }
+                }
+
+                if (riseLog.saveParams()) {
+                    Object[] arguments = invocation.getArguments();
+                    Parameter[] parameters = method.getParameters();
+                    Map<String, Object> keyValues = new HashMap<>();
+                    for (int i = 0; i < parameters.length; i++) {
+                        Object arg = arguments[i];
+                        if (arg instanceof HttpServletRequest || arg instanceof HttpServletResponse
+                            || arg instanceof MultipartFile) {
+                            continue;
+                        }
+                        keyValues.put(parameters[i].getName(), arg);
+                    }
+                    log.setParamsJson(Y9JsonUtil.writeValueAsString(keyValues));
                 }
 
                 log.setModularName(method.getDeclaringClass().getName());

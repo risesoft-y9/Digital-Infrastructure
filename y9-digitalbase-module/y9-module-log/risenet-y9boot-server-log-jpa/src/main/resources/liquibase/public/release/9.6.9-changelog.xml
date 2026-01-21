@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet author="shidaobang" id="1768889134693" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="Y9_LOG_ACCESS_LOG" columnName="PARAMS_JSON"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="Y9_LOG_ACCESS_LOG">
+            <column name="PARAMS_JSON" type="LONGTEXT"
+                    remarks="请求参数 JSON"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

@@ -54,6 +54,10 @@ public class Y9LogAccessLog implements Serializable {
     @Field(type = FieldType.Keyword, index = true, store = true)
     private String methodName;
 
+    /** 请求参数 JSON */
+    @Field(type = FieldType.Keyword, index = true, store = true)
+    private String paramsJson;
+
     /** 日志级别 0=TRACE 1=DEBUG 2=INFO 3=WARN 4=ERROR */
     @Field(type = FieldType.Keyword, index = true, store = true)
     private String logLevel;
