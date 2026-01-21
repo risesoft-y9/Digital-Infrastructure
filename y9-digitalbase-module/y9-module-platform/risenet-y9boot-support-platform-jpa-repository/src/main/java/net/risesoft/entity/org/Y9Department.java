@@ -171,7 +171,7 @@ public class Y9Department extends Y9OrgBase {
 
     public void update(Department department, Y9OrgBase parent) {
         Y9BeanUtil.copyProperties(department, this);
-        
+
         this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.DEPARTMENT, this.name, parent.getDn());
         this.guidPath = Y9OrgUtil.buildGuidPath(parent.getGuidPath(), this.id);
     }

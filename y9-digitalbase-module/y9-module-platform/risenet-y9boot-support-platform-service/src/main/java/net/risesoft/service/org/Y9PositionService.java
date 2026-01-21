@@ -3,7 +3,6 @@ package net.risesoft.service.org;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.org.Position;
 import net.risesoft.y9.exception.Y9NotFoundException;
 

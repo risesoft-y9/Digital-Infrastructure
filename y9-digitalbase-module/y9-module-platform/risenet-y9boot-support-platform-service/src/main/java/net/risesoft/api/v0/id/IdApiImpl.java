@@ -1,6 +1,5 @@
 package net.risesoft.api.v0.id;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;

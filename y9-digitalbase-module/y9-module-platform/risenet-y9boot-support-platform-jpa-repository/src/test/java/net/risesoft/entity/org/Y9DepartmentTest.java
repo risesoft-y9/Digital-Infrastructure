@@ -34,7 +34,7 @@ class Y9DepartmentTest {
     void testConstructorWithDepartmentAndParent() {
         // 测试使用Department对象和父节点创建Y9Department的构造函数
         // 部门可以作为中间节点，所以它可以有父节点（可以是组织机构或其他部门）
-        Y9Department parentDept = new Y9Department();  // 父节点是另一个部门
+        Y9Department parentDept = new Y9Department(); // 父节点是另一个部门
         parentDept.setId("parent456");
         parentDept.setDn("ou=上级部门,o=组织机构");
         parentDept.setGuidPath("org123,parent456"); // 父部门的guidPath
@@ -90,18 +90,18 @@ class Y9DepartmentTest {
         // 测试不允许移动到子部门的业务规则（防止循环引用）
         // 场景：当前部门A试图移动到部门B下，但部门B本身就是部门A的子树中的节点
         // 这种情况会形成循环引用，所以必须阻止
-        
+
         // 当前部门A的ID是"deptA"
         String departmentId = "deptA";
         department.setId(departmentId);
         department.setName("部门A");
         department.setGuidPath("orgRoot,parentOrg,deptA");
-        
+
         // 构造一个目标父节点B，它实际上是部门A的子节点
-        Y9Department targetParentB = new Y9Department(); 
+        Y9Department targetParentB = new Y9Department();
         targetParentB.setId("deptB");
         targetParentB.setName("部门B");
-        targetParentB.setGuidPath("orgRoot,deptA,deptB"); 
+        targetParentB.setGuidPath("orgRoot,deptA,deptB");
         targetParentB.setDn("ou=部门B,ou=部门A,o=组织");
 
         // 尝试将部门A移动到部门B下（部门B是部门A的子树成员），应该抛出异常

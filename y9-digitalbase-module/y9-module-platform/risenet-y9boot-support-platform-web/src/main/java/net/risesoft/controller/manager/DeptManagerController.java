@@ -60,7 +60,7 @@ public class DeptManagerController {
      * @param deptId 部门id
      * @return {@code Y9Result<Boolean>}
      */
-    @RiseLog(operationName = "根据部门id，验证该成员是否部门管理员", operationType = OperationTypeEnum.BROWSE)
+    @RiseLog(operationName = "根据部门id，验证该成员是否部门管理员")
     @PostMapping(value = "/checkDeptManager")
     @IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
     public Y9Result<Boolean> checkDeptManager(@RequestParam @NotBlank String deptId) {

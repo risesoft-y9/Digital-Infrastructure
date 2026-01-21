@@ -1,6 +1,5 @@
 package net.risesoft.entity.org;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -88,7 +87,6 @@ class Y9GroupTest {
         // 验证dn的构建：当前节点类型+名称 + 父节点dn
         assertEquals("cn=一级用户组,o=组织机构", newGroup.getDn());
     }
-
 
     @Test
     void testChangeParent_MoveToDifferentParent_OrganizationAsParent() {

@@ -59,7 +59,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         Y9Department originalDepartment = PlatformModelConvertUtil.convert(currentDepartment, Y9Department.class);
 
         boolean allDescendantsDisabled = compositeOrgBaseManager.isAllDescendantsDisabled(id);
-        Boolean disableStatus =  currentDepartment.changeDisabled(allDescendantsDisabled);
+        Boolean disableStatus = currentDepartment.changeDisabled(allDescendantsDisabled);
         Y9Department savedDepartment = y9DepartmentManager.update(currentDepartment, originalDepartment);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()

@@ -54,7 +54,8 @@ public class LogonController {
     private final LogoutManager logoutManager;
     private final TicketRegistry ticketRegistry;
 
-    public LogonController(CentralAuthenticationService centralAuthenticationService,
+    public LogonController(
+        CentralAuthenticationService centralAuthenticationService,
         @Qualifier("ticketGrantingTicketCookieGenerator") CasCookieBuilder ticketGrantingTicketCookieGenerator,
         @Qualifier("defaultAuthenticationSystemSupport") AuthenticationSystemSupport authenticationSystemSupport,
         @Qualifier("webApplicationServiceFactory") ServiceFactory webApplicationServiceFactory,
@@ -91,8 +92,11 @@ public class LogonController {
                 } catch (InvalidTicketException ignored) {
                 }
                 if (ticket != null) {
-                    logoutManager.performLogout(SingleLogoutExecutionRequest.builder().ticketGrantingTicket(ticket)
-                        .httpServletRequest(Optional.of(request)).httpServletResponse(Optional.of(response)).build());
+                    logoutManager.performLogout(SingleLogoutExecutionRequest.builder()
+                        .ticketGrantingTicket(ticket)
+                        .httpServletRequest(Optional.of(request))
+                        .httpServletResponse(Optional.of(response))
+                        .build());
                 }
             }
 

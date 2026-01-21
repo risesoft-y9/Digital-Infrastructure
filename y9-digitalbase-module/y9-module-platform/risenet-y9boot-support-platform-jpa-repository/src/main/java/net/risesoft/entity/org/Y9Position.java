@@ -140,7 +140,7 @@ public class Y9Position extends Y9OrgBase {
         // 修改的岗位容量不能小于当前岗位人数
         Y9AssertUtil.lessThanOrEqualTo(y9PersonList.size(), this.capacity, OrgUnitErrorCodeEnum.POSITION_IS_FULL,
             this.name);
-        
+
         this.name = buildName(positionNameTemplate, y9Job.getName(), y9PersonList);
         this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.POSITION, this.name, parent.getDn());
         this.guidPath = Y9OrgUtil.buildGuidPath(parent.getGuidPath(), this.id);
@@ -162,7 +162,7 @@ public class Y9Position extends Y9OrgBase {
         this.name = buildName(positionNameTemplate, y9Job.getName(), y9PersonList);
         this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.POSITION, this.name, parent.getDn());
     }
-    
+
     public void changeName(String positionNameTemplate, Y9Job y9Job, Y9OrgBase parent, List<Y9Person> y9PersonList) {
         this.name = buildName(positionNameTemplate, y9Job.getName(), y9PersonList);
         this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.POSITION, this.name, parent.getDn());

@@ -254,7 +254,7 @@ public class Y9Person extends Y9OrgBase {
         this.guidPath = Y9OrgUtil.buildGuidPath(parent.getGuidPath(), this.id);
         this.orderedPath = Y9OrgUtil.buildOrderedPath(this, ancestorList);
     }
-    
+
     public void changeAvatar(String avatorUrl) {
         this.avator = avatorUrl;
     }

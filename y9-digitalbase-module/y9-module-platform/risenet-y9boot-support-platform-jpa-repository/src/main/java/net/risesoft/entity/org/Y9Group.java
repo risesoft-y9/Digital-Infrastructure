@@ -70,7 +70,7 @@ public class Y9Group extends Y9OrgBase {
         this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.GROUP, this.name, parent.getDn());
         this.guidPath = Y9OrgUtil.buildGuidPath(parent.getGuidPath(), this.id);
     }
-    
+
     @Override
     public String getParentId() {
         return this.parentId;
@@ -99,7 +99,7 @@ public class Y9Group extends Y9OrgBase {
 
     public void update(Group group, Y9OrgBase parent) {
         Y9BeanUtil.copyProperties(group, this);
-        
+
         this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.GROUP, this.name, parent.getDn());
         this.guidPath = Y9OrgUtil.buildGuidPath(parent.getGuidPath(), this.id);
     }

@@ -1,11 +1,16 @@
 package net.risesoft.log;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 /**
  * 操作类型枚举
  *
  * @author shidaobang
  * @date 2022/09/22
  */
+@RequiredArgsConstructor
+@Getter
 public enum OperationTypeEnum {
     /** 查看 */
     BROWSE("查看"),
@@ -24,15 +29,16 @@ public enum OperationTypeEnum {
     /** 退出 */
     LOGOUT("退出"),
     /** 检查 */
-    CHECK("检查");
+    CHECK("检查"),
+    /** 导出 */
+    EXPORT("导出"),
+    /** 导入 */
+    IMPORT("导入"),
+    /** 下载 */
+    DOWNLOAD("下载"),
+    /** 上传 */
+    UPLOAD("上传");
 
     private final String value;
 
-    OperationTypeEnum(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
 }

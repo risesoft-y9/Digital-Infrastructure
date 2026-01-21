@@ -48,7 +48,7 @@ public class ApiAccessControlController {
      * @param type 访问控制类型
      * @return {@code Y9Result<List<ApiAccessControl>> }
      */
-    @RiseLog(operationName = "根据类型列出访问控制列表", operationType = OperationTypeEnum.BROWSE)
+    @RiseLog(operationName = "根据类型列出访问控制列表")
     @GetMapping("/list")
     public Y9Result<List<ApiAccessControl>> list(ApiAccessControlType type) {
         List<ApiAccessControl> apiAccessControlList = y9ApiAccessControlService.listByType(type);

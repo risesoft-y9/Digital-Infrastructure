@@ -173,7 +173,7 @@ public class AppIconController {
      * @param name 图标名称
      * @return {@code Y9Page<AppIcon>}
      */
-    @RiseLog(operationType = OperationTypeEnum.BROWSE, operationName = "搜索图标")
+    @RiseLog(operationName = "搜索图标")
     @RequestMapping("/searchIconPageByName")
     public Y9Page<AppIcon> searchIconPageByName(Y9PageQuery pageQuery, String name) {
         return appIconService.pageByName(name, pageQuery);

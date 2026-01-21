@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.org.Y9Department;
 import net.risesoft.entity.org.Y9Group;
-import net.risesoft.entity.org.Y9Manager;
 import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.entity.org.Y9Person;

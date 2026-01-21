@@ -232,7 +232,8 @@ public class Y9PositionServiceImpl implements Y9PositionService {
             Y9Position currentPosition = y9PositionManager.getById(positionId);
             Y9Position originalPosition = PlatformModelConvertUtil.convert(currentPosition, Y9Position.class);
 
-            List<Y9OrgBase> ancestorList = compositeOrgBaseManager.listOrgUnitAndAncestor(currentPosition.getParentId());
+            List<Y9OrgBase> ancestorList =
+                compositeOrgBaseManager.listOrgUnitAndAncestor(currentPosition.getParentId());
             currentPosition.changeTabIndex(tabIndex, ancestorList);
             orgPositionList.add(y9PositionManager.update(currentPosition, originalPosition));
         }
