@@ -5,7 +5,7 @@ spring-boot = "3.5.6"
 spring-cloud = "2025.0.0"
 io-spring-dependency-management = "1.1.7"
 # cas server bom
-cas-server-bom = "7.3.1"
+cas-server-bom = "7.3.3"
 # oracle bom
 ojdbc-bom = "23.8.0.25.04"
 # hutool
@@ -184,7 +184,7 @@ fastexcel = { module = "cn.idev.excel:fastexcel", version.ref = "cn-idev-excel-f
 
 auth0-jwt = { module = "com.auth0:java-jwt", version.ref = "auth0-jwt" }
 auth0-jwks = { module = "com.auth0:jwks-rsa", version.ref = "auth0-jwks" }
- 
+
 checker-qual = { module = "org.checkerframework:checker-qual", version.ref = "checker-qual" }
 
 [plugins]

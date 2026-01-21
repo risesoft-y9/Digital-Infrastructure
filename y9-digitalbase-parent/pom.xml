@@ -37,24 +37,24 @@
         <!-- Plugin versions -->
         <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
         <smart-doc-maven-plugin.version>3.0.9</smart-doc-maven-plugin.version>
-        <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
         <aspectj-maven-plugin.version>1.14</aspectj-maven-plugin.version>
-        <maven-dependency-plugin.version>3.6.1</maven-dependency-plugin.version>
-        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
-        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-        <maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
-        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
+        <maven-dependency-plugin.version>3.7.1</maven-dependency-plugin.version>
         <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+        <maven-release-plugin.version>3.1.0</maven-release-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-deploy-plugin.version>3.1.2</maven-deploy-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-javadoc-plugin.version>3.7.0</maven-javadoc-plugin.version>
         <maven-jar-plugin.version>3.4.0</maven-jar-plugin.version>
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
-        <central-publishing-maven-plugin.version>0.7.0</central-publishing-maven-plugin.version>
-        <maven-gpg-plugin.version>3.2.3</maven-gpg-plugin.version>
+        <central-publishing-maven-plugin.version>0.9.0</central-publishing-maven-plugin.version>
+        <maven-gpg-plugin.version>3.2.4</maven-gpg-plugin.version>
         <buildnumber-maven-plugin.version>3.2.1</buildnumber-maven-plugin.version>
         <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
         <git-commit-id-maven-plugin.version>8.0.2</git-commit-id-maven-plugin.version>
-        <native-maven-plugin.version>0.11.1</native-maven-plugin.version>
+        <native-maven-plugin.version>0.11.3</native-maven-plugin.version>
 
         <docker.tag>${project.version}-${maven.build.timestamp}</docker.tag>
         <docker.name>svn.youshengyun.com:9923/${project.artifactId}-native:${project.version}</docker.name>
@@ -632,6 +632,17 @@
                         </execution>
                     </executions>
                 </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven-gpg-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>${central-publishing-maven-plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -793,7 +804,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${maven-gpg-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -807,7 +817,6 @@
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>${central-publishing-maven-plugin.version}</version>
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>mvn-central</publishingServerId>
