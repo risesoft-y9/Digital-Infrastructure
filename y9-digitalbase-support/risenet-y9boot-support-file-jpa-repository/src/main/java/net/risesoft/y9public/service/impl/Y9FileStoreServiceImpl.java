@@ -15,7 +15,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -213,11 +212,6 @@ public class Y9FileStoreServiceImpl implements Y9FileStoreService {
     }
 
     @Override
-    public Y9FileStore uploadFile(MultipartFile multipartFile, String customPath, String fileName) throws Exception {
-        return this.uploadFile(multipartFile.getInputStream(), customPath, fileName);
-    }
-
-    @Override
     public Y9FileStore uploadFileReplace(String y9FileStoreId, byte[] bytes) throws Exception {
         try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes)) {
             return this.uploadFileReplace(y9FileStoreId, byteArrayInputStream);
@@ -236,11 +230,6 @@ public class Y9FileStoreServiceImpl implements Y9FileStoreService {
         Y9FileStore y9FileStore = this.getById(y9FileStoreId);
         this.deleteFile(y9FileStoreId);
         return this.uploadFile(y9FileStoreId, inputStream, y9FileStore.getFullPath(), y9FileStore.getFileName());
-    }
-
-    @Override
-    public Y9FileStore uploadFileReplace(String y9FileStoreId, MultipartFile multipartFile) throws Exception {
-        return this.uploadFileReplace(y9FileStoreId, multipartFile.getInputStream());
     }
 
 }

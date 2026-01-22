@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import net.risesoft.y9public.entity.Y9FileStore;
 
 public interface Y9FileStoreService {
@@ -24,15 +22,11 @@ public interface Y9FileStoreService {
 
     Y9FileStore uploadFile(File file, String customPath, String fileName) throws Exception;
 
-    Y9FileStore uploadFile(MultipartFile multipartFile, String customPath, String fileName) throws Exception;
-
     Y9FileStore uploadFile(InputStream inputStream, String customPath, String fileName) throws Exception;
 
     Y9FileStore uploadFileReplace(String y9FileStoreId, byte[] bytes) throws Exception;
 
     Y9FileStore uploadFileReplace(String y9FileStoreId, File file) throws Exception;
-
-    Y9FileStore uploadFileReplace(String y9FileStoreId, MultipartFile multipartFile) throws Exception;
 
     Y9FileStore uploadFileReplace(String y9FileStoreId, InputStream inputStream) throws Exception;
 }

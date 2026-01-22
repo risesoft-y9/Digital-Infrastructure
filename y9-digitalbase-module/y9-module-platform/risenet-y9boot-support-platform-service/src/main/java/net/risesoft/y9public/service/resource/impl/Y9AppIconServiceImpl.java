@@ -137,7 +137,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
         appIcon.setType(imgType);
         String fullPath = Y9FileStore.buildPath("riseplatform", "public", "appIcon");
         try {
-            appIcon.setPath(y9FileStoreService.uploadFile(iconFile, fullPath, imgName).getId());
+            appIcon.setPath(y9FileStoreService.uploadFile(iconFile.getInputStream(), fullPath, imgName).getId());
             appIcon.setIconData(Base64.getEncoder().encodeToString(iconData));
             return entityToModel(appIconRepository.save(appIcon));
         } catch (Exception e) {
@@ -180,7 +180,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
         appIcon.setCategory(category);
         String fullPath = Y9FileStore.buildPath("riseplatform", "public", "appIcon", category, colorType);
         try {
-            appIcon.setPath(y9FileStoreService.uploadFile(iconFile, fullPath, name).getId());
+            appIcon.setPath(y9FileStoreService.uploadFile(iconFile.getInputStream(), fullPath, name).getId());
             appIcon.setIconData(Base64.getEncoder().encodeToString(iconData));
             return entityToModel(appIconRepository.save(appIcon));
         } catch (Exception e) {

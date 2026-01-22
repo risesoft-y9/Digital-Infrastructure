@@ -316,7 +316,8 @@ public class PersonController {
                 String fileType = FilenameUtils.getExtension(iconFile.getOriginalFilename());
                 String fileNewName = personId + "_" + sdf.format(new Date()) + "." + fileType;
                 String fullPath = Y9FileStore.buildPath(Y9Context.getSystemName(), "avator");
-                Y9FileStore y9FileStore = y9FileStoreService.uploadFile(iconFile, fullPath, fileNewName);
+                Y9FileStore y9FileStore =
+                    y9FileStoreService.uploadFile(iconFile.getInputStream(), fullPath, fileNewName);
                 String url = y9FileStore.getUrl();
                 y9PersonService.saveAvator(personId, url);
                 return Y9Result.success(url, "保存个人头像成功！");
