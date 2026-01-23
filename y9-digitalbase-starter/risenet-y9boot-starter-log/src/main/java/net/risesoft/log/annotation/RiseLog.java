@@ -42,7 +42,9 @@ public @interface RiseLog {
     String moduleName() default "";
 
     /**
-     * 操作名称
+     * 操作名称。可支持SpEL表达式，需要用双大括号包围起来，SpEL 可以使用当前注解方法的参数，也可使用放入到 Y9LogContext 的变量。<br>
+     * 示例：<br>
+     * operationName = "禁用用户组[{{ #name }}]"，如果 name = "开发小组长"，最终解析 -> 禁用用户组[开发小组长]
      * 
      * @return String 操作名称
      */
