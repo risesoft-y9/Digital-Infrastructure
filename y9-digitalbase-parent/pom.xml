@@ -832,56 +832,7 @@
                 </plugins>
             </build>
         </profile>
-
-        <profile>
-            <!-- docker环境 -->
-            <id>build-docker-jvm</id>
-            <properties>
-                <dir>docker</dir>
-            </properties>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
-                        <configuration>
-                            <excludes>
-                                <exclude>
-                                    <groupId>org.projectlombok</groupId>
-                                    <artifactId>lombok</artifactId>
-                                </exclude>
-                            </excludes>
-                            <image>
-                                <env>
-                                    <BP_NATIVE_IMAGE>false</BP_NATIVE_IMAGE>
-                                    <BP_JVM_VERSION>21</BP_JVM_VERSION>
-                                </env>
-                                <builder>paketobuildpacks/builder-jammy-base:latest</builder>
-                                <name>svn.youshengyun.com:9923/${project.artifactId}-jvm:${project.version}</name>
-                                <publish>true</publish>
-                            </image>
-                            <docker>
-                                <publishRegistry>
-                                    <username>publisher</username>
-                                    <password>83204585</password>
-                                </publishRegistry>
-                            </docker>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>install</phase>
-                                <goals>
-                                    <goal>build-image-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+        
         <profile>
             <!-- docker环境 -->
             <id>build-docker-native</id>
