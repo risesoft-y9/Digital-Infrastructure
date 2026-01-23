@@ -66,7 +66,7 @@ public class TenantController {
         String fullPath = Y9FileStore.buildPath(Y9Context.getSystemName(), "tenantLogo", tenantId);
         String originalFilename = file.getOriginalFilename();
         String fileName = FilenameUtils.getName(originalFilename);
-        Y9FileStore y9FileStore = y9FileStoreService.uploadFile(file, fullPath, fileName);
+        Y9FileStore y9FileStore = y9FileStoreService.uploadFile(file.getInputStream(), fullPath, fileName);
         String logoUrl = y9Properties.getCommon().getOrgBaseUrl() + "/s/" + y9FileStore.getRealFileName();
         return Y9Result.success(logoUrl, "上传租户Logo成功！");
     }
