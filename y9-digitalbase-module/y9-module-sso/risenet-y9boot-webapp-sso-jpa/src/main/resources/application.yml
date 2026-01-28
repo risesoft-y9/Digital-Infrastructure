@@ -239,6 +239,14 @@ management:
     metrics:
         enable:
             all: false
+    endpoints:
+        web:
+            exposure:
+                include: health
+    endpoint:
+        health:
+            probes:
+                enabled: true
 server:
     port: 7055
     servlet:
