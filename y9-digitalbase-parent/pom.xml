@@ -9,10 +9,8 @@
         <version>${revision}</version>
         <relativePath>../y9-digitalbase-dependencies</relativePath>
     </parent>
-    <groupId>net.risesoft</groupId>
     <artifactId>y9-digitalbase-parent</artifactId>
     <packaging>pom</packaging>
-    <version>${revision}</version>
     <name>y9-digitalbase-parent</name>
     <description>RiseSoft/Digital Infrastructure dependencies parent</description>
     <url>https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-parent</url>
@@ -22,10 +20,10 @@
         <gitee.connection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.connection>
         <gitee.developerConnection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
 
-        <revision>9.7.0-SNAPSHOT</revision>
+        <revision>9.8.0-SNAPSHOT</revision>
         <dockerBuildNumber>${maven.build.timestamp}</dockerBuildNumber>
 
-        <java.version>21</java.version>
+        <java.version>25</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <resource.delimiter>@</resource.delimiter>
@@ -36,25 +34,25 @@
 
         <!-- Plugin versions -->
         <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
-        <smart-doc-maven-plugin.version>3.0.9</smart-doc-maven-plugin.version>
-        <aspectj-maven-plugin.version>1.14</aspectj-maven-plugin.version>
-        <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
-        <maven-dependency-plugin.version>3.7.1</maven-dependency-plugin.version>
-        <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
-        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-        <maven-release-plugin.version>3.1.0</maven-release-plugin.version>
-        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-        <maven-deploy-plugin.version>3.1.2</maven-deploy-plugin.version>
-        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-        <maven-javadoc-plugin.version>3.7.0</maven-javadoc-plugin.version>
-        <maven-jar-plugin.version>3.4.0</maven-jar-plugin.version>
-        <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
-        <central-publishing-maven-plugin.version>0.9.0</central-publishing-maven-plugin.version>
-        <maven-gpg-plugin.version>3.2.4</maven-gpg-plugin.version>
-        <buildnumber-maven-plugin.version>3.2.1</buildnumber-maven-plugin.version>
-        <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
-        <git-commit-id-maven-plugin.version>8.0.2</git-commit-id-maven-plugin.version>
-        <native-maven-plugin.version>0.11.3</native-maven-plugin.version>
+        <smart-doc-maven-plugin.version>3.1.2</smart-doc-maven-plugin.version>
+        <aspectj-maven-plugin.version>1.14.1</aspectj-maven-plugin.version>
+        <flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
+        <maven-dependency-plugin.version>3.9.0</maven-dependency-plugin.version>
+        <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
+        <maven-resources-plugin.version>3.4.0</maven-resources-plugin.version>
+        <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
+        <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
+        <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
+        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+        <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
+        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+        <maven-war-plugin.version>3.5.1</maven-war-plugin.version>
+        <central-publishing-maven-plugin.version>0.10.0</central-publishing-maven-plugin.version>
+        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
+        <buildnumber-maven-plugin.version>3.3.0</buildnumber-maven-plugin.version>
+        <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
+        <git-commit-id-maven-plugin.version>9.0.2</git-commit-id-maven-plugin.version>
+        <native-maven-plugin.version>1.0.0</native-maven-plugin.version>
 
         <docker.tag>${project.version}-${maven.build.timestamp}</docker.tag>
         <docker.name>svn.youshengyun.com:9923/${project.artifactId}-native:${project.version}</docker.name>

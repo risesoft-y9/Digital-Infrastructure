@@ -12,7 +12,6 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Comment;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.StringUtils;
 
@@ -28,8 +27,7 @@ import net.risesoft.y9public.support.FileNameConverter;
 import net.risesoft.y9public.support.FileStoreTypeEnumConverter;
 
 @Entity
-@Table(name = "Y9_COMMON_FILE_STORE")
-@Comment("文件仓库表")
+@Table(name = "Y9_COMMON_FILE_STORE", comment = "文件仓库表")
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
@@ -40,69 +38,61 @@ public class Y9FileStore implements Serializable {
     private static final long serialVersionUID = 5215025303846508704L;
 
     @Id
-    @Column(name = "STOREID", length = 38)
-    @Comment("主键")
+    @Column(name = "STOREID", length = 38, comment = "主键")
     private String id;
 
-    @Column(name = "STORETYPE")
-    @Comment("仓库类型")
+    @Column(name = "STORETYPE", comment = "仓库类型")
     @Convert(converter = FileStoreTypeEnumConverter.class)
     private FileStoreTypeEnum storeType = FileStoreTypeEnum.FTP;
 
-    @Column(name = "FULLPATH", length = 300)
-    @Comment("绝对路径")
-    private String fullPath; // 在仓库中的绝对路径。
+    // 在仓库中的绝对路径。
+    @Column(name = "FULLPATH", length = 300, comment = "绝对路径")
+    private String fullPath; 
 
+    // 包含扩展名称，用户上传的文件名称，有可能包含特殊字符，也很长，实际存储的名称是realFileName
     @Convert(converter = FileNameConverter.class)
-    @Column(name = "FILENAME", length = 600)
-    @Comment("上传的文件名称")
-    private String fileName; // 包含扩展名称，用户上传的文件名称，有可能包含特殊字符，也很长，实际存储的名称是realFileName
+    @Column(name = "FILENAME", length = 600, comment = "上传的文件名称")
+    private String fileName; 
 
-    @Column(name = "REALFILENAME", length = 100, nullable = true)
-    @Comment("存放的文件名称")
-    private String realFileName; // 包含扩展名称，操作系统中实际存储的文件名称，格式为{id}.ext 这样可以解决文件名过长及乱码的问题
+    // 包含扩展名称，操作系统中实际存储的文件名称，格式为{id}.ext 这样可以解决文件名过长及乱码的问题
+    @Column(name = "REALFILENAME", length = 100, nullable = true, comment = "存放的文件名称")
+    private String realFileName; 
 
-    @Column(name = "FILESIZE", nullable = true)
+    @Column(name = "FILESIZE", nullable = true, comment = "文件长度")
     @ColumnDefault("0")
-    @Comment("文件长度")
     private Long fileSize;
 
-    @Column(name = "FILESHA", length = 200, nullable = true)
-    @Comment("文件SHA值")
+    @Column(name = "FILESHA", length = 200, nullable = true, comment = "文件SHA值")
     private String fileSha;
 
-    @Column(name = "FILEENVELOPE", length = 200, nullable = true)
-    @Comment("文件数字信封: 即AES的随机密钥，然后进行RSA加密后的结果")
+    // 文件数字信封: 即AES的随机密钥，然后进行RSA加密后的结果
+    @Column(name = "FILEENVELOPE", length = 200, nullable = true, comment = "文件数字信封")
     private String fileEnvelope;
 
-    @Column(name = "FILEEXT", length = 50, nullable = true)
-    @Comment("文件扩展名称")
-    private String fileExt; // 冗余字段，只保存文件扩展名
+    // 冗余字段，只保存文件扩展名
+    @Column(name = "FILEEXT", length = 50, nullable = true, comment = "文件扩展名称")
+    private String fileExt; 
 
-    @Column(name = "FILEURL", length = 500)
-    @Comment("完整的文件地址")
-    private String url; // /s/{id}.ext
+    // /s/{id}.ext
+    @Column(name = "FILEURL", length = 500, comment = "完整的文件地址")
+    private String url; 
 
-    @Column(name = "SYSTEMNAME", length = 50)
-    @Comment("系统名称")
+    @Column(name = "SYSTEMNAME", length = 50, comment = "系统名称")
     private String systemName;
 
-    @Column(name = "PREFIX", length = 50)
-    @Comment("根目录前缀") // 格式为：/disk01的形式，以字符/开头，尾部不包含字符/
+    // 格式为：/disk01的形式，以字符/开头，尾部不包含字符/
+    @Column(name = "PREFIX", length = 50, comment = "根目录前缀")
     private String prefix;
 
-    @Column(name = "TENANTID", length = 38)
-    @Comment("租户Id")
+    @Column(name = "TENANTID", length = 38, comment = "租户Id")
     private String tenantId;
 
-    @Column(name = "UPLOADER", length = 100)
-    @Comment("上传人")
+    @Column(name = "UPLOADER", length = 100, comment = "上传人")
     private String uploader;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "UPLOADTIME")
-    @Comment("上传时间")
+    @Column(name = "UPLOADTIME", comment = "上传时间")
     private Date uploadTime;
 
     /**

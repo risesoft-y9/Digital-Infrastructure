@@ -6,7 +6,6 @@ import java.util.Date;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 
-import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -40,18 +39,16 @@ public class BaseEntity implements Serializable {
      * 创建时间
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @Comment("创建时间")
     @CreationTimestamp
-    @Column(name = "CREATE_TIME", updatable = false)
+    @Column(name = "CREATE_TIME", updatable = false, comment = "创建时间")
     protected Date createTime;
 
     /**
      * 更新时间
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @Comment("更新时间")
     @UpdateTimestamp
-    @Column(name = "UPDATE_TIME")
+    @Column(name = "UPDATE_TIME", comment = "更新时间")
     protected Date updateTime;
 
     /**

@@ -92,7 +92,7 @@
     </pluginRepositories>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>25</java.version>
         <resource.delimiter>@</resource.delimiter>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -108,18 +108,18 @@
             scm:git:https://gitee.com/risesoft-y9/y9-core.git
         </gitee.developerConnection>
 
-        <revision>9.7.0-SNAPSHOT</revision>
+        <revision>9.8.0-SNAPSHOT</revision>
 
-        <spring-boot.version>3.5.6</spring-boot.version>
-        <spring-cloud.version>2025.0.0</spring-cloud.version>
+        <spring-boot.version>4.0.2</spring-boot.version>
+        <spring-cloud.version>2025.1.0</spring-cloud.version>
         <alibaba-cloud.version>2025.0.0.0</alibaba-cloud.version>
         <alibaba-nacos.version>3.0.3</alibaba-nacos.version>
 
         <antisamy.version>1.7.8</antisamy.version>
-        <aspectj.version>1.9.24</aspectj.version>
+        <aspectj.version>1.9.25.1</aspectj.version>
         <axis2.version>2.0.0</axis2.version>
         <bcprov-ext-jdk18on.version>1.78.1</bcprov-ext-jdk18on.version>
-        <classgraph.version>4.8.181</classgraph.version>
+        <classgraph.version>4.8.184</classgraph.version>
         <commons-io.version>2.20.0</commons-io.version>
         <commons-net.version>3.12.0</commons-net.version>
         <commons-text.version>1.14.0</commons-text.version>
