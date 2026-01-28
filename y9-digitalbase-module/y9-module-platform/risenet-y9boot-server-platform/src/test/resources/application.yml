@@ -1,11 +1,12 @@
 management:
-    endpoint:
-        health:
-            show-details: always
     endpoints:
         web:
             exposure:
-                include: health,info
+                include: health
+    endpoint:
+        health:
+            probes:
+                enabled: true
     metrics:
         tags:
             application: ${spring.application.name}
@@ -133,7 +134,7 @@ y9:
         platform:
             systemName: riseplatform
             positionNameTemplate: "#jobName + '（' + #personNames + '）'"
-            managerModifyPasswordCycle: 30
+            managerModifyPasswordCycle: 7
             userDefaultPassword: Risesoft@2022
     service:
         log:

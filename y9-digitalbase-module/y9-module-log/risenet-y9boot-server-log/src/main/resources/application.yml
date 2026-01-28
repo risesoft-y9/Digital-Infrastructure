@@ -3,6 +3,10 @@ management:
         web:
             exposure:
                 include: health,info
+    endpoint:
+        health:
+            probes:
+                enabled: true
     metrics:
         tags:
             application: ${spring.application.name}
@@ -105,7 +109,7 @@ spring:
         allow-bean-definition-overriding: true
 y9:
     systemName: ${spring.application.name}
-    internalIp: 192.168.x.x,10.0.x.x,172.20.x.x
+    internalIp: 192.168.x.x,10.x.x.x,172.20.x.x
     app:
         log:
             #kafkaEnabled=true时才会初始化Kafka的事件监听（注意要将KafkaAutoConfiguration启用）

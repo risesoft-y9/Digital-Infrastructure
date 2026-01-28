@@ -1,11 +1,13 @@
 management:
-    endpoint:
-        health:
-            show-details: always
     endpoints:
         web:
             exposure:
-                include: health,info
+                include: health
+    endpoint:
+        health:
+            probes:
+                enabled: true
+            show-details: always
     metrics:
         tags:
             application: ${spring.application.name}
