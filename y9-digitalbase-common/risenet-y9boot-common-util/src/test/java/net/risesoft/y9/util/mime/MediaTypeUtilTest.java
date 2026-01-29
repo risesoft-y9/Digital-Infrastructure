@@ -37,7 +37,7 @@ class MediaTypeUtilTest {
         assertEquals(MediaType.TEXT_HTML, mediaType);
 
         mediaType = MediaTypeUtil.getMediaTypeForFileName(servletContext, "script.js");
-        assertEquals(MediaType.valueOf("application/javascript"), mediaType);
+        assertEquals(MediaType.valueOf("text/javascript"), mediaType);
     }
 
     @Test

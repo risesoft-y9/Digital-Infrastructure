@@ -1,6 +1,5 @@
 package y9.autoconfiguration;
 
-//import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 
@@ -18,12 +17,11 @@ import lombok.RequiredArgsConstructor;
 public class NacosAutoServiceRegistrationListener implements ApplicationListener<ApplicationReadyEvent> {
 
     private final NacosAutoServiceRegistration registration;
-    private final ServerProperties serverProperties;
+    //private final ServerProperties serverProperties;
 
     @Override
-    @SuppressWarnings("deprecation")
     public void onApplicationEvent(ApplicationReadyEvent event) {
-        registration.setPort(serverProperties.getPort());
+        //registration.setPort(serverProperties.getPort());
         registration.start();
     }
 }
