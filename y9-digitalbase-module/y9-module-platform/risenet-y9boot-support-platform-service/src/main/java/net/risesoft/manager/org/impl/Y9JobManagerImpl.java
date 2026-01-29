@@ -82,11 +82,11 @@ public class Y9JobManagerImpl implements Y9JobManager {
 
     @Override
     @CacheEvict(key = "#y9Job.id", condition = "#y9Job.id!=null")
-    public Y9Job update(Y9Job job) {
-        Y9Job currentJob = this.getById(job.getId());
+    public Y9Job update(Y9Job y9Job) {
+        Y9Job currentJob = this.getById(y9Job.getId());
         Y9Job originY9Job = PlatformModelConvertUtil.convert(currentJob, Y9Job.class);
 
-        Y9BeanUtil.copyProperties(job, currentJob);
+        Y9BeanUtil.copyProperties(y9Job, currentJob);
         Y9Job savedJob = y9JobRepository.save(currentJob);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Job, savedJob));
@@ -95,14 +95,13 @@ public class Y9JobManagerImpl implements Y9JobManager {
     }
 
     @Override
-    public Y9Job insert(Y9Job job) {
-        if (StringUtils.isBlank(job.getId())) {
-            job.setId(Y9IdGenerator.genId());
+    @CacheEvict(key = "#y9Job.id", condition = "#y9Job.id!=null")
+    public Y9Job insert(Y9Job y9Job) {
+        if (StringUtils.isBlank(y9Job.getId())) {
+            y9Job.setId(Y9IdGenerator.genId());
         }
-        job.setCode(job.getCode());
-        job.setName(job.getName());
-        job.setTabIndex(getMaxTabIndex() + 1);
-        final Y9Job savedJob = y9JobRepository.save(job);
+        y9Job.setTabIndex(getMaxTabIndex() + 1);
+        final Y9Job savedJob = y9JobRepository.save(y9Job);
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedJob));
 
