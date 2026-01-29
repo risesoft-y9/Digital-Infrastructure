@@ -1,6 +1,7 @@
 package y9.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -31,8 +32,28 @@ public class Y9UserServiceImpl implements Y9UserService {
     }
 
     @Override
+    public List<Y9User> findByLoginNameContainingAndOriginalOrderByTenantShortName(String loginName, Boolean original) {
+        return y9UserRepository.findByLoginNameContainingAndOriginalOrderByTenantShortName(loginName, original);
+    }
+
+    @Override
     public List<Y9User> findByMobileAndOriginal(String mobile, Boolean original) {
         return y9UserRepository.findByMobileAndOriginal(mobile, original);
+    }
+
+    @Override
+    public List<Y9User> findByOriginalAndLoginNameStartingWith(Boolean original, String loginName) {
+        return y9UserRepository.findByOriginalAndLoginNameStartingWith(original, loginName);
+    }
+
+    @Override
+    public List<Y9User> findByTenantIdAndLoginNameAndOriginal(String tenantId, String loginName, Boolean original) {
+        return y9UserRepository.findByTenantIdAndLoginNameAndOriginal(tenantId, loginName, original);
+    }
+
+    @Override
+    public List<Y9User> findByTenantShortNameAndLoginName(String tenantShortName, String loginName) {
+        return y9UserRepository.findByTenantShortNameAndLoginName(tenantShortName, loginName);
     }
 
     @Override
@@ -48,6 +69,24 @@ public class Y9UserServiceImpl implements Y9UserService {
     }
 
     @Override
+    public List<Y9User> findByTenantShortNameAndLoginNameAndPassword(String tenantShortName, String loginName,
+        String password) {
+        return y9UserRepository.findByTenantShortNameAndLoginNameAndPassword(tenantShortName, loginName, password);
+    }
+
+    @Override
+    public List<Y9User> findByTenantShortNameAndLoginNameAndPasswordAndOriginal(String tenantShortName,
+        String loginName, String password, Boolean original) {
+        return y9UserRepository.findByTenantShortNameAndLoginNameAndPasswordAndOriginal(tenantShortName, loginName,
+            password, original);
+    }
+
+    @Override
+    public List<Y9User> findByTenantShortNameAndMobile(String tenantShortName, String mobile) {
+        return y9UserRepository.findByTenantShortNameAndMobile(tenantShortName, mobile);
+    }
+
+    @Override
     public List<Y9User> findByTenantShortNameAndMobileAndOriginal(String tenantShortName, String mobile,
         Boolean original) {
         return y9UserRepository.findByTenantShortNameAndMobileAndOriginal(tenantShortName, mobile, original);
@@ -60,8 +99,30 @@ public class Y9UserServiceImpl implements Y9UserService {
     }
 
     @Override
+    public List<Y9User> findByTenantShortNameAndMobileAndPassword(String tenantShortName, String mobile,
+        String password) {
+        return y9UserRepository.findByTenantShortNameAndMobileAndPassword(tenantShortName, mobile, password);
+    }
+
+    @Override
+    public List<Y9User> findByTenantShortNameNotInAndLoginNameAndOriginal(List<String> tenantlist, String loginName,
+        Boolean original) {
+        return y9UserRepository.findByTenantShortNameNotInAndLoginNameAndOriginal(tenantlist, loginName, original);
+    }
+
+    @Override
+    public List<Y9User> findByTenantNameAndLoginNameAndOriginal(String tenantName, String loginName, Boolean original) {
+        return y9UserRepository.findByTenantNameAndLoginNameAndOriginal(tenantName, loginName, original);
+    }
+
+    @Override
     public List<Y9User> findByPersonIdAndOriginal(String personId, Boolean original) {
         return y9UserRepository.findByPersonIdAndOriginal(personId, original);
+    }
+
+    @Override
+    public List<Map<String, String>> listAllTenants() {
+        return y9UserRepository.listAllTenants();
     }
 
 }

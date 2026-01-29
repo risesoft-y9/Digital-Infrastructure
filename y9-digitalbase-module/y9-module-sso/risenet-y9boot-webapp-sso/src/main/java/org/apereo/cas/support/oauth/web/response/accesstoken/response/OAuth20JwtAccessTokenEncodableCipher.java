@@ -1,15 +1,6 @@
 package org.apereo.cas.support.oauth.web.response.accesstoken.response;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
-import jakarta.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.StringUtils;
+import module java.base;
 import org.apereo.cas.CasProtocolConstants;
 import org.apereo.cas.authentication.principal.Principal;
 import org.apereo.cas.authentication.principal.Service;
@@ -33,12 +24,14 @@ import com.nimbusds.jose.util.Base64URL;
 import com.nimbusds.oauth2.sdk.auth.X509CertificateConfirmation;
 import com.nimbusds.oauth2.sdk.dpop.JWKThumbprintConfirmation;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.val;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * This is {@link OAuth20JwtAccessTokenEncodableCipher}.
@@ -75,7 +68,8 @@ class OAuth20JwtAccessTokenEncodableCipher implements EncodableCipher<String, St
         val authentication = token.getAuthentication();
         val builder = JwtBuilder.JwtRequest.builder();
         val attributes = collectAttributes();
-        return builder.serviceAudience(determineServiceAudience())
+        return builder
+            .serviceAudience(determineServiceAudience())
             .issueDate(DateTimeUtils.dateOf(authentication.getAuthenticationDate()))
             .jwtId(token.getId())
             .subject(authentication.getPrincipal().getId())
@@ -103,18 +97,18 @@ class OAuth20JwtAccessTokenEncodableCipher implements EncodableCipher<String, St
     protected Map<String, List<Object>> collectClaimsForAccessToken() throws Throwable {
         val activePrincipal = buildPrincipalForAttributeFilter(token, registeredService);
         val principal = configurationContext.getProfileScopeToAttributesFilter()
-            .filter(service, activePrincipal, registeredService, (OAuth20AccessToken)token);
+            .filter(service, activePrincipal, registeredService, (OAuth20AccessToken) token);
         val attributesToRelease = new HashMap<>(principal.getAttributes());
         val originalAttributes = activePrincipal.getAttributes();
         if (originalAttributes.containsKey(OAuth20Constants.DPOP_CONFIRMATION)) {
-            CollectionUtils.firstElement(originalAttributes.get(OAuth20Constants.DPOP_CONFIRMATION)).ifPresent(conf -> {
-                val confirmation = new JWKThumbprintConfirmation(new Base64URL(conf.toString()));
-                val claim = confirmation.toJWTClaim();
-                attributesToRelease.put(claim.getKey(), List.of(claim.getValue()));
-            });
+            CollectionUtils.firstElement(originalAttributes.get(OAuth20Constants.DPOP_CONFIRMATION))
+                .ifPresent(conf -> {
+                    val confirmation = new JWKThumbprintConfirmation(new Base64URL(conf.toString()));
+                    val claim = confirmation.toJWTClaim();
+                    attributesToRelease.put(claim.getKey(), List.of(claim.getValue()));
+                });
             attributesToRelease.put(OAuth20Constants.DPOP, originalAttributes.get(OAuth20Constants.DPOP));
-            attributesToRelease.put(OAuth20Constants.DPOP_CONFIRMATION,
-                originalAttributes.get(OAuth20Constants.DPOP_CONFIRMATION));
+            attributesToRelease.put(OAuth20Constants.DPOP_CONFIRMATION, originalAttributes.get(OAuth20Constants.DPOP_CONFIRMATION));
         }
 
         if (originalAttributes.containsKey(OAuth20Constants.X509_CERTIFICATE_DIGEST)) {
@@ -124,13 +118,12 @@ class OAuth20JwtAccessTokenEncodableCipher implements EncodableCipher<String, St
                     val claim = confirmation.toJWTClaim();
                     attributesToRelease.put(claim.getKey(), List.of(claim.getValue()));
                 });
-            attributesToRelease.put(OAuth20Constants.X509_CERTIFICATE_DIGEST,
-                originalAttributes.get(OAuth20Constants.X509_CERTIFICATE_DIGEST));
+            attributesToRelease.put(OAuth20Constants.X509_CERTIFICATE_DIGEST, originalAttributes.get(OAuth20Constants.X509_CERTIFICATE_DIGEST));
         }
-        FunctionUtils.doIfNotNull(token.getGrantType(),
-            type -> attributesToRelease.put(OAuth20Constants.GRANT_TYPE, List.of(type.getType())));
-        FunctionUtils.doIfNotNull(token.getResponseType(),
-            type -> attributesToRelease.put(OAuth20Constants.RESPONSE_TYPE, List.of(type.getType())));
+        FunctionUtils.doIfNotNull(token.getGrantType(), type ->
+            attributesToRelease.put(OAuth20Constants.GRANT_TYPE, List.of(type.getType())));
+        FunctionUtils.doIfNotNull(token.getResponseType(), type ->
+            attributesToRelease.put(OAuth20Constants.RESPONSE_TYPE, List.of(type.getType())));
         attributesToRelease.remove(CasProtocolConstants.PARAMETER_PASSWORD);
         return attributesToRelease;
     }
@@ -141,10 +134,10 @@ class OAuth20JwtAccessTokenEncodableCipher implements EncodableCipher<String, St
     }
 
     protected Set<String> determineServiceAudience() {
-        val oauthRegisteredService = (OAuthRegisteredService)registeredService;
         if (StringUtils.isNotBlank(tokenAudience)) {
             return Set.of(tokenAudience);
         }
+        val oauthRegisteredService = (OAuthRegisteredService) registeredService;
         if (oauthRegisteredService.getAudience().isEmpty()) {
             return Set.of(token.getClientId());
         }
@@ -152,7 +145,7 @@ class OAuth20JwtAccessTokenEncodableCipher implements EncodableCipher<String, St
     }
 
     protected boolean shouldEncodeAsJwt() {
-        val oauthRegisteredService = (OAuthRegisteredService)registeredService;
+        val oauthRegisteredService = (OAuthRegisteredService) registeredService;
         val oauthProps = configurationContext.getCasProperties().getAuthn().getOauth();
 
         val dpopRequest = token.getAuthentication().containsAttribute(OAuth20Constants.DPOP);
@@ -166,21 +159,23 @@ class OAuth20JwtAccessTokenEncodableCipher implements EncodableCipher<String, St
     }
 
     private Principal buildPrincipalForAttributeFilter(final OAuth20Token token,
-        final RegisteredService registeredService) throws Throwable {
+                                                       final RegisteredService registeredService) throws Throwable {
         val authentication = token.getAuthentication();
         val attributes = new HashMap<>(authentication.getPrincipal().getAttributes());
         val authnAttributes = configurationContext.getAuthenticationAttributeReleasePolicy()
             .getAuthenticationAttributesForRelease(authentication, registeredService);
         attributes.putAll(authnAttributes);
-
+        
+        // y9 add
         HttpServletRequest request =
-            ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
-        String positionId = request.getParameter("positionId");
-        if (StringUtils.isNotBlank(positionId)) {
-            attributes.put("positionId", Lists.newArrayList(positionId));
-        }
-
-        return configurationContext.getPrincipalFactory()
-            .createPrincipal(authentication.getPrincipal().getId(), attributes);
+                ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+            String positionId = request.getParameter("positionId");
+            if (StringUtils.isNotBlank(positionId)) {
+                attributes.put("positionId", Lists.newArrayList(positionId));
+            }
+        //y9 end
+            
+        return configurationContext.getPrincipalFactory().createPrincipal(authentication.getPrincipal().getId(), attributes);
     }
 }
+

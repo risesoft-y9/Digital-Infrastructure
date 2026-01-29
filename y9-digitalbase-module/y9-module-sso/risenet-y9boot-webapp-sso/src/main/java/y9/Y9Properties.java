@@ -19,8 +19,6 @@ import lombok.Setter;
 @Setter
 @Configuration
 @ConfigurationProperties(prefix = "y9", ignoreInvalidFields = true)
-// @ConfigurationPropertiesScan
-// @EnableConfigurationProperties(Y9Properties.class)
 public class Y9Properties {
     /** 日志保存目标：kafka、jpa */
     private String loginInfoSaveTarget = "jpa";

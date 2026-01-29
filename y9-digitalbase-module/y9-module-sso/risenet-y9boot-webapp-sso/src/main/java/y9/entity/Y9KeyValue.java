@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
-import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -23,8 +22,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 @Entity(name = Y9KeyValue.ENTITY_NAME)
-@Table(name = "Y9_COMMON_KEY_VALUE", indexes = {@Index(columnList = "EXPIRE_TIME")})
-@Comment("键值对")
+@Table(name = "Y9_COMMON_KEY_VALUE", indexes = {@Index(columnList = "EXPIRE_TIME")}, comment = "键值对")
 @Getter
 @Setter
 @ToString
@@ -33,26 +31,25 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class Y9KeyValue implements Serializable {
+	
     public static final String ENTITY_NAME = "Y9KeyValue";
+    
     private static final long serialVersionUID = -3351125761118770968L;
+    
     @Id
-    @Column(name = "KV_KEY")
-    @Comment("键")
+    @Column(name = "KV_KEY", comment = "键")
     private String key;
 
-    @Column(name = "KV_VALUE")
-    @Comment("值")
+    @Column(name = "KV_VALUE", comment = "值")
     private String value;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @Comment("过期时间")
-    @Column(name = "EXPIRE_TIME")
+    @Column(name = "EXPIRE_TIME", comment = "过期时间")
     private Instant expireTime;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @Comment("创建时间")
     @CreationTimestamp
-    @Column(name = "CREATE_TIME", updatable = false)
+    @Column(name = "CREATE_TIME", updatable = false, comment = "创建时间")
     private Instant createTime;
 
     /**

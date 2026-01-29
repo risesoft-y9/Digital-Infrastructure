@@ -13,7 +13,7 @@ import org.apereo.cas.authentication.principal.Principal;
 import org.apereo.cas.authentication.principal.PrincipalFactory;
 import org.apereo.cas.authentication.principal.PrincipalResolver;
 import org.apereo.cas.authentication.principal.Service;
-import org.apereo.cas.authentication.principal.attribute.PersonAttributes;
+//import org.apereo.cas.authentication.principal.attribute.PersonAttributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -50,7 +50,7 @@ public class Y9PrincipalResolver implements PrincipalResolver {
         String positionId = (String)customFields.get("positionId");
         String loginType = (String)customFields.get("loginType");
 
-        PersonAttributes personAttributes = null;
+        //PersonAttributes personAttributes = null;
         List<Y9User> users = null;
         if ("mobile".equals(loginType)) {
             if (StringUtils.hasText(deptId)) {

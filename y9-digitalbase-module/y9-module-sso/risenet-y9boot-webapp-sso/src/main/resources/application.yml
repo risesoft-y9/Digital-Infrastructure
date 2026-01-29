@@ -84,7 +84,7 @@ cas:
             driver-class: org.postgresql.Driver
             url: jdbc:postgresql://localhost:5432/postgres
             user: root
-            password: '111111'
+            password: '11111111'
             idleTimeout: PT10M
             leakThreshold: 0
             autocommit: true
@@ -114,7 +114,7 @@ cas:
                 driver-class: org.postgresql.Driver
                 url: jdbc:postgresql://localhost:5432/postgres
                 user: root
-                password: "111111"
+                password: "11111111"
                 leakThreshold: 0
                 idleTimeout: PT5M
                 autocommit: true
@@ -132,7 +132,7 @@ cas:
                 port: 6379
                 database: 0
                 username: default
-                password: "111111"
+                password: "11111111"
                 timeout: "PT60S"
                 pool:
                     enabled: true
@@ -263,12 +263,6 @@ server:
         context-parameters:
             isLog4jAutoInitializationDisabled: true
         context-path: /sso
-        encoding:
-            charset: UTF-8
-            enabled: true
-            force: true
-            force-request: true
-            force-response: true
         session:
             cookie:
                 http-only: true
@@ -320,7 +314,8 @@ management:
     server:
         add-application-context-header: false
     tracing:
-        enabled: true
+        export:
+            enabled: true
 spring:
     application:
         name: sso
@@ -337,7 +332,7 @@ spring:
                 namespace: local
                 server-addr: http://localhost:8848
                 username: nacos
-                password: ${NACOS_PASSWORD:111111}
+                password: ${NACOS_PASSWORD:11111111}
             discovery:
                 enabled: false
         compatibility-verifier:
@@ -350,7 +345,7 @@ spring:
             driverClassName: org.postgresql.Driver
             jdbcUrl: jdbc:postgresql://localhost:5432/postgres
             username: root
-            password: '111111'
+            password: '11111111'
             maximumPoolSize: 20
             minimumIdle: 1
     jpa:

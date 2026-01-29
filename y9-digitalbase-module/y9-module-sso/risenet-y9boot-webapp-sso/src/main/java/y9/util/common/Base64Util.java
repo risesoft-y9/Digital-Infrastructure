@@ -271,7 +271,7 @@ public class Base64Util {
     }
 
     public static void main(String[] args) throws Exception {
-        String data = "Risesoft@2022";
+        String data = "/v9OAVFGT8o=";
         String data1 = encode(data, "Unicode");
         String data2 = decode(data, "Unicode");
         System.out.println(data);

@@ -7,86 +7,7 @@
     <groupId>net.risesoft</groupId>
     <artifactId>risenet-y9boot-webapp-sso</artifactId>
     <packaging>war</packaging>
-    <version>9.7.0-SNAPSHOT</version>
-
-    <repositories>
-        <repository>
-            <id>aliyun-repo</id>
-            <url>https://maven.aliyun.com/repository/public</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-
-        <repository>
-            <id>apache-snapshots</id>
-            <url>https://repository.apache.org/content/repositories/snapshots</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>apache-release</id>
-            <url>https://repository.apache.org/content/repositories/releases</url>
-        </repository>
-
-        <repository>
-            <id>spring-snapshots</id>
-            <url>https://repo.spring.io/snapshot</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>spring-milestones</id>
-            <url>https://repo.spring.io/milestone</url>
-        </repository>
-
-        <repository>
-            <id>shibboleth-releases</id>
-            <name>Shibboleth Releases Repository</name>
-            <url>https://build.shibboleth.net/maven/releases/</url>
-            <releases>
-                <enabled>true</enabled>
-                <checksumPolicy>warn</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>shibboleth-snapshots</id>
-            <name>Shibboleth Snapshots Repository</name>
-            <url>https://build.shibboleth.net/maven/snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy> <!-- daily、never、always -->
-                <checksumPolicy>fail</checksumPolicy>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>aliyun-repo-plugin</id>
-            <url>https://maven.aliyun.com/repository/public</url>
-        </pluginRepository>
-
-        <pluginRepository>
-            <id>spring-snapshots</id>
-            <url>https://repo.spring.io/snapshot</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>spring-milestones</id>
-            <url>https://repo.spring.io/milestone</url>
-        </pluginRepository>
-    </pluginRepositories>
+    <version>9.8.0-SNAPSHOT</version>
 
     <distributionManagement>
         <repository>
@@ -100,33 +21,33 @@
     </distributionManagement>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>25</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
         <maven.deploy.skip>true</maven.deploy.skip>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <cas.version>7.3.3</cas.version>
+        <cas.version>8.0.0-RC1</cas.version>
         <start-class>org.apereo.cas.web.CasWebApplication</start-class>
-        <spring-boot.version>3.5.6</spring-boot.version>
-        <spring-framework.version>6.2.11</spring-framework.version>
-        <spring-cloud.version>2025.0.0</spring-cloud.version>
+        <spring-boot.version>4.0.1</spring-boot.version>
+        <spring-framework.version>7.0.3</spring-framework.version>
+        <spring-cloud.version>2025.1.0</spring-cloud.version>
 
         <jBCrypt.version>0.4.3</jBCrypt.version>
         <lombok.version>1.18.42</lombok.version>
 
         <!-- Plugin versions -->
-        <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
-        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-        <maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
-        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-        <maven-jar-plugin.version>3.4.0</maven-jar-plugin.version>
-        <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
-        <buildnumber-maven-plugin.version>3.2.1</buildnumber-maven-plugin.version>
-        <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
-        <native-maven-plugin.version>0.11.1</native-maven-plugin.version>
+        <jib-maven-plugin.version>3.5.1</jib-maven-plugin.version>
+        <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
+        <maven-resources-plugin.version>3.4.0</maven-resources-plugin.version>
+        <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
+        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+        <maven-war-plugin.version>3.5.1</maven-war-plugin.version>
+        <buildnumber-maven-plugin.version>3.3.0</buildnumber-maven-plugin.version>
+        <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
+        <native-maven-plugin.version>1.0.0</native-maven-plugin.version>
 
         <docker.tag>${project.version}-${maven.build.timestamp}</docker.tag>
     </properties>
@@ -327,6 +248,12 @@
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-logging</artifactId>
+            <!--<exclusions>
+            	<exclusion>
+            		<groupId>org.apache.logging.log4j</groupId>
+            		<artifactId>log4j-slf4j2-impl</artifactId>
+            	</exclusion>
+            </exclusions>-->
         </dependency>
 
         <dependency>
@@ -416,20 +343,30 @@
             </exclusions>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-common-nacos</artifactId>
             <version>${project.version}</version>
+        </dependency>-->
+        <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-kafka</artifactId>
+		    <exclusions>
+		    	<exclusion>
+		    		<groupId>ch.qos.logback</groupId>
+		    		<artifactId>logback-classic</artifactId>
+		    	</exclusion>
+		    	<exclusion>
+		    		<groupId>org.apache.logging.log4j</groupId>
+		    		<artifactId>log4j-to-slf4j</artifactId>
+		    	</exclusion>
+		    </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
             <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
                 <exclusion>
                     <groupId>org.antlr</groupId>
                     <artifactId>antlr4-runtime</artifactId>
@@ -440,12 +377,12 @@
         <dependency>
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-jdbc</artifactId>
-            <exclusions>
+            <!--<exclusions>
                 <exclusion>
                     <groupId>org.springframework.integration</groupId>
                     <artifactId>spring-integration-core</artifactId>
                 </exclusion>
-            </exclusions>
+            </exclusions>-->
         </dependency>
 
         <dependency>
@@ -724,7 +661,68 @@
 
         <profile>
             <!-- docker环境 -->
-            <id>build-docker-native</id>
+            <id>docker-jvm</id>
+            <properties>
+                <dir>docker</dir>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <mainClass>${start-class}</mainClass>
+                            <excludes>
+                                <exclude>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                </exclude>
+                            </excludes>
+                            <image>
+                                <env>
+                                    <BP_NATIVE_IMAGE>false</BP_NATIVE_IMAGE>
+                                    <BP_JVM_VERSION>21</BP_JVM_VERSION>
+                                </env>
+                                <name>svn.youshengyun.com:9923/${project.artifactId}-jvm:${project.version}</name>
+                                <publish>true</publish>
+                            </image>
+                            <docker>
+                                <publishRegistry>
+                                    <username>publisher</username>
+                                    <password>83204585</password>
+                                </publishRegistry>
+                            </docker>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>package</id>
+                                <goals>
+                                    <goal>repackage</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>generate-resources</id>
+                                <goals>
+                                    <goal>build-info</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>build-image-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <!-- docker环境 -->
+            <id>docker-native</id>
             <properties>
                 <dir>docker</dir>
             </properties>
