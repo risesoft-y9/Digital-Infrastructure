@@ -109,7 +109,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                 String start = DATETIME_UTC_FORMAT.format(startDate);
                 String end = DATETIME_UTC_FORMAT.format(endDate);
                 builder.must(m -> m.range(r -> r.date(
-                    d -> d.field(Y9LogSearchConsts.LOG_TIME).from(start).to(end).format("yyyy-MM-dd'T'HH:mm:ss'Z'"))));
+                    d -> d.field(Y9LogSearchConsts.LOG_TIME).gte(start).lte(end).format("yyyy-MM-dd'T'HH:mm:ss'Z'"))));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }

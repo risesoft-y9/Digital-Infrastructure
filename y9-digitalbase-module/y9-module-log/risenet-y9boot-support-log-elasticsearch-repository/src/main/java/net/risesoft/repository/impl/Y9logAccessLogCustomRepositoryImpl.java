@@ -130,8 +130,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 Date sDay = Y9DayUtil.getStartOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(startDay));
                 Date eDay = Y9DayUtil.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
                 build.must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME)
-                    .from(String.valueOf(sDay.getTime()))
-                    .to(String.valueOf(eDay.getTime())))));
+                    .gte(String.valueOf(sDay.getTime()))
+                    .lte(String.valueOf(eDay.getTime())))));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -197,8 +197,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 Date sDay = Y9DayUtil.getStartOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(startDay));
                 Date eDay = Y9DayUtil.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
                 builder.must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOGIN_TIME)
-                    .from(String.valueOf(sDay.getTime()))
-                    .to(String.valueOf(eDay.getTime())))));
+                    .gte(String.valueOf(sDay.getTime()))
+                    .lte(String.valueOf(eDay.getTime())))));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -267,13 +267,13 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         sbuilder.must(m -> m.exists(e -> e.field(Y9LogSearchConsts.USER_NAME)));
         sbuilder.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.SUCCESS).query(success)));
         sbuilder.must(
-            m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(startTimeStr).to(etartTimeStr))));
+            m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).gte(startTimeStr).lte(etartTimeStr))));
 
         Builder ebuilder = new Builder();
         ebuilder.must(m -> m.exists(e -> e.field(Y9LogSearchConsts.USER_NAME)));
         ebuilder.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.SUCCESS).query(error)));
         ebuilder.must(
-            m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(startTimeStr).to(etartTimeStr))));
+            m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).gte(startTimeStr).lte(etartTimeStr))));
 
         if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             sbuilder.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
@@ -365,7 +365,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 String start = DATETIME_UTC_FORMAT.format(startDate);
                 String end = DATETIME_UTC_FORMAT.format(endDate);
                 builder.must(m -> m.range(r -> r.date(
-                    d -> d.field(Y9LogSearchConsts.LOG_TIME).from(start).to(end).format("yyyy-MM-dd'T'HH:mm:ss'Z'"))));
+                    d -> d.field(Y9LogSearchConsts.LOG_TIME).gte(start).lte(end).format("yyyy-MM-dd'T'HH:mm:ss'Z'"))));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }

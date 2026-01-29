@@ -2,7 +2,7 @@ package net.risesoft.liquibase;
 
 import javax.sql.DataSource;
 
-import org.springframework.boot.autoconfigure.liquibase.DataSourceClosingSpringLiquibase;
+import org.springframework.boot.liquibase.autoconfigure.DataSourceClosingSpringLiquibase;
 import org.springframework.core.io.ResourceLoader;
 
 import com.zaxxer.hikari.HikariDataSource;

@@ -7,11 +7,9 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.servlet.ConditionalOnMissingFilterBean;
+import org.springframework.boot.kafka.autoconfigure.KafkaAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.task.ThreadPoolTaskExecutorBuilder;
-import org.springframework.boot.web.servlet.filter.OrderedRequestContextFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -19,7 +17,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.web.filter.RequestContextFilter;
 
 import com.alibaba.ttl.threadpool.TtlExecutors;
 
@@ -44,14 +41,6 @@ import net.risesoft.y9.configuration.feature.log.Y9LogProperties;
 @EnableAsync(proxyTargetClass = true)
 @EnableConfigurationProperties({Y9Properties.class, Y9LogProperties.class})
 public class Y9LogConfiguration {
-
-    // https://github.com/spring-projects/spring-boot/issues/2637
-    // https://github.com/spring-projects/spring-boot/issues/4331
-    @Bean
-    @ConditionalOnMissingFilterBean(RequestContextFilter.class)
-    public static RequestContextFilter requestContextFilter() {
-        return new OrderedRequestContextFilter();
-    }
 
     @Bean
     @ConditionalOnMissingBean(AbstractAdvisorAutoProxyCreator.class)

@@ -3,7 +3,9 @@ package org.hibernate.integrator.api.integrator;
 import java.util.Collection;
 
 import org.hibernate.boot.Metadata;
+import org.hibernate.boot.spi.BootstrapContext;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.integrator.spi.Integrator;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.service.spi.SessionFactoryServiceRegistry;
 
@@ -12,17 +14,18 @@ public class Y9TenantIntegrator implements org.hibernate.integrator.spi.Integrat
     @Override
     public void disintegrate(SessionFactoryImplementor sessionFactory, SessionFactoryServiceRegistry serviceRegistry) {}
 
-    @Override
-    public void integrate(Metadata metadata, SessionFactoryImplementor sessionFactory,
-        SessionFactoryServiceRegistry serviceRegistry) {
-        Collection<PersistentClass> classes = metadata.getEntityBindings();
+	@Override
+	public void integrate(Metadata metadata, BootstrapContext bootstrapContext,
+			SessionFactoryImplementor sessionFactory) {
+		Collection<PersistentClass> classes = metadata.getEntityBindings();
         if (!classes.isEmpty()) {
             String name = (String)sessionFactory.getProperties().get("hibernate.persistenceUnitName");
             if ("y9Tenant".equals(name)) {
                 Y9TenantHibernateInfoHolder.setMetadata(metadata);
                 Y9TenantHibernateInfoHolder.setSessionFactory(sessionFactory);
-                Y9TenantHibernateInfoHolder.setServiceRegistry(serviceRegistry);
+                Y9TenantHibernateInfoHolder.setBootstrapContext(bootstrapContext);
             }
         }
-    }
+	}
+    
 }

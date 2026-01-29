@@ -2,7 +2,7 @@ package y9.autoconfiguration;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWarDeployment;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
+//import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

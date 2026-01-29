@@ -9,6 +9,7 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.boot.spi.BootstrapContext;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.service.spi.SessionFactoryServiceRegistry;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
@@ -32,7 +33,7 @@ public class Y9TenantHibernateInfoHolder {
 
     private static SessionFactoryImplementor sessionFactory;
 
-    private static SessionFactoryServiceRegistry serviceRegistry;
+    private static BootstrapContext bootstrapContext;
 
     public static Metadata getMetadata() {
         return metadata;
@@ -40,17 +41,17 @@ public class Y9TenantHibernateInfoHolder {
 
     public static void setMetadata(Metadata metadata) {
         Y9TenantHibernateInfoHolder.metadata = metadata;
-    }
+    }    
 
-    public static SessionFactoryServiceRegistry getServiceRegistry() {
-        return serviceRegistry;
-    }
+    public static BootstrapContext getBootstrapContext() {
+		return bootstrapContext;
+	}
 
-    public static void setServiceRegistry(SessionFactoryServiceRegistry serviceRegistry) {
-        Y9TenantHibernateInfoHolder.serviceRegistry = serviceRegistry;
-    }
+	public static void setBootstrapContext(BootstrapContext bootstrapContext) {
+		Y9TenantHibernateInfoHolder.bootstrapContext = bootstrapContext;
+	}
 
-    public static SessionFactoryImplementor getSessionFactory() {
+	public static SessionFactoryImplementor getSessionFactory() {
         return sessionFactory;
     }
 
@@ -98,8 +99,7 @@ public class Y9TenantHibernateInfoHolder {
                 SchemaExport schemaExport = new SchemaExport();
                 schemaExport.setOverrideOutputFileContent();
                 schemaExport.setOutputFile(rootPath + File.separator + systemName + "-all.sql");
-                schemaExport.execute(targetTypes, Action.CREATE, Y9TenantHibernateInfoHolder.getMetadata(),
-                    Y9TenantHibernateInfoHolder.getServiceRegistry());
+                schemaExport.execute(targetTypes, Action.CREATE, Y9TenantHibernateInfoHolder.getMetadata());
             }
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
