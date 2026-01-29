@@ -58,7 +58,7 @@
         <module>y9-digitalbase-bom</module>
         <module>y9-digitalbase-dependencies</module>
         <module>y9-digitalbase-parent</module>
-        
+
         <module>y9-digitalbase-common</module>
         <module>y9-digitalbase-example</module>
         <module>y9-digitalbase-idcode</module>
@@ -66,5 +66,5 @@
         <module>y9-digitalbase-support</module>
         <module>y9-digitalbase-module</module>
     </modules>
-    
+
 </project>

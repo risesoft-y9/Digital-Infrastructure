@@ -124,8 +124,8 @@
         <liquibase.version>4.32.0</liquibase.version>
         <org-dom4j.version>2.1.4</org-dom4j.version>
         <oshi.version>6.8.2</oshi.version>
-        <poi-ooxml.version>5.2.3</poi-ooxml.version>
-        <poi-scratchpad.version>5.2.3</poi-scratchpad.version>
+        <poi-ooxml.version>5.4.1</poi-ooxml.version>
+        <poi-scratchpad.version>5.4.1</poi-scratchpad.version>
         <rs-api.version>2.1.1</rs-api.version>
         <reflections.version>0.10.2</reflections.version>
         <shedlock.version>4.48.0</shedlock.version>
