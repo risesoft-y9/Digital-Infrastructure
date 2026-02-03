@@ -1,6 +1,6 @@
 {
     "name": "y9vue-kernel-standard",
-    "version": "9.6.8",
+    "version": "9.6.9",
     "scripts": {
         "serve": "vite  --mode development --host 0.0.0.0",
         "serve-local": "vite  --mode localEnv",

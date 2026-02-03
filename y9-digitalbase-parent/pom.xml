@@ -52,7 +52,7 @@
         <gitee.connection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.connection>
         <gitee.developerConnection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
 
-        <revision>v9.6.9-SNAPSHOT</revision>
+        <revision>v9.6.9</revision>
         <docker.tag>${project.version}-${maven.build.timestamp}</docker.tag>
 
         <spring-boot.version>2.7.18</spring-boot.version>
