@@ -1,3 +1,104 @@
+## v9.6.9 2026-02-03
+
+### Added
+
+- 引入risenet-y9boot-starter-repeatsubmit
+- 添加日志的控制台输出
+- 增加审计日志，自己实现的审计日志替换 javers
+- 添加 DateFormatter 处理 Date 类型的时间为 yyyy-MM-dd HH:mm:ss
+- 新增risenet-y9boot-common-sso，提取sso公共代码到该工程。
+- 新增角色关联数据目录授权
+- 添加 y9-digitalbase-bom
+- 添加 y9-digitalbase-parent
+- 数据目录支持导入导出 excel
+- 日志注解 @RiseLog 的操作名称 operationName 支持 SpEL 实现可读性更高的描述
+- SpringBoot Actuactor 配置调整，结合 docker 的healthcheck 实现不健康应用的重启
+
+### Changed
+
+- 修改应用的上下文
+  对于未前后端分离的工程，应用上下文统一小写，举例：risenet-y9boot-webapp-filemanager 对应上下文 /filemanager
+  对于已经前后端分离的后端工程名做了修改，应用上下文统一小写，举例：risenet-y9boot-webapp-addressbook ->
+  risenet-y9boot-server-addressbook，对应的上下文 /server-addressbook
+- 移除risenet-y9boot-common-util的webService接口调用
+- 修改默认的岗位名模板："#jobName.equals('无') ? #personNames : #personNames+ '（' + #jobName + '）'"
+- 移除 ftpStoreService 的 @Primary 注解，所有文件存储服务同级，通过开关控制只有一个存储服务注入
+- 应用的 docker 基础镜像 tomcat 更新至 9.0.107-jdk11-temurin
+- 将登录表单的提交的代码挪回页面中，清晰整个登录提交流程，与点选验证码的代码解耦，以及调整点选验证码样式，移除未使用的页面
+- jodd.util.Base64转java.util.Base64
+- 调整获取系统下的角色信息：先获取系统角色，再获取应用
+- platform 相关类的包名统一
+- 实体修改时获取原始对象不使用缓存
+- 重构日志管理的 repository 层，降低 service 层对它的依赖，不同的存储实现使用不同的 SpringBoot App
+- 调整事务注解仅在必要的方法上加
+- 调整Specification多条件查询的实现
+- 多条件查询使用 Query 对象封装
+- 调整代码，Controller 层不直接使用 Entity
+- AES 工具类使用随机 IV，如果有旧的加密数据需考虑迁移
+- RSA 使用 OAEP/SHA-256，替代AES加密
+- 移除risenet-y9boot-starter-kafka，调整配置文件
+- 移除增强实现类，通过不同的方法名区分
+- 移除非必要 maven 属性和插件，调整flatten-maven-plugin 配置
+- 完善 starter-listener-kafka、starter-publish-kafka 使用的示例工程
+- 移除 risenet-y9boot-starter-multi-tenant 对 risenet-y9boot-starter-jpa-tenant 的依赖，同时不强依赖
+  risenet-y9boot-starter-liquibase，项目可按需引入
+- 日志相关接口调整，移除一些冗余、无用接口
+- starter-jpa 公用的一些代码提取到 3rd-jpa 模块中
+- 工具类重命名
+- version 无需手动设置以及实体的 tenantId 无需手动设置
+- 操作日志展示字段调整，优化日志记录功能，方法和类级别的注解 RiseLog 属性 moduleName 的“合并”
+- ID 生成器工具类不依赖 Spring 容器
+- 移除 Y9FileStoreService 的 Y9FileStore uploadFile(MultipartFile multipartFile, String customPath, String fileName) 方法
+
+### Fixed
+
+- 升级echarts版本，处理窗口拖动报错的问题
+- 租户修改触发人员更新
+- 处理组织删除关联的授权数据没有删除的问题
+- 新增或修改角色时对 appId 和 systemId 的处理
+- 处理Y9PersonExt 传入 null 的问题
+- 角色移动的父节点为应用时报错
+- 授权树获取用于回显授权数据不成功时导致的转圈问题
+- 组织节点排列序号更新时同时更新其后代叶子节点的 orderPath
+- 移除示例中无用的测试
+- 三员禁止修改登录名
+- addHeader--》setHeader，处理请求头重复添加y9aoplog，导致请求过大的问题
+- 静态代码扫描问题修复
+- 选择树的 checked 节点回显
+- 使用 hibernate 管理多租户表结构没有正常更新的问题
+- 恢复 oauth2 ，处理退出后导致 oidc 退出重定向 URL 非预期的问题
+- 处理参数大小写的问题：oSName -> osName，以及修改entityClass路径
+- 删除人员的同时删除人员扩展信息
+- 前台提交的时间参数不能正确转换成 Date 的问题
+- 文件上传文件流关闭
+- 处理使用 builder 构建对象某些字段没有默认值的问题
+- Y9Tenant 实体跟 platform 中的字段保持一致，避免 sso 先初始化导致 platform 使用该表时字段“缺失”
+- 修改前端加密库 jsencrypt -> forge ，解决中文在 RSA-OAEP 中不能正常加密的问题
+- 添加 Y9Properties bean 的注册
+- 处理数据目录不能正确反序列化的问题
+- 处理disabled值为空的异常
+- 新租户无法创建、初始化新租户发生异常时人员也同步进账号表的问题
+- 租用数字底座事务没提交就进行初始化发生的异常
+- 前端没有提交 tabIndex 时该值没有正确设置的问题
+
+### Documentation
+
+- 添加代码注释
+- 调整smart-doc.json
+- 更新 README.md
+- smart-doc 不设置 responseBodyAdvice，否则没有使用统一返回类 net.risesoft.pojo.Y9Result 的接口生成的文档不正确
+
+### Dependency Upgrades
+
+- Upgrade to commons-io 2.19.0
+- Upgrade to commons-beanutils 1.11.0
+- Upgrade to jaxws-rt 2.3.7
+- Upgrade to alibaba-nacos 2.2.4
+- Upgrade to spring-cloud-starter-alibaba-nacos-config 2021.0.6.2
+- Upgrade to y9plugin-components-auto 3.0.51
+- Upgrade to poi-ooxml 5.4.1
+- Upgrade to poi-scratchpad 5.4.1
+
 ## v9.6.8 2025-06-27
 
 ### Added
@@ -12,7 +113,6 @@
 - JaVers 通过导入 sql 和 指定方言支持达梦数据库
 - 增加对部门属性可继承的支持
 - 图标上传增加颜色类别和所属分类
-
 
 ### Changed
 
@@ -39,7 +139,6 @@
 - 移除 Y9Oauth2ResourceFilter 的 saveOnlineMessage 配置
 - 移除 risenet-y9boot-starter-useronline
 
-
 ### Fixed
 
 - 处理系统、资源和角色树顶节点获取异常
@@ -64,7 +163,6 @@
 
 - 升级了一些依赖包的版本
 - 升级 vue 和 vite 的版本
-
 
 ## v9.6.7 2024-10-12
 
