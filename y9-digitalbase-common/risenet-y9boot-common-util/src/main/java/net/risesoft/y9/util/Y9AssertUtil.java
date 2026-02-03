@@ -2,8 +2,6 @@ package net.risesoft.y9.util;
 
 import java.util.Collection;
 
-import org.apache.commons.collections4.CollectionUtils;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -70,7 +68,7 @@ public class Y9AssertUtil {
      * @param arguments 参数
      */
     public static void isEmpty(Collection<?> list, ErrorCode errorCode, Object... arguments) {
-        if (CollectionUtils.isNotEmpty(list)) {
+        if (list != null && list.size() > 0) {
             throw Y9ExceptionUtil.businessException(errorCode, arguments);
         }
     }

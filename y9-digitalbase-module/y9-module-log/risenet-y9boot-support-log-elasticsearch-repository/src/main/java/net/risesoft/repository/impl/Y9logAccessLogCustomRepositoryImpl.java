@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.springframework.data.domain.Page;
@@ -422,7 +421,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     public Y9Page<AccessLog> pageByOrgType(List<String> personIds, String operateType, Integer page, Integer rows) {
         IndexCoordinates index = IndexCoordinates.of(getCurrentYearIndexName());
         try {
-            if (CollectionUtils.isNotEmpty(personIds)) {
+            if (personIds!=null && personIds.size()>0) {
                 CriteriaQuery criteriaQuery =
                     new CriteriaQuery(new Criteria().and(new Criteria(Y9LogSearchConsts.OPERATE_TYPE).is(operateType))
                         .and(new Criteria(Y9LogSearchConsts.USER_ID).in(personIds)))

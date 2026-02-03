@@ -1,4 +1,5 @@
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
@@ -8,10 +9,10 @@
         <version>${revision}</version>
         <relativePath>../../y9-digitalbase-parent/pom.xml</relativePath>
     </parent>
-    <artifactId>risenet-y9boot-common-tenant-datasource</artifactId>
+    <artifactId>risenet-y9boot-common-poi</artifactId>
     <packaging>jar</packaging>
-    <name>risenet-y9boot-common-tenant-datasource</name>
-    <description>RiseSoft/Digital Infrastructure multi tenant datasource</description>
+    <name>risenet-y9boot-common-poi</name>
+    <description>RiseSoft/Digital Infrastructure common poi</description>
 
     <scm>
         <url>${gitee.url}</url>
@@ -21,19 +22,24 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-common-util</artifactId>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>4.5.0</version>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-scratchpad</artifactId>
         </dependency>
 
         <dependency>

@@ -1,18 +1,15 @@
 package net.risesoft.y9.util;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.util.StringUtils;
 
 import lombok.AccessLevel;
@@ -129,51 +126,6 @@ public class Y9Util {
             stringBuilder.append(delimiter).append(addNew);
         }
         return stringBuilder;
-    }
-
-    /**
-     * 获取Bean对象的属性名称数组，排除指定的属性
-     * 
-     * @param bean Bean对象
-     * @param exclude 需要排除的属性名称，多个属性用逗号分隔
-     * @return String[] 属性名称数组
-     */
-    public static String[] getBeanPropertyNames(Object bean, String exclude) {
-        return getBeanPropertyNames(bean, exclude.split(","));
-    }
-
-    /**
-     * 获取Bean对象的属性名称数组，排除指定的属性
-     * 
-     * @param bean Bean对象
-     * @param exclude 需要排除的属性名称数组
-     * @return String[] 属性名称数组
-     */
-    public static String[] getBeanPropertyNames(Object bean, String[] exclude) {
-        List<String> list = new ArrayList<String>();
-        try {
-            Map<String, Object> beanMap = PropertyUtils.describe(bean);
-            Set<String> set = beanMap.keySet();
-            for (String s : set) {
-                if (!"class".equals(s)) {
-                    list.add(s);
-                }
-            }
-
-            for (String name : exclude) {
-                if (StringUtils.hasText(name)) {
-                    list.remove(name);
-                }
-            }
-        } catch (IllegalAccessException e) {
-            LOGGER.warn(e.getMessage(), e);
-        } catch (InvocationTargetException e) {
-            LOGGER.warn(e.getMessage(), e);
-        } catch (NoSuchMethodException e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-
-        return list.toArray(new String[0]);
     }
 
     /**

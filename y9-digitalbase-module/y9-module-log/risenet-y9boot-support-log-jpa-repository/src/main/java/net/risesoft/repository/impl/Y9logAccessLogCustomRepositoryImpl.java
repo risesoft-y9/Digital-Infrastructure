@@ -16,7 +16,6 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -326,7 +325,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                     list.add(
                         criteriaBuilder.equal(root.get(Y9LogSearchConsts.OPERATE_TYPE).as(String.class), operateType));
                 }
-                if (CollectionUtils.isNotEmpty(personIds)) {
+                if (personIds!=null && personIds.size()>0) {
                     // in条件拼接
                     In<String> in = criteriaBuilder.in(root.get(Y9LogSearchConsts.USER_ID).as(String.class));
                     for (String id : personIds) {
