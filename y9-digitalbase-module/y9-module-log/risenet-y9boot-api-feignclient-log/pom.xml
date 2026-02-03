@@ -27,13 +27,11 @@
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-openfeign</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-api-interface-log</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>

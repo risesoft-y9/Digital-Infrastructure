@@ -40,13 +40,11 @@
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-properties</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-3rd-jpa</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>

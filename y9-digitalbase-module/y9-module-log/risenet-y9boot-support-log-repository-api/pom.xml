@@ -22,7 +22,6 @@
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-common-util</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>

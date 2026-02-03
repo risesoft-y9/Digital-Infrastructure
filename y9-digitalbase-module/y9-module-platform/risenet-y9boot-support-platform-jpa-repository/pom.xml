@@ -16,7 +16,7 @@
 
     <properties>
         <mysql-driver.version>8.2.0</mysql-driver.version>
-        <HikariCP.version>4.0.3</HikariCP.version>
+        <HikariCP.version>7.0.2</HikariCP.version>
 
         <!-- Plugin versions -->
         <screw-maven-plugin.version>1.0.5</screw-maven-plugin.version>
@@ -32,25 +32,21 @@
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-common-platform</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-idgenerator</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-jpa-public</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-jpa-tenant</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>

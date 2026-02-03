@@ -9,10 +9,8 @@
         <version>${revision}</version>
         <relativePath>../../../y9-digitalbase-parent/pom.xml</relativePath>
     </parent>
-    <groupId>net.risesoft</groupId>
     <artifactId>risenet-y9boot-webapp-filemanager</artifactId>
     <packaging>war</packaging>
-    <version>${revision}</version>
 
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
@@ -22,19 +20,16 @@
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-support-file-jpa-repository</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-support-file-service-rest</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-common-nacos</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>

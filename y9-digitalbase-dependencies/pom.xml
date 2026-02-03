@@ -132,12 +132,12 @@
         <fastexcel.version>1.3.0</fastexcel.version>
         <guava.version>33.5.0-jre</guava.version>
         <httpcomponents.version>4.5.14</httpcomponents.version>
-        <hutool.version>5.8.40</hutool.version>
+        <hutool.version>5.8.43</hutool.version>
         <ipaddress.version>5.5.1</ipaddress.version>
         <javers.version>7.8.0</javers.version>
         <jakarta.mail.version>2.0.2</jakarta.mail.version>
         <jakarta-json.version>2.0.1</jakarta-json.version>
-        <java-uuid-generator.version>5.1.1</java-uuid-generator.version>
+        <java-uuid-generator.version>5.2.0</java-uuid-generator.version>
         <jBCrypt.version>0.4.3</jBCrypt.version>
         <jodd-mail.version>7.1.0</jodd-mail.version>
         <jodd-bean.version>5.1.6</jodd-bean.version>
