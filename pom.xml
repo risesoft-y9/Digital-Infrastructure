@@ -45,7 +45,7 @@
         <gitee.connection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.connection>
         <gitee.developerConnection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
 
-        <revision>v9.6.9</revision>
+        <revision>9.6.10-SNAPSHOT</revision>
     </properties>
 
     <scm>
