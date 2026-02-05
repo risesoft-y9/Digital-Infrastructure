@@ -9,8 +9,6 @@ import javax.sql.DataSource;
 
 import org.springframework.util.StringUtils;
 
-import com.fasterxml.jackson.databind.type.TypeFactory;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -27,8 +25,8 @@ public class DdlKingbase {
 
     public static void addTableColumn(DataSource dataSource, String tableName, String jsonDbColumns) throws Exception {
         StringBuilder sb = new StringBuilder();
-        DbColumn[] dbcs = Y9JsonUtil.objectMapper.readValue(jsonDbColumns,
-            TypeFactory.defaultInstance().constructArrayType(DbColumn.class));
+        DbColumn[] dbcs = Y9JsonUtil.getJsonMapper().readValue(jsonDbColumns,
+        		Y9JsonUtil.getJsonMapper().getTypeFactory().constructArrayType(DbColumn.class));
         if (DbMetaDataUtil.checkTableExist(dataSource, tableName)) {
             for (DbColumn dbc : dbcs) {
                 String columnName = dbc.getColumnName();
@@ -131,8 +129,8 @@ public class DdlKingbase {
             throw new Exception("数据库中不存在这个表：" + tableName);
         }
 
-        DbColumn[] dbcs = Y9JsonUtil.objectMapper.readValue(jsonDbColumns,
-            TypeFactory.defaultInstance().constructArrayType(DbColumn.class));
+        DbColumn[] dbcs = Y9JsonUtil.getJsonMapper().readValue(jsonDbColumns,
+        		Y9JsonUtil.getJsonMapper().getTypeFactory().constructArrayType(DbColumn.class));
         for (DbColumn dbc : dbcs) {
             if (StringUtils.hasText(dbc.getColumnNameOld())) {
                 StringBuilder sb = new StringBuilder();
@@ -190,8 +188,8 @@ public class DdlKingbase {
 
     public static void createTable(DataSource dataSource, String tableName, String jsonDbColumns) throws Exception {
         StringBuilder sb = new StringBuilder();
-        DbColumn[] dbcs = Y9JsonUtil.objectMapper.readValue(jsonDbColumns,
-            TypeFactory.defaultInstance().constructArrayType(DbColumn.class));
+        DbColumn[] dbcs = Y9JsonUtil.getJsonMapper().readValue(jsonDbColumns,
+        		Y9JsonUtil.getJsonMapper().getTypeFactory().constructArrayType(DbColumn.class));
         //@formatter:off
 		sb.append("CREATE TABLE \"" + tableName + "\" (\r\n").append("GUID varchar2(38 char) NOT NULL, \r\n").append("PROCESSINSTANCEID varchar2(64 char) NOT NULL, \r\n");
 		//@formatter:off

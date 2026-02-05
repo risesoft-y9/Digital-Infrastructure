@@ -6,8 +6,6 @@ import javax.sql.DataSource;
 
 import org.springframework.util.StringUtils;
 
-import com.fasterxml.jackson.databind.type.TypeFactory;
-
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.SqlConstants;
@@ -31,8 +29,8 @@ public class DdlOracle {
 
     public static void addTableColumn(DataSource dataSource, String tableName, String jsonDbColumns) throws Exception {
         StringBuilder sb = new StringBuilder();
-        DbColumn[] dbcs = Y9JsonUtil.objectMapper.readValue(jsonDbColumns,
-            TypeFactory.defaultInstance().constructArrayType(DbColumn.class));
+        DbColumn[] dbcs = Y9JsonUtil.getJsonMapper().readValue(jsonDbColumns,
+        		Y9JsonUtil.getJsonMapper().getTypeFactory().constructArrayType(DbColumn.class));
         if (DbMetaDataUtil.checkTableExist(dataSource, tableName)) {
             for (DbColumn dbc : dbcs) {
                 sb.append("ALTER TABLE " + tableName + " ADD " + dbc.getColumnName() + " ");
@@ -111,7 +109,7 @@ public class DdlOracle {
             throw new Exception("数据库中不存在这个表：" + tableName);
         }
 
-        DbColumn[] dbcs = Y9JsonUtil.objectMapper.readValue(jsonDbColumns, TypeFactory.defaultInstance().constructArrayType(DbColumn.class));
+        DbColumn[] dbcs = Y9JsonUtil.getJsonMapper().readValue(jsonDbColumns, Y9JsonUtil.getJsonMapper().getTypeFactory().constructArrayType(DbColumn.class));
         for (DbColumn dbc : dbcs) {
             if (StringUtils.hasText(dbc.getColumnNameOld())) {
                 StringBuilder sb = new StringBuilder();

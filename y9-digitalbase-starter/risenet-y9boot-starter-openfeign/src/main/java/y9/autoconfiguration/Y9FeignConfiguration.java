@@ -8,17 +8,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import feign.RequestInterceptor;
+import feign.codec.ErrorDecoder;
 import net.risesoft.y9.configuration.feature.openfeign.Y9SignProperties;
 import net.risesoft.y9.configuration.feature.openfeign.Y9TokenProperties;
-
+import tools.jackson.databind.json.JsonMapper;
 import y9.support.SignInterceptor;
 import y9.support.TokenInterceptor;
 import y9.support.Y9ErrorDecoder;
-
-import feign.RequestInterceptor;
-import feign.codec.ErrorDecoder;
 
 /**
  * open feign 自动配置类
@@ -28,26 +25,26 @@ import feign.codec.ErrorDecoder;
  */
 @Configuration(proxyBeanMethods = false)
 @EnableFeignClients("y9.client")
-@EnableConfigurationProperties({Y9TokenProperties.class, Y9SignProperties.class})
+@EnableConfigurationProperties({ Y9TokenProperties.class, Y9SignProperties.class })
 public class Y9FeignConfiguration {
 
-    @Bean
-    @ConditionalOnMissingBean(name = "errorDecoder")
-    public ErrorDecoder errorDecoder(ObjectMapper objectMapper) {
-        return new Y9ErrorDecoder(objectMapper);
-    }
+	@Bean
+	@ConditionalOnMissingBean(name = "errorDecoder")
+	public ErrorDecoder errorDecoder(JsonMapper jsonMapper) {
+		return new Y9ErrorDecoder(jsonMapper);
+	}
 
-    @Bean
-    @ConditionalOnProperty(name = "y9.feature.openfeign.token.enabled", havingValue = "true", matchIfMissing = false)
-    public RequestInterceptor tokenInterceptor(Y9TokenProperties y9TokenProperties,
-        RedisTemplate<String, String> redisTemplate) {
-        return new TokenInterceptor(y9TokenProperties, redisTemplate);
-    }
+	@Bean
+	@ConditionalOnProperty(name = "y9.feature.openfeign.token.enabled", havingValue = "true", matchIfMissing = false)
+	public RequestInterceptor tokenInterceptor(Y9TokenProperties y9TokenProperties,
+			RedisTemplate<String, String> redisTemplate) {
+		return new TokenInterceptor(y9TokenProperties, redisTemplate);
+	}
 
-    @Bean
-    @ConditionalOnProperty(name = "y9.feature.openfeign.sign.enabled", havingValue = "true", matchIfMissing = false)
-    public RequestInterceptor signInterceptor(Y9SignProperties y9SignProperties) {
-        return new SignInterceptor(y9SignProperties);
-    }
+	@Bean
+	@ConditionalOnProperty(name = "y9.feature.openfeign.sign.enabled", havingValue = "true", matchIfMissing = false)
+	public RequestInterceptor signInterceptor(Y9SignProperties y9SignProperties) {
+		return new SignInterceptor(y9SignProperties);
+	}
 
 }

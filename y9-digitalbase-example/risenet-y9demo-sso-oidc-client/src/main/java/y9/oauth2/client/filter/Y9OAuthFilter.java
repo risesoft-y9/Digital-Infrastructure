@@ -78,7 +78,12 @@ public class Y9OAuthFilter implements Filter {
 
                 UserInfo userInfo = null;
                 if (introspectEntity.getStatusCode().is2xxSuccessful()) {
-                    String attr = null;
+                	    ResponseEntity<String> profileEntity = invokeProfileEndpoint(accessToken);
+                    String profile = profileEntity.getBody();
+                    profile = profile.replace("[]", "\"\"");
+                    userInfo = Y9JsonUtil.readValue(profile, UserInfo.class);
+                    
+                    /*String attr = null;
                     try {
                         attr = introspectionResponse.getAttr();
                         userInfo = Y9JsonUtil.readValue(attr, UserInfo.class);
@@ -87,7 +92,7 @@ public class Y9OAuthFilter implements Filter {
                         String profile = profileEntity.getBody();
                         profile = profile.replace("[]", "\"\"");
                         userInfo = Y9JsonUtil.readValue(profile, UserInfo.class);
-                    }
+                    }*/
                 }
 
                 if (ObjectUtils.isEmpty(userInfo)) {

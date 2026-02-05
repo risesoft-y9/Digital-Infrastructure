@@ -6,13 +6,12 @@ import javax.sql.DataSource;
 
 import org.springframework.util.StringUtils;
 
-import com.fasterxml.jackson.databind.type.TypeFactory;
-
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.SqlConstants;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.sqlddl.pojo.DbColumn;
+import tools.jackson.databind.type.TypeFactory;
 
 /**
  *
@@ -25,49 +24,49 @@ import net.risesoft.y9.sqlddl.pojo.DbColumn;
 @Slf4j
 public class DdlDm {
 
-    private DdlDm() {
-        throw new IllegalStateException("DdlDm Utility class");
-    }
+	private DdlDm() {
+		throw new IllegalStateException("DdlDm Utility class");
+	}
 
-    public static void addTableColumn(DataSource dataSource, String tableName, String jsonDbColumns) throws Exception {
-        StringBuilder sb = new StringBuilder();
-        DbColumn[] dbcs = Y9JsonUtil.objectMapper.readValue(jsonDbColumns,
-            TypeFactory.defaultInstance().constructArrayType(DbColumn.class));
-        if (DbMetaDataUtil.checkTableExist(dataSource, tableName)) {
-            for (DbColumn dbc : dbcs) {
-                sb.append("ALTER TABLE " + tableName + " ADD " + dbc.getColumnName() + " ");
-                String sType = dbc.getTypeName().toUpperCase();
+	public static void addTableColumn(DataSource dataSource, String tableName, String jsonDbColumns) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		DbColumn[] dbcs = Y9JsonUtil.getJsonMapper().readValue(jsonDbColumns,
+				Y9JsonUtil.getJsonMapper().getTypeFactory().constructArrayType(DbColumn.class));
+		if (DbMetaDataUtil.checkTableExist(dataSource, tableName)) {
+			for (DbColumn dbc : dbcs) {
+				sb.append("ALTER TABLE " + tableName + " ADD " + dbc.getColumnName() + " ");
+				String sType = dbc.getTypeName().toUpperCase();
 
-                if (SqlConstants.CHAR_TYPE.equals(sType) || SqlConstants.NCHAR_TYPE.equals(sType)
-                    || SqlConstants.VARCHAR_TYPE.equals(sType) || SqlConstants.VARCHAR2_TYPE.equals(sType)
-                    || SqlConstants.NVARCHAR2_TYPE.equals(sType) || SqlConstants.RAW_TYPE.equals(sType)) {
-                    sb.append(sType + "(" + dbc.getDataLength() + ")");
-                } else if (SqlConstants.DECIMAL_TYPE.equalsIgnoreCase(sType)
-                    || SqlConstants.NUMERIC_TYPE.equalsIgnoreCase(sType)
-                    || SqlConstants.NUMBER_TYPE.equalsIgnoreCase(sType)) {
-                    if (dbc.getDataScale() == null) {
-                        sb.append(sType + "(" + dbc.getDataLength() + ")");
-                    } else {
-                        sb.append(sType + "(" + dbc.getDataLength() + "," + dbc.getDataScale() + ")");
-                    }
-                } else {
-                    sb.append(sType);
-                }
+				if (SqlConstants.CHAR_TYPE.equals(sType) || SqlConstants.NCHAR_TYPE.equals(sType)
+						|| SqlConstants.VARCHAR_TYPE.equals(sType) || SqlConstants.VARCHAR2_TYPE.equals(sType)
+						|| SqlConstants.NVARCHAR2_TYPE.equals(sType) || SqlConstants.RAW_TYPE.equals(sType)) {
+					sb.append(sType + "(" + dbc.getDataLength() + ")");
+				} else if (SqlConstants.DECIMAL_TYPE.equalsIgnoreCase(sType)
+						|| SqlConstants.NUMERIC_TYPE.equalsIgnoreCase(sType)
+						|| SqlConstants.NUMBER_TYPE.equalsIgnoreCase(sType)) {
+					if (dbc.getDataScale() == null) {
+						sb.append(sType + "(" + dbc.getDataLength() + ")");
+					} else {
+						sb.append(sType + "(" + dbc.getDataLength() + "," + dbc.getDataScale() + ")");
+					}
+				} else {
+					sb.append(sType);
+				}
 
-                if (dbc.getNullable()) {
-                    sb.append(" NULL");
-                } else {
-                    sb.append(" NOT NULL");
-                }
+				if (dbc.getNullable()) {
+					sb.append(" NULL");
+				} else {
+					sb.append(" NOT NULL");
+				}
 
-                DbMetaDataUtil.executeDdl(dataSource, sb.toString());
-                if (StringUtils.hasText(dbc.getComment())) {
-                    DbMetaDataUtil.executeDdl(dataSource, "COMMENT ON COLUMN " + tableName.trim().toUpperCase() + "."
-                        + dbc.getColumnName().trim().toUpperCase() + " IS '" + dbc.getComment() + "'");
-                }
-            }
-        } else { // table不存在。
-            //@formatter:off
+				DbMetaDataUtil.executeDdl(dataSource, sb.toString());
+				if (StringUtils.hasText(dbc.getComment())) {
+					DbMetaDataUtil.executeDdl(dataSource, "COMMENT ON COLUMN " + tableName.trim().toUpperCase() + "."
+							+ dbc.getColumnName().trim().toUpperCase() + " IS '" + dbc.getComment() + "'");
+				}
+			}
+		} else { // table不存在。
+			//@formatter:off
 			sb.append("CREATE TABLE " + tableName + " (\r\n").append("ID varchar2(38) NOT NULL, \r\n").append("PROCESSINSTANCEID nvarchar2(64) NOT NULL, \r\n").append("CREATETIME timestamp NOT NULL, \r\n").append("UPDATETIME timestamp NOT NULL, \r\n").append(
 					"TABINDEX NUMERIC(19,3) DEFAULT 1, \r\n");
 			//@formatter:off
@@ -112,7 +111,7 @@ public class DdlDm {
             throw new Exception("数据库中不存在这个表：" + tableName);
         }
 
-        DbColumn[] dbcs = Y9JsonUtil.objectMapper.readValue(jsonDbColumns, TypeFactory.defaultInstance().constructArrayType(DbColumn.class));
+        DbColumn[] dbcs = Y9JsonUtil.getJsonMapper().readValue(jsonDbColumns, Y9JsonUtil.getJsonMapper().getTypeFactory().constructArrayType(DbColumn.class));
         for (DbColumn dbc : dbcs) {
             if (StringUtils.hasText(dbc.getColumnNameOld())) {
                 StringBuilder sb = new StringBuilder();

@@ -9,9 +9,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 @Getter
 @Setter
+@Accessors(chain = true)
+@ToString
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class TokenResponse implements Serializable {
     @Serial
     private static final long serialVersionUID = -7917281748569741345L;
@@ -45,12 +50,13 @@ public class TokenResponse implements Serializable {
     @JsonProperty("grant_type")
     private String grantType;
 
-    private String attr; // y9 add
+    //private String attr; // y9 add
 
     @JsonProperty("cnf")
     private Confirmation confirmation = new Confirmation();
 
     @Data
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public static class Confirmation implements Serializable {
         @Serial
         private static final long serialVersionUID = 5434898952283549630L;
@@ -59,6 +65,10 @@ public class TokenResponse implements Serializable {
 
         @JsonProperty("x5t#S256")
         private String x5t;
+    }
+    
+    public boolean isActive() {
+    	    return this.active;
     }
 
 }

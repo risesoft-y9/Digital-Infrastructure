@@ -2,8 +2,6 @@ package net.risesoft.y9.sqlddl;
 
 import javax.sql.DataSource;
 
-import com.fasterxml.jackson.databind.type.TypeFactory;
-
 import net.risesoft.consts.SqlConstants;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.sqlddl.pojo.DbColumn;
@@ -23,8 +21,8 @@ public class DdlMysql {
     }
 
     public static void addTableColumn(DataSource dataSource, String tableName, String jsonDbColumns) throws Exception {
-        DbColumn[] dbcs = Y9JsonUtil.objectMapper.readValue(jsonDbColumns,
-            TypeFactory.defaultInstance().constructArrayType(DbColumn.class));
+        DbColumn[] dbcs = Y9JsonUtil.getJsonMapper().readValue(jsonDbColumns,
+        		Y9JsonUtil.getJsonMapper().getTypeFactory().constructArrayType(DbColumn.class));
         if (DbMetaDataUtil.checkTableExist(dataSource, tableName)) {
             for (DbColumn dbc : dbcs) {
                 String ddl = "ALTER TABLE " + tableName + " ADD COLUMN " + dbc.getColumnName() + " ";
@@ -95,7 +93,7 @@ public class DdlMysql {
             throw new Exception("数据库中不存在这个表：" + tableName);
         }
 
-        DbColumn[] dbcs = Y9JsonUtil.objectMapper.readValue(jsonDbColumns, TypeFactory.defaultInstance().constructArrayType(DbColumn.class));
+        DbColumn[] dbcs = Y9JsonUtil.getJsonMapper().readValue(jsonDbColumns, Y9JsonUtil.getJsonMapper().getTypeFactory().constructArrayType(DbColumn.class));
         for (DbColumn dbc : dbcs) {
             String ddl = "ALTER TABLE " + tableName;
             // 字段名称没有改变

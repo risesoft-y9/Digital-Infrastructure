@@ -6,12 +6,10 @@ import java.nio.charset.Charset;
 
 import org.springframework.http.HttpStatus;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.risesoft.pojo.Y9Result;
-
 import feign.Response;
 import feign.codec.ErrorDecoder;
+import net.risesoft.pojo.Y9Result;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * feign client 错误返回（非2xx段）解析器
@@ -21,22 +19,22 @@ import feign.codec.ErrorDecoder;
  * @since 9.6.2
  */
 public class Y9ErrorDecoder extends ErrorDecoder.Default {
-    private final ObjectMapper objectMapper;
+	private final JsonMapper jsonMapper;
 
-    public Y9ErrorDecoder(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
+	public Y9ErrorDecoder(JsonMapper jsonMapper) {
+		this.jsonMapper = jsonMapper;
+	}
 
-    @Override
-    public Exception decode(String methodKey, Response response) {
-        if (HttpStatus.BAD_REQUEST.value() == response.status()) {
-            try {
-                Reader reader = response.body().asReader(Charset.defaultCharset());
-                Y9Result<?> y9Result = objectMapper.readValue(reader, Y9Result.class);
-                return new Y9ApiException(y9Result.getCode(), y9Result.getMsg());
-            } catch (IOException ignored) {
-            }
-        }
-        return super.decode(methodKey, response);
-    }
+	@Override
+	public Exception decode(String methodKey, Response response) {
+		if (HttpStatus.BAD_REQUEST.value() == response.status()) {
+			try {
+				Reader reader = response.body().asReader(Charset.defaultCharset());
+				Y9Result<?> y9Result = jsonMapper.readValue(reader, Y9Result.class);
+				return new Y9ApiException(y9Result.getCode(), y9Result.getMsg());
+			} catch (IOException ignored) {
+			}
+		}
+		return super.decode(methodKey, response);
+	}
 }

@@ -24,13 +24,8 @@ import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.http.MediaType;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -38,9 +33,13 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.json.Y9DateFormat;
 import net.risesoft.y9.json.Y9JsonUtil;
-
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JavaType;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.type.CollectionType;
 import cn.hutool.json.JSONObject;
 
 /**
@@ -54,13 +53,18 @@ import cn.hutool.json.JSONObject;
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RemoteCallUtil {
-    public static ObjectMapper objectMapper = new ObjectMapper();
+	private static JsonMapper jsonMapper;
 
-    static {
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        Y9DateFormat sdf = new Y9DateFormat();
-        objectMapper.setDateFormat(sdf);
-    }
+	public static JsonMapper getJsonMapper() {
+		if (jsonMapper == null) {
+			try {
+				jsonMapper = Y9Context.getBean("jacksonJsonMapper");
+			} catch (BeansException e) {
+				LOGGER.warn(e.getMessage(), e);
+			}
+		}
+		return jsonMapper;
+	}
 
     public static <T> T delete(String url, List<NameValuePair> params, Class<T> clz) {
         HttpClient client = new HttpClient();
@@ -84,7 +88,7 @@ public class RemoteCallUtil {
                 response = stringBuffer.toString();
             }
             if (code == HttpStatus.SC_OK) {
-                return objectMapper.readValue(response, clz);
+                return jsonMapper.readValue(response, clz);
             } else {
                 LOGGER.info("http status code: {}, response: {}", code, response);
             }
@@ -102,7 +106,7 @@ public class RemoteCallUtil {
     }
 
     public static <T> Y9Result<T> get(String url, List<NameValuePair> params, Class<T> clz) {
-        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Y9Result.class, clz);
+        JavaType javaType = jsonMapper.getTypeFactory().constructParametricType(Y9Result.class, clz);
         return sendRequest(MethodType.GET, url, params, null, javaType);
     }
 
@@ -129,7 +133,7 @@ public class RemoteCallUtil {
                 response = stringBuffer.toString();
             }
             if (code == HttpStatus.SC_OK) {
-                return objectMapper.readValue(response, clz);
+                return jsonMapper.readValue(response, clz);
             } else {
                 LOGGER.info("http status code: {}, response: {}", code, response);
             }
@@ -169,8 +173,8 @@ public class RemoteCallUtil {
                 response = stringBuffer.toString();
             }
             if (code == HttpStatus.SC_OK) {
-                return objectMapper.readValue(response,
-                    objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
+                return jsonMapper.readValue(response,
+                		jsonMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
             } else {
                 LOGGER.info("http status code: {}, response: {}", code, response);
             }
@@ -217,8 +221,8 @@ public class RemoteCallUtil {
                 response = stringBuffer.toString();
             }
             if (code == HttpStatus.SC_OK) {
-                return objectMapper.readValue(response,
-                    objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
+                return jsonMapper.readValue(response,
+                		jsonMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
             } else {
                 LOGGER.info("http status code: {}, response: {}", code, response);
             }
@@ -264,7 +268,7 @@ public class RemoteCallUtil {
                 response = stringBuffer.toString();
             }
             if (code == HttpStatus.SC_OK) {
-                return objectMapper.readValue(response, clz);
+                return jsonMapper.readValue(response, clz);
             } else {
                 LOGGER.info("http status code: {}, response: {}", code, response);
             }
@@ -282,13 +286,13 @@ public class RemoteCallUtil {
     }
 
     public static <T> Y9Result<List<T>> getList(String url, List<NameValuePair> params, Class<T> clz) {
-        CollectionType collectionType = objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz);
-        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Y9Result.class, collectionType);
+        CollectionType collectionType = jsonMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz);
+        JavaType javaType = jsonMapper.getTypeFactory().constructParametricType(Y9Result.class, collectionType);
         return sendRequest(MethodType.GET, url, params, null, javaType);
     }
 
     public static <T> Y9Page<T> getPage(String url, List<NameValuePair> params, Class<T> clz) {
-        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Y9Page.class, clz);
+        JavaType javaType = jsonMapper.getTypeFactory().constructParametricType(Y9Page.class, clz);
         return sendRequest(MethodType.GET, url, params, null, javaType);
     }
 
@@ -308,7 +312,7 @@ public class RemoteCallUtil {
 
     public static <T> Y9Result<T> post(String url, List<NameValuePair> params, List<NameValuePair> bodyParams,
         Class<T> clz) {
-        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Y9Result.class, clz);
+        JavaType javaType = jsonMapper.getTypeFactory().constructParametricType(Y9Result.class, clz);
         return sendRequest(MethodType.POST, url, params, bodyParams, javaType);
     }
 
@@ -339,7 +343,7 @@ public class RemoteCallUtil {
                 response = stringBuffer.toString();
             }
             if (code == HttpStatus.SC_OK) {
-                return objectMapper.readValue(response, clz);
+                return jsonMapper.readValue(response, clz);
             } else {
                 LOGGER.info("http status code: {}, response: {}", code, response);
             }
@@ -379,8 +383,8 @@ public class RemoteCallUtil {
                 response = stringBuffer.toString();
             }
             if (code == HttpStatus.SC_OK) {
-                return objectMapper.readValue(response,
-                    objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
+                return jsonMapper.readValue(response,
+                		jsonMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
             } else {
                 LOGGER.info("http status code: {}, response: {}", code, response);
             }
@@ -425,7 +429,7 @@ public class RemoteCallUtil {
                 response = stringBuffer.toString();
             }
             if (code == HttpStatus.SC_OK) {
-                return objectMapper.readValue(response, clz);
+                return jsonMapper.readValue(response, clz);
             } else {
                 LOGGER.info("http status code: {}, response: {}", code, response);
             }
@@ -470,8 +474,8 @@ public class RemoteCallUtil {
                 response = stringBuffer.toString();
             }
             if (code == HttpStatus.SC_OK) {
-                return objectMapper.readValue(response,
-                    objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
+                return jsonMapper.readValue(response,
+                		jsonMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
             } else {
                 LOGGER.info("http status code: {}, response: {}", code, response);
             }
@@ -561,7 +565,7 @@ public class RemoteCallUtil {
                 response = stringBuffer.toString();
             }
             if (code == HttpStatus.SC_OK) {
-                return objectMapper.readValue(response, clz);
+                return jsonMapper.readValue(response, clz);
             } else {
                 LOGGER.info("http status code: {}, response: {}", code, response);
             }
@@ -606,7 +610,7 @@ public class RemoteCallUtil {
                 response = stringBuffer.toString();
             }
             if (code == HttpStatus.SC_OK) {
-                return objectMapper.readValue(response, clz);
+                return jsonMapper.readValue(response, clz);
             } else {
                 LOGGER.info("http status code: {}, response: {}", code, response);
             }
@@ -660,7 +664,7 @@ public class RemoteCallUtil {
                 response = stringBuffer.toString();
             }
             if (code == HttpStatus.SC_OK) {
-                return objectMapper.readValue(response, javaType);
+                return jsonMapper.readValue(response, javaType);
             } else {
                 LOGGER.info("http status code: {}, response: {}", code, response);
             }

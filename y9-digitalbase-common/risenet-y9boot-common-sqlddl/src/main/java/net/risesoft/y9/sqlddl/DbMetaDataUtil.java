@@ -16,13 +16,13 @@ import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.RowSetDynaClass;
 import org.apache.commons.lang3.StringUtils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.SqlConstants;
+import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.sqlddl.pojo.DbColumn;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * 数据库相关操作工具类
@@ -642,7 +642,7 @@ public class DbMetaDataUtil {
     public static String listAllTablesTree(DataSource dataSource, String tableNamePattern) throws Exception {
         List<Map<String, Object>> list = new ArrayList<>();
         ResultSet rs = null;
-        ObjectMapper mapper = new ObjectMapper();
+        JsonMapper mapper = Y9JsonUtil.getJsonMapper();
         String json = "[]";
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData dbmd = connection.getMetaData();
