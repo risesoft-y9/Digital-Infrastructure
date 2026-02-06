@@ -1,15 +1,15 @@
 [versions]
 # spring boot & cloud bom
-spring-bom = "6.2.11"
-spring-boot = "3.5.6"
-spring-cloud = "2025.0.0"
+spring-bom = "6.2.15"
+spring-boot = "3.5.10"
+spring-cloud = "2025.0.1"
 io-spring-dependency-management = "1.1.7"
 # cas server bom
 cas-server-bom = "7.3.3"
 # oracle bom
 ojdbc-bom = "23.8.0.25.04"
 # hutool
-cn-hutool-hutool-all = "5.8.40"
+cn-hutool-hutool-all = "5.8.43"
 # alibaba
 spring-cloud-alibaba = "2025.0.0.0"
 alibaba-transmittable-thread-local = "2.14.5"
@@ -33,28 +33,28 @@ com-googlecode-cqengine-cqengine = "3.6.0"
 commons-beanutils-commons-beanutils = "1.10.1"
 commons-codec-commons-codec = "1.18.0"
 commons-httpclient-commons-httpclient = "3.1"
-commons-io-commons-io = "2.20.0"
+commons-io-commons-io = "2.21.0"
 commons-net-commons-net = "3.12.0"
-org-apache-commons-commons-lang3 = "3.17.0"
+org-apache-commons-commons-lang3 = "3.20.0"
 org-apache-commons-commons-pool2 = "2.12.1"
 org-apache-httpcomponents-httpclient = "4.5.14"
 org-apache-httpcomponents-httpmime = "4.5.14"
 org-apache-poi-poi-scratchpad = "5.4.1"
-org-apache-poi-poi-ooxml = "5.4.1"
+org-apache-poi-poi-ooxml = "5.5.1"
 # xml
 jaxen-jaxen = "2.0.0"
 org-dom4j-dom4j = "2.1.4"
 # jdbc
 com-h2database-h2 = "2.2.224"
 com-mysql-mysql-connector-j = "8.2.0"
-com-oceanbase-oceanbase-client = "2.4.12"
-org-mariadb-jdbc-mariadb-java-client = "3.5.0"
-org-postgresql-postgresql = "42.7.3"
+com-oceanbase-oceanbase-client = "2.4.16"
+org-mariadb-jdbc-mariadb-java-client = "3.5.7"
+org-postgresql-postgresql = "42.7.9"
 # javers
-org-javers-javers-spring-boot-starter-sql = "7.8.0"
+org-javers-javers-spring-boot-starter-sql = "7.9.0"
 org-jodd-jodd-http = "6.3.0"
 #liquibase
-org-liquibase-liquibase-core = "4.32.0"
+org-liquibase-liquibase-core = "5.0.1"
 # 其他
 com-ibm-etcd-etcd-java = "0.0.24"
 com-redis-lettucemod = "4.3.0"
@@ -63,13 +63,13 @@ com-twelvemonkeys-imageio-imageio-jpeg = "3.12.0"
 cz-mallat-uasparser-uasparser = "0.6.2"
 # 类反射
 io-github-bruce0203-reflections = "0.10.3.4"
-io-github-classgraph-classgraph = "4.8.181"
+io-github-classgraph-classgraph = "4.8.184"
 # prometheus
 io-micrometer-micrometer-registry-prometheus = "1.15.0"
 # 安全相关
 de-svenkubiak-jbcrypt = "0.4.3"
-net-javacrumbs-shedlock-shedlock-spring = "6.9.2"
-org-bouncycastle-bcprov-ext-jdk18on = "1.78.1"
+net-javacrumbs-shedlock-shedlock-spring = "7.5.0"
+org-bouncycastle-bcprov-jdk18on = "1.83"
 org-imgscalr-imgscalr-lib = "4.2"
 org-owasp-antisamy-antisamy = "1.7.8"
 com-github-seancfoley-ipaddress = "5.5.1"
@@ -86,7 +86,7 @@ cn-idev-excel-fastexcel = "1.3.0"
 # auth0 jwt
 auth0-jwt = "4.5.0"
 auth0-jwks = "0.22.1"
-checker-qual = "3.51.0"
+checker-qual = "3.53.0"
 
 [libraries]
 #spring boot & cloud dependencies
@@ -114,7 +114,7 @@ httpcomponents-httpclient = { module = "org.apache.httpcomponents:httpclient", v
 httpcomponents-httpmime = { module = "org.apache.httpcomponents:httpmime", version.ref = "org-apache-httpcomponents-httpmime" }
 
 jbcrypt = { module = "de.svenkubiak:jBCrypt", version.ref = "de-svenkubiak-jbcrypt" }
-bcprov-ext-jdk18on = { module = "org.bouncycastle:bcprov-ext-jdk18on", version.ref = "org-bouncycastle-bcprov-ext-jdk18on" }
+bcprov-jdk18on = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = "org-bouncycastle-bcprov-jdk18on" }
 
 
 poi-scratchpad = { module = "org.apache.poi:poi-scratchpad", version.ref = "org-apache-poi-poi-scratchpad" }
@@ -168,6 +168,7 @@ mariadb-java-client = { module = "org.mariadb.jdbc:mariadb-java-client", version
 antisamy = { module = "org.owasp.antisamy:antisamy", version.ref = "org-owasp-antisamy-antisamy" }
 postgresql = { module = "org.postgresql:postgresql", version.ref = "org-postgresql-postgresql" }
 
+org-apache-commons-commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "org-apache-commons-commons-lang3" }
 org-aspectj-aspectjrt = { module = "org.aspectj:aspectjrt", version.ref = "org-aspectj" }
 org-aspectj-aspectjtools = { module = "org.aspectj:aspectjtools", version.ref = "org-aspectj" }
 org-aspectj-aspectjweaver = { module = "org.aspectj:aspectjweaver", version.ref = "org-aspectj" }

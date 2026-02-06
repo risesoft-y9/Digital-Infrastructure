@@ -12,11 +12,11 @@ dependencies {
     api("com.fasterxml.jackson.core:jackson-databind")
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml")
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-properties")
-    api("org.apache.commons:commons-lang3")
     api("org.slf4j:slf4j-api")
     api("org.springframework:spring-web")
     api("org.springframework:spring-context")
     api(libs.commons.io)
+    api(libs.org.apache.commons.commons.lang3)
     api(libs.commons.beanutils)
     api(libs.commons.httpclient)
     api(libs.alibaba.transmittable.thread.local)
@@ -24,10 +24,10 @@ dependencies {
     api(libs.poi.scratchpad)
     api(libs.poi.ooxml)
     api(libs.hutool.all)
-    api(libs.bcprov.ext.jdk18on)
+    api(libs.bcprov.jdk18on)
 
     compileOnly("jakarta.servlet:jakarta.servlet-api")
-    
+
     testImplementation("jakarta.servlet:jakarta.servlet-api")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter")

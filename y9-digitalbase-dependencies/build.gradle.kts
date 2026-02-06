@@ -28,7 +28,7 @@ dependencies {
         api(libs.httpcomponents.httpclient)
         api(libs.httpcomponents.httpmime)
         api(libs.jbcrypt)
-        api(libs.bcprov.ext.jdk18on)
+        api(libs.bcprov.jdk18on)
         api(libs.poi.scratchpad)
         api(libs.poi.ooxml)
         api(libs.java.uuid.generator)

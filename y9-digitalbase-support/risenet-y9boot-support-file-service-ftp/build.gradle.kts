@@ -8,8 +8,8 @@ dependencies {
 
     api("org.springframework.boot:spring-boot-configuration-processor")
     api("org.slf4j:slf4j-api")
-    api("org.apache.commons:commons-lang3")
     api(libs.commons.io)
+    api(libs.org.apache.commons.commons.lang3)
     api(libs.commons.net)
     api("org.apache.commons:commons-pool2")
 }

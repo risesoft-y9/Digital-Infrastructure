@@ -108,10 +108,10 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
         </dependency>
-
+  
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-ext-jdk18on</artifactId>
+            <artifactId>bcprov-jdk18on</artifactId>
         </dependency>
         <!-- 国密 end-->
 

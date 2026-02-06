@@ -109,9 +109,9 @@
 
         <cas.version>7.3.3</cas.version>
         <start-class>org.apereo.cas.web.CasWebApplication</start-class>
-        <spring-boot.version>3.5.6</spring-boot.version>
-        <spring-framework.version>6.2.11</spring-framework.version>
-        <spring-cloud.version>2025.0.0</spring-cloud.version>
+        <spring-boot.version>3.5.10</spring-boot.version>
+        <spring-framework.version>6.2.15</spring-framework.version>
+        <spring-cloud.version>2025.0.1</spring-cloud.version>
 
         <jBCrypt.version>0.4.3</jBCrypt.version>
         <lombok.version>1.18.42</lombok.version>
