@@ -419,7 +419,7 @@
                             <image>docker-internal.youshengyun.com/main/${project.artifactId}</image>
                             <tags>
                                 <tag>${project.version}</tag>
-                                <tag>v9.6.x</tag>
+                                <tag>9.6.x</tag>
                                 <tag>${docker.tag}</tag>
                             </tags>
                         </to>
