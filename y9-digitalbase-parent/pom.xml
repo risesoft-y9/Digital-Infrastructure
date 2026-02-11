@@ -53,6 +53,10 @@
         <gitee.developerConnection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
 
         <revision>9.6.10-SNAPSHOT</revision>
+        
+        <profile.dir>default</profile.dir>
+        
+        <docker.registry>docker-internal.youshengyun.com</docker.registry>
         <docker.tag>${project.version}-${maven.build.timestamp}</docker.tag>
 
         <spring-boot.version>2.7.18</spring-boot.version>
@@ -211,7 +215,7 @@
                             <configuration>
                                 <resources>
                                     <resource>
-                                        <directory>src/main/resources/profiles/${dir}</directory>
+                                        <directory>src/main/resources/profiles/${profile.dir}</directory>
                                         <filtering>true</filtering>
                                     </resource>
                                 </resources>
@@ -400,7 +404,7 @@
                         <skip>false</skip>
                         <from>
                             <!--<image>eclipse-temurin:11-jre</image>-->
-                            <image>docker-internal.youshengyun.com/base/tomcat:9.0.107-jdk11-temurin</image>
+                            <image>${docker.registry}/base/tomcat:9.0.107-jdk11-temurin</image>
                             <platforms>
                                 <platform>
                                     <architecture>amd64</architecture>
@@ -416,7 +420,7 @@
                             <appRoot>/usr/local/tomcat/webapps/${project.build.finalName}</appRoot>
                         </container>
                         <to>
-                            <image>docker-internal.youshengyun.com/main/${project.artifactId}</image>
+                            <image>${docker.registry}/main/${project.artifactId}</image>
                             <tags>
                                 <tag>${project.version}</tag>
                                 <tag>9.6.x</tag>
@@ -663,7 +667,7 @@
                 </excludes>
             </resource>
             <resource>
-                <directory>src/main/resources/profiles/${dir}</directory>
+                <directory>src/main/resources/profiles/${profile.dir}</directory>
             </resource>
         </resources>
 
@@ -674,7 +678,7 @@
             <!-- 本机个人开发环境 -->
             <id>env-local</id>
             <properties>
-                <dir>local</dir>
+                <profile.dir>local</profile.dir>
             </properties>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -684,7 +688,7 @@
             <!-- 本地团队开发环境 -->
             <id>env-dev</id>
             <properties>
-                <dir>dev</dir>
+                <profile.dir>dev</profile.dir>
             </properties>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -694,7 +698,7 @@
             <!-- 测试环境 -->
             <id>env-test</id>
             <properties>
-                <dir>test</dir>
+                <profile.dir>test</profile.dir>
             </properties>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -704,7 +708,8 @@
             <!-- 生产环境 -->
             <id>env-prod</id>
             <properties>
-                <dir>prod</dir>
+                <profile.dir>prod</profile.dir>
+                <docker.registry>docker.youshengyun.com</docker.registry>
             </properties>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -714,7 +719,7 @@
             <!-- demo测试环境 -->
             <id>env-demo</id>
             <properties>
-                <dir>demo</dir>
+                <profile.dir>demo</profile.dir>
             </properties>
             <activation>
                 <activeByDefault>false</activeByDefault>
