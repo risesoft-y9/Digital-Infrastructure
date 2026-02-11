@@ -14,52 +14,9 @@
     <packaging>pom</packaging>
     <version>${revision}</version>
     <name>y9-digitalbase-parent</name>
-    <description>RiseSoft/Digital Infrastructure dependencies parent</description>
+    <description>RiseSoft/Digital Infrastructure Parent</description>
     <url>https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-parent</url>
 
-    <properties>
-        <gitee.url>https://gitee.com/risesoft-y9/y9-core</gitee.url>
-        <gitee.connection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.connection>
-        <gitee.developerConnection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
-
-        <revision>9.7.0-SNAPSHOT</revision>
-        <dockerBuildNumber>${maven.build.timestamp}</dockerBuildNumber>
-
-        <java.version>21</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <resource.delimiter>@</resource.delimiter>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
-        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-
-        <!-- Plugin versions -->
-        <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
-        <smart-doc-maven-plugin.version>3.0.9</smart-doc-maven-plugin.version>
-        <aspectj-maven-plugin.version>1.14</aspectj-maven-plugin.version>
-        <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
-        <maven-dependency-plugin.version>3.7.1</maven-dependency-plugin.version>
-        <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
-        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-        <maven-release-plugin.version>3.1.0</maven-release-plugin.version>
-        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-        <maven-deploy-plugin.version>3.1.2</maven-deploy-plugin.version>
-        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-        <maven-javadoc-plugin.version>3.7.0</maven-javadoc-plugin.version>
-        <maven-jar-plugin.version>3.4.0</maven-jar-plugin.version>
-        <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
-        <central-publishing-maven-plugin.version>0.9.0</central-publishing-maven-plugin.version>
-        <maven-gpg-plugin.version>3.2.4</maven-gpg-plugin.version>
-        <buildnumber-maven-plugin.version>3.2.1</buildnumber-maven-plugin.version>
-        <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
-        <git-commit-id-maven-plugin.version>8.0.2</git-commit-id-maven-plugin.version>
-        <native-maven-plugin.version>0.11.3</native-maven-plugin.version>
-
-        <docker.tag>${project.version}-${maven.build.timestamp}</docker.tag>
-        <docker.name>svn.youshengyun.com:9923/${project.artifactId}-native:${project.version}</docker.name>
-        <docker.docker.bp-native-image>false</docker.docker.bp-native-image>
-    </properties>
 
     <licenses>
         <license>
@@ -90,11 +47,76 @@
         </developer>
     </developers>
 
+    <properties>
+        <java.version>21</java.version>
+        <resource.delimiter>@</resource.delimiter>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+
+        <gitee.url>https://gitee.com/risesoft-y9/y9-core</gitee.url>
+        <gitee.connection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.connection>
+        <gitee.developerConnection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
+
+        <revision>9.7.0-SNAPSHOT</revision>
+        <profile.dir>default</profile.dir>
+        <docker.registry>docker-internal.youshengyun.com</docker.registry>
+        <docker.tag>${project.version}-${maven.build.timestamp}</docker.tag>
+        <dockerBuildNumber>${maven.build.timestamp}</dockerBuildNumber>
+        <docker.name>svn.youshengyun.com:9923/${project.artifactId}-native:${project.version}</docker.name>
+        <docker.docker.bp-native-image>false</docker.docker.bp-native-image>
+
+        <!-- Plugin versions -->
+        <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
+        <smart-doc-maven-plugin.version>3.0.9</smart-doc-maven-plugin.version>
+        <aspectj-maven-plugin.version>1.14</aspectj-maven-plugin.version>
+        <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
+        <maven-dependency-plugin.version>3.7.1</maven-dependency-plugin.version>
+        <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+        <maven-release-plugin.version>3.1.0</maven-release-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-deploy-plugin.version>3.1.2</maven-deploy-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-javadoc-plugin.version>3.7.0</maven-javadoc-plugin.version>
+        <maven-jar-plugin.version>3.4.0</maven-jar-plugin.version>
+        <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
+        <central-publishing-maven-plugin.version>0.9.0</central-publishing-maven-plugin.version>
+        <maven-gpg-plugin.version>3.2.4</maven-gpg-plugin.version>
+        <buildnumber-maven-plugin.version>3.2.1</buildnumber-maven-plugin.version>
+        <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
+        <git-commit-id-maven-plugin.version>8.0.2</git-commit-id-maven-plugin.version>
+        <native-maven-plugin.version>0.11.3</native-maven-plugin.version>
+    </properties>
+
+
     <scm>
         <url>${gitee.url}</url>
         <connection>${gitee.connection}</connection>
         <developerConnection>${gitee.developerConnection}</developerConnection>
     </scm>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>net.risesoft</groupId>
+                <artifactId>y9-digitalbase-bom</artifactId>
+                <version>${revision}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+           <!-- <dependency>
+                <groupId>net.risesoft</groupId>
+                <artifactId>y9-digitalbase-dependencies</artifactId>
+                <version>${revision}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>-->
+        </dependencies>
+    </dependencyManagement>
 
     <repositories>
         <repository>
@@ -140,19 +162,6 @@
             <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
         </pluginRepository>
     </pluginRepositories>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>y9-digitalbase-bom</artifactId>
-                <version>${revision}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <pluginManagement>
@@ -215,7 +224,7 @@
                             <configuration>
                                 <resources>
                                     <resource>
-                                        <directory>src/main/resources/profiles/${dir}</directory>
+                                        <directory>src/main/resources/profiles/${profile.dir}</directory>
                                         <filtering>true</filtering>
                                     </resource>
                                 </resources>
@@ -404,7 +413,7 @@
                         <skip>false</skip>
                         <from>
                             <!--<image>eclipse-temurin:11-jre</image>-->
-                            <image>docker-internal.youshengyun.com/base/tomcat:10.1.48-jdk21-temurin</image>
+                            <image>${docker.registry}/base/tomcat:10.1.48-jdk21-temurin</image>
                             <platforms>
                                 <platform>
                                     <architecture>amd64</architecture>
@@ -420,7 +429,7 @@
                             <appRoot>/usr/local/tomcat/webapps/${project.build.finalName}</appRoot>
                         </container>
                         <to>
-                            <image>docker-internal.youshengyun.com/v97x/${project.artifactId}</image>
+                            <image>${docker.registry}/v97x/${project.artifactId}</image>
                             <tags>
                                 <tag>${project.version}</tag>
                                 <tag>9.7.x</tag>
@@ -699,7 +708,7 @@
                 </excludes>
             </resource>
             <resource>
-                <directory>src/main/resources/profiles/${dir}</directory>
+                <directory>src/main/resources/profiles/${profile.dir}</directory>
             </resource>
         </resources>
 
@@ -710,7 +719,7 @@
             <!-- 本机个人开发环境 -->
             <id>env-local</id>
             <properties>
-                <dir>local</dir>
+                <profile.dir>local</profile.dir>
             </properties>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -720,7 +729,7 @@
             <!-- 本地团队开发环境 -->
             <id>env-dev</id>
             <properties>
-                <dir>dev</dir>
+                <profile.dir>dev</profile.dir>
             </properties>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -730,7 +739,7 @@
             <!-- 测试环境 -->
             <id>env-test</id>
             <properties>
-                <dir>test</dir>
+                <profile.dir>test</profile.dir>
             </properties>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -740,7 +749,8 @@
             <!-- 生产环境 -->
             <id>env-prod</id>
             <properties>
-                <dir>prod</dir>
+                <profile.dir>prod</profile.dir>
+                <docker.registry>docker.youshengyun.com</docker.registry>
             </properties>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -750,7 +760,7 @@
             <!-- demo测试环境 -->
             <id>env-demo</id>
             <properties>
-                <dir>demo</dir>
+                <profile.dir>demo</profile.dir>
             </properties>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -804,6 +814,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -817,6 +828,7 @@
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central-publishing-maven-plugin.version}</version>
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>mvn-central</publishingServerId>
@@ -832,7 +844,7 @@
                 </plugins>
             </build>
         </profile>
-        
+
         <profile>
             <!-- docker环境 -->
             <id>build-docker-native</id>
