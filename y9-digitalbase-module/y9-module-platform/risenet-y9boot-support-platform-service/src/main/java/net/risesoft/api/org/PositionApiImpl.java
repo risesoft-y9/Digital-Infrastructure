@@ -132,6 +132,22 @@ public class PositionApiImpl implements PositionApi {
     }
 
     /**
+     * 根据id列表批量获取岗位对象
+     *
+     * @param tenantId 租户id
+     * @param ids 岗位唯一标识列表
+     * @return {@code Y9Result<List<Position>>} 通用请求返回对象 - data 是岗位对象列表
+     * @since 9.6.10
+     */
+    @Override
+    public Y9Result<List<Position>> listByIds(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("ids") @NotBlank List<String> ids) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        return Y9Result.success(y9PositionService.listByIds(ids));
+    }
+
+    /**
      * 根据父节点获取岗位列表（不包含禁用）
      *
      * @param tenantId 租户唯一标识

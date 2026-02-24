@@ -54,6 +54,14 @@ public interface Y9GroupService {
     Group getById(String id);
 
     /**
+     * 根据 id 列表获取用户组
+     *
+     * @param ids 用户组id
+     * @return {@code List<Group> }
+     */
+    List<Group> listByIds(List<String> ids);
+
+    /**
      * 根据dn查询
      *
      * @param dn dn

@@ -2,6 +2,7 @@ package net.risesoft.y9public.service.role.impl;
 
 import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +47,6 @@ import net.risesoft.y9public.service.role.Y9RoleService;
 public class Y9RoleServiceImpl implements Y9RoleService {
 
     private final Y9RoleRepository y9RoleRepository;
-    private final Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository;
 
     private final Y9RoleManager y9RoleManager;
     private final Y9AppManager y9AppManager;
@@ -88,6 +88,16 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     @Override
     public Role getById(String roleId) {
         return entityToModel(y9RoleManager.getByIdFromCache(roleId));
+    }
+
+    @Override
+    public List<Role> listByIds(List<String> ids) {
+        List<Role> roleList = new ArrayList<>();
+        for (String id : ids) {
+            Optional<Role> roleOptional = this.findById(id);
+            roleOptional.ifPresent(roleList::add);
+        }
+        return roleList;
     }
 
     @Override

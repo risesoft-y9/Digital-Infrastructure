@@ -93,7 +93,7 @@ public interface Y9AppService extends ResourceCommonService<App> {
 
     List<App> listByEnable();
 
-    List<App> listByIds(List<String> appIdList);
+    List<App> listByIds(List<String> ids);
 
     /**
      * 根据systemId，获取应用列表

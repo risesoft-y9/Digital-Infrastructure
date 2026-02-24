@@ -85,6 +85,16 @@ public interface RoleApi {
     Y9Result<Role> getRole(@RequestParam("roleId") @NotBlank String roleId);
 
     /**
+     * 根据id列表获取相应角色节点
+     *
+     * @param ids 角色唯一标识列表
+     * @return {@code Y9Result<Role>} 通用请求返回对象 - data 是角色对象
+     * @since 9.6.10
+     */
+    @GetMapping("/listByIds")
+    Y9Result<List<Role>> listByIds(@RequestParam("ids") @NotBlank List<String> ids);
+
+    /**
      * 根据父节点Id获取相应子级角色节点
      *
      * @param roleId 角色唯一标识

@@ -110,6 +110,16 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     }
 
     @Override
+    public List<Group> listByIds(List<String> ids) {
+        List<Group> groupList = new ArrayList<>();
+        for (String groupId : ids) {
+            Optional<Group> groupOptional = findById(groupId);
+            groupOptional.ifPresent(groupList::add);
+        }
+        return groupList;
+    }
+
+    @Override
     public List<Group> listByDn(String dn, Boolean disabled) {
         List<Y9Group> y9GroupList;
         if (disabled == null) {

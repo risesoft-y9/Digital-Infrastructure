@@ -114,11 +114,11 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @Override
-    public List<Department> list(List<String> ids) {
+    public List<Department> listByIds(List<String> ids) {
         List<Department> y9DepartmentList = new ArrayList<>();
         for (String id : ids) {
-            Optional<Department> y9DepartmentOptional = findById(id);
-            y9DepartmentOptional.ifPresent(y9DepartmentList::add);
+            Optional<Department> departmentOptional = findById(id);
+            departmentOptional.ifPresent(y9DepartmentList::add);
         }
         return y9DepartmentList;
     }

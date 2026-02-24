@@ -156,6 +156,18 @@ public interface PersonApi {
     Y9Result<List<Person>> list(@RequestParam("tenantId") @NotBlank String tenantId);
 
     /**
+     * 根据id列表批量获取人员对象
+     *
+     * @param tenantId 租户id
+     * @param ids 人员唯一标识列表
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象列表
+     * @since 9.6.10
+     */
+    @GetMapping("/listByIds")
+    Y9Result<List<Person>> listByIds(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("ids") @NotBlank List<String> ids);
+
+    /**
      * 根据证件类型和证件号码获取人员列表（不包含禁用）
      *
      * @param tenantId 租户id

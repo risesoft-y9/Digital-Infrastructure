@@ -71,6 +71,14 @@ public interface Y9OrganizationService {
     List<Organization> list();
 
     /**
+     * 根据 id 列表获取组织机构
+     *
+     * @param ids IDs
+     * @return {@code List<Organization> }
+     */
+    List<Organization> listByIds(List<String> ids);
+
+    /**
      * 获取组织架构列表
      *
      * @param virtual 是否虚拟组织

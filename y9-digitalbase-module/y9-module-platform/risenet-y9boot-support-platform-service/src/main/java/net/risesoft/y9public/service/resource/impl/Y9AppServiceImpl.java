@@ -104,8 +104,8 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    public List<App> listByIds(List<String> appIdList) {
-        List<Y9App> y9AppList = y9AppRepository.findAllById(appIdList);
+    public List<App> listByIds(List<String> ids) {
+        List<Y9App> y9AppList = y9AppRepository.findAllById(ids);
         return entityToModel(y9AppList);
     }
 

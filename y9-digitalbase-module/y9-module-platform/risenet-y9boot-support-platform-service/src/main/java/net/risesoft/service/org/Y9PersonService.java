@@ -161,6 +161,14 @@ public interface Y9PersonService {
     List<Person> list(Boolean disabled);
 
     /**
+     * 根据 id 列表获取人员
+     *
+     * @param ids IDs
+     * @return {@code List<Person> }
+     */
+    List<Person> listByIds(List<String> ids);
+
+    /**
      * 查询所有人员
      *
      * @return {@code List<Person>}
