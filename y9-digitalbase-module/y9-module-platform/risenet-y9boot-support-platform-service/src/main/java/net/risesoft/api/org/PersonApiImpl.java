@@ -224,6 +224,22 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
+     * 根据id列表批量获取人员对象
+     *
+     * @param tenantId 租户id
+     * @param ids 人员唯一标识列表
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象列表
+     * @since 9.6.10
+     */
+    @Override
+    public Y9Result<List<Person>> listByIds(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("ids") @NotBlank List<String> ids) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        return Y9Result.success(y9PersonService.listByIds(ids));
+    }
+
+    /**
      * 根据证件类型和证件号码获取人员列表（不包含禁用）
      *
      * @param tenantId 租户id

@@ -166,6 +166,16 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
+    public List<Position> listByIds(List<String> ids) {
+        List<Position> positionList = new ArrayList<>();
+        for (String id : ids) {
+            Optional<Position> positionOptional = this.findById(id);
+            positionOptional.ifPresent(positionList::add);
+        }
+        return positionList;
+    }
+
+    @Override
     public List<Position> listByParentId(String parentId, Boolean disabled) {
         List<Y9Position> y9PositionList;
         if (disabled == null) {

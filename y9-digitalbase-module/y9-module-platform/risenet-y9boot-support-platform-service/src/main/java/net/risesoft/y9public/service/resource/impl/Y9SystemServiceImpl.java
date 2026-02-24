@@ -174,8 +174,8 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     }
 
     @Override
-    public List<System> listByIds(List<String> systemIdList) {
-        return entityToModel(y9SystemRepository.findAllById(systemIdList));
+    public List<System> listByIds(List<String> ids) {
+        return entityToModel(y9SystemRepository.findAllById(ids));
     }
 
     @Override

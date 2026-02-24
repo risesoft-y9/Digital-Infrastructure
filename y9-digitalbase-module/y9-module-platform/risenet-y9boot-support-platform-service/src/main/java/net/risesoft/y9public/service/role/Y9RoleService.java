@@ -6,6 +6,8 @@ import java.util.Optional;
 import net.risesoft.model.platform.Role;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * @author dingzhaojun
  * @author qinman
@@ -47,6 +49,14 @@ public interface Y9RoleService {
      */
     Role getById(String roleId);
 
+    /**
+     * 根据 id 列表获取角色
+     *
+     * @param ids IDs
+     * @return {@code List<Role> }
+     */
+    List<Role> listByIds(List<String> ids);
+    
     /**
      * 根据角色名称查找
      *

@@ -102,6 +102,14 @@ public interface Y9PositionService {
     List<Position> listAll();
 
     /**
+     * 根据 id 列表获取岗位
+     *
+     * @param ids IDs
+     * @return {@code List<Position> }
+     */
+    List<Position> listByIds(List<String> ids);
+
+    /**
      * 根据父节点id,获取本层级的岗位列表
      *
      * @param parentId 父节点id

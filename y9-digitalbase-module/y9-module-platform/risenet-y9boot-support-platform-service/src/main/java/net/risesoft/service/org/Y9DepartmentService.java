@@ -54,7 +54,7 @@ public interface Y9DepartmentService {
      * @return {@code List<Department>}
      */
 
-    List<Department> list(List<String> ids);
+    List<Department> listByIds(List<String> ids);
 
     /**
      * 获取组织机构下所有的委办局

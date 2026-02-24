@@ -273,6 +273,16 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
+    public List<Person> listByIds(List<String> ids) {
+        List<Person> personList = new ArrayList<>();
+        for (String id : ids) {
+            Optional<Person> personOptional = this.findById(id);
+            personOptional.ifPresent(personList::add);
+        }
+        return personList;
+    }
+
+    @Override
     public List<Person> listAll() {
         return PlatformModelConvertUtil.y9PersonToPerson(y9PersonRepository.findAll());
     }

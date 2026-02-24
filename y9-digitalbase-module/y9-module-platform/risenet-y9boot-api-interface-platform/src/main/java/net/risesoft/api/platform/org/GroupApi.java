@@ -76,6 +76,18 @@ public interface GroupApi {
     Y9Result<Group> get(@RequestParam @NotBlank String tenantId, @RequestParam("groupId") @NotBlank String groupId);
 
     /**
+     * 根据id列表批量获取用户组对象
+     *
+     * @param tenantId 租户id
+     * @param ids 用户组唯一标识列表
+     * @return {@code Y9Result<List<Group>>} 通用请求返回对象 - data 是用户组对象列表
+     * @since 9.6.10
+     */
+    @GetMapping("/listByIds")
+    Y9Result<List<Group>> listByIds(@RequestParam @NotBlank String tenantId,
+        @RequestParam("ids") @NotBlank List<String> ids);
+
+    /**
      * 获取下一级用户组列表（不包含禁用）
      *
      * @param tenantId 租户id

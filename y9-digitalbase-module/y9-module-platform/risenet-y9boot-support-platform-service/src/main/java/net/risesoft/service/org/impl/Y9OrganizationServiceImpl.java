@@ -114,6 +114,16 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     }
 
     @Override
+    public List<Organization> listByIds(List<String> ids) {
+        List<Organization> organizationList = new ArrayList<>();
+        for (String id : ids) {
+            Optional<Organization> organizationOptional = this.findById(id);
+            organizationOptional.ifPresent(organizationList::add);
+        }
+        return organizationList;
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<Organization> list(Boolean virtual, Boolean disabled) {
         List<Y9Organization> y9OrganizationList;

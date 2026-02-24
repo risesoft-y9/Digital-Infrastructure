@@ -90,7 +90,7 @@ public interface Y9SystemService {
      */
     List<System> listByContextPath(String contextPath);
 
-    List<System> listByIds(List<String> systemIdList);
+    List<System> listByIds(List<String> ids);
 
     /**
      * 分页查询系统列表

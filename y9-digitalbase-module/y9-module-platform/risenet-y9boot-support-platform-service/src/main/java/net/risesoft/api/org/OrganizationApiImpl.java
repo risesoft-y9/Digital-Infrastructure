@@ -83,6 +83,22 @@ public class OrganizationApiImpl implements OrganizationApi {
     }
 
     /**
+     * 根据id列表批量获取组织机构对象
+     *
+     * @param tenantId 租户id
+     * @param ids 组织机构唯一标识
+     * @return {@code Y9Result<List<Organization>>} 通用请求返回对象 - data 是组织机构对象列表
+     * @since 9.6.10
+     */
+    @Override
+    public Y9Result<List<Organization>> listByIds(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("ids") @NotBlank List<String> ids) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        return Y9Result.success(y9OrganizationService.listByIds(ids));
+    }
+
+    /**
      * 获取机构的委办局列表（不包含禁用）
      *
      * @param tenantId 租户id
