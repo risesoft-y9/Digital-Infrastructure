@@ -122,7 +122,7 @@
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
                         <configuration>
                             <skip>true</skip>
                         </configuration>
