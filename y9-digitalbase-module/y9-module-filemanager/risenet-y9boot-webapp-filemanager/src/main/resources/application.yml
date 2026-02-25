@@ -71,20 +71,18 @@ spring:
                 maximumPoolSize: 20
                 minimumIdle: 1
     jpa:
-        properties:
-            hibernate:
-                dialect: org.hibernate.dialect.MySQL8Dialect
-                hbm2ddl:
-                    auto: update
-                jdbc:
-                    batchSize: 100
-                showSql: true
         hibernate:
             ddl-auto: update
             naming:
                 implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
                 physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
         open-in-view: false
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL8Dialect
+                jdbc:
+                    batch_size: 100
+                show_sql: true
     main:
         allow-bean-definition-overriding: false
     web:

@@ -52,22 +52,18 @@ spring:
                 minimumIdle: 1
     jpa:
         generate-ddl: true
-        database-platform: org.hibernate.dialect.MySQL8Dialect
         hibernate:
-            ddl-auto: none
+            ddl-auto: update
             naming:
                 implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
                 physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
         open-in-view: false
         properties:
             hibernate:
-                hbm2ddl:
-                    auto: update
                 dialect: org.hibernate.dialect.MySQL8Dialect
                 jdbc:
                     batch_size: 100
                 show_sql: true
-
 y9:
     systemName: y9demo-cache
     systemCnName: '缓存测试'

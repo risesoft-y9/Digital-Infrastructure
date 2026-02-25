@@ -95,21 +95,18 @@ spring:
                 maximumPoolSize: 20
                 minimumIdle: 1
     jpa:
-        #databasePlatform: org.hibernate.dialect.MySQL8Dialect
-        properties:
-            hibernate:
-                dialect: org.hibernate.dialect.MySQL8Dialect
-                hbm2ddl:
-                    auto: none
-                jdbc:
-                    batchSize: 100
-                showSql: true
         hibernate:
             ddl-auto: none
             naming:
                 implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
                 physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
         open-in-view: false
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL8Dialect
+                jdbc:
+                    batch_size: 100
+                show_sql: true
     kafka:
         bootstrap-servers: localhost:9092
         consumer:
