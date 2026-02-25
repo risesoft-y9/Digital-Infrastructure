@@ -3,12 +3,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase-dependencies</artifactId>
-        <version>${revision}</version>
-        <relativePath>../y9-digitalbase-dependencies</relativePath>
-    </parent>
     <groupId>net.risesoft</groupId>
     <artifactId>y9-digitalbase-parent</artifactId>
     <packaging>pom</packaging>
@@ -65,9 +59,15 @@
         <profile.dir>default</profile.dir>
         <docker.registry>docker-internal.youshengyun.com</docker.registry>
         <docker.tag>${project.version}-${maven.build.timestamp}</docker.tag>
+
         <dockerBuildNumber>${maven.build.timestamp}</dockerBuildNumber>
         <docker.name>svn.youshengyun.com:9923/${project.artifactId}-native:${project.version}</docker.name>
         <docker.docker.bp-native-image>false</docker.docker.bp-native-image>
+
+        <spring-boot.version>3.5.10</spring-boot.version>
+
+        <aspectj.version>1.9.25.1</aspectj.version>
+        <lombok.version>1.18.42</lombok.version>
 
         <!-- Plugin versions -->
         <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
@@ -84,14 +84,13 @@
         <maven-javadoc-plugin.version>3.7.0</maven-javadoc-plugin.version>
         <maven-jar-plugin.version>3.4.0</maven-jar-plugin.version>
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
-        <central-publishing-maven-plugin.version>0.9.0</central-publishing-maven-plugin.version>
-        <maven-gpg-plugin.version>3.2.4</maven-gpg-plugin.version>
+        <central-publishing-maven-plugin.version>0.10.0</central-publishing-maven-plugin.version>
+        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <buildnumber-maven-plugin.version>3.2.1</buildnumber-maven-plugin.version>
         <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
         <git-commit-id-maven-plugin.version>8.0.2</git-commit-id-maven-plugin.version>
         <native-maven-plugin.version>0.11.3</native-maven-plugin.version>
     </properties>
-
 
     <scm>
         <url>${gitee.url}</url>
@@ -108,13 +107,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-           <!-- <dependency>
+            <dependency>
                 <groupId>net.risesoft</groupId>
                 <artifactId>y9-digitalbase-dependencies</artifactId>
                 <version>${revision}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>-->
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -128,6 +127,17 @@
             <releases>
                 <enabled>false</enabled>
             </releases>
+        </repository>
+        <repository>
+            <id>spring-snapshots</id>
+            <url>https://repo.spring.io/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <url>https://repo.spring.io/milestone</url>
         </repository>
         <repository>
             <id>aliyun-repo</id>
@@ -152,7 +162,16 @@
             </snapshots>
         </repository>
     </repositories>
+
     <pluginRepositories>
+        <pluginRepository>
+            <id>spring-snapshots</id>
+            <url>https://repo.spring.io/snapshot</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <url>https://repo.spring.io/milestone</url>
+        </pluginRepository>
         <pluginRepository>
             <id>aliyun-repo-plugin</id>
             <url>https://maven.aliyun.com/repository/public</url>
@@ -640,17 +659,6 @@
                             </goals>
                         </execution>
                     </executions>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-gpg-plugin</artifactId>
-                    <version>${maven-gpg-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.sonatype.central</groupId>
-                    <artifactId>central-publishing-maven-plugin</artifactId>
-                    <version>${central-publishing-maven-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

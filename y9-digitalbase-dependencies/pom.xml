@@ -58,6 +58,17 @@
             </releases>
         </repository>
         <repository>
+            <id>spring-snapshots</id>
+            <url>https://repo.spring.io/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
+        <repository>
             <id>aliyun-repo</id>
             <url>https://maven.aliyun.com/repository/public</url>
             <releases>
@@ -82,6 +93,14 @@
     </repositories>
     <pluginRepositories>
         <pluginRepository>
+            <id>spring-snapshots</id>
+            <url>https://repo.spring.io/snapshot</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <url>https://repo.spring.io/milestone</url>
+        </pluginRepository>
+        <pluginRepository>
             <id>aliyun-repo-plugin</id>
             <url>https://maven.aliyun.com/repository/public</url>
         </pluginRepository>
@@ -92,21 +111,9 @@
     </pluginRepositories>
 
     <properties>
-        <java.version>21</java.version>
-        <resource.delimiter>@</resource.delimiter>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
-        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <maven.deploy.skip>false</maven.deploy.skip>
-
         <gitee.url>https://gitee.com/risesoft-y9/y9-core</gitee.url>
         <gitee.connection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.connection>
-        <gitee.developerConnection>
-            scm:git:https://gitee.com/risesoft-y9/y9-core.git
-        </gitee.developerConnection>
+        <gitee.developerConnection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
 
         <revision>9.7.0-SNAPSHOT</revision>
 
@@ -173,7 +180,7 @@
 
         <!-- Plugin versions -->
         <flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
-        <central-publishing-maven-plugin.version>0.9.0</central-publishing-maven-plugin.version>
+        <central-publishing-maven-plugin.version>0.10.0</central-publishing-maven-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
     </properties>
 
@@ -594,29 +601,6 @@
     </dependencyManagement>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-gpg-plugin</artifactId>
-                    <version>${maven-gpg-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>sign-artifacts</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>sign</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.sonatype.central</groupId>
-                    <artifactId>central-publishing-maven-plugin</artifactId>
-                    <version>${central-publishing-maven-plugin.version}</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -674,6 +658,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -687,6 +672,7 @@
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central-publishing-maven-plugin.version}</version>
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>mvn-central</publishingServerId>

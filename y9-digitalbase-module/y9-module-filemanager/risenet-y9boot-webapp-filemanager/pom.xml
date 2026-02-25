@@ -117,9 +117,7 @@
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
                         <configuration>
-                            <excludeArtifacts>
-                                <artifact>risenet-y9boot-webapp-filemanager</artifact>
-                            </excludeArtifacts>
+                            <skipPublishing>true</skipPublishing>
                         </configuration>
                     </plugin>
                 </plugins>
