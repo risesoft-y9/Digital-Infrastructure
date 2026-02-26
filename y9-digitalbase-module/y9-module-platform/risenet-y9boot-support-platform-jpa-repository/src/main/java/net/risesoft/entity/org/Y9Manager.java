@@ -154,9 +154,11 @@ public class Y9Manager extends Y9OrgBase {
         if (StringUtils.isBlank(this.id)) {
             this.id = Y9IdGenerator.genId(IdType.SNOWFLAKE);
         }
+        if (!globalManager) {
+            // 系统管理员新建的子域三员默认禁用 需安全管理员启用
+            this.disabled = Boolean.TRUE;
+        }
         this.tabIndex = nextSubTabIndex;
-        // 系统管理员新建的子域三员默认禁用 需安全管理员启用
-        this.disabled = Boolean.TRUE;
         this.password = Y9MessageDigestUtil.bcrypt(defaultPassword);
         this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.MANAGER, this.name, parent.getDn());
         this.guidPath = Y9OrgUtil.buildGuidPath(parent.getGuidPath(), this.id);
