@@ -37,18 +37,7 @@
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
                         <configuration>
-                            <excludeArtifacts>
-                                <artifact>risenet-y9demo-cache</artifact>
-                                <artifact>risenet-y9demo-data-jpa</artifact>
-                                <artifact>risenet-y9demo-elasticsearch</artifact>
-                                <artifact>risenet-y9demo-file</artifact>
-                                <artifact>risenet-y9demo-idcode</artifact>
-                                <artifact>risenet-y9demo-kernel-api</artifact>
-                                <artifact>risenet-y9demo-data-log</artifact>
-                                <artifact>risenet-y9demo-sso-oauth2</artifact>
-                                <artifact>risenet-y9demo-sync-kafka</artifact>
-                                <artifact>risenet-y9demo-log</artifact>
-                            </excludeArtifacts>
+                            <skipPublishing>true</skipPublishing>
                         </configuration>
                     </plugin>
                 </plugins>

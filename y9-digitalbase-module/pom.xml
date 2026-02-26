@@ -27,31 +27,4 @@
         <module>y9-module-platform</module>
         <module>y9-module-sso</module>
     </modules>
-
-    <profiles>
-        <profile>
-            <id>deploy-maven-central</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.sonatype.central</groupId>
-                        <artifactId>central-publishing-maven-plugin</artifactId>
-                        <configuration>
-                            <excludeArtifacts>
-                                <artifact>y9-module-filemanager</artifact>
-                                <artifact>risenet-y9boot-webapp-filemanager</artifact>
-                                <artifact>risenet-y9boot-server-log</artifact>
-                                <artifact>risenet-y9boot-server-log-jpa</artifact>
-                                <artifact>risenet-y9boot-server-platform</artifact>
-                                <artifact>y9-module-sso</artifact>
-                                <artifact>risenet-y9boot-common-sso</artifact>
-                                <artifact>risenet-y9boot-webapp-sso</artifact>
-                                <artifact>risenet-y9boot-webapp-sso-jpa</artifact>
-                            </excludeArtifacts>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

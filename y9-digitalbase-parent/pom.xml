@@ -53,9 +53,9 @@
         <gitee.developerConnection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
 
         <revision>9.6.10-SNAPSHOT</revision>
-        
+
         <profile.dir>default</profile.dir>
-        
+
         <docker.registry>docker-internal.youshengyun.com</docker.registry>
         <docker.tag>${project.version}-${maven.build.timestamp}</docker.tag>
 
@@ -66,8 +66,8 @@
         <aspectj.version>1.9.20.1</aspectj.version>
         <lombok.version>1.18.38</lombok.version>
 
-        <central-publishing-maven-plugin.version>0.7.0</central-publishing-maven-plugin.version>
-        <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
+        <central-publishing-maven-plugin.version>0.10.0</central-publishing-maven-plugin.version>
+        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <jib-maven-plugin.version>3.4.5</jib-maven-plugin.version>
         <smart-doc-maven-plugin.version>3.1.0</smart-doc-maven-plugin.version>
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
