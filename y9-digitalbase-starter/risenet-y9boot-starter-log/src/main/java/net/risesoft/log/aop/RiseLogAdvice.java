@@ -100,13 +100,13 @@ public class RiseLogAdvice implements MethodInterceptor {
     }
 
     private boolean reportLog(MethodInvocation invocation, long start, String success, String errorMessage,
-                              String throwable) {
+        String throwable) {
         try {
             Method method = invocation.getMethod();
             RiseLog riseLog = method.getAnnotation(RiseLog.class);
 
-            if (riseLog != null && !riseLog.enable()) {
-                // 只有 @RiseLog(enable = false) 不记录日志，其他情况都记录
+            if (riseLog == null || !riseLog.enable()) {
+                // 有 @RiseLog 注解且开关打开才记录日志，其他情况不记录
                 return false;
             }
 
