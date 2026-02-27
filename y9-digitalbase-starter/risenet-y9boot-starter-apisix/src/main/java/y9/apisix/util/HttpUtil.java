@@ -41,10 +41,6 @@ import net.risesoft.y9.json.Y9JsonUtil;
 @Slf4j
 public class HttpUtil {
 
-    private HttpUtil() {
-        throw new IllegalStateException("HttpUtil class");
-    }
-
     public static Map<String, Object> doDelete(String url, Map<String, String> headers) {
         Map<String, Object> map = new HashMap<>(16);
         map.put("success", false);
@@ -176,5 +172,9 @@ public class HttpUtil {
                 httpRequest.setHeader(entry.getKey(), value);
             }
         }
+    }
+
+    private HttpUtil() {
+        throw new IllegalStateException("HttpUtil class");
     }
 }

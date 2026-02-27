@@ -120,8 +120,7 @@ public class SqlInjectionFilter implements Filter {
         List list = new ArrayList();
         for (Iterator iter = map.values().iterator(); iter.hasNext();) {
             Object value = iter.next();
-            if (value instanceof String[]) {
-                String[] values = (String[])value;
+            if (value instanceof String[] values) {
                 Collections.addAll(list, values);
             } else {
                 list.add(value);

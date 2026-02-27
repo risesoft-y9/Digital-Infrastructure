@@ -22,10 +22,6 @@ import net.risesoft.y9.json.Y9JsonUtil;
 @Slf4j
 public class ApisixUtil {
 
-    private ApisixUtil() {
-        throw new IllegalStateException("ApisixUtil class");
-    }
-
     public static String bindRouteToUpstream(String adminAddress, String adminKey, String uri, String upstreamId,
         String routeId, String methodDescription, boolean consumerEnabled, String authenticationType) {
         String result = "";
@@ -453,6 +449,10 @@ public class ApisixUtil {
             }
         }
         return returnMap;
+    }
+
+    private ApisixUtil() {
+        throw new IllegalStateException("ApisixUtil class");
     }
 
 }

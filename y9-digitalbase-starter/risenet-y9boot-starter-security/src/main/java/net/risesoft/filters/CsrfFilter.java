@@ -44,10 +44,7 @@ public class CsrfFilter implements Filter {
      */
     public boolean isRefererValid(HttpServletRequest request) {
         String referer = request.getHeader("Referer");
-        if (StringUtils.isNotBlank(referer) && !referer.contains(request.getContextPath())
-            && !isAcceptedReferer(referer)) {
-            return false;
-        }
-        return true;
+        return !StringUtils.isNotBlank(referer) || referer.contains(request.getContextPath())
+                || isAcceptedReferer(referer);
     }
 }

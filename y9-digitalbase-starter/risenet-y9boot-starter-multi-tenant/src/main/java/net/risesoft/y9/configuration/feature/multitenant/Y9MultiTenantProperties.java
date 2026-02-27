@@ -22,8 +22,7 @@ public class Y9MultiTenantProperties {
     @Getter
     @AllArgsConstructor
     public enum MultiTenantEventSourceEnum {
-        DB,
-        KAFKA
+        DB, KAFKA
     }
 
 }

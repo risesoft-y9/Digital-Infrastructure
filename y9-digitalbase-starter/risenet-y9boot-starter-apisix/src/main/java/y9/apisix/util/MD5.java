@@ -18,10 +18,6 @@ public class MD5 {
     private static final char[] DIGITS =
         {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
-    private MD5() {
-
-    }
-
     public static byte[] digest(byte[] data) {
         return getMessageDigest().digest(data);
     }
@@ -87,6 +83,10 @@ public class MD5 {
 
     public static String hash(String message, Charset charset) {
         return hash(message.getBytes(charset));
+    }
+
+    private MD5() {
+
     }
 
     public byte[] hashDigest(byte[] source) {
