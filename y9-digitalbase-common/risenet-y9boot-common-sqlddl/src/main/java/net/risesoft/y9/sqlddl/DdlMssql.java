@@ -16,10 +16,6 @@ import org.slf4j.LoggerFactory;
 public class DdlMssql {
     private static Logger log = LoggerFactory.getLogger(DdlMssql.class);
 
-    private DdlMssql() {
-        throw new IllegalStateException("DdlMssql Utility class");
-    }
-
     public static void addTableColumn(DataSource dataSource, String tableName, String jsonDbColumns) throws Exception {
         log.info("addTableColumn");
     }
@@ -39,5 +35,9 @@ public class DdlMssql {
 
     public static void renameTable(DataSource dataSource, String tableNameOld, String tableNameNew) throws Exception {
         log.info("renameTable");
+    }
+
+    private DdlMssql() {
+        throw new IllegalStateException("DdlMssql Utility class");
     }
 }
