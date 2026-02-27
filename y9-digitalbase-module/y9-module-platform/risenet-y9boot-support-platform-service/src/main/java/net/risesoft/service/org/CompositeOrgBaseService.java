@@ -85,7 +85,7 @@ public interface CompositeOrgBaseService {
      * @param orgUnitId 组织节点id
      * @return {@code Optional<OrgUnit>}
      */
-    Optional<OrgUnit> findOrgUnitPersonOrPosition(String orgUnitId);
+    Optional<OrgUnit> findPersonOrPosition(String orgUnitId);
 
     /**
      * 根据指定id获取组织节点对象(可以是org的任意类型)
