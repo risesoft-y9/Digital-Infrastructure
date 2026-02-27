@@ -246,7 +246,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
-    public Optional<OrgUnit> findOrgUnitPersonOrPosition(String orgUnitId) {
+    public Optional<OrgUnit> findPersonOrPosition(String orgUnitId) {
         return compositeOrgBaseManager.findPersonOrPosition(orgUnitId).map(PlatformModelConvertUtil::orgBaseToOrgUnit);
     }
 

@@ -51,7 +51,7 @@ public class PersonIconServiceImpl implements PersonIconService {
     @Override
     @Transactional(readOnly = true)
     public List<PersonIconItem> listByOrgUnitId(String orgUnitId) {
-        Optional<OrgUnit> orgUnitOptional = compositeOrgBaseService.findOrgUnitPersonOrPosition(orgUnitId);
+        Optional<OrgUnit> orgUnitOptional = compositeOrgBaseService.findPersonOrPosition(orgUnitId);
         if (orgUnitOptional.isPresent()) {
             OrgUnit orgUnit = orgUnitOptional.get();
             if (orgUnit instanceof Person) {
@@ -68,7 +68,7 @@ public class PersonIconServiceImpl implements PersonIconService {
     @Override
     @Transactional(readOnly = true)
     public Y9Page<PersonIconItem> pageByOrgUnitId(String orgUnitId, Y9PageQuery pageQuery) {
-        Optional<OrgUnit> orgUnitOptional = compositeOrgBaseService.findOrgUnitPersonOrPosition(orgUnitId);
+        Optional<OrgUnit> orgUnitOptional = compositeOrgBaseService.findPersonOrPosition(orgUnitId);
         if (orgUnitOptional.isPresent()) {
             OrgUnit orgUnit = orgUnitOptional.get();
             if (orgUnit instanceof Person) {
