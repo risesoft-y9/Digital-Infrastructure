@@ -1052,4 +1052,15 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
         }
         return PlatformModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrgUnit> listPersonOrPositionByIds(List<String> ids) {
+        List<OrgUnit> orgUnitList = new ArrayList<>();
+        for (String id : ids) {
+            Optional<OrgUnit> orgUnitOptional = this.findPersonOrPosition(id);
+            orgUnitOptional.ifPresent(orgUnitList::add);
+        }
+        return orgUnitList;
+    }
 }
