@@ -3,6 +3,7 @@ package net.risesoft.api.platform.org;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -71,7 +72,7 @@ public interface OrganizationApi {
      */
     @GetMapping("/listByIds")
     Y9Result<List<Organization>> listByIds(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("ids") @NotBlank List<String> ids);
+        @RequestParam("ids") @NotEmpty List<String> ids);
 
     /**
      * 获取机构的委办局列表（不包含禁用）

@@ -266,4 +266,5 @@ public interface CompositeOrgBaseService {
      */
     List<OrgUnit> listOrgUnitsAsParentByParentId(String parentId);
 
+    List<OrgUnit> listPersonOrPositionByIds(List<String> ids);
 }

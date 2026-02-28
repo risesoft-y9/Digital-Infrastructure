@@ -3,6 +3,7 @@ package net.risesoft.api.platform.org;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,7 +66,7 @@ public interface OrgUnitApi {
      * 根据id获得组织节点对象（人员或岗位）
      *
      * @param tenantId 租户id
-     * @param orgUnitId 组织节点唯一标识
+     * @param orgUnitId 组织节点（人员或岗位）唯一标识
      * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（人员或岗位）
      * @since 9.6.0
      */
@@ -162,4 +163,15 @@ public interface OrgUnitApi {
         @RequestParam("name") @NotBlank String name, @RequestParam("treeType") OrgTreeTypeEnum treeType,
         @RequestParam("dnName") @NotBlank String dnName);
 
+    /**
+     * 根据id获得组织节点对象（人员或岗位）列表
+     *
+     * @param tenantId 租户id
+     * @param ids      组织节点（人员或岗位）唯一标识列表
+     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（人员或岗位）列表
+     * @since 9.6.10
+     */
+    @GetMapping("/listPersonOrPositionByIds")
+    Y9Result<List<OrgUnit>> listPersonOrPositionByIds(@RequestParam("tenantId") @NotBlank String tenantId,
+                                            @RequestParam("ids") @NotEmpty List<String> ids);
 }

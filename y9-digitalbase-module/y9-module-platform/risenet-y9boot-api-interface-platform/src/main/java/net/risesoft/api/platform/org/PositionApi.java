@@ -3,6 +3,7 @@ package net.risesoft.api.platform.org;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -100,7 +101,7 @@ public interface PositionApi {
      */
     @GetMapping("/listByIds")
     Y9Result<List<Position>> listByIds(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("ids") @NotBlank List<String> ids);
+        @RequestParam("ids") @NotEmpty List<String> ids);
 
     /**
      * 根据父节点获取岗位列表（不包含禁用）
