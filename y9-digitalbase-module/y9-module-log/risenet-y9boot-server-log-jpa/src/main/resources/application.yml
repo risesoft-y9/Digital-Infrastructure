@@ -7,6 +7,14 @@ management:
         health:
             probes:
                 enabled: true
+            show-details: always
+    metrics:
+        tags:
+            application: ${spring.application.name}
+    prometheus:
+        metrics:
+            export:
+                enabled: true
 server:
     port: 8080
     servlet:
