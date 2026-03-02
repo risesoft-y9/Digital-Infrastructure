@@ -140,6 +140,11 @@
             </dependency>
             <dependency>
                 <groupId>net.risesoft</groupId>
+                <artifactId>risenet-y9boot-common-poi</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.risesoft</groupId>
                 <artifactId>risenet-y9boot-properties</artifactId>
                 <version>${revision}</version>
             </dependency>
