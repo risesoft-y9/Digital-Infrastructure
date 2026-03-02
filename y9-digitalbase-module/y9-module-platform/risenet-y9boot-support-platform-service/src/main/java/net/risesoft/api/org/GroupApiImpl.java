@@ -3,6 +3,7 @@ package net.risesoft.api.org;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
@@ -122,7 +123,7 @@ public class GroupApiImpl implements GroupApi {
      */
     @Override
     public Y9Result<List<Group>> listByIds(@RequestParam @NotBlank String tenantId,
-        @RequestParam("ids") @NotBlank List<String> ids) {
+        @RequestParam("ids") @NotEmpty List<String> ids) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9GroupService.listByIds(ids));

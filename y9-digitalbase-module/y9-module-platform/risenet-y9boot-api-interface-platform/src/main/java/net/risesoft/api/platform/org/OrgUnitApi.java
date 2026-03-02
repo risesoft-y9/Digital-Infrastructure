@@ -3,6 +3,7 @@ package net.risesoft.api.platform.org;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,8 +34,8 @@ public interface OrgUnitApi {
      * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（部门或组织机构）
      * @since 9.6.0
      */
-    @GetMapping("/getBureau")
-    Y9Result<OrgUnit> getBureau(@RequestParam("tenantId") @NotBlank String tenantId,
+    @GetMapping("/getOrgUnitBureau")
+    Y9Result<OrgUnit> getOrgUnitBureau(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
@@ -45,7 +46,7 @@ public interface OrgUnitApi {
      * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象
      * @since 9.6.0
      */
-    @GetMapping("/get")
+    @GetMapping("/getOrgUnit")
     Y9Result<OrgUnit> getOrgUnit(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
@@ -57,20 +58,20 @@ public interface OrgUnitApi {
      * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象
      * @since 9.6.2
      */
-    @GetMapping("/getOrgUnitDeletedById")
-    Y9Result<OrgUnit> getOrgUnitDeletedById(@RequestParam("tenantId") @NotBlank String tenantId,
+    @GetMapping("/getOrgUnitDeleted")
+    Y9Result<OrgUnit> getOrgUnitDeleted(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
      * 根据id获得组织节点对象（人员或岗位）
      *
      * @param tenantId 租户id
-     * @param orgUnitId 组织节点唯一标识
+     * @param orgUnitId 组织节点（人员或岗位）唯一标识
      * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（人员或岗位）
      * @since 9.6.0
      */
-    @GetMapping("/getOrgUnitPersonOrPosition")
-    Y9Result<OrgUnit> getOrgUnitPersonOrPosition(@RequestParam("tenantId") @NotBlank String tenantId,
+    @GetMapping("/getPersonOrPosition")
+    Y9Result<OrgUnit> getPersonOrPosition(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
@@ -81,8 +82,8 @@ public interface OrgUnitApi {
      * @return {@code Y9Result<Organization>} 通用请求返回对象 - data 是组织机构对象
      * @since 9.6.0
      */
-    @GetMapping("/getOrganization")
-    Y9Result<Organization> getOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
+    @GetMapping("/getOrgUnitOrganization")
+    Y9Result<Organization> getOrgUnitOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
@@ -94,8 +95,21 @@ public interface OrgUnitApi {
      * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（部门或组织机构）
      * @since 9.6.0
      */
-    @GetMapping("/getParent")
-    Y9Result<OrgUnit> getParent(@RequestParam("tenantId") @NotBlank String tenantId,
+    @GetMapping("/getOrgUnitParent")
+    Y9Result<OrgUnit> getOrgUnitParent(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId);
+
+    /**
+     * 获取作为父节点的组织节点对象（部门或组织机构）<br>
+     * 如果 orgUnitId 对应组织机构节点，则返回 null
+     *
+     * @param tenantId 租户id
+     * @param orgUnitId 组织节点唯一标识
+     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（部门或组织机构）
+     * @since 9.6.10
+     */
+    @GetMapping("/getOrgUnitAsParent")
+    Y9Result<OrgUnit> getOrgUnitAsParent(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
@@ -149,4 +163,15 @@ public interface OrgUnitApi {
         @RequestParam("name") @NotBlank String name, @RequestParam("treeType") OrgTreeTypeEnum treeType,
         @RequestParam("dnName") @NotBlank String dnName);
 
+    /**
+     * 根据id获得组织节点对象（人员或岗位）列表
+     *
+     * @param tenantId 租户id
+     * @param ids      组织节点（人员或岗位）唯一标识列表
+     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（人员或岗位）列表
+     * @since 9.6.10
+     */
+    @GetMapping("/listPersonOrPositionByIds")
+    Y9Result<List<OrgUnit>> listPersonOrPositionByIds(@RequestParam("tenantId") @NotBlank String tenantId,
+                                            @RequestParam("ids") @NotEmpty List<String> ids);
 }

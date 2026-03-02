@@ -246,7 +246,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
-    public Optional<OrgUnit> findOrgUnitPersonOrPosition(String orgUnitId) {
+    public Optional<OrgUnit> findPersonOrPosition(String orgUnitId) {
         return compositeOrgBaseManager.findPersonOrPosition(orgUnitId).map(PlatformModelConvertUtil::orgBaseToOrgUnit);
     }
 
@@ -1051,5 +1051,16 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
                 .addAll(y9DepartmentRepository.findByParentIdAndDisabledOrderByTabIndexAsc(parentId, Boolean.FALSE));
         }
         return PlatformModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrgUnit> listPersonOrPositionByIds(List<String> ids) {
+        List<OrgUnit> orgUnitList = new ArrayList<>();
+        for (String id : ids) {
+            Optional<OrgUnit> orgUnitOptional = this.findPersonOrPosition(id);
+            orgUnitOptional.ifPresent(orgUnitList::add);
+        }
+        return orgUnitList;
     }
 }

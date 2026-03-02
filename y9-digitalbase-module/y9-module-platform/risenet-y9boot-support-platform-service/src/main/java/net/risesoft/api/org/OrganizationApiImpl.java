@@ -3,6 +3,7 @@ package net.risesoft.api.org;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
@@ -92,7 +93,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      */
     @Override
     public Y9Result<List<Organization>> listByIds(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("ids") @NotBlank List<String> ids) {
+        @RequestParam("ids") @NotEmpty List<String> ids) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9OrganizationService.listByIds(ids));

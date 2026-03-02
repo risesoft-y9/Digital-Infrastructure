@@ -3,6 +3,7 @@ package net.risesoft.api.org;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
@@ -50,7 +51,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<OrgUnit> getBureau(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<OrgUnit> getOrgUnitBureau(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -81,7 +82,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.2
      */
     @Override
-    public Y9Result<OrgUnit> getOrgUnitDeletedById(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<OrgUnit> getOrgUnitDeleted(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -97,11 +98,11 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<OrgUnit> getOrgUnitPersonOrPosition(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<OrgUnit> getPersonOrPosition(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result.success(compositeOrgBaseService.findOrgUnitPersonOrPosition(orgUnitId).orElse(null));
+        return Y9Result.success(compositeOrgBaseService.findPersonOrPosition(orgUnitId).orElse(null));
     }
 
     /**
@@ -113,7 +114,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<Organization> getOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Organization> getOrgUnitOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -130,11 +131,28 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<OrgUnit> getParent(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<OrgUnit> getOrgUnitParent(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(compositeOrgBaseService.findOrgUnitParent(orgUnitId).orElse(null));
+    }
+
+    /**
+     * 获取作为父节点的组织节点对象（部门或组织机构）<br>
+     * 如果 orgUnitId 对应组织机构节点，则返回 null
+     *
+     * @param tenantId 租户id
+     * @param orgUnitId 组织节点唯一标识
+     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（部门或组织机构）
+     * @since 9.6.10
+     */
+    @Override
+    public Y9Result<OrgUnit> getOrgUnitAsParent(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        return Y9Result.success(compositeOrgBaseService.findOrgUnitAsParent(orgUnitId).orElse(null));
     }
 
     /**
@@ -202,5 +220,21 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(compositeOrgBaseService.treeSearch(name, treeType, dnName, Boolean.FALSE));
+    }
+
+    /**
+     * 根据id获得组织节点对象（人员或岗位）列表
+     *
+     * @param tenantId 租户id
+     * @param ids      组织节点（人员或岗位）唯一标识列表
+     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（人员或岗位）列表
+     * @since 9.6.10
+     */
+    @Override
+    public Y9Result<List<OrgUnit>> listPersonOrPositionByIds(@RequestParam("tenantId") @NotBlank String tenantId,
+                                                      @RequestParam("ids") @NotEmpty List<String> ids) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        return Y9Result.success(compositeOrgBaseService.listPersonOrPositionByIds(ids));
     }
 }
