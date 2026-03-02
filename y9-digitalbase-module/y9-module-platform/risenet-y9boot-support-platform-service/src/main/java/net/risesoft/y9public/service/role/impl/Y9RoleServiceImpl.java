@@ -21,7 +21,6 @@ import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.exception.RoleErrorCodeEnum;
 import net.risesoft.model.platform.Role;
 import net.risesoft.pojo.AuditLogEvent;
-import net.risesoft.repository.permission.Y9OrgBasesToRolesRepository;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;

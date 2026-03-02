@@ -226,13 +226,13 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * 根据id获得组织节点对象（人员或岗位）列表
      *
      * @param tenantId 租户id
-     * @param ids      组织节点（人员或岗位）唯一标识列表
+     * @param ids 组织节点（人员或岗位）唯一标识列表
      * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（人员或岗位）列表
      * @since 9.6.10
      */
     @Override
     public Y9Result<List<OrgUnit>> listPersonOrPositionByIds(@RequestParam("tenantId") @NotBlank String tenantId,
-                                                      @RequestParam("ids") @NotEmpty List<String> ids) {
+        @RequestParam("ids") @NotEmpty List<String> ids) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(compositeOrgBaseService.listPersonOrPositionByIds(ids));
