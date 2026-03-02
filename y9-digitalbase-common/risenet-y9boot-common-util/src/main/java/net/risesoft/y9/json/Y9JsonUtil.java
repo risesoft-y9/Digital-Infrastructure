@@ -186,6 +186,20 @@ public class Y9JsonUtil {
 		}
 		return null;
 	}
+	
+	public static Y9Result<Map<String, Object>> readY9Result(String content) {
+		try {
+			//jsonMapper = getJsonMapper();
+			MapType hm = jsonMapper.getTypeFactory().constructMapType(Map.class, String.class, Object.class);
+			return jsonMapper.readValue(content,
+					jsonMapper.getTypeFactory().constructParametricType(Y9Result.class, hm));
+		} catch (JacksonException e) {
+			LOGGER.warn(e.getMessage(), e);
+		} catch (BeansException e) {
+			LOGGER.warn(e.getMessage(), e);
+		}
+		return null;
+	}
 
 	public static String writeValueAsString(Object value) {
 		String s = "";

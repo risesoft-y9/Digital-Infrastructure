@@ -28,7 +28,7 @@
         <maven.deploy.skip>true</maven.deploy.skip>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <cas.version>8.0.0-RC1</cas.version>
+        <cas.version>8.0.0-RC2</cas.version>
         <start-class>org.apereo.cas.web.CasWebApplication</start-class>
         <spring-boot.version>4.0.1</spring-boot.version>
         <spring-framework.version>7.0.3</spring-framework.version>
