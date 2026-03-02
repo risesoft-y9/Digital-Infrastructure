@@ -37,6 +37,7 @@ commons-io-commons-io = "2.21.0"
 commons-net-commons-net = "3.12.0"
 org-apache-commons-commons-lang3 = "3.20.0"
 org-apache-commons-commons-pool2 = "2.12.1"
+org-apache-commons-commons-collections4 = "4.5.0"
 org-apache-httpcomponents-httpclient = "4.5.14"
 org-apache-httpcomponents-httpmime = "4.5.14"
 org-apache-poi-poi-scratchpad = "5.4.1"
@@ -169,6 +170,7 @@ antisamy = { module = "org.owasp.antisamy:antisamy", version.ref = "org-owasp-an
 postgresql = { module = "org.postgresql:postgresql", version.ref = "org-postgresql-postgresql" }
 
 org-apache-commons-commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "org-apache-commons-commons-lang3" }
+org-apache-commons-commons-collections4 = { module = "org.apache.commons:commons-collections4", version.ref = "org-apache-commons-commons-collections4" }
 org-aspectj-aspectjrt = { module = "org.aspectj:aspectjrt", version.ref = "org-aspectj" }
 org-aspectj-aspectjtools = { module = "org.aspectj:aspectjtools", version.ref = "org-aspectj" }
 org-aspectj-aspectjweaver = { module = "org.aspectj:aspectjweaver", version.ref = "org-aspectj" }

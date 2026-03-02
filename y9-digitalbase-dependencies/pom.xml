@@ -131,6 +131,7 @@
         <commons-net.version>3.12.0</commons-net.version>
         <commons-text.version>1.15.0</commons-text.version>
         <commons-beanutils.version>1.11.0</commons-beanutils.version>
+        <commons-collections4.version>4.5.0</commons-collections4.version>
         <checker-qual.version>3.53.0</checker-qual.version>
         <fastjson.version>2.0.59</fastjson.version>
         <fastexcel.version>1.3.0</fastexcel.version>
@@ -279,6 +280,12 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-text</artifactId>
                 <version>${commons-text.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${commons-collections4.version}</version>
             </dependency>
 
             <dependency>

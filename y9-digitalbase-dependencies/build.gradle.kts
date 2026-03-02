@@ -68,5 +68,6 @@ dependencies {
         api(libs.auth0.jwt)
         api(libs.auth0.jwks)
         api(libs.fastexcel)
+        api(libs.org.apache.commons.commons.collections4)
     }
 }

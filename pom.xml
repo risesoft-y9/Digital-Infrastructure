@@ -67,6 +67,7 @@
         <module>y9-digitalbase-common/risenet-y9boot-common-model</module>
         <module>y9-digitalbase-common/risenet-y9boot-common-nacos</module>
         <module>y9-digitalbase-common/risenet-y9boot-common-util</module>
+        <module>y9-digitalbase-common/risenet-y9boot-common-poi</module>
         <module>y9-digitalbase-common/risenet-y9boot-common-tenant-datasource</module>
         <module>y9-digitalbase-common/risenet-y9boot-common-sqlddl</module>
         <module>y9-digitalbase-common/risenet-y9boot-3rd-jpa</module>
