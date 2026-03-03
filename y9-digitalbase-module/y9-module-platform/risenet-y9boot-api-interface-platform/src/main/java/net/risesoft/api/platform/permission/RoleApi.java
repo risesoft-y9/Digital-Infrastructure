@@ -3,6 +3,7 @@ package net.risesoft.api.platform.permission;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -92,7 +93,7 @@ public interface RoleApi {
      * @since 9.6.10
      */
     @GetMapping("/listByIds")
-    Y9Result<List<Role>> listByIds(@RequestParam("ids") @NotBlank List<String> ids);
+    Y9Result<List<Role>> listByIds(@RequestParam("ids") @NotEmpty List<String> ids);
 
     /**
      * 根据父节点Id获取相应子级角色节点

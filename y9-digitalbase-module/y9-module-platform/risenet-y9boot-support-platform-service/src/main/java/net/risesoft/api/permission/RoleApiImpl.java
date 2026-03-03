@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
@@ -139,7 +140,7 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.10
      */
     @Override
-    public Y9Result<List<Role>> listByIds(@RequestParam("ids") @NotBlank List<String> ids) {
+    public Y9Result<List<Role>> listByIds(@RequestParam("ids") @NotEmpty List<String> ids) {
         return Y9Result.success(y9RoleService.listByIds(ids));
     }
 
