@@ -113,32 +113,24 @@ public interface OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
-     * 获得下一级组织节点列表（不包含禁用）
+     * 根据父组织节点唯一标识获得下一级组织节点列表（不包含禁用）
      *
      * @param tenantId 租户id
-     * @param orgUnitId 组织节点唯一标识
+     * @param parentOrgUnitId 父组织节点唯一标识
      * @param treeType 树的类型
      * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是组织节点对象集合
      * @since 9.6.0
      */
     @GetMapping("/getSubTree")
     Y9Result<List<OrgUnit>> getSubTree(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("treeType") OrgTreeTypeEnum treeType);
-
-    /**
-     * 获取组织树的根节点即组织机构列表（不包含禁用）
-     *
-     * @param tenantId 租户id
-     * @return {@code Y9Result<List<Organization>>} 通用请求返回对象 - data 是组织机构对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/treeRoot")
-    Y9Result<List<Organization>> treeRoot(@RequestParam("tenantId") @NotBlank String tenantId);
+        @RequestParam("parentOrgUnitId") @NotBlank String parentOrgUnitId,
+        @RequestParam("treeType") OrgTreeTypeEnum treeType);
 
     /**
      * 根据节点名称和树类型查询组织节点列表（不包含禁用）
      *
      * @param tenantId 租户id
+     * @param orgUnitId 如果为 null 则在整个树中进行搜索，如果不为 null 仅该组织节点下搜索
      * @param name 组织节点名称
      * @param treeType 树的类型
      * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是组织节点对象集合
@@ -146,32 +138,18 @@ public interface OrgUnitApi {
      */
     @GetMapping("/treeSearch")
     Y9Result<List<OrgUnit>> treeSearch(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam(value = "orgUnitId", required = false) String orgUnitId,
         @RequestParam("name") @NotBlank String name, @RequestParam("treeType") OrgTreeTypeEnum treeType);
-
-    /**
-     * 根据节点名称和结构树类型查询组织节点列表（不包含禁用）
-     *
-     * @param tenantId 租户id
-     * @param name 组织节点名称
-     * @param dnName 路径名称
-     * @param treeType 树的类型
-     * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是组织节点对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/treeSearchByDn")
-    Y9Result<List<OrgUnit>> treeSearchByDn(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("name") @NotBlank String name, @RequestParam("treeType") OrgTreeTypeEnum treeType,
-        @RequestParam("dnName") @NotBlank String dnName);
 
     /**
      * 根据id获得组织节点对象（人员或岗位）列表
      *
      * @param tenantId 租户id
-     * @param ids      组织节点（人员或岗位）唯一标识列表
+     * @param ids 组织节点（人员或岗位）唯一标识列表
      * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（人员或岗位）列表
      * @since 9.6.10
      */
     @GetMapping("/listPersonOrPositionByIds")
     Y9Result<List<OrgUnit>> listPersonOrPositionByIds(@RequestParam("tenantId") @NotBlank String tenantId,
-                                            @RequestParam("ids") @NotEmpty List<String> ids);
+        @RequestParam("ids") @NotEmpty List<String> ids);
 }

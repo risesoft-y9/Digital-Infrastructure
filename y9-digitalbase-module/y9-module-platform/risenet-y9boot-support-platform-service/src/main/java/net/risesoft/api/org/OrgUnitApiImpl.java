@@ -156,70 +156,39 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     }
 
     /**
-     * 获得下一级组织节点列表（不包含禁用）
+     * 根据父组织节点唯一标识获得下一级组织节点列表（不包含禁用）
      *
      * @param tenantId 租户id
-     * @param orgUnitId 组织节点唯一标识
+     * @param parentOrgUnitId 父组织节点唯一标识
      * @param treeType 树的类型
      * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是组织节点对象集合
      * @since 9.6.0
      */
     @Override
     public Y9Result<List<OrgUnit>> getSubTree(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("treeType") OrgTreeTypeEnum treeType) {
+        @RequestParam("parentOrgUnitId") @NotBlank String parentOrgUnitId,
+        @RequestParam("treeType") OrgTreeTypeEnum treeType) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result.success(compositeOrgBaseService.getTree(orgUnitId, treeType, Boolean.FALSE));
-    }
-
-    /**
-     * 获取组织树的根节点即组织机构列表（不包含禁用）
-     *
-     * @param tenantId 租户id
-     * @return {@code Y9Result<List<Organization>>} 通用请求返回对象 - data 是组织机构对象集合
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<List<Organization>> treeRoot(@RequestParam("tenantId") @NotBlank String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        return Y9Result.success(y9OrganizationService.list(Boolean.FALSE, Boolean.FALSE));
+        return Y9Result.success(compositeOrgBaseService.getTree(parentOrgUnitId, treeType, Boolean.FALSE));
     }
 
     /**
      * 根据节点名称和树类型查询组织节点列表（不包含禁用）
      *
      * @param tenantId 租户id
+     * @param orgUnitId 如果为 null 则在整个树中查询，如果不为 null 仅该组织节点下查询
      * @param name 组织节点名称
      * @param treeType 树的类型
      * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是组织节点对象集合
-     * @since 9.6.0
+     * @since 9.6.10
      */
-    @Override
     public Y9Result<List<OrgUnit>> treeSearch(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam(value = "orgUnitId", required = false) String orgUnitId,
         @RequestParam("name") @NotBlank String name, @RequestParam("treeType") OrgTreeTypeEnum treeType) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result.success(compositeOrgBaseService.treeSearch(name, treeType, Boolean.FALSE));
-    }
-
-    /**
-     * 根据节点名称和结构树类型查询组织节点列表（不包含禁用）
-     *
-     * @param tenantId 租户id
-     * @param name 组织节点名称
-     * @param dnName 路径名称
-     * @param treeType 树的类型
-     * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是组织节点对象集合
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<List<OrgUnit>> treeSearchByDn(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("name") @NotBlank String name, @RequestParam("treeType") OrgTreeTypeEnum treeType,
-        @RequestParam("dnName") @NotBlank String dnName) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        return Y9Result.success(compositeOrgBaseService.treeSearch(name, treeType, dnName, Boolean.FALSE));
+        return Y9Result.success(compositeOrgBaseService.treeSearch(orgUnitId, name, treeType, Boolean.FALSE, false));
     }
 
     /**

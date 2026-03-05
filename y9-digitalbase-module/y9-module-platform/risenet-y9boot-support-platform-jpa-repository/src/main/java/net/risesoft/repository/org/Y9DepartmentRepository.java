@@ -44,6 +44,11 @@ public interface Y9DepartmentRepository
     List<Y9Department> findByNameContainingAndDnContainingAndDisabledOrderByTabIndexAsc(String name, String dnName,
         Boolean disabled);
 
+    List<Y9Department> findByNameContainingAndGuidPathContainingOrderByTabIndexAsc(String name, String orgUnitId);
+
+    List<Y9Department> findByNameContainingAndGuidPathContainingAndDisabledOrderByTabIndexAsc(String name,
+        String orgUnitId, Boolean disabled);
+
     List<Y9Department> findByNameContainingAndDnContainingOrderByTabIndexAsc(String name, String dnName);
 
     List<Y9Department> findByNameContainingOrderByTabIndexAsc(String name);
@@ -60,4 +65,5 @@ public interface Y9DepartmentRepository
 
     @Query("select o.id from Y9Department o where o.dn like %?1%")
     List<String> findIdByDnContaining(String name);
+
 }

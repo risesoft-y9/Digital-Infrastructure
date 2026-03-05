@@ -172,7 +172,8 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("name") @NotBlank String name, @RequestParam("treeType") @NotBlank String treeType) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return compositeOrgBaseService.treeSearch(name, Y9EnumUtil.valueOf(OrgTreeTypeEnum.class, treeType), false);
+        return compositeOrgBaseService.treeSearch(null, name, Y9EnumUtil.valueOf(OrgTreeTypeEnum.class, treeType),
+            false, true);
     }
 
     /**
@@ -192,7 +193,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("dnName") @NotBlank String dnName) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return compositeOrgBaseService.treeSearch(name, Y9EnumUtil.valueOf(OrgTreeTypeEnum.class, treeType), dnName,
+        return compositeOrgBaseService.treeSearch2(name, Y9EnumUtil.valueOf(OrgTreeTypeEnum.class, treeType), dnName,
             false);
     }
 

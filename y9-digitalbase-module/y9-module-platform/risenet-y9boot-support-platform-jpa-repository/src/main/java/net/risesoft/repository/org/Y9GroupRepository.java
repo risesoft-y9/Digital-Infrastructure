@@ -32,6 +32,11 @@ public interface Y9GroupRepository extends JpaRepository<Y9Group, String> {
 
     List<Y9Group> findByNameContainingAndDnContainingOrderByTabIndex(String name, String dnName);
 
+    List<Y9Group> findByNameContainingAndGuidPathContainingOrderByTabIndex(String name, String orgUnitId);
+
+    List<Y9Group> findByNameContainingAndGuidPathContainingAndDisabledOrderByTabIndexAsc(String name, String orgUnitId,
+        Boolean disabled);
+
     List<Y9Group> findByNameContainingOrderByTabIndexAsc(String name);
 
     List<Y9Group> findByParentIdAndDisabledOrderByTabIndexAsc(String parentId, Boolean disabled);

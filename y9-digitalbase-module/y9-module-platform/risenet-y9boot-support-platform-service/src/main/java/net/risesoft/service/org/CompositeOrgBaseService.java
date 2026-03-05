@@ -148,14 +148,14 @@ public interface CompositeOrgBaseService {
     SyncOrgUnits getSyncOrgUnits(String organizationId, OrgTypeEnum orgTypeEnum, boolean recursionRequired);
 
     /**
-     * 获取机构树子节点
+     * 获取组织架构树
      *
-     * @param id 组织节点id
+     * @param parentOrgUnitId 组织节点id
      * @param treeType 树类型
      * @param disabled 节点是否禁用
      * @return {@code List<OrgUnit>}
      */
-    List<OrgUnit> getTree(String id, OrgTreeTypeEnum treeType, Boolean disabled);
+    List<OrgUnit> getTree(String parentOrgUnitId, OrgTreeTypeEnum treeType, Boolean disabled);
 
     /**
      * 子域三员获取部门树
@@ -228,25 +228,27 @@ public interface CompositeOrgBaseService {
     void sync(String syncId, OrgTypeEnum orgType, boolean needRecursion, String targetSystemName);
 
     /**
-     * 根据name，和结构树类型查询机构主体(不含禁用人员)
-     *
-     * @param name 组织节点名称
-     * @param treeType 树类型{@link OrgTreeTypeEnum}
-     * @param disabled 是否包含禁用的组织节点
-     * @return {@code List<OrgUnit>}
-     */
-    List<OrgUnit> treeSearch(String name, OrgTreeTypeEnum treeType, Boolean disabled);
-
-    /**
-     * 根据name，和结构树类型查询机构主体
+     * 根据名称和树类型查询组织节点
      *
      * @param name 组织节点名称
      * @param treeType 树类型{@link OrgTreeTypeEnum}
      * @param dnName dn
-     * @param disabled 是否包含禁用的组织节点
+     * @param disabled 是否禁用
      * @return {@code List<OrgUnit>}
      */
-    List<OrgUnit> treeSearch(String name, OrgTreeTypeEnum treeType, String dnName, Boolean disabled);
+    List<OrgUnit> treeSearch2(String name, OrgTreeTypeEnum treeType, String dnName, Boolean disabled);
+
+    /**
+     * 在某一个组织节点下根据名称、树类型和是否禁用查询组织节点
+     *
+     * @param orgUnitId 组织节点id
+     * @param name 组织节点名称
+     * @param treeType 树类型{@link OrgTreeTypeEnum}
+     * @param disabled 是否禁用
+     * @return {@code List<OrgUnit>}
+     */
+    List<OrgUnit> treeSearch(String orgUnitId, String name, OrgTreeTypeEnum treeType, Boolean disabled,
+        boolean includeOrgUnitAndAncestor);
 
     /**
      * 根据name，和结构树类型查询机构主体
