@@ -149,9 +149,10 @@ public interface CompositeOrgBaseManager {
      * 填充组织节点及其祖先节点到集合中
      *
      * @param orgUnitId 组织节点 id
+     * @param stopOrgUnitId 终止组织节点 id，为 null 时表示查到根节点
      * @param orgBaseCollection 组织节点集合
      */
-    void fillWithOrgUnitAndAncestor(String orgUnitId, Collection<Y9OrgBase> orgBaseCollection);
+    void fillWithOrgUnitAndAncestor(String orgUnitId, String stopOrgUnitId, Collection<Y9OrgBase> orgBaseCollection);
 
     /**
      * 获取组织节点和及其祖先的列表（有序）

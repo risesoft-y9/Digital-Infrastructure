@@ -32,6 +32,11 @@ public interface Y9PositionRepository extends JpaRepository<Y9Position, String> 
     List<Y9Position> findByNameContainingAndDnContainingAndDisabledOrderByTabIndexAsc(String name, String dnName,
         Boolean disabled);
 
+    List<Y9Position> findByNameContainingAndGuidPathContainingOrderByTabIndexAsc(String name, String orgUnitId);
+
+    List<Y9Position> findByNameContainingAndGuidPathContainingAndDisabledOrderByTabIndexAsc(String name,
+        String orgUnitId, Boolean disabled);
+
     @Query("from Y9Position t where t.name like %?1% and (t.dn like %?2% and t.dn like %?3%)")
     List<Y9Position> findByNameContainingAndDnContainingOrDnContaining(String name, String dn, String dn2);
 

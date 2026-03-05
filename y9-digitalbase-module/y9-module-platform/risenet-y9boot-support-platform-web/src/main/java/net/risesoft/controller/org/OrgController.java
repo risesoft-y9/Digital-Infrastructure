@@ -256,7 +256,7 @@ public class OrgController {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         List<OrgUnit> orgUnitList = new ArrayList<>();
         if (userInfo.isGlobalManager()) {
-            orgUnitList = compositeOrgBaseService.treeSearch(name, treeType, disabled);
+            orgUnitList = compositeOrgBaseService.treeSearch(null, name, treeType, disabled, true);
         } else if (ManagerLevelEnum.SYSTEM_MANAGER.equals(userInfo.getManagerLevel())
             || ManagerLevelEnum.SECURITY_MANAGER.equals(userInfo.getManagerLevel())) {
             orgUnitList = compositeOrgBaseService.treeSearch4DeptManager(name, treeType, disabled);

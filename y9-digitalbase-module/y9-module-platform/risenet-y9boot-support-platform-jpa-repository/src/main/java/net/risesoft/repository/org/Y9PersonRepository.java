@@ -40,6 +40,11 @@ public interface Y9PersonRepository extends JpaRepository<Y9Person, String>, Jpa
 
     List<Y9Person> findByNameContainingAndDnContainingAndDisabled(String name, String dnName, Boolean disabled);
 
+    List<Y9Person> findByNameContainingAndGuidPathContaining(String name, String orgUnitId);
+
+    List<Y9Person> findByNameContainingAndGuidPathContainingAndDisabled(String name, String orgUnitId,
+        Boolean disabled);
+
     List<Y9Person> findByOriginalId(String originalId);
 
     List<Y9Person> findByOriginalIdAndDisabled(String originalId, Boolean disable);

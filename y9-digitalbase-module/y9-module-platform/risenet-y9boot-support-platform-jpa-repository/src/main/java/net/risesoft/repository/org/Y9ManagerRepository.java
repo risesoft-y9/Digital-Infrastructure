@@ -28,6 +28,11 @@ public interface Y9ManagerRepository extends JpaRepository<Y9Manager, String> {
 
     List<Y9Manager> findByNameContainingAndDnContainingAndDisabled(String name, String dnName, Boolean disabled);
 
+    List<Y9Manager> findByNameContainingAndGuidPathContaining(String name, String orgUnitId);
+
+    List<Y9Manager> findByNameContainingAndGuidPathContainingAndDisabled(String name, String orgUnitId,
+        Boolean disabled);
+
     List<Y9Manager> findByNameContainingAndGlobalManagerFalse(String name);
 
     List<Y9Manager> findByNameContainingAndGlobalManagerFalseAndDisabled(String name, Boolean disabled);

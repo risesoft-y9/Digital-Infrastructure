@@ -332,19 +332,23 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
     }
 
     @Override
-    public void fillWithOrgUnitAndAncestor(String orgUnitId, Collection<Y9OrgBase> orgBaseCollection) {
+    public void fillWithOrgUnitAndAncestor(String orgUnitId, String stopOrgUnitId,
+        Collection<Y9OrgBase> orgBaseCollection) {
+        if (stopOrgUnitId != null && stopOrgUnitId.equals(orgUnitId)) {
+            return;
+        }
         Y9OrgBase y9OrgBase = this.getOrgUnit(orgUnitId);
         orgBaseCollection.add(y9OrgBase);
         if (y9OrgBase.getOrgType().equals(OrgTypeEnum.DEPARTMENT)) {
             Y9Department departmentParent = (Y9Department)y9OrgBase;
-            this.fillWithOrgUnitAndAncestor(departmentParent.getParentId(), orgBaseCollection);
+            this.fillWithOrgUnitAndAncestor(departmentParent.getParentId(), stopOrgUnitId, orgBaseCollection);
         }
     }
 
     @Override
     public List<Y9OrgBase> listOrgUnitAndAncestor(String orgUnitId) {
         List<Y9OrgBase> orgBaseList = new ArrayList<>();
-        this.fillWithOrgUnitAndAncestor(orgUnitId, orgBaseList);
+        this.fillWithOrgUnitAndAncestor(orgUnitId, null, orgBaseList);
         return orgBaseList;
     }
 }

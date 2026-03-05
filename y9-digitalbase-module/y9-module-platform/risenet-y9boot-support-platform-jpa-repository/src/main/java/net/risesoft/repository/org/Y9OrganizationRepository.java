@@ -27,9 +27,12 @@ public interface Y9OrganizationRepository extends JpaRepository<Y9Organization, 
 
     List<Y9Organization> findByNameContainingOrderByTabIndexAsc(String name);
 
-    List<Y9Organization> findByOrderByTabIndexAsc();
+    List<Y9Organization> findByNameContainingAndGuidPathContainingOrderByTabIndexAsc(String name, String orgUnitId);
 
-    List<Y9Organization> findByTenantIdOrderByTabIndexAsc(String tenantId);
+    List<Y9Organization> findByNameContainingAndGuidPathContainingAndDisabledOrderByTabIndexAsc(String name,
+        String orgUnitId, Boolean disabled);
+
+    List<Y9Organization> findByOrderByTabIndexAsc();
 
     List<Y9Organization> findByVirtualAndDisabledOrderByTabIndexAsc(Boolean virtual, Boolean disabled);
 
