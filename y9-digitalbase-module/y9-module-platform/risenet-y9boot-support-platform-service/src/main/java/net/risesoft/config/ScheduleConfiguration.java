@@ -13,9 +13,14 @@ import net.javacrumbs.shedlock.core.LockProvider;
 import net.javacrumbs.shedlock.provider.jdbctemplate.JdbcTemplateLockProvider;
 import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 
+/**
+ * 定时任务配置
+ *
+ * @author shidaobang
+ * @date 2026/03/09
+ */
 @Configuration
 @EnableScheduling
-@EnableAsync(proxyTargetClass = true)
 @EnableSchedulerLock(defaultLockAtMostFor = "PT2H")
 public class ScheduleConfiguration {
 

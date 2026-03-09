@@ -53,7 +53,7 @@ public class UpdateY9UserListener {
         Y9Manager y9Manager = event.getEntity();
         String personId = y9Manager.getId();
         String tenantId = y9Manager.getTenantId();
-        LOGGER.info("开始处理管理员员新增->{}", y9Manager.getId());
+        LOGGER.debug("开始处理管理员员新增->{}", y9Manager.getId());
         Tenant y9Tenant = y9TenantService.getById(tenantId);
         Optional<UserInfo> y9UserOptional = y9UserService.findByPersonIdAndTenantId(personId, tenantId);
         UserInfo y9User;
@@ -108,7 +108,7 @@ public class UpdateY9UserListener {
     @Async
     public void onY9ManagerDeleted(Y9EntityDeletedEvent<Y9Manager> event) {
         Y9Manager y9Manager = event.getEntity();
-        LOGGER.info("开始处理管理员员删除->{}", y9Manager.getId());
+        LOGGER.debug("开始处理管理员员删除->{}", y9Manager.getId());
         Optional<UserInfo> y9UserOptional =
             y9UserService.findByPersonIdAndTenantId(y9Manager.getId(), y9Manager.getTenantId());
         if (y9UserOptional.isPresent()) {
@@ -130,7 +130,7 @@ public class UpdateY9UserListener {
     public void onY9ManagerUpdated(Y9EntityUpdatedEvent<Y9Manager> event) {
         Y9Manager y9Manager = event.getUpdatedEntity();
         String tenantId = y9Manager.getTenantId();
-        LOGGER.info("开始处理管理员员修改->{}", y9Manager.getId());
+        LOGGER.debug("开始处理管理员员修改->{}", y9Manager.getId());
         Tenant y9Tenant = y9TenantService.getById(tenantId);
         Optional<UserInfo> y9UserOptional = y9UserService.findByPersonIdAndTenantId(y9Manager.getId(), tenantId);
         UserInfo y9User;
@@ -189,7 +189,7 @@ public class UpdateY9UserListener {
     public void onY9PersonCreated(Y9EntityCreatedEvent<Y9Person> event) {
         Y9Person person = event.getEntity();
         String personId = person.getId();
-        LOGGER.info("开始处理人员新增->{}", person.getId());
+        LOGGER.debug("开始处理人员新增->{}", person.getId());
         String tenantId = person.getTenantId();
         Tenant y9Tenant = y9TenantService.getById(tenantId);
         Optional<UserInfo> y9UserOptional = y9UserService.findByPersonIdAndTenantId(personId, tenantId);
@@ -249,7 +249,7 @@ public class UpdateY9UserListener {
     @Async
     public void onY9PersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
         Y9Person person = event.getEntity();
-        LOGGER.info("开始处理人员删除->{}", person.getId());
+        LOGGER.debug("开始处理人员删除->{}", person.getId());
         Optional<UserInfo> y9UserOptional =
             y9UserService.findByPersonIdAndTenantId(person.getId(), person.getTenantId());
         if (y9UserOptional.isPresent()) {
@@ -271,7 +271,7 @@ public class UpdateY9UserListener {
     public void onY9PersonUpdated(Y9EntityUpdatedEvent<Y9Person> event) {
         Y9Person person = event.getUpdatedEntity();
         String tenantId = person.getTenantId();
-        LOGGER.info("开始处理人员更新->{}", person.getId());
+        LOGGER.debug("开始处理人员更新->{}", person.getId());
         Tenant y9Tenant = y9TenantService.getById(tenantId);
         Optional<UserInfo> y9UserOptional = y9UserService.findByPersonIdAndTenantId(person.getId(), tenantId);
         UserInfo y9User;
@@ -384,13 +384,13 @@ public class UpdateY9UserListener {
     public void onY9TenantUpdated(Y9EntityUpdatedEvent<Y9Tenant> event) {
         Y9Tenant originEntity = event.getOriginEntity();
         Y9Tenant updatedEntity = event.getUpdatedEntity();
-        LOGGER.info("租户[{}]更新触发的更新用户开始", updatedEntity.getId());
+        LOGGER.debug("租户[{}]更新触发的更新用户开始", updatedEntity.getId());
 
         if (!Objects.equals(originEntity.getName(), updatedEntity.getName())) {
             y9UserService.updateByTenantId(updatedEntity.getId(), updatedEntity.getName(),
                 updatedEntity.getShortName());
         }
 
-        LOGGER.info("租户[{}]更新触发的更新用户结束", updatedEntity.getId());
+        LOGGER.debug("租户[{}]更新触发的更新用户结束", updatedEntity.getId());
     }
 }
