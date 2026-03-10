@@ -275,7 +275,8 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     public List<Person> listByIds(List<String> ids) {
         List<Person> personList = new ArrayList<>();
-        for (String id : ids) {
+        List<String> distinctIds = ids.stream().distinct().collect(Collectors.toList());
+        for (String id : distinctIds) {
             Optional<Person> personOptional = this.findById(id);
             personOptional.ifPresent(personList::add);
         }

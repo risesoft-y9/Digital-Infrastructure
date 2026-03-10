@@ -101,7 +101,7 @@ public interface PositionApi {
      */
     @GetMapping("/listByIds")
     Y9Result<List<Position>> listByIds(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("ids") @NotEmpty List<String> ids);
+        @RequestParam(value = "ids", defaultValue = "") List<String> ids);
 
     /**
      * 根据父节点获取岗位列表（不包含禁用）

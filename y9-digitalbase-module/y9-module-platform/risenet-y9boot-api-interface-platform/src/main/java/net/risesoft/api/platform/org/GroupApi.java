@@ -86,7 +86,7 @@ public interface GroupApi {
      */
     @GetMapping("/listByIds")
     Y9Result<List<Group>> listByIds(@RequestParam @NotBlank String tenantId,
-        @RequestParam("ids") @NotEmpty List<String> ids);
+        @RequestParam(value = "ids", defaultValue = "") List<String> ids);
 
     /**
      * 获取下一级用户组列表（不包含禁用）

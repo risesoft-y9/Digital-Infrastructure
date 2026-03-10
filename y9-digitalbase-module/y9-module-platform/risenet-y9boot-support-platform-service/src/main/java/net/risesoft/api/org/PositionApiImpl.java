@@ -142,7 +142,7 @@ public class PositionApiImpl implements PositionApi {
      */
     @Override
     public Y9Result<List<Position>> listByIds(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("ids") @NotEmpty List<String> ids) {
+        @RequestParam(value = "ids", defaultValue = "") List<String> ids) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PositionService.listByIds(ids));

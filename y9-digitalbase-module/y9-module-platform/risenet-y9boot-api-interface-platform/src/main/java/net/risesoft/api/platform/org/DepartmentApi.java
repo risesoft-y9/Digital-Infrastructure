@@ -100,7 +100,7 @@ public interface DepartmentApi {
      */
     @GetMapping("/listByIds")
     Y9Result<List<Department>> listByIds(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("ids") @NotEmpty List<String> ids);
+        @RequestParam(value = "ids", defaultValue = "") List<String> ids);
 
     /**
      * 根据部门名称模糊查询部门列表（不包含禁用）

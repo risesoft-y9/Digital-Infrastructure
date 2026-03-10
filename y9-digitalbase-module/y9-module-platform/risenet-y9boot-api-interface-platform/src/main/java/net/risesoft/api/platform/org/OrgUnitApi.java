@@ -151,5 +151,5 @@ public interface OrgUnitApi {
      */
     @GetMapping("/listPersonOrPositionByIds")
     Y9Result<List<OrgUnit>> listPersonOrPositionByIds(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("ids") @NotEmpty List<String> ids);
+        @RequestParam(value = "ids", defaultValue = "") List<String> ids);
 }

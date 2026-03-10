@@ -123,7 +123,7 @@ public class GroupApiImpl implements GroupApi {
      */
     @Override
     public Y9Result<List<Group>> listByIds(@RequestParam @NotBlank String tenantId,
-        @RequestParam("ids") @NotEmpty List<String> ids) {
+        @RequestParam(value = "ids", defaultValue = "") List<String> ids) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9GroupService.listByIds(ids));

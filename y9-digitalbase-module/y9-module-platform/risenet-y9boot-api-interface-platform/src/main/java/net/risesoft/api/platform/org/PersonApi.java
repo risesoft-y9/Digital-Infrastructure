@@ -166,7 +166,7 @@ public interface PersonApi {
      */
     @GetMapping("/listByIds")
     Y9Result<List<Person>> listByIds(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("ids") @NotEmpty List<String> ids);
+        @RequestParam(value = "ids", defaultValue = "") List<String> ids);
 
     /**
      * 根据证件类型和证件号码获取人员列表（不包含禁用）

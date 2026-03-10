@@ -3,6 +3,7 @@ package net.risesoft.service.org.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
@@ -168,7 +169,8 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Override
     public List<Position> listByIds(List<String> ids) {
         List<Position> positionList = new ArrayList<>();
-        for (String id : ids) {
+        List<String> distinctIds = ids.stream().distinct().collect(Collectors.toList());
+        for (String id : distinctIds) {
             Optional<Position> positionOptional = this.findById(id);
             positionOptional.ifPresent(positionList::add);
         }

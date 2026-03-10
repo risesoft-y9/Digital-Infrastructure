@@ -92,7 +92,8 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     @Override
     public List<Role> listByIds(List<String> ids) {
         List<Role> roleList = new ArrayList<>();
-        for (String id : ids) {
+        List<String> distinctIds = ids.stream().distinct().collect(Collectors.toList());
+        for (String id : distinctIds) {
             Optional<Role> roleOptional = this.findById(id);
             roleOptional.ifPresent(roleList::add);
         }

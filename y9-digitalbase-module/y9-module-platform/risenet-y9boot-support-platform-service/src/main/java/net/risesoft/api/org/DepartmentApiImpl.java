@@ -138,7 +138,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      */
     @Override
     public Y9Result<List<Department>> listByIds(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("ids") @NotEmpty List<String> ids) {
+        @RequestParam(value = "ids", defaultValue = "") List<String> ids) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9DepartmentService.listByIds(ids));
