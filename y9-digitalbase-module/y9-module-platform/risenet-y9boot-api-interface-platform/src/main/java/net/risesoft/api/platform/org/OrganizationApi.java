@@ -72,7 +72,7 @@ public interface OrganizationApi {
      */
     @GetMapping("/listByIds")
     Y9Result<List<Organization>> listByIds(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("ids") @NotEmpty List<String> ids);
+        @RequestParam(value = "ids", defaultValue = "") List<String> ids);
 
     /**
      * 获取机构的委办局列表（不包含禁用）

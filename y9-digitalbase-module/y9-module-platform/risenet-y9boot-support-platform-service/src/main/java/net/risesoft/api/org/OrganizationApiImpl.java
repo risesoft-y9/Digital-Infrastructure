@@ -93,7 +93,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      */
     @Override
     public Y9Result<List<Organization>> listByIds(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("ids") @NotEmpty List<String> ids) {
+        @RequestParam(value = "ids", defaultValue = "") List<String> ids) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9OrganizationService.listByIds(ids));

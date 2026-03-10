@@ -3,6 +3,7 @@ package net.risesoft.service.org.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
@@ -112,8 +113,9 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     @Override
     public List<Group> listByIds(List<String> ids) {
         List<Group> groupList = new ArrayList<>();
-        for (String groupId : ids) {
-            Optional<Group> groupOptional = findById(groupId);
+        List<String> distinctIds = ids.stream().distinct().collect(Collectors.toList());
+        for (String id : distinctIds) {
+            Optional<Group> groupOptional = findById(id);
             groupOptional.ifPresent(groupList::add);
         }
         return groupList;

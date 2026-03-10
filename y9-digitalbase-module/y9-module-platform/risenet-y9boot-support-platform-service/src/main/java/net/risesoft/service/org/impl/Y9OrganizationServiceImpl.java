@@ -3,6 +3,7 @@ package net.risesoft.service.org.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -116,7 +117,8 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     @Override
     public List<Organization> listByIds(List<String> ids) {
         List<Organization> organizationList = new ArrayList<>();
-        for (String id : ids) {
+        List<String> distinctIds = ids.stream().distinct().collect(Collectors.toList());
+        for (String id : distinctIds) {
             Optional<Organization> organizationOptional = this.findById(id);
             organizationOptional.ifPresent(organizationList::add);
         }

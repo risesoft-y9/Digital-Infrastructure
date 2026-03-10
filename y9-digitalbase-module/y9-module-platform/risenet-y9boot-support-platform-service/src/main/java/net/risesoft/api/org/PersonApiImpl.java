@@ -234,7 +234,7 @@ public class PersonApiImpl implements PersonApi {
      */
     @Override
     public Y9Result<List<Person>> listByIds(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("ids") @NotEmpty List<String> ids) {
+        @RequestParam(value = "ids", defaultValue = "") List<String> ids) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PersonService.listByIds(ids));

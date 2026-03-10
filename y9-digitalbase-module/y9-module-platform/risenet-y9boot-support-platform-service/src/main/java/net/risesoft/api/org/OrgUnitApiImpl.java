@@ -201,7 +201,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      */
     @Override
     public Y9Result<List<OrgUnit>> listPersonOrPositionByIds(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("ids") @NotEmpty List<String> ids) {
+        @RequestParam(value = "ids", defaultValue = "") List<String> ids) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(compositeOrgBaseService.listPersonOrPositionByIds(ids));
