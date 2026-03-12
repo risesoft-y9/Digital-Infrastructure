@@ -6,11 +6,14 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.app.y9log.Y9LogProperties;
+import net.risesoft.y9.spring.boot.Y9Banner;
 
 @SpringBootApplication
 @EnableConfigurationProperties({Y9Properties.class, Y9LogProperties.class})
 public class LogJpaApplication {
     public static void main(String[] args) {
-        SpringApplication.run(LogJpaApplication.class, args);
+        SpringApplication springApplication = new SpringApplication(LogJpaApplication.class);
+        springApplication.setBanner(new Y9Banner());
+        springApplication.run(args);
     }
 }

@@ -12,12 +12,14 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.core.env.Environment;
 import org.springframework.web.context.WebApplicationContext;
 
+import net.risesoft.y9.spring.boot.Y9Banner;
+
 public class ServletInitializer extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(final SpringApplicationBuilder builder) {
         setRegisterErrorPageFilter(false);
-        builder.sources(LogApplication.class);
+        builder.sources(LogApplication.class).banner(new Y9Banner());
         return builder;
     }
 
