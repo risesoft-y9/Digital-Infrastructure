@@ -13,6 +13,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.WebApplicationContext;
 
+import net.risesoft.y9.spring.boot.Y9Banner;
+
 /**
  * https://docs.spring.io/spring-boot/docs/2.1.0.RELEASE/reference/htmlsingle/ 92.3 Deploying a WAR to WebLogic To
  * deploy a Spring Boot application to WebLogic, you must ensure that your servlet initializer directly implements
@@ -42,7 +44,7 @@ public class ServletInitializer extends SpringBootServletInitializer implements 
     @Override
     protected SpringApplicationBuilder configure(final SpringApplicationBuilder builder) {
         setRegisterErrorPageFilter(false);
-        builder.sources(PlatformApplication.class);
+        builder.sources(PlatformApplication.class).banner(new Y9Banner());
         return builder;
     }
 }

@@ -3,6 +3,8 @@ package net.risesoft;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import net.risesoft.y9.spring.boot.Y9Banner;
+
 /**
  * @author dingzhaojun
  * @author qinman
@@ -12,6 +14,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class PlatformApplication {
     public static void main(String[] args) {
-        SpringApplication.run(PlatformApplication.class, args);
+        SpringApplication springApplication = new SpringApplication(PlatformApplication.class);
+        springApplication.setBanner(new Y9Banner());
+        springApplication.run(args);
     }
 }

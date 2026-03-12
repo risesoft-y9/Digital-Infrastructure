@@ -13,11 +13,13 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.WebApplicationContext;
 
+import net.risesoft.y9.spring.boot.Y9Banner;
+
 public class ServletInitializer extends SpringBootServletInitializer implements WebApplicationInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(final SpringApplicationBuilder builder) {
-        return builder.sources(FileManagerApplication.class);
+        return builder.sources(FileManagerApplication.class).banner(new Y9Banner());
     }
 
     @Override
