@@ -132,6 +132,14 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
                         Y9Context.publishEvent(tenantSystemRegisteredEvent);
                     }
 
+                    Y9MessageCommon syncDataSourceEvent = new Y9MessageCommon();
+                    syncDataSourceEvent.setEventTarget(y9System.getName());
+                    syncDataSourceEvent.setEventObject(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
+                    syncDataSourceEvent.setEventType(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
+                    Y9PublishServiceUtil.publishMessageCommon(syncDataSourceEvent);
+
+                    LOGGER.debug("添加租户系统后发送租户数据源同步事件：{}", syncDataSourceEvent);
+
                     // 租户租用系统事件，应用可监听做对应租户的初始化的工作
                     Y9MessageCommon tenantSystemRegisteredEvent = new Y9MessageCommon();
                     tenantSystemRegisteredEvent.setEventObject(tenantSystem);
