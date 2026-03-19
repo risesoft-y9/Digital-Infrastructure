@@ -53,7 +53,7 @@ import y9.jpa.extension.Y9EnableJpaRepositories;
     includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},
     entityManagerFactoryRef = "rsTenantEntityManagerFactory", transactionManagerRef = TENANT_TRANSACTION_MANAGER)
 @Slf4j
-public class SpringMultiTenantConfiguration {
+public class JpaMultiTenantConfiguration {
 
     // @ConfigurationProperties("spring.datasource.druid.tenantDefault")
     @Bean("defaultDataSource")
@@ -241,6 +241,9 @@ public class SpringMultiTenantConfiguration {
         String basePackages = environment.getProperty("y9.feature.jpa.packagesToScanEntityTenant");
         em.setPackagesToScan(basePackages.split(","));
         em.setJpaPropertyMap(jpaProperties.getProperties());
+        // EntityManagerFactory 初始化过程不触发表结构更新及数据库元数据的获取
+        em.getJpaPropertyMap().put("hibernate.hbm2ddl.auto", "none");
+        em.getJpaPropertyMap().put("hibernate.temp.use_jdbc_metadata_defaults", "false");
         return em;
     }
 

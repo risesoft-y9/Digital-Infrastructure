@@ -27,6 +27,8 @@ public enum GlobalErrorCodeEnum implements ErrorCode {
     ENTITY_NOT_FOUND(NONE_MODULE_CODE, 3, "对象[{}]不存在"),
     /** 重复提交，请稍后再试 */
     REPEAT_REQUEST_DENIED(NONE_MODULE_CODE, 4, "重复提交，请稍后再试"),
+    /** 租户不存在 */
+    TENANT_NOT_FOUND(NONE_MODULE_CODE, 5, "租户[{}]不存在"),
 
     /** 令牌未传入 */
     ACCESS_TOKEN_NOT_FOUND(AUTH_MODULE_CODE, 0, "令牌未传入"),

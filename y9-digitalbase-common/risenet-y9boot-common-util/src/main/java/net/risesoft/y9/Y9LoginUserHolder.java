@@ -1,10 +1,17 @@
 package net.risesoft.y9;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 
+import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.model.user.UserInfo;
+import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 
 /**
  * 当前登录用户 holder
@@ -15,6 +22,10 @@ import net.risesoft.model.user.UserInfo;
  * @date 2022/2/10
  */
 public class Y9LoginUserHolder {
+    // 缓存所有租户ID
+    private static final Set<String> TENANT_ID_SET = ConcurrentHashMap.newKeySet();
+
+    // 当前租户 id，可用于多数据源的切换
     private static final TransmittableThreadLocal<String> TENANT_ID_HOLDER = new TransmittableThreadLocal<>();
     private static final TransmittableThreadLocal<String> TENANT_NAME_HOLDER = new TransmittableThreadLocal<>();
     private static final TransmittableThreadLocal<String> TENANT_SHORT_NAME_HOLDER = new TransmittableThreadLocal<>();
@@ -37,6 +48,11 @@ public class Y9LoginUserHolder {
         POSITION_ID_HOLDER.remove();
 
         MAP_HOLDER.remove();
+    }
+
+    public static void updateTenantIdSet(List<String> tenantIdList) {
+        TENANT_ID_SET.clear();
+        TENANT_ID_SET.addAll(tenantIdList);
     }
 
     public static String getDeptId() {
@@ -73,6 +89,9 @@ public class Y9LoginUserHolder {
     }
 
     public static void setTenantId(final String tenantId) {
+        if (StringUtils.isNotBlank(tenantId) && !TENANT_ID_SET.isEmpty() && !TENANT_ID_SET.contains(tenantId)) {
+            throw Y9ExceptionUtil.businessException(GlobalErrorCodeEnum.TENANT_NOT_FOUND, tenantId);
+        }
         TENANT_ID_HOLDER.set(tenantId);
     }
 

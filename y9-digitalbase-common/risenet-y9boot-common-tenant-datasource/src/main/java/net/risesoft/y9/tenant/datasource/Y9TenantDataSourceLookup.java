@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.DataSourceTypeEnum;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.base64.Y9Base64Util;
 
 /**
@@ -205,8 +206,9 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
     public void loadDataSources() {
         JdbcTemplate publicJdbcTemplate = new JdbcTemplate(this.publicDataSource);
 
-        // 1 移除不存在的租户的连接池
         List<String> allTenantIds = publicJdbcTemplate.queryForList("select ID FROM Y9_COMMON_TENANT", String.class);
+        Y9LoginUserHolder.updateTenantIdSet(allTenantIds);
+        // 1 移除不存在的租户的连接池
         Set<String> loadedTenantIdSet = new HashSet<>(this.loadedTenantIdDataSourceMap.keySet());
         for (String loadedTenantId : loadedTenantIdSet) {
             if (!allTenantIds.contains(loadedTenantId)) {
