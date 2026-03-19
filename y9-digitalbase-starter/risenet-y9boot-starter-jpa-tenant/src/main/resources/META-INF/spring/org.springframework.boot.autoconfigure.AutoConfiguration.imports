@@ -1,1 +1,1 @@
-y9.autoconfiguration.tenant.SpringMultiTenantConfiguration
+y9.autoconfiguration.tenant.JpaMultiTenantConfiguration
