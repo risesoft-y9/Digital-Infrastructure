@@ -209,7 +209,7 @@ public class AppApiImpl implements AppApi {
             app.setShowNumber(false);
             app.setOpentype(AppOpenTypeEnum.DESKTOP);
             app.setType(AppTypeEnum.BUSINESS_COLLABORATION);
-            saveIsvApp = y9AppService.saveIsvApp(app);
+            saveIsvApp = y9AppService.saveOrUpdate(app);
             appId = saveIsvApp.getId();
             y9AppService.verifyApp(appId, true, ManagerLevelEnum.SYSTEM_MANAGER.getName());
         } catch (Exception e) {
@@ -284,7 +284,7 @@ public class AppApiImpl implements AppApi {
             app.setOpentype(AppOpenTypeEnum.DESKTOP);
             app.setType(AppTypeEnum.BUSINESS_COLLABORATION);
 
-            saveIsvApp = y9AppService.saveIsvApp(app);
+            saveIsvApp = y9AppService.saveOrUpdate(app);
             appId = saveIsvApp.getId();
             y9AppService.verifyApp(appId, true, ManagerLevelEnum.SYSTEM_MANAGER.getName());
         } catch (Exception e) {
@@ -314,7 +314,7 @@ public class AppApiImpl implements AppApi {
      */
     @Override
     public App saveIsvApp(@RequestBody App app) {
-        return y9AppService.saveIsvApp(app);
+        return y9AppService.saveOrUpdate(app);
     }
 
 }

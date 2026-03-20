@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.CacheNameConsts;
+import net.risesoft.consts.DefaultConsts;
 import net.risesoft.exception.ResourceErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
@@ -87,6 +88,10 @@ public class Y9AppManagerImpl implements Y9AppManager {
         if (StringUtils.isBlank(y9App.getId())) {
             y9App.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
+        if (y9App.getTabIndex() == null || DefaultConsts.TAB_INDEX.equals(y9App.getTabIndex())) {
+            Integer tabIndex = getNextTabIndexBySystemId(y9App.getSystemId());
+            y9App.setTabIndex(tabIndex);
+        }
         y9App.setGuidPath(Y9OrgUtil.buildGuidPath(null, y9App.getId()));
         Y9App savedApp = y9AppRepository.save(y9App);
 
@@ -116,6 +121,10 @@ public class Y9AppManagerImpl implements Y9AppManager {
         Y9App y9App = this.getById(id);
         y9App.setTabIndex(index);
         return this.update(y9App);
+    }
+
+    private Integer getNextTabIndexBySystemId(String systemId) {
+        return y9AppRepository.findTopBySystemIdOrderByTabIndexDesc(systemId).map(Y9App::getTabIndex).orElse(0) + 1;
     }
 
 }
