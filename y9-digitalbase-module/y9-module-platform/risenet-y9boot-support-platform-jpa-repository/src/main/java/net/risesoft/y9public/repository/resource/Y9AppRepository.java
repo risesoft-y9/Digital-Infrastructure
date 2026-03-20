@@ -46,8 +46,7 @@ public interface Y9AppRepository extends JpaRepository<Y9App, String>, JpaSpecif
 
     List<Y9App> findBySystemIdOrderByTabIndex(String systemId);
 
-    List<Y9App> findByUrlContaining(String url);
-
     Optional<Y9App> findTopByOrderByTabIndexDesc();
 
+    Optional<Y9App> findTopBySystemIdOrderByTabIndexDesc(String systemId);
 }

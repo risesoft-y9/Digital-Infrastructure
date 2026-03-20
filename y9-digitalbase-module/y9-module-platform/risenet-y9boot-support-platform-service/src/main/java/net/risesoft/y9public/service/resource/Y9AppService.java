@@ -124,14 +124,6 @@ public interface Y9AppService extends ResourceCommonService<App> {
     App saveAndRegister4Tenant(App y9App);
 
     /**
-     * 保存isv应用
-     *
-     * @param app 应用程序
-     * @return {@link App}
-     */
-    App saveIsvApp(App app);
-
-    /**
      * 保存应用排序
      *
      * @param appIds 应用ids

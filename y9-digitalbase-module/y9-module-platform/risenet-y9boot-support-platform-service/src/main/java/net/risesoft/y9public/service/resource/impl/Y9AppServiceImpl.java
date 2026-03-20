@@ -178,18 +178,6 @@ public class Y9AppServiceImpl implements Y9AppService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public App saveIsvApp(App app) {
-        if (app.getTabIndex() == null || DefaultConsts.TAB_INDEX.equals(app.getTabIndex())) {
-            Integer tabIndex =
-                y9AppRepository.findTopByOrderByTabIndexDesc().map(y9App -> y9App.getTabIndex() + 1).orElse(1);
-            app.setTabIndex(tabIndex);
-        }
-
-        return saveOrUpdate(app);
-    }
-
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void saveOrder(String[] appIds) {
         if (appIds.length > 0) {
             for (int i = 0, len = appIds.length; i < len; i++) {
