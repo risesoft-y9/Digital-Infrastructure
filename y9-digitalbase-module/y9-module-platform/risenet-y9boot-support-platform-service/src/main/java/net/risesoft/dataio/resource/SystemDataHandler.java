@@ -2,8 +2,8 @@ package net.risesoft.dataio.resource;
 
 import java.io.OutputStream;
 
-import net.risesoft.dataio.resource.model.AppJsonModel;
-import net.risesoft.dataio.resource.model.SystemJsonModel;
+import net.risesoft.model.platform.SystemJsonModel;
+import net.risesoft.model.platform.resource.AppJsonModel;
 
 /**
  * Y9SystemDataHandler

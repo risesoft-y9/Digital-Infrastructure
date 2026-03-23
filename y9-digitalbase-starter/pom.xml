@@ -36,6 +36,7 @@
         <module>risenet-y9boot-starter-log</module>
         <module>risenet-y9boot-starter-multi-tenant</module>
         <module>risenet-y9boot-starter-openfeign</module>
+        <module>risenet-y9boot-starter-system-registration</module>
         <module>risenet-y9boot-starter-permission</module>
         <module>risenet-y9boot-starter-repeatsubmit</module>
         <module>risenet-y9boot-starter-security</module>

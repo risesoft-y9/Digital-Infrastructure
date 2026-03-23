@@ -25,6 +25,7 @@ import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
+import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.Y9Role;
 import net.risesoft.y9public.entity.Y9System;
@@ -170,7 +171,8 @@ public class Y9RoleServiceImpl implements Y9RoleService {
             Optional<Y9Role> y9RoleOptional = y9RoleManager.findById(y9Role.getId());
             if (y9RoleOptional.isPresent()) {
                 Y9Role originRole = PlatformModelConvertUtil.convert(y9RoleOptional.get(), Y9Role.class);
-                Y9Role savedRole = y9RoleManager.update(originRole);
+                Y9BeanUtil.copyProperties(originRole, y9Role);
+                Y9Role savedRole = y9RoleManager.update(y9Role);
 
                 AuditLogEvent auditLogEvent = AuditLogEvent.builder()
                     .action(AuditLogEnum.ROLE_UPDATE.getAction())

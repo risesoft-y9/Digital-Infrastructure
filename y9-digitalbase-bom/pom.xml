@@ -224,6 +224,11 @@
             </dependency>
             <dependency>
                 <groupId>net.risesoft</groupId>
+                <artifactId>risenet-y9boot-starter-system-registration</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.risesoft</groupId>
                 <artifactId>risenet-y9boot-starter-permission</artifactId>
                 <version>${revision}</version>
             </dependency>

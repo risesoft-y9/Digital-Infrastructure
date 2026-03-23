@@ -188,14 +188,14 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
         if (StringUtils.isNotBlank(y9Role.getAppId())) {
             // 应用角色
             Y9App y9App = y9AppManager.getByIdFromCache(y9Role.getAppId());
-            y9Role.setSystemId(y9App.getSystemId());
+            currentRole.setSystemId(y9App.getSystemId());
         } else if (StringUtils.isNotBlank(y9Role.getSystemId())) {
             // 系统角色
-            y9Role.setAppId(null);
+            currentRole.setAppId(null);
         } else {
             // 公共角色
-            y9Role.setAppId(null);
-            y9Role.setSystemId(null);
+            currentRole.setAppId(null);
+            currentRole.setSystemId(null);
         }
 
         return y9RoleRepository.save(currentRole);

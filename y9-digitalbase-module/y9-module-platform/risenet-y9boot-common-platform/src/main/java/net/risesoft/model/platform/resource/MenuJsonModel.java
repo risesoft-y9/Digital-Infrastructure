@@ -1,26 +1,31 @@
-package net.risesoft.dataio.resource.model;
+package net.risesoft.model.platform.resource;
 
 import java.util.List;
+
+import javax.validation.Valid;
+
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.y9public.entity.resource.Y9Menu;
-
 /**
- * Y9Menu 导出 JSON 模型
+ * 菜单导出 JSON 模型
  *
  * @author shidaobang
- * @date 2022/6/7
+ * @since 9.6.10
  */
 @Getter
 @Setter
-public class MenuJsonModel extends Y9Menu {
+@JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
+public class MenuJsonModel extends Menu {
 
     private static final long serialVersionUID = 6051765640925960718L;
 
+    @Valid
     private List<MenuJsonModel> subMenuList;
 
+    @Valid
     private List<OperationJsonModel> subOperationList;
 
 }

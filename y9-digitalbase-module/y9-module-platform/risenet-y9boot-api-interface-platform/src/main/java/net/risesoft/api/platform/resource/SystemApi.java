@@ -1,13 +1,16 @@
 package net.risesoft.api.platform.resource;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.platform.System;
+import net.risesoft.model.platform.SystemJsonModel;
 import net.risesoft.pojo.Y9Result;
 
 /**
@@ -55,5 +58,15 @@ public interface SystemApi {
     @PostMapping("/registrySystem")
     Y9Result<System> registrySystem(@RequestParam("name") String name, @RequestParam("cnName") String cnName,
         @RequestParam("contextPath") String contextPath, @RequestParam("isvGuid") String isvGuid);
+
+    /**
+     * 系统、资源、角色注册。
+     *
+     * @param systemJsonModel 系统 JSON 模型
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
+     * @since 9.6.10
+     */
+    @PostMapping("/register")
+    Y9Result<Object> register(@RequestBody @Valid SystemJsonModel systemJsonModel);
 
 }
