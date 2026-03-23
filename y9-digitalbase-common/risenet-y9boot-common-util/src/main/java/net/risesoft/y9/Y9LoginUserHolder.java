@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 
+import net.risesoft.consts.InitDataConsts;
 import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
@@ -78,7 +79,8 @@ public class Y9LoginUserHolder {
     }
 
     public static void setTenantId(final String tenantId) {
-        if (StringUtils.isNotBlank(tenantId) && !TenantCache.isEmpty() && !TenantCache.containsTenantId(tenantId)) {
+        if (StringUtils.isNotBlank(tenantId) && !InitDataConsts.OPERATION_TENANT_ID.equals(tenantId)
+            && !TenantCache.isEmpty() && !TenantCache.containsTenantId(tenantId)) {
             throw Y9ExceptionUtil.businessException(GlobalErrorCodeEnum.TENANT_NOT_FOUND, tenantId);
         }
         TENANT_ID_HOLDER.set(tenantId);
