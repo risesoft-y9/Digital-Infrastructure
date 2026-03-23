@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -20,10 +21,12 @@ import net.risesoft.consts.DefaultConsts;
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.ResourceErrorCodeEnum;
 import net.risesoft.model.platform.resource.App;
+import net.risesoft.model.user.UserInfo;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.util.PlatformModelConvertUtil;
+import net.risesoft.y9.TenantCache;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9AssertUtil;
@@ -165,13 +168,23 @@ public class Y9AppServiceImpl implements Y9AppService {
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public App saveAndRegister4Tenant(App app) {
         App savedApp = this.saveOrUpdate(app);
+        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         // 审核应用
-        this.verifyApp(savedApp.getId(), true, Y9LoginUserHolder.getUserInfo().getName());
-        if (Y9LoginUserHolder.getUserInfo().getManagerLevel().isTenantManager()) {
+        this.verifyApp(savedApp.getId(), true, userInfo == null ? "系统" : userInfo.getName());
+        if (userInfo != null && userInfo.getManagerLevel().isTenantManager()) {
             // 租用系统
             y9TenantSystemManager.saveTenantSystem(savedApp.getSystemId(), Y9LoginUserHolder.getTenantId());
             // 租用应用
             y9TenantAppManager.save(savedApp.getId(), Y9LoginUserHolder.getTenantId(), "系统默认租用");
+        } else {
+            Set<String> tenantIdSet = TenantCache.getTenantIdSet();
+            // 单租户时默认租用
+            if (tenantIdSet.size() == 1) {
+                for (String tenantId : tenantIdSet) {
+                    y9TenantSystemManager.saveTenantSystem(savedApp.getSystemId(), tenantId);
+                    y9TenantAppManager.save(savedApp.getId(), tenantId, "系统默认租用");
+                }
+            }
         }
         return savedApp;
     }

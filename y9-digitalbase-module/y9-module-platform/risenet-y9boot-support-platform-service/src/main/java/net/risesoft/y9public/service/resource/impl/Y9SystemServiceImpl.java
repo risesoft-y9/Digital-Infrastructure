@@ -4,6 +4,7 @@ import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -19,10 +20,12 @@ import net.risesoft.consts.DefaultConsts;
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.SystemErrorCodeEnum;
 import net.risesoft.model.platform.System;
+import net.risesoft.model.user.UserInfo;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.util.PlatformModelConvertUtil;
+import net.risesoft.y9.TenantCache;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
@@ -190,15 +193,27 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public System saveAndRegister4Tenant(System y9System) {
-        if (Y9LoginUserHolder.getUserInfo().getManagerLevel().isTenantManager()) {
+        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
+        if (userInfo != null && userInfo.getManagerLevel().isTenantManager()) {
             y9System.setTenantId(Y9LoginUserHolder.getTenantId());
             System savedSystem = this.saveOrUpdate(y9System);
             y9TenantSystemManager.saveTenantSystem(savedSystem.getId(), Y9LoginUserHolder.getTenantId());
             return savedSystem;
         } else {
-            y9System.setTenantId(null);
-            return this.saveOrUpdate(y9System);
+            Set<String> tenantIdSet = TenantCache.getTenantIdSet();
+            // 单租户时默认租用
+            if (tenantIdSet.size() == 1) {
+                for (String tenantId : tenantIdSet) {
+                    y9System.setTenantId(tenantId);
+                    System savedSystem = this.saveOrUpdate(y9System);
+                    y9TenantSystemManager.saveTenantSystem(savedSystem.getId(), tenantId);
+                    return savedSystem;
+                }
+            }
         }
+
+        y9System.setTenantId(null);
+        return this.saveOrUpdate(y9System);
     }
 
     @Override

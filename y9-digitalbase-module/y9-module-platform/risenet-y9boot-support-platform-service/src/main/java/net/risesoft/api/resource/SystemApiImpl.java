@@ -3,21 +3,26 @@ package net.risesoft.api.resource;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.api.platform.resource.SystemApi;
 import net.risesoft.consts.InitDataConsts;
+import net.risesoft.dataio.resource.SystemDataHandler;
 import net.risesoft.model.platform.System;
+import net.risesoft.model.platform.SystemJsonModel;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -38,11 +43,14 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 @RestController
 @RequestMapping(value = "/services/rest/v1/system", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
+@Slf4j
 public class SystemApiImpl implements SystemApi {
 
     private final Y9SystemService y9SystemService;
 
     private final Y9TenantSystemService y9TenantSystemService;
+
+    private final SystemDataHandler systemDataHandler;
 
     /**
      * 根据系统唯一标识获取系统
@@ -111,6 +119,20 @@ public class SystemApiImpl implements SystemApi {
             return Y9Result.failure("创建失败！");
         }
 
+    }
+
+    /**
+     * 系统、资源、角色注册。
+     *
+     * @param systemJsonModel 系统 JSON 模型
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
+     * @since 9.6.10
+     */
+    @Override
+    public Y9Result<Object> register(@RequestBody @Valid SystemJsonModel systemJsonModel) {
+        systemDataHandler.importSystem(systemJsonModel);
+
+        return Y9Result.success();
     }
 
 }

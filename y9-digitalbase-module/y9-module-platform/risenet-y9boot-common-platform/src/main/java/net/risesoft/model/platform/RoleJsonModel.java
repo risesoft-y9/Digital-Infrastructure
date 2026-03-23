@@ -1,23 +1,24 @@
-package net.risesoft.dataio.resource.model;
+package net.risesoft.model.platform;
 
 import java.util.List;
+
+import javax.validation.Valid;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.y9public.entity.Y9Role;
-
 /**
- * Y9Role 导出 JSON 模型
+ * 角色导出 JSON 模型
  *
  * @author shidaobang
- * @date 2022/6/7
+ * @since 9.6.10
  */
 @Getter
 @Setter
-public class RoleJsonModel extends Y9Role {
+public class RoleJsonModel extends Role {
 
     private static final long serialVersionUID = 5734021385079857067L;
 
+    @Valid
     private List<RoleJsonModel> subRoleList;
 }

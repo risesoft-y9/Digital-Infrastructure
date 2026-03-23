@@ -1,25 +1,29 @@
-package net.risesoft.dataio.resource.model;
+package net.risesoft.model.platform;
 
 import java.util.List;
+
+import javax.validation.Valid;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.y9public.entity.Y9System;
+import net.risesoft.model.platform.resource.AppJsonModel;
 
 /**
- * Y9System 导出 JSON 模型
+ * 系统导出 JSON 模型
  *
  * @author shidaobang
- * @date 2022/6/7
+ * @since 9.6.10
  */
 @Getter
 @Setter
-public class SystemJsonModel extends Y9System {
+public class SystemJsonModel extends System {
 
     private static final long serialVersionUID = -1010121704644942107L;
 
+    @Valid
     private List<RoleJsonModel> subRoleList;
 
+    @Valid
     private List<AppJsonModel> appList;
 }

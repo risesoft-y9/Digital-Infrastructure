@@ -1,28 +1,34 @@
-package net.risesoft.dataio.resource.model;
+package net.risesoft.model.platform.resource;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.y9public.entity.resource.Y9App;
+import net.risesoft.model.platform.RoleJsonModel;
 
 /**
- * Y9App 导出 JSON 模型
+ * 应用导出 JSON 模型
  *
  * @author shidaobang
- * @date 2022/6/7
+ * @since 9.6.10
  */
 @Getter
 @Setter
-public class AppJsonModel extends Y9App {
+@JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
+public class AppJsonModel extends App {
 
     private static final long serialVersionUID = -6368600177705586612L;
 
+    @Valid
     private List<MenuJsonModel> subMenuList;
 
+    @Valid
     private List<OperationJsonModel> subOperationList;
 
+    @Valid
     private List<RoleJsonModel> subRoleList;
-
 }
