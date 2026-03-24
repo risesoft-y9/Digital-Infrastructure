@@ -412,10 +412,19 @@
                 const y9RoleFormInstance = roleFormRef.value?.elFormRef;
                 await y9RoleFormInstance.validate(async (valid) => {
                     if (valid) {
+                        const appId = currData.value.nodeType === 'SYSTEM' ? null : currData.value.appId;
+
+                        let systemId = null;
+                        if (currData.value.nodeType === 'SYSTEM') {
+                            systemId = currData.value.id;
+                        } else if (currData.value.nodeType === 'APP') {
+                            systemId = currData.value.systemId;
+                        }
+
                         const params = {
-                            appId: currData.value.nodeType === 'SYSTEM' ? null : currData.value.appId,
+                            appId: appId,
                             parentId: currData.value.id,
-                            systemId: currData.value.nodeType === 'SYSTEM' ? currData.value.id : null,
+                            systemId: systemId,
                             type: roleForm.value.nodeType,
                             ...roleFormRef.value?.model
                         };
