@@ -39,11 +39,9 @@ public interface Y9RoleRepository extends JpaRepository<Y9Role, String>, JpaSpec
 
     List<Y9Role> findByParentIdAndNameContainingOrderByTabIndexAsc(String parentId, String name);
 
-    List<Y9Role> findByParentIdIsNullOrderByTabIndexAsc();
-
     List<Y9Role> findByParentIdOrderByTabIndexAsc(String parentId);
 
-    Optional<Y9Role> findTopByOrderByTabIndexDesc();
+    Optional<Y9Role> findTopByParentIdOrderByTabIndexDesc(String parentId);
 
     List<Y9Role> findByParentIdAndTenantIdOrParentIdAndTenantIdIsNullOrderByTabIndexAsc(String parentId,
         String tenantId, String parentId2);

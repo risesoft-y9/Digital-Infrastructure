@@ -23,9 +23,9 @@ import net.risesoft.model.platform.Role;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
-import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.Y9Role;
 import net.risesoft.y9public.entity.Y9System;
@@ -127,7 +127,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         String parentName = this.getRoleParent(newParentId);
         Y9Role originalRole = PlatformModelConvertUtil.convert(currentRole, Y9Role.class);
 
-        currentRole.setParentId(newParentId);
+        currentRole.changeParent(findRoleParent(newParentId).orElse(null), getNextTabIndex(newParentId));
         Y9Role savedRole = y9RoleManager.update(currentRole);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -165,14 +165,14 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Role saveOrUpdate(Role role) {
-        Y9Role y9Role = PlatformModelConvertUtil.convert(role, Y9Role.class);
-
-        if (StringUtils.isNotEmpty(y9Role.getId())) {
-            Optional<Y9Role> y9RoleOptional = y9RoleManager.findById(y9Role.getId());
+        if (StringUtils.isNotEmpty(role.getId())) {
+            Optional<Y9Role> y9RoleOptional = y9RoleManager.findById(role.getId());
             if (y9RoleOptional.isPresent()) {
-                Y9Role originRole = PlatformModelConvertUtil.convert(y9RoleOptional.get(), Y9Role.class);
-                Y9BeanUtil.copyProperties(originRole, y9Role);
-                Y9Role savedRole = y9RoleManager.update(y9Role);
+                Y9Role currentRole = y9RoleOptional.get();
+                Y9Role originRole = PlatformModelConvertUtil.convert(currentRole, Y9Role.class);
+                currentRole.update(role, findRoleParent(role.getParentId()).orElse(null),
+                    Y9LoginUserHolder.getTenantId());
+                Y9Role savedRole = y9RoleManager.update(currentRole);
 
                 AuditLogEvent auditLogEvent = AuditLogEvent.builder()
                     .action(AuditLogEnum.ROLE_UPDATE.getAction())
@@ -187,6 +187,8 @@ public class Y9RoleServiceImpl implements Y9RoleService {
             }
         }
 
+        Y9Role y9Role = new Y9Role(role, findRoleParent(role.getParentId()).orElse(null),
+            getNextTabIndex(role.getParentId()), Y9LoginUserHolder.getTenantId());
         Y9Role savedRole = y9RoleManager.insert(y9Role);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -207,7 +209,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         int index = 0;
         for (String id : ids) {
             Y9Role roleNode = y9RoleManager.getByIdFromCache(id);
-            roleNode.setTabIndex(index++);
+            roleNode.changeTabIndex(index++);
             y9RoleManager.update(roleNode);
         }
     }
@@ -218,7 +220,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         Y9Role currentRole = y9RoleManager.getByIdFromCache(id);
         Y9Role originalRole = PlatformModelConvertUtil.convert(currentRole, Y9Role.class);
 
-        currentRole.setProperties(properties);
+        currentRole.changeProperties(properties);
         Y9Role savedRole = y9RoleManager.update(currentRole);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -306,4 +308,16 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     private List<Role> entityToModel(List<Y9Role> y9RoleList) {
         return PlatformModelConvertUtil.y9RoleToRole(y9RoleList);
     }
+
+    private Optional<Y9Role> findRoleParent(String parentId) {
+        if (StringUtils.isEmpty(parentId)) {
+            return Optional.empty();
+        }
+        return y9RoleManager.findById(parentId);
+    }
+
+    private Integer getNextTabIndex(String parentId) {
+        return y9RoleRepository.findTopByParentIdOrderByTabIndexDesc(parentId).map(Y9Role::getTabIndex).orElse(-1) + 1;
+    }
+
 }
