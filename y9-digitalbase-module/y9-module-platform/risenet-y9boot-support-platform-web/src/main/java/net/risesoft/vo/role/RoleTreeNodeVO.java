@@ -27,9 +27,15 @@ public class RoleTreeNodeVO extends TreeNodeVO {
     private static final long serialVersionUID = -447737996123909425L;
 
     /**
+     * 系统id
+     */
+    private String systemId;
+
+    /**
      * 应用id
      */
     private String appId;
+    
     /**
      * 租户id
      */
@@ -38,6 +44,7 @@ public class RoleTreeNodeVO extends TreeNodeVO {
     public static RoleTreeNodeVO convertRole(Role role) {
         RoleTreeNodeVO roleTreeNodeVO = new RoleTreeNodeVO();
         roleTreeNodeVO.setId(role.getId());
+        roleTreeNodeVO.setSystemId(role.getSystemId());
         roleTreeNodeVO.setAppId(role.getAppId());
         roleTreeNodeVO.setTenantId(role.getTenantId());
         roleTreeNodeVO.setName(role.getName());
@@ -59,6 +66,7 @@ public class RoleTreeNodeVO extends TreeNodeVO {
     public static RoleTreeNodeVO convertApp(App app) {
         RoleTreeNodeVO roleTreeNodeVO = new RoleTreeNodeVO();
         roleTreeNodeVO.setId(app.getId());
+        roleTreeNodeVO.setSystemId(app.getSystemId());
         roleTreeNodeVO.setAppId(app.getId());
         roleTreeNodeVO.setName(app.getName());
         roleTreeNodeVO.setParentId(app.getSystemId());
