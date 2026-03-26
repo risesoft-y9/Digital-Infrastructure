@@ -2,6 +2,7 @@ package y9.client.rest.log;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.api.log.FlowableAccessLogApi;
@@ -22,6 +23,7 @@ import net.risesoft.pojo.Y9Page;
 public interface FlowableAccessLogApiClient extends FlowableAccessLogApi {
 
     @Override
+    @GetMapping("/search")
     Y9Page<FlowableAccessLog> search(@SpringQueryMap FlowableAccessLogQuery query, @RequestParam("page") Integer page,
         @RequestParam("rows") Integer rows);
 
