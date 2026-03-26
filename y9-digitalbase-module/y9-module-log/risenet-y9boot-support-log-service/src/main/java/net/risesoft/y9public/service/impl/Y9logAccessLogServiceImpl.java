@@ -129,16 +129,14 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
     @Override
     public Page<Y9LogAccessLogDO> pageElapsedTimeByCondition(AccessLogQuery searchDto, String startDay, String endDay,
         String sTime, String lTime, Integer page, Integer rows) throws ParseException {
-        return y9logAccessLogCustomRepository.pageElapsedTimeByCondition(searchDto, startDay, endDay, sTime, lTime,
-            page, rows);
+        return y9logAccessLogCustomRepository.pageByCondition(searchDto, startDay, endDay, sTime, lTime, page, rows);
     }
 
     @Override
     public Page<Y9LogAccessLogDO> pageOperateStatusByOperateStatus(AccessLogQuery searchDto, String operateStatus,
         String date, String hour, Integer page, Integer rows) throws ParseException {
 
-        return y9logAccessLogCustomRepository.pageOperateStatusByOperateStatus(searchDto, operateStatus, date, hour,
-            page, rows);
+        return y9logAccessLogCustomRepository.pageByOperateStatus(searchDto, date, hour, page, rows);
     }
 
     @Override

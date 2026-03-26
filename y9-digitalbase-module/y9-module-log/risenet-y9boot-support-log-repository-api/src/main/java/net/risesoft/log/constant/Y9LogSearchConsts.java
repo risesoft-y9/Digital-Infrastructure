@@ -24,6 +24,8 @@ public class Y9LogSearchConsts {
     public static final String USER_HOST_IP = "userHostIp";
     /** 方法类和名称 */
     public static final String METHOD_NAME = "methodName";
+    /** 请求参数 JSON */
+    public static final String PARAMS_JSON = "paramsJson";
     /** 模块名称 */
     public static final String MODULAR_NAME = "modularName";
     /** 模块名称 */
