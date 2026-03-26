@@ -392,7 +392,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public Page<Y9LogAccessLogDO> pageElapsedTimeByCondition(AccessLogQuery searchDto, String startDay, String endDay,
+    public Page<Y9LogAccessLogDO> pageByCondition(AccessLogQuery searchDto, String startDay, String endDay,
         String sTime, String lTime, Integer page, Integer rows) throws ParseException {
         String tenantId = Y9LoginUserHolder.getTenantId();
 
@@ -420,6 +420,30 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 if (StringUtils.isNotBlank(searchDto.getOperateType())) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.OPERATE_TYPE).as(String.class),
                         searchDto.getOperateType()));
+                }
+                if (StringUtils.isNotBlank(searchDto.getUserName())) {
+                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.USER_NAME).as(String.class),
+                        searchDto.getUserName()));
+                }
+                if (StringUtils.isNotBlank(searchDto.getUserHostIp())) {
+                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.USER_HOST_IP).as(String.class),
+                        searchDto.getUserHostIp()));
+                }
+                if (StringUtils.isNotBlank(searchDto.getSystemName())) {
+                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.SYSTEM_NAME).as(String.class),
+                        searchDto.getSystemName()));
+                }
+                if (StringUtils.isNotBlank(searchDto.getModularName())) {
+                    list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.MODULAR_NAME).as(String.class),
+                        "%" + searchDto.getModularName() + "%"));
+                }
+                if (StringUtils.isNotBlank(searchDto.getParamsJson())) {
+                    list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.PARAMS_JSON).as(String.class),
+                        "%" + searchDto.getParamsJson() + "%"));
+                }
+                if (StringUtils.isNotBlank(searchDto.getOperateName())) {
+                    list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.OPERATE_NAME).as(String.class),
+                        "%" + searchDto.getOperateName() + "%"));
                 }
                 if (StringUtils.isNotBlank(startDay) && StringUtils.isNotBlank(endDay)) {
                     try {
@@ -456,8 +480,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public Page<Y9LogAccessLogDO> pageOperateStatusByOperateStatus(AccessLogQuery searchDto, String operateStatus,
-        String date, String hour, Integer page, Integer rows) throws ParseException {
+    public Page<Y9LogAccessLogDO> pageByOperateStatus(AccessLogQuery searchDto, String date, String hour, Integer page,
+        Integer rows) throws ParseException {
         String tenantId = Y9LoginUserHolder.getTenantId();
 
         PageRequest pageable =
@@ -472,9 +496,9 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
                 list.add(criteriaBuilder.isNotNull(root.get(Y9LogSearchConsts.USER_NAME).as(String.class)));
 
-                if (StringUtils.isNotBlank(operateStatus)) {
-                    list.add(
-                        criteriaBuilder.equal(root.get(Y9LogSearchConsts.SUCCESS).as(String.class), operateStatus));
+                if (StringUtils.isNotBlank(searchDto.getSuccess())) {
+                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.SUCCESS).as(String.class),
+                        searchDto.getSuccess()));
                 }
 
                 if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
@@ -494,6 +518,26 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 if (StringUtils.isNotBlank(searchDto.getOperateType())) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.OPERATE_TYPE).as(String.class),
                         searchDto.getOperateType()));
+                }
+                if (StringUtils.isNotBlank(searchDto.getUserHostIp())) {
+                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.USER_HOST_IP).as(String.class),
+                        searchDto.getUserHostIp()));
+                }
+                if (StringUtils.isNotBlank(searchDto.getSystemName())) {
+                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.SYSTEM_NAME).as(String.class),
+                        searchDto.getSystemName()));
+                }
+                if (StringUtils.isNotBlank(searchDto.getModularName())) {
+                    list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.MODULAR_NAME).as(String.class),
+                        "%" + searchDto.getModularName() + "%"));
+                }
+                if (StringUtils.isNotBlank(searchDto.getParamsJson())) {
+                    list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.PARAMS_JSON).as(String.class),
+                        "%" + searchDto.getParamsJson() + "%"));
+                }
+                if (StringUtils.isNotBlank(searchDto.getOperateName())) {
+                    list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.OPERATE_NAME).as(String.class),
+                        "%" + searchDto.getOperateName() + "%"));
                 }
 
                 if (StringUtils.isNotBlank(date) && StringUtils.isNotBlank(hour)) {
@@ -564,6 +608,18 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                     list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.MODULAR_NAME).as(String.class),
                         "%" + loginInfoModel.getModularName() + "%"));
                 }
+                if (StringUtils.isNotBlank(loginInfoModel.getSystemName())) {
+                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.SYSTEM_NAME).as(String.class),
+                        loginInfoModel.getSystemName()));
+                }
+                if (StringUtils.isNotBlank(loginInfoModel.getParamsJson())) {
+                    list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.PARAMS_JSON).as(String.class),
+                        "%" + loginInfoModel.getParamsJson() + "%"));
+                }
+                if (StringUtils.isNotBlank(loginInfoModel.getOperateName())) {
+                    list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.OPERATE_NAME).as(String.class),
+                        "%" + loginInfoModel.getOperateName() + "%"));
+                }
 
                 if (StringUtils.isNotBlank(loginInfoModel.getStartTime())
                     && StringUtils.isNotBlank(loginInfoModel.getEndTime())) {
@@ -600,8 +656,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     }
 
     @Override
-    public Page<Y9LogAccessLogDO> searchQuery(String tenantId, String managerLevel, AccessLogQuery loginInfoModel,
-        Integer page, Integer rows) {
+    public Page<Y9LogAccessLogDO> searchQuery(String tenantId, String managerLevel, AccessLogQuery search, Integer page,
+        Integer rows) {
         Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
 
         Page<Y9LogAccessLog> y9LogAccessLogPage = y9logAccessLogRepository.findAll(new Specification<>() {
@@ -619,43 +675,46 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.MANAGER_LEVEL).as(String.class),
                         managerLevel));
                 }
-                if (StringUtils.isNotBlank(loginInfoModel.getUserName())) {
+                if (StringUtils.isNotBlank(search.getUserName())) {
                     list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.USER_NAME).as(String.class),
-                        "%" + loginInfoModel.getUserName() + "%"));
+                        "%" + search.getUserName() + "%"));
                 }
-                if (StringUtils.isNotBlank(loginInfoModel.getUserHostIp())) {
+                if (StringUtils.isNotBlank(search.getUserHostIp())) {
                     list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.USER_HOST_IP).as(String.class),
-                        "%" + loginInfoModel.getUserHostIp() + "%"));
+                        "%" + search.getUserHostIp() + "%"));
                 }
-                if (StringUtils.isNotBlank(loginInfoModel.getSystemName())) {
+                if (StringUtils.isNotBlank(search.getSystemName())) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.SYSTEM_NAME).as(String.class),
-                        loginInfoModel.getSystemName()));
+                        search.getSystemName()));
                 }
-                if (StringUtils.isNotBlank(loginInfoModel.getModularName())) {
+                if (StringUtils.isNotBlank(search.getModularName())) {
                     list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.MODULAR_NAME).as(String.class),
-                        "%" + loginInfoModel.getModularName() + "%"));
+                        "%" + search.getModularName() + "%"));
                 }
-                if (StringUtils.isNotBlank(loginInfoModel.getOperateName())) {
+                if (StringUtils.isNotBlank(search.getParamsJson())) {
+                    list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.PARAMS_JSON).as(String.class),
+                        "%" + search.getParamsJson() + "%"));
+                }
+                if (StringUtils.isNotBlank(search.getOperateName())) {
 
                     list.add(criteriaBuilder.like(root.get(Y9LogSearchConsts.OPERATE_NAME).as(String.class),
-                        "%" + loginInfoModel.getOperateName() + "%"));
+                        "%" + search.getOperateName() + "%"));
                 }
-                if (StringUtils.isNotBlank(loginInfoModel.getOperateType())) {
+                if (StringUtils.isNotBlank(search.getOperateType())) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.OPERATE_TYPE).as(String.class),
-                        loginInfoModel.getOperateType()));
+                        search.getOperateType()));
                 }
-                if (StringUtils.isNotBlank(loginInfoModel.getSuccess())) {
+                if (StringUtils.isNotBlank(search.getSuccess())) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.SUCCESS).as(String.class),
-                        loginInfoModel.getSuccess()));
+                        search.getSuccess()));
                 }
-                if (StringUtils.isNotBlank(loginInfoModel.getLogLevel())) {
+                if (StringUtils.isNotBlank(search.getLogLevel())) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.LOG_LEVEL).as(String.class),
-                        loginInfoModel.getLogLevel()));
+                        search.getLogLevel()));
                 }
-                if (StringUtils.isNotBlank(loginInfoModel.getStartTime())
-                    && StringUtils.isNotBlank(loginInfoModel.getEndTime())) {
-                    String sTime = loginInfoModel.getStartTime() + " 00:00:00";
-                    String eTime = loginInfoModel.getEndTime() + " 23:59:59";
+                if (StringUtils.isNotBlank(search.getStartTime()) && StringUtils.isNotBlank(search.getEndTime())) {
+                    String sTime = search.getStartTime() + " 00:00:00";
+                    String eTime = search.getEndTime() + " 23:59:59";
                     SimpleDateFormat sdfUtc = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
                     try {
                         Date startDate = DATE_TIME_FORMAT.parse(sTime);
