@@ -257,7 +257,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
         BoolQueryBuilder sQueryBuilder = QueryBuilders.boolQuery();
         sQueryBuilder.must(QueryBuilders.existsQuery(Y9LogSearchConsts.USER_NAME));
-        if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+        if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             sQueryBuilder.must(QueryBuilders.termQuery(Y9LogSearchConsts.TENANT_ID, Y9Util.escape(tenantId)));
         }
         sQueryBuilder.must(QueryBuilders.termQuery(Y9LogSearchConsts.SUCCESS, success));
@@ -267,7 +267,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
         BoolQueryBuilder eQueryBuilder = QueryBuilders.boolQuery();
         eQueryBuilder.must(QueryBuilders.existsQuery(Y9LogSearchConsts.USER_NAME));
-        if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+        if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             eQueryBuilder.must(QueryBuilders.termQuery(Y9LogSearchConsts.TENANT_ID, Y9Util.escape(tenantId)));
         }
         eQueryBuilder.must(QueryBuilders.termQuery(Y9LogSearchConsts.SUCCESS, error));
@@ -342,7 +342,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.must(QueryBuilders.existsQuery(Y9LogSearchConsts.USER_NAME));
         String tenantId = Y9LoginUserHolder.getTenantId();
-        if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+        if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             boolQueryBuilder.must(QueryBuilders.matchQuery(Y9LogSearchConsts.TENANT_ID, tenantId));
         }
         if (StringUtils.isNotBlank(startDay) && StringUtils.isNotBlank(endDay)) {
@@ -476,7 +476,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             Date eDay = Y9DayUtil.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.LOG_TIME).between(sDay.getTime(), eDay.getTime()));
         }
-        if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+        if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
         }
         if (StringUtils.isNotBlank(search.getLogLevel())) {
@@ -539,7 +539,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         if (StringUtils.isNotBlank(search.getSuccess())) {
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.SUCCESS).is(search.getSuccess()));
         }
-        if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+        if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
         }
         if (StringUtils.isNotBlank(search.getUserName())) {
@@ -640,7 +640,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 .subCriteria(new Criteria(Y9LogSearchConsts.OPERATE_NAME).contains(accessLogQuery.getOperateName()));
         }
         String tenantId = Y9LoginUserHolder.getTenantId();
-        if (!InitDataConsts.OPERATION_TENANT_ID.equals(tenantId)) {
+        if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
         }
         if (StringUtils.isNotBlank(accessLogQuery.getStartTime())
