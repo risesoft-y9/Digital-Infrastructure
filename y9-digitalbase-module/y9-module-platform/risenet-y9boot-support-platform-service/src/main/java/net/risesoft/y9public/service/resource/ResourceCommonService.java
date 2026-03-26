@@ -101,12 +101,4 @@ public interface ResourceCommonService<T extends Resource> {
      */
     T saveOrUpdate(T resourceBase);
 
-    /**
-     * 更新排列序号
-     *
-     * @param id 资源id
-     * @param index 序列号
-     * @return {@code  T}
-     */
-    T updateTabIndex(String id, int index);
 }

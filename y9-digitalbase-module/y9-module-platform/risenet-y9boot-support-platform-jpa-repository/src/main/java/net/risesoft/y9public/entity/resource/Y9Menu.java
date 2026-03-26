@@ -4,13 +4,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import net.risesoft.consts.DefaultConsts;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
+import net.risesoft.id.IdType;
+import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.model.platform.resource.Menu;
+import net.risesoft.y9.util.Y9BeanUtil;
 
 /**
  * 应用的菜单表
@@ -64,6 +70,18 @@ public class Y9Menu extends Y9ResourceBase {
     @Comment("元信息")
     private String meta;
 
+    public Y9Menu(Menu menu, Y9ResourceBase parentResource, Integer nextTabIndex) {
+        Y9BeanUtil.copyProperties(menu, this);
+
+        if (StringUtils.isBlank(this.id)) {
+            this.id = Y9IdGenerator.genId(IdType.SNOWFLAKE);
+        }
+        if (this.tabIndex == null || DefaultConsts.TAB_INDEX.equals(this.tabIndex)) {
+            this.tabIndex = nextTabIndex;
+        }
+        rebuildGuidPath(parentResource);
+    }
+
     @Override
     public String getAppId() {
         return this.appId;
@@ -72,5 +90,10 @@ public class Y9Menu extends Y9ResourceBase {
     @Override
     public String getParentId() {
         return this.parentId;
+    }
+
+    public void update(Menu menu, Y9ResourceBase parentResource) {
+        Y9BeanUtil.copyProperties(menu, this);
+        rebuildGuidPath(parentResource);
     }
 }

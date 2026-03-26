@@ -5,6 +5,7 @@ import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
@@ -12,9 +13,14 @@ import org.hibernate.annotations.DynamicUpdate;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import net.risesoft.consts.DefaultConsts;
 import net.risesoft.enums.platform.resource.OperationDisplayTypeEnum;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
+import net.risesoft.id.IdType;
+import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.model.platform.resource.Operation;
 import net.risesoft.persistence.EnumConverter;
+import net.risesoft.y9.util.Y9BeanUtil;
 
 /**
  * 页面按钮操作表
@@ -60,6 +66,18 @@ public class Y9Operation extends Y9ResourceBase {
     @Comment("按钮事件")
     private String eventName;
 
+    public Y9Operation(Operation operation, Y9ResourceBase parentResource, Integer nextTabIndex) {
+        Y9BeanUtil.copyProperties(operation, this);
+
+        if (StringUtils.isBlank(this.id)) {
+            this.id = Y9IdGenerator.genId(IdType.SNOWFLAKE);
+        }
+        if (this.tabIndex == null || DefaultConsts.TAB_INDEX.equals(this.tabIndex)) {
+            this.tabIndex = nextTabIndex;
+        }
+        rebuildGuidPath(parentResource);
+    }
+
     @Override
     public String getAppId() {
         return this.appId;
@@ -68,5 +86,10 @@ public class Y9Operation extends Y9ResourceBase {
     @Override
     public String getParentId() {
         return this.parentId;
+    }
+
+    public void update(Operation operation, Y9ResourceBase parentResource) {
+        Y9BeanUtil.copyProperties(operation, this);
+        rebuildGuidPath(parentResource);
     }
 }

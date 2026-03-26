@@ -18,6 +18,7 @@ import net.risesoft.base.BaseEntity;
 import net.risesoft.consts.DefaultConsts;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.persistence.EnumConverter;
+import net.risesoft.util.Y9OrgUtil;
 
 /**
  * 资源基类
@@ -122,7 +123,25 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
             .compare(this, y9ResourceBase);
     }
 
+    public void changeTabIndex(int tabIndex) {
+        this.tabIndex = tabIndex;
+    }
+
+    public Boolean disable() {
+        this.enabled = Boolean.FALSE;
+        return this.enabled;
+    }
+
+    public Boolean enable() {
+        this.enabled = Boolean.TRUE;
+        return this.enabled;
+    }
+
     public abstract String getAppId();
 
     public abstract String getParentId();
+
+    protected void rebuildGuidPath(Y9ResourceBase parentResource) {
+        this.guidPath = Y9OrgUtil.buildGuidPath(parentResource == null ? null : parentResource.getGuidPath(), this.id);
+    }
 }

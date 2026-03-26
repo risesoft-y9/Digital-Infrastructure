@@ -3,7 +3,6 @@ package net.risesoft.y9public.manager.resource.impl;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -13,17 +12,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.CacheNameConsts;
-import net.risesoft.consts.DefaultConsts;
 import net.risesoft.exception.ResourceErrorCodeEnum;
-import net.risesoft.id.IdType;
-import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.util.Y9OrgUtil;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
-import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.repository.resource.Y9AppRepository;
@@ -85,14 +80,6 @@ public class Y9AppManagerImpl implements Y9AppManager {
 
     @Override
     public Y9App insert(Y9App y9App) {
-        if (StringUtils.isBlank(y9App.getId())) {
-            y9App.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        }
-        if (y9App.getTabIndex() == null || DefaultConsts.TAB_INDEX.equals(y9App.getTabIndex())) {
-            Integer tabIndex = getNextTabIndexBySystemId(y9App.getSystemId());
-            y9App.setTabIndex(tabIndex);
-        }
-        y9App.setGuidPath(Y9OrgUtil.buildGuidPath(null, y9App.getId()));
         Y9App savedApp = y9AppRepository.save(y9App);
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedApp));
@@ -102,14 +89,8 @@ public class Y9AppManagerImpl implements Y9AppManager {
 
     @Override
     @CacheEvict(key = "#y9App.id")
-    public Y9App update(Y9App y9App) {
-        Y9App currentApp = this.getById(y9App.getId());
-        Y9App originalApp = new Y9App();
-        Y9BeanUtil.copyProperties(currentApp, originalApp);
-        Y9BeanUtil.copyProperties(y9App, currentApp);
-
-        currentApp.setGuidPath(Y9OrgUtil.buildGuidPath(null, currentApp.getId()));
-        Y9App savedApp = y9AppRepository.save(currentApp);
+    public Y9App update(Y9App y9App, Y9App originalApp) {
+        Y9App savedApp = y9AppRepository.save(y9App);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalApp, savedApp));
 
@@ -117,14 +98,13 @@ public class Y9AppManagerImpl implements Y9AppManager {
     }
 
     @Override
+    @CacheEvict(key = "#id", condition = "#id!=null")
     public Y9App updateTabIndex(String id, int index) {
-        Y9App y9App = this.getById(id);
-        y9App.setTabIndex(index);
-        return this.update(y9App);
-    }
+        Y9App currentApp = this.getById(id);
+        Y9App originalApp = PlatformModelConvertUtil.convert(currentApp, Y9App.class);
 
-    private Integer getNextTabIndexBySystemId(String systemId) {
-        return y9AppRepository.findTopBySystemIdOrderByTabIndexDesc(systemId).map(Y9App::getTabIndex).orElse(0) + 1;
+        currentApp.changeTabIndex(index);
+        return this.update(currentApp, originalApp);
     }
 
 }

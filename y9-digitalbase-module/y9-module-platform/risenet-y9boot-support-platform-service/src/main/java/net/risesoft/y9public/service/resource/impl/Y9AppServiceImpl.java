@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.DefaultConsts;
 import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.ResourceErrorCodeEnum;
 import net.risesoft.model.platform.resource.App;
@@ -194,9 +193,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     public void saveOrder(String[] appIds) {
         if (appIds.length > 0) {
             for (int i = 0, len = appIds.length; i < len; i++) {
-                Y9App app = y9AppManager.getById(appIds[i]);
-                app.setTabIndex(i + 1);
-                y9AppManager.update(app);
+                y9AppManager.updateTabIndex(appIds[i], i + 1);
             }
         }
     }
@@ -204,10 +201,10 @@ public class Y9AppServiceImpl implements Y9AppService {
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public App verifyApp(String id, boolean checked, String verifyUserName) {
-        Y9App y9App = y9AppManager.getById(id);
-        y9App.setChecked(checked);
-        y9App.setVerifyUserName(verifyUserName);
-        return entityToModel(y9AppManager.update(y9App));
+        Y9App currentApp = y9AppManager.getById(id);
+        Y9App originalApp = PlatformModelConvertUtil.convert(currentApp, Y9App.class);
+        currentApp.verify(checked, verifyUserName);
+        return entityToModel(y9AppManager.update(currentApp, originalApp));
     }
 
     @Override
@@ -259,8 +256,8 @@ public class Y9AppServiceImpl implements Y9AppService {
         Y9App currentApp = y9AppManager.getById(id);
         Y9App originalApp = PlatformModelConvertUtil.convert(currentApp, Y9App.class);
 
-        currentApp.setEnabled(Boolean.FALSE);
-        Y9App savedApp = y9AppManager.update(currentApp);
+        currentApp.disable();
+        Y9App savedApp = y9AppManager.update(currentApp, originalApp);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.APP_UPDATE_ENABLE.getAction())
@@ -290,8 +287,8 @@ public class Y9AppServiceImpl implements Y9AppService {
         Y9App currentApp = y9AppManager.getById(id);
         Y9App originalApp = PlatformModelConvertUtil.convert(currentApp, Y9App.class);
 
-        currentApp.setEnabled(Boolean.TRUE);
-        Y9App savedApp = y9AppManager.update(currentApp);
+        currentApp.enable();
+        Y9App savedApp = y9AppManager.update(currentApp, originalApp);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.APP_UPDATE_ENABLE.getAction())
@@ -329,15 +326,14 @@ public class Y9AppServiceImpl implements Y9AppService {
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public App saveOrUpdate(App app) {
-        Y9App y9App = PlatformModelConvertUtil.convert(app, Y9App.class);
-        // 每次保存都更改审核状态为未审核
-        y9App.setChecked(false);
-
-        if (StringUtils.isNotBlank(y9App.getId())) {
-            Optional<Y9App> y9AppOptional = y9AppManager.findById(y9App.getId());
+        if (StringUtils.isNotBlank(app.getId())) {
+            Optional<Y9App> y9AppOptional = y9AppManager.findById(app.getId());
             if (y9AppOptional.isPresent()) {
-                Y9App originApp = PlatformModelConvertUtil.convert(y9AppOptional.get(), Y9App.class);
-                Y9App savedApp = y9AppManager.update(y9App);
+                Y9App currentApp = y9AppOptional.get();
+                Y9App originApp = PlatformModelConvertUtil.convert(currentApp, Y9App.class);
+
+                currentApp.update(app);
+                Y9App savedApp = y9AppManager.update(currentApp, originApp);
 
                 AuditLogEvent auditLogEvent = AuditLogEvent.builder()
                     .action(AuditLogEnum.APP_UPDATE.getAction())
@@ -352,6 +348,7 @@ public class Y9AppServiceImpl implements Y9AppService {
             }
         }
 
+        Y9App y9App = new Y9App(app, getNextTabIndex(app.getSystemId()));
         Y9App savedApp = y9AppManager.insert(y9App);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -366,9 +363,7 @@ public class Y9AppServiceImpl implements Y9AppService {
         return entityToModel(savedApp);
     }
 
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public App updateTabIndex(String id, int index) {
-        return entityToModel(y9AppManager.updateTabIndex(id, index));
+    private Integer getNextTabIndex(String systemId) {
+        return y9AppRepository.findTopBySystemIdOrderByTabIndexDesc(systemId).map(Y9App::getTabIndex).orElse(0) + 1;
     }
 }

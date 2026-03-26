@@ -5,16 +5,21 @@ import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import net.risesoft.consts.DefaultConsts;
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.resource.DataCatalogTypeEnum;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
+import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.model.platform.resource.DataCatalog;
 import net.risesoft.persistence.EnumConverter;
+import net.risesoft.y9.util.Y9BeanUtil;
 
 /**
  * 数据目录
@@ -73,6 +78,21 @@ public class Y9DataCatalog extends Y9ResourceBase {
     @Convert(converter = EnumConverter.DataCatalogTypeEnumConverter.class)
     private DataCatalogTypeEnum type = DataCatalogTypeEnum.CLASSIFICATION;
 
+    public Y9DataCatalog(DataCatalog dataCatalog, Y9DataCatalog parent, Integer nextTabIndex, String currentTenantId) {
+        Y9BeanUtil.copyProperties(dataCatalog, this);
+
+        if (StringUtils.isBlank(this.id)) {
+            this.id = Y9IdGenerator.genId();
+        }
+        this.tenantId = currentTenantId;
+        this.systemId = InitDataConsts.SYSTEM_ID;
+        this.inherit = Boolean.TRUE;
+        if (this.tabIndex == null || DefaultConsts.TAB_INDEX.equals(this.tabIndex)) {
+            this.tabIndex = nextTabIndex;
+        }
+        rebuildProperties(parent);
+    }
+
     @Override
     public String getAppId() {
         return InitDataConsts.APP_ID;
@@ -81,6 +101,22 @@ public class Y9DataCatalog extends Y9ResourceBase {
     @Override
     public String getParentId() {
         return this.parentId;
+    }
+
+    public void update(DataCatalog dataCatalog, Y9DataCatalog parent) {
+        Y9BeanUtil.copyProperties(dataCatalog, this);
+        rebuildProperties(parent);
+    }
+
+    private void rebuildProperties(Y9DataCatalog parent) {
+        if (parent != null) {
+            this.parentId = parent.getId();
+            rebuildGuidPath(parent);
+            return;
+        }
+
+        this.parentId = null;
+        rebuildGuidPath(null);
     }
 
 }
