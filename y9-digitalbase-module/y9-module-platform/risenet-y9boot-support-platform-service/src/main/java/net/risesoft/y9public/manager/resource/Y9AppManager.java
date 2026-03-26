@@ -26,7 +26,7 @@ public interface Y9AppManager {
 
     Y9App insert(Y9App y9App);
 
-    Y9App update(Y9App y9App);
+    Y9App update(Y9App y9App, Y9App originalApp);
 
     Y9App updateTabIndex(String id, int index);
 }

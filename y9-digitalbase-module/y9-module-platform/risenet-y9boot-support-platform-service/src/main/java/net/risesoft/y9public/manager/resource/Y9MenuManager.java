@@ -24,7 +24,7 @@ public interface Y9MenuManager {
 
     Y9Menu insert(Y9Menu y9Menu);
 
-    Y9Menu update(Y9Menu y9Menu);
+    Y9Menu update(Y9Menu y9Menu, Y9Menu originalMenu);
 
     Y9Menu updateTabIndex(String id, int index);
 }

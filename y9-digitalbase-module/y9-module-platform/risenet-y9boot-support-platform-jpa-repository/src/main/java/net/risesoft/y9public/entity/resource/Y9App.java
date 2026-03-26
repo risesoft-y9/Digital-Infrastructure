@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
@@ -13,10 +14,15 @@ import org.hibernate.annotations.DynamicUpdate;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import net.risesoft.consts.DefaultConsts;
 import net.risesoft.enums.platform.resource.AppOpenTypeEnum;
 import net.risesoft.enums.platform.resource.AppTypeEnum;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
+import net.risesoft.id.IdType;
+import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.model.platform.resource.App;
 import net.risesoft.persistence.EnumConverter;
+import net.risesoft.y9.util.Y9BeanUtil;
 
 /**
  * 应用市场表
@@ -104,6 +110,19 @@ public class Y9App extends Y9ResourceBase {
     @ColumnDefault("0")
     private Boolean autoInit = Boolean.FALSE;
 
+    public Y9App(App app, Integer nextTabIndex) {
+        Y9BeanUtil.copyProperties(app, this);
+
+        if (StringUtils.isBlank(this.id)) {
+            this.id = Y9IdGenerator.genId(IdType.SNOWFLAKE);
+        }
+        if (this.tabIndex == null || DefaultConsts.TAB_INDEX.equals(this.tabIndex)) {
+            this.tabIndex = nextTabIndex;
+        }
+        this.checked = Boolean.FALSE;
+        rebuildGuidPath(null);
+    }
+
     @Override
     public String getAppId() {
         return id;
@@ -112,6 +131,18 @@ public class Y9App extends Y9ResourceBase {
     @Override
     public String getParentId() {
         return null;
+    }
+
+    public void update(App app) {
+        Y9BeanUtil.copyProperties(app, this);
+        // 每次保存都更改审核状态为未审核
+        this.checked = Boolean.FALSE;
+        rebuildGuidPath(null);
+    }
+
+    public void verify(boolean checked, String verifyUserName) {
+        this.checked = checked;
+        this.verifyUserName = verifyUserName;
     }
 
 }

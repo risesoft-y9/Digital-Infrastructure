@@ -24,6 +24,8 @@ import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9Operation;
+import net.risesoft.y9public.entity.resource.Y9ResourceBase;
+import net.risesoft.y9public.manager.resource.CompositeResourceManager;
 import net.risesoft.y9public.manager.resource.Y9OperationManager;
 import net.risesoft.y9public.repository.resource.Y9OperationRepository;
 import net.risesoft.y9public.service.resource.Y9OperationService;
@@ -42,6 +44,7 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     private final Y9OperationRepository y9OperationRepository;
 
     private final Y9OperationManager y9OperationManager;
+    private final CompositeResourceManager compositeResourceManager;
 
     private static Operation entityToModel(Y9Operation savedOperation) {
         return PlatformModelConvertUtil.convert(savedOperation, Operation.class);
@@ -89,8 +92,8 @@ public class Y9OperationServiceImpl implements Y9OperationService {
         Y9Operation currentOperation = y9OperationManager.getById(id);
         Y9Operation originalOperation = PlatformModelConvertUtil.convert(currentOperation, Y9Operation.class);
 
-        currentOperation.setEnabled(Boolean.FALSE);
-        Y9Operation savedOperation = y9OperationManager.update(currentOperation);
+        currentOperation.disable();
+        Y9Operation savedOperation = y9OperationManager.update(currentOperation, originalOperation);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.OPERATION_UPDATE_ENABLE.getAction())
@@ -121,8 +124,8 @@ public class Y9OperationServiceImpl implements Y9OperationService {
         Y9Operation currentOperation = y9OperationManager.getById(id);
         Y9Operation originalOperation = PlatformModelConvertUtil.convert(currentOperation, Y9Operation.class);
 
-        currentOperation.setEnabled(Boolean.TRUE);
-        Y9Operation savedOperation = y9OperationManager.update(currentOperation);
+        currentOperation.enable();
+        Y9Operation savedOperation = y9OperationManager.update(currentOperation, originalOperation);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.OPERATION_UPDATE_ENABLE.getAction())
@@ -161,14 +164,14 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Operation saveOrUpdate(Operation operation) {
-        Y9Operation y9Operation = PlatformModelConvertUtil.convert(operation, Y9Operation.class);
-
-        if (StringUtils.isNotBlank(y9Operation.getId())) {
-            Optional<Y9Operation> y9OperationOptional = y9OperationManager.findById(y9Operation.getId());
+        if (StringUtils.isNotBlank(operation.getId())) {
+            Optional<Y9Operation> y9OperationOptional = y9OperationManager.findById(operation.getId());
             if (y9OperationOptional.isPresent()) {
-                Y9Operation originOperation =
-                    PlatformModelConvertUtil.convert(y9OperationOptional.get(), Y9Operation.class);
-                Y9Operation savedOperation = y9OperationManager.update(y9Operation);
+                Y9Operation currentOperation = y9OperationOptional.get();
+                Y9Operation originOperation = PlatformModelConvertUtil.convert(currentOperation, Y9Operation.class);
+
+                currentOperation.update(operation, findParent(operation.getParentId()));
+                Y9Operation savedOperation = y9OperationManager.update(currentOperation, originOperation);
 
                 AuditLogEvent auditLogEvent = AuditLogEvent.builder()
                     .action(AuditLogEnum.OPERATION_UPDATE.getAction())
@@ -184,6 +187,8 @@ public class Y9OperationServiceImpl implements Y9OperationService {
             }
         }
 
+        Y9Operation y9Operation =
+            new Y9Operation(operation, findParent(operation.getParentId()), getNextTabIndex(operation.getParentId()));
         Y9Operation savedOperation = y9OperationManager.insert(y9Operation);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -196,11 +201,6 @@ public class Y9OperationServiceImpl implements Y9OperationService {
         Y9Context.publishEvent(auditLogEvent);
 
         return entityToModel(savedOperation);
-    }
-
-    @Override
-    public Operation updateTabIndex(String id, int index) {
-        return entityToModel(y9OperationManager.updateTabIndex(id, index));
     }
 
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
@@ -234,4 +234,15 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     private List<Operation> entityToModel(List<Y9Operation> y9OperationList) {
         return PlatformModelConvertUtil.convert(y9OperationList, Operation.class);
     }
+
+    private Y9ResourceBase findParent(String parentId) {
+        return compositeResourceManager.getResourceAsParent(parentId);
+    }
+
+    private Integer getNextTabIndex(String parentId) {
+        return y9OperationRepository.findTopByParentIdOrderByTabIndexDesc(parentId)
+            .map(Y9Operation::getTabIndex)
+            .orElse(0) + 1;
+    }
+
 }

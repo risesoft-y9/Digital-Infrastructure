@@ -23,6 +23,8 @@ import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
+import net.risesoft.y9public.entity.resource.Y9ResourceBase;
+import net.risesoft.y9public.manager.resource.CompositeResourceManager;
 import net.risesoft.y9public.manager.resource.Y9MenuManager;
 import net.risesoft.y9public.repository.resource.Y9MenuRepository;
 import net.risesoft.y9public.service.resource.Y9MenuService;
@@ -41,6 +43,7 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     private final Y9MenuRepository y9MenuRepository;
 
     private final Y9MenuManager y9MenuManager;
+    private final CompositeResourceManager compositeResourceManager;
 
     private static Menu entityToModel(Y9Menu savedMenu) {
         return PlatformModelConvertUtil.convert(savedMenu, Menu.class);
@@ -88,8 +91,8 @@ public class Y9MenuServiceImpl implements Y9MenuService {
         Y9Menu currentMenu = y9MenuManager.getById(id);
         Y9Menu originalMenu = PlatformModelConvertUtil.convert(currentMenu, Y9Menu.class);
 
-        currentMenu.setEnabled(Boolean.FALSE);
-        Y9Menu savedMenu = y9MenuManager.update(currentMenu);
+        currentMenu.disable();
+        Y9Menu savedMenu = y9MenuManager.update(currentMenu, originalMenu);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.MENU_UPDATE_ENABLE.getAction())
@@ -120,8 +123,8 @@ public class Y9MenuServiceImpl implements Y9MenuService {
         Y9Menu currentMenu = y9MenuManager.getById(id);
         Y9Menu originalMenu = PlatformModelConvertUtil.convert(currentMenu, Y9Menu.class);
 
-        currentMenu.setEnabled(Boolean.TRUE);
-        Y9Menu savedMenu = y9MenuManager.update(currentMenu);
+        currentMenu.enable();
+        Y9Menu savedMenu = y9MenuManager.update(currentMenu, originalMenu);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.MENU_UPDATE_ENABLE.getAction())
@@ -160,19 +163,20 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Menu saveOrUpdate(Menu menu) {
-        Y9Menu y9Menu = PlatformModelConvertUtil.convert(menu, Y9Menu.class);
-
-        if (StringUtils.isNotBlank(y9Menu.getId())) {
-            Optional<Y9Menu> y9MenuOptional = y9MenuManager.findById(y9Menu.getId());
+        if (StringUtils.isNotBlank(menu.getId())) {
+            Optional<Y9Menu> y9MenuOptional = y9MenuManager.findById(menu.getId());
             if (y9MenuOptional.isPresent()) {
-                Y9Menu originMenu = PlatformModelConvertUtil.convert(y9MenuOptional.get(), Y9Menu.class);
-                Y9Menu savedMenu = y9MenuManager.update(y9Menu);
+                Y9Menu currentMenu = y9MenuOptional.get();
+                Y9Menu originalMenu = PlatformModelConvertUtil.convert(currentMenu, Y9Menu.class);
+
+                currentMenu.update(menu, findParent(menu.getParentId()));
+                Y9Menu savedMenu = y9MenuManager.update(currentMenu, originalMenu);
 
                 AuditLogEvent auditLogEvent = AuditLogEvent.builder()
                     .action(AuditLogEnum.MENU_UPDATE.getAction())
                     .description(Y9StringUtil.format(AuditLogEnum.MENU_UPDATE.getDescription(), savedMenu.getName()))
                     .objectId(savedMenu.getId())
-                    .oldObject(originMenu)
+                    .oldObject(originalMenu)
                     .currentObject(savedMenu)
                     .build();
                 Y9Context.publishEvent(auditLogEvent);
@@ -181,6 +185,7 @@ public class Y9MenuServiceImpl implements Y9MenuService {
             }
         }
 
+        Y9Menu y9Menu = new Y9Menu(menu, findParent(menu.getParentId()), getNextTabIndex(menu.getParentId()));
         Y9Menu savedMenu = y9MenuManager.insert(y9Menu);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -193,12 +198,6 @@ public class Y9MenuServiceImpl implements Y9MenuService {
         Y9Context.publishEvent(auditLogEvent);
 
         return entityToModel(savedMenu);
-    }
-
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Menu updateTabIndex(String id, int index) {
-        return entityToModel(y9MenuManager.updateTabIndex(id, index));
     }
 
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
@@ -231,6 +230,14 @@ public class Y9MenuServiceImpl implements Y9MenuService {
 
     private List<Menu> entityToModel(List<Y9Menu> y9MenuList) {
         return PlatformModelConvertUtil.convert(y9MenuList, Menu.class);
+    }
+
+    private Y9ResourceBase findParent(String parentId) {
+        return compositeResourceManager.getResourceAsParent(parentId);
+    }
+
+    private Integer getNextTabIndex(String parentId) {
+        return y9MenuRepository.findTopByParentIdOrderByTabIndexDesc(parentId).map(Y9Menu::getTabIndex).orElse(0) + 1;
     }
 
 }

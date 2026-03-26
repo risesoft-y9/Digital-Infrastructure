@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.consts.DefaultConsts;
 import net.risesoft.consts.OptionClassConsts;
 import net.risesoft.entity.org.Y9Department;
 import net.risesoft.entity.org.Y9Organization;
@@ -71,15 +72,18 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public DataCatalog saveOrUpdate(DataCatalog dataCatalog) {
-        Y9DataCatalog y9DataCatalog = PlatformModelConvertUtil.convert(dataCatalog, Y9DataCatalog.class);
-
-        if (StringUtils.isNotBlank(y9DataCatalog.getId())) {
-            Optional<Y9DataCatalog> y9DataCatalogOptional = y9DataCatalogManager.findById(y9DataCatalog.getId());
+        if (StringUtils.isNotBlank(dataCatalog.getId())) {
+            Optional<Y9DataCatalog> y9DataCatalogOptional = y9DataCatalogManager.findById(dataCatalog.getId());
             if (y9DataCatalogOptional.isPresent()) {
-                return PlatformModelConvertUtil.convert(y9DataCatalogManager.update(y9DataCatalog), DataCatalog.class);
+                Y9DataCatalog currentDataCatalog = y9DataCatalogOptional.get();
+                currentDataCatalog.update(dataCatalog, findParent(dataCatalog.getParentId()).orElse(null));
+                return PlatformModelConvertUtil.convert(y9DataCatalogManager.update(currentDataCatalog),
+                    DataCatalog.class);
             }
         }
 
+        Y9DataCatalog y9DataCatalog = new Y9DataCatalog(dataCatalog, findParent(dataCatalog.getParentId()).orElse(null),
+            getNextTabIndex(dataCatalog.getParentId()), Y9LoginUserHolder.getTenantId());
         return PlatformModelConvertUtil.convert(y9DataCatalogManager.insert(y9DataCatalog), DataCatalog.class);
     }
 
@@ -332,13 +336,13 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
         List<Y9DataCatalog> y9DataCatalogList = y9DataCatalogRepository
             .findByTenantIdAndOrgUnitId(Y9LoginUserHolder.getTenantId(), createdDepartment.getParentId());
         for (Y9DataCatalog y9DataCatalog : y9DataCatalogList) {
-            Y9DataCatalog orgUnitDataCatalog = new Y9DataCatalog();
+            DataCatalog orgUnitDataCatalog = new DataCatalog();
             orgUnitDataCatalog.setName(createdDepartment.getName());
             orgUnitDataCatalog.setOrgUnitId(createdDepartment.getId());
             orgUnitDataCatalog.setParentId(y9DataCatalog.getId());
             orgUnitDataCatalog.setType(DataCatalogTypeEnum.ORG_UNIT);
             orgUnitDataCatalog.setTreeType(y9DataCatalog.getTreeType());
-            y9DataCatalogManager.insert(orgUnitDataCatalog);
+            this.saveOrUpdate(orgUnitDataCatalog);
         }
     }
 
@@ -349,7 +353,7 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
         List<Y9DataCatalog> y9DataCatalogList =
             y9DataCatalogRepository.findByTenantIdAndOrgUnitId(Y9LoginUserHolder.getTenantId(), entity.getId());
         for (Y9DataCatalog y9DataCatalog : y9DataCatalogList) {
-            y9DataCatalog.setEnabled(Boolean.FALSE);
+            y9DataCatalog.disable();
             y9DataCatalogManager.update(y9DataCatalog);
         }
     }
@@ -374,7 +378,7 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
         List<Y9DataCatalog> y9DataCatalogList =
             y9DataCatalogRepository.findByTenantIdAndOrgUnitId(Y9LoginUserHolder.getTenantId(), entity.getId());
         for (Y9DataCatalog y9DataCatalog : y9DataCatalogList) {
-            y9DataCatalog.setEnabled(Boolean.FALSE);
+            y9DataCatalog.disable();
             y9DataCatalogManager.update(y9DataCatalog);
         }
     }
@@ -392,6 +396,23 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
             dataCatalogList.add(this.convertY9DataCatalogToDataCatalog(y9DataCatalog));
         }
         return dataCatalogList;
+    }
+
+    private Optional<Y9DataCatalog> findParent(String parentId) {
+        if (StringUtils.isBlank(parentId)) {
+            return Optional.empty();
+        }
+        return Optional.of(y9DataCatalogManager.getById(parentId));
+    }
+
+    private Integer getNextTabIndex(String parentId) {
+        if (StringUtils.isBlank(parentId)) {
+            return DefaultConsts.TAB_INDEX;
+        }
+        return y9DataCatalogRepository
+            .findTopByTenantIdAndParentIdOrderByTabIndexDesc(Y9LoginUserHolder.getTenantId(), parentId)
+            .map(Y9DataCatalog::getTabIndex)
+            .orElse(-1) + 1;
     }
 
 }

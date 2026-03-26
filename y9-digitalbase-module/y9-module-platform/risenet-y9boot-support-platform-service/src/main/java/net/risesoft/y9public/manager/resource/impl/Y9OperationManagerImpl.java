@@ -2,7 +2,6 @@ package net.risesoft.y9public.manager.resource.impl;
 
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -12,17 +11,12 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.exception.ResourceErrorCodeEnum;
-import net.risesoft.id.IdType;
-import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.util.Y9OrgUtil;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
-import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9public.entity.resource.Y9Operation;
-import net.risesoft.y9public.entity.resource.Y9ResourceBase;
-import net.risesoft.y9public.manager.resource.CompositeResourceManager;
 import net.risesoft.y9public.manager.resource.Y9OperationManager;
 import net.risesoft.y9public.repository.resource.Y9OperationRepository;
 
@@ -39,8 +33,6 @@ import net.risesoft.y9public.repository.resource.Y9OperationRepository;
 public class Y9OperationManagerImpl implements Y9OperationManager {
 
     private final Y9OperationRepository y9OperationRepository;
-
-    private final CompositeResourceManager compositeResourceManager;
 
     @Override
     public Optional<Y9Operation> findById(String id) {
@@ -67,14 +59,6 @@ public class Y9OperationManagerImpl implements Y9OperationManager {
 
     @Override
     public Y9Operation insert(Y9Operation y9Operation) {
-        Y9ResourceBase parent = compositeResourceManager.getResourceAsParent(y9Operation.getParentId());
-
-        if (StringUtils.isBlank(y9Operation.getId())) {
-            y9Operation.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        }
-        y9Operation.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), y9Operation.getId()));
-        Integer tabIndex = getNextIndexByParentId(y9Operation.getParentId());
-        y9Operation.setTabIndex(tabIndex);
         Y9Operation savedOperation = y9OperationRepository.save(y9Operation);
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedOperation));
@@ -84,16 +68,8 @@ public class Y9OperationManagerImpl implements Y9OperationManager {
 
     @Override
     @CacheEvict(key = "#y9Operation.id", condition = "#y9Operation.id!=null")
-    public Y9Operation update(Y9Operation y9Operation) {
-        Y9ResourceBase parent = compositeResourceManager.getResourceAsParent(y9Operation.getParentId());
-
-        Y9Operation currentOperation = this.getByIdFromCache(y9Operation.getId());
-        Y9Operation originalOperation = new Y9Operation();
-        Y9BeanUtil.copyProperties(currentOperation, originalOperation);
-        Y9BeanUtil.copyProperties(y9Operation, currentOperation);
-
-        currentOperation.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), currentOperation.getId()));
-        Y9Operation savedOperation = y9OperationRepository.save(currentOperation);
+    public Y9Operation update(Y9Operation y9Operation, Y9Operation originalOperation) {
+        Y9Operation savedOperation = y9OperationRepository.save(y9Operation);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalOperation, savedOperation));
 
@@ -107,16 +83,13 @@ public class Y9OperationManagerImpl implements Y9OperationManager {
     }
 
     @Override
+    @CacheEvict(key = "#id", condition = "#id!=null")
     public Y9Operation updateTabIndex(String id, int index) {
-        Y9Operation y9Operation = this.getByIdFromCache(id);
-        y9Operation.setTabIndex(index);
-        return this.update(y9Operation);
-    }
+        Y9Operation currentOperation = this.getById(id);
+        Y9Operation originalOperation = PlatformModelConvertUtil.convert(currentOperation, Y9Operation.class);
 
-    private Integer getNextIndexByParentId(String parentId) {
-        return y9OperationRepository.findTopByParentIdOrderByTabIndexDesc(parentId)
-            .map(Y9Operation::getTabIndex)
-            .orElse(0) + 1;
+        currentOperation.changeTabIndex(index);
+        return this.update(currentOperation, originalOperation);
     }
 
 }
