@@ -207,7 +207,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 String tenantId = Y9LoginUserHolder.getTenantId();
                 long countSuccess = 0L;
                 long countError = 0L;
-                if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+                if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
                     countSuccess =
                         y9logAccessLogRepository.countByTenantIdAndSuccessAndLogTimeBetweenAndUserNameNotNull(tenantId,
                             success, startOfTime, endOfTime);
@@ -243,7 +243,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 List<Predicate> list = new ArrayList<>();
                 list.add(criteriaBuilder.isNotNull(root.get(Y9LogSearchConsts.USER_NAME).as(String.class)));
 
-                if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+                if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class),
                         Y9LoginUserHolder.getTenantId()));
                 }
@@ -402,7 +402,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             public Predicate toPredicate(Root<Y9LogAccessLog> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
                 List<Predicate> list = new ArrayList<>();
-                if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+                if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
                 }
                 if (StringUtils.isNotBlank(searchDto.getLogLevel())) {
@@ -498,7 +498,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                         searchDto.getSuccess()));
                 }
 
-                if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+                if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
                 }
 
@@ -578,7 +578,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             public Predicate toPredicate(Root<Y9LogAccessLog> root, CriteriaQuery<?> query,
                 CriteriaBuilder criteriaBuilder) {
                 List<Predicate> list = new ArrayList<>();
-                if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+                if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
                 }
                 if (StringUtils.isNotBlank(loginInfoModel.getLogLevel())) {

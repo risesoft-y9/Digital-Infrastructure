@@ -52,6 +52,7 @@ import net.risesoft.util.AccessLogModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9DayUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9.util.Y9Util;
 import net.risesoft.y9public.entity.Y9LogAccessLog;
 import net.risesoft.y9public.repository.Y9LogAccessLogRepository;
 
@@ -118,7 +119,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.METHOD_NAME).query(Y9LogSearchConsts.APP_METHODNAME)));
 
         if (StringUtils.isNotBlank(tenantId)) {
-            build.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
+            build.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(Y9Util.escape(tenantId))));
         }
 
         if (StringUtils.isNotBlank(guidPath)) {
@@ -275,7 +276,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         ebuilder.must(
             m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(startTimeStr).to(etartTimeStr))));
 
-        if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+        if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             sbuilder.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
             ebuilder.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
         }
@@ -352,7 +353,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
         builder.must(m -> m.exists(e -> e.field(Y9LogSearchConsts.USER_NAME)));
         String tenantId = Y9LoginUserHolder.getTenantId();
-        if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+        if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             builder.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
         }
         if (StringUtils.isNotBlank(startDay) && StringUtils.isNotBlank(endDay)) {
@@ -486,7 +487,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             Date eDay = Y9DayUtil.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.LOG_TIME).between(sDay.getTime(), eDay.getTime()));
         }
-        if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+        if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
         }
         if (StringUtils.isNotBlank(search.getLogLevel())) {
@@ -549,7 +550,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         if (StringUtils.isNotBlank(search.getSuccess())) {
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.SUCCESS).is(search.getSuccess()));
         }
-        if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+        if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
         }
         if (StringUtils.isNotBlank(search.getUserName())) {
@@ -650,7 +651,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 .subCriteria(new Criteria(Y9LogSearchConsts.OPERATE_NAME).contains(accessLogQuery.getOperateName()));
         }
         String tenantId = Y9LoginUserHolder.getTenantId();
-        if (!InitDataConsts.OPERATION_TENANT_ID.equals(tenantId)) {
+        if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
         }
         if (StringUtils.isNotBlank(accessLogQuery.getStartTime())
