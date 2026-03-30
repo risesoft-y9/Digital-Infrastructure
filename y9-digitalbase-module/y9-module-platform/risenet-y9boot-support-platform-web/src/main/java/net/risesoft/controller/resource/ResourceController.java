@@ -263,27 +263,36 @@ public class ResourceController {
         List<ResourceTreeNodeVO> resourceTreeNodeVOList = new ArrayList<>();
 
         List<Resource> appResourceList = compositeResourceService.treeSearch(name);
+        
         List<String> appIds =
             y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
+        // 筛选出已租用的应用下的资源
         List<Resource> accessAppResourceList = appResourceList.stream()
             .filter(resource -> appIds.contains(resource.getAppId()))
             .collect(Collectors.toList());
         if (StringUtils.isNotBlank(appId)) {
+            // 筛选出该应用下的资源
             accessAppResourceList = accessAppResourceList.stream()
                 .filter(resource -> appId.equals(resource.getAppId()))
                 .collect(Collectors.toList());
         }
-        resourceTreeNodeVOList.addAll(ResourceTreeNodeVO.convertResource(accessAppResourceList));
 
         List<System> systemList = new ArrayList<>();
         if (StringUtils.isNotBlank(systemId)) {
             System system = y9SystemService.findById(systemId).get();
             systemList.add(system);
+
+            // 筛选出该系统下的资源
+            accessAppResourceList = accessAppResourceList.stream()
+                    .filter(resource -> systemId.equals(resource.getSystemId()))
+                    .collect(Collectors.toList());
         } else {
             List<String> systemIdList =
                 accessAppResourceList.stream().map(Resource::getSystemId).collect(Collectors.toList());
             systemList = y9SystemService.listByIds(systemIdList);
         }
+        
+        resourceTreeNodeVOList.addAll(ResourceTreeNodeVO.convertResource(accessAppResourceList));
         resourceTreeNodeVOList.addAll(ResourceTreeNodeVO.convertSystem(systemList));
         return resourceTreeNodeVOList;
     }
