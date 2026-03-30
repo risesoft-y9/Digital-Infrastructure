@@ -2,7 +2,7 @@ package net.risesoft.model.platform.resource;
 
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 

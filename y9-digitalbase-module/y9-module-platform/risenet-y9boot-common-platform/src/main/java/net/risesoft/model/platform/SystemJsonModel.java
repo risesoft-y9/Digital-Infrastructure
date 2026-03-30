@@ -2,7 +2,7 @@ package net.risesoft.model.platform;
 
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -2,15 +2,12 @@ package net.risesoft.model.platform.resource;
 
 import java.util.List;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import net.risesoft.enums.platform.resource.OperationDisplayTypeEnum;
 
 /**
  * 操作导出 JSON 模型

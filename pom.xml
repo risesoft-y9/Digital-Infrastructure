@@ -91,6 +91,7 @@
         <module>y9-digitalbase-starter/risenet-y9boot-starter-log</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-multi-tenant</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-openfeign</module>
+        <module>y9-digitalbase-starter/risenet-y9boot-starter-system-registration</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-permission</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-repeatsubmit</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-security</module>
