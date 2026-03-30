@@ -300,6 +300,7 @@
             selectTreeDefaultCheckedKeys.value = result.data;
             negativeConfigDialog.value.title = computed(() => t('添加负权限成员'));
         }
+        searchKey.value = '';
         negativeConfigDialog.value.show = true;
     }
 
