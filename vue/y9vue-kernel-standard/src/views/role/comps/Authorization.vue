@@ -208,6 +208,7 @@
                 title: computed(() => t('添加数据目录授权'))
             });
         }
+        searchKey.value = '';
     };
 
     // 全局 loading
