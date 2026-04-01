@@ -176,7 +176,7 @@ public class TerminalController {
         String tenantId = Y9LoginUserHolder.getTenantId();
         List<Map<String, Object>> list = new ArrayList<>();
         PersonQuery personQuery = PersonQuery.builder().parentId(parentId).disabled(false).build();
-        Y9Page<Person> personPage = personManager.page(tenantId, personQuery, pageQuery);
+        Y9Page<Person> personPage = personManager.page(tenantId, personQuery, pageQuery.getPage(), pageQuery.getSize());
         List<Person> personList = personPage.getRows();
         if (!personList.isEmpty()) {
             personList.forEach(person -> {
@@ -209,7 +209,7 @@ public class TerminalController {
         String tenantId = Y9LoginUserHolder.getTenantId();
         List<Map<String, Object>> list = new ArrayList<>();
         PersonQuery personQuery = PersonQuery.builder().parentId(parentId).name(userName).disabled(false).build();
-        Y9Page<Person> personPage = personManager.page(tenantId, personQuery, pageQuery);
+        Y9Page<Person> personPage = personManager.page(tenantId, personQuery, pageQuery.getPage(), pageQuery.getSize());
         List<Person> personList = personPage.getRows();
         if (!personList.isEmpty()) {
             for (Person orgPerson : personList) {

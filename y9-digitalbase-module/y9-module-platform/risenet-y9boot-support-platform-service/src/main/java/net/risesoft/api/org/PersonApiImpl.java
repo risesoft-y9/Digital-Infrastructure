@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
@@ -457,15 +456,16 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param personQuery 查询参数
-     * @param pageQuery 分页查询参数
+     * @param page
+     * @param size
      * @return {@code Y9Page<Person>} 通用请求返回对象 - data 是人员对象
      */
     @Override
     public Y9Page<Person> page(@RequestParam("tenantId") @NotBlank String tenantId, @Validated PersonQuery personQuery,
-        @Validated Y9PageQuery pageQuery) {
+        Integer page, Integer size) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return y9PersonService.page(personQuery, pageQuery);
+        return y9PersonService.page(personQuery, new Y9PageQuery(page, size));
     }
 
     /**
