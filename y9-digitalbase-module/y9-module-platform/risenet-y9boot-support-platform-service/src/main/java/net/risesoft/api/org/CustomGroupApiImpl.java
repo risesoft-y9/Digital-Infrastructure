@@ -196,7 +196,8 @@ public class CustomGroupApiImpl implements CustomGroupApi {
 
     @Override
     public Y9Page<CustomGroupMember> pageCustomGroupMember(@RequestParam("tenantId") @NotBlank String tenantId,
-        @Validated CustomGroupMemberQuery customGroupMemberQuery, Integer page, Integer size) {
+        @Validated CustomGroupMemberQuery customGroupMemberQuery, @RequestParam("page") Integer page,
+        @RequestParam("size") Integer size) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return customGroupMembersService.page(customGroupMemberQuery, new Y9PageQuery(page, size));

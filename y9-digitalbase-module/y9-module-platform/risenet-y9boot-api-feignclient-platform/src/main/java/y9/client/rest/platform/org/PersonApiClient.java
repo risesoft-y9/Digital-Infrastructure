@@ -27,6 +27,6 @@ public interface PersonApiClient extends PersonApi {
     @Override
     @GetMapping("/page")
     Y9Page<Person> page(@RequestParam("tenantId") String tenantId, @SpringQueryMap PersonQuery personQuery,
-        Integer page, Integer size);
+        @RequestParam("page") Integer page, @RequestParam("size") Integer size);
 
 }

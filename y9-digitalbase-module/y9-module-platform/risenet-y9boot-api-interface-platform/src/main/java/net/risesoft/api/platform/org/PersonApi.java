@@ -327,7 +327,7 @@ public interface PersonApi {
      */
     @GetMapping("/page")
     Y9Page<Person> page(@RequestParam("tenantId") @NotBlank String tenantId, @Validated PersonQuery personQuery,
-        Integer page, Integer size);
+        @RequestParam("page") Integer page, @RequestParam("size") Integer size);
 
     /**
      * 保存人员头像

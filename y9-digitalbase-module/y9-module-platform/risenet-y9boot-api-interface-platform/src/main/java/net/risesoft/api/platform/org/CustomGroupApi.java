@@ -143,7 +143,8 @@ public interface CustomGroupApi {
      */
     @GetMapping("/pageCustomGroupMember")
     Y9Page<CustomGroupMember> pageCustomGroupMember(@RequestParam("tenantId") @NotBlank String tenantId,
-        @Validated CustomGroupMemberQuery customGroupMemberQuery, Integer page, Integer size);
+        @Validated CustomGroupMemberQuery customGroupMemberQuery, @RequestParam("page") Integer page,
+        @RequestParam("size") Integer size);
 
     /**
      * 删除组成员
