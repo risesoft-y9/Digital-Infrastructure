@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import net.risesoft.api.platform.org.PersonApi;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Page;
-import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.query.platform.PersonQuery;
 
 /**
@@ -28,6 +27,6 @@ public interface PersonApiClient extends PersonApi {
     @Override
     @GetMapping("/page")
     Y9Page<Person> page(@RequestParam("tenantId") String tenantId, @SpringQueryMap PersonQuery personQuery,
-        @SpringQueryMap Y9PageQuery pageQuery);
+        Integer page, Integer size);
 
 }

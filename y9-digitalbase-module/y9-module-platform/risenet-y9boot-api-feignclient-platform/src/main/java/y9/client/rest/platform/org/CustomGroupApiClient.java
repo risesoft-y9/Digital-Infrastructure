@@ -41,5 +41,5 @@ public interface CustomGroupApiClient extends CustomGroupApi {
 
     @GetMapping("/pageCustomGroupMember")
     Y9Page<CustomGroupMember> pageCustomGroupMember(@RequestParam("tenantId") String tenantId,
-        @SpringQueryMap CustomGroupMemberQuery customGroupMemberQuery, @SpringQueryMap Y9PageQuery pageQuery);
+        @SpringQueryMap CustomGroupMemberQuery customGroupMemberQuery, Integer page, Integer size);
 }

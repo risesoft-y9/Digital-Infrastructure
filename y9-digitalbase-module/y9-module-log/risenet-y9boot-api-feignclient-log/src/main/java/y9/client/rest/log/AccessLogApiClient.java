@@ -8,7 +8,6 @@ import net.risesoft.api.log.AccessLogApi;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.log.AccessLogQuery;
 import net.risesoft.pojo.Y9Page;
-import net.risesoft.pojo.Y9PageQuery;
 
 /**
  * 访问日志组件
@@ -23,6 +22,6 @@ public interface AccessLogApiClient extends AccessLogApi {
 
     @Override
     @GetMapping("/search")
-    Y9Page<AccessLog> search(@SpringQueryMap AccessLogQuery accessLogQuery, @SpringQueryMap Y9PageQuery pageQuery);
+    Y9Page<AccessLog> search(@SpringQueryMap AccessLogQuery accessLogQuery, Integer page, Integer size);
 
 }

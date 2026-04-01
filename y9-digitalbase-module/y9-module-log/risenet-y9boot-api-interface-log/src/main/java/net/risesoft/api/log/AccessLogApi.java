@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.log.AccessLogQuery;
 import net.risesoft.pojo.Y9Page;
-import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
 
 /**
@@ -45,11 +44,12 @@ public interface AccessLogApi {
      * 多条件分页查询访问日志
      *
      * @param accessLogQuery 查询条件
-     * @param pageQuery 分页查询
+     * @param page
+     * @param size
      * @return {@code Y9Page<AccessLog>} 通用分页请求返回对象 - data 是访问日志集合
      * @since 9.6.0
      */
     @GetMapping("/search")
-    Y9Page<AccessLog> search(AccessLogQuery accessLogQuery, Y9PageQuery pageQuery);
+    Y9Page<AccessLog> search(AccessLogQuery accessLogQuery, Integer page, Integer size);
 
 }

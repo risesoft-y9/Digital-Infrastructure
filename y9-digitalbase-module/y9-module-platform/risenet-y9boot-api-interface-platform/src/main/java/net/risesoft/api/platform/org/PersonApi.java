@@ -3,7 +3,6 @@ package net.risesoft.api.platform.org;
 import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +19,6 @@ import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.org.PersonExt;
 import net.risesoft.model.platform.org.Position;
 import net.risesoft.pojo.Y9Page;
-import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.query.platform.PersonQuery;
 
@@ -323,12 +321,13 @@ public interface PersonApi {
      *
      * @param tenantId 租户id
      * @param personQuery 查询参数
-     * @param pageQuery 分页查询参数
+     * @param page
+     * @param size
      * @return {@code Y9Page<Person>} 通用请求返回对象 - data 是人员对象
      */
     @GetMapping("/page")
     Y9Page<Person> page(@RequestParam("tenantId") @NotBlank String tenantId, @Validated PersonQuery personQuery,
-        @Validated Y9PageQuery pageQuery);
+        Integer page, Integer size);
 
     /**
      * 保存人员头像

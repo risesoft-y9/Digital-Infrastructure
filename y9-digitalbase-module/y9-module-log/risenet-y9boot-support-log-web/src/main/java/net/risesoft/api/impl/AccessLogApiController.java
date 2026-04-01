@@ -84,14 +84,15 @@ public class AccessLogApiController implements AccessLogApi {
      * 多条件分页查询访问日志
      *
      * @param accessLogQuery 查询条件
-     * @param pageQuery 分页条件
+     * @param page
+     * @param size
      * @return {@code Y9Page<AccessLog>} 通用分页请求返回对象 - data 是访问日志集合
      * @since 9.6.0
      */
     @Override
     @GetMapping("/search")
-    public Y9Page<AccessLog> search(AccessLogQuery accessLogQuery, Y9PageQuery pageQuery) {
-        return accessLogService.pageSearchByCondition(accessLogQuery, pageQuery);
+    public Y9Page<AccessLog> search(AccessLogQuery accessLogQuery, Integer page, Integer size) {
+        return accessLogService.pageSearchByCondition(accessLogQuery, new Y9PageQuery(page, size));
     }
 
 }

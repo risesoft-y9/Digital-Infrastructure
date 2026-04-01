@@ -136,13 +136,14 @@ public interface CustomGroupApi {
      *
      * @param tenantId 租户id
      * @param customGroupMemberQuery 查询条件
-     * @param pageQuery 分页查询参数
+     * @param page
+     * @param size
      * @return {@code Y9Page<CustomGroupMember>} 通用分页请求返回对象 - rows 是返回的用户组成员列表
      * @since 9.6.0
      */
     @GetMapping("/pageCustomGroupMember")
     Y9Page<CustomGroupMember> pageCustomGroupMember(@RequestParam("tenantId") @NotBlank String tenantId,
-        @Validated CustomGroupMemberQuery customGroupMemberQuery, @Validated Y9PageQuery pageQuery);
+        @Validated CustomGroupMemberQuery customGroupMemberQuery, Integer page, Integer size);
 
     /**
      * 删除组成员
