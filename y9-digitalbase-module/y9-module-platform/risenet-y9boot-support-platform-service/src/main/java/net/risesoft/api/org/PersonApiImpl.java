@@ -462,7 +462,7 @@ public class PersonApiImpl implements PersonApi {
      */
     @Override
     public Y9Page<Person> page(@RequestParam("tenantId") @NotBlank String tenantId, @Validated PersonQuery personQuery,
-        Integer page, Integer size) {
+        @RequestParam("page") Integer page, @RequestParam("size") Integer size) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonService.page(personQuery, new Y9PageQuery(page, size));

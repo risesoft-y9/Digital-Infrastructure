@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -91,7 +92,8 @@ public class AccessLogApiController implements AccessLogApi {
      */
     @Override
     @GetMapping("/search")
-    public Y9Page<AccessLog> search(AccessLogQuery accessLogQuery, Integer page, Integer size) {
+    public Y9Page<AccessLog> search(AccessLogQuery accessLogQuery, @RequestParam("page") Integer page,
+        @RequestParam("size") Integer size) {
         return accessLogService.pageSearchByCondition(accessLogQuery, new Y9PageQuery(page, size));
     }
 
