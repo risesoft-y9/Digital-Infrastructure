@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
     api(platform(libs.spring.boot.bom))
+    api(project(":y9-digitalbase-common:risenet-y9boot-common-util"))
 
     api("org.springframework.boot:spring-boot")
     api("org.springframework.boot:spring-boot-autoconfigure")
