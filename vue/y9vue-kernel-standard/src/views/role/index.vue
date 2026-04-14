@@ -589,9 +589,8 @@
         showFooter: true, //是否显示底部
         columns: [
             {
-                type: 'radio',
-                title: computed(() => t('请选择')),
-                width: 200
+                type: 'index',
+                title: computed(() => t('序号'))
             },
             {
                 title: computed(() => t('名称')),

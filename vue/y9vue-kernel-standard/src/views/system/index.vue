@@ -459,9 +459,8 @@
                 type == 'sort'
                     ? [
                           {
-                              type: 'radio',
-                              title: '请选择',
-                              width: 200
+                              type: 'index',
+                              title: computed(() => t('序号'))
                           },
                           {
                               title: '名称',

@@ -1,5 +1,5 @@
 <template>
-    <div class="margin-bottom-20">
+    <!-- <div class="margin-bottom-20">
         <el-button
             :size="fontSizeObj.buttonSize"
             :style="{ fontSize: fontSizeObj.baseFontSize }"
@@ -18,13 +18,16 @@
             <i class="ri-arrow-down-line"></i>
             <span>{{ $t('下移') }}</span>
         </el-button>
-    </div>
-    <y9Table v-model:selectedVal="selecedtVal" :config="tableConfig" @on-current-change="onCurrentChange"></y9Table>
+    </div> -->
+    <VueDraggable v-model="tableConfig.tableData" :animation="150" target=".el-table__body tbody">
+        <y9Table v-model:selectedVal="selecedtVal" :config="tableConfig" @on-current-change="onCurrentChange"></y9Table>
+    </VueDraggable>
 </template>
 
 <script lang="ts" setup>
     import { computed, inject, reactive, toRefs, watch } from 'vue';
     import { useI18n } from 'vue-i18n';
+    import { VueDraggable } from 'vue-draggable-plus';
 
     const { t } = useI18n();
     // 注入 字体对象
@@ -58,7 +61,8 @@
             //人员列表表格配置
             columns: [] as any,
             tableData: [] as any,
-            pageConfig: false //取消分页
+            pageConfig: false, //取消分页
+            rowStyle: { cursor: 'move' }
         },
         currentRow: '',
         selecedtVal: ''
@@ -67,11 +71,6 @@
     let { tableConfig, currentRow, selecedtVal } = toRefs(data);
 
     let defaultColumn = [
-        {
-            type: 'radio',
-            title: computed(() => t('请选择')),
-            width: 200
-        },
         {
             title: computed(() => t('名称')),
             key: 'name'
@@ -170,7 +169,7 @@
         selecedtVal.value = data?.id;
     }
 
-    async function upPerson() {
+    /*async function upPerson() {
         if (currentRow.value == '' || currentRow.value == null) {
             ElNotification({
                 title: t('失败'),
@@ -234,7 +233,7 @@
                 break;
             }
         }
-    }
+    }*/
 </script>
 
 <style lang="scss" scoped></style>
