@@ -9,7 +9,6 @@
         "svgo": "svgo -f src/assets/iconsvg --config=src/assets/iconsvg/svgo.yml"
     },
     "dependencies": {
-        "@element-plus/icons-vue": "^2.3.2",
         "@floating-ui/core": "^1.2.0",
         "@sxzz/popperjs-es": "^2.11.7",
         "@types/lodash": "^4.14.182",
@@ -35,6 +34,7 @@
         "v-viewer": "^3.0.10",
         "vue": "^3.5.11",
         "vue-demi": "^0.12.4",
+        "vue-draggable-plus": "^0.6.1",
         "vue-i18n": "^9.2.2",
         "vue-router": "^4.0.13",
         "vxe-table": "^4.5.13",
@@ -45,6 +45,7 @@
     },
     "devDependencies": {
         "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+        "@element-plus/icons-vue": "^2.3.2",
         "@iconify/json": "^2.1.14",
         "@vitejs/plugin-vue": "^4.3.2",
         "@vue/compiler-sfc": "^3.2.32",

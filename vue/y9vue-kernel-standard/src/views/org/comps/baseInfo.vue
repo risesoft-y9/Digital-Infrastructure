@@ -320,7 +320,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { computed, inject, reactive, toRefs, watch, ref } from 'vue';
+    import { computed, inject, reactive, ref, toRefs, watch } from 'vue';
     import { $dictionaryFunc } from '@/utils/data';
     import { $deeploneObject } from '@/utils/object';
     import y9_storage from '@/utils/storage';
@@ -953,9 +953,8 @@
                     type == 'sort'
                         ? [
                               {
-                                  type: 'radio',
-                                  title: computed(() => t('请选择')),
-                                  width: 200
+                                  type: 'index',
+                                  title: computed(() => t('序号'))
                               },
                               {
                                   title: computed(() => t('名称')),
