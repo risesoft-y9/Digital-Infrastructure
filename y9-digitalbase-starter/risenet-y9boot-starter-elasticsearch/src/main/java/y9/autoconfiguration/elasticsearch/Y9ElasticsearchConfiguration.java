@@ -1,6 +1,12 @@
 package y9.autoconfiguration.elasticsearch;
 
+import java.util.concurrent.TimeUnit;
+
+import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
+import org.elasticsearch.client.RestClientBuilder;
+import org.springframework.boot.autoconfigure.elasticsearch.RestClientBuilderCustomizer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
@@ -22,6 +28,23 @@ public class Y9ElasticsearchConfiguration {
     public Y9ElasticsearchConfiguration() {
         LOGGER.info("Y9ElasticsearchConfiguration init. ");
         System.setProperty("es.set.netty.runtime.available.processors", "false");
+    }
+
+    @Bean
+    public RestClientBuilderCustomizer restClientBuilderCustomizer() {
+
+        return new RestClientBuilderCustomizer() {
+            @Override
+            public void customize(RestClientBuilder builder) {
+
+            }
+
+            @Override
+            public void customize(HttpAsyncClientBuilder builder) {
+                // 默认 keepalive = -1 ？但是 ES / 网络 / NAT 可能提前关掉连接，这样会导致 Connection reset by peer
+                builder.setKeepAliveStrategy(((response, context) -> TimeUnit.MINUTES.toMillis(1)));
+            }
+        };
     }
 
 }
