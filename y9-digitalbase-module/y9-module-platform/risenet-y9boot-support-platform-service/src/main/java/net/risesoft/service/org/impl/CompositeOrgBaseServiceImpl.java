@@ -27,6 +27,7 @@ import net.risesoft.entity.org.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.enums.AuditLogEnum;
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.enums.platform.org.OrgTreeTypeEnum;
 import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
@@ -45,6 +46,7 @@ import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.org.PersonsGroups;
 import net.risesoft.model.platform.org.PersonsPositions;
 import net.risesoft.model.platform.org.Position;
+import net.risesoft.model.user.UserInfo;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.org.Y9DepartmentRepository;
 import net.risesoft.repository.org.Y9GroupRepository;
@@ -345,10 +347,21 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrgUnit> getTree4DeptManager(String id, OrgTreeTypeEnum treeType, Boolean disabled) {
+    public List<OrgUnit> getTreeForManager(String parentOrgUnitId, OrgTreeTypeEnum treeType, Boolean disabled,
+        UserInfo userInfo) {
+        if (ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
+            return new ArrayList<>();
+        }
+        if (userInfo.isGlobalManager()) {
+            return this.getTree(parentOrgUnitId, treeType, disabled);
+        }
+        return this.getTree4DeptManager(parentOrgUnitId, treeType, disabled, userInfo);
+    }
+
+    private List<OrgUnit> getTree4DeptManager(String id, OrgTreeTypeEnum treeType, Boolean disabled,
+        UserInfo userInfo) {
         Set<Y9OrgBase> orgBaseSet = new HashSet<>();
-        Optional<Y9Department> managerDeptOptional =
-            y9DepartmentManager.findByIdFromCache(Y9LoginUserHolder.getDeptId());
+        Optional<Y9Department> managerDeptOptional = y9DepartmentManager.findByIdFromCache(userInfo.getParentId());
         if (managerDeptOptional.isPresent()) {
             Y9Department managerDept = managerDeptOptional.get();
 
@@ -386,13 +399,6 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             .sorted()
             .map(PlatformModelConvertUtil::orgBaseToOrgUnit)
             .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Person> listAllPersonsByParentId(String parentId) {
-        List<Y9Person> persons = new ArrayList<>();
-        recursionAllPersons(parentId, persons);
-        return PlatformModelConvertUtil.y9PersonToPerson(persons);
     }
 
     @Override
@@ -589,9 +595,21 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrgUnit> treeSearch4DeptManager(String name, OrgTreeTypeEnum treeType, Boolean disabled) {
-        Y9Department y9Department = y9DepartmentManager.getByIdFromCache(Y9LoginUserHolder.getDeptId());
-        return treeSearch(y9Department.getId(), name, treeType, disabled, true);
+    public List<OrgUnit> treeSearchForManager(String name, OrgTreeTypeEnum treeType, Boolean disabled,
+        UserInfo userInfo) {
+        if (ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
+            return new ArrayList<>();
+        }
+        if (userInfo.isGlobalManager()) {
+            return this.treeSearch(null, name, treeType, disabled, true);
+        }
+        return this.treeSearch4DeptManager(name, treeType, disabled, userInfo);
+    }
+
+    private List<OrgUnit> treeSearch4DeptManager(String name, OrgTreeTypeEnum treeType, Boolean disabled,
+        UserInfo userInfo) {
+        Y9Department y9Department = y9DepartmentManager.getByIdFromCache(userInfo.getParentId());
+        return this.treeSearch(y9Department.getId(), name, treeType, disabled, true);
     }
 
     @Override
@@ -617,16 +635,6 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             orgUnitOptional.ifPresent(orgUnitList::add);
         }
         return orgUnitList;
-    }
-
-    private List<Y9Department> findBureauUnderOrganization(String organizationId, Boolean disabled) {
-        if (disabled == null) {
-            return y9DepartmentRepository.findByBureauAndGuidPathContainingOrderByTabIndexAsc(Boolean.TRUE,
-                organizationId);
-        } else {
-            return y9DepartmentRepository.findByBureauAndGuidPathContainingAndDisabledOrderByTabIndexAsc(Boolean.TRUE,
-                organizationId, disabled);
-        }
     }
 
     private List<Y9Department> findDepartmentByNameLike(String name, Boolean disabled) {
@@ -931,21 +939,6 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
         for (Y9Person y9Person : orgPersonList) {
             Person person = PlatformModelConvertUtil.convert(y9Person, Person.class);
             syncOrgUnits.getPersons().add(person);
-        }
-    }
-
-    /**
-     * 递归获取所有人员
-     *
-     * @param parentId
-     * @param personList
-     */
-    private void recursionAllPersons(String parentId, List<Y9Person> personList) {
-        List<Y9Person> lists = this.getPersonByParentId(parentId);
-        personList.addAll(lists);
-        List<Y9Department> deptList = y9DepartmentRepository.findByParentIdOrderByTabIndexAsc(parentId);
-        for (Y9Department dept : deptList) {
-            recursionAllPersons(dept.getId(), personList);
         }
     }
 

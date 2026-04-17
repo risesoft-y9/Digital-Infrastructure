@@ -33,4 +33,13 @@ public interface Y9PublishedEventService {
      * @return {@code Page<Y9PublishedEvent>}
      */
     Y9Page<PublishedEvent> page(Y9PageQuery pageQuery, PublishedEventQuery query);
+
+    /**
+     * 分页查询操作事件列表
+     *
+     * @param pageQuery 分页信息
+     * @param query 查询条件
+     * @return {@code Page<Y9PublishedEvent>}
+     */
+    Y9Page<PublishedEvent> pageForManager(Y9PageQuery pageQuery, PublishedEventQuery query);
 }

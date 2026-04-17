@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.model.platform.PublishedEvent;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.query.platform.PublishedEventQuery;
 import net.risesoft.util.PlatformModelConvertUtil;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.event.Y9PublishedEvent;
 import net.risesoft.y9public.repository.event.Y9PublishedEventRepository;
 import net.risesoft.y9public.service.event.Y9PublishedEventService;
@@ -55,5 +57,13 @@ public class Y9PublishedEventServiceImpl implements Y9PublishedEventService {
 
         return Y9Page.success(pageQuery.getPage(), y9PublishedEventPage.getTotalPages(),
             y9PublishedEventPage.getTotalElements(), entityToModel(y9PublishedEventPage.getContent()));
+    }
+
+    @Override
+    public Y9Page<PublishedEvent> pageForManager(Y9PageQuery pageQuery, PublishedEventQuery query) {
+        if (Y9LoginUserHolder.getUserInfo().getManagerLevel().isTenantManager()) {
+            query.setTenantId(Y9LoginUserHolder.getTenantId());
+        }
+        return page(pageQuery, query);
     }
 }

@@ -80,6 +80,16 @@ public interface Y9AuthorizationService {
     List<Authorization> listByRoleIds(List<String> principalIds, String resourceId, AuthorityEnum authority);
 
     /**
+     * 根据资源id、角色名称和权限类型获取关联角色授权列表
+     *
+     * @param resourceId 资源id
+     * @param roleName 角色名
+     * @param authority 权限类型 {@link AuthorityEnum}
+     * @return {@code List<Authorization>}
+     */
+    List<Authorization> listRelateRole(String resourceId, String roleName, AuthorityEnum authority);
+
+    /**
      * 根据授权主体id，获取与此授权主体相关的权限分页记录
      *
      * @param principalId 授权主体的唯一标识

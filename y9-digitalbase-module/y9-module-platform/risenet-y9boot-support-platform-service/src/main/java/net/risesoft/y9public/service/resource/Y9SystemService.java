@@ -26,6 +26,13 @@ public interface Y9SystemService {
     void deleteAfterCheck(String id);
 
     /**
+     * 根据当前登录管理员删除系统
+     *
+     * @param id 唯一标识
+     */
+    void deleteForManager(String id);
+
+    /**
      * 根据id禁用
      *
      * @param id 唯一标识

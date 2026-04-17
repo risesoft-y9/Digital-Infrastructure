@@ -1,13 +1,11 @@
 package net.risesoft.controller.org;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +30,6 @@ import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
 import net.risesoft.service.org.Y9OrganizationService;
-import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.vo.org.OrgTreeNodeVO;
 import net.risesoft.y9.Y9LoginUserHolder;
 
@@ -54,7 +51,6 @@ public class OrgController {
     private final Y9DepartmentService y9DepartmentService;
     private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9OrganizationService y9OrganizationService;
-    private final Y9PersonService y9PersonService;
 
     /**
      * 根据id，改变组织禁用状态
@@ -95,31 +91,6 @@ public class OrgController {
     }
 
     /**
-     * 根据组织机构实体guidPath和禁用/未禁用状态查找所有人员数量
-     *
-     * @param id 节点id
-     * @param orgType 组织类型
-     * @return {@code Y9Result<Long>}
-     */
-    @RiseLog(operationName = "根据guidPath和禁用/未禁用状态查找部门下人员总数")
-    @RequestMapping(value = "/getAllPersonsCount")
-    public Y9Result<Long> getPersonsCountByDisabled(@RequestParam @NotBlank String id,
-        @RequestParam OrgTypeEnum orgType) {
-        long count = 0;
-        if (orgType.equals(OrgTypeEnum.ORGANIZATION)) {
-            count = y9PersonService.countByGuidPathLikeAndDisabledAndDeletedFalse(id);
-        } else if (orgType.equals(OrgTypeEnum.DEPARTMENT)) {
-            Department dept = y9DepartmentService.getById(id);
-            if (StringUtils.isNotBlank(dept.getGuidPath())) {
-                count = y9PersonService.countByGuidPathLikeAndDisabledAndDeletedFalse(dept.getGuidPath());
-            } else {
-                count = y9PersonService.countByGuidPathLikeAndDisabledAndDeletedFalse(dept.getId());
-            }
-        }
-        return Y9Result.success(count, "根据guidPath和禁用/未禁用状态查找部门下人员总数完成");
-    }
-
-    /**
      * 获取机构树子节点
      *
      * @param id 父节点id
@@ -133,12 +104,7 @@ public class OrgController {
     public Y9Result<List<OrgTreeNodeVO>> getTree2(@RequestParam @NotBlank String id,
         @RequestParam OrgTreeTypeEnum treeType, @RequestParam(required = false) Boolean disabled) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-        List<OrgUnit> orgUnitList = new ArrayList<>();
-        if (userInfo.isGlobalManager() && !ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
-            orgUnitList = compositeOrgBaseService.getTree(id, treeType, disabled);
-        } else if (!ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
-            orgUnitList = compositeOrgBaseService.getTree4DeptManager(id, treeType, disabled);
-        }
+        List<OrgUnit> orgUnitList = compositeOrgBaseService.getTreeForManager(id, treeType, disabled, userInfo);
         return Y9Result.success(OrgTreeNodeVO.convertOrgUnitList(orgUnitList, treeType, true, compositeOrgBaseService),
             "获取机构树成功！");
     }
@@ -254,13 +220,7 @@ public class OrgController {
     public Y9Result<List<OrgTreeNodeVO>> treeSearch2(@RequestParam String name, @RequestParam OrgTreeTypeEnum treeType,
         @RequestParam(required = false) Boolean disabled) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-        List<OrgUnit> orgUnitList = new ArrayList<>();
-        if (userInfo.isGlobalManager()) {
-            orgUnitList = compositeOrgBaseService.treeSearch(null, name, treeType, disabled, true);
-        } else if (ManagerLevelEnum.SYSTEM_MANAGER.equals(userInfo.getManagerLevel())
-            || ManagerLevelEnum.SECURITY_MANAGER.equals(userInfo.getManagerLevel())) {
-            orgUnitList = compositeOrgBaseService.treeSearch4DeptManager(name, treeType, disabled);
-        }
+        List<OrgUnit> orgUnitList = compositeOrgBaseService.treeSearchForManager(name, treeType, disabled, userInfo);
         return Y9Result.success(OrgTreeNodeVO.convertOrgUnitList(orgUnitList, treeType, false, compositeOrgBaseService),
             "获取机构树成功！");
     }

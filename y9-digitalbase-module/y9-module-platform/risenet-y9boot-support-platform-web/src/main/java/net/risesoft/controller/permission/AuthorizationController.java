@@ -210,19 +210,7 @@ public class AuthorizationController {
     public Y9Result<List<AuthorizationVO>> listRelateRole(@RequestParam("resourceId") @NotBlank String resourceId,
         @RequestParam(required = false) String roleName, @RequestParam("authority") AuthorityEnum authority) {
         List<AuthorizationVO> authorizationVOList = new ArrayList<>();
-        List<Authorization> authorizationList;
-        if (StringUtils.isNotBlank(roleName)) {
-            List<Role> list = y9RoleService.listByName(roleName);
-            List<String> roleIds = list.stream().map(Role::getId).collect(Collectors.toList());
-            if (!roleIds.isEmpty()) {
-                authorizationList = y9AuthorizationService.listByRoleIds(roleIds, resourceId, authority);
-            } else {
-                authorizationList = new ArrayList<>();
-            }
-        } else {
-            authorizationList = y9AuthorizationService
-                .listByPrincipalTypeAndResourceId(AuthorizationPrincipalTypeEnum.ROLE, resourceId);
-        }
+        List<Authorization> authorizationList = y9AuthorizationService.listRelateRole(resourceId, roleName, authority);
         for (Authorization authorization : authorizationList) {
             if (AuthorizationPrincipalTypeEnum.ROLE.equals(authorization.getPrincipalType())) {
                 authorizationVOList.add(getAuthorizationVOForRole(authorization));
