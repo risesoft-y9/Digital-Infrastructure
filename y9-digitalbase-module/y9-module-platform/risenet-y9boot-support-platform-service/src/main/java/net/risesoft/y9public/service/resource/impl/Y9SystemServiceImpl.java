@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.DefaultConsts;
 import net.risesoft.enums.AuditLogEnum;
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.exception.SystemErrorCodeEnum;
 import net.risesoft.model.platform.System;
 import net.risesoft.model.user.UserInfo;
@@ -92,6 +93,16 @@ public class Y9SystemServiceImpl implements Y9SystemService {
         long tenantSystemCount = y9TenantSystemRepository.countBySystemId(id);
         Y9AssertUtil.isTrue(tenantSystemCount == 0, SystemErrorCodeEnum.SYSTEM_REGISTERED_BY_TENANT);
 
+        this.delete(id);
+    }
+
+    @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
+    public void deleteForManager(String id) {
+        if (Y9LoginUserHolder.getUserInfo().getManagerLevel().isOperationManager()) {
+            this.deleteAfterCheck(id);
+            return;
+        }
         this.delete(id);
     }
 

@@ -14,7 +14,6 @@ import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.query.platform.PublishedEventQuery;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.service.event.Y9PublishedEventService;
 
 /**
@@ -46,11 +45,6 @@ public class PublishedEventController {
     @RiseLog(operationName = "分页获取操作事件")
     @RequestMapping("/pagePublishedEventList")
     public Y9Page<PublishedEvent> pagePublishedEventList(PublishedEventQuery query, Y9PageQuery pageQuery) {
-        if (Y9LoginUserHolder.getUserInfo().getManagerLevel().equals(ManagerLevelEnum.OPERATION_SECURITY_MANAGER)) {
-            return y9PublishedEventService.page(pageQuery, query);
-        } else {
-            query.setTenantId(Y9LoginUserHolder.getTenantId());
-            return y9PublishedEventService.page(pageQuery, query);
-        }
+        return y9PublishedEventService.pageForManager(pageQuery, query);
     }
 }

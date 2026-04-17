@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
@@ -50,6 +51,7 @@ import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.resource.CompositeResourceManager;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
+import net.risesoft.y9public.repository.Y9RoleRepository;
 
 /**
  * @author dingzhaojun
@@ -69,6 +71,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
 
     private final Y9AuthorizationManager y9AuthorizationManager;
     private final Y9RoleManager y9RoleManager;
+    private final Y9RoleRepository y9RoleRepository;
 
     private static List<Authorization> entityToModel(List<Y9Authorization> y9AuthorizationList) {
         return PlatformModelConvertUtil.convert(y9AuthorizationList, Authorization.class);
@@ -149,6 +152,23 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
         List<Y9Authorization> y9AuthorizationList =
             y9AuthorizationRepository.findByResourceIdAndAuthorityAndPrincipalIdIn(resourceId, authority, principalIds);
         return entityToModel(y9AuthorizationList);
+    }
+
+    @Override
+    @Transactional
+    public List<Authorization> listRelateRole(String resourceId, String roleName, AuthorityEnum authority) {
+        if (StringUtils.isNotBlank(roleName)) {
+            List<String> roleIds = y9RoleRepository.findByNameContainingOrderByTabIndexAsc(roleName)
+                .stream()
+                .map(Y9Role::getId)
+                .collect(Collectors.toList());
+            if (roleIds.isEmpty()) {
+                return new ArrayList<>();
+            }
+            return this.listByRoleIds(roleIds, resourceId, authority);
+        }
+
+        return this.listByPrincipalTypeAndResourceId(AuthorizationPrincipalTypeEnum.ROLE, resourceId);
     }
 
     @Override

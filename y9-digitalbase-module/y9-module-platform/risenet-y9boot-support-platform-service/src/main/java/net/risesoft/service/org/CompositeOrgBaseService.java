@@ -12,6 +12,7 @@ import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.org.Organization;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.org.Position;
+import net.risesoft.model.user.UserInfo;
 
 /**
  * 组合的组织节点 service
@@ -158,22 +159,16 @@ public interface CompositeOrgBaseService {
     List<OrgUnit> getTree(String parentOrgUnitId, OrgTreeTypeEnum treeType, Boolean disabled);
 
     /**
-     * 子域三员获取部门树
+     * 根据管理员权限获取组织架构树
      *
-     * @param id 组织节点id
+     * @param parentOrgUnitId 组织节点id
      * @param treeType 树类型
-     * @param disabled 是否禁用
+     * @param disabled 节点是否禁用
+     * @param userInfo 当前用户信息
      * @return {@code List<OrgUnit>}
      */
-    List<OrgUnit> getTree4DeptManager(String id, OrgTreeTypeEnum treeType, Boolean disabled);
-
-    /**
-     * 根据父节点id，获取子节点下的所有人员，包括用户组和岗位下的人员
-     *
-     * @param parentId 父节点id
-     * @return {@code List<OrgUnit>}
-     */
-    List<Person> listAllPersonsByParentId(String parentId);
+    List<OrgUnit> getTreeForManager(String parentOrgUnitId, OrgTreeTypeEnum treeType, Boolean disabled,
+        UserInfo userInfo);
 
     /**
      * 根据父节点id,递归获取其下所有人员
@@ -251,14 +246,15 @@ public interface CompositeOrgBaseService {
         boolean includeOrgUnitAndAncestor);
 
     /**
-     * 根据name，和结构树类型查询机构主体
+     * 根据管理员权限查询组织节点
      *
      * @param name 组织节点名称
      * @param treeType 树类型{@link OrgTreeTypeEnum}
      * @param disabled 是否禁用
+     * @param userInfo 当前用户信息
      * @return {@code List<OrgUnit>}
      */
-    List<OrgUnit> treeSearch4DeptManager(String name, OrgTreeTypeEnum treeType, Boolean disabled);
+    List<OrgUnit> treeSearchForManager(String name, OrgTreeTypeEnum treeType, Boolean disabled, UserInfo userInfo);
 
     /**
      * 通过父节点 id 获取作为可作为父亲节点的节点（只可能是组织机构和部门）

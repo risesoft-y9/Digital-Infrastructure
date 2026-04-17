@@ -53,11 +53,7 @@ public class SystemController {
     @RiseLog(operationName = "删除系统")
     @PostMapping(value = "/delete")
     public Y9Result<Object> delete(@RequestParam @NotBlank String id) {
-        if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
-            y9SystemService.deleteAfterCheck(id);
-        } else {
-            y9SystemService.delete(id);
-        }
+        y9SystemService.deleteForManager(id);
         return Y9Result.successMsg("删除系统成功");
     }
 
