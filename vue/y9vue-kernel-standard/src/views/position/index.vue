@@ -60,7 +60,7 @@
     import setDepartmentPropList from '../org/comps/setDepartmentPropList.vue';
     import InheritableDepartmentPropList from '@/views/org/comps/inheritableDepartmentPropList.vue';
     import auditLog from '@/views/y9log/entityAuditLog/index.vue';
-    import { getAllPersonsCount, getTreeItemById, removeOrg, searchByName, treeInterface } from '@/api/org/index';
+    import { getTreeItemById, removeOrg, searchByName, treeInterface } from '@/api/org/index';
     import { checkDeptManager } from '@/api/deptManager/index';
     import { removeDept } from '@/api/dept/index';
     import { removePosition } from '@/api/position/index';
@@ -205,8 +205,6 @@
         // Object.assign(currNode, obj); //合并节点信息
         if (currNode) {
             if (isRePostPersonCount) {
-                let res = await getAllPersonsCount(currNode.id, currNode.nodeType); //获取人员数量
-                currNode.personCount = res.data; //人员数量
             }
             Object.assign(currNode, obj); //合并节点信息
 

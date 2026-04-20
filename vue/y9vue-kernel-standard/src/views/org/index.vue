@@ -112,7 +112,6 @@
     import auditLog from '@/views/y9log/entityAuditLog/index.vue';
     import InheritableDepartmentPropList from '@/views/org/comps/inheritableDepartmentPropList.vue';
     import {
-        getAllPersonsCount,
         getTreeItemById,
         orgSaveOrder,
         orgSaveOrUpdate,
@@ -405,8 +404,6 @@
         const currNode = findNode(getTreeData(), targetId); //找到树节点对应的节点信息
         if (currNode) {
             if (isRePostPersonCount) {
-                let res = await getAllPersonsCount(currNode.id, currNode.nodeType); //获取人员数量
-                currNode.personCount = res.data; //人员数量
             }
             Object.assign(currNode, obj); //合并节点信息
             if (currNode.nodeType === 'Organization' || currNode.nodeType === 'Department') {

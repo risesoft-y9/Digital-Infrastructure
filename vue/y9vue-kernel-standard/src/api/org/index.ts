@@ -113,20 +113,6 @@ export const sync = async (params) => {
     });
 };
 
-/**
- * 获取人员数
- * @param {*} ID
- * @param {*} orgType
- * @returns
- */
-export const getAllPersonsCount = async (id, orgType) => {
-    return await platformRequest({
-        url: '/api/rest/org/getAllPersonsCount',
-        method: 'GET',
-        cType: false,
-        params: { id: id, orgType: orgType }
-    });
-};
 
 //保存扩展属性
 export const saveOrgExtendProperties = async (orgId, properties) => {

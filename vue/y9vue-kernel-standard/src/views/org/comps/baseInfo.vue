@@ -335,7 +335,6 @@
     import uploadOrgInfo from '../comps/dialogContent/uploadOrgInfo.vue';
     import {
         changeDisabledOrganization,
-        getAllPersonsCount,
         getDepartmentById,
         getGroupById,
         getOrganizationById,
@@ -511,15 +510,8 @@
                         if (result.success) {
                             //更新当前节点的人员计数信息
                             if (props.getTreeData) {
-                                //原本的人数
-                                const originCount = currInfo.value.personCount;
-
-                                //获取最新的人数
-                                let res = await getAllPersonsCount(currInfo.value.id, currInfo.value.orgType); //获取人员数量
-                                const newCount = res.data; //最新的人数
-
                                 //手动更新tree的人员计数并更新子节点
-                                props.updateTreePersonCount(currInfo.value, newCount - originCount, currInfo.value.id); //手动更新tree的人员计数
+                                props.updateTreePersonCount(currInfo.value, orgBaseIds.length, currInfo.value.id); //手动更新tree的人员计数
                             }
                         }
                     } else if (newConfig.value.type == 'move') {
