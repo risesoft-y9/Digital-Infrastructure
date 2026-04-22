@@ -90,6 +90,13 @@ public interface Y9SystemService {
     List<System> listAll();
 
     /**
+     * 根据当前登录管理员查询系统列表
+     *
+     * @return {@code List<System>}
+     */
+    List<System> listByManager();
+
+    /**
      * 根据contextPath获取系统实体
      *
      * @param contextPath 上下文路径

@@ -5,6 +5,7 @@ import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -180,6 +181,23 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     public List<System> listAll() {
         List<Y9System> y9SystemList = y9SystemRepository.findAll(Sort.by(Sort.Direction.ASC, "tabIndex"));
         return entityToModel(y9SystemList);
+    }
+
+    @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER, readOnly = true)
+    public List<System> listByManager() {
+        if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
+            return this.listAll();
+        }
+
+        // 租户租用的系统
+        return y9TenantSystemRepository.findByTenantId(Y9LoginUserHolder.getTenantId())
+            .stream()
+            .map(tenantSystem -> y9SystemManager.findByIdFromCache(tenantSystem.getSystemId()))
+            .flatMap(Optional::stream)
+            .sorted()
+            .map(Y9SystemServiceImpl::entityToModel)
+            .collect(Collectors.toList());
     }
 
     @Override

@@ -45,14 +45,6 @@ public interface CompositeResourceService {
     List<Resource> listByParentId(String parentId);
 
     /**
-     * 根据系统id查询所有的根资源（App资源）
-     *
-     * @param systemId 系统id
-     * @return {@code List<Y9ResourceBase>}
-     */
-    List<App> listRootResourceBySystemId(String systemId);
-
-    /**
      * 查询所有的根资源（App资源）
      *
      * @return {@code List<Y9App>}

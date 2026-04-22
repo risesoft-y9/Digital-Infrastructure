@@ -22,9 +22,7 @@ import net.risesoft.model.platform.System;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.vo.resource.SystemTreeNodeVO;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.service.resource.Y9SystemService;
-import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 
 /**
  * 系统管理
@@ -42,7 +40,6 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 public class SystemController {
 
     private final Y9SystemService y9SystemService;
-    private final Y9TenantSystemService y9TenantSystemService;
 
     /**
      * 删除系统
@@ -101,13 +98,7 @@ public class SystemController {
     @RiseLog(operationName = "获取系统列表")
     @GetMapping(value = "/list2")
     public Y9Result<List<SystemTreeNodeVO>> list2() {
-        List<System> systemList;
-        if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
-            systemList = y9SystemService.listAll();
-        } else {
-            systemList = y9TenantSystemService.listSystemByTenantId(Y9LoginUserHolder.getTenantId());
-        }
-        return Y9Result.success(SystemTreeNodeVO.convertY9SystemList(systemList), "获取系统列表成功");
+        return Y9Result.success(SystemTreeNodeVO.convertY9SystemList(y9SystemService.listByManager()), "获取系统列表成功");
     }
 
     /**

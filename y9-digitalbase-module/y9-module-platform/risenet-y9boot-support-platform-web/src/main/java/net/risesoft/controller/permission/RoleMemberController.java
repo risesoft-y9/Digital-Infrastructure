@@ -1,8 +1,6 @@
 package net.risesoft.controller.permission;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
@@ -28,10 +26,8 @@ import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
-import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
 import net.risesoft.vo.role.RoleMemberVO;
-import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 组织-角色关联管理
@@ -51,8 +47,6 @@ public class RoleMemberController {
     private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9OrgBasesToRolesService y9OrgBasesToRolesService;
 
-    private final Y9ManagerService y9ManagerService;
-
     /**
      * 对角色，添加组织节点的映射
      *
@@ -66,19 +60,7 @@ public class RoleMemberController {
     public Y9Result<Object> addOrgUnitsForRole(@RequestParam @NotBlank String roleId,
         @RequestParam(value = "orgUnitIds") @NotEmpty List<String> orgUnitIds, @RequestParam Boolean negative) {
 
-        List<String> accessibleOrgUnitIdList;
-
-        if (Y9LoginUserHolder.getUserInfo().isGlobalManager()) {
-            accessibleOrgUnitIdList = orgUnitIds;
-        } else {
-            accessibleOrgUnitIdList =
-                y9ManagerService.filterManagableOrgUnitList(Y9LoginUserHolder.getDeptId(), orgUnitIds)
-                    .stream()
-                    .map(OrgUnit::getId)
-                    .collect(Collectors.toList());
-        }
-
-        y9OrgBasesToRolesService.addOrgUnitsForRole(roleId, accessibleOrgUnitIdList, negative);
+        y9OrgBasesToRolesService.addManagableOrgUnitsForRole(roleId, orgUnitIds, negative);
         return Y9Result.successMsg("对角色，添加组织节点的映射成功");
     }
 
@@ -108,27 +90,13 @@ public class RoleMemberController {
     @RiseLog(operationName = "根据角色id，返回角色关联的机构节点（机构，部门，用户组，岗位，人员）")
     @RequestMapping(value = "/listByRoleId")
     public Y9Result<List<RoleMemberVO>> listByRoleId(@RequestParam @NotBlank String roleId) {
-        List<OrgBasesToRoles> orgBasesToRolesList = y9OrgBasesToRolesService.listByRoleId(roleId);
-        List<RoleMemberVO> roleMemberVOList = new ArrayList<>();
-        if (Y9LoginUserHolder.getUserInfo().isGlobalManager()) {
-            for (OrgBasesToRoles orgBasesToRoles : orgBasesToRolesList) {
+        List<RoleMemberVO> roleMemberVOList = y9OrgBasesToRolesService.listManagableByRoleId(roleId)
+            .stream()
+            .map(orgBasesToRoles -> {
                 OrgUnit orgUnit = compositeOrgBaseService.getOrgUnit(orgBasesToRoles.getOrgId());
-                roleMemberVOList.add(RoleMemberVO.of(orgBasesToRoles, orgUnit));
-            }
-        } else {
-            List<String> orgUnitIdList =
-                orgBasesToRolesList.stream().map(OrgBasesToRoles::getOrgId).collect(Collectors.toList());
-            List<OrgUnit> orgUnitList =
-                y9ManagerService.filterManagableOrgUnitList(Y9LoginUserHolder.getPersonId(), orgUnitIdList);
-            for (OrgUnit orgUnit : orgUnitList) {
-                orgBasesToRolesList.stream()
-                    .filter(orgBasesToRoles -> Objects.equals(orgBasesToRoles.getOrgId(), orgUnit.getId()))
-                    .findFirst()
-                    .ifPresent(orgBasesToRoles -> {
-                        roleMemberVOList.add(RoleMemberVO.of(orgBasesToRoles, orgUnit));
-                    });
-            }
-        }
+                return RoleMemberVO.of(orgBasesToRoles, orgUnit);
+            })
+            .collect(Collectors.toList());
         return Y9Result.success(roleMemberVOList, "获取数据成功");
     }
 
