@@ -93,6 +93,12 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     }
 
     @Override
+    public List<TenantSystem> listBySystemId(String systemId) {
+        List<Y9TenantSystem> y9TenantSystemList = y9TenantSystemRepository.findBySystemId(systemId);
+        return entityToModel(y9TenantSystemList);
+    }
+
+    @Override
     public List<String> listSystemIdByTenantId(String tenantId) {
         List<Y9TenantSystem> ts = y9TenantSystemRepository.findByTenantId(tenantId);
         if (ts != null) {
@@ -111,6 +117,14 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     }
 
     @Override
+    public Y9Page<TenantSystem> pageByTenantId(String tenantId, Y9PageQuery pageQuery) {
+        Pageable pageable = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize());
+        Page<Y9TenantSystem> y9TenantSystemPage = y9TenantSystemRepository.findByTenantId(tenantId, pageable);
+        return Y9Page.success(pageQuery.getPage(), y9TenantSystemPage.getTotalPages(),
+            y9TenantSystemPage.getTotalElements(), entityToModel(y9TenantSystemPage.getContent()));
+    }
+
+    @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public TenantSystem save(TenantSystem tenantSystem) {
         Y9TenantSystem y9TenantSystem = PlatformModelConvertUtil.convert(tenantSystem, Y9TenantSystem.class);
@@ -121,6 +135,12 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public TenantSystem saveTenantSystem(String systemId, String tenantId) {
         return entityToModel(y9TenantSystemManager.saveTenantSystem(systemId, tenantId));
+    }
+
+    @Override
+    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
+    public List<TenantSystem> saveTenantSystems(String[] systemIds, String tenantId) {
+        return entityToModel(y9TenantSystemManager.saveTenantSystems(systemIds, tenantId));
     }
 
     @Override
