@@ -39,6 +39,11 @@ public class AuditLogQuery {
     private String tenantId;
 
     /**
+     * 系统名称
+     */
+    private String systemName;
+
+    /**
      * 操作类型
      */
     private String action;
@@ -47,5 +52,4 @@ public class AuditLogQuery {
      * 描述
      */
     private String description;
-
 }

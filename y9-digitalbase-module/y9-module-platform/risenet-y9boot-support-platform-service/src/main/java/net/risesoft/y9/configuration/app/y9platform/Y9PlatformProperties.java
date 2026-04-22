@@ -71,8 +71,6 @@ public class Y9PlatformProperties {
      */
     private String newTableSpacePath = "";
 
-    private boolean auditLogEnabled = true;
-
     /**
      * 数据目录档案保留期限
      */

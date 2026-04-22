@@ -33,6 +33,12 @@
 
         <dependency>
             <groupId>net.risesoft</groupId>
+            <artifactId>risenet-y9boot-support-audit</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-multi-tenant</artifactId>
             <version>${project.version}</version>
         </dependency>

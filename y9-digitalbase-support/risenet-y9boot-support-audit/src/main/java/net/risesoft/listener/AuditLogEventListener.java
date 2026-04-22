@@ -19,7 +19,7 @@ import net.risesoft.y9public.manager.auditlog.Y9AuditLogManager;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-@ConditionalOnProperty(name = "y9.app.platform.audit-log-enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "y9.feature.audit.enabled", havingValue = "true", matchIfMissing = true)
 public class AuditLogEventListener {
 
     private final Y9AuditLogManager y9AuditLogManager;

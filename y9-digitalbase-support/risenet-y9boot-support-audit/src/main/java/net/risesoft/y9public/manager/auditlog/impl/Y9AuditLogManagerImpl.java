@@ -39,6 +39,7 @@ public class Y9AuditLogManagerImpl implements Y9AuditLogManager {
         y9AuditLog.setAction(auditLogEvent.getAction());
         y9AuditLog.setDescription(auditLogEvent.getDescription());
         y9AuditLog.setTenantId(Y9LoginUserHolder.getTenantId());
+        y9AuditLog.setSystemName(Y9Context.getSystemName());
         y9AuditLog.setObjectId(auditLogEvent.getObjectId());
         if (auditLogEvent.getOldObject() != null) {
             y9AuditLog.setOldObjectJson(Y9JsonUtil.writeValueAsString(auditLogEvent.getOldObject()));

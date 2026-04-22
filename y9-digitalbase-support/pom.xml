@@ -22,6 +22,7 @@
     </scm>
 
     <modules>
+        <module>risenet-y9boot-support-audit</module>
         <module>risenet-y9boot-support-file-jpa-repository</module>
         <module>risenet-y9boot-support-file-service-ftp</module>
         <module>risenet-y9boot-support-file-service-local</module>
