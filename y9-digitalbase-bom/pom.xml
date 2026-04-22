@@ -261,6 +261,11 @@
             <!-- net.risesoft support-->
             <dependency>
                 <groupId>net.risesoft</groupId>
+                <artifactId>risenet-y9boot-support-file-audit</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.risesoft</groupId>
                 <artifactId>risenet-y9boot-support-file-jpa-repository</artifactId>
                 <version>${revision}</version>
             </dependency>
