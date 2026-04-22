@@ -56,6 +56,14 @@ public interface Y9TenantSystemService {
      */
     Optional<TenantSystem> getByTenantIdAndSystemId(String tenantId, String systemId);
 
+    /**
+     * 根据系统唯一标示查找租户系统集合
+     *
+     * @param systemId 系统id
+     * @return {@code List<}{@link TenantSystem}{@code >}
+     */
+    List<TenantSystem> listBySystemId(String systemId);
+
     List<System> listSystemByTenantId(String tenantId);
 
     /**
@@ -79,6 +87,15 @@ public interface Y9TenantSystemService {
     List<String> listTenantIdBySystemId(String systemId);
 
     /**
+     * 分页查询租户应用列表
+     *
+     * @param tenantId 租户id
+     * @param pageQuery 分页查询参数
+     * @return {@code Page<}{@link TenantSystem}{@code >}
+     */
+    Y9Page<TenantSystem> pageByTenantId(String tenantId, Y9PageQuery pageQuery);
+
+    /**
      * 保存租户应用实体类
      *
      * @param entity 租户应用实体类
@@ -94,6 +111,15 @@ public interface Y9TenantSystemService {
      * @return {@link TenantSystem}
      */
     TenantSystem saveTenantSystem(String systemId, String tenantId);
+
+    /**
+     * 批量保存租户租用的系统
+     *
+     * @param systemIds 系统id数组
+     * @param tenantId 租户id
+     * @return {@code List<}{@link TenantSystem}{@code >}
+     */
+    List<TenantSystem> saveTenantSystems(String[] systemIds, String tenantId);
 
     TenantSystem getById(String id);
 }
