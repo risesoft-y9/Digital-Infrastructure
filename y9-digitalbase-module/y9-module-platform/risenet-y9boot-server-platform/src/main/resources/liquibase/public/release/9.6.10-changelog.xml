@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="1776844742458-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="Y9_AUDIT_LOG" columnName="SYSTEM_NAME"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="Y9_AUDIT_LOG">
+            <column name="SYSTEM_NAME" remarks="系统名称" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    
+    <!-- 添加字段后回填值 -->
+    <changeSet id="1776844742458-2" author="shidaobang" runOnChange="true">
+        <update tableName="Y9_AUDIT_LOG">
+            <column name="SYSTEM_NAME" value="riseplatform"/>
+            <where>SYSTEM_NAME IS NULL</where>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>

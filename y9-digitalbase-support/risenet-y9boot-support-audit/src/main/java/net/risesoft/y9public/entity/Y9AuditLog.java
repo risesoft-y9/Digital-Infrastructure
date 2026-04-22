@@ -79,6 +79,13 @@ public class Y9AuditLog extends BaseEntity {
     private String userAgent;
 
     /**
+     * 系统名称
+     */
+    @Column(name = "SYSTEM_NAME", length = 100)
+    @Comment(value = "系统名称")
+    private String systemName;
+
+    /**
      * 操作类型
      */
     @Column(name = "ACTION", length = 50)

@@ -1,6 +1,7 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.risesoft</groupId>
@@ -9,10 +10,10 @@
         <relativePath>../y9-digitalbase-parent/pom.xml</relativePath>
     </parent>
     <groupId>net.risesoft</groupId>
-    <artifactId>y9-digitalbase-common</artifactId>
+    <artifactId>y9-digitalbase-support</artifactId>
     <packaging>pom</packaging>
-    <name>y9-digitalbase-common</name>
-    <description>RiseSoft/Digital Infrastructure common parent</description>
+    <name>y9-digitalbase-support</name>
+    <description>RiseSoft/Digital Infrastructure support parent</description>
 
     <scm>
         <url>${gitee.url}</url>
@@ -21,12 +22,11 @@
     </scm>
 
     <modules>
-        <module>risenet-y9boot-properties</module>
-        <module>risenet-y9boot-common-model</module>
-        <module>risenet-y9boot-common-nacos</module>
-        <module>risenet-y9boot-common-util</module>
-        <module>risenet-y9boot-common-poi</module>
-        <module>risenet-y9boot-common-tenant-datasource</module>
-        <module>risenet-y9boot-common-sqlddl</module>
+        <module>risenet-y9boot-support-audit</module>
+        <module>risenet-y9boot-support-file-jpa-repository</module>
+        <module>risenet-y9boot-support-file-service-ftp</module>
+        <module>risenet-y9boot-support-file-service-local</module>
+        <module>risenet-y9boot-support-file-service-rest</module>
+        <module>risenet-y9boot-support-history</module>
     </modules>
 </project>

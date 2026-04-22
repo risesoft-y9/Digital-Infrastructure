@@ -38,6 +38,9 @@ public class Y9AuditLogSpecification implements Specification<Y9AuditLog> {
         if (StringUtils.hasText(auditLogQuery.getTenantId())) {
             list.add(criteriaBuilder.equal(root.get("tenantId"), auditLogQuery.getTenantId()));
         }
+        if (StringUtils.hasText(auditLogQuery.getSystemName())) {
+            list.add(criteriaBuilder.equal(root.get("systemName"), auditLogQuery.getSystemName()));
+        }
         if (StringUtils.hasText(auditLogQuery.getAction())) {
             list.add(criteriaBuilder.equal(root.get("action"), auditLogQuery.getAction()));
         }
@@ -50,10 +53,9 @@ public class Y9AuditLogSpecification implements Specification<Y9AuditLog> {
         if (auditLogQuery.getEndTime() != null) {
             list.add(criteriaBuilder.lessThanOrEqualTo(root.get("createTime"), auditLogQuery.getEndTime()));
         }
-        // 如果没有条件，返回空查询
         if (list.isEmpty()) {
-            return criteriaBuilder.conjunction(); // 相当于 WHERE 1=1
+            return criteriaBuilder.conjunction();
         }
-        return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
+        return criteriaBuilder.and(list.toArray(new Predicate[0]));
     }
 }

@@ -46,6 +46,11 @@ public class AuditLog extends BaseModel {
     private String userAgent;
 
     /**
+     * 系统名称
+     */
+    private String systemName;
+
+    /**
      * 操作类型
      */
     private String action;

@@ -13,8 +13,8 @@ import net.risesoft.model.platform.AuditLog;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.query.platform.AuditLogQuery;
-import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.Y9AuditLog;
 import net.risesoft.y9public.repository.Y9AuditLogRepository;
 import net.risesoft.y9public.service.auditlog.Y9AuditLogService;
@@ -33,7 +33,7 @@ public class Y9AuditLogServiceImpl implements Y9AuditLogService {
     private final Y9AuditLogRepository y9AuditLogRepository;
 
     private static List<AuditLog> entityToModel(Page<Y9AuditLog> y9AuditLogPage) {
-        return PlatformModelConvertUtil.convert(y9AuditLogPage.getContent(), AuditLog.class);
+        return Y9ModelConvertUtil.convert(y9AuditLogPage.getContent(), AuditLog.class);
     }
 
     @Override
