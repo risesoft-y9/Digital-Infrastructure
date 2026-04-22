@@ -199,14 +199,13 @@ public class RoleController {
             List<System> systemList = y9SystemService.listAll();
             roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertSystemList(systemList));
         } else if (TreeNodeType.SYSTEM.equals(parentNodeType)) {
-            // 系统下的角色
+            // 系统下所有应用共用的角色
             List<Role> roleList = y9RoleService.listByParentId(parentId);
             roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertRoleList(roleList));
 
-            // 系统节点下为应用
+            // 系统节点下的应用
             List<App> appList = y9AppService.listBySystemId(parentId);
             roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertAppList(appList));
-
         } else {
             // 应用节点下为角色文件夹或角色节点
             List<Role> roleList = y9RoleService.listByParentId(parentId);
@@ -222,16 +221,15 @@ public class RoleController {
             List<System> systemList = y9TenantSystemService.listSystemByTenantId(Y9LoginUserHolder.getTenantId());
             roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertSystemList(systemList));
         } else if (TreeNodeType.SYSTEM.equals(parentNodeType)) {
-            // 系统下的角色
+            // 系统下所有应用共用的角色
             List<Role> roleList = y9RoleService.listByParentId(parentId);
             roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertRoleList(roleList));
 
-            // 系统节点下为应用及系统下所有应用共用的角色
+            // 系统节点下的应用
             List<String> appIdList = y9TenantAppService.listAppIdBySystemIdAndTenantId(parentId,
                 Y9LoginUserHolder.getTenantId(), true, true);
             List<App> appList = y9AppService.listByIds(appIdList);
             roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertAppList(appList));
-
         } else {
             // 应用节点下为角色文件夹或角色节点
             List<Role> roleList = y9RoleService.listByParentId4Tenant(parentId, Y9LoginUserHolder.getTenantId());

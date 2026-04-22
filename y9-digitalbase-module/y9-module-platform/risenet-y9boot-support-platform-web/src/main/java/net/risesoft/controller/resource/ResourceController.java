@@ -60,19 +60,6 @@ public class ResourceController {
     private final Y9SystemService y9SystemService;
 
     /**
-     * 查询所有的根资源（App资源）
-     *
-     * @return {@code Y9Result<List<}{@link ResourceBaseVO}{@code >>}
-     */
-    @RiseLog(operationName = "查询所有的根资源（App资源）")
-    @GetMapping(value = "/allTreeRoot")
-    @Deprecated(since = "9.6.8")
-    public Y9Result<List<ResourceBaseVO>> allTreeRoot() {
-        List<App> appResourceList = compositeResourceService.listRootResourceList();
-        return Y9Result.success(PlatformModelConvertUtil.convert(appResourceList, ResourceBaseVO.class), "查询所有的根资源成功");
-    }
-
-    /**
      * 根据父资源id获取子资源列表
      *
      * @param parentId 父节点id
@@ -83,33 +70,6 @@ public class ResourceController {
     public Y9Result<List<ResourceTreeNodeVO>> listByParentId2(@RequestParam @NotBlank String parentId) {
         List<Resource> resourceList = compositeResourceService.listByParentId(parentId);
         return Y9Result.success(ResourceTreeNodeVO.convertResource(resourceList), "根据父资源id获取子资源列表成功");
-    }
-
-    /**
-     * 查询所有的根资源（有权限的App资源）
-     *
-     * @return {@code Y9Result<List<}{@link ResourceTreeNodeVO}{@code >>}
-     *
-     *
-     */
-    @RiseLog(operationName = "查询所有的根资源（有权限的App资源）")
-    @GetMapping(value = "/treeRoot2")
-    @Deprecated(since = "9.6.8")
-    public Y9Result<List<ResourceTreeNodeVO>> treeRoot2() {
-        List<App> appResourceList = compositeResourceService.listRootResourceList();
-        List<App> accessibleAppResourceList;
-
-        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-        if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.equals(userInfo.getManagerLevel())) {
-            accessibleAppResourceList = appResourceList;
-        } else {
-            List<String> appIds =
-                y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
-            accessibleAppResourceList = appResourceList.stream()
-                .filter(resource -> appIds.contains(resource.getId()))
-                .collect(Collectors.toList());
-        }
-        return Y9Result.success(ResourceTreeNodeVO.convertResource(accessibleAppResourceList), "查询所有的根资源成功");
     }
 
     /**

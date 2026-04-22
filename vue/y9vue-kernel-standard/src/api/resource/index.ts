@@ -44,18 +44,6 @@ export const resourceTreeRoot = async (params) => {
     });
 };
 
-
-// 应用树（废弃）
-export const resourceTreeList = async () => {
-    return await resourceRequest({
-        // url: 'http://127.0.0.1:4523/mock/891645/platform/api/rest/resource/treeRoot',
-        url: '/api/rest/resource/treeRoot2',
-        method: 'get',
-        cType: false,
-        params: {}
-    });
-};
-
 // 搜索资源树
 export const treeSearch = async (value) => {
     let params;

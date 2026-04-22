@@ -82,11 +82,6 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
     }
 
     @Override
-    public List<App> listRootResourceBySystemId(String systemId) {
-        return PlatformModelConvertUtil.y9AppToApp(y9AppRepository.findBySystemIdOrderByTabIndex(systemId));
-    }
-
-    @Override
     public List<App> listRootResourceList() {
         List<Y9App> y9AppList = y9AppRepository.findAll(Sort.by("systemId", "tabIndex"));
         return PlatformModelConvertUtil.y9AppToApp(y9AppList);

@@ -3,6 +3,7 @@ package net.risesoft.service.relation.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
@@ -28,11 +29,14 @@ import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.exception.RoleErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
+import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.permission.OrgBasesToRoles;
+import net.risesoft.model.user.UserInfo;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.permission.Y9OrgBasesToRolesRepository;
+import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.util.Y9PlatformUtil;
@@ -59,6 +63,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
     private final Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository;
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
+    private final Y9ManagerService y9ManagerService;
     private final Y9RoleManager y9RoleManager;
 
     private static List<OrgBasesToRoles> entityToModel(List<Y9OrgBasesToRoles> y9OrgBasesToRolesList) {
@@ -82,6 +87,23 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
         return mappingList;
     }
 
+    @Override
+    @Transactional
+    public List<OrgBasesToRoles> addManagableOrgUnitsForRole(String roleId, List<String> orgIds, Boolean negative) {
+        return addOrgUnitsForRole(roleId, filterAccessibleOrgUnitIds(orgIds), negative);
+    }
+
+    private List<String> filterAccessibleOrgUnitIds(List<String> orgIds) {
+        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
+        if (userInfo == null || userInfo.isGlobalManager()) {
+            return orgIds;
+        }
+        return y9ManagerService.filterManagableOrgUnitList(Y9LoginUserHolder.getDeptId(), orgIds)
+            .stream()
+            .map(OrgUnit::getId)
+            .collect(Collectors.toList());
+    }
+
     private Y9OrgBasesToRoles getById(String id) {
         return y9OrgBasesToRolesRepository.findById(id)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(RoleErrorCodeEnum.ORG_UNIT_ROLE_NOT_FOUND, id));
@@ -92,6 +114,27 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
         List<Y9OrgBasesToRoles> y9OrgBasesToRolesList =
             y9OrgBasesToRolesRepository.findByRoleId(roleId, Sort.by(Sort.Direction.DESC, "orgOrder"));
         return entityToModel(y9OrgBasesToRolesList);
+    }
+
+    @Override
+    public List<OrgBasesToRoles> listManagableByRoleId(String roleId) {
+        List<OrgBasesToRoles> orgBasesToRolesList = listByRoleId(roleId);
+        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
+        if (userInfo == null || userInfo.isGlobalManager()) {
+            return orgBasesToRolesList;
+        }
+
+        List<String> orgUnitIdList =
+            orgBasesToRolesList.stream().map(OrgBasesToRoles::getOrgId).collect(Collectors.toList());
+        List<OrgUnit> managableOrgUnitList =
+            y9ManagerService.filterManagableOrgUnitList(Y9LoginUserHolder.getPersonId(), orgUnitIdList);
+        return managableOrgUnitList.stream()
+            .map(orgUnit -> orgBasesToRolesList.stream()
+                .filter(orgBasesToRoles -> orgUnit.getId().equals(orgBasesToRoles.getOrgId()))
+                .findFirst())
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .collect(Collectors.toList());
     }
 
     @Transactional
