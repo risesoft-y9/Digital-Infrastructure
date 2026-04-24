@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.api.platform.org.PersonApi;
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.log.domain.Y9LogIpDeptMappingDO;
@@ -34,8 +35,6 @@ import net.risesoft.y9public.service.Y9logIpDeptMappingService;
 import net.risesoft.y9public.service.Y9logUserHostIpInfoService;
 import net.risesoft.y9public.service.Y9logUserLoginInfoService;
 
-import y9.client.rest.platform.org.PersonApiClient;
-
 /**
  * 终端管理
  *
@@ -49,7 +48,8 @@ import y9.client.rest.platform.org.PersonApiClient;
 @RequiredArgsConstructor
 public class TerminalController {
 
-    private final PersonApiClient personManager;
+    private final PersonApi personApi;
+
     private final Y9logIpDeptMappingService y9logIpDeptMappingService;
     private final Y9logUserLoginInfoService y9logUserLoginInfoService;
     private final Y9logUserHostIpInfoService y9logUserHostIpInfoService;
@@ -176,7 +176,7 @@ public class TerminalController {
         String tenantId = Y9LoginUserHolder.getTenantId();
         List<Map<String, Object>> list = new ArrayList<>();
         PersonQuery personQuery = PersonQuery.builder().parentId(parentId).disabled(false).build();
-        Y9Page<Person> personPage = personManager.page(tenantId, personQuery, pageQuery.getPage(), pageQuery.getSize());
+        Y9Page<Person> personPage = personApi.page(tenantId, personQuery, pageQuery.getPage(), pageQuery.getSize());
         List<Person> personList = personPage.getRows();
         if (!personList.isEmpty()) {
             personList.forEach(person -> {
@@ -209,7 +209,7 @@ public class TerminalController {
         String tenantId = Y9LoginUserHolder.getTenantId();
         List<Map<String, Object>> list = new ArrayList<>();
         PersonQuery personQuery = PersonQuery.builder().parentId(parentId).name(userName).disabled(false).build();
-        Y9Page<Person> personPage = personManager.page(tenantId, personQuery, pageQuery.getPage(), pageQuery.getSize());
+        Y9Page<Person> personPage = personApi.page(tenantId, personQuery, pageQuery.getPage(), pageQuery.getSize());
         List<Person> personList = personPage.getRows();
         if (!personList.isEmpty()) {
             for (Person orgPerson : personList) {

@@ -12,6 +12,12 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.platform.org.DepartmentApi;
+import net.risesoft.api.platform.org.GroupApi;
+import net.risesoft.api.platform.org.OrganizationApi;
+import net.risesoft.api.platform.org.PersonApi;
+import net.risesoft.api.platform.org.PositionApi;
+import net.risesoft.api.platform.tenant.TenantApi;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.log.domain.Y9LogAccessLogDO;
@@ -23,13 +29,6 @@ import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9public.service.Y9logAccessLogService;
 
-import y9.client.rest.platform.org.DepartmentApiClient;
-import y9.client.rest.platform.org.GroupApiClient;
-import y9.client.rest.platform.org.OrganizationApiClient;
-import y9.client.rest.platform.org.PersonApiClient;
-import y9.client.rest.platform.org.PositionApiClient;
-import y9.client.rest.platform.tenant.TenantApiClient;
-
 /**
  * @author guoweijun
  * @author shidaobang
@@ -39,12 +38,12 @@ import y9.client.rest.platform.tenant.TenantApiClient;
 @RequiredArgsConstructor
 public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
 
-    private final DepartmentApiClient departmentManager;
-    private final PersonApiClient personManager;
-    private final PositionApiClient positionManager;
-    private final GroupApiClient groupManager;
-    private final OrganizationApiClient organizationManager;
-    private final TenantApiClient tenantManager;
+    private final DepartmentApi departmentApi;
+    private final PersonApi personApi;
+    private final PositionApi positionApi;
+    private final GroupApi groupApi;
+    private final OrganizationApi organizationApi;
+    private final TenantApi tenantApi;
 
     private final Y9logAccessLogCustomRepository y9logAccessLogCustomRepository;
 
@@ -59,19 +58,19 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         String guidPath = null;
         if (StringUtils.isNotBlank(orgId) && StringUtils.isNotBlank(orgType)) {
             if (orgType.equals(OrgTypeEnum.ORGANIZATION.getEnName())) {
-                guidPath = organizationManager.get(tenantId, orgId).getData().getGuidPath();
+                guidPath = organizationApi.get(tenantId, orgId).getData().getGuidPath();
 
             } else if (orgType.equals(OrgTypeEnum.DEPARTMENT.getEnName())) {
-                guidPath = departmentManager.get(tenantId, orgId).getData().getGuidPath();
+                guidPath = departmentApi.get(tenantId, orgId).getData().getGuidPath();
 
             } else if (orgType.equals(OrgTypeEnum.GROUP.getEnName())) {
-                guidPath = groupManager.get(tenantId, orgId).getData().getGuidPath();
+                guidPath = groupApi.get(tenantId, orgId).getData().getGuidPath();
 
             } else if (orgType.equals(OrgTypeEnum.POSITION.getEnName())) {
-                guidPath = positionManager.get(tenantId, orgId).getData().getGuidPath();
+                guidPath = positionApi.get(tenantId, orgId).getData().getGuidPath();
 
             } else if (orgType.equals(OrgTypeEnum.PERSON.getEnName())) {
-                guidPath = personManager.get(tenantId, orgId).getData().getGuidPath();
+                guidPath = personApi.get(tenantId, orgId).getData().getGuidPath();
             }
         }
         return guidPath;
@@ -105,13 +104,13 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         List<String> ids = new ArrayList<>();
         List<Person> allPersons = new ArrayList<>();
         if (orgType.equals(OrgTypeEnum.DEPARTMENT.getEnName())) {
-            allPersons = personManager.listRecursivelyByParentId(tenantId, orgId).getData();
+            allPersons = personApi.listRecursivelyByParentId(tenantId, orgId).getData();
         } else if (orgType.equals(OrgTypeEnum.GROUP.getEnName())) {
-            allPersons = groupManager.listPersonsByGroupId(tenantId, orgId).getData();
+            allPersons = groupApi.listPersonsByGroupId(tenantId, orgId).getData();
         } else if (orgType.equals(OrgTypeEnum.POSITION.getEnName())) {
-            allPersons = positionManager.listPersonsByPositionId(tenantId, orgId).getData();
+            allPersons = positionApi.listPersonsByPositionId(tenantId, orgId).getData();
         } else if (orgType.equals(OrgTypeEnum.PERSON.getEnName())) {
-            allPersons.add(personManager.get(tenantId, orgId).getData());
+            allPersons.add(personApi.get(tenantId, orgId).getData());
         }
         for (Person p : allPersons) {
             ids.add(p.getId());

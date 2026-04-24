@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.platform.org.OrgUnitApi;
+import net.risesoft.api.platform.org.OrganizationApi;
+import net.risesoft.api.platform.tenant.TenantApi;
 import net.risesoft.enums.platform.org.OrgTreeTypeEnum;
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
@@ -18,10 +21,6 @@ import net.risesoft.model.platform.org.Organization;
 import net.risesoft.model.platform.tenant.Tenant;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
-
-import y9.client.rest.platform.org.OrgUnitApiClient;
-import y9.client.rest.platform.org.OrganizationApiClient;
-import y9.client.rest.platform.tenant.TenantApiClient;
 
 /**
  * 组织管理
@@ -34,9 +33,9 @@ import y9.client.rest.platform.tenant.TenantApiClient;
 @RequiredArgsConstructor
 public class OrgUnitController {
 
-    private final OrganizationApiClient organizationManager;
-    private final OrgUnitApiClient orgUnitManager;
-    private final TenantApiClient tenantApiClient;
+    private final OrganizationApi organizationApi;
+    private final OrgUnitApi orgUnitApi;
+    private final TenantApi tenantApi;
 
     /**
      * 获取租户组织机构列表
@@ -50,7 +49,7 @@ public class OrgUnitController {
         if (StringUtils.isBlank(tenantId)) {
             tenantId = Y9LoginUserHolder.getTenantId();
         }
-        List<Organization> org = organizationManager.list(tenantId).getData();
+        List<Organization> org = organizationApi.list(tenantId).getData();
         return Y9Result.success(org);
     }
 
@@ -62,12 +61,12 @@ public class OrgUnitController {
     @RiseLog(moduleName = "日志系统", operationName = "根据租户类型获取所有租户信息", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/getTenantTreeByTenantType")
     public Y9Result<List<Organization>> getTenantTreeByTenantType() {
-        List<Tenant> tenants = tenantApiClient.listAllTenants().getData();
+        List<Tenant> tenants = tenantApi.listAllTenants().getData();
         List<Organization> organizationList = new ArrayList<>();
         if (!tenants.isEmpty()) {
             for (Tenant tenant : tenants) {
                 Y9LoginUserHolder.setTenantId(tenant.getId());
-                List<Organization> list = organizationManager.list(tenant.getId()).getData();
+                List<Organization> list = organizationApi.list(tenant.getId()).getData();
                 organizationList.addAll(list);
             }
         }
@@ -89,7 +88,7 @@ public class OrgUnitController {
         if (StringUtils.isBlank(tenantId)) {
             tenantId = Y9LoginUserHolder.getTenantId();
         }
-        List<OrgUnit> orgUnitList = orgUnitManager.getSubTree(tenantId, id, treeType).getData();
+        List<OrgUnit> orgUnitList = orgUnitApi.getSubTree(tenantId, id, treeType).getData();
         return Y9Result.success(orgUnitList);
     }
 }
