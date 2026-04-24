@@ -18,14 +18,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.api.platform.org.PersonApi;
 import net.risesoft.log.domain.Y9LogUserLoginInfoDO;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.PersonInformation;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.mime.ContentDispositionUtil;
 import net.risesoft.y9public.service.Y9logUserLoginInfoService;
-
-import y9.client.rest.platform.org.PersonApiClient;
 
 import cn.idev.excel.FastExcel;
 
@@ -39,7 +38,7 @@ import cn.idev.excel.FastExcel;
 public class DownloadController {
 
     private final Y9logUserLoginInfoService userLoginInfoService;
-    private final PersonApiClient personManager;
+    private final PersonApi personApi;
 
     /**
      * 下载未登录信息
@@ -112,7 +111,7 @@ public class DownloadController {
             .distinct()
             .collect(Collectors.toList());
 
-        List<Person> persons = personManager.list(tenantID).getData();
+        List<Person> persons = personApi.list(tenantID).getData();
         List<PersonInformation> personInformationList = new ArrayList<PersonInformation>();
         for (Person person : persons) {
             if (person.getDisabled()) {
@@ -151,7 +150,7 @@ public class DownloadController {
             .distinct()
             .collect(Collectors.toList());
 
-        List<Person> persons = personManager.list(tenantID).getData();
+        List<Person> persons = personApi.list(tenantID).getData();
         List<PersonInformation> personInformationList = new ArrayList<PersonInformation>();
         for (Person person : persons) {
             if (person.getDisabled()) {

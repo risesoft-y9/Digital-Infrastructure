@@ -8,14 +8,13 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.platform.tenant.TenantApi;
 import net.risesoft.log.domain.Y9LogFlowableAccessLogDO;
 import net.risesoft.log.repository.Y9logFlowableAccessLogCustomRepository;
 import net.risesoft.model.log.FlowableAccessLog;
 import net.risesoft.model.log.FlowableAccessLogQuery;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.y9public.service.Y9logFlowableAccessLogService;
-
-import y9.client.rest.platform.tenant.TenantApiClient;
 
 /**
  * @author qinman
@@ -24,7 +23,7 @@ import y9.client.rest.platform.tenant.TenantApiClient;
 @RequiredArgsConstructor
 public class Y9logFlowableAccessLogServiceImpl implements Y9logFlowableAccessLogService {
 
-    private final TenantApiClient tenantManager;
+    private final TenantApi tenantApi;
 
     private final Y9logFlowableAccessLogCustomRepository y9logFlowableAccessLogCustomRepository;
 
