@@ -1,10 +1,11 @@
 package net.risesoft.org;
 
-import jakarta.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
 
 import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.model.platform.org.OrgUnit;
@@ -16,10 +17,11 @@ import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 
 @RestController
 @RequestMapping("/")
+@RequiredArgsConstructor
 public class MainController {
 
-    @Resource(name = "y9PublishService")
-    private Y9PublishService y9PublishService;
+    @Qualifier("y9PublishService")
+    private final Y9PublishService y9PublishService;
 
     /**
      * 发布新增事件

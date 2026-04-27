@@ -3,14 +3,13 @@ package y9.autoconfiguration.cache.redis;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.boot.autoconfigure.cache.CacheProperties.Redis;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CachingConfigurer;
+import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.AdviceMode;
@@ -34,17 +33,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
 @EnableConfigurationProperties(CacheProperties.class)
 @EnableCaching(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
 @ConditionalOnProperty(name = "y9.common.cacheEnabled", havingValue = "true", matchIfMissing = true)
-public class Y9CacheRedisConfiguration implements CachingConfigurer {
+@RequiredArgsConstructor
+public class Y9CacheRedisConfiguration extends CachingConfigurerSupport {
 
-    @Autowired
-    private CacheProperties cacheProperties;
+    private final CacheProperties cacheProperties;
 
-    @Autowired
-    private RedisConnectionFactory redisConnectionFactory;
+    private final RedisConnectionFactory redisConnectionFactory;
 
     @Override
     @Bean
@@ -64,8 +64,8 @@ public class Y9CacheRedisConfiguration implements CachingConfigurer {
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        StdTypeResolverBuilder typer = new TypeResolverBuilder(ObjectMapper.DefaultTyping.EVERYTHING,
-                objectMapper.getPolymorphicTypeValidator());
+        StdTypeResolverBuilder typer =
+            new TypeResolverBuilder(ObjectMapper.DefaultTyping.EVERYTHING, objectMapper.getPolymorphicTypeValidator());
         typer = typer.init(JsonTypeInfo.Id.CLASS, null);
         typer = typer.inclusion(JsonTypeInfo.As.PROPERTY);
         objectMapper.setDefaultTyping(typer);
@@ -126,9 +126,9 @@ public class Y9CacheRedisConfiguration implements CachingConfigurer {
         }
 
         /**
-         * Method called to check if the default type handler should be used for given type. Note: "natural types" (String,
-         * Boolean, Integer, Double) will never use typing; that is both due to them being concrete and final, and since
-         * actual serializers and deserializers will also ignore any attempts to enforce typing.
+         * Method called to check if the default type handler should be used for given type. Note: "natural types"
+         * (String, Boolean, Integer, Double) will never use typing; that is both due to them being concrete and final,
+         * and since actual serializers and deserializers will also ignore any attempts to enforce typing.
          */
         public boolean useForType(JavaType t) {
 
@@ -143,7 +143,7 @@ public class Y9CacheRedisConfiguration implements CachingConfigurer {
             }
 
             if (t.isFinal() && !KotlinDetector.isKotlinType(t.getRawClass())
-                    && t.getRawClass().getPackage().getName().startsWith("java")) {
+                && t.getRawClass().getPackage().getName().startsWith("java")) {
                 return false;
             }
 

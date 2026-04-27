@@ -39,9 +39,9 @@ public class PersonIconServiceImpl implements PersonIconService {
     private final Y9PersonToResourceService y9PersonToResourceService;
     private final Y9PositionToResourceService y9PositionToResourceService;
 
-    protected final CompositeOrgBaseService compositeOrgBaseService;
+    private final CompositeOrgBaseService compositeOrgBaseService;
 
-    protected final Y9AppService y9AppService;
+    private final Y9AppService y9AppService;
 
     @Override
     public void buildPersonalAppIconByOrgUnitId(String orgUnitId) {

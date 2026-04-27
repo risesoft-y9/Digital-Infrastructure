@@ -2,7 +2,6 @@ package y9.autoconfiguration.jpa;
 
 import jakarta.persistence.EntityManagerFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -26,6 +25,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.zaxxer.hikari.HikariDataSource;
 
+import lombok.RequiredArgsConstructor;
+
 import net.risesoft.y9.Y9Context;
 
 import y9.jpa.extension.Y9EnableJpaRepositories;
@@ -38,15 +39,14 @@ import y9.jpa.extension.Y9EnableJpaRepositories;
     includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},
     entityManagerFactoryRef = "rsDedicatedEntityManagerFactory",
     transactionManagerRef = JpaDedicatedConfiguration.TRANSACTION_MANAGER)
+@RequiredArgsConstructor
 public class JpaDedicatedConfiguration {
 
     public static final String TRANSACTION_MANAGER = "rsDedicatedTransactionManager";
 
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
 
-    @Autowired
-    private JpaProperties jpaProperties;
+    private final JpaProperties jpaProperties;
 
     @Bean(name = {"jdbcTemplate4Dedicated"})
     @ConditionalOnMissingBean(name = "jdbcTemplate4Dedicated")

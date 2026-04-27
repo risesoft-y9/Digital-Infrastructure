@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 
 import net.risesoft.example.entity.User;
 import net.risesoft.example.repository.UserRepository;
@@ -18,10 +19,10 @@ import net.risesoft.id.Y9IdGenerator;
  * 描述：人员 服务实现层
  */
 @Service(value = "userService")
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public void deleteById(String id) {

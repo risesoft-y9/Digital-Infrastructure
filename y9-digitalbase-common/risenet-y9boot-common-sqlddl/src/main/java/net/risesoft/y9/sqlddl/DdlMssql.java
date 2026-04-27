@@ -2,8 +2,7 @@ package net.risesoft.y9.sqlddl;
 
 import javax.sql.DataSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
@@ -13,28 +12,28 @@ import org.slf4j.LoggerFactory;
  * @author mengjuhua
  * @author shidaobang
  */
+@Slf4j
 public class DdlMssql {
-    private static Logger log = LoggerFactory.getLogger(DdlMssql.class);
 
     public static void addTableColumn(DataSource dataSource, String tableName, String jsonDbColumns) throws Exception {
-        log.info("addTableColumn");
+        LOGGER.info("addTableColumn");
     }
 
     public static void alterTableColumn(DataSource dataSource, String tableName, String jsonDbColumns)
         throws Exception {
-        log.info("alterTableColumn");
+        LOGGER.info("alterTableColumn");
     }
 
     public static void dropTable(DataSource dataSource, String tableName) throws Exception {
-        log.info("dropTable");
+        LOGGER.info("dropTable");
     }
 
     public static void dropTableColumn(DataSource dataSource, String tableName, String columnName) throws Exception {
-        log.info("dropTableColumn");
+        LOGGER.info("dropTableColumn");
     }
 
     public static void renameTable(DataSource dataSource, String tableNameOld, String tableNameNew) throws Exception {
-        log.info("renameTable");
+        LOGGER.info("renameTable");
     }
 
     private DdlMssql() {

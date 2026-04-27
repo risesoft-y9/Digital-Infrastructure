@@ -6,7 +6,6 @@ import lombok.Data;
 
 import net.risesoft.model.platform.org.Manager;
 
-
 /**
  * 个人中心管理员 vo
  *

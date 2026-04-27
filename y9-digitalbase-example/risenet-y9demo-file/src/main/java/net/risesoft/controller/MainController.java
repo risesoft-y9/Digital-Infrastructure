@@ -5,14 +5,14 @@ import java.io.OutputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.y9.util.mime.ContentDispositionUtil;
 import net.risesoft.y9public.entity.Y9FileStore;
@@ -20,12 +20,11 @@ import net.risesoft.y9public.service.Y9FileStoreService;
 
 @RestController
 @RequestMapping(value = "/main")
+@Slf4j
+@RequiredArgsConstructor
 public class MainController {
 
-    Logger log = LoggerFactory.getLogger(MainController.class);
-
-    @Autowired
-    private Y9FileStoreService y9FileStoreService;
+    private final Y9FileStoreService y9FileStoreService;
 
     /**
      * 根据文件唯一标示删除文件
@@ -77,7 +76,7 @@ public class MainController {
             String fullPath = Y9FileStore.buildPath("aaa", "bbb");
             Y9FileStore y9FileStore =
                 y9FileStoreService.uploadFile(file.getInputStream(), fullPath, file.getOriginalFilename());
-            log.info("fileStoreId:{}", y9FileStore.getId());
+            LOGGER.info("fileStoreId:{}", y9FileStore.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }

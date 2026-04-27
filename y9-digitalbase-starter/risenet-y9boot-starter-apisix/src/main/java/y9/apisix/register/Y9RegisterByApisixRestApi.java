@@ -39,18 +39,18 @@ import io.github.classgraph.ScanResult;
 @Slf4j
 public class Y9RegisterByApisixRestApi {
 
-    String contextPath;
-    String apiBasePackages;
+    private String contextPath;
+    private String apiBasePackages;
     // String apiDomain;
-    String apiVersion;
-    String adminKey;
-    String adminAddress;
-    String upstreamNodes;
-    String upstreamType;
-    String etcdAddress;
-    String upstreamId;
-    boolean consumerEnabled;
-    String authenticationType;
+    private String apiVersion;
+    private String adminKey;
+    private String adminAddress;
+    private String upstreamNodes;
+    private String upstreamType;
+    private String etcdAddress;
+    private String upstreamId;
+    private boolean consumerEnabled;
+    private String authenticationType;
     private BuildProperties buildProperties;
 
     @Autowired

@@ -35,7 +35,7 @@ public class RoleTreeNodeVO extends TreeNodeVO {
      * 应用id
      */
     private String appId;
-    
+
     /**
      * 租户id
      */
