@@ -1,8 +1,8 @@
 package net.risesoft.liquibase;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Comparator;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class VersionComparator implements Comparator<String> {
 

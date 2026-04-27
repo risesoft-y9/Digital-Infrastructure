@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.model.platform.PublishedEvent;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;

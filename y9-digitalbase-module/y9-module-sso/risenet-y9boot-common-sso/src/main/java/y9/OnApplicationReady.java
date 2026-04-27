@@ -2,9 +2,10 @@ package y9;
 
 import java.time.Instant;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
+
+import lombok.RequiredArgsConstructor;
 
 import y9.entity.Y9User;
 import y9.service.Y9UserService;
@@ -18,9 +19,9 @@ import y9.util.Y9MessageDigest;
  * @since 9.6.3
  */
 // @Component
+@RequiredArgsConstructor
 public class OnApplicationReady implements ApplicationListener<ApplicationReadyEvent> {
-    @Autowired
-    private Y9UserService y9UserService;
+    private final Y9UserService y9UserService;
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {

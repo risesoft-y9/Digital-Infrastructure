@@ -90,13 +90,11 @@ public class RoleMemberController {
     @RiseLog(operationName = "根据角色id，返回角色关联的机构节点（机构，部门，用户组，岗位，人员）")
     @RequestMapping(value = "/listByRoleId")
     public Y9Result<List<RoleMemberVO>> listByRoleId(@RequestParam @NotBlank String roleId) {
-        List<RoleMemberVO> roleMemberVOList = y9OrgBasesToRolesService.listManagableByRoleId(roleId)
-            .stream()
-            .map(orgBasesToRoles -> {
+        List<RoleMemberVO> roleMemberVOList =
+            y9OrgBasesToRolesService.listManagableByRoleId(roleId).stream().map(orgBasesToRoles -> {
                 OrgUnit orgUnit = compositeOrgBaseService.getOrgUnit(orgBasesToRoles.getOrgId());
                 return RoleMemberVO.of(orgBasesToRoles, orgUnit);
-            })
-            .collect(Collectors.toList());
+            }).collect(Collectors.toList());
         return Y9Result.success(roleMemberVOList, "获取数据成功");
     }
 

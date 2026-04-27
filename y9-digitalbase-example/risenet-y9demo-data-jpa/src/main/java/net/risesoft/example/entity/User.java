@@ -70,7 +70,6 @@ public class User implements Serializable {
     @Column(name = "USER_MOBILE", length = 50)
     private String mobile;
 
-
     /**
      * 创建时间
      */

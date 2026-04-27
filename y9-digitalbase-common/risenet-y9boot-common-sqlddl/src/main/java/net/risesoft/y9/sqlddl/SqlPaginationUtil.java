@@ -6,8 +6,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.SqlConstants;
 
@@ -19,8 +18,8 @@ import net.risesoft.consts.SqlConstants;
  * @author mengjuhua
  * @author shidaobang
  */
+@Slf4j
 public class SqlPaginationUtil {
-    private static final Logger log = LoggerFactory.getLogger(SqlPaginationUtil.class);
 
     private static String dbType;
     private static int dbVersion;
@@ -49,7 +48,7 @@ public class SqlPaginationUtil {
 
                 dbVersion = dbmd.getDatabaseMajorVersion();
             } catch (SQLException e) {
-                log.error(e.getMessage());
+                LOGGER.error(e.getMessage());
             }
         }
 

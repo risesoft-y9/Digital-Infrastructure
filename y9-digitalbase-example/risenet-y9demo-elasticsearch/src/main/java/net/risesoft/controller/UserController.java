@@ -1,6 +1,5 @@
 package net.risesoft.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import lombok.RequiredArgsConstructor;
 
 import net.risesoft.elastic.entity.User;
 import net.risesoft.id.Y9IdGenerator;
@@ -19,10 +20,10 @@ import net.risesoft.service.UserService;
  * 描述：控制层
  */
 @Controller
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @RequestMapping("/html")
     public String html() {

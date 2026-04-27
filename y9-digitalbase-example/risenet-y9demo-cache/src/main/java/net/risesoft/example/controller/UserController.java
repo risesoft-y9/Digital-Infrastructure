@@ -2,12 +2,13 @@ package net.risesoft.example.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
 
 import net.risesoft.example.entity.User;
 import net.risesoft.example.service.UserService;
@@ -19,10 +20,10 @@ import net.risesoft.pojo.Y9Result;
  */
 @RestController
 @RequestMapping("/")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     /**
      * 获取最新一条数据

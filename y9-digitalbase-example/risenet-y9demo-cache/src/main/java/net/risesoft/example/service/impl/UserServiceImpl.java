@@ -6,11 +6,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 
 import net.risesoft.example.entity.User;
 import net.risesoft.example.repository.UserRepository;
@@ -22,10 +23,10 @@ import net.risesoft.id.Y9IdGenerator;
  */
 @Service(value = "userService")
 @CacheConfig(cacheNames = "y9cache_User")
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")

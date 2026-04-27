@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;

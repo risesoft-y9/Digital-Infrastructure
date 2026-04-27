@@ -13,15 +13,14 @@ import lombok.Setter;
 @Setter
 public class Y9Oauth2ResourceJwtTokenProperties {
 
-	/**
-	 * 是否验证 JWT Access Token 签名
-	 */
-	private boolean validationRequired;
+    /**
+     * 是否验证 JWT Access Token 签名
+     */
+    private boolean validationRequired;
 
-	/**
-	 * JSON Web Key Set 资源路径
-	 * 支持格式：classpath:*;https://*;file://*
-	 */
-	private String jwksLocation = "classpath:keystore-public.jwks";
+    /**
+     * JSON Web Key Set 资源路径 支持格式：classpath:*;https://*;file://*
+     */
+    private String jwksLocation = "classpath:keystore-public.jwks";
 
 }

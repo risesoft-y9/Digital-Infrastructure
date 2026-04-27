@@ -22,7 +22,7 @@ public class FtpPoolConfig extends GenericObjectPoolConfig<FTPClient> {
 
     /** 是否启用 */
     private boolean enabled = false;
-    
+
     /** 主机名 */
     private String host;
     /** 端口 */

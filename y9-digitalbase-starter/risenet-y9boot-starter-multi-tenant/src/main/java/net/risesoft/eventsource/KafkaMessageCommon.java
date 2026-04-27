@@ -34,7 +34,7 @@ public class KafkaMessageCommon {
                 || Y9CommonEventConst.TENANT_APP_REGISTERED.equals(eventType))
                 && Objects.equals(Y9Context.getSystemName(), msg.getEventTarget())) {
                 // 对于非当前引入的系统的消息不处理
-                
+
                 Y9EventCommon event = new Y9EventCommon();
                 event.setEventType(msg.getEventType());
                 event.setEventObject(msg.getEventObject());
@@ -48,13 +48,11 @@ public class KafkaMessageCommon {
         }
     }
 
-
     /**
      * 监听租户数据源同步事件，这里的 groupId 使用随机生成保证引入服务在多实例时都能监听到 <br>
      * 可根据实际情况调整 kafka 的 offsets.retention.minutes （无活跃成员的消费者组的保留时长）配置项清理无用的消费者组
      */
-    @KafkaListener(topics = {"y9_common_event"},
-        groupId = "${spring.kafka.consumer.group-id}-${random.uuid}")
+    @KafkaListener(topics = {"y9_common_event"}, groupId = "${spring.kafka.consumer.group-id}-${random.uuid}")
     public void dataSourceSyncListener4kafka(ConsumerRecord<String, String> data) {
         String value = data.value();
         try {

@@ -3,7 +3,6 @@ package net.risesoft.api.platform.permission;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;

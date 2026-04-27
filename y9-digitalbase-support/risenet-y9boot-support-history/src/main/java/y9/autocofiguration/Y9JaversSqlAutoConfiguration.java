@@ -82,14 +82,17 @@ public class Y9JaversSqlAutoConfiguration {
     @ConditionalOnMissingBean
     public JaversSqlRepository javersSqlRepository(ConnectionProvider connectionProvider,
         JaversSqlProperties javersSqlProperties, DialectName y9javersSqlDialectName) {
-        return SqlRepositoryBuilder.sqlRepository().withSchema(javersSqlProperties.getSqlSchema())
-            .withConnectionProvider(connectionProvider).withDialect(y9javersSqlDialectName)
+        return SqlRepositoryBuilder.sqlRepository()
+            .withSchema(javersSqlProperties.getSqlSchema())
+            .withConnectionProvider(connectionProvider)
+            .withDialect(y9javersSqlDialectName)
             .withSchemaManagementEnabled(javersSqlProperties.isSqlSchemaManagementEnabled())
             .withGlobalIdCacheDisabled(javersSqlProperties.isSqlGlobalIdCacheDisabled())
             .withGlobalIdTableName(javersSqlProperties.getSqlGlobalIdTableName())
             .withCommitTableName(javersSqlProperties.getSqlCommitTableName())
             .withSnapshotTableName(javersSqlProperties.getSqlSnapshotTableName())
-            .withCommitPropertyTableName(javersSqlProperties.getSqlCommitPropertyTableName()).build();
+            .withCommitPropertyTableName(javersSqlProperties.getSqlCommitPropertyTableName())
+            .build();
     }
 
     @Bean(name = "JaversFromStarter")
@@ -97,7 +100,8 @@ public class Y9JaversSqlAutoConfiguration {
     public Javers javers(JaversSqlRepository sqlRepository,
         @Qualifier("rsPublicTransactionManager") PlatformTransactionManager transactionManager,
         JaversSqlProperties javersSqlProperties) {
-        JaversBuilder javersBuilder = TransactionalJpaJaversBuilder.javers().withTxManager(transactionManager)
+        JaversBuilder javersBuilder = TransactionalJpaJaversBuilder.javers()
+            .withTxManager(transactionManager)
             .registerJaversRepository(sqlRepository)
             .withObjectAccessHook(javersSqlProperties.createObjectAccessHookInstance())
             .withProperties(javersSqlProperties);

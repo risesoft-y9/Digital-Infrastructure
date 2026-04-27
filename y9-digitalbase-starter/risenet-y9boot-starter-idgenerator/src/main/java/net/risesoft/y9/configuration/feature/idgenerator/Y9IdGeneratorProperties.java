@@ -20,5 +20,5 @@ public class Y9IdGeneratorProperties {
      * 是否启用
      */
     private boolean enabled = false;
-    
+
 }
