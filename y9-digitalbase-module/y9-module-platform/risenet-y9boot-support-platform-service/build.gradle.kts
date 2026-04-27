@@ -14,6 +14,7 @@ dependencies {
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-publish-kafka"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-log"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-idgenerator"))
+    api(project(":y9-digitalbase-support:risenet-y9boot-support-audit"))
     api(project(":y9-digitalbase-support:risenet-y9boot-support-file-service-ftp"))
     api(project(":y9-digitalbase-support:risenet-y9boot-support-file-service-local"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-permission"))
