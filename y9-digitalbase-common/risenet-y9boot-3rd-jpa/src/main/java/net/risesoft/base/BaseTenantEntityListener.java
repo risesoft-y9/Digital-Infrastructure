@@ -1,7 +1,7 @@
 package net.risesoft.base;
 
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 
 import net.risesoft.y9.Y9LoginUserHolder;
 
