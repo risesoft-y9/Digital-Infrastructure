@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -48,8 +49,9 @@ import net.risesoft.y9public.entity.Y9LogFlowableAccessLog;
 import net.risesoft.y9public.repository.Y9LogFlowableAccessLogRepository;
 
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import co.elastic.clients.elasticsearch._types.aggregations.AggregationRange;
-import co.elastic.clients.elasticsearch._types.aggregations.RangeAggregation;
 import co.elastic.clients.elasticsearch._types.aggregations.RangeBucket;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 
@@ -95,10 +97,14 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
 
     @Override
     public List<Long> listOperateTimeCount(String startDay, String endDay) {
-        List<Long> list = new ArrayList<>();
         BoolQuery.Builder builder = new BoolQuery.Builder();
-
         builder.must(m -> m.exists(e -> e.field(Y9LogSearchConsts.USER_NAME)));
+
+        String tenantId = Y9LoginUserHolder.getTenantId();
+        if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+            builder.must(m -> m.term(t -> t.field(Y9LogSearchConsts.TENANT_ID).value(tenantId)));
+        }
+
         if (StringUtils.isNotBlank(startDay) && StringUtils.isNotBlank(endDay)) {
             String sTime = startDay + " 00:00:00";
             String eTime = endDay + " 23:59:59";
@@ -108,42 +114,50 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
                 Date endDate = sdf.parse(eTime);
                 String start = DATETIME_UTC_FORMAT.format(startDate);
                 String end = DATETIME_UTC_FORMAT.format(endDate);
-                builder.must(m -> m.range(r -> r.date(
-                    d -> d.field(Y9LogSearchConsts.LOG_TIME).from(start).to(end).format("yyyy-MM-dd'T'HH:mm:ss'Z'"))));
+                LOGGER.info(start + "   " + end);
+                builder.must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(start).to(end))));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
         }
 
         List<AggregationRange> aggregationRanges = new ArrayList<>();
-        aggregationRanges.add(AggregationRange.of(ar -> ar.from(0d).to(1000000d)));
-        aggregationRanges.add(AggregationRange.of(ar -> ar.from(1000000d).to(10000000d)));
-        aggregationRanges.add(AggregationRange.of(ar -> ar.from(10000000d).to(100000000d)));
-        aggregationRanges.add(AggregationRange.of(ar -> ar.from(100000000d).to(500000000d)));
-        aggregationRanges.add(AggregationRange.of(ar -> ar.from(500000000d).to(1000000000d)));
-        aggregationRanges.add(AggregationRange.of(ar -> ar.from(1000000000d)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.to(1000000.0)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(1000000.0).to(10000000.0)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(10000000.0).to(100000000.0)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(100000000.0).to(500000000.0)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(500000000.0).to(1000000000.0)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(1000000000.0)));
+
+        Aggregation ranges =
+            Aggregation.of(a -> a.range(r -> r.field(Y9LogSearchConsts.ELAPSED_TIME).ranges(aggregationRanges)));
 
         NativeQueryBuilder nativebuilder = new NativeQueryBuilder();
         nativebuilder.withQuery(builder.build()._toQuery());
-        nativebuilder.withAggregation("range-elapsedtime",
-            RangeAggregation.of(r -> r.field(Y9LogSearchConsts.ELAPSED_TIME).ranges(aggregationRanges))
-                ._toAggregation());
-        IndexCoordinates indexs = IndexCoordinates.of(createIndexNames(startDay, endDay));
-        try {
-            SearchHits<Y9LogFlowableAccessLog> searchHits =
-                elasticsearchOperations.search(nativebuilder.build(), Y9LogFlowableAccessLog.class, indexs);
-            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
-            List<? extends RangeBucket> buckets =
-                aggregations.get("range-elapsedtime").aggregation().getAggregate().range().buckets().array();
+        nativebuilder.withAggregation("range-elapsedtime", ranges);
 
-            buckets.forEach(bucket -> {
-                long count = bucket.docCount();
-                list.add(count);
-            });
-        } catch (ElasticsearchException e1) {
-            LOGGER.error(e1.getMessage(), e1);
+        try {
+            IndexCoordinates index = IndexCoordinates.of(createIndexNames(startDay, endDay));
+            SearchHits<Y9LogFlowableAccessLog> searchHits =
+                elasticsearchOperations.search(nativebuilder.build(), Y9LogFlowableAccessLog.class, index);
+            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
+            List<Long> list = new ArrayList<>();
+            if (aggregations != null) {
+                var aggregation = aggregations.get("range-elapsedtime");
+                if (aggregation != null) {
+                    Aggregate aggregate = aggregation.aggregation().getAggregate();
+                    if (aggregate != null) {
+                        aggregate.range().buckets().array().stream()
+                            .map(RangeBucket::docCount)
+                            .forEach(list::add);
+                    }
+                }
+            }
+            return list;
+        } catch (ElasticsearchException e) {
+            LOGGER.error(e.getMessage(), e);
+            return Collections.emptyList();
         }
-        return list;
     }
 
     @Override

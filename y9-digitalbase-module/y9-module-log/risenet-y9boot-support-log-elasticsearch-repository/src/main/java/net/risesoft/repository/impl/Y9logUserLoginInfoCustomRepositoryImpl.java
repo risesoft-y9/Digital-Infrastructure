@@ -19,7 +19,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregation;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregations;
 import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -28,7 +27,6 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
-import org.springframework.data.elasticsearch.core.query.CriteriaQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Component;
 
@@ -53,9 +51,8 @@ import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
-import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery.Builder;
-import co.elastic.clients.elasticsearch.core.search.Hit;
-import co.elastic.clients.json.JsonData;
+import co.elastic.clients.elasticsearch._types.aggregations.TermsAggregation;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 
 /**
  * @author guoweijun
@@ -90,7 +87,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
         }
-        Query query = new CriteriaQueryBuilder(criteria).build();
+        Query query = new CriteriaQuery(criteria);
         return elasticsearchOperations.count(query, INDEX);
     }
 
@@ -136,35 +133,39 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
 
     @Override
     public List<Map<String, Object>> listUserHostIpByCip(String cip) {
-        List<Map<String, Object>> list = new ArrayList<>();
-        Builder build = new Builder();
-        build.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.USER_HOST_IP).query(cip + "*")));
         String tenantId = Y9LoginUserHolder.getTenantId();
+        BoolQuery.Builder builder = new BoolQuery.Builder();
+        builder.must(m -> m.wildcard(w -> w.field(Y9LogSearchConsts.USER_HOST_IP).value(cip + "*")));
         if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
-            build.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
+            builder.must(m -> m.term(t -> t.field(Y9LogSearchConsts.TENANT_ID).value(tenantId)));
         }
 
-        Aggregation userHostIpAggs = Aggregation.of(a -> a.terms(t -> t.field(Y9LogSearchConsts.USER_HOST_IP)));
+        Aggregation userHostIpAggs =
+            Aggregation.of(a -> a.terms(t -> t.field(Y9LogSearchConsts.USER_HOST_IP).size(Integer.MAX_VALUE)));
 
-        NativeQueryBuilder querybuilder = new NativeQueryBuilder();
-        querybuilder.withQuery(build.build()._toQuery());
-        querybuilder.withAggregation("by_UserHostIP", userHostIpAggs);
-        querybuilder.withTrackTotalHits(true);
+        NativeQueryBuilder nativeBuilder = new NativeQueryBuilder();
+        nativeBuilder.withQuery(builder.build()._toQuery());
+        nativeBuilder.withAggregation("by_UserHostIP", userHostIpAggs);
+
         try {
             SearchHits<Y9LogUserLoginInfo> searchHits =
-                elasticsearchOperations.search(querybuilder.build(), Y9LogUserLoginInfo.class, INDEX);
-            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
-            List<StringTermsBucket> ipList =
-                aggregations.get("by_UserHostIP").aggregation().getAggregate().sterms().buckets().array();
-
-            ipList.forEach(bucket -> {
-                Map<String, Object> map = new HashMap<>();
-                String serverIp = bucket.key().stringValue();
-                String text = serverIp + "<span style='color:red'>(" + bucket.docCount() + ")</span>";
-                map.put("serverIp", serverIp);
-                map.put("text", text);
-                list.add(map);
-            });
+                elasticsearchOperations.search(nativeBuilder.build(), Y9LogUserLoginInfo.class, INDEX);
+            if (searchHits.hasAggregations()) {
+                ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
+                var aggregation = aggregations.get("by_UserHostIP");
+                if (aggregation != null) {
+                    Aggregate aggregate = aggregation.aggregation().getAggregate();
+                    if (aggregate != null) {
+                        return aggregate.sterms().buckets().array().stream().map(bucket -> {
+                            Map<String, Object> map = new HashMap<>();
+                            String serverIp = bucket.key().stringValue();
+                            map.put("serverIp", serverIp);
+                            map.put("text", serverIp + "<span style='color:red'>(" + bucket.docCount() + ")</span>");
+                            return map;
+                        }).collect(Collectors.toList());
+                    }
+                }
+            }
         } catch (ElasticsearchException e) {
             LOGGER.warn(e.getMessage(), e);
         }
@@ -192,8 +193,9 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             try {
-                criteria.subCriteria(new Criteria(Y9LogSearchConsts.LOGIN_TIME)
-                    .between(simpleDateFormat.parse(startTime).getTime(), simpleDateFormat.parse(endTime).getTime()));
+                long startTimestamp = simpleDateFormat.parse(startTime).getTime();
+                long endTimestamp = simpleDateFormat.parse(endTime).getTime();
+                criteria.subCriteria(new Criteria(Y9LogSearchConsts.LOGIN_TIME).between(startTimestamp, endTimestamp));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -227,105 +229,145 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         int startIndex = (page - 1) * rows;
         int endIndex = page * rows;
         List<Map<String, Object>> strList = new ArrayList<>();
-        Builder build = new Builder();
-        build.must(m -> m.term(t -> t.field(Y9LogSearchConsts.SUCCESS).value(success)));
-        build.must(m -> m.term(t -> t.field(Y9LogSearchConsts.USER_HOST_IP).value(userHostIp)));
         String tenantId = Y9LoginUserHolder.getTenantId();
+
+        // 构建查询条件
+        BoolQuery.Builder builder = new BoolQuery.Builder();
+        builder.must(m -> m.term(t -> t.field(Y9LogSearchConsts.SUCCESS).value(success)));
+        builder.must(m -> m.term(t -> t.field(Y9LogSearchConsts.USER_HOST_IP).value(userHostIp)));
         if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
-            build.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
+            builder.must(m -> m.term(t -> t.field(Y9LogSearchConsts.TENANT_ID).value(tenantId)));
         }
 
-        Aggregation usernameAggs = Aggregation.of(a -> a.terms(t -> t.field(Y9LogSearchConsts.USER_NAME))
-            .aggregations("topHits", aggs -> aggs.topHits(h -> h.size(1).explain(true))));
+        // 构建topHits子聚合
+        Aggregation topHitsAgg = Aggregation.of(a -> a.topHits(t -> t.size(1).explain(true)));
 
-        NativeQueryBuilder querybuilder = new NativeQueryBuilder();
-        querybuilder.withQuery(build.build()._toQuery());
-        querybuilder.withAggregation("username-aggs", usernameAggs);
-        querybuilder.withTrackTotalHits(true);
-        try {
-            SearchHits<Y9LogUserLoginInfo> searchHits =
-                elasticsearchOperations.search(querybuilder.build(), Y9LogUserLoginInfo.class, INDEX);
+        // 构建terms聚合并添加topHits作为子聚合 - 使用链式调用
+        Aggregation usernameAggs =
+            Aggregation.of(a -> a.terms(TermsAggregation.of(t -> t.field(Y9LogSearchConsts.USER_NAME)))
+                .aggregations("topHits", topHitsAgg));
+
+        NativeQueryBuilder nativeBuilder = new NativeQueryBuilder();
+        nativeBuilder.withQuery(builder.build()._toQuery());
+        nativeBuilder.withAggregation("username-aggs", usernameAggs);
+
+        SearchHits<Y9LogUserLoginInfo> searchHits =
+            elasticsearchOperations.search(nativeBuilder.build(), Y9LogUserLoginInfo.class, INDEX);
+        if (searchHits.hasAggregations()) {
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
-            List<StringTermsBucket> stbList =
-                aggregations.get("username-aggs").aggregation().getAggregate().sterms().buckets().array();
-            int totalCount = stbList.size();
-            endIndex = endIndex < totalCount ? endIndex : totalCount;
-            for (int i = startIndex; i < endIndex; i++) {
-                Map<String, Object> map = new HashMap<>();
-                StringTermsBucket bucket = stbList.get(i);
-                long count = bucket.docCount();
-                Y9LogUserLoginInfo y9logUserLoginInfo = bucket.aggregations()
-                    .get("topHits")
-                    .topHits()
-                    .hits()
-                    .hits()
-                    .get(0)
-                    .source()
-                    .to(Y9LogUserLoginInfo.class);
-                map.put(Y9LogSearchConsts.USER_ID, y9logUserLoginInfo.getUserId());
-                map.put(Y9LogSearchConsts.USER_NAME, y9logUserLoginInfo.getUserName());
-                map.put("serverCount", String.valueOf(count));
-                strList.add(map);
+            var termsAggregation = aggregations.get("username-aggs");
+            if (termsAggregation != null) {
+                Aggregate aggregate = termsAggregation.aggregation().getAggregate();
+                if (aggregate != null) {
+                    List<? extends StringTermsBucket> stbList = aggregate.sterms().buckets().array();
+                    int totalCount = stbList.size();
+                    endIndex = Math.min(endIndex, totalCount);
+                    for (int i = startIndex; i < endIndex; i++) {
+                        Map<String, Object> map = new HashMap<>();
+                        StringTermsBucket bucket = stbList.get(i);
+                        long count = bucket.docCount();
+
+                        // 从子聚合中获取topHits结果
+                        var bucketAggs = bucket.aggregations();
+                        if (bucketAggs != null && !bucketAggs.isEmpty()) {
+                            var topHitsAggResult = bucketAggs.get("topHits");
+                            if (topHitsAggResult != null) {
+                                Aggregate topHitsAggregate = topHitsAggResult;
+                                if (topHitsAggregate != null) {
+                                    var topHit = topHitsAggregate.topHits().hits().hits().get(0);
+                                    Y9LogUserLoginInfoDO y9LogUserLoginInfoDO =
+                                        topHit.source().to(Y9LogUserLoginInfoDO.class);
+                                    map.put(Y9LogSearchConsts.USER_ID, y9LogUserLoginInfoDO.getUserId());
+                                    map.put(Y9LogSearchConsts.USER_NAME, y9LogUserLoginInfoDO.getUserName());
+                                }
+                            }
+                        }
+                        map.put("serverCount", String.valueOf(count));
+                        strList.add(map);
+                    }
+                    return Y9Page.success(page, (int)Math.ceil((float)totalCount / (float)rows), totalCount, strList);
+                }
             }
-            return Y9Page.success(page, (int)Math.ceil((float)totalCount / (float)page), totalCount, strList);
-        } catch (ElasticsearchException e) {
-            LOGGER.warn(e.getMessage(), e);
         }
-        return Y9Page.failure(page, page, startIndex, null, tenantId, endIndex);
+        int totalCount = 0;
+        return Y9Page.failure(page, (int)Math.ceil((float)totalCount / (float)rows), totalCount,
+            Collections.emptyList(), "查询失败", 0);
     }
 
     @Override
     public Y9Page<Map<String, Object>> pageByUserHostIpAndSuccessAndUserNameLike(String userHostIp, String success,
         String userName, int page, int rows) {
+        int startIndex = (page - 1) * rows;
         int endIndex = page * rows;
         List<Map<String, Object>> strList = new ArrayList<>();
-        Builder build = new Builder();
-        build.must(m -> m.term(t -> t.field(Y9LogSearchConsts.SUCCESS).value(success)));
-        build.must(m -> m.term(t -> t.field(Y9LogSearchConsts.USER_HOST_IP).value(userHostIp)));
-        build.must(m -> m.term(t -> t.field(Y9LogSearchConsts.USER_NAME).value("*" + userName + "*")));
         String tenantId = Y9LoginUserHolder.getTenantId();
+        // 构建查询条件
+        BoolQuery.Builder builder = new BoolQuery.Builder();
+        builder.must(m -> m.term(t -> t.field(Y9LogSearchConsts.SUCCESS).value(success)));
+        builder.must(m -> m.term(t -> t.field(Y9LogSearchConsts.USER_HOST_IP).value(userHostIp)));
+        builder.must(m -> m.wildcard(w -> w.field(Y9LogSearchConsts.USER_NAME).value("*" + userName + "*")));
         if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
-            build.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
+            builder.must(m -> m.term(t -> t.field(Y9LogSearchConsts.TENANT_ID).value(tenantId)));
         }
 
-        Aggregation appAggs = Aggregation.of(a -> a.terms(t -> t.field(Y9LogSearchConsts.USER_NAME))
-            .aggregations("topHits", aggs -> aggs.topHits(h -> h.size(1).explain(true))));
+        // 构建topHits子聚合
+        Aggregation topHitsAgg = Aggregation.of(a -> a.topHits(t -> t.size(1).explain(true)));
 
-        NativeQueryBuilder querybuilder = new NativeQueryBuilder();
-        querybuilder.withQuery(build.build()._toQuery());
-        querybuilder.withAggregation("userNameAggs", appAggs);
-        querybuilder.withTrackTotalHits(true);
+        // 构建terms聚合并添加topHits作为子聚合 - 使用链式调用
+        Aggregation termsAgg =
+            Aggregation.of(a -> a.terms(TermsAggregation.of(t -> t.field(Y9LogSearchConsts.USER_NAME)))
+                .aggregations("topHits", topHitsAgg));
+
+        NativeQueryBuilder nativeBuilder = new NativeQueryBuilder();
+        nativeBuilder.withQuery(builder.build()._toQuery());
+        nativeBuilder.withAggregation("username-aggs", termsAgg);
 
         try {
             SearchHits<Y9LogUserLoginInfo> searchHits =
-                elasticsearchOperations.search(querybuilder.build(), Y9LogUserLoginInfo.class, INDEX);
+                elasticsearchOperations.search(nativeBuilder.build(), Y9LogUserLoginInfo.class, INDEX);
+            if (searchHits.hasAggregations()) {
+                ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
+                var termsAggregation = aggregations.get("username-aggs");
+                if (termsAggregation != null) {
+                    Aggregate aggregate = termsAggregation.aggregation().getAggregate();
+                    if (aggregate != null) {
+                        List<? extends StringTermsBucket> stbList = aggregate.sterms().buckets().array();
+                        int totalCount = stbList.size();
+                        endIndex = Math.min(endIndex, totalCount);
+                        for (int i = startIndex; i < endIndex; i++) {
+                            Map<String, Object> map = new HashMap<>();
+                            StringTermsBucket bucket = stbList.get(i);
+                            long count = bucket.docCount();
 
-            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
-            // 指定聚合的名称
-            ElasticsearchAggregation userNameAggs = aggregations.get("userNameAggs");
-            // 获得聚合
-            Aggregate aggregate = userNameAggs.aggregation().getAggregate();
-
-            List<StringTermsBucket> list = aggregate.sterms().buckets().array();
-            int totalCount = list.size();
-            endIndex = endIndex < totalCount ? endIndex : totalCount;
-            for (StringTermsBucket bucket : list) {
-                long count = bucket.docCount();
-                List<Hit<JsonData>> topHitList = bucket.aggregations().get("topHits").topHits().hits().hits();
-                for (Hit<JsonData> h : topHitList) {
-                    Map<String, Object> map = new HashMap<>();
-                    Y9LogUserLoginInfoDO y9LogUserLoginInfoDO = h.source().to(Y9LogUserLoginInfoDO.class);
-                    map.put(Y9LogSearchConsts.USER_ID, y9LogUserLoginInfoDO.getUserId());
-                    map.put(Y9LogSearchConsts.USER_NAME, y9LogUserLoginInfoDO.getUserName());
-                    map.put("serverCount", String.valueOf(count));
-                    strList.add(map);
+                            // 从子聚合中获取topHits结果
+                            var bucketAggs = bucket.aggregations();
+                            if (bucketAggs != null && !bucketAggs.isEmpty()) {
+                                var topHitsAggResult = bucketAggs.get("topHits");
+                                if (topHitsAggResult != null) {
+                                    Aggregate topHitsAggregate = topHitsAggResult;
+                                    if (topHitsAggregate != null) {
+                                        var topHit = topHitsAggregate.topHits().hits().hits().get(0);
+                                        Y9LogUserLoginInfoDO y9LogUserLoginInfoDO =
+                                            topHit.source().to(Y9LogUserLoginInfoDO.class);
+                                        map.put(Y9LogSearchConsts.USER_ID, y9LogUserLoginInfoDO.getUserId());
+                                        map.put(Y9LogSearchConsts.USER_NAME, y9LogUserLoginInfoDO.getUserName());
+                                    }
+                                }
+                            }
+                            map.put("serverCount", String.valueOf(count));
+                            strList.add(map);
+                        }
+                        return Y9Page.success(page, (int)Math.ceil((float)totalCount / (float)rows), totalCount,
+                            strList);
+                    }
                 }
             }
-            return Y9Page.success(page, (int)Math.ceil((float)totalCount / (float)page), totalCount, strList);
         } catch (ElasticsearchException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.warn(e.getMessage(), e);
         }
-        return null;
+        int totalCount = 0;
+        return Y9Page.failure(page, (int)Math.ceil((float)totalCount / (float)rows), totalCount,
+            Collections.emptyList(), "查询失败", 0);
     }
 
     @Override
@@ -473,4 +515,5 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             Y9ModelConvertUtil.convert(y9LogUserLoginInfoDO, Y9LogUserLoginInfo.class);
         y9logUserLoginInfoRepository.save(y9LogUserLoginInfo);
     }
+
 }

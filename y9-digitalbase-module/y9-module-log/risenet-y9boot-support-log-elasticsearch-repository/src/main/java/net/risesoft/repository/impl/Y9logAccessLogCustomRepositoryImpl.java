@@ -58,16 +58,13 @@ import net.risesoft.y9public.repository.Y9LogAccessLogRepository;
 
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.SortOrder;
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import co.elastic.clients.elasticsearch._types.aggregations.AggregationRange;
-import co.elastic.clients.elasticsearch._types.aggregations.CalendarInterval;
-import co.elastic.clients.elasticsearch._types.aggregations.DateHistogramAggregation;
 import co.elastic.clients.elasticsearch._types.aggregations.DateHistogramBucket;
-import co.elastic.clients.elasticsearch._types.aggregations.FieldDateMath;
-import co.elastic.clients.elasticsearch._types.aggregations.RangeAggregation;
 import co.elastic.clients.elasticsearch._types.aggregations.RangeBucket;
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
-import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery.Builder;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.util.NamedValue;
 
 /**
@@ -110,7 +107,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
     @Override
     public Map<String, Object> getAppClickCount(String tenantId, String guidPath, String startDay, String endDay) {
-        Builder build = new Builder();
+        BoolQuery.Builder build = new BoolQuery.Builder();
         Map<String, Object> returnMap = new HashMap<>();
         List<String> strList = new ArrayList<>();
         List<Long> longList = new ArrayList<>();
@@ -138,10 +135,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             }
         }
 
-        List<NamedValue<SortOrder>> sortOrders = new ArrayList<>();
-        sortOrders.add(NamedValue.of("_count", SortOrder.Desc));
-        Aggregation appNameAggs =
-            Aggregation.of(a -> a.terms(t -> t.field(Y9LogSearchConsts.MODULAR_NAME).size(10000).order(sortOrders)));
+        Aggregation appNameAggs = Aggregation.of(a -> a.terms(
+            t -> t.field(Y9LogSearchConsts.MODULAR_NAME).size(10000).order(NamedValue.of("_count", SortOrder.Desc))));
 
         NativeQueryBuilder querybuilder = new NativeQueryBuilder();
         querybuilder.withQuery(build.build()._toQuery());
@@ -154,14 +149,11 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
             List<? extends StringTermsBucket> buckets =
                 aggregations.get("by_appName").aggregation().getAggregate().sterms().buckets().array();
-            int length = buckets.size();
             buckets.forEach(bucket -> {
-                String appName = bucket.key().stringValue();
-                long count = bucket.docCount();
-                strList.add(appName);
-                longList.add(count);
+                strList.add(bucket.key().stringValue());
+                longList.add(bucket.docCount());
             });
-            returnMap.put("number", length);
+            returnMap.put("number", buckets.size());
             returnMap.put("name", strList);
             returnMap.put("value", longList);
             return returnMap;
@@ -182,7 +174,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         List<String> strList = new ArrayList<>();
         List<Long> longList = new ArrayList<>();
 
-        Builder builder = new Builder();
+        BoolQuery.Builder builder = new BoolQuery.Builder();
         builder.must(m -> m.exists(e -> e.field(Y9LogSearchConsts.USER_NAME)));
 
         if (StringUtils.isNotBlank(guidPath)) {
@@ -197,7 +189,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             try {
                 Date sDay = Y9DayUtil.getStartOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(startDay));
                 Date eDay = Y9DayUtil.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
-                builder.must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOGIN_TIME)
+                builder.must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME)
                     .from(String.valueOf(sDay.getTime()))
                     .to(String.valueOf(eDay.getTime())))));
             } catch (ParseException e) {
@@ -205,10 +197,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             }
         }
 
-        List<NamedValue<SortOrder>> sortOrders = new ArrayList<>();
-        sortOrders.add(NamedValue.of("_count", SortOrder.Desc));
-        Aggregation modularnameAggs =
-            Aggregation.of(a -> a.terms(t -> t.field(Y9LogSearchConsts.MODULAR_NAME).size(10000).order(sortOrders)));
+        Aggregation modularnameAggs = Aggregation.of(a -> a.terms(
+            t -> t.field(Y9LogSearchConsts.MODULAR_NAME).size(10000).order(NamedValue.of("_count", SortOrder.Desc))));
 
         NativeQueryBuilder querybuilder = new NativeQueryBuilder();
         querybuilder.withQuery(builder.build()._toQuery());
@@ -228,9 +218,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 if (StringUtils.isNotBlank(modularCnName)) {
                     modularName = modularCnName;
                 }
-                long count = bucket.docCount();
                 strList.add(modularName);
-                longList.add(count);
+                longList.add(bucket.docCount());
             });
             map.put("name", strList);
             map.put("value", longList);
@@ -264,79 +253,92 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         String etartTimeStr = DATETIME_UTC_FORMAT.format(endOfTime.getTime());
         LOGGER.info("startTimeStr---->{},etartTimeStr-->{}", startTimeStr, etartTimeStr);
 
-        Builder sbuilder = new Builder();
-        sbuilder.must(m -> m.exists(e -> e.field(Y9LogSearchConsts.USER_NAME)));
-        sbuilder.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.SUCCESS).query(success)));
-        sbuilder.must(
+        // 成功的查询
+        BoolQuery.Builder sBuilder = new BoolQuery.Builder();
+        sBuilder.must(m -> m.exists(e -> e.field(Y9LogSearchConsts.USER_NAME)));
+        sBuilder.must(m -> m.term(t -> t.field(Y9LogSearchConsts.SUCCESS).value(success)));
+        sBuilder.must(
             m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(startTimeStr).to(etartTimeStr))));
-
-        Builder ebuilder = new Builder();
-        ebuilder.must(m -> m.exists(e -> e.field(Y9LogSearchConsts.USER_NAME)));
-        ebuilder.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.SUCCESS).query(error)));
-        ebuilder.must(
-            m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(startTimeStr).to(etartTimeStr))));
-
         if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
-            sbuilder.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
-            ebuilder.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
+            sBuilder.must(m -> m.term(t -> t.field(Y9LogSearchConsts.TENANT_ID).value(Y9Util.escape(tenantId))));
         }
 
-        IndexCoordinates indexs = IndexCoordinates.of(createIndexNames(selectedDate, null));
-
-        DateHistogramAggregation sdateHistogramAgg =
-            DateHistogramAggregation.of(d -> d.field(Y9LogSearchConsts.LOG_TIME)
-                .calendarInterval(CalendarInterval.Hour)
-                .timeZone("GMT+08:00")
-                .offset(t -> t.time("-8h"))
-                .minDocCount(0)
-                .extendedBounds(bounds -> bounds.min(FieldDateMath.of(f -> f.expr(startTimeStr)))
-                    .max(FieldDateMath.of(f -> f.expr(etartTimeStr)))));
+        Aggregation sdateHistogramAgg = Aggregation.of(a -> a.dateHistogram(d -> d.field(Y9LogSearchConsts.LOG_TIME)
+            .fixedInterval(i -> i.time("1h"))
+            .timeZone("Asia/Shanghai")
+            .minDocCount(0)));
 
         NativeQueryBuilder sNativebuilder = new NativeQueryBuilder();
-        sNativebuilder.withQuery(sbuilder.build()._toQuery());
-        sNativebuilder.withAggregation("by_success_logtime", sdateHistogramAgg._toAggregation());
+        sNativebuilder.withQuery(sBuilder.build()._toQuery());
+        sNativebuilder.withAggregation("by_success_logtime", sdateHistogramAgg);
 
-        DateHistogramAggregation edateHistogramAgg =
-            DateHistogramAggregation.of(d -> d.field(Y9LogSearchConsts.LOG_TIME)
-                .calendarInterval(CalendarInterval.Hour)
-                .timeZone("GMT+08:00")
-                .offset(t -> t.time("-8h"))
-                .minDocCount(0)
-                .extendedBounds(bounds -> bounds.min(FieldDateMath.of(f -> f.expr(startTimeStr)))
-                    .max(FieldDateMath.of(f -> f.expr(etartTimeStr)))));
+        // 错误的查询
+        BoolQuery.Builder eBuilder = new BoolQuery.Builder();
+        eBuilder.must(m -> m.exists(e -> e.field(Y9LogSearchConsts.USER_NAME)));
+        eBuilder.must(m -> m.term(t -> t.field(Y9LogSearchConsts.SUCCESS).value(error)));
+        eBuilder.must(
+            m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(startTimeStr).to(etartTimeStr))));
+        if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+            eBuilder.must(m -> m.term(t -> t.field(Y9LogSearchConsts.TENANT_ID).value(Y9Util.escape(tenantId))));
+        }
+
+        Aggregation edateHistogramAgg = Aggregation.of(a -> a.dateHistogram(d -> d.field(Y9LogSearchConsts.LOG_TIME)
+            .fixedInterval(i -> i.time("1h"))
+            .timeZone("Asia/Shanghai")
+            .minDocCount(0)));
+
         NativeQueryBuilder eNativebuilder = new NativeQueryBuilder();
-        eNativebuilder.withQuery(ebuilder.build()._toQuery());
-        eNativebuilder.withAggregation("by_error_logtime", edateHistogramAgg._toAggregation());
+        eNativebuilder.withQuery(eBuilder.build()._toQuery());
+        eNativebuilder.withAggregation("by_error_logtime", edateHistogramAgg);
+
+        IndexCoordinates index = IndexCoordinates
+            .of(createIndexNames(DATETIME_UTC_FORMAT.format(startOfTime), DATETIME_UTC_FORMAT.format(endOfTime)));
+        // IndexCoordinates indexs = IndexCoordinates.of(createIndexNames(selectedDate, null));
 
         try {
             SearchHits<Y9LogAccessLog> searchHits =
-                elasticsearchOperations.search(sNativebuilder.build(), Y9LogAccessLog.class, indexs);
+                elasticsearchOperations.search(sNativebuilder.build(), Y9LogAccessLog.class, index);
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
-            List<? extends DateHistogramBucket> buckets =
-                aggregations.get("by_success_logtime").aggregation().getAggregate().dateHistogram().buckets().array();
-            buckets.forEach(bucket -> {
-                long count = bucket.docCount();
-                countOfSuccess.add(count);
-            });
-
+            if (aggregations != null) {
+                var aggregation = aggregations.get("by_success_logtime");
+                if (aggregation != null) {
+                    Aggregate aggregate = aggregation.aggregation().getAggregate();
+                    if (aggregate != null) {
+                        aggregate.dateHistogram()
+                            .buckets()
+                            .array()
+                            .stream()
+                            .map(DateHistogramBucket::docCount)
+                            .forEach(countOfSuccess::add);
+                    }
+                }
+            }
         } catch (ElasticsearchException e1) {
             LOGGER.error(e1.getMessage(), e1);
         }
 
         try {
             SearchHits<Y9LogAccessLog> searchHits =
-                elasticsearchOperations.search(eNativebuilder.build(), Y9LogAccessLog.class, indexs);
+                elasticsearchOperations.search(eNativebuilder.build(), Y9LogAccessLog.class, index);
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
-            List<? extends DateHistogramBucket> buckets =
-                aggregations.get("by_error_logtime").aggregation().getAggregate().dateHistogram().buckets().array();
-            buckets.forEach(bucket -> {
-                long count = bucket.docCount();
-                countOfError.add(count);
-            });
-
+            if (aggregations != null) {
+                var aggregation = aggregations.get("by_error_logtime");
+                if (aggregation != null) {
+                    Aggregate aggregate = aggregation.aggregation().getAggregate();
+                    if (aggregate != null) {
+                        aggregate.dateHistogram()
+                            .buckets()
+                            .array()
+                            .stream()
+                            .map(DateHistogramBucket::docCount)
+                            .forEach(countOfError::add);
+                    }
+                }
+            }
         } catch (ElasticsearchException e1) {
             LOGGER.error(e1.getMessage(), e1);
         }
+
         for (int i = 0; i < 24; i++) {
             time.add(i);
         }
@@ -348,13 +350,12 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
     @Override
     public List<Long> listOperateTimeCount(String startDay, String endDay) {
-        List<Long> list = new ArrayList<>();
-        Builder builder = new Builder();
-
+        BoolQuery.Builder builder = new BoolQuery.Builder();
         builder.must(m -> m.exists(e -> e.field(Y9LogSearchConsts.USER_NAME)));
+
         String tenantId = Y9LoginUserHolder.getTenantId();
         if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
-            builder.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
+            builder.must(m -> m.term(t -> t.field(Y9LogSearchConsts.TENANT_ID).value(tenantId)));
         }
         if (StringUtils.isNotBlank(startDay) && StringUtils.isNotBlank(endDay)) {
             String sTime = startDay + " 00:00:00";
@@ -365,42 +366,48 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 Date endDate = sdf.parse(eTime);
                 String start = DATETIME_UTC_FORMAT.format(startDate);
                 String end = DATETIME_UTC_FORMAT.format(endDate);
-                builder.must(m -> m.range(r -> r.date(
-                    d -> d.field(Y9LogSearchConsts.LOG_TIME).from(start).to(end).format("yyyy-MM-dd'T'HH:mm:ss'Z'"))));
+                LOGGER.info(start + "   " + end);
+                builder.must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(start).to(end))));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
         }
 
         List<AggregationRange> aggregationRanges = new ArrayList<>();
-        aggregationRanges.add(AggregationRange.of(ar -> ar.from(0d).to(1000000d)));
-        aggregationRanges.add(AggregationRange.of(ar -> ar.from(1000000d).to(10000000d)));
-        aggregationRanges.add(AggregationRange.of(ar -> ar.from(10000000d).to(100000000d)));
-        aggregationRanges.add(AggregationRange.of(ar -> ar.from(100000000d).to(500000000d)));
-        aggregationRanges.add(AggregationRange.of(ar -> ar.from(500000000d).to(1000000000d)));
-        aggregationRanges.add(AggregationRange.of(ar -> ar.from(1000000000d)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.to(1000000.0)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(1000000.0).to(10000000.0)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(10000000.0).to(100000000.0)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(100000000.0).to(500000000.0)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(500000000.0).to(1000000000.0)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(1000000000.0)));
+
+        Aggregation ranges =
+            Aggregation.of(a -> a.range(r -> r.field(Y9LogSearchConsts.ELAPSED_TIME).ranges(aggregationRanges)));
 
         NativeQueryBuilder nativebuilder = new NativeQueryBuilder();
         nativebuilder.withQuery(builder.build()._toQuery());
-        nativebuilder.withAggregation("range-elapsedtime",
-            RangeAggregation.of(r -> r.field(Y9LogSearchConsts.ELAPSED_TIME).ranges(aggregationRanges))
-                ._toAggregation());
-        IndexCoordinates indexs = IndexCoordinates.of(createIndexNames(startDay, endDay));
-        try {
-            SearchHits<Y9LogAccessLog> searchHits =
-                elasticsearchOperations.search(nativebuilder.build(), Y9LogAccessLog.class, indexs);
-            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
-            List<? extends RangeBucket> buckets =
-                aggregations.get("range-elapsedtime").aggregation().getAggregate().range().buckets().array();
+        nativebuilder.withAggregation("range-elapsedtime", ranges);
 
-            buckets.forEach(bucket -> {
-                long count = bucket.docCount();
-                list.add(count);
-            });
-        } catch (ElasticsearchException e1) {
-            LOGGER.error(e1.getMessage(), e1);
+        try {
+            IndexCoordinates index = IndexCoordinates.of(createIndexNames(startDay, endDay));
+            SearchHits<Y9LogAccessLog> searchHits =
+                elasticsearchOperations.search(nativebuilder.build(), Y9LogAccessLog.class, index);
+            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
+            List<Long> list = new ArrayList<>();
+            aggregations.get("range-elapsedtime")
+                .aggregation()
+                .getAggregate()
+                .range()
+                .buckets()
+                .array()
+                .stream()
+                .map(RangeBucket::docCount)
+                .forEach(list::add);
+            return list;
+        } catch (ElasticsearchException e) {
+            LOGGER.error(e.getMessage(), e);
+            return Collections.emptyList();
         }
-        return list;
     }
 
     @Override

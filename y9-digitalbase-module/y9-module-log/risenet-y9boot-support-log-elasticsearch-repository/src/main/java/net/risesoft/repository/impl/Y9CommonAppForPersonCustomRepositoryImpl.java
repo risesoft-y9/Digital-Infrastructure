@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregation;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregations;
 import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -13,7 +13,7 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +44,7 @@ import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
  * @author mengjuhua
  *
  */
-@Service
+@Component
 @Slf4j
 @RequiredArgsConstructor
 public class Y9CommonAppForPersonCustomRepositoryImpl implements Y9CommonAppForPersonCustomRepository {
@@ -69,26 +69,25 @@ public class Y9CommonAppForPersonCustomRepositoryImpl implements Y9CommonAppForP
         builder.withTrackTotalHits(true);
 
         try {
-            List<String> list = new ArrayList<>();
             SearchHits<Y9ClickedApp> searchHits =
                 elasticsearchOperations.search(builder.build(), Y9ClickedApp.class, INDEX);
-            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
-            // 指定聚合的名称
-            ElasticsearchAggregation elasticsearchAggregation = aggregations.get("by_appName");
-            // 获得聚合
-            Aggregate aggregate = elasticsearchAggregation.aggregation().getAggregate();
-            if (aggregate != null) {
-                List<? extends StringTermsBucket> buckets = aggregate.sterms().buckets().array();
-                buckets.forEach(bucket -> {
-                    String appName = bucket.key().stringValue();
-                    list.add(appName);
-                });
+            if (searchHits.hasAggregations()) {
+                ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
+                var aggregation = aggregations.get("by_appName");
+                if (aggregation != null) {
+                    Aggregate aggregate = aggregation.aggregation().getAggregate();
+                    if (aggregate != null) {
+                        return aggregate.sterms().buckets().array().stream()
+                            .map(bucket -> bucket.key().stringValue())
+                            .collect(Collectors.toList());
+                    }
+                }
             }
-            return list;
+            return Collections.emptyList();
         } catch (ElasticsearchException e) {
             LOGGER.error(e.getMessage());
+            return Collections.emptyList();
         }
-        return Collections.emptyList();
     }
 
     @Override
