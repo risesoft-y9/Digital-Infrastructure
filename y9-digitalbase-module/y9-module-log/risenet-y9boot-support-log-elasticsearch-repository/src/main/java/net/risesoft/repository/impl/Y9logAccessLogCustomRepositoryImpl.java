@@ -128,8 +128,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 Date sDay = Y9DayUtil.getStartOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(startDay));
                 Date eDay = Y9DayUtil.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
                 build.must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME)
-                    .from(String.valueOf(sDay.getTime()))
-                    .to(String.valueOf(eDay.getTime())))));
+                    .gte(String.valueOf(sDay.getTime()))
+                    .lte(String.valueOf(eDay.getTime())))));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -147,13 +147,20 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             SearchHits<Y9LogAccessLog> searchHits =
                 elasticsearchOperations.search(querybuilder.build(), Y9LogAccessLog.class, indexs);
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
-            List<? extends StringTermsBucket> buckets =
-                aggregations.get("by_appName").aggregation().getAggregate().sterms().buckets().array();
-            buckets.forEach(bucket -> {
-                strList.add(bucket.key().stringValue());
-                longList.add(bucket.docCount());
-            });
-            returnMap.put("number", buckets.size());
+            if (aggregations != null) {
+                var aggregation = aggregations.get("by_appName");
+                if (aggregation != null) {
+                    Aggregate aggregate = aggregation.aggregation().getAggregate();
+                    if (aggregate != null) {
+                        List<? extends StringTermsBucket> buckets = aggregate.sterms().buckets().array();
+                        buckets.forEach(bucket -> {
+                            strList.add(bucket.key().stringValue());
+                            longList.add(bucket.docCount());
+                        });
+                        returnMap.put("number", buckets.size());
+                    }
+                }
+            }
             returnMap.put("name", strList);
             returnMap.put("value", longList);
             return returnMap;
@@ -190,8 +197,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 Date sDay = Y9DayUtil.getStartOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(startDay));
                 Date eDay = Y9DayUtil.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
                 builder.must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME)
-                    .from(String.valueOf(sDay.getTime()))
-                    .to(String.valueOf(eDay.getTime())))));
+                    .gte(String.valueOf(sDay.getTime()))
+                    .lte(String.valueOf(eDay.getTime())))));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -210,17 +217,24 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             SearchHits<Y9LogAccessLog> searchHits =
                 elasticsearchOperations.search(querybuilder.build(), Y9LogAccessLog.class, indexs);
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
-            List<? extends StringTermsBucket> buckets =
-                aggregations.get("by_modularname").aggregation().getAggregate().sterms().buckets().array();
-            buckets.forEach(bucket -> {
-                String modularName = bucket.key().stringValue();
-                String modularCnName = y9logMappingService.getCnModularName(modularName);
-                if (StringUtils.isNotBlank(modularCnName)) {
-                    modularName = modularCnName;
+            if (aggregations != null) {
+                var aggregation = aggregations.get("by_modularname");
+                if (aggregation != null) {
+                    Aggregate aggregate = aggregation.aggregation().getAggregate();
+                    if (aggregate != null) {
+                        List<? extends StringTermsBucket> buckets = aggregate.sterms().buckets().array();
+                        buckets.forEach(bucket -> {
+                            String modularName = bucket.key().stringValue();
+                            String modularCnName = y9logMappingService.getCnModularName(modularName);
+                            if (StringUtils.isNotBlank(modularCnName)) {
+                                modularName = modularCnName;
+                            }
+                            strList.add(modularName);
+                            longList.add(bucket.docCount());
+                        });
+                    }
                 }
-                strList.add(modularName);
-                longList.add(bucket.docCount());
-            });
+            }
             map.put("name", strList);
             map.put("value", longList);
             map.put("number", strList.size());
@@ -236,29 +250,38 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         String tenantId = Y9LoginUserHolder.getTenantId();
         String success = "成功";
         String error = "出错";
-        List<Integer> time = new ArrayList<>();
         Map<String, Object> map = new HashMap<>();
         List<Long> countOfSuccess = new ArrayList<>();
         List<Long> countOfError = new ArrayList<>();
-        Date day = new Date();
+        Date day;
         try {
             day = new SimpleDateFormat("yyyy-MM-dd").parse(selectedDate);
         } catch (ParseException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error("日期解析失败: {}", selectedDate, e);
+            Map<String, Object> emptyMap = new HashMap<>();
+            List<Integer> time = new ArrayList<>();
+            for (int i = 0; i < 24; i++) {
+                time.add(i);
+            }
+            emptyMap.put("time", time);
+            emptyMap.put("totalOfSuccess", countOfSuccess);
+            emptyMap.put("totalOfError", countOfError);
+            return emptyMap;
         }
+
         Date startOfTime = Y9DayUtil.getStartOfDay(day);
         Date endOfTime = Y9DayUtil.getEndOfDay(day);
 
         String startTimeStr = DATETIME_UTC_FORMAT.format(startOfTime.getTime());
-        String etartTimeStr = DATETIME_UTC_FORMAT.format(endOfTime.getTime());
-        LOGGER.info("startTimeStr---->{},etartTimeStr-->{}", startTimeStr, etartTimeStr);
+        String endTimeStr = DATETIME_UTC_FORMAT.format(endOfTime.getTime());
+        LOGGER.info("startTimeStr---->{},endTimeStr-->{}", startTimeStr, endTimeStr);
 
         // 成功的查询
         BoolQuery.Builder sBuilder = new BoolQuery.Builder();
         sBuilder.must(m -> m.exists(e -> e.field(Y9LogSearchConsts.USER_NAME)));
         sBuilder.must(m -> m.term(t -> t.field(Y9LogSearchConsts.SUCCESS).value(success)));
         sBuilder.must(
-            m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(startTimeStr).to(etartTimeStr))));
+            m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).gte(startTimeStr).lte(endTimeStr))));
         if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             sBuilder.must(m -> m.term(t -> t.field(Y9LogSearchConsts.TENANT_ID).value(Y9Util.escape(tenantId))));
         }
@@ -277,7 +300,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         eBuilder.must(m -> m.exists(e -> e.field(Y9LogSearchConsts.USER_NAME)));
         eBuilder.must(m -> m.term(t -> t.field(Y9LogSearchConsts.SUCCESS).value(error)));
         eBuilder.must(
-            m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(startTimeStr).to(etartTimeStr))));
+            m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).gte(startTimeStr).lte(endTimeStr))));
         if (StringUtils.isNotBlank(tenantId) && !tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             eBuilder.must(m -> m.term(t -> t.field(Y9LogSearchConsts.TENANT_ID).value(Y9Util.escape(tenantId))));
         }
@@ -293,7 +316,6 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
         IndexCoordinates index = IndexCoordinates
             .of(createIndexNames(DATETIME_UTC_FORMAT.format(startOfTime), DATETIME_UTC_FORMAT.format(endOfTime)));
-        // IndexCoordinates indexs = IndexCoordinates.of(createIndexNames(selectedDate, null));
 
         try {
             SearchHits<Y9LogAccessLog> searchHits =
@@ -339,6 +361,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             LOGGER.error(e1.getMessage(), e1);
         }
 
+        List<Integer> time = new ArrayList<>();
         for (int i = 0; i < 24; i++) {
             time.add(i);
         }
@@ -367,7 +390,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 String start = DATETIME_UTC_FORMAT.format(startDate);
                 String end = DATETIME_UTC_FORMAT.format(endDate);
                 LOGGER.info(start + "   " + end);
-                builder.must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(start).to(end))));
+                builder.must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).gte(start).lte(end))));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -394,15 +417,20 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 elasticsearchOperations.search(nativebuilder.build(), Y9LogAccessLog.class, index);
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
             List<Long> list = new ArrayList<>();
-            aggregations.get("range-elapsedtime")
-                .aggregation()
-                .getAggregate()
-                .range()
-                .buckets()
-                .array()
-                .stream()
-                .map(RangeBucket::docCount)
-                .forEach(list::add);
+            if (aggregations != null) {
+                var aggregation = aggregations.get("range-elapsedtime");
+                if (aggregation != null) {
+                    Aggregate aggregate = aggregation.aggregation().getAggregate();
+                    if (aggregate != null) {
+                        aggregate.range()
+                            .buckets()
+                            .array()
+                            .stream()
+                            .map(RangeBucket::docCount)
+                            .forEach(list::add);
+                    }
+                }
+            }
             return list;
         } catch (ElasticsearchException e) {
             LOGGER.error(e.getMessage(), e);

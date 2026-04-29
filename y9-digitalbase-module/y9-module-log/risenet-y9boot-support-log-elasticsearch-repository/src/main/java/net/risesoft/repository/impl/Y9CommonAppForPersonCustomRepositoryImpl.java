@@ -1,6 +1,5 @@
 package net.risesoft.repository.impl;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +32,6 @@ import net.risesoft.y9public.repository.Y9CommonAppForPersonRepository;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
-import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
 
@@ -77,7 +75,10 @@ public class Y9CommonAppForPersonCustomRepositoryImpl implements Y9CommonAppForP
                 if (aggregation != null) {
                     Aggregate aggregate = aggregation.aggregation().getAggregate();
                     if (aggregate != null) {
-                        return aggregate.sterms().buckets().array().stream()
+                        return aggregate.sterms()
+                            .buckets()
+                            .array()
+                            .stream()
                             .map(bucket -> bucket.key().stringValue())
                             .collect(Collectors.toList());
                     }
