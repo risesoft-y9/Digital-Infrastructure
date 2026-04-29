@@ -1,4 +1,4 @@
-plugins {
+﻿plugins {
     id("net.risesoft.y9.conventions-war")
     id("net.risesoft.y9.docker")
     id("net.risesoft.y9.lombok")

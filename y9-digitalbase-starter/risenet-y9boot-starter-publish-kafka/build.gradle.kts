@@ -1,4 +1,4 @@
-plugins {
+﻿plugins {
     id("net.risesoft.y9.conventions-java")
     id("net.risesoft.y9.lombok")
 }
@@ -13,6 +13,8 @@ dependencies {
     api("org.springframework.boot:spring-boot-autoconfigure")
     api("org.springframework.boot:spring-boot-configuration-processor")
     api("org.springframework.kafka:spring-kafka")
+
+    api("jakarta.annotation:jakarta.annotation-api")
 }
 
 description = "risenet-y9boot-starter-publish-kafka"

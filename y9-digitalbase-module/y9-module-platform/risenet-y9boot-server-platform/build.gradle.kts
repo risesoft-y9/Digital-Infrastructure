@@ -1,4 +1,4 @@
-plugins {
+﻿plugins {
     id("net.risesoft.y9.conventions-war")
     id("net.risesoft.y9.lombok")
     id("net.risesoft.y9.docker")
@@ -14,6 +14,7 @@ dependencies {
     implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-security"))
     implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-log"))
     implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-cache-redis"))
+    implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-apisix"))
     implementation(project(":y9-digitalbase-common:risenet-y9boot-common-nacos"))
     implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-multi-tenant"))
 
@@ -26,6 +27,7 @@ dependencies {
     testImplementation(libs.h2database)
 
     compileOnly("jakarta.servlet:jakarta.servlet-api")
+    compileOnly("org.springframework.boot:spring-boot-starter-tomcat")
 }
 
 description = "risenet-y9boot-server-platform"

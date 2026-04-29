@@ -1,4 +1,4 @@
-plugins {
+﻿plugins {
     id("net.risesoft.y9.conventions-java")
     id("net.risesoft.y9.lombok")
 }
@@ -8,7 +8,6 @@ dependencies {
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-elasticsearch"))
     api(project(":y9-digitalbase-module:y9-module-log:risenet-y9boot-support-log-repository-api"))
     api(project(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-api-feignclient-platform"))
-
 }
 
 description = "risenet-y9boot-support-log-elasticsearch-repository"

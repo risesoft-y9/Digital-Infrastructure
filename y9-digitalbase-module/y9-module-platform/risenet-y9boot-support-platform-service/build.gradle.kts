@@ -1,4 +1,4 @@
-plugins {
+﻿plugins {
     id("net.risesoft.y9.conventions-java")
     id("net.risesoft.y9.lombok")
     id("net.risesoft.y9.smart-doc")
@@ -14,6 +14,7 @@ dependencies {
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-publish-kafka"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-log"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-idgenerator"))
+    api(project(":y9-digitalbase-starter:risenet-y9boot-starter-liquibase"))
     api(project(":y9-digitalbase-support:risenet-y9boot-support-audit"))
     api(project(":y9-digitalbase-support:risenet-y9boot-support-file-service-ftp"))
     api(project(":y9-digitalbase-support:risenet-y9boot-support-file-service-local"))
@@ -24,6 +25,9 @@ dependencies {
     api(libs.shedlock.provider.jdbc.template)
     api(libs.ipaddress)
     api(libs.fastexcel)
+    api(libs.google.guava)
+    api("org.springframework:spring-aspects")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 }

@@ -1,4 +1,4 @@
-plugins {
+﻿plugins {
     id("net.risesoft.y9.conventions-java")
     id("net.risesoft.y9.lombok")
 }
@@ -14,6 +14,7 @@ dependencies {
     api(libs.classgraph)
     api(libs.httpcomponents.httpclient)
     api(libs.etcd.java)
+    
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 }
 

@@ -1,6 +1,4 @@
-import kotlin.Boolean
-
-plugins {
+﻿plugins {
     `java-platform`
     id("net.risesoft.y9.javaPlatform-publish")
 }
@@ -14,7 +12,7 @@ fun matchProjectNamePattern(project: Project): Boolean {
 dependencies {
     constraints {
         rootProject.subprojects.forEach { p ->
-            if(matchProjectNamePattern(p)) {
+            if (matchProjectNamePattern(p)) {
                 api(p)
             }
         }

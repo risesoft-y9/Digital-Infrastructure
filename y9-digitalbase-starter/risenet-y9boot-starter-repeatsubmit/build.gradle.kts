@@ -1,4 +1,4 @@
-plugins {
+﻿plugins {
     id("net.risesoft.y9.conventions-java")
     id("net.risesoft.y9.lombok")
 }
@@ -14,7 +14,7 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-data-redis")
     api("com.github.ben-manes.caffeine:caffeine")
     api(libs.checker.qual)
-    
+
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 }
 

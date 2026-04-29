@@ -1,4 +1,4 @@
-plugins {
+﻿plugins {
     id("net.risesoft.y9.conventions-java")
     id("net.risesoft.y9.lombok")
 }
@@ -17,6 +17,7 @@ dependencies {
     api("org.springframework:spring-context")
     api(libs.commons.io)
     api(libs.org.apache.commons.commons.lang3)
+    api(libs.org.apache.commons.commons.collections4)
     api(libs.commons.beanutils)
     api(libs.commons.httpclient)
     api(libs.alibaba.transmittable.thread.local)

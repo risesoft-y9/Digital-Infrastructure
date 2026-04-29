@@ -1,4 +1,4 @@
-plugins {
+﻿plugins {
     id("net.risesoft.y9.conventions-java")
     id("net.risesoft.y9.lombok")
 }
@@ -24,6 +24,7 @@ dependencies {
     api(libs.dameng.dmdialect.hibernate62)
     api(libs.dameng.dmjdbcdriver18)
     api(libs.oceanbase.client)
+    
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 }
 

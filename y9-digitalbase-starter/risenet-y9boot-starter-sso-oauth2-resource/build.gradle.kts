@@ -1,4 +1,4 @@
-plugins {
+﻿plugins {
     id("net.risesoft.y9.conventions-java")
     id("net.risesoft.y9.lombok")
 }
@@ -15,7 +15,6 @@ dependencies {
     api(libs.jodd.http)
     api(libs.auth0.jwt)
     api(libs.auth0.jwks)
-
 
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 }

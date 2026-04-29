@@ -1,4 +1,4 @@
-plugins {
+﻿plugins {
     `java-platform`
     id("net.risesoft.y9.javaPlatform-publish")
 }

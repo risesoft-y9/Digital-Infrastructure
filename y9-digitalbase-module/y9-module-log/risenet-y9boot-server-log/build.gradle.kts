@@ -1,4 +1,4 @@
-plugins {
+﻿plugins {
     id("net.risesoft.y9.conventions-war")
     id("net.risesoft.y9.lombok")
     id("net.risesoft.y9.docker")
@@ -21,6 +21,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
 
     compileOnly("jakarta.servlet:jakarta.servlet-api")
+    compileOnly("org.springframework.boot:spring-boot-starter-tomcat")
 }
 
 description = "risenet-y9boot-server-log"
