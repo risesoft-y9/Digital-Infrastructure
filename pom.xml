@@ -123,6 +123,7 @@
         <module>y9-digitalbase-module/y9-module-platform/risenet-y9boot-server-platform</module>
 
         <module>y9-digitalbase-module/y9-module-sso/risenet-y9boot-webapp-sso</module>
+        <module>y9-digitalbase-module/y9-module-sso/risenet-y9boot-webapp-keycloak-server</module>
 
         <module>y9-digitalbase-example/risenet-y9demo-cache</module>
         <module>y9-digitalbase-example/risenet-y9demo-data-jpa</module>

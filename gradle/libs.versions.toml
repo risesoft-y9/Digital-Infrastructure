@@ -1,11 +1,11 @@
 [versions]
 # spring boot & cloud bom
-spring-bom = "6.2.15"
-spring-boot = "3.5.10"
-spring-cloud = "2025.0.1"
+spring-bom = "6.2.18"
+spring-boot = "3.5.14"
+spring-cloud = "2025.0.2"
 io-spring-dependency-management = "1.1.7"
 # cas server bom
-cas-server-bom = "7.3.4"
+cas-server-bom = "7.3.6"
 # oracle bom
 ojdbc-bom = "23.8.0.25.04"
 # hutool
