@@ -67,7 +67,7 @@
         <spring-boot.version>3.5.14</spring-boot.version>
 
         <aspectj.version>1.9.25.1</aspectj.version>
-        <lombok.version>1.18.42</lombok.version>
+        <lombok.version>1.18.46</lombok.version>
 
         <!-- Plugin versions -->
         <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
@@ -79,7 +79,7 @@
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <maven-release-plugin.version>3.1.0</maven-release-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-        <maven-deploy-plugin.version>3.1.2</maven-deploy-plugin.version>
+        <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-javadoc-plugin.version>3.7.0</maven-javadoc-plugin.version>
         <maven-jar-plugin.version>3.4.0</maven-jar-plugin.version>
@@ -89,7 +89,7 @@
         <buildnumber-maven-plugin.version>3.2.1</buildnumber-maven-plugin.version>
         <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
         <git-commit-id-maven-plugin.version>8.0.2</git-commit-id-maven-plugin.version>
-        <native-maven-plugin.version>0.11.3</native-maven-plugin.version>
+        <native-maven-plugin.version>0.10.6</native-maven-plugin.version>
     </properties>
 
     <scm>
