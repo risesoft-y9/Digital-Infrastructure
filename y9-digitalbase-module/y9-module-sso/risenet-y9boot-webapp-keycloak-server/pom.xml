@@ -2,19 +2,30 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>net.risesoft</groupId>
-    <artifactId>risenet-y9boot-webapp-keycloak-server</artifactId>
-    <name>risenet-y9boot-webapp-keycloak-server</name>
-    <version>9.7.0</version>
-    <packaging>jar</packaging>
-
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.5.14</version>
         <relativePath/>
     </parent>
+    <groupId>net.risesoft</groupId>
+    <artifactId>risenet-y9boot-webapp-keycloak-server</artifactId>
+    <name>risenet-y9boot-webapp-keycloak-server</name>
+    <version>9.7.0</version>
+    <packaging>jar</packaging>
+    <properties>
+        <!-- non-dependencies -->
+        <java.version>21</java.version>
+        <maven.deploy.skip>true</maven.deploy.skip>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <keycloak.version>24.0.5</keycloak.version>
+        <!-- these should be updated together with Keycloak -->
+        <!-- check keycloak-dependencies-server-all effective pom -->
+        <resteasy.version>6.2.16.Final</resteasy.version>
+        <liquibase.version>5.0.2</liquibase.version>
+        <infinispan.version>14.0.6.Final</infinispan.version>
+    </properties>
 
     <dependencies>
 
@@ -183,16 +194,5 @@
         </developer>
     </developers>
 
-    <properties>
-        <!-- non-dependencies -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>21</java.version>
-        <keycloak.version>24.0.5</keycloak.version>
-        <!-- these should be updated together with Keycloak -->
-        <!-- check keycloak-dependencies-server-all effective pom -->
-        <resteasy.version>6.2.4.Final</resteasy.version>
-        <liquibase.version>4.25.1</liquibase.version>
-        <infinispan.version>14.0.6.Final</infinispan.version>
-    </properties>
 
 </project>
