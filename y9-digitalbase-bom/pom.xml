@@ -261,7 +261,7 @@
             <!-- net.risesoft support-->
             <dependency>
                 <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-support-file-audit</artifactId>
+                <artifactId>risenet-y9boot-support-audit</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
