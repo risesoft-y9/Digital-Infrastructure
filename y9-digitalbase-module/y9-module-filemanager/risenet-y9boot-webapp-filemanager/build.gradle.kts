@@ -1,4 +1,4 @@
-﻿plugins {
+plugins {
     id("net.risesoft.y9.conventions-war")
     id("net.risesoft.y9.lombok")
     id("net.risesoft.y9.docker")
@@ -33,4 +33,9 @@ y9Docker {
 
 y9War {
     archiveBaseName = finalName
+}
+
+// 跳过 Maven 发布（类似 Maven 的 <maven.deploy.skip>true</maven.deploy.skip>）
+tasks.withType<PublishToMavenRepository> {
+    enabled = false
 }

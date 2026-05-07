@@ -21,10 +21,10 @@ public class Y9KeyValueServiceImpl implements Y9KeyValueService {
 
     @Override
     public void cleanUpExpiredKeyValue() {
-        int deletedCount = y9KeyValueRepository.deleteItem(Instant.now());
+        y9KeyValueRepository.deleteItem(Instant.now());
 
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Cleaned up " + deletedCount + " expired Y9KeyValue");
+            LOGGER.debug("Cleaned up  expired Y9KeyValue");
         }
     }
 
