@@ -3,7 +3,10 @@ package y9.service.impl;
 import java.time.Instant;
 import java.util.Optional;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +22,15 @@ public class Y9KeyValueServiceImpl implements Y9KeyValueService {
 
     private final Y9KeyValueRepository y9KeyValueRepository;
 
+    @PersistenceContext(unitName = "rsPublicEntityManagerFactory")
+    private EntityManager entityManager;
+
     @Override
+    @Transactional(transactionManager = "rsPublicTransactionManager")
     public void cleanUpExpiredKeyValue() {
-        int deletedCount = y9KeyValueRepository.deleteItem(Instant.now());
+        int deletedCount = entityManager.createQuery("DELETE FROM Y9KeyValue t WHERE t.expireTime < :time")
+            .setParameter("time", Instant.now())
+            .executeUpdate();
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Cleaned up " + deletedCount + " expired Y9KeyValue");
