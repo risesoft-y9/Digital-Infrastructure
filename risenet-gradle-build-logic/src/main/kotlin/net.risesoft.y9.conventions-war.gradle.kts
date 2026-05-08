@@ -8,7 +8,7 @@ group = "net.risesoft"
 version = providers.gradleProperty("Y9_VERSION").get()
 
 dependencies {
-    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat:3.4.0")
+    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat:3.5.14")
 }
 
 java {

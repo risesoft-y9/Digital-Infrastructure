@@ -5,24 +5,26 @@ plugins {
     id("io.freefair.aspectj.post-compile-weaving")
 }
 
-dependencies {
-    api("org.aspectj:aspectjrt:1.9.25")
-    api("org.aspectj:aspectjtools:1.9.25")
-    api("org.aspectj:aspectjweaver:1.9.25")
-
-    aspect("org.springframework:spring-aspects:6.2.8")
-    testAspect("org.springframework:spring-aspects:6.2.8")
-}
-
 interface Y9AspectjPluginExtension {
     val aspectjVersion: Property<String>
+    val springAspectsVersion: Property<String>
 }
 
-// Add the 'greeting' extension object to project
+// Add the 'y9Aspectj' extension object to project
 val extension = project.extensions.create<Y9AspectjPluginExtension>("y9Aspectj")
 
-// Set a default value for 'message'
-extension.aspectjVersion.convention("1.9.25")
+// Set default values
+extension.aspectjVersion.convention("1.9.25.1")
+extension.springAspectsVersion.convention("6.2.18") // Spring Boot 3.5.14 corresponds to Spring Framework 6.2.18
+
+dependencies {
+    api("org.aspectj:aspectjrt:${extension.aspectjVersion.get()}")
+    api("org.aspectj:aspectjtools:${extension.aspectjVersion.get()}")
+    api("org.aspectj:aspectjweaver:${extension.aspectjVersion.get()}")
+
+    aspect("org.springframework:spring-aspects:${extension.springAspectsVersion.get()}")
+    testAspect("org.springframework:spring-aspects:${extension.springAspectsVersion.get()}")
+}
 
 tasks.named("compileJava") {
     configure<AjcAction> {
