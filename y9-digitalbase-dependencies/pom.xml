@@ -147,7 +147,7 @@
         <oshi.version>6.9.0</oshi.version>
         <poi-ooxml.version>5.5.1</poi-ooxml.version>
         <poi-scratchpad.version>5.5.1</poi-scratchpad.version>
-        <shedlock.version>7.5.0</shedlock.version>
+        <shedlock.version>6.10.0</shedlock.version>
 
         <!--  End of OSS Support start -->
         <commons-httpclient.version>3.1</commons-httpclient.version>
