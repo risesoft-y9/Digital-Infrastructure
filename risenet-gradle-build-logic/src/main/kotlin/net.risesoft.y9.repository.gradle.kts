@@ -5,7 +5,9 @@ repositories {
     /*maven {
         url = uri("https://maven.aliyun.com/repository/public")
     }*/
+    // 主要稳定版本来源（最高优先级）
     mavenCentral()
+    //  Gradle 插件仓库
     gradlePluginPortal()
 
     maven {
@@ -20,14 +22,15 @@ repositories {
         url = uri("https://repo.spring.io/snapshot")
     }
 
-    maven {
-        url = uri("https://repo.spring.io/milestone")
-    }
+    // maven {
+    //     url = uri("https://repo.spring.io/milestone")
+    // }
 
     maven {
         url = uri("https://repo.maven.apache.org/maven2/")
     }
 
+    //   Shibboleth 仓库（CAS 相关依赖）
     maven {
         url = uri("https://build.shibboleth.net/maven/releases/")
     }

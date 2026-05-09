@@ -10,10 +10,9 @@ javaPlatform {
 description = "y9-digitalbase-dependencies"
 
 dependencies {
-    //bom
     api(platform(libs.spring.boot.bom))
     api(platform(libs.spring.cloud.bom))
-    api(platform(libs.cas.server.bom))
+    //api(platform(libs.cas.server.bom))
     api(platform(libs.spring.cloud.alibaba.bom))
     api(platform(libs.ojdbc.bom))
 
