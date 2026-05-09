@@ -7,7 +7,7 @@
 dependencies {
     implementation(enforcedPlatform(libs.cas.server.bom))
     annotationProcessor(enforcedPlatform(libs.spring.boot.bom))
-   
+
     implementation("org.apereo.cas:cas-server-core")
     implementation("org.apereo.cas:cas-server-core-authentication-api")
     implementation("org.apereo.cas:cas-server-core-authentication")
@@ -113,4 +113,8 @@ y9War {
 // 跳过 Maven 发布（类似 Maven 的 <maven.deploy.skip>true</maven.deploy.skip>）
 tasks.withType<PublishToMavenRepository> {
     enabled = false
+}
+
+tasks.withType<GenerateModuleMetadata> {
+    suppressedValidationErrors.add("enforced-platform")
 }
