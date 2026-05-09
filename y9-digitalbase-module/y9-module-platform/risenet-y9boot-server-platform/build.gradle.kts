@@ -7,18 +7,12 @@
 dependencies {
     implementation(platform(project(":y9-digitalbase-dependencies")))
 
-    implementation(project(":y9-digitalbase-common:risenet-y9boot-common-util"))
     implementation(project(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-support-platform-web"))
-    implementation(project(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-support-platform-jpa-repository"))
     implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-sso-oauth2-resource"))
     implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-security"))
-    implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-log"))
-    implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-cache-redis"))
     implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-apisix"))
     implementation(project(":y9-digitalbase-common:risenet-y9boot-common-nacos"))
-    implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-multi-tenant"))
 
-    implementation("org.apache.commons:commons-pool2")
     implementation("org.springframework.boot:spring-boot-docker-compose")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus")
@@ -27,7 +21,7 @@ dependencies {
     testImplementation(libs.h2database)
 
     compileOnly("jakarta.servlet:jakarta.servlet-api")
-    compileOnly("org.springframework.boot:spring-boot-starter-tomcat")
+    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 }
 
 description = "risenet-y9boot-server-platform"

@@ -6,9 +6,8 @@
 
 dependencies {
     implementation(enforcedPlatform(libs.cas.server.bom))
-    //implementation(enforcedPlatform(libs.spring.bom))
-    annotationProcessor(enforcedPlatform(libs.spring.bom))
-
+    annotationProcessor(enforcedPlatform(libs.spring.boot.bom))
+   
     implementation("org.apereo.cas:cas-server-core")
     implementation("org.apereo.cas:cas-server-core-authentication-api")
     implementation("org.apereo.cas:cas-server-core-authentication")
@@ -57,7 +56,6 @@ dependencies {
     implementation("org.apereo.cas:cas-server-support-oauth-api")
     implementation("org.apereo.cas:cas-server-support-oauth-core-api")
     implementation("org.apereo.cas:cas-server-support-oauth-services")
-    //implementation("org.apereo.cas:cas-server-support-oauth")
 
     implementation("org.apereo.cas:cas-server-support-oidc")
     implementation("org.apereo.cas:cas-server-support-oidc-core-api")
