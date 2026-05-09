@@ -4,17 +4,18 @@
 }
 
 dependencies {
+    api(platform(libs.spring.boot.bom))
+    
     api(project(":y9-digitalbase-common:risenet-y9boot-properties"))
     api(project(":y9-digitalbase-common:risenet-y9boot-common-util"))
 
-    api("org.springframework.boot:spring-boot")
     api("org.springframework.boot:spring-boot-autoconfigure")
     api("org.springframework.boot:spring-boot-configuration-processor")
     api("org.springframework.boot:spring-boot-starter-actuator")
     api(libs.classgraph)
     api(libs.httpcomponents.httpclient)
     api(libs.etcd.java)
-    
+
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 }
 

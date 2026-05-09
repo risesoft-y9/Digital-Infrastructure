@@ -4,8 +4,9 @@
 }
 
 dependencies {
+    api(platform(libs.spring.boot.bom))
     api(project(":y9-digitalbase-support:risenet-y9boot-support-file-jpa-repository"))
-
+    
     api("org.springframework.boot:spring-boot-configuration-processor")
     api("org.slf4j:slf4j-api")
     api(libs.commons.io)
