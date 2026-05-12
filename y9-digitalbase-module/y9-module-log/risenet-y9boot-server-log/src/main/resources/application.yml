@@ -97,6 +97,8 @@ spring:
         uris: localhost:9200
         username: elastic
         password: 'risesoft'
+        connection-timeout: 30s
+        socket-timeout: 60s
     kafka:
         bootstrap-servers: localhost:9092
         consumer:
