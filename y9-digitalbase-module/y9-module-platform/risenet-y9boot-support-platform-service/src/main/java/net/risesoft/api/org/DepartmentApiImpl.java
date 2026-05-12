@@ -176,29 +176,48 @@ public class DepartmentApiImpl implements DepartmentApi {
     }
 
     /**
+     * 根据组织节点id和部门属性类型查找部门属性对应的部门列表
+     *
+     * @param tenantId 租户id
+     * @param orgUnitId 组织节点id
+     * @param category 部门属性类型，默认可参考 {@link DepartmentPropCategoryEnum}，如有调整或扩展需参考数据字典
+     * @return {@code Y9Result<List<DepartmentProp>>} 通用请求返回对象 - data 是部门属性配置集合
+     * @since 9.6.10
+     */
+    @Override
+    public Y9Result<List<Department>> listByOrgUnitIdAndDepartmentPropCategory(
+        @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId,
+        @RequestParam("category") Integer category) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        return Y9Result.success(y9DepartmentService.listByOrgUnitIdAndDepartmentPropCategory(orgUnitId, category));
+    }
+
+    /**
      * 根据组织节点id查找管理的部门部门属性配置
      *
      * @param tenantId 租户id
      * @param orgUnitId 组织节点id
-     * @param category 配置类型 {@link DepartmentPropCategoryEnum}
+     * @param category 部门属性类型，默认可参考 {@link DepartmentPropCategoryEnum}，如有调整或扩展需参考数据字典
      * @return {@code Y9Result<List<DepartmentProp>>} 通用请求返回对象 - data 是部门属性配置集合
      * @since 9.6.0
      */
     @Override
     public Y9Result<List<DepartmentProp>> listDepartmentPropByOrgUnitIdAndCategory(
         @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId,
-        @RequestParam("category") DepartmentPropCategoryEnum category) {
+        @RequestParam("category") Integer category) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9DepartmentPropService.listByOrgBaseIdAndCategory(orgUnitId, category));
     }
 
     /**
-     * 向上递归获取部门属性对应组织节点列表
+     * 获取部门属性对应组织节点列表
      *
      * @param tenantId 租户id
      * @param departmentId 部门唯一标识
-     * @param category 部门属性类型
+     * @param category 部门属性类型，默认可参考 {@link DepartmentPropCategoryEnum}，如有调整或扩展需参考数据字典
+     * @param isInherit 当前部门找不到时是否向上递归
      * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是人员或岗位对象集合
      * @since 9.6.0
      */

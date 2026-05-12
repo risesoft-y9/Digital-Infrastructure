@@ -30,7 +30,6 @@ import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
-import net.risesoft.y9.util.Y9EnumUtil;
 
 /**
  * 部门服务组件
@@ -238,8 +237,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("category") Integer category) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return y9DepartmentPropService.listByOrgBaseIdAndCategory(orgUnitId,
-            Y9EnumUtil.valueOf(DepartmentPropCategoryEnum.class, category));
+        return y9DepartmentPropService.listByOrgBaseIdAndCategory(orgUnitId, category);
     }
 
     /**

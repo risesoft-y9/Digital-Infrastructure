@@ -15,7 +15,6 @@ import net.risesoft.entity.org.Y9Department;
 import net.risesoft.entity.org.Y9DepartmentProp;
 import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.org.Y9Position;
-import net.risesoft.enums.platform.org.DepartmentPropCategoryEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.model.platform.org.DepartmentProp;
@@ -45,9 +44,8 @@ public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
 
     @Override
     @Transactional
-    public void deleteByDeptIdAndCategoryAndOrgBaseId(String deptId, DepartmentPropCategoryEnum category,
-        String orgBaseId) {
-        y9DepartmentPropRepository.deleteByDeptIdAndCategoryAndOrgBaseId(deptId, category.getValue(), orgBaseId);
+    public void deleteByDeptIdAndCategoryAndOrgBaseId(String deptId, Integer category, String orgBaseId) {
+        y9DepartmentPropRepository.deleteByDeptIdAndCategoryAndOrgBaseId(deptId, category, orgBaseId);
     }
 
     private Optional<Y9DepartmentProp> findById(String id) {
@@ -60,16 +58,16 @@ public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
     }
 
     @Override
-    public List<DepartmentProp> listByDeptIdAndCategory(String deptId, DepartmentPropCategoryEnum category) {
+    public List<DepartmentProp> listByDeptIdAndCategory(String deptId, Integer category) {
         List<Y9DepartmentProp> y9DepartmentPropList =
-            y9DepartmentPropRepository.findByDeptIdAndCategoryOrderByTabIndex(deptId, category.getValue());
+            y9DepartmentPropRepository.findByDeptIdAndCategoryOrderByTabIndex(deptId, category);
         return entityToModel(y9DepartmentPropList);
     }
 
     @Override
-    public List<DepartmentProp> listByOrgBaseIdAndCategory(String orgBaseId, DepartmentPropCategoryEnum category) {
+    public List<DepartmentProp> listByOrgBaseIdAndCategory(String orgBaseId, Integer category) {
         List<Y9DepartmentProp> y9DepartmentPropList =
-            y9DepartmentPropRepository.findByOrgBaseIdAndCategoryOrderByTabIndex(orgBaseId, category.getValue());
+            y9DepartmentPropRepository.findByOrgBaseIdAndCategoryOrderByTabIndex(orgBaseId, category);
         return entityToModel(y9DepartmentPropList);
     }
 

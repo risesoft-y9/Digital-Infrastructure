@@ -2,7 +2,6 @@ package net.risesoft.service.org;
 
 import java.util.List;
 
-import net.risesoft.enums.platform.org.DepartmentPropCategoryEnum;
 import net.risesoft.model.platform.org.DepartmentProp;
 
 /**
@@ -27,7 +26,7 @@ public interface Y9DepartmentPropService {
      * @param category 类别
      * @param orgBaseId 组织唯一标示
      */
-    void deleteByDeptIdAndCategoryAndOrgBaseId(String deptId, DepartmentPropCategoryEnum category, String orgBaseId);
+    void deleteByDeptIdAndCategoryAndOrgBaseId(String deptId, Integer category, String orgBaseId);
 
     /**
      * 根据部门唯一标识查找部门配置信息
@@ -44,7 +43,7 @@ public interface Y9DepartmentPropService {
      * @param category 类别
      * @return {@code List<Y9DepartmentProp>}
      */
-    List<DepartmentProp> listByDeptIdAndCategory(String deptId, DepartmentPropCategoryEnum category);
+    List<DepartmentProp> listByDeptIdAndCategory(String deptId, Integer category);
 
     /**
      * 根据人员唯一标识查找管理的部门
@@ -53,7 +52,7 @@ public interface Y9DepartmentPropService {
      * @param category 类别
      * @return {@code List<Y9DepartmentProp>}
      */
-    List<DepartmentProp> listByOrgBaseIdAndCategory(String orgBaseId, DepartmentPropCategoryEnum category);
+    List<DepartmentProp> listByOrgBaseIdAndCategory(String orgBaseId, Integer category);
 
     /**
      * 保存或者更新

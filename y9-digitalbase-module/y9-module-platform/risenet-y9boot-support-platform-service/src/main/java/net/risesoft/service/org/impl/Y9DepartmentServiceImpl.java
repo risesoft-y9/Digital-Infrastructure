@@ -17,7 +17,6 @@ import net.risesoft.entity.org.Y9Department;
 import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.enums.AuditLogEnum;
-import net.risesoft.enums.platform.org.DepartmentPropCategoryEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9DepartmentManager;
 import net.risesoft.model.platform.org.Department;
@@ -32,7 +31,6 @@ import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
-import net.risesoft.y9.util.Y9EnumUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 
 /**
@@ -188,8 +186,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Transactional(readOnly = true)
     public List<OrgUnit> listDepartmentPropOrgUnits(String deptId, Integer category, Boolean inherit,
         Boolean disabled) {
-        List<DepartmentProp> y9DepartmentPropList = y9DepartmentPropService.listByDeptIdAndCategory(deptId,
-            Y9EnumUtil.valueOf(DepartmentPropCategoryEnum.class, category));
+        List<DepartmentProp> y9DepartmentPropList = y9DepartmentPropService.listByDeptIdAndCategory(deptId, category);
         if (!y9DepartmentPropList.isEmpty()) {
             return getOrgUnitList(y9DepartmentPropList, disabled);
         }
@@ -225,8 +222,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
                 break;
             }
             currentDeptId = currentDepartmentOptional.get().getParentId();
-            List<DepartmentProp> currentDepartmentPropList = y9DepartmentPropService
-                .listByDeptIdAndCategory(currentDeptId, Y9EnumUtil.valueOf(DepartmentPropCategoryEnum.class, category));
+            List<DepartmentProp> currentDepartmentPropList =
+                y9DepartmentPropService.listByDeptIdAndCategory(currentDeptId, category);
             if (!currentDepartmentPropList.isEmpty()) {
                 y9DepartmentPropList.addAll(currentDepartmentPropList);
                 break;
@@ -234,6 +231,18 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         }
 
         return getOrgUnitList(y9DepartmentPropList, disabled);
+    }
+
+    @Override
+    public List<Department> listByOrgUnitIdAndDepartmentPropCategory(String orgUnitId, Integer category) {
+        List<DepartmentProp> departmentPropList =
+            y9DepartmentPropService.listByOrgBaseIdAndCategory(orgUnitId, category);
+        List<Department> departmentList = new ArrayList<>();
+        for (DepartmentProp departmentProp : departmentPropList) {
+            Optional<Department> departmentOptional = this.findById(departmentProp.getDeptId());
+            departmentOptional.ifPresent(departmentList::add);
+        }
+        return departmentList;
     }
 
     @Override
@@ -318,8 +327,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional
     public void removeDepartmentProp(String deptId, Integer category, String orgBaseId) {
-        y9DepartmentPropService.deleteByDeptIdAndCategoryAndOrgBaseId(deptId,
-            Y9EnumUtil.valueOf(DepartmentPropCategoryEnum.class, category), orgBaseId);
+        y9DepartmentPropService.deleteByDeptIdAndCategoryAndOrgBaseId(deptId, category, orgBaseId);
     }
 
     @Override
