@@ -141,6 +141,14 @@
             {
                 type: 'input',
                 value: '',
+                key: 'systemName',
+                label: computed(() => t('系统名')),
+                labelWidth: '82px',
+                span: settingStore.device === 'mobile' ? 24 : 6
+            },
+            {
+                type: 'input',
+                value: '',
                 key: 'action',
                 label: computed(() => t('操作类型')),
                 labelWidth: '82px',
@@ -181,6 +189,7 @@
             { title: computed(() => t('序号')), showOverflowTooltip: false, type: 'index', width: 80 },
             { title: computed(() => t('用户名')), key: 'userName', width: 130 },
             { title: computed(() => t('用户IP')), key: 'userIp', width: 150 },
+            { title: computed(() => t('系统名')), key: 'systemName', width: 150 },
             { title: computed(() => t('操作时间')), key: 'createTime', width: 180 },
             { title: computed(() => t('操作类型')), key: 'action', align: 'left', width: 250 },
             { title: computed(() => t('操作描述')), key: 'description', align: 'left' }

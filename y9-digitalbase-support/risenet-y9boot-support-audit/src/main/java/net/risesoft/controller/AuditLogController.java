@@ -25,7 +25,7 @@ public class AuditLogController {
 
     @RequestMapping(value = "/list")
     public Y9Page<AuditLog> list(AuditLogQuery auditLogQuery, Y9PageQuery y9PageQuery) {
-        auditLogQuery.setSystemName(Y9Context.getSystemName());
+        // auditLogQuery.setSystemName(Y9Context.getSystemName());
         return y9AuditLogService.page(auditLogQuery, y9PageQuery);
     }
 }
