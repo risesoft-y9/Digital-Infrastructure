@@ -290,8 +290,8 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
 
                 AuditLogEvent auditLogEvent = AuditLogEvent.builder()
                     .action(AuditLogEnum.MANAGER_UPDATE.getAction())
-                    .description(
-                        Y9StringUtil.format(AuditLogEnum.MANAGER_UPDATE.getDescription(), savedManager.getName()))
+                    .description(Y9StringUtil.format(AuditLogEnum.MANAGER_UPDATE.getDescription(),
+                        savedManager.getManagerLevel().getName(), savedManager.getName()))
                     .objectId(savedManager.getId())
                     .oldObject(originalManager)
                     .currentObject(savedManager)
@@ -312,7 +312,8 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.MANAGER_CREATE.getAction())
-            .description(Y9StringUtil.format(AuditLogEnum.MANAGER_CREATE.getDescription(), savedManager.getName()))
+            .description(Y9StringUtil.format(AuditLogEnum.MANAGER_CREATE.getDescription(),
+                savedManager.getManagerLevel().getName(), savedManager.getName()))
             .objectId(savedManager.getId())
             .oldObject(null)
             .currentObject(savedManager)
