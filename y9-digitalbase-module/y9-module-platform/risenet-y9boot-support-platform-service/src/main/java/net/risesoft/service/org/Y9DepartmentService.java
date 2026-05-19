@@ -180,7 +180,7 @@ public interface Y9DepartmentService {
      * 根据组织节点id和部门属性类型查找对应的部门列表
      *
      * @param orgUnitId 组织节点id
-     * @param category  类别
+     * @param category 类别
      * @return {@code List<Department> }
      */
     List<Department> listByOrgUnitIdAndDepartmentPropCategory(String orgUnitId, Integer category);

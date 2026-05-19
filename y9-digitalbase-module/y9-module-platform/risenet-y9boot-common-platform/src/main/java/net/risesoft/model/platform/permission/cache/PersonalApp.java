@@ -1,4 +1,4 @@
-package net.risesoft.model.platform.permission;
+package net.risesoft.model.platform.permission.cache;
 
 import java.io.Serializable;
 
@@ -7,13 +7,13 @@ import lombok.Data;
 import net.risesoft.enums.platform.resource.AppOpenTypeEnum;
 
 /**
- * 个人图标缓存
+ * 个人应用缓存
  *
  * @author mengjuhua
  * @date 2022/10/21
  */
 @Data
-public class PersonIconItem implements Serializable {
+public class PersonalApp implements Serializable {
 
     private static final long serialVersionUID = -6172641522877416578L;
 
@@ -29,8 +29,8 @@ public class PersonIconItem implements Serializable {
     /** 应用名称 */
     private String appName;
 
-    /** 图标类别 1:普通的 2:常用图标 */
-    private Integer iconType;
+    /** 应用是否标星 */
+    private Boolean star;
 
     /** 访问地址 */
     private String url;

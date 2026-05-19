@@ -88,6 +88,15 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
             createDataCatalogTreeType(type);
             return;
         }
+
+        if (OptionClassConsts.APP_CATEGORY.equals(type)) {
+            createAppCatalogValues(type);
+            return;
+        }
+    }
+
+    private void createAppCatalogValues(String type) {
+        y9OptionValueService.create("default", "默认分类", type);
     }
 
     private void createDataCatalogTreeType(String type) {
@@ -341,6 +350,7 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
         createOptionClass("证件类型", OptionClassConsts.PRINCIPAL_ID_TYPE);
         createOptionClass("部门属性类型", OptionClassConsts.DEPARTMENT_PROP_CATEGORY);
         createOptionClass("数据目录树类型", OptionClassConsts.DATA_CATALOG_TREE_TYPE);
+        createOptionClass("应用分类", OptionClassConsts.APP_CATEGORY);
     }
 
     @Transactional

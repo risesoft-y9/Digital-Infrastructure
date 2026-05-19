@@ -10,6 +10,7 @@ package net.risesoft.consts;
  * @date 2022/4/21
  */
 public class OptionClassConsts {
+
     /** 组织机构类型 */
     public static final String ORGANIZATION_TYPE = "organizationType";
 
@@ -33,6 +34,9 @@ public class OptionClassConsts {
 
     /** 数据目录树类型 */
     public static final String DATA_CATALOG_TREE_TYPE = "dataCatalogTreeType";
+
+    /** 应用分类 */
+    public static final String APP_CATEGORY = "appCategory";
 
     private OptionClassConsts() {
         throw new IllegalStateException("OptionClassConsts class");

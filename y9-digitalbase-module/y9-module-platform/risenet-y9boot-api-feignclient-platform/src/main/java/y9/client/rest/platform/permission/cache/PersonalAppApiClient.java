@@ -5,8 +5,8 @@ import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.api.platform.permission.cache.PersonIconApi;
-import net.risesoft.model.platform.permission.PersonIconItem;
+import net.risesoft.api.platform.permission.cache.PersonalAppApi;
+import net.risesoft.model.platform.permission.cache.PersonalApp;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 
@@ -20,12 +20,13 @@ import net.risesoft.pojo.Y9PageQuery;
  * @since 9.6.0
  */
 @FeignClient(contextId = "PersonIconApiClient", name = "${y9.service.org.name:platform}",
-    url = "${y9.service.org.directUrl:}", path = "/${y9.service.org.name:server-platform}/services/rest/v1/personIcon")
-public interface PersonIconApiClient extends PersonIconApi {
+    url = "${y9.service.org.directUrl:}", path = "/${y9.service.org.name:server-platform}/services/rest/v1/personalApp")
+public interface PersonalAppApiClient extends PersonalAppApi {
 
     @Override
     @GetMapping("/pageByOrgUnitId")
-    Y9Page<PersonIconItem> pageByOrgUnitId(@RequestParam("tenantId") String tenantId,
-        @RequestParam("orgUnitId") String orgUnitId, @SpringQueryMap Y9PageQuery pageQuery);
+    Y9Page<PersonalApp> pageByOrgUnitId(@RequestParam("tenantId") String tenantId,
+        @RequestParam("orgUnitId") String orgUnitId, @RequestParam("categoryId") String categoryId,
+        @SpringQueryMap Y9PageQuery pageQuery);
 
 }

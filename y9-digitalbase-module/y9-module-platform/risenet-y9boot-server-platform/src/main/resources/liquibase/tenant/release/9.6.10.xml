@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="1779170897000-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_COMMON_APP_CATEGORY"/>
+            </not>
+        </preConditions>
+        <createTable remarks="应用分类排序表" tableName="Y9_COMMON_APP_CATEGORY">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="CATEGORY_ID" remarks="应用所属分类id" type="VARCHAR(38)"/>
+            <column name="APP_ID" remarks="应用id" type="VARCHAR(38)"/>
+            <column name="TAB_INDEX" remarks="排序号" type="INT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1779170897000-2" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_PERSONAL_APP"/>
+            </not>
+        </preConditions>
+        <createTable remarks="个人应用分类排序缓存" tableName="Y9_ORG_PERSONAL_APP">
+            <column name="ID" remarks="UUID字段" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="ORG_UNIT_ID" remarks="人员/岗位唯一主键" type="VARCHAR(38)"/>
+            <column name="APP_ID" remarks="应用编号" type="VARCHAR(38)"/>
+            <column name="CATEGORY_ID" remarks="分类id" type="VARCHAR(38)"/>
+            <column name="IS_STAR" remarks="是否标星" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TAB_INDEX_TYPE" remarks="排列序号类别 1:配置的默认排序 2:个人排序" type="INT"/>
+            <column name="TAB_INDEX" remarks="排列序号" type="INT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1779170897000-3" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="Y9_ORG_PERSONAL_APP"/>
+                <not>
+                    <indexExists tableName="Y9_ORG_PERSONAL_APP" columnNames="ORG_UNIT_ID,APP_ID"/>
+                </not>
+            </and>
+        </preConditions>
+        <createIndex indexName="Y9_ORG_PERSONAL_APP_INDEX" tableName="Y9_ORG_PERSONAL_APP" unique="true">
+            <column name="ORG_UNIT_ID"/>
+            <column name="APP_ID"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
