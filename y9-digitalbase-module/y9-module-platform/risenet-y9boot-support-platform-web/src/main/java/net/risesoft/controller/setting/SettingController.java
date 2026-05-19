@@ -1,4 +1,4 @@
-package net.risesoft.controller;
+package net.risesoft.controller.setting;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;

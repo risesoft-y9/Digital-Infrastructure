@@ -42,7 +42,7 @@ public class DataCatalogController {
 
     private final Y9DataCatalogService y9DataCatalogService;
 
-    @RiseLog(operationName = "或许数据目录树类型")
+    @RiseLog(operationName = "获取数据目录树类型")
     @GetMapping(value = "/treeTypeList")
     public Y9Result<List<OptionValue>> getTreeTypeList() {
         List<OptionValue> treeTypeList = y9DataCatalogService.getTreeTypeList();

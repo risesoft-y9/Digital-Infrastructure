@@ -1,6 +1,7 @@
 package net.risesoft.persistence;
 
 import net.risesoft.enums.platform.DataSourceTypeEnum;
+import net.risesoft.enums.platform.PersonalAppTabIndexTypeEnum;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.enums.platform.SqlFileTypeEnum;
 import net.risesoft.enums.platform.org.DepartmentPropCategoryEnum;
@@ -126,6 +127,13 @@ public class EnumConverter {
         extends AbstractEnumConverter<DepartmentPropCategoryEnum, Integer> {
         public DepartmentPropCategoryEnumConverter() {
             super(DepartmentPropCategoryEnum.class);
+        }
+    }
+
+    public static class PersonAppTabIndexTypeEnumConverter
+        extends AbstractEnumConverter<PersonalAppTabIndexTypeEnum, Integer> {
+        public PersonAppTabIndexTypeEnumConverter() {
+            super(PersonalAppTabIndexTypeEnum.class);
         }
     }
 }

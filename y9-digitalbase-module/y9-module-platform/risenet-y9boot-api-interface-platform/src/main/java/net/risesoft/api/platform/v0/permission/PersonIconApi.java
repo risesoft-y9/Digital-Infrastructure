@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.model.platform.permission.PersonIconItem;
+import net.risesoft.model.platform.permission.cache.PersonalApp;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9Result;
 
@@ -60,7 +60,7 @@ public interface PersonIconApi {
      * @since 9.6.2
      */
     @GetMapping("/listByOrgUnitId")
-    List<PersonIconItem> listByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
+    List<PersonalApp> listByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
@@ -73,7 +73,7 @@ public interface PersonIconApi {
      * @since 9.6.2
      */
     @GetMapping("/listByOrgUnitIdAndIconType")
-    List<PersonIconItem> listByOrgUnitIdAndIconType(@RequestParam("tenantId") @NotBlank String tenantId,
+    List<PersonalApp> listByOrgUnitIdAndIconType(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("iconType") Integer iconType);
 
     /**
@@ -87,7 +87,7 @@ public interface PersonIconApi {
      * @since 9.6.2
      */
     @GetMapping("/pageByOrgUnitId")
-    Y9Page<PersonIconItem> pageByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Page<PersonalApp> pageByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("page") int page,
         @RequestParam("rows") int rows);
 
