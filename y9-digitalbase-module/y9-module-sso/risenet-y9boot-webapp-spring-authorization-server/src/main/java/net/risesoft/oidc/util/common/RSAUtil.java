@@ -1,4 +1,4 @@
-package y9.util.common;
+package net.risesoft.oidc.util.common;
 
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;

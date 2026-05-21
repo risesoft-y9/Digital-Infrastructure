@@ -18,7 +18,7 @@ import lombok.SneakyThrows;
 import net.risesoft.oidc.util.Y9Context;
 import net.risesoft.oidc.util.common.Base64Util;
 
-import y9.util.common.RSAUtil;
+import net.risesoft.oidc.util.common.RSAUtil;
 
 /**
  * An {@link org.springframework.security.core.Authentication} implementation that is designed for simple presentation
