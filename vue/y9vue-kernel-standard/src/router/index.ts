@@ -18,8 +18,8 @@ import authRouter from './modules/authRouter';
 import dictionaryRouter from './modules/dictionaryRouter';
 import grantAuthorizeRouter from './modules/grantAuthorizeRouter';
 import homeRouter from './modules/homeRouter';
+import appCategoryRouter from './modules/appCategoryRouter';
 import iconManagerRouter from './modules/iconManagerRouter';
-import iconManagerOldRouter from './modules/iconManagerOldRouter';
 import orgRouter from './modules/orgRouter';
 import personalRouter from './modules/personalRouter';
 import positionRouter from './modules/positionRouter';
@@ -85,6 +85,7 @@ export const asyncRoutes = [
     subDomainRouter,
     permission,
     dictionaryRouter,
+    appCategoryRouter,
     iconManagerRouter,
     // iconManagerOldRouter,
     personalRouter,
