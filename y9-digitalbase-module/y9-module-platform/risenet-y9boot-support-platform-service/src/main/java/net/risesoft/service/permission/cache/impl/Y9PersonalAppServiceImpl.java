@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,6 +21,7 @@ import net.risesoft.enums.platform.PersonalAppTabIndexTypeEnum;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.model.platform.org.Department;
 import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.org.Position;
@@ -30,6 +30,8 @@ import net.risesoft.pojo.AppCategory;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.permission.cache.Y9PersonalAppRepository;
 import net.risesoft.service.org.CompositeOrgBaseService;
+import net.risesoft.service.org.Y9DepartmentService;
+import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.service.permission.cache.Y9PersonToResourceService;
 import net.risesoft.service.permission.cache.Y9PersonalAppService;
 import net.risesoft.service.permission.cache.Y9PositionToResourceService;
@@ -61,6 +63,10 @@ public class Y9PersonalAppServiceImpl implements Y9PersonalAppService {
     private final Y9PositionToResourceService y9PositionToResourceService;
 
     private final CompositeOrgBaseService compositeOrgBaseService;
+
+    private final Y9DepartmentService y9DepartmentService;
+
+    private final Y9PositionService y9PositionService;
 
     @Transactional(readOnly = false)
     public void buildAppIconForPerson(String personId, List<AppCategory> appCategoryList) {
@@ -235,11 +241,20 @@ public class Y9PersonalAppServiceImpl implements Y9PersonalAppService {
     }
 
     @Override
-    public Page<String> pageOrgUnitIdByAppId(String appId, Y9PageQuery pageQuery) {
-        Pageable pageable = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize());
-        Page<Y9PersonalApp> icons = y9PersonalAppRepository.findByAppId(appId, pageable);
-        List<String> list = icons.stream().map(Y9PersonalApp::getOrgUnitId).collect(Collectors.toList());
-        return new PageImpl<>(list, pageable, icons.getTotalElements());
+    public Page<Y9PersonalApp> pageOrgUnitIdByAppId(String appId, String deptName, Y9PageQuery pageQuery) {
+        Pageable pageable = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by("createTime"));
+        List<Department> departmentList = y9DepartmentService.listByNameLike(deptName, Boolean.FALSE);
+        List<Position> positionList = new ArrayList<>();
+        for (Department department : departmentList) {
+            positionList.addAll(compositeOrgBaseService.listAllDescendantPositions(department.getId()));
+        }
+        List<String> orgUnitIdList = positionList.stream().map(OrgUnit::getId).collect(Collectors.toList());
+
+        if (orgUnitIdList.isEmpty()) {
+            return y9PersonalAppRepository.findByAppId(appId, pageable);
+        } else {
+            return y9PersonalAppRepository.findByOrgUnitIdInAndAppId(orgUnitIdList, appId, pageable);
+        }
     }
 
     @Override

@@ -3,18 +3,18 @@ import Request from '@/api/lib/request';
 const appCategoryRequest = Request();
 
 /**
- * 获取应用排序分页列表
+ * 分页获取应用分类配置
  */
-export const pageOrderLists = async (params) => {
+export const pageAppCategory = async (params) => {
     return await appCategoryRequest({
-        url: '/api/rest/appCategory/pageOrderListByResourceId',
+        url: '/api/rest/appCategory/pageByCategoryId',
         method: 'get',
         cType: false,
         params
     });
 };
 
-/**获取全部租用的应用列表 */
+/**获取分类列表 */
 export const getCategoryList = async () => {
     return await appCategoryRequest({
         url: '/api/rest/appCategory/categoryList',
@@ -44,8 +44,8 @@ export const searchAppList = async (appName) => {
     });
 };
 
-/**根据资源id，获取应用排序数据 */
-export const listOrderDataByResourceId = async (params) => {
+/**根据分类id，获取应用分类配置数据 */
+export const listByCategoryId = async (params) => {
     return await appCategoryRequest({
         url: '/api/rest/appCategory/listByCategoryId',
         method: 'get',
@@ -55,16 +55,17 @@ export const listOrderDataByResourceId = async (params) => {
 };
 
 /**保存应用分类信息 */
-export const saveAppCategoryOrder = async (appIDs, categoryId) => {
+export const saveAppCategory = async (appIDs, categoryId) => {
     return await appCategoryRequest({
-        url: '/api/rest/appCategory/saveIconItemOrder',
+        url: '/api/rest/appCategory/save',
         method: 'POST',
         cType: false,
         params: { appIds: appIDs, categoryId: categoryId }
     });
 };
 
-export const deleteIcon = async (ids) => {
+/**批量移除应用分类配置*/
+export const deleteAppCategory = async (ids) => {
     return await appCategoryRequest({
         url: '/api/rest/appCategory/delete',
         method: 'POST',
@@ -73,10 +74,10 @@ export const deleteIcon = async (ids) => {
     });
 };
 
-/**更新应用的排序信息 */
+/**更新应用分类的排序信息 */
 export const updateAppCategoryOrder = async (ids) => {
     return await appCategoryRequest({
-        url: '/api/rest/appCategory/updateIconItemOrder',
+        url: '/api/rest/appCategory/updateOrder',
         method: 'POST',
         cType: false,
         params: { ids: ids }
@@ -92,27 +93,27 @@ export const listAppByPersonId2 = async (personId) => {
     });
 };
 
-export const pageByAppIcon = async (params) => {
+export const pageByApp = async (params) => {
     return await appCategoryRequest({
-        url: '/api/rest/appCategory/pageByAppIcon',
+        url: '/api/rest/appCategory/pageByApp',
         method: 'get',
         cType: false,
         params
     });
 };
 
-export const syncDeptIcons = async (deptId) => {
+export const sync4Dept = async (deptId) => {
     return await appCategoryRequest({
-        url: '/api/tenantmain/tenant/syncDeptIcons',
+        url: '/api/rest/personalApp/sync4Dept',
         method: 'POST',
         cType: false,
         params: { deptId: deptId }
     });
 };
 
-export const syncPositionIcons = async (positionId) => {
+export const sync4Position = async (positionId) => {
     return await appCategoryRequest({
-        url: '/api/tenantmain/tenant/syncPositionIcons',
+        url: '/api/rest/personalApp/sync4Position',
         method: 'POST',
         cType: false,
         params: { positionId: positionId }

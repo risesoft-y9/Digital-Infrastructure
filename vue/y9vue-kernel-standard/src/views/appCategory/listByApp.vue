@@ -32,7 +32,7 @@
 </template>
 <script lang="ts" setup>
     import { computed, onMounted, reactive, ref, toRefs, watch } from 'vue';
-    import { listAllAppByTenantId, pageByAppIcon } from '@/api/appCategory';
+    import { listAllAppByTenantId, pageByApp } from '@/api/appCategory';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useI18n } from 'vue-i18n';
 
@@ -54,7 +54,6 @@
     const data = reactive({
         // 选中的tab
         query: {
-            personName: '',
             deptName: ''
         },
         iconfixedTreeRef: '', //tree实例
@@ -87,7 +86,7 @@
                     width: 350
                 },
                 {
-                    title: computed(() => t('所属部门')),
+                    title: computed(() => t('dn')),
                     key: 'dn',
                     align: 'left'
                 }
@@ -104,17 +103,6 @@
                 query.value = filter;
             },
             itemList: [
-                {
-                    type: 'input',
-                    value: '',
-                    key: 'personName',
-                    label: computed(() => t('人员名称')),
-                    labelWith: '82px',
-                    props: {
-                        placeholder: computed(() => t('人员名称'))
-                    },
-                    span: settingStore.device === 'mobile' ? 24 : 6
-                },
                 {
                     type: 'input',
                     value: '',
@@ -157,9 +145,8 @@
 
     // 用户组 列表初始化
     async function getPersonListInfo() {
-        let result = await pageByAppIcon({
+        let result = await pageByApp({
             appId: currData.value.id,
-            personName: query.value.personName,
             deptName: query.value.deptName,
             page: personTableConfig.value.pageConfig.currentPage,
             size: personTableConfig.value.pageConfig.pageSize
@@ -187,7 +174,6 @@
 
     function reset() {
         query.value = {
-            personName: '',
             deptName: ''
         };
         getPersonListInfo();

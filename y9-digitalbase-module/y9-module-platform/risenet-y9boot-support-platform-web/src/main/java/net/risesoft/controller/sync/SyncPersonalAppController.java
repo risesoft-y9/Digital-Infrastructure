@@ -71,7 +71,7 @@ public class SyncPersonalAppController {
     @RiseLog(operationName = "同步人员的个人应用", operationType = OperationTypeEnum.MODIFY)
     @RequestMapping("/personalAppForPerson")
     public Y9Result<Object> personalAppForPerson() {
-        double start = Instant.now().toEpochMilli();
+        long start = Instant.now().toEpochMilli();
         LOGGER.info("开始人员图标更新操作时间:{}", DATE_FORMAT.format(start));
 
         Optional<System> y9SystemOptional = y9SystemService.findByName(y9PlatformProperties.getSystemName());
@@ -98,7 +98,7 @@ public class SyncPersonalAppController {
             }
         }
 
-        double end = Instant.now().toEpochMilli();
+        long end = Instant.now().toEpochMilli();
         LOGGER.info("更新人员图标所用时间---------------》{}", end - start);
         LOGGER.info("完成人员图标更新操作时间---------》{}", DATE_FORMAT.format(end));
         return Y9Result.successMsg("Update Success");
@@ -110,7 +110,7 @@ public class SyncPersonalAppController {
     @RiseLog(operationName = "同步岗位的个人应用", operationType = OperationTypeEnum.MODIFY)
     @RequestMapping("/personalAppForPosition")
     public Y9Result<Object> personalAppForPosition() {
-        double start = Instant.now().toEpochMilli();
+        long start = Instant.now().toEpochMilli();
         LOGGER.info("开始人员图标更新操作时间:{}", DATE_FORMAT.format(start));
 
         Optional<System> y9SystemOptional = y9SystemService.findByName(y9PlatformProperties.getSystemName());
@@ -138,7 +138,7 @@ public class SyncPersonalAppController {
             }
         }
 
-        double end = Instant.now().toEpochMilli();
+        long end = Instant.now().toEpochMilli();
         LOGGER.info("更新岗位新图标所用时间---------------》{}", end - start);
         LOGGER.info("完成岗位图标更新操作时间---------》{}", DATE_FORMAT.format(end));
         return Y9Result.successMsg("Update Success");
@@ -153,7 +153,7 @@ public class SyncPersonalAppController {
     @RiseLog(operationName = "同步租户人员的个人应用", operationType = OperationTypeEnum.MODIFY)
     @RequestMapping("/personalAppForPersonByTenantId")
     public Y9Result<Object> personalAppForPersonByTenantId(@NotBlank String tenantId) {
-        double start = Instant.now().toEpochMilli();
+        long start = Instant.now().toEpochMilli();
         LOGGER.info("开始人员图标更新操作时间:{}", DATE_FORMAT.format(start));
 
         List<UserInfo> listUser = y9UserService.listByTenantId(tenantId);
@@ -172,7 +172,7 @@ public class SyncPersonalAppController {
             }
         }
 
-        double end = Instant.now().toEpochMilli();
+        long end = Instant.now().toEpochMilli();
         LOGGER.info("更新租户人员图标所用时间---------------》{}", end - start);
         LOGGER.info("完成租户人员图标更新操作时间---------》{}", DATE_FORMAT.format(end));
         return Y9Result.successMsg("Update Success");
@@ -187,7 +187,7 @@ public class SyncPersonalAppController {
     @RiseLog(operationName = "同步租户岗位的个人应用", operationType = OperationTypeEnum.MODIFY)
     @RequestMapping("/personalAppForPositionByTenantId")
     public Y9Result<Object> personalAppForPositionByTenantId(@NotBlank String tenantId) {
-        double start = Instant.now().toEpochMilli();
+        long start = Instant.now().toEpochMilli();
         LOGGER.info("开始人员图标更新操作时间:{}", DATE_FORMAT.format(start));
 
         Y9LoginUserHolder.setTenantId(tenantId);
@@ -208,7 +208,7 @@ public class SyncPersonalAppController {
             }
         }
 
-        double end = Instant.now().toEpochMilli();
+        long end = Instant.now().toEpochMilli();
         LOGGER.info("更新租户岗位新图标所用时间--------------->>{}", end - start);
         LOGGER.info("完成租户岗位图标更新操作时间---------》{}", DATE_FORMAT.format(end));
         return Y9Result.successMsg("Update Success");
