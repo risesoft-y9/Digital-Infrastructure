@@ -71,7 +71,7 @@
             v-if="dialogConfig.type == 'sort'"
             ref="sortRef"
             :apiParams="{ categoryId: currData.code }"
-            :apiRequest="listOrderDataByResourceId"
+            :apiRequest="listByCategoryId"
             :columns="dialogConfig.columns"
         >
         </treeSort>
@@ -91,12 +91,12 @@
 <script lang="ts" setup>
     import { computed, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
     import {
-        deleteIcon,
+        deleteAppCategory,
         getCategoryList,
         listAllAppByTenantId,
-        listOrderDataByResourceId,
-        pageOrderLists,
-        saveAppCategoryOrder,
+        listByCategoryId,
+        pageAppCategory,
+        saveAppCategory,
         searchAppList,
         updateAppCategoryOrder
     } from '@/api/appCategory';
@@ -155,7 +155,7 @@
                         appSelectedVal.value.forEach((element) => {
                             ids.push(element.id);
                         });
-                        let result = await saveAppCategoryOrder(ids.toString(), currData.value.code);
+                        let result = await saveAppCategory(ids.toString(), currData.value.code);
                         if (result.success) {
                             refreshData();
                         }
@@ -318,7 +318,7 @@
 
     // 列表初始化
     async function myAppCategoryListInfo() {
-        let result = await pageOrderLists({
+        let result = await pageAppCategory({
             categoryId: currData.value.code,
             page: iconTableConfig.value.pageConfig.currentPage,
             size: iconTableConfig.value.pageConfig.pageSize
@@ -411,7 +411,7 @@
                 tableCurrSelectedVal.value.forEach((element) => {
                     ids.push(element.id);
                 });
-                deleteIcon(ids.toString()).then((res) => {
+                deleteAppCategory(ids.toString()).then((res) => {
                     loading.value = false;
                     if (res.success) {
                         ElMessage({ type: 'success', message: res.msg, offset: 65 });

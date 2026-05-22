@@ -42,7 +42,7 @@ import net.risesoft.vo.role.RoleMemberVO;
 @RequiredArgsConstructor
 @Validated
 @IsAnyManager(ManagerLevelEnum.SECURITY_MANAGER)
-public class RoleMemberController {
+public class OrgBasesToRolesController {
 
     private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9OrgBasesToRolesService y9OrgBasesToRolesService;

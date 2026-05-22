@@ -24,7 +24,7 @@ import net.risesoft.service.permission.cache.Y9PersonalAppService;
  * @date 2026/05/20
  */
 @RestController
-@RequestMapping(value = "/api/tenantmain/tenant", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/rest/personalApp", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
 @IsAnyManager(value = {ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
@@ -39,8 +39,8 @@ public class PersonalAppController {
      * @return
      */
     @RiseLog(operationName = "更新部门图标", operationType = OperationTypeEnum.MODIFY)
-    @PostMapping(value = "/syncDeptIcons")
-    public Y9Result<Boolean> syncDeptIcons(@NotBlank String deptId) {
+    @PostMapping(value = "/sync4Dept")
+    public Y9Result<Object> sync4Dept(@NotBlank String deptId) {
         y9PersonalAppService.buildDeptAppIconForPosition(deptId);
         return Y9Result.successMsg("更新部门图标成功!");
     }
@@ -52,8 +52,8 @@ public class PersonalAppController {
      * @return
      */
     @RiseLog(operationName = "更新个人图标", operationType = OperationTypeEnum.MODIFY)
-    @PostMapping(value = "/syncPersonIcons")
-    public Y9Result<Boolean> syncPersonIcons(@NotBlank String personId) {
+    @PostMapping(value = "/sync4Person")
+    public Y9Result<Object> sync4Person(@NotBlank String personId) {
         y9PersonalAppService.buildPersonalAppForPerson(personId);
         return Y9Result.successMsg("更新人员图标成功!");
     }
@@ -65,8 +65,8 @@ public class PersonalAppController {
      * @return
      */
     @RiseLog(operationName = "更新岗位图标", operationType = OperationTypeEnum.MODIFY)
-    @PostMapping(value = "/syncPositionIcons")
-    public Y9Result<Boolean> syncPositionIcons(@NotBlank String positionId) {
+    @PostMapping(value = "/sync4Position")
+    public Y9Result<Object> sync4Position(@NotBlank String positionId) {
         y9PersonalAppService.buildPersonalAppForPosition(positionId);
         return Y9Result.successMsg("更新岗位图标成功!");
     }

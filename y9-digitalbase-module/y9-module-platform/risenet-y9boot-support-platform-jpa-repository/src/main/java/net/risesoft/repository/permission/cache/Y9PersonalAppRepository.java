@@ -32,9 +32,9 @@ public interface Y9PersonalAppRepository extends JpaRepository<Y9PersonalApp, St
 
     Page<Y9PersonalApp> findByOrgUnitIdAndCategoryId(String orgUnitId, String categoryId, Pageable pageable);
 
-    List<Y9PersonalApp> findByOrgUnitIdAndCategoryIdOrderByTabIndex(String orgUnitId, String categoryId);
+    Page<Y9PersonalApp> findByOrgUnitIdInAndAppId(List<String> orgUnitId, String appId, Pageable pageable);
 
-    List<Y9PersonalApp> findByOrgUnitIdAndTabIndexBetweenOrderByTabIndex(String orgUnitId, Integer to, int i);
+    List<Y9PersonalApp> findByOrgUnitIdAndCategoryIdOrderByTabIndex(String orgUnitId, String categoryId);
 
     List<Y9PersonalApp> findByOrgUnitIdOrderByTabIndex(String orgUnitId);
 

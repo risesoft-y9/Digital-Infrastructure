@@ -2,7 +2,6 @@
     <div class="icon-list">
         <fixedTreeModule
             ref="positionfixedTreeRef"
-            :hiddenSearch="true"
             :showNodeDelete="false"
             :treeApiObj="positionTreeApi"
             @onTreeClick="handlerPositionTreeClick"
@@ -50,7 +49,7 @@
 </template>
 <script lang="ts" setup>
     import { computed, onMounted, reactive, ref, toRefs, watch } from 'vue';
-    import { listAppByPersonId2, syncDeptIcons, syncPositionIcons } from '@/api/appCategory';
+    import { listAppByPersonId2, sync4Dept, sync4Position } from '@/api/appCategory';
     import { getTreeItemById, searchByName, treeInterface } from '@/api/org';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useI18n } from 'vue-i18n';
@@ -84,7 +83,6 @@
             search: {
                 api: searchByName,
                 params: {
-                    key: '',
                     treeType: 'tree_type_position'
                 }
             }
@@ -202,7 +200,7 @@
 
     async function syncDeptIcon() {
         loading.value = true;
-        let result = await syncDeptIcons(currData.value.id);
+        let result = await sync4Dept(currData.value.id);
         loading.value = false;
         ElNotification({
             title: result.success ? t('成功') : t('失败'),
@@ -215,7 +213,7 @@
 
     async function syncPositionIcon() {
         loading.value = true;
-        let result = await syncPositionIcons(currData.value.id);
+        let result = await sync4Position(currData.value.id);
         loading.value = false;
         if (result.success) {
             getAppCategoryListInfo2();

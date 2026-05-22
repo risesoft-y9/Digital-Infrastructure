@@ -93,11 +93,12 @@ public interface Y9PersonalAppService {
     /**
      * 获取租用的人员id分页列表
      *
-     * @param appId 应用id
+     * @param appId     应用id
+     * @param deptName
      * @param pageQuery
      * @return
      */
-    Page<String> pageOrgUnitIdByAppId(String appId, Y9PageQuery pageQuery);
+    Page<Y9PersonalApp> pageOrgUnitIdByAppId(String appId, String deptName, Y9PageQuery pageQuery);
 
     /**
      * 保存个人图标信息

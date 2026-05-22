@@ -9,7 +9,6 @@ import java.util.Optional;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -140,11 +139,8 @@ public class AppCategoryController {
         List<App> appList = new ArrayList<>();
         List<Y9PersonalApp> personIconList = y9PersonalAppService.listByOrgUnitId(personId);
         if (!personIconList.isEmpty()) {
-            for (Y9PersonalApp acPersonIcon : personIconList) {
-                App app = y9AppService.findById(acPersonIcon.getAppId()).orElse(null);
-                if (null != app) {
-                    appList.add(app);
-                }
+            for (Y9PersonalApp y9PersonalApp : personIconList) {
+                y9AppService.findById(y9PersonalApp.getAppId()).ifPresent(appList::add);
             }
         }
         return Y9Result.success(appList, "根据人员Id获取图标app列表成功!");
@@ -186,75 +182,44 @@ public class AppCategoryController {
      *
      * @param pageQuery 分页信息
      * @param appId 应用id
-     * @param personName 人员名称
      * @param deptName 部门名称
      * @return
      */
     @RiseLog(operationName = "根据人员名称或者部门名称进行模糊查询")
-    @RequestMapping(value = "/pageByAppIcon")
-    public Y9Page<Map<String, Object>> pageByAppIcon(Y9PageQuery pageQuery, @NotBlank String appId, String personName,
-        String deptName) {
+    @RequestMapping(value = "/pageByApp")
+    public Y9Page<Map<String, Object>> pageByApp(Y9PageQuery pageQuery, @NotBlank String appId, String deptName) {
         List<Map<String, Object>> items = new ArrayList<>();
-        Page<String> personIdPage = y9PersonalAppService.pageOrgUnitIdByAppId(appId, pageQuery);
-        List<String> personIdList = personIdPage.getContent();
-        if (!personIdList.isEmpty()) {
-            for (String personId : personIdList) {
-                Map<String, Object> map;
-                Optional<OrgUnit> y9OrgBaseOptional = compositeOrgBaseService.findOrgUnit(personId);
-                if (y9OrgBaseOptional.isPresent()) {
-                    OrgUnit person = y9OrgBaseOptional.get();
-                    // 如果根据部门和人员同时搜索
-                    if (StringUtils.isNotBlank(deptName)) {
-                        if (person.getDn().contains(deptName)) {
-                            if (StringUtils.isNotBlank(personName)) {
-                                if (person.getName().contains(personName)) {
-                                    map = personMap(person);
-                                    items.add(map);
-                                }
-                            } else {
-                                map = personMap(person);
-                                items.add(map);
-                            }
-                        }
-                    } else if (StringUtils.isNotBlank(personName)) {
-                        if (person.getName().contains(personName)) {
-                            map = personMap(person);
-                            items.add(map);
-                        }
-                    } else {
-                        map = personMap(person);
-                        items.add(map);
-                    }
-                }
+        Page<Y9PersonalApp> y9PersonalAppPage = y9PersonalAppService.pageOrgUnitIdByAppId(appId, deptName, pageQuery);
+        for (Y9PersonalApp y9PersonalApp : y9PersonalAppPage.getContent()) {
+            Optional<OrgUnit> y9OrgBaseOptional =
+                compositeOrgBaseService.findPersonOrPosition(y9PersonalApp.getOrgUnitId());
+            if (y9OrgBaseOptional.isPresent()) {
+                OrgUnit orgUnit = y9OrgBaseOptional.get();
+                Map<String, Object> map = new HashMap<>(3);
+                map.put("id", orgUnit.getId());
+                map.put("name", orgUnit.getName());
+                map.put("dn", orgUnit.getDn());
+                items.add(map);
             }
         }
-        return Y9Page.success(pageQuery.getPage(), personIdPage.getTotalPages(), personIdPage.getTotalElements(),
-            items);
+        return Y9Page.success(pageQuery.getPage(), y9PersonalAppPage.getTotalPages(),
+            y9PersonalAppPage.getTotalElements(), items);
     }
 
     /**
-     * 获取应用排序分页列表
+     * 分页获取应用分类
      *
      * @param categoryId 分类id
      * @param pageQuery 分页信息
      * @return
      */
-    @RiseLog(operationName = "获取应用排序列表")
-    @RequestMapping(value = "/pageOrderListByResourceId")
-    public Y9Page<AppCategoryVO> pageOrderListByResourceId(@RequestParam @NotBlank String categoryId,
-        Y9PageQuery pageQuery) {
+    @RiseLog(operationName = "分页获取应用分类")
+    @RequestMapping(value = "/pageByCategoryId")
+    public Y9Page<AppCategoryVO> pageByCategoryId(@RequestParam @NotBlank String categoryId, Y9PageQuery pageQuery) {
         Page<Y9AppCategory> y9AppCategoryMappingPage = y9AppCategoryService.pageByCategoryId(categoryId, pageQuery);
         List<AppCategoryVO> appCategoryVOList = toVo(y9AppCategoryMappingPage.getContent());
         return Y9Page.success(pageQuery.getPage(), y9AppCategoryMappingPage.getTotalPages(),
             y9AppCategoryMappingPage.getTotalElements(), appCategoryVOList);
-    }
-
-    public Map<String, Object> personMap(OrgUnit person) {
-        Map<String, Object> map = new HashMap<>(3);
-        map.put("id", person.getId());
-        map.put("name", person.getName());
-        map.put("dn", person.getDn());
-        return map;
     }
 
     /**
@@ -265,9 +230,8 @@ public class AppCategoryController {
      * @return
      */
     @RiseLog(operationName = "保存应用信息", operationType = OperationTypeEnum.ADD)
-    @PostMapping(value = "/saveIconItemOrder")
-    public Y9Result<Boolean> saveIconItemOrder(@RequestParam @NotEmpty String[] appIds,
-        @RequestParam @NotBlank String categoryId) {
+    @PostMapping(value = "/save")
+    public Y9Result<Boolean> save(@RequestParam @NotEmpty String[] appIds, @RequestParam @NotBlank String categoryId) {
         y9AppCategoryService.saveOrUpdate(appIds, categoryId);
         return Y9Result.successMsg("保存应用排序信息成功!");
     }
@@ -292,8 +256,8 @@ public class AppCategoryController {
      * @return
      */
     @RiseLog(operationName = "更新应用的排序信息", operationType = OperationTypeEnum.MODIFY)
-    @PostMapping(value = "/updateIconItemOrder")
-    public Y9Result<Boolean> updateIconItemOrder(@RequestParam @NotEmpty String[] ids) {
+    @PostMapping(value = "/updateOrder")
+    public Y9Result<Boolean> updateOrder(@RequestParam @NotEmpty String[] ids) {
         y9AppCategoryService.saveOrder(ids);
         return Y9Result.successMsg("更新应用的排序信息成功!");
     }
