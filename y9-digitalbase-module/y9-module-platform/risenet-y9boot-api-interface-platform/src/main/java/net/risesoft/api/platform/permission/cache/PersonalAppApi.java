@@ -62,8 +62,8 @@ public interface PersonalAppApi {
      */
     @GetMapping("/pageByOrgUnitId")
     Y9Page<PersonalApp> pageByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("categoryId") String categoryId,
-        @Validated Y9PageQuery pageQuery);
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId,
+        @RequestParam(name = "categoryId", required = false) String categoryId, @Validated Y9PageQuery pageQuery);
 
     /**
      * 应用排序
