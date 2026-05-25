@@ -63,8 +63,8 @@ public class PersonalAppApiImpl implements PersonalAppApi {
 
     @Override
     public Y9Page<PersonalApp> pageByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("categoryId") String categoryId,
-        @Validated Y9PageQuery pageQuery) {
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId,
+        @RequestParam(name = "categoryId", required = false) String categoryId, @Validated Y9PageQuery pageQuery) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Page<Y9PersonalApp> appList = y9PersonalAppService.pageByOrgUnitId(orgUnitId, categoryId, pageQuery);
