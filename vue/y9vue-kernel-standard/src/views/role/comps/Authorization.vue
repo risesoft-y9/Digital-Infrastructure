@@ -67,6 +67,7 @@
 
     <!-- 应用资源授权 -->
     <y9Dialog v-model:config="addAuthorizationConfigDialog">
+        <hidden-authority-alert />
         <y9Filter
             ref="resourceFilterRef"
             :filtersValueCallBack="sourceFiltersValueCallBack"
@@ -127,6 +128,7 @@
     </y9Dialog>
     <!-- 数据目录授权 -->
     <y9Dialog v-model:config="addDataCatalogAuthorizationConfigDialog">
+        <hidden-authority-alert />
         <y9Filter
             ref="dataCatalogFilterRef"
             :filtersValueCallBack="dataCatalogFiltersValueCallBack"
@@ -174,6 +176,7 @@
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useI18n } from 'vue-i18n';
     import { dataCatalogTree, dataCatalogTreeSearch, getTreeTypeList } from '@/api/dataCatalog';
+    import HiddenAuthorityAlert from '@/views/grantAuthorize/comps/HiddenAuthorityAlert.vue';
 
     const { t } = useI18n();
     const settingStore = useSettingStore();

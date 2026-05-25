@@ -58,6 +58,7 @@
         </y9Table>
         <!-- 授权 -->
         <y9Dialog v-model:config="positiveAuthorityDialog">
+            <hidden-authority-alert />
             <y9Filter
                 :filtersValueCallBack="filtersValueCallBack"
                 :itemList="filtersList"
@@ -84,6 +85,7 @@
     import { appRoleTree, getPublicRoleTree, listPrincipalIdByResourceId, roleTreeList } from '@/api/role/index';
     import { useI18n } from 'vue-i18n';
     import { useSettingStore } from '@/store/modules/settingStore';
+    import HiddenAuthorityAlert from '@/views/grantAuthorize/comps/HiddenAuthorityAlert.vue';
 
     const settingStore = useSettingStore();
     // 注入 字体对象

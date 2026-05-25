@@ -40,6 +40,7 @@
         </y9Table>
         <!-- 组织 岗位 -->
         <y9Dialog v-model:config="personConfigDialog">
+            <hidden-authority-alert />
             <y9Filter :filtersValueCallBack="filtersValueCallBack" :itemList="filtersList" :showBorder="true">
                 <template #treeFilter>
                     <div class="custom-select-tree-filter">
@@ -95,6 +96,7 @@
 
     import { useI18n } from 'vue-i18n';
     import { listPrincipalIdByResourceId } from '@/api/role';
+    import HiddenAuthorityAlert from '@/views/grantAuthorize/comps/HiddenAuthorityAlert.vue';
 
     const { t } = useI18n();
     const settingStore = useSettingStore();
