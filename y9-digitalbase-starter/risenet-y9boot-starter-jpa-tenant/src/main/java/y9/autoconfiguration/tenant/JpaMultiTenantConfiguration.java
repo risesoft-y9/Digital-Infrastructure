@@ -82,7 +82,7 @@ public class JpaMultiTenantConfiguration {
         Integer notFullTimeoutRetryCount = environment.getProperty(prefix + "notFullTimeoutRetryCount", Integer.class);
         Long timeBetweenEvictionRunsMillis =
             environment.getProperty(prefix + "timeBetweenEvictionRunsMillis", Long.class);
-        Integer maxWaithThreadCount = environment.getProperty(prefix + "maxWaithThreadCount", Integer.class);
+        Integer maxWaitThreadCount = environment.getProperty(prefix + "maxWaitThreadCount", Integer.class);
         Long maxWaitMillis = environment.getProperty(prefix + "maxWaitMillis", Long.class);
         Boolean failFast = environment.getProperty(prefix + "failFast", Boolean.class);
         Long phyTimeoutMillis = environment.getProperty(prefix + "phyTimeoutMillis", Long.class);
@@ -149,8 +149,8 @@ public class JpaMultiTenantConfiguration {
         if (timeBetweenEvictionRunsMillis != null) {
             dataSource.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
         }
-        if (maxWaithThreadCount != null) {
-            dataSource.setMaxWaitThreadCount(maxWaithThreadCount);
+        if (maxWaitThreadCount != null) {
+            dataSource.setMaxWaitThreadCount(maxWaitThreadCount);
         }
         if (maxWaitMillis != null) {
             dataSource.setMaxWait(maxWaitMillis);
