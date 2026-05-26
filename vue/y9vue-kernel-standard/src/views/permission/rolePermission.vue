@@ -128,9 +128,9 @@
             pageConfig: false,
             spanMethod: ({ row, column, rowIndex, columnIndex }) => {
                 if (column.property === 'systemCnName') {
-                    if (row.systemCnNameRowspan) {
+                    if (row.systemCnNameRowSpan) {
                         return {
-                            rowspan: row.systemCnNameRowspan,
+                            rowspan: row.systemCnNameRowSpan,
                             colspan: 1
                         };
                     } else {
@@ -142,9 +142,9 @@
                 }
 
                 if (column.property === 'appName') {
-                    if (row.detailRowspan) {
+                    if (row.appRowSpan) {
                         return {
-                            rowspan: row.detailRowspan,
+                            rowspan: row.appRowSpan,
                             colspan: 1
                         };
                     } else {
@@ -177,37 +177,29 @@
         y9TableConfig.value.maxHeight = tableHeight - 35 - 35 - 28; //35 35 是y9-card-content样式中上padding、下padding的值
     }
 
-    function countSystemCnNameRowspan(permission) {
-        let counter = 0;
-        permission.appList.map((app, resourceIndex) => {
-            if (app.permissionDetailList.length > 0) {
-                app.permissionDetailList.map((detail, detailIndex) => {
-                    counter++;
-                });
-            } else {
-                counter++;
-            }
-        });
-        return counter;
-    }
-
     function buildRowSpanData(permissionList) {
-        // 根据后台返回的数据，构造出
+        // 根据后台返回的数据，构造表格合并行数据
         let perData = [] as any;
-        permissionList.map((permission, permissionIndex) => {
-            let systemCnNameRowspan = countSystemCnNameRowspan(permission);
+        permissionList.forEach((permission) => {
+            const appList = permission.appList || [];
+            const systemCnNameRowSpan = appList.reduce((counter, app) => {
+                const permissionDetailList = app.permissionDetailList || [];
+                return counter + permissionDetailList.length;
+            }, 0);
 
-            permission.appList.map((app, resourceIndex) => {
-                if (app.permissionDetailList.length > 0) {
-                    app.permissionDetailList.map((detail, detailIndex) => {
-                        let content = {} as any;
-                        content = detail;
-                        content.appName = app.appName;
+            appList.forEach((app, resourceIndex) => {
+                const permissionDetailList = app.permissionDetailList || [];
+                if (permissionDetailList.length > 0) {
+                    permissionDetailList.forEach((detail, detailIndex) => {
+                        const content = {
+                            ...detail,
+                            appName: app.appName
+                        } as any;
                         if (detailIndex === 0) {
-                            content.detailRowspan = app.permissionDetailList.length;
+                            content.appRowSpan = permissionDetailList.length;
                             if (resourceIndex === 0) {
                                 content.systemCnName = permission.systemCnName;
-                                content.systemCnNameRowspan = systemCnNameRowspan;
+                                content.systemCnNameRowSpan = systemCnNameRowSpan;
                             }
                         }
                         perData.push(content);
@@ -215,7 +207,6 @@
                 }
             });
         });
-        // console.log(perData);
         return perData;
     }
 
