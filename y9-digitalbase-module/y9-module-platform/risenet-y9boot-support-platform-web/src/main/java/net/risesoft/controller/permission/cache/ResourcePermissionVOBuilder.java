@@ -14,13 +14,13 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.enums.platform.permission.AuthorizationPrincipalTypeEnum;
-import net.risesoft.model.platform.Role;
 import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.permission.Authorization;
 import net.risesoft.model.platform.permission.cache.IdentityToResourceBase;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.permission.Y9AuthorizationService;
+import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.vo.permission.ResourcePermissionVO;
 import net.risesoft.y9public.service.resource.CompositeResourceService;
 import net.risesoft.y9public.service.resource.Y9SystemService;
@@ -44,7 +44,7 @@ public class ResourcePermissionVOBuilder {
     private final Y9RoleService y9RoleService;
     private final Y9SystemService y9SystemService;
 
-    private List<ResourcePermissionVO.PermissionDetail> buildDetail(Resource resource,
+    private List<ResourcePermissionVO.PermissionDetail> buildDetailList(Resource resource,
         List<IdentityToResourceBase> permissionList) {
         return permissionList.stream()
             .filter(permission -> permission.getResourceId().equals(resource.getId()))
@@ -59,12 +59,13 @@ public class ResourcePermissionVOBuilder {
                     detail.setPrincipalType(authorization.getPrincipalType());
                     if (AuthorizationPrincipalTypeEnum.ROLE.equals(authorization.getPrincipalType())) {
                         y9RoleService.findById(authorization.getPrincipalId())
-                            .map(Role::getName)
+                            .map(role -> Y9OrgUtil.dnToNamePath(role.getDn()))
                             .ifPresent(detail::setPrincipalName);
                     } else {
                         Optional<OrgUnit> orgUnitOptional =
                             compositeOrgBaseService.findOrgUnit(authorization.getPrincipalId());
-                        orgUnitOptional.map(OrgUnit::getName).ifPresent(detail::setPrincipalName);
+                        orgUnitOptional.map(orgUnit -> Y9OrgUtil.dnToNamePath(orgUnit.getDn()))
+                            .ifPresent(detail::setPrincipalName);
                     }
                 }
                 return detail;
@@ -87,7 +88,7 @@ public class ResourcePermissionVOBuilder {
             permittedResource.setResourceName(resource.getName());
             permittedResource.setLevel(level);
             permittedResource.setResourceType(resource.getResourceType());
-            permittedResource.setPermissionDetailList(buildDetail(resource, permissionList));
+            permittedResource.setPermissionDetailList(buildDetailList(resource, permissionList));
             permittedResource.setEnabled(resource.getEnabled());
             permittedResourceList.add(permittedResource);
             List<Resource> subResourceBaseList = allResourceBaseList.stream()

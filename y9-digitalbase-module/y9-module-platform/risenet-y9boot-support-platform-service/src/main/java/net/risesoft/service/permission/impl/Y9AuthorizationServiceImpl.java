@@ -88,9 +88,8 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
 
         y9AuthorizationRepository.delete(y9Authorization);
 
-        String resourceName = compositeResourceManager
-            .findByIdAndResourceType(y9Authorization.getResourceId(), y9Authorization.getResourceType())
-            .getName();
+        Y9ResourceBase y9ResourceBase = compositeResourceManager
+            .findByIdAndResourceType(y9Authorization.getResourceId(), y9Authorization.getResourceType());
         String principalName = Objects.equals(AuthorizationPrincipalTypeEnum.ROLE, y9Authorization.getPrincipalType())
             ? y9RoleManager.getByIdFromCache(y9Authorization.getPrincipalId()).getName()
             : compositeOrgBaseManager.getOrgUnit(y9Authorization.getPrincipalId()).getName();
@@ -98,7 +97,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
             .action(AuditLogEnum.AUTHORIZATION_DELETE.getAction())
             .description(Y9StringUtil.format(AuditLogEnum.AUTHORIZATION_DELETE.getDescription(),
                 y9Authorization.getPrincipalType().getName(), principalName, y9Authorization.getAuthority().getName(),
-                y9Authorization.getResourceType().getName(), resourceName))
+                y9ResourceBase.getResourceType().getName(), y9ResourceBase.getName()))
             .objectId(id)
             .oldObject(y9Authorization)
             .currentObject(null)
@@ -236,9 +235,8 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
 
         Y9Authorization savedAuthorization = y9AuthorizationManager.insert(y9Authorization);
 
-        String resourceName = compositeResourceManager
-            .findByIdAndResourceType(y9Authorization.getResourceId(), y9Authorization.getResourceType())
-            .getName();
+        Y9ResourceBase y9ResourceBase = compositeResourceManager
+            .findByIdAndResourceType(y9Authorization.getResourceId(), y9Authorization.getResourceType());
         String principalName = Objects.equals(AuthorizationPrincipalTypeEnum.ROLE, y9Authorization.getPrincipalType())
             ? y9RoleManager.getByIdFromCache(y9Authorization.getPrincipalId()).getName()
             : compositeOrgBaseManager.getOrgUnit(y9Authorization.getPrincipalId()).getName();
@@ -246,7 +244,8 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
             .action(AuditLogEnum.AUTHORIZATION_CREATE.getAction())
             .description(Y9StringUtil.format(AuditLogEnum.AUTHORIZATION_CREATE.getDescription(),
                 savedAuthorization.getPrincipalType().getName(), principalName,
-                y9Authorization.getAuthority().getName(), savedAuthorization.getResourceType().getName(), resourceName))
+                y9Authorization.getAuthority().getName(), y9ResourceBase.getResourceType().getName(),
+                y9ResourceBase.getName()))
             .objectId(savedAuthorization.getId())
             .oldObject(null)
             .currentObject(savedAuthorization)

@@ -6,6 +6,7 @@ import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
 
+import net.risesoft.enums.platform.RoleLevelEnum;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.model.BaseModel;
 
@@ -87,6 +88,11 @@ public class Role extends BaseModel implements Serializable {
      * 排序号
      */
     private Integer tabIndex;
+
+    /**
+     * 角色级别
+     */
+    private RoleLevelEnum level;
 
     /**
      * 扩展属性键值对

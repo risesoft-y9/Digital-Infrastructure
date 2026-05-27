@@ -41,6 +41,11 @@ public class AuthorizationVO implements Serializable {
     private String roleNamePath;
 
     /**
+     * 角色级别
+     */
+    private String roleLevelStr;
+
+    /**
      * 组织节点id
      */
     private String orgUnitId;

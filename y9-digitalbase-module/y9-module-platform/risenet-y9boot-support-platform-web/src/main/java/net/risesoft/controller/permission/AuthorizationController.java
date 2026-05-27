@@ -116,6 +116,7 @@ public class AuthorizationController {
         authorizationVO.setId(authorization.getId());
         authorizationVO.setRoleId(authorization.getPrincipalId());
         authorizationVO.setRoleName(role.getName());
+        authorizationVO.setRoleLevelStr(role.getLevel().getName());
         authorizationVO.setRoleNamePath(Y9OrgUtil.dnToNamePath(role.getDn()));
         authorizationVO.setAuthorizer(authorization.getAuthorizer() == null ? "" : authorization.getAuthorizer());
         authorizationVO.setResourceId(authorization.getResourceId());
