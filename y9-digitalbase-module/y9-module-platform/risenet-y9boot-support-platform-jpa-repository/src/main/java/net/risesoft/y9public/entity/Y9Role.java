@@ -18,6 +18,7 @@ import net.risesoft.base.BaseEntity;
 import net.risesoft.consts.DefaultConsts;
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.consts.RoleLevelConsts;
+import net.risesoft.enums.platform.RoleLevelEnum;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.model.platform.Role;
@@ -117,6 +118,22 @@ public class Y9Role extends BaseEntity implements Comparable<Y9Role> {
     @Comment("序列号")
     private Integer tabIndex = DefaultConsts.TAB_INDEX;
 
+    public RoleLevelEnum getLevel() {
+        // appId systemId 都为空则当前角色属于公共级角色
+        // systemId 不为空则当前角色属于系统级角色
+        // appId systemId 都不为空则当前角色属于应用级角色
+
+        if (StringUtils.isBlank(appId) && StringUtils.isBlank(systemId)) {
+            return RoleLevelEnum.PUBLIC;
+        }
+
+        if (StringUtils.isBlank(appId) && StringUtils.isNotBlank(systemId)) {
+            return RoleLevelEnum.SYSTEM;
+        }
+
+        return RoleLevelEnum.APP;
+    }
+
     public Y9Role(Role role, Y9Role parentRole, Integer nextTabIndex, String currentTenantId) {
         Y9BeanUtil.copyProperties(role, this);
 
@@ -134,10 +151,6 @@ public class Y9Role extends BaseEntity implements Comparable<Y9Role> {
         }
 
         rebuildProperties(parentRole);
-
-        // appId systemId 都不为空则当前角色属于应用
-        // systemId 不为空则当前角色属于系统
-        // appId systemId 都为空则当前角色属于公共角色
     }
 
     @Override
