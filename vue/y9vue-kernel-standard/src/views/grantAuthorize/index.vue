@@ -33,7 +33,7 @@
                         </template>
                     </y9Card>
                     <!-- 角色关联 -->
-                    <y9Card :title="`${$t('角色关联')} - ${currData.name ? currData.name : ''}`">
+                    <y9Card :title="`${$t('角色关联授权')} - ${currData.name ? currData.name : ''}`">
                         <template v-slot>
                             <RelationRole :id="currData.id" :appId="currData.appId" />
                         </template>
@@ -48,7 +48,7 @@
                         </template>
                     </y9Card>
                     <!-- 组织关联 -->
-                    <y9Card :title="`${$t('组织关联')} - ${currData.name ? currData.name : ''}`">
+                    <y9Card :title="`${$t('组织关联授权')} - ${currData.name ? currData.name : ''}`">
                         <RelationOrg :id="currData.id" />
                     </y9Card>
                     <!-- 组织关联授权继承 -->

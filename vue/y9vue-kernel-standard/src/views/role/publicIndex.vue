@@ -100,7 +100,7 @@
 
                 <y9Card
                     v-if="managerLevel === 2 && currData.nodeType === 'role'"
-                    :title="`${$t('资源列表')} - ${currData.name ? currData.name : ''}`"
+                    :title="`${$t('授权列表')} - ${currData.name ? currData.name : ''}`"
                 >
                     <Authorization
                         :id="currData.id"

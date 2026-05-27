@@ -48,7 +48,7 @@
         </template>
         <template #expandRowSlot="props">
             <div class="expand-rows">
-                <p>资源名称: {{ props.row.resourceNamePath }}</p>
+                <p>资源名称路径: {{ props.row.resourceNamePath }}</p>
                 <p>资源类型: {{ props.row.resourceTypeStr }}</p>
                 <p>所属系统: {{ props.row.systemCnName }}</p>
                 <p>权限: {{ props.row.authorityStr }}</p>
@@ -240,7 +240,7 @@
             { type: 'selection', fixed: 'left', width: 60 },
             { type: 'expand', width: 40, slot: 'expandRowSlot' },
             { title: computed(() => t('序号')), type: 'index', width: 60, showOverflowTooltip: false },
-            { title: computed(() => t('资源名称')), align: 'left', key: 'resourceNamePath' },
+            { title: computed(() => t('资源名称路径')), align: 'left', key: 'resourceNamePath' },
             { title: computed(() => t('资源类型')), width: 120, key: 'resourceTypeStr' },
             { title: computed(() => t('所属系统')), key: 'systemCnName' },
             {
