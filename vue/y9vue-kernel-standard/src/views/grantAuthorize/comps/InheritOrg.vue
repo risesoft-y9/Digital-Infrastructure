@@ -12,7 +12,7 @@
         <y9Table :config="tableOrgConfig">
             <template #expandRowSlot="props">
                 <div class="expand-rows">
-                    <p>组织节点名称: {{ props.row.orgUnitName }}</p>
+                    <p>组织节点名称路径: {{ props.row.orgUnitNamePath }}</p>
                     <p>组织节点类型: {{ props.row.orgType }}</p>
                     <p>权限来自的资源名称: {{ props.row.resourceName }}</p>
                     <p>权限类型: {{ props.row.authorityStr }}</p>
@@ -55,7 +55,7 @@
                 // { title: '', type: 'selection', fixed: 'left' },
                 { title: computed(() => t('序号')), type: 'index', width: 60, fixed: 'left' },
                 { type: 'expand', width: 40, slot: 'expandRowSlot' },
-                { title: computed(() => t('组织节点名称')), align: 'left', key: 'orgUnitName' },
+                { title: computed(() => t('组织节点名称路径')), align: 'left', key: 'orgUnitNamePath' },
                 { title: computed(() => t('组织节点类型')), key: 'orgType', width: 150 },
                 { title: computed(() => t('权限来自的资源名称')), key: 'resourceName' },
                 { title: computed(() => t('权限类型')), key: 'authorityStr', width: 100, slot: 'authoritySlot' }

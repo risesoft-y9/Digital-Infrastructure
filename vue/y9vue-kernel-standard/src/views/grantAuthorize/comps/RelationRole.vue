@@ -43,6 +43,7 @@
             <template #expandRowSlot="props">
                 <div class="expand-rows">
                     <p>角色名称: {{ props.row.roleNamePath }}</p>
+                    <p>角色级别: {{ props.row.roleLevelStr }}</p>
                     <p>权限类型: {{ props.row.authorityStr }}</p>
                     <p>授权者: {{ props.row.authorizer }}</p>
                     <p>授权时间: {{ props.row.authorizeTime }}</p>
@@ -130,7 +131,8 @@
                 // { title: '', type: 'selection', fixed: 'left' },
                 { title: computed(() => t('序号')), type: 'index', width: 60, fixed: 'left' },
                 { type: 'expand', width: 40, slot: 'expandRowSlot' },
-                { title: computed(() => t('角色名称')), align: 'left', key: 'roleNamePath' },
+                { title: computed(() => t('角色名称路径')), align: 'left', key: 'roleNamePath' },
+                { title: computed(() => t('角色级别')), key: 'roleLevelStr', width: 100 },
                 { title: computed(() => t('权限类型')), key: 'authorityStr', width: 100, slot: 'authoritySlot' },
                 {
                     title: computed(() => t('操作')),

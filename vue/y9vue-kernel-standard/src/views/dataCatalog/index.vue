@@ -53,7 +53,7 @@
                     <!-- 角色关联 -->
                     <y9Card
                         v-if="managerLevel === 2 && currData.nodeType === 'DATA_CATALOG'"
-                        :title="`${$t('角色关联')} - ${currData.name ? currData.name : ''}`"
+                        :title="`${$t('角色关联授权')} - ${currData.name ? currData.name : ''}`"
                     >
                         <template v-slot>
                             <RelationRole :id="currData.id" :appId="currData.appId" />
@@ -73,7 +73,7 @@
                     <!-- 组织关联 -->
                     <y9Card
                         v-if="managerLevel === 2 && currData.nodeType === 'DATA_CATALOG'"
-                        :title="`${$t('组织关联')} - ${currData.name ? currData.name : ''}`"
+                        :title="`${$t('组织关联授权')} - ${currData.name ? currData.name : ''}`"
                     >
                         <RelationOrg :id="currData.id" />
                     </y9Card>

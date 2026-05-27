@@ -56,7 +56,7 @@
         </template>
         <template #expandRowSlot="props">
             <div class="expand-rows">
-                <p>名称: {{ props.row.orgUnitNamePath }}</p>
+                <p>名称路径: {{ props.row.orgUnitNamePath }}</p>
                 <p>成员类型: {{ props.row.orgTypeStr }}</p>
                 <p>负权限成员: {{ props.row.negative ? '是' : '否' }}</p>
                 <p>添加时间: {{ props.row.createTime }}</p>
@@ -174,7 +174,7 @@
             { type: 'selection', fixed: 'left', width: 60 },
             { type: 'expand', width: 40, slot: 'expandRowSlot' },
             { title: computed(() => t('序号')), type: 'index', width: 60, showOverflowTooltip: false },
-            { title: computed(() => t('名称')), align: 'left', key: 'orgUnitNamePath' },
+            { title: computed(() => t('名称路径')), align: 'left', key: 'orgUnitNamePath' },
             { title: computed(() => t('成员类型')), width: 100, key: 'orgTypeStr' },
             {
                 title: computed(() => t('负权限成员')),
