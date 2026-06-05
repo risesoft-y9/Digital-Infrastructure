@@ -5,15 +5,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.manager.org.Y9PersonManager;
+import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.org.PersonsPositions;
@@ -39,6 +40,8 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
     private final Y9PersonsToPositionsManager y9PersonsToPositionsManager;
 
     private final Y9PersonManager y9PersonManager;
+
+    private final Y9PositionManager y9PositionManager;
 
     @Override
     @Transactional
@@ -172,9 +175,15 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
     }
 
     @Override
-    public String getPositionIdsByPersonId(String personId) {
+    public String getPositionIdsByPersonId(String personId, Boolean disabled) {
         List<String> positionIdList = y9PersonsToPositionsRepository.listPositionIdsByPersonId(personId);
-        return StringUtils.join(positionIdList, ",");
+        return positionIdList.stream().map(y9PositionManager::getById).filter(position -> {
+            if (disabled != null) {
+                return position.getDisabled() == disabled;
+            } else {
+                return false;
+            }
+        }).map(Y9OrgBase::getId).collect(Collectors.joining(","));
     }
 
     private List<PersonsPositions> entityToModel(List<Y9PersonsToPositions> personsToPositionsList) {
