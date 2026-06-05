@@ -51,9 +51,10 @@ public interface Y9PersonsToPositionsService {
      * 根据人员id获取所拥有的岗位id（,分隔）
      *
      * @param personId 人员id
+     * @param disabled 是否禁用
      * @return {@link String}
      */
-    String getPositionIdsByPersonId(String personId);
+    String getPositionIdsByPersonId(String personId, Boolean disabled);
 
     List<PersonsPositions> listByPersonId(String personId);
 

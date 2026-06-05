@@ -1,5 +1,6 @@
 package net.risesoft.listener;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -12,11 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.entity.org.Y9Manager;
 import net.risesoft.entity.org.Y9Person;
+import net.risesoft.entity.org.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.enums.platform.org.PersonTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.tenant.Tenant;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.service.relation.Y9PersonsToPositionsService;
@@ -232,7 +235,7 @@ public class UpdateY9UserListener {
         y9User.setOriginal(person.getOriginal());
         y9User.setOriginalId(person.getOriginalId());
         y9User.setGlobalManager(false);
-        String positionIds = y9PersonsToPositionsService.getPositionIdsByPersonId(person.getId());
+        String positionIds = y9PersonsToPositionsService.getPositionIdsByPersonId(person.getId(), Boolean.FALSE);
         y9User.setPositions(positionIds);
         y9UserService.save(y9User);
         if (LOGGER.isDebugEnabled()) {
@@ -316,11 +319,49 @@ public class UpdateY9UserListener {
         y9User.setOriginal(person.getOriginal());
         y9User.setOriginalId(person.getOriginalId());
         y9User.setGlobalManager(false);
-        String positionIds = y9PersonsToPositionsService.getPositionIdsByPersonId(person.getId());
+        String positionIds = y9PersonsToPositionsService.getPositionIdsByPersonId(person.getId(), Boolean.FALSE);
         y9User.setPositions(positionIds);
         y9UserService.save(y9User);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("更新人员->{}执行完成", person.getId());
+        }
+    }
+
+    /**
+     * 监听岗位更新事件
+     *
+     * @param event 岗位更新事件
+     */
+    @TransactionalEventListener
+    @Async
+    public void onY9PositionUpdated(Y9EntityUpdatedEvent<Y9Position> event) {
+
+        Y9Position updatedPosition = event.getUpdatedEntity();
+        Y9Position originPosition = event.getOriginEntity();
+
+        LOGGER.debug("开始处理岗位更新->{}", updatedPosition.getId());
+
+        // 修改禁用状态
+        if (!Objects.equals(updatedPosition.getDisabled(), originPosition.getDisabled())) {
+
+            List<Person> personList = y9PersonsToPositionsService.listPersonByPositionId(updatedPosition.getId());
+            for (Person person : personList) {
+
+                Optional<UserInfo> y9UserOptional =
+                    y9UserService.findByPersonIdAndTenantId(person.getId(), person.getTenantId());
+                UserInfo y9User;
+                if (y9UserOptional.isPresent()) {
+                    y9User = y9UserOptional.get();
+                    String positionIds =
+                        y9PersonsToPositionsService.getPositionIdsByPersonId(person.getId(), Boolean.FALSE);
+                    y9User.setPositions(positionIds);
+                    y9UserService.save(y9User);
+                }
+            }
+        }
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("更新岗位->{}执行完成", updatedPosition.getId());
         }
     }
 
@@ -339,7 +380,7 @@ public class UpdateY9UserListener {
         if (y9UserOptional.isPresent()) {
             UserInfo y9User = y9UserOptional.get();
             String positionIds =
-                y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId());
+                y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId(), Boolean.FALSE);
             y9User.setPositions(positionIds);
             y9UserService.save(y9User);
         }
@@ -364,13 +405,38 @@ public class UpdateY9UserListener {
         if (y9UserOptional.isPresent()) {
             UserInfo y9User = y9UserOptional.get();
             String positionIds =
-                y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId());
+                y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId(), Boolean.FALSE);
             y9User.setPositions(positionIds);
             y9UserService.save(y9User);
         }
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("人员-岗位关联删除触发的更新用户拥有的岗位id完成");
+        }
+    }
+
+    /**
+     * 监听人员-岗位关联更新事件 更新用户拥有的岗位id
+     *
+     * @param event 人员-岗位关联删除事件
+     */
+    @TransactionalEventListener
+    @Async
+    public void onY9PersonsToPositionsUpdated(Y9EntityUpdatedEvent<Y9PersonsToPositions> event) {
+        Y9PersonsToPositions y9PersonsToPositions = event.getUpdatedEntity();
+
+        Optional<UserInfo> y9UserOptional = y9UserService.findByPersonIdAndTenantId(y9PersonsToPositions.getPersonId(),
+            Y9LoginUserHolder.getTenantId());
+        if (y9UserOptional.isPresent()) {
+            UserInfo y9User = y9UserOptional.get();
+            String positionIds =
+                y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId(), Boolean.FALSE);
+            y9User.setPositions(positionIds);
+            y9UserService.save(y9User);
+        }
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("人员-岗位关联更新触发的更新用户拥有的岗位id完成");
         }
     }
 
