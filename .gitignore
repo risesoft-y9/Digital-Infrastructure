@@ -54,3 +54,4 @@ node_modules/
 auto-imports.d.ts
 
 .flattened-pom.xml
+/CLAUDE.md
