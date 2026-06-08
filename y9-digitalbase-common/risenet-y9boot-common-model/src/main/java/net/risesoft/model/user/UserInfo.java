@@ -38,9 +38,6 @@ public class UserInfo implements Serializable {
     /** 登录名称 */
     private String loginName;
 
-    // FIXME 密码为敏感字段 不返回？
-    private String password;
-
     /** 性别 */
     private SexEnum sex;
 

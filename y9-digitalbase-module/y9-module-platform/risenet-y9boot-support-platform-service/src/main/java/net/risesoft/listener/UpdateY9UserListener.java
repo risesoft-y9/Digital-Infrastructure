@@ -77,7 +77,6 @@ public class UpdateY9UserListener {
         y9User.setTenantName(y9Tenant.getName());
         y9User.setTenantShortName(y9Tenant.getShortName());
         y9User.setLoginName(y9Manager.getLoginName());
-        y9User.setPassword(y9Manager.getPassword());
         y9User.setPersonId(y9Manager.getId());
         y9User.setEmail(y9Manager.getEmail());
         y9User.setMobile(y9Manager.getMobile());
@@ -96,7 +95,7 @@ public class UpdateY9UserListener {
         y9User.setOriginal(true);
         y9User.setOriginalId(null);
         y9User.setGlobalManager(y9Manager.getGlobalManager());
-        y9UserService.save(y9User);
+        y9UserService.save(y9User, y9Manager.getPassword());
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("新增管理员->{}执行完成", y9Manager.getId());
         }
@@ -157,7 +156,6 @@ public class UpdateY9UserListener {
         y9User.setTenantName(y9Tenant.getName());
         y9User.setTenantShortName(y9Tenant.getShortName());
         y9User.setLoginName(y9Manager.getLoginName());
-        y9User.setPassword(y9Manager.getPassword());
         y9User.setPersonId(y9Manager.getId());
         y9User.setEmail(y9Manager.getEmail());
         y9User.setMobile(y9Manager.getMobile());
@@ -176,7 +174,7 @@ public class UpdateY9UserListener {
         y9User.setOriginal(true);
         y9User.setOriginalId(null);
         y9User.setGlobalManager(y9Manager.getGlobalManager());
-        y9UserService.save(y9User);
+        y9UserService.save(y9User, y9Manager.getPassword());
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("更新管理员->{}执行完成", y9Manager.getId());
         }
@@ -216,7 +214,6 @@ public class UpdateY9UserListener {
         y9User.setTenantName(y9Tenant.getName());
         y9User.setTenantShortName(y9Tenant.getShortName());
         y9User.setLoginName(person.getLoginName());
-        y9User.setPassword(person.getPassword());
         y9User.setPersonId(person.getId());
         y9User.setEmail(person.getEmail());
         y9User.setMobile(person.getMobile());
@@ -237,7 +234,7 @@ public class UpdateY9UserListener {
         y9User.setGlobalManager(false);
         String positionIds = y9PersonsToPositionsService.getPositionIdsByPersonId(person.getId(), Boolean.FALSE);
         y9User.setPositions(positionIds);
-        y9UserService.save(y9User);
+        y9UserService.save(y9User, person.getPassword());
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("新增人员->{}执行完成", person.getId());
         }
@@ -300,7 +297,6 @@ public class UpdateY9UserListener {
         y9User.setTenantName(y9Tenant.getName());
         y9User.setTenantShortName(y9Tenant.getShortName());
         y9User.setLoginName(person.getLoginName());
-        y9User.setPassword(person.getPassword());
         y9User.setPersonId(person.getId());
         y9User.setEmail(person.getEmail());
         y9User.setMobile(person.getMobile());
@@ -321,7 +317,7 @@ public class UpdateY9UserListener {
         y9User.setGlobalManager(false);
         String positionIds = y9PersonsToPositionsService.getPositionIdsByPersonId(person.getId(), Boolean.FALSE);
         y9User.setPositions(positionIds);
-        y9UserService.save(y9User);
+        y9UserService.save(y9User, person.getPassword());
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("更新人员->{}执行完成", person.getId());
         }
@@ -355,7 +351,7 @@ public class UpdateY9UserListener {
                     String positionIds =
                         y9PersonsToPositionsService.getPositionIdsByPersonId(person.getId(), Boolean.FALSE);
                     y9User.setPositions(positionIds);
-                    y9UserService.save(y9User);
+                    y9UserService.save(y9User, null);
                 }
             }
         }
@@ -382,7 +378,7 @@ public class UpdateY9UserListener {
             String positionIds =
                 y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId(), Boolean.FALSE);
             y9User.setPositions(positionIds);
-            y9UserService.save(y9User);
+            y9UserService.save(y9User, null);
         }
 
         if (LOGGER.isDebugEnabled()) {
@@ -407,7 +403,7 @@ public class UpdateY9UserListener {
             String positionIds =
                 y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId(), Boolean.FALSE);
             y9User.setPositions(positionIds);
-            y9UserService.save(y9User);
+            y9UserService.save(y9User, null);
         }
 
         if (LOGGER.isDebugEnabled()) {
@@ -432,7 +428,7 @@ public class UpdateY9UserListener {
             String positionIds =
                 y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId(), Boolean.FALSE);
             y9User.setPositions(positionIds);
-            y9UserService.save(y9User);
+            y9UserService.save(y9User, null);
         }
 
         if (LOGGER.isDebugEnabled()) {

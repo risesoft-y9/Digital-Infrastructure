@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import net.risesoft.enums.platform.org.SexEnum;
@@ -77,7 +78,11 @@ public class Person extends OrgUnit implements Serializable {
      */
     private String officialType;
 
-    // FIXME 密码为敏感字段 不返回？
+    /**
+     * 密码
+     * 敏感字段 不返回
+     */
+    @JsonIgnore
     private String password;
 
     /**

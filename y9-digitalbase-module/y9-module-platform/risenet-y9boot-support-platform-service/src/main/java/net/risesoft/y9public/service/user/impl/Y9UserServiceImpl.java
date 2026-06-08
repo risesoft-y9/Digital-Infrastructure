@@ -5,6 +5,7 @@ import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,8 +64,11 @@ public class Y9UserServiceImpl implements Y9UserService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public UserInfo save(UserInfo userInfo) {
+    public UserInfo save(UserInfo userInfo, String password) {
         Y9User y9User = PlatformModelConvertUtil.convert(userInfo, Y9User.class);
+        if (StringUtils.isNotBlank(password)) {
+            y9User.setPassword(password);
+        }
         return entityToModel(y9UserRepository.save(y9User));
     }
 
@@ -75,7 +79,7 @@ public class Y9UserServiceImpl implements Y9UserService {
         for (UserInfo userInfo : list) {
             userInfo.setTenantName(tenantName);
             userInfo.setTenantShortName(tenantShortName);
-            save(userInfo);
+            save(userInfo, null);
         }
     }
 
