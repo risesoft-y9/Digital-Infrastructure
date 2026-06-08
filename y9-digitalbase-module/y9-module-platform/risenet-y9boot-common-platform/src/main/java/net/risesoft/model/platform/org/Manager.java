@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
@@ -51,7 +52,11 @@ public class Manager extends OrgUnit implements Serializable {
     @Mobile
     private String mobile;
 
-    // FIXME 密码为敏感字段 不返回？
+    /**
+     * 密码
+     * 敏感字段 不返回
+     */
+    @JsonIgnore
     private String password;
 
     /**

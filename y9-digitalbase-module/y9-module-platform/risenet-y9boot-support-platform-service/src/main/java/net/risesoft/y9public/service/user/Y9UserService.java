@@ -55,9 +55,10 @@ public interface Y9UserService {
      * 向用户总表里添加一个用户
      *
      * @param y9User 用户对象
+     * @param password 加密后的密码
      * @return {@link UserInfo}
      */
-    UserInfo save(UserInfo y9User);
+    UserInfo save(UserInfo y9User, String password);
 
     /**
      * 根据tenantId,tenantName，tenantLoginName进行更新
