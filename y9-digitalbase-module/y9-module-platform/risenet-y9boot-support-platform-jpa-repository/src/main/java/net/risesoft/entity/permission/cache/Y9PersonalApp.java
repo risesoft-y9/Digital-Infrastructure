@@ -2,15 +2,14 @@ package net.risesoft.entity.permission.cache;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.Type;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,7 +30,7 @@ import net.risesoft.persistence.EnumConverter;
 @Entity
 @Table(name = "Y9_ORG_PERSONAL_APP",
     indexes = {@Index(name = "Y9_ORG_PERSONAL_APP_INDEX", columnList = "ORG_UNIT_ID,APP_ID", unique = true)})
-@org.hibernate.annotations.Table(comment = "个人应用分类排序缓存", appliesTo = "Y9_ORG_PERSONAL_APP")
+@Comment("个人应用分类排序缓存")
 @NoArgsConstructor
 @Data
 public class Y9PersonalApp extends BaseEntity implements Serializable {
@@ -61,7 +60,7 @@ public class Y9PersonalApp extends BaseEntity implements Serializable {
 
     /** 是否标星 */
     @Column(name = "IS_STAR", nullable = false)
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @Comment("是否标星")
     private Boolean star = Boolean.FALSE;
 
