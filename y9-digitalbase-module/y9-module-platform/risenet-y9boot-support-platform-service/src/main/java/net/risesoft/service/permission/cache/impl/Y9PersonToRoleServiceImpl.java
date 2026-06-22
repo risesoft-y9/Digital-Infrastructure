@@ -116,28 +116,6 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
             .collect(Collectors.toList());
     }
 
-    @EventListener
-    @Transactional
-    public void onPersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
-        Y9Person person = event.getEntity();
-        y9PersonToRoleRepository.deleteByPersonId(person.getId());
-    }
-
-    @TransactionalEventListener
-    public void onRoleDeleted(Y9EntityDeletedEvent<Y9Role> event) {
-        Y9Role entity = event.getEntity();
-        for (String tenantId : Y9PlatformUtil.getTenantIds()) {
-            deleteByRole(tenantId, entity);
-        }
-    }
-
-    @Async
-    protected void deleteByRole(String tenantId, Y9Role entity) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-        y9PersonToRoleRepository.deleteByRoleId(entity.getId());
-        LOGGER.debug("角色[{}]删除时同步删除租户[{}]的人员角色缓存数据", entity.getId(), tenantId);
-    }
-
     private List<PersonToRole> entityToModel(List<Y9PersonToRole> y9PersonToRoleList) {
         return PlatformModelConvertUtil.convert(y9PersonToRoleList, PersonToRole.class);
     }

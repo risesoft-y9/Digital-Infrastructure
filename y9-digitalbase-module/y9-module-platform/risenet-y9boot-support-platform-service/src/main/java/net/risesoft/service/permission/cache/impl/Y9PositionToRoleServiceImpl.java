@@ -112,28 +112,6 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
             .collect(Collectors.toList());
     }
 
-    @EventListener
-    @Transactional
-    public void onPositionDeleted(Y9EntityDeletedEvent<Y9Position> event) {
-        Y9Position position = event.getEntity();
-        y9PositionToRoleRepository.deleteByPositionId(position.getId());
-    }
-
-    @TransactionalEventListener
-    public void onRoleDeleted(Y9EntityDeletedEvent<Y9Role> event) {
-        Y9Role entity = event.getEntity();
-        for (String tenantId : Y9PlatformUtil.getTenantIds()) {
-            deleteByRole(tenantId, entity);
-        }
-    }
-
-    @Async
-    protected void deleteByRole(String tenantId, Y9Role entity) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-        y9PositionToRoleRepository.deleteByRoleId(entity.getId());
-        LOGGER.debug("角色[{}]删除时同步删除租户[{}]的岗位角色缓存数据", entity.getId(), tenantId);
-    }
-
     private List<PositionToRole> entityToModel(List<Y9PositionToRole> y9PositionToRoleList) {
         return PlatformModelConvertUtil.convert(y9PositionToRoleList, PositionToRole.class);
     }

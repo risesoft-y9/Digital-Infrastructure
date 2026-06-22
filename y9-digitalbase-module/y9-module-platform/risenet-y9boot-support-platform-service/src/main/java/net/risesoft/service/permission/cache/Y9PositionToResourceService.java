@@ -130,4 +130,8 @@ public interface Y9PositionToResourceService {
      * @return {@code Page<String>}
      */
     Page<String> pageAppIdByAuthority(String positionId, AuthorityEnum authority, Y9PageQuery pageQuery);
+
+    void deleteByAuthorizationId(String authorizationId);
+
+    void deleteByResourceId(String resourceId);
 }

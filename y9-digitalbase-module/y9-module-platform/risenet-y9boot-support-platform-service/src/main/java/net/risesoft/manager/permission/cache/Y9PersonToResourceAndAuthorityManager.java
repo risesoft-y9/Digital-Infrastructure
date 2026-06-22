@@ -14,8 +14,6 @@ import net.risesoft.y9public.entity.resource.Y9ResourceBase;
  * @since 9.6.2
  */
 public interface Y9PersonToResourceAndAuthorityManager {
-    void deleteByAuthorizationId(String authorizationId);
-
     void deleteByPersonIdAndAuthorizationIdNotIn(String personId, List<String> authorizationIdList);
 
     void deleteByPersonIdAndResourceId(String personId, String resourceId);

@@ -33,11 +33,15 @@ import net.risesoft.service.permission.cache.Y9PersonToResourceService;
 import net.risesoft.service.permission.cache.Y9PositionToResourceService;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
 import net.risesoft.util.Y9OrgUtil;
+import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.util.Y9ResourceUtil;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
+import net.risesoft.y9public.entity.tenant.Y9TenantApp;
+import net.risesoft.y9public.manager.resource.CompositeResourceManager;
 
 /**
  * 监听各种需要重新计算权限缓存的事件并执行相应操作
@@ -48,7 +52,7 @@ import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class UpdateIdentityResourceAndAuthorityListener {
+public class IdentityResourceRelatedEventListener {
 
     private final Y9PersonToResourceService y9PersonToResourceService;
     private final Y9PositionToResourceService y9PositionToResourceService;
@@ -56,6 +60,7 @@ public class UpdateIdentityResourceAndAuthorityListener {
     private final Y9OrgBasesToRolesService y9OrgBasesToRolesService;
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
+    private final CompositeResourceManager compositeResourceManager;
     private final Y9PersonManager y9PersonService;
     private final Y9PositionManager y9PositionService;
 
@@ -184,6 +189,14 @@ public class UpdateIdentityResourceAndAuthorityListener {
     }
 
     @TransactionalEventListener
+    public void onResourceDeleted(Y9EntityDeletedEvent<? extends Y9ResourceBase> event) {
+        Y9ResourceBase entity = event.getEntity();
+        for (String tenantId : Y9PlatformUtil.getTenantIds()) {
+            deleteByResource(tenantId, entity);
+        }
+    }
+
+    @TransactionalEventListener
     @Async
     public void onY9AuthorizationCreated(Y9EntityCreatedEvent<Y9Authorization> event) {
         Y9Authorization y9Authorization = event.getEntity();
@@ -223,7 +236,10 @@ public class UpdateIdentityResourceAndAuthorityListener {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("删除对角色的隐藏授权配置触发的重新计算权限缓存执行完成");
             }
-        }
+        } else {
+            y9PersonToResourceService.deleteByAuthorizationId(y9Authorization.getId());
+            y9PositionToResourceService.deleteByAuthorizationId(y9Authorization.getId());
+        } 
     }
 
     @TransactionalEventListener
@@ -346,6 +362,56 @@ public class UpdateIdentityResourceAndAuthorityListener {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("岗位删人触发的重新计算权限缓存执行完成");
         }
+    }
+
+    @TransactionalEventListener
+    @Async
+    public void onPersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
+        Y9Person person = event.getEntity();
+        y9PersonToResourceService.deleteByPersonId(person.getId());
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("人员[{}]删除同步删除权限缓存执行完成", person.getId());
+        }
+    }
+
+    @TransactionalEventListener
+    @Async
+    public void onPositionDeleted(Y9EntityDeletedEvent<Y9Position> event) {
+        Y9Position position = event.getEntity();
+        y9PositionToResourceService.deleteByPositionId(position.getId());
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("岗位[{}]删除同步删除权限缓存执行完成", position.getId());
+        }
+    }
+
+    @TransactionalEventListener
+    public void onTenantAppDeleted(Y9EntityDeletedEvent<Y9TenantApp> event) {
+        Y9TenantApp entity = event.getEntity();
+        deleteByTenantApp(entity);
+    }
+
+    @Async
+    protected void deleteByResource(String tenantId, Y9ResourceBase entity) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        y9PersonToResourceService.deleteByResourceId(entity.getId());
+        LOGGER.debug("{}资源[{}]删除时同步删除租户[{}]的人员授权缓存数据", entity.getResourceType().getName(), entity.getId(), tenantId);
+
+        y9PositionToResourceService.deleteByResourceId(entity.getId());
+        LOGGER.debug("{}资源[{}]删除时同步删除租户[{}]的岗位授权缓存数据", entity.getResourceType().getName(), entity.getId(), tenantId);
+    }
+
+    @Async
+    protected void deleteByTenantApp(Y9TenantApp entity) {
+        Y9LoginUserHolder.setTenantId(entity.getTenantId());
+        List<Y9ResourceBase> y9ResourceList = compositeResourceManager.findByAppId(entity.getAppId());
+        for (Y9ResourceBase y9ResourceBase : y9ResourceList) {
+            y9PersonToResourceService.deleteByResourceId(y9ResourceBase.getId());
+            y9PositionToResourceService.deleteByResourceId(y9ResourceBase.getId());
+        }
+        LOGGER.debug("应用[{}]取消租用时同步删除租户[{}]的授权缓存数据", entity.getAppId(), entity.getTenantId());
     }
 
     private void recalculateByRoleId(String roleId) {

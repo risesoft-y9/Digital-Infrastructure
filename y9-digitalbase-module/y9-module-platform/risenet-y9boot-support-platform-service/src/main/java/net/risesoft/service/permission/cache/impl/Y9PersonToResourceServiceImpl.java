@@ -6,36 +6,29 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.entity.org.Y9Person;
-import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.entity.permission.cache.person.Y9PersonToResource;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
-import net.risesoft.manager.permission.cache.Y9PersonToResourceAndAuthorityManager;
 import net.risesoft.model.platform.permission.cache.PersonToResource;
 import net.risesoft.model.platform.resource.App;
 import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.pojo.Y9PageQuery;
-import net.risesoft.repository.permission.cache.person.Y9PersonToResourceAndAuthorityRepository;
+import net.risesoft.repository.permission.cache.person.Y9PersonToResourceRepository;
 import net.risesoft.service.permission.cache.Y9PersonToResourceService;
 import net.risesoft.util.PlatformModelConvertUtil;
-import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
@@ -56,12 +49,11 @@ import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
 @Slf4j
 public class Y9PersonToResourceServiceImpl implements Y9PersonToResourceService {
 
-    private final Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository;
+    private final Y9PersonToResourceRepository y9PersonToResourceRepository;
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final CompositeResourceManager compositeResourceManager;
 
-    private final Y9PersonToResourceAndAuthorityManager y9PersonToResourceAndAuthorityManager;
     private final Y9AppManager y9AppManager;
     private final Y9MenuManager y9MenuManager;
     private final Y9TenantAppManager y9TenantAppManager;
@@ -78,7 +70,7 @@ public class Y9PersonToResourceServiceImpl implements Y9PersonToResourceService 
     @Transactional
     @Override
     public void deleteByAuthorizationIdAndPersonId(String authorizationId, String personId) {
-        y9PersonToResourceAndAuthorityRepository.deleteByAuthorizationIdAndPersonId(authorizationId, personId);
+        y9PersonToResourceRepository.deleteByAuthorizationIdAndPersonId(authorizationId, personId);
     }
 
     @Transactional
@@ -93,12 +85,12 @@ public class Y9PersonToResourceServiceImpl implements Y9PersonToResourceService 
     @Transactional
     @Override
     public void deleteByPersonId(String personId) {
-        y9PersonToResourceAndAuthorityRepository.deleteByPersonId(personId);
+        y9PersonToResourceRepository.deleteByPersonId(personId);
     }
 
     @Override
     public boolean hasPermission(String personId, String resourceId, AuthorityEnum authority) {
-        return !y9PersonToResourceAndAuthorityRepository
+        return !y9PersonToResourceRepository
             .findByPersonIdAndResourceIdAndAuthority(personId, resourceId, authority)
             .isEmpty();
     }
@@ -113,12 +105,12 @@ public class Y9PersonToResourceServiceImpl implements Y9PersonToResourceService 
     @Override
     public List<PersonToResource> list(String personId) {
         List<Y9PersonToResource> y9PersonToResourceList =
-            y9PersonToResourceAndAuthorityRepository.findByPersonId(personId);
+            y9PersonToResourceRepository.findByPersonId(personId);
         return entityToModel(y9PersonToResourceList);
     }
 
     private List<Y9PersonToResource> list(String personId, String parentResourceId, AuthorityEnum authority) {
-        return y9PersonToResourceAndAuthorityRepository.findByPersonIdAndParentResourceIdAndAuthority(personId,
+        return y9PersonToResourceRepository.findByPersonIdAndParentResourceIdAndAuthority(personId,
             parentResourceId, authority);
     }
 
@@ -126,7 +118,7 @@ public class Y9PersonToResourceServiceImpl implements Y9PersonToResourceService 
     public List<PersonToResource> list(String personId, String parentResourceId, ResourceTypeEnum resourceType,
         AuthorityEnum authority) {
         List<Y9PersonToResource> y9PersonToResourceList =
-            y9PersonToResourceAndAuthorityRepository.findByPersonIdAndParentResourceIdAndAuthorityAndResourceType(
+            y9PersonToResourceRepository.findByPersonIdAndParentResourceIdAndAuthorityAndResourceType(
                 personId, parentResourceId, authority, resourceType);
         return entityToModel(y9PersonToResourceList);
     }
@@ -134,7 +126,7 @@ public class Y9PersonToResourceServiceImpl implements Y9PersonToResourceService 
     @Override
     @Transactional(readOnly = true)
     public List<App> listAppsByAuthority(String personId, AuthorityEnum authority) {
-        List<Y9PersonToResource> resourceList = y9PersonToResourceAndAuthorityRepository
+        List<Y9PersonToResource> resourceList = y9PersonToResourceRepository
             .findByPersonIdAndAuthorityAndResourceType(personId, authority, ResourceTypeEnum.APP);
         Set<Y9App> appSet = new HashSet<>();
         for (Y9PersonToResource r : resourceList) {
@@ -155,9 +147,19 @@ public class Y9PersonToResourceServiceImpl implements Y9PersonToResourceService 
 
     @Override
     public Page<String> pageAppIdByAuthority(String personId, AuthorityEnum authority, Y9PageQuery pageQuery) {
-        return y9PersonToResourceAndAuthorityRepository.findResourceIdByPersonIdAndAuthorityAndResourceType(personId,
+        return y9PersonToResourceRepository.findResourceIdByPersonIdAndAuthorityAndResourceType(personId,
             authority, ResourceTypeEnum.APP,
             PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by("resourceId")));
+    }
+
+    @Override
+    public void deleteByAuthorizationId(String authorizationId) {
+        y9PersonToResourceRepository.deleteByAuthorizationId(authorizationId);
+    }
+
+    @Override
+    public void deleteByResourceId(String resourceId) {
+        y9PersonToResourceRepository.deleteByResourceId(resourceId);
     }
 
     @Override
@@ -198,50 +200,6 @@ public class Y9PersonToResourceServiceImpl implements Y9PersonToResourceService 
         return menuSet.stream().sorted().map(PlatformModelConvertUtil::y9MenuToMenu).collect(Collectors.toList());
     }
 
-    @EventListener
-    @Transactional
-    public void onPersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
-        Y9Person person = event.getEntity();
-        y9PersonToResourceAndAuthorityRepository.deleteByPersonId(person.getId());
-    }
-
-    @EventListener
-    @Transactional
-    public void onAuthorizationDeleted(Y9EntityDeletedEvent<Y9Authorization> event) {
-        Y9Authorization y9Authorization = event.getEntity();
-        y9PersonToResourceAndAuthorityRepository.deleteByAuthorizationId(y9Authorization.getId());
-    }
-
-    @TransactionalEventListener
-    public void onResourceDeleted(Y9EntityDeletedEvent<? extends Y9ResourceBase> event) {
-        Y9ResourceBase entity = event.getEntity();
-        for (String tenantId : Y9PlatformUtil.getTenantIds()) {
-            deleteByResource(tenantId, entity);
-        }
-    }
-
-    @Async
-    protected void deleteByResource(String tenantId, Y9ResourceBase entity) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-        y9PersonToResourceAndAuthorityRepository.deleteByResourceId(entity.getId());
-        LOGGER.debug("{}资源[{}]删除时同步删除租户[{}]的人员授权缓存数据", entity.getResourceType().getName(), entity.getId(), tenantId);
-    }
-
-    @EventListener
-    public void onTenantAppDeleted(Y9EntityDeletedEvent<Y9TenantApp> event) {
-        Y9TenantApp entity = event.getEntity();
-        deleteByTenantApp(entity);
-    }
-
-    @Async
-    protected void deleteByTenantApp(Y9TenantApp entity) {
-        Y9LoginUserHolder.setTenantId(entity.getTenantId());
-        List<Y9ResourceBase> y9ResourceList = compositeResourceManager.findByAppId(entity.getAppId());
-        for (Y9ResourceBase y9ResourceBase : y9ResourceList) {
-            y9PersonToResourceAndAuthorityRepository.deleteByResourceId(y9ResourceBase.getId());
-        }
-        LOGGER.debug("应用[{}]取消租用时同步删除租户[{}]的人员授权缓存数据", entity.getAppId(), entity.getTenantId());
-    }
 
     private List<PersonToResource> entityToModel(List<Y9PersonToResource> y9PersonToResourceList) {
         return PlatformModelConvertUtil.convert(y9PersonToResourceList, PersonToResource.class);
