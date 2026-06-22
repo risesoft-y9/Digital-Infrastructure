@@ -8,37 +8,30 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.entity.org.Y9Position;
-import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.entity.permission.cache.position.Y9PositionToResource;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
-import net.risesoft.manager.permission.cache.Y9PositionToResourceAndAuthorityManager;
 import net.risesoft.model.platform.permission.cache.IdentityToResourceBase;
 import net.risesoft.model.platform.permission.cache.PositionToResource;
 import net.risesoft.model.platform.resource.App;
 import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.pojo.Y9PageQuery;
-import net.risesoft.repository.permission.cache.position.Y9PositionToResourceAndAuthorityRepository;
+import net.risesoft.repository.permission.cache.position.Y9PositionToResourceRepository;
 import net.risesoft.service.permission.cache.Y9PositionToResourceService;
 import net.risesoft.util.PlatformModelConvertUtil;
-import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
@@ -60,12 +53,11 @@ import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
 @Slf4j
 public class Y9PositionToResourceServiceImpl implements Y9PositionToResourceService {
 
-    private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
+    private final Y9PositionToResourceRepository y9PositionToResourceRepository;
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final CompositeResourceManager compositeResourceManager;
 
-    private final Y9PositionToResourceAndAuthorityManager y9PositionToResourceAndAuthorityManager;
     private final Y9TenantAppManager y9TenantAppManager;
     private final Y9AppManager y9AppManager;
     private final Y9MenuManager y9MenuManager;
@@ -82,7 +74,7 @@ public class Y9PositionToResourceServiceImpl implements Y9PositionToResourceServ
     @Transactional
     @Override
     public void deleteByAuthorizationIdAndPositionId(String authorizationId, String positionId) {
-        y9PositionToResourceAndAuthorityRepository.deleteByAuthorizationIdAndPositionId(authorizationId, positionId);
+        y9PositionToResourceRepository.deleteByAuthorizationIdAndPositionId(authorizationId, positionId);
     }
 
     @Transactional
@@ -97,12 +89,12 @@ public class Y9PositionToResourceServiceImpl implements Y9PositionToResourceServ
     @Transactional
     @Override
     public void deleteByPositionId(String positionId) {
-        y9PositionToResourceAndAuthorityRepository.deleteByPositionId(positionId);
+        y9PositionToResourceRepository.deleteByPositionId(positionId);
     }
 
     @Override
     public boolean hasPermission(String positionId, String resourceId, AuthorityEnum authority) {
-        return !y9PositionToResourceAndAuthorityRepository
+        return !y9PositionToResourceRepository
             .findByPositionIdAndResourceIdAndAuthority(positionId, resourceId, authority)
             .isEmpty();
     }
@@ -117,20 +109,20 @@ public class Y9PositionToResourceServiceImpl implements Y9PositionToResourceServ
     @Override
     public List<PositionToResource> list(String positionId) {
         List<Y9PositionToResource> y9PositionToResourceList =
-            y9PositionToResourceAndAuthorityRepository.findByPositionId(positionId);
+            y9PositionToResourceRepository.findByPositionId(positionId);
         return entityToModel(y9PositionToResourceList);
     }
 
     private List<Y9PositionToResource> list(String positionId, String parentResourceId, AuthorityEnum authority) {
         if (StringUtils.isBlank(parentResourceId)) {
             List<Y9PositionToResource> list = new ArrayList<>();
-            list.addAll(y9PositionToResourceAndAuthorityRepository
+            list.addAll(y9PositionToResourceRepository
                 .findByPositionIdAndParentResourceIdIsNullAndAuthority(positionId, authority));
-            list.addAll(y9PositionToResourceAndAuthorityRepository
+            list.addAll(y9PositionToResourceRepository
                 .findByPositionIdAndParentResourceIdAndAuthority(positionId, "", authority));
             return list;
         }
-        return y9PositionToResourceAndAuthorityRepository.findByPositionIdAndParentResourceIdAndAuthority(positionId,
+        return y9PositionToResourceRepository.findByPositionIdAndParentResourceIdAndAuthority(positionId,
             parentResourceId, authority);
     }
 
@@ -138,7 +130,7 @@ public class Y9PositionToResourceServiceImpl implements Y9PositionToResourceServ
     public List<PositionToResource> list(String positionId, String parentResourceId, ResourceTypeEnum resourceType,
         AuthorityEnum authority) {
         List<Y9PositionToResource> y9PositionToResourceList =
-            y9PositionToResourceAndAuthorityRepository.findByPositionIdAndParentResourceIdAndAuthorityAndResourceType(
+            y9PositionToResourceRepository.findByPositionIdAndParentResourceIdAndAuthorityAndResourceType(
                 positionId, parentResourceId, authority, resourceType);
         return entityToModel(y9PositionToResourceList);
     }
@@ -146,7 +138,7 @@ public class Y9PositionToResourceServiceImpl implements Y9PositionToResourceServ
     @Override
     @Transactional(readOnly = true)
     public List<App> listAppsByAuthority(String positionId, AuthorityEnum authority) {
-        List<Y9PositionToResource> resourceList = y9PositionToResourceAndAuthorityRepository
+        List<Y9PositionToResource> resourceList = y9PositionToResourceRepository
             .findByPositionIdAndAuthorityAndResourceType(positionId, authority, ResourceTypeEnum.APP);
         Set<Y9App> appList = new HashSet<>();
         for (Y9PositionToResource r : resourceList) {
@@ -167,9 +159,19 @@ public class Y9PositionToResourceServiceImpl implements Y9PositionToResourceServ
 
     @Override
     public Page<String> pageAppIdByAuthority(String positionId, AuthorityEnum authority, Y9PageQuery pageQuery) {
-        return y9PositionToResourceAndAuthorityRepository.findResourceIdByPositionIdAndAuthorityAndResourceType(
+        return y9PositionToResourceRepository.findResourceIdByPositionIdAndAuthorityAndResourceType(
             positionId, authority, ResourceTypeEnum.APP,
             PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by("resourceId")));
+    }
+
+    @Override
+    public void deleteByAuthorizationId(String authorizationId) {
+        y9PositionToResourceRepository.deleteByAuthorizationId(authorizationId);
+    }
+
+    @Override
+    public void deleteByResourceId(String resourceId) {
+        y9PositionToResourceRepository.deleteByResourceId(resourceId);
     }
 
     @Override
@@ -208,51 +210,6 @@ public class Y9PositionToResourceServiceImpl implements Y9PositionToResourceServ
             }
         }
         return y9MenuSet.stream().sorted().map(PlatformModelConvertUtil::y9MenuToMenu).collect(Collectors.toList());
-    }
-
-    @EventListener
-    @Transactional
-    public void onPositionDeleted(Y9EntityDeletedEvent<Y9Position> event) {
-        Y9Position position = event.getEntity();
-        y9PositionToResourceAndAuthorityRepository.deleteByPositionId(position.getId());
-    }
-
-    @EventListener
-    @Transactional
-    public void onAuthorizationDeleted(Y9EntityDeletedEvent<Y9Authorization> event) {
-        Y9Authorization y9Authorization = event.getEntity();
-        y9PositionToResourceAndAuthorityRepository.deleteByAuthorizationId(y9Authorization.getId());
-    }
-
-    @TransactionalEventListener
-    public void onResourceDeleted(Y9EntityDeletedEvent<? extends Y9ResourceBase> event) {
-        Y9ResourceBase entity = event.getEntity();
-        for (String tenantId : Y9PlatformUtil.getTenantIds()) {
-            deleteByResource(tenantId, entity);
-        }
-    }
-
-    @Async
-    protected void deleteByResource(String tenantId, Y9ResourceBase entity) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-        y9PositionToResourceAndAuthorityRepository.deleteByResourceId(entity.getId());
-        LOGGER.debug("{}资源[{}]删除时同步删除租户[{}]的岗位授权缓存数据", entity.getResourceType().getName(), entity.getId(), tenantId);
-    }
-
-    @EventListener
-    public void onTenantAppDeleted(Y9EntityDeletedEvent<Y9TenantApp> event) {
-        Y9TenantApp entity = event.getEntity();
-        deleteByTenantApp(entity);
-    }
-
-    @Async
-    protected void deleteByTenantApp(Y9TenantApp entity) {
-        Y9LoginUserHolder.setTenantId(entity.getTenantId());
-        List<Y9ResourceBase> y9ResourceList = compositeResourceManager.findByAppId(entity.getAppId());
-        for (Y9ResourceBase y9ResourceBase : y9ResourceList) {
-            y9PositionToResourceAndAuthorityRepository.deleteByResourceId(y9ResourceBase.getId());
-        }
-        LOGGER.debug("应用[{}]取消租用时同步删除租户[{}]的岗位授权缓存数据", entity.getAppId(), entity.getTenantId());
     }
 
     private List<PositionToResource> entityToModel(List<Y9PositionToResource> y9PositionToResourceList) {

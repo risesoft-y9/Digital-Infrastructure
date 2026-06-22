@@ -39,7 +39,7 @@ import net.risesoft.y9public.service.user.Y9UserService;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class UpdateY9UserListener {
+public class Y9UserRelatedEventListener {
 
     private final Y9TenantService y9TenantService;
     private final Y9UserService y9UserService;

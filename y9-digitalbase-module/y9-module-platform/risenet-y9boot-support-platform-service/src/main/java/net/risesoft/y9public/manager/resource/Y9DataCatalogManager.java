@@ -22,5 +22,5 @@ public interface Y9DataCatalogManager {
 
     Y9DataCatalog insert(Y9DataCatalog y9DataCatalog);
 
-    Y9DataCatalog update(Y9DataCatalog y9DataCatalog);
+    Y9DataCatalog update(Y9DataCatalog y9DataCatalog, Y9DataCatalog originalDataCatalog);
 }

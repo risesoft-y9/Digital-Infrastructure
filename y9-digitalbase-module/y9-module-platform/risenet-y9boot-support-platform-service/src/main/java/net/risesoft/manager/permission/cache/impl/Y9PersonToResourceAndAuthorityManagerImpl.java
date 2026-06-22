@@ -12,7 +12,7 @@ import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.entity.permission.cache.person.Y9PersonToResource;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.permission.cache.Y9PersonToResourceAndAuthorityManager;
-import net.risesoft.repository.permission.cache.person.Y9PersonToResourceAndAuthorityRepository;
+import net.risesoft.repository.permission.cache.person.Y9PersonToResourceRepository;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 
 /**
@@ -26,32 +26,27 @@ import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 @RequiredArgsConstructor
 public class Y9PersonToResourceAndAuthorityManagerImpl implements Y9PersonToResourceAndAuthorityManager {
 
-    private final Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository;
-
-    @Override
-    public void deleteByAuthorizationId(String authorizationId) {
-        y9PersonToResourceAndAuthorityRepository.deleteByAuthorizationId(authorizationId);
-    }
+    private final Y9PersonToResourceRepository y9PersonToResourceRepository;
 
     @Override
     public void deleteByPersonIdAndAuthorizationIdNotIn(String personId, List<String> authorizationIdList) {
         if (authorizationIdList.isEmpty()) {
-            y9PersonToResourceAndAuthorityRepository.deleteByPersonId(personId);
+            y9PersonToResourceRepository.deleteByPersonId(personId);
             return;
         }
-        y9PersonToResourceAndAuthorityRepository.deleteByPersonIdAndAuthorizationIdNotIn(personId, authorizationIdList);
+        y9PersonToResourceRepository.deleteByPersonIdAndAuthorizationIdNotIn(personId, authorizationIdList);
     }
 
     @Override
     public void deleteByPersonIdAndResourceId(String personId, String resourceId) {
-        y9PersonToResourceAndAuthorityRepository.deleteByPersonIdAndResourceId(personId, resourceId);
+        y9PersonToResourceRepository.deleteByPersonIdAndResourceId(personId, resourceId);
     }
 
     @Override
     public void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Person person, Y9Authorization y9Authorization,
         Boolean inherit) {
         Optional<Y9PersonToResource> optionalY9PersonToResourceAndAuthority =
-            y9PersonToResourceAndAuthorityRepository.findByPersonIdAndResourceIdAndAuthorizationIdAndAuthority(
+            y9PersonToResourceRepository.findByPersonIdAndResourceIdAndAuthorizationIdAndAuthority(
                 person.getId(), y9ResourceBase.getId(), y9Authorization.getId(), y9Authorization.getAuthority());
         Y9PersonToResource y9PersonToResource;
         if (optionalY9PersonToResourceAndAuthority.isEmpty()) {
@@ -70,6 +65,6 @@ public class Y9PersonToResourceAndAuthorityManagerImpl implements Y9PersonToReso
         y9PersonToResource.setAppId(y9ResourceBase.getAppId());
         y9PersonToResource.setSystemId(y9ResourceBase.getSystemId());
 
-        y9PersonToResourceAndAuthorityRepository.save(y9PersonToResource);
+        y9PersonToResourceRepository.save(y9PersonToResource);
     }
 }

@@ -37,6 +37,7 @@ import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9DataCatalog;
 import net.risesoft.y9public.manager.resource.Y9DataCatalogManager;
 import net.risesoft.y9public.repository.resource.Y9DataCatalogRepository;
@@ -76,8 +77,10 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
             Optional<Y9DataCatalog> y9DataCatalogOptional = y9DataCatalogManager.findById(dataCatalog.getId());
             if (y9DataCatalogOptional.isPresent()) {
                 Y9DataCatalog currentDataCatalog = y9DataCatalogOptional.get();
+                Y9DataCatalog originalDataCatalog = Y9ModelConvertUtil.convert(currentDataCatalog, Y9DataCatalog.class);
+
                 currentDataCatalog.update(dataCatalog, findParent(dataCatalog.getParentId()).orElse(null));
-                return PlatformModelConvertUtil.convert(y9DataCatalogManager.update(currentDataCatalog),
+                return PlatformModelConvertUtil.convert(y9DataCatalogManager.update(currentDataCatalog, originalDataCatalog),
                     DataCatalog.class);
             }
         }
@@ -323,8 +326,10 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
         List<Y9DataCatalog> y9DataCatalogList = y9DataCatalogRepository
             .findByTenantIdAndOrgUnitId(Y9LoginUserHolder.getTenantId(), updatedDepartment.getId());
         for (Y9DataCatalog y9DataCatalog : y9DataCatalogList) {
+            Y9DataCatalog originalDataCatalog = Y9ModelConvertUtil.convert(y9DataCatalog, Y9DataCatalog.class);
+
             y9DataCatalog.setName(updatedDepartment.getName());
-            y9DataCatalogManager.update(y9DataCatalog);
+            y9DataCatalogManager.update(y9DataCatalog, originalDataCatalog);
         }
     }
 
@@ -353,8 +358,10 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
         List<Y9DataCatalog> y9DataCatalogList =
             y9DataCatalogRepository.findByTenantIdAndOrgUnitId(Y9LoginUserHolder.getTenantId(), entity.getId());
         for (Y9DataCatalog y9DataCatalog : y9DataCatalogList) {
+            Y9DataCatalog originalDataCatalog = Y9ModelConvertUtil.convert(y9DataCatalog, Y9DataCatalog.class);
+
             y9DataCatalog.disable();
-            y9DataCatalogManager.update(y9DataCatalog);
+            y9DataCatalogManager.update(y9DataCatalog, originalDataCatalog);
         }
     }
 
@@ -366,8 +373,10 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
         List<Y9DataCatalog> y9DataCatalogList = y9DataCatalogRepository
             .findByTenantIdAndOrgUnitId(Y9LoginUserHolder.getTenantId(), updatedOrganization.getId());
         for (Y9DataCatalog y9DataCatalog : y9DataCatalogList) {
+            Y9DataCatalog originalDataCatalog = Y9ModelConvertUtil.convert(y9DataCatalog, Y9DataCatalog.class);
+
             y9DataCatalog.setName(updatedOrganization.getName());
-            y9DataCatalogManager.update(y9DataCatalog);
+            y9DataCatalogManager.update(y9DataCatalog, originalDataCatalog);
         }
     }
 
@@ -378,8 +387,10 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
         List<Y9DataCatalog> y9DataCatalogList =
             y9DataCatalogRepository.findByTenantIdAndOrgUnitId(Y9LoginUserHolder.getTenantId(), entity.getId());
         for (Y9DataCatalog y9DataCatalog : y9DataCatalogList) {
+            Y9DataCatalog originalDataCatalog = Y9ModelConvertUtil.convert(y9DataCatalog, Y9DataCatalog.class);
+
             y9DataCatalog.disable();
-            y9DataCatalogManager.update(y9DataCatalog);
+            y9DataCatalogManager.update(y9DataCatalog, originalDataCatalog);
         }
     }
 

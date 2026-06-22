@@ -123,4 +123,8 @@ public interface Y9PersonToResourceService {
      * @return {@code Page<String>}
      */
     Page<String> pageAppIdByAuthority(String personId, AuthorityEnum authority, Y9PageQuery pageQuery);
+
+    void deleteByAuthorizationId(String authorizationId);
+
+    void deleteByResourceId(String resourceId);
 }

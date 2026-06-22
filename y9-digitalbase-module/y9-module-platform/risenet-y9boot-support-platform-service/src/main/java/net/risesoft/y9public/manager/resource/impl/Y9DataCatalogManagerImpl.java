@@ -11,7 +11,10 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.exception.ResourceErrorCodeEnum;
+import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
+import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
+import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9public.entity.resource.Y9DataCatalog;
 import net.risesoft.y9public.manager.resource.Y9DataCatalogManager;
 import net.risesoft.y9public.repository.resource.Y9DataCatalogRepository;
@@ -54,12 +57,20 @@ public class Y9DataCatalogManagerImpl implements Y9DataCatalogManager {
 
     @Override
     public Y9DataCatalog insert(Y9DataCatalog y9DataCatalog) {
-        return y9DataCatalogRepository.save(y9DataCatalog);
+        Y9DataCatalog savedDataCatalog = y9DataCatalogRepository.save(y9DataCatalog);
+
+        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedDataCatalog));
+
+        return savedDataCatalog;
     }
 
     @Override
     @CacheEvict(key = "#y9DataCatalog.id", condition = "#y9DataCatalog.id!=null")
-    public Y9DataCatalog update(Y9DataCatalog y9DataCatalog) {
-        return y9DataCatalogRepository.save(y9DataCatalog);
+    public Y9DataCatalog update(Y9DataCatalog y9DataCatalog, Y9DataCatalog originalDataCatalog) {
+        Y9DataCatalog savedDataCatalog = y9DataCatalogRepository.save(y9DataCatalog);
+
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalDataCatalog, savedDataCatalog));
+
+        return savedDataCatalog;
     }
 }
