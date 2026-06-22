@@ -1,4 +1,4 @@
-﻿plugins {
+﻿kongjplugins {
     id("net.risesoft.y9.conventions-java")
     id("net.risesoft.y9.lombok")
 }
@@ -19,12 +19,12 @@ dependencies {
     api(libs.hibernate.ant)
     api(libs.mysql.connector.j)
     api(libs.mariadb.java.client)
-    api("com.oracle.database.jdbc:ojdbc17")
+    api(libs.com.oracle.database.jdbc.ojdbc17)
     api(libs.postgresql)
-    api(libs.dameng.dmdialect.hibernate62)
-    api(libs.dameng.dmjdbcdriver18)
+    api(libs.dameng.dmdialect.hibernate66)
+    api(libs.dameng.dmjdbcdriver11)
     api(libs.oceanbase.client)
-    
+
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 }
 

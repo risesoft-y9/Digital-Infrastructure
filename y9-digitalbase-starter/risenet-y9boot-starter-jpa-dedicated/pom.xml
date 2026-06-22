@@ -59,17 +59,17 @@
 
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc11</artifactId>
+            <artifactId>ojdbc17</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.dameng</groupId>
-            <artifactId>DmDialect-for-hibernate5.6</artifactId>
+            <artifactId>DmDialect-for-hibernate6.6</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.dameng</groupId>
-            <artifactId>DmJdbcDriver18</artifactId>
+            <artifactId>DmJdbcDriver11</artifactId>
         </dependency>
 
         <dependency>

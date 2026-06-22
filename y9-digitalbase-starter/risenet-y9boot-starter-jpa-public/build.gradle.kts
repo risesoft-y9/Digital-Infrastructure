@@ -14,12 +14,12 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-data-jpa")
     api(libs.mysql.connector.j)
     api(libs.mariadb.java.client)
-    api("com.oracle.database.jdbc:ojdbc17")
+    api(libs.com.oracle.database.jdbc.ojdbc17)
     api(libs.postgresql)
-    api(libs.dameng.dmdialect.hibernate62)
-    api(libs.dameng.dmjdbcdriver18)
+    api(libs.dameng.dmdialect.hibernate66)
+    api(libs.dameng.dmjdbcdriver11)
     api(libs.kingbase.kingbase8)
-    api(libs.kingbase.kesdialect.hibernate4)
+    api(libs.kingbase.kesdialect.hibernate62)
     api(libs.oceanbase.client)
 }
 
