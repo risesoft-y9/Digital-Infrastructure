@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.model.platform.resource.App;
 import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.model.platform.resource.VueMenu;
@@ -100,4 +101,18 @@ public interface PositionResourceApi {
     Y9Result<List<Resource>> listSubResources(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam(name = "resourceId", required = false) String resourceId);
+
+    /**
+     * 根据人员id和操作类型，获取有权限的应用列表
+     *
+     * @param tenantId 租户id
+     * @param positionId 岗位id
+     * @param authority 操作类型 {@link AuthorityEnum}
+     * @return {@code Y9Result<List<App>>} 通用请求返回对象 - data 是应用列表
+     * @since 9.6.0
+     */
+    @GetMapping("/listApps")
+    Y9Result<List<App>> listApps(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority);
+
 }

@@ -1,4 +1,4 @@
-package net.risesoft.api.permission;
+package net.risesoft.api.permission.cache;
 
 import java.util.ArrayList;
 import java.util.List;

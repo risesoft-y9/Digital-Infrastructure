@@ -1,4 +1,4 @@
-package net.risesoft.api.permission;
+package net.risesoft.api.permission.cache;
 
 import java.util.List;
 
@@ -13,73 +13,71 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.api.platform.permission.cache.PersonRoleApi;
+import net.risesoft.api.platform.permission.cache.PositionRoleApi;
 import net.risesoft.model.platform.Role;
-import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.Position;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.permission.cache.Y9PersonToRoleService;
+import net.risesoft.service.permission.cache.Y9PositionToRoleService;
 import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
- * 人员角色组件
+ * 岗位角色组件
  *
- * @author dingzhaojun
- * @author qinman
- * @author mengjuhua
- * @date 2022/2/10
+ * @author shidaobang
+ * @date 2022/11/11
  * @since 9.6.0
  */
 @Primary
 @Validated
 @RestController
-@RequestMapping(value = "/services/rest/v1/personRole", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/services/rest/v1/positionRole", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-public class PersonRoleApiImpl implements PersonRoleApi {
+public class PositionRoleApiImpl implements PositionRoleApi {
 
-    private final Y9PersonToRoleService y9PersonToRoleService;
+    private final Y9PositionToRoleService y9PositionToRoleService;
 
     /**
-     * 根据人员id判断该人员是否拥有roleName这个公共角色
+     * 根据岗位id判断该岗位是否拥有roleName这个公共角色
      *
      * @param tenantId 租户id
      * @param roleName 角色名称
-     * @param personId 人员id
+     * @param positionId 岗位id
      * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否拥有角色
      * @since 9.6.0
      */
     @Override
     public Y9Result<Boolean> hasPublicRole(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId) {
+        @RequestParam("roleName") @NotBlank String roleName, @RequestParam("positionId") @NotBlank String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result.success(y9PersonToRoleService.hasPublicRole(personId, roleName));
+        return Y9Result.success(y9PositionToRoleService.hasPublicRole(positionId, roleName));
     }
 
     /**
-     * 判断人员是否拥有角色
+     * 判断岗位是否拥有角色
      *
      * @param tenantId 租户id
      * @param roleId 角色id
-     * @param personId 人员id
+     * @param positionId 岗位id
      * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否拥有角色
      * @since 9.6.0
      */
     @Override
     public Y9Result<Boolean> hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("personId") @NotBlank String personId) {
+        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("positionId") @NotBlank String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result.success(y9PersonToRoleService.hasRole(personId, roleId));
+        return Y9Result.success(y9PositionToRoleService.hasRole(positionId, roleId));
     }
 
     /**
-     * 根据人员id判断该人员是否拥有 roleName 这个角色
+     * 根据岗位id判断该岗位是否拥有 roleName 这个角色
      *
      * @param tenantId 租户id
      * @param systemName 系统标识
      * @param properties 角色扩展属性
      * @param roleName 角色名称
-     * @param personId 人员id
+     * @param positionId 岗位id
      * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否拥有角色
      * @since 9.6.0
      */
@@ -87,58 +85,56 @@ public class PersonRoleApiImpl implements PersonRoleApi {
     public Y9Result<Boolean> hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("systemName") @NotBlank String systemName,
         @RequestParam(value = "properties", required = false) String properties,
-        @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId) {
+        @RequestParam("roleName") @NotBlank String roleName, @RequestParam("positionId") @NotBlank String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result.success(y9PersonToRoleService.hasRole(personId, systemName, roleName, properties));
+        return Y9Result.success(y9PositionToRoleService.hasRole(positionId, systemName, roleName, properties));
     }
 
     /**
-     * 判断人员是否拥有 customId 对应的角色
+     * 判断岗位是否拥有 customId 对应的角色
      *
      * @param tenantId 租户id
-     * @param personId 人员id
+     * @param positionId 岗位id
      * @param customId 自定义id
      * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否拥有角色
      * @since 9.6.0
      */
     @Override
     public Y9Result<Boolean> hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId) {
+        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result.success(y9PersonToRoleService.hasRoleByCustomId(personId, customId));
+        return Y9Result.success(y9PositionToRoleService.hasRoleByCustomId(positionId, customId));
     }
 
     /**
-     * 获取拥有角色的所有人员（不包含禁用）集合
+     * 获取拥有角色的所有岗位（不包含禁用）集合
      *
      * @param tenantId 租户id
      * @param roleId 角色唯一标识
-     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
-     * @since 9.6.0
+     * @return {@code Y9Result<List<Position>>} 通用请求返回对象 - data 是岗位对象集合
+     * @since 9.6.8
      */
     @Override
-    public Y9Result<List<Person>> listPersonsByRoleId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("roleId") @NotBlank String roleId) {
+    public Y9Result<List<Position>> listPositionsByRoleId(String tenantId, String roleId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result.success(y9PersonToRoleService.listPersonsByRoleId(roleId, Boolean.FALSE));
+        return Y9Result.success(y9PositionToRoleService.listPositionsByRoleId(roleId, Boolean.FALSE));
     }
 
     /**
-     * 获取人员所拥有的角色集合
+     * 获取岗位所拥有的角色集合
      *
      * @param tenantId 租户id
-     * @param personId 人员id
+     * @param positionId 岗位id
      * @return {@code Y9Result<List<Role>>} 通用请求返回对象 - data 是角色集合
-     * @since 9.6.0
+     * @since 9.6.8
      */
     @Override
-    public Y9Result<List<Role>> listRolesByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId) {
+    public Y9Result<List<Role>> listRolesByPositionId(String tenantId, String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result.success(y9PersonToRoleService.listRolesByPersonId(personId));
+        return Y9Result.success(y9PositionToRoleService.listRolesByPositionId(positionId));
     }
 }

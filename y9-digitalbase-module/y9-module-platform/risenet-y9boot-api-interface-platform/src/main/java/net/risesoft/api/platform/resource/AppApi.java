@@ -61,32 +61,6 @@ public interface AppApi {
         @RequestParam("customId") @NotBlank String customId);
 
     /**
-     * 根据人员id和操作类型，获取有权限的应用列表
-     *
-     * @param tenantId 租户id
-     * @param personId 人员id
-     * @param authority 操作类型(如：BROWSE、ADMIN)
-     * @return {@code Y9Result<List<App>>} 通用请求返回对象 - data 是有权限的应用列表
-     * @since 9.6.0
-     */
-    @GetMapping("/listAccessAppForPerson")
-    Y9Result<List<App>> listAccessAppForPerson(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority);
-
-    /**
-     * 根据人员id和操作类型，获取有权限的应用列表
-     *
-     * @param tenantId 租户id
-     * @param positionId 岗位id
-     * @param authority 操作类型 {@link AuthorityEnum}
-     * @return {@code Y9Result<List<App>>} 通用请求返回对象 - data 是应用列表
-     * @since 9.6.0
-     */
-    @GetMapping("/listAccessAppForPosition")
-    Y9Result<List<App>> listAccessAppForPosition(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority);
-
-    /**
      * 根据 customId ，获取应用列表
      *
      * @param customId customId

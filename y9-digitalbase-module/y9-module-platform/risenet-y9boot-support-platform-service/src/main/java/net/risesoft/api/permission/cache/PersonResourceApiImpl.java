@@ -1,10 +1,11 @@
-package net.risesoft.api.permission;
+package net.risesoft.api.permission.cache;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
+import net.risesoft.api.permission.VueMenuBuilder;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -14,19 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.api.platform.permission.cache.PositionResourceApi;
+import net.risesoft.api.platform.permission.cache.PersonResourceApi;
 import net.risesoft.enums.platform.org.IdentityTypeEnum;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
-import net.risesoft.enums.platform.resource.ResourceTypeEnum;
+import net.risesoft.model.platform.resource.App;
 import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.model.platform.resource.VueMenu;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.permission.cache.Y9PositionToResourceService;
+import net.risesoft.service.permission.cache.Y9PersonToResourceService;
 import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
- * 岗位资源权限组件
+ * 人员资源权限查看组件
  *
  * @author dingzhaojun
  * @author qinman
@@ -37,18 +38,18 @@ import net.risesoft.y9.Y9LoginUserHolder;
 @Primary
 @Validated
 @RestController
-@RequestMapping(value = "/services/rest/v1/positionResource", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/services/rest/v1/personResource", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-public class PositionResourceApiImpl implements PositionResourceApi {
+public class PersonResourceApiImpl implements PersonResourceApi {
 
-    private final Y9PositionToResourceService y9PositionToResourceService;
+    private final Y9PersonToResourceService y9PersonToResourceService;
     private final VueMenuBuilder vueMenuBuilder;
 
     /**
-     * 判断岗位对资源是否有指定的操作权限
+     * 判断人员对资源是否有指定的操作权限
      *
      * @param tenantId 租户id
-     * @param positionId 岗位id
+     * @param personId 人员id
      * @param resourceId 资源id
      * @param authority 权限类型 {@link AuthorityEnum}
      * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否有权限
@@ -56,18 +57,18 @@ public class PositionResourceApiImpl implements PositionResourceApi {
      */
     @Override
     public Y9Result<Boolean> hasPermission(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionId") @NotBlank String positionId,
-        @RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("authority") AuthorityEnum authority) {
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("resourceId") @NotBlank String resourceId,
+        @RequestParam("authority") AuthorityEnum authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result.success(y9PositionToResourceService.hasPermission(positionId, resourceId, authority));
+        return Y9Result.success(y9PersonToResourceService.hasPermission(personId, resourceId, authority));
     }
 
     /**
-     * 判断岗位对 customId 对应的资源是否有指定的操作权限
+     * 判断人员对 customId 对应的资源是否有指定的操作权限
      *
      * @param tenantId 租户id
-     * @param positionId 岗位id
+     * @param personId 人员id
      * @param customId 自定义id
      * @param authority 权限类型 {@link AuthorityEnum}
      * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否有权限
@@ -75,40 +76,40 @@ public class PositionResourceApiImpl implements PositionResourceApi {
      */
     @Override
     public Y9Result<Boolean> hasPermissionByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId,
         @RequestParam("authority") AuthorityEnum authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result.success(y9PositionToResourceService.hasPermissionByCustomId(positionId, customId, authority));
+        return Y9Result.success(y9PersonToResourceService.hasPermissionByCustomId(personId, customId, authority));
     }
 
     /**
-     * 递归获得某一资源下，岗位有相应权限的菜单和按钮（树形）
+     * 递归获得某一资源下，人员有相应权限的菜单和按钮（树形）
      *
      * @param tenantId 租户id
-     * @param positionId 人员id
+     * @param personId 人员id
      * @param authority 权限类型 {@link AuthorityEnum}
      * @param resourceId 资源id
      * @return {@code Y9Result<List<VueMenu>>} 通用请求返回对象 - data 是有权限的菜单和按钮（树形）
-     * @since 9.6.8
+     * @since 9.6.0
      */
     @Override
     public Y9Result<List<VueMenu>> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam("resourceId") @NotBlank String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<VueMenu> vueMenuList = new ArrayList<>();
-        vueMenuBuilder.buildVueMenus(IdentityTypeEnum.POSITION, positionId, authority, resourceId, vueMenuList);
+        vueMenuBuilder.buildVueMenus(IdentityTypeEnum.PERSON, personId, authority, resourceId, vueMenuList);
 
         return Y9Result.success(vueMenuList);
     }
 
     /**
-     * 获得某一资源下，岗位有相应操作权限的菜单资源集合
+     * 获得某一资源下，人员有相应操作权限的菜单资源集合
      *
      * @param tenantId 租户id
-     * @param positionId 岗位id
+     * @param personId 人员id
      * @param authority 权限类型 {@link AuthorityEnum}
      * @param resourceId 资源id
      * @return {@code Y9Result<List<Menu>>} 通用请求返回对象 - data 是有权限的菜单资源集合
@@ -116,20 +117,18 @@ public class PositionResourceApiImpl implements PositionResourceApi {
      */
     @Override
     public Y9Result<List<Menu>> listSubMenus(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam("resourceId") @NotBlank String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Menu> menuList =
-            y9PositionToResourceService.listSubMenus(positionId, resourceId, ResourceTypeEnum.MENU, authority);
-        return Y9Result.success(menuList);
+        return Y9Result.success(y9PersonToResourceService.listSubMenus(personId, resourceId, authority));
     }
 
     /**
-     * 获得某一资源下，岗位有相应操作权限的子资源集合
+     * 获得某一资源下，人员有相应操作权限的子资源集合
      *
      * @param tenantId 租户id
-     * @param positionId 岗位id
+     * @param personId 人员id
      * @param authority 权限类型 {@link AuthorityEnum}
      * @param resourceId 资源id
      * @return {@code Y9Result<List<Resource>>} 有权限的子资源集合
@@ -137,12 +136,27 @@ public class PositionResourceApiImpl implements PositionResourceApi {
      */
     @Override
     public Y9Result<List<Resource>> listSubResources(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
-        @RequestParam(name = "resourceId", required = false) String resourceId) {
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
+        @RequestParam("resourceId") @NotBlank String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Resource> returnResourceList =
-            y9PositionToResourceService.listSubResources(positionId, resourceId, authority);
-        return Y9Result.success(returnResourceList);
+        return Y9Result.success(y9PersonToResourceService.listSubResources(personId, resourceId, authority));
+    }
+
+    /**
+     * 根据人员id和操作类型，获取有权限的应用列表
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @param authority 操作类型(如：BROWSE、ADMIN)
+     * @return {@code Y9Result<List<App>>} 通用请求返回对象 - data 是有权限的应用列表
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<List<App>> listApps(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        return Y9Result.success(y9PersonToResourceService.listAppsByAuthority(personId, authority));
     }
 }
