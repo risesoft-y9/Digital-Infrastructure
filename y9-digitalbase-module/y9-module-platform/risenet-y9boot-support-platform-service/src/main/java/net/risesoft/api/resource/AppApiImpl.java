@@ -104,40 +104,6 @@ public class AppApiImpl implements AppApi {
     }
 
     /**
-     * 根据人员id和操作类型，获取有权限的应用列表
-     *
-     * @param tenantId 租户id
-     * @param personId 人员id
-     * @param authority 操作类型(如：BROWSE、ADMIN)
-     * @return {@code Y9Result<List<App>>} 通用请求返回对象 - data 是有权限的应用列表
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<List<App>> listAccessAppForPerson(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        return Y9Result.success(y9PersonToResourceService.listAppsByAuthority(personId, authority));
-    }
-
-    /**
-     * 根据人员id和操作类型，获取有权限的应用列表
-     *
-     * @param tenantId 租户id
-     * @param positionId 岗位id
-     * @param authority 操作类型 {@link AuthorityEnum}
-     * @return {@code Y9Result<List<App>>} 通用请求返回对象 - data 是应用列表
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<List<App>> listAccessAppForPosition(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        return Y9Result.success(y9PositionToResourceService.listAppsByAuthority(positionId, authority));
-    }
-
-    /**
      * 根据 customId ，获取应用列表
      *
      * @param customId customId
