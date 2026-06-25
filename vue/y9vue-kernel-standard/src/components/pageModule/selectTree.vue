@@ -31,6 +31,7 @@
 
     <y9Tree
         ref="y9TreeRef"
+        class="select-tree-content"
         :checkStrictly="checkStrictly"
         :data="alreadyLoadTreeData"
         :defaultCheckedKeys="defaultCheckedKeys"
@@ -348,12 +349,15 @@
             const data = res.data;
             //格式化tree数据
             await formatLazyTreeData(data);
-            // nodeType 为APP 的parentId 为空
-            // await data?.map((item) => {
-            //     if (item.nodeType == 'APP') {
-            //         item.parentId = '';
-            //     }
-            // });
+
+            await data?.map((item) => {
+                let child = data.filter((resultItem) => item.parentId === resultItem.id);
+                if (child.length == 0) {
+                    // 处理查询的数据不存在根节点时，找到这部分数据的顶节点作为树的根节点
+                    item.parentId = '';
+                }
+            });
+
             //根据搜索结果转换成tree结构显示出来
             alreadyLoadTreeData.value = transformTreeBySearchResult(data);
 
@@ -492,6 +496,12 @@
                 border: 1px solid var(--el-color-primary-light-7);
             }
         }
+    }
+    // 树内容区域高度限制，超过屏幕80%显示滚动条
+    .select-tree-content {
+        max-height: calc(70vh - 280px);
+        min-height: 200px;
+        overflow-y: auto;
     }
 
     :deep(.node-title) {
