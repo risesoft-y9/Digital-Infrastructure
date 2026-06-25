@@ -218,7 +218,7 @@ public class Y9UserRelatedEventListener {
         y9User.setEmail(person.getEmail());
         y9User.setMobile(person.getMobile());
         y9User.setSex(person.getSex());
-        y9User.setCaid(person.getCaid());
+        y9User.setCaid(person.getCaId());
         y9User.setWeixinId(person.getWeixinId());
         y9User.setGuidPath(person.getGuidPath());
         y9User.setOrderedPath(person.getOrderedPath());
@@ -301,7 +301,7 @@ public class Y9UserRelatedEventListener {
         y9User.setEmail(person.getEmail());
         y9User.setMobile(person.getMobile());
         y9User.setSex(person.getSex());
-        y9User.setCaid(person.getCaid());
+        y9User.setCaid(person.getCaId());
         y9User.setWeixinId(person.getWeixinId());
         y9User.setGuidPath(person.getGuidPath());
         y9User.setOrderedPath(person.getOrderedPath());

@@ -79,7 +79,7 @@ public class Y9User extends BaseEntity {
     /** ca认证号 */
     @Column(name = "CAID", length = 255)
     @Comment("ca认证号")
-    private String caid;
+    private String caId;
 
     /** 邮箱 */
     @Column(name = "EMAIL", length = 255)

@@ -78,8 +78,8 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     private final Y9SettingService y9SettingService;
 
     @Override
-    public boolean isCaidAvailable(String personId, String caid) {
-        List<Y9Person> y9PersonList = y9PersonRepository.findByCaid(caid);
+    public boolean isCaidAvailable(String personId, String caId) {
+        List<Y9Person> y9PersonList = y9PersonRepository.findByCaId(caId);
         if (y9PersonList.isEmpty()) {
             return true;
         }
@@ -218,7 +218,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     public Optional<Person> findByCaId(final String caId) {
-        return y9PersonRepository.findByCaidAndOriginalTrue(caId).map(PlatformModelConvertUtil::y9PersonToPerson);
+        return y9PersonRepository.findByCaIdAndOriginalTrue(caId).map(PlatformModelConvertUtil::y9PersonToPerson);
     }
 
     @Override

@@ -116,7 +116,7 @@
             },
             {
                 type: 'input',
-                prop: 'caid',
+                prop: 'caId',
                 label: computed(() => t('CA认证码'))
             },
             {

@@ -33,7 +33,7 @@ public class Person extends OrgUnit implements Serializable {
     /**
      * CA认证码
      */
-    private String caid;
+    private String caId;
 
     /**
      * 邮箱

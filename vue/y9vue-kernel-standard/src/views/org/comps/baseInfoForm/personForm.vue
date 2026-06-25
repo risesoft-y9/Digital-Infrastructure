@@ -146,7 +146,7 @@
             parentId: '',
             name: '', //人员名称
             loginName: '', //登录名称
-            caid: '', //认证码
+            caId: '', //认证码
             wxId: '', //微信唯一标识
             sex: t('男'), //性别,
             // userType:"",//人员类型
@@ -232,12 +232,12 @@
                 type: 'text',
                 type1: 'input', //自定义字段-编辑时显示的类型
                 type2: 'text', //自定义字段-非编辑状态显示文本类型
-                prop: 'caid',
+                prop: 'caId',
                 label: computed(() => t('CA认证码')),
                 props: {
                     render: () => {
                         //text类型渲染的内容
-                        return h('span', props.currInfo?.caid);
+                        return h('span', props.currInfo?.caId);
                     }
                 }
             },
