@@ -72,4 +72,5 @@ public interface Y9PersonToResourceRepository extends JpaRepository<Y9PersonToRe
     Page<String> findResourceIdByPersonIdAndAuthorityAndResourceType(String personId, AuthorityEnum authority,
         ResourceTypeEnum resourceTypeEnum, Pageable pageable);
 
+    List<Y9PersonToResource> findByPersonIdAndParentResourceIdIsNullAndAuthority(String personId, AuthorityEnum authority);
 }

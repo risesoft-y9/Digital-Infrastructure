@@ -39,7 +39,7 @@ public interface CompositeResourceManager {
      * @param customId 自定义id
      * @return {@code List<Y9ResourceBase>}
      */
-    List<Y9ResourceBase> findByCustomId(String customId);
+    Y9ResourceBase getByCustomId(String customId);
 
     /**
      * 根据资源id和资源类型查找

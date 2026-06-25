@@ -47,4 +47,6 @@ public interface Y9DataCatalogRepository extends JpaRepository<Y9DataCatalog, St
 
     Optional<Y9DataCatalog> findByTenantIdAndTreeTypeAndParentIdIsNullAndName(String tenantId, String treeType,
         String dataCatalogName);
+
+    Optional<Y9DataCatalog> findByCustomId(String customId);
 }

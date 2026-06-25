@@ -141,4 +141,6 @@ public interface Y9AppService extends ResourceCommonService<App> {
     App verifyApp(String id, boolean checked, String verifyUserName);
 
     void deleteAfterCheck(String id);
+
+    Optional<App> findByCustomId(String customId);
 }

@@ -28,7 +28,7 @@ public interface Y9AppRepository extends JpaRepository<Y9App, String>, JpaSpecif
 
     List<Y9App> findByCheckedOrderByCreateTime(Boolean checked);
 
-    List<Y9App> findByCustomId(String customId);
+    Optional<Y9App> findByCustomId(String customId);
 
     List<Y9App> findByEnabledOrderByTabIndex(Boolean enabled);
 

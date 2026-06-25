@@ -2,15 +2,12 @@ package net.risesoft.service.permission.cache;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.model.platform.permission.cache.PositionToResource;
 import net.risesoft.model.platform.resource.App;
 import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
-import net.risesoft.pojo.Y9PageQuery;
 
 /**
  * @author dingzhaojun
@@ -121,15 +118,7 @@ public interface Y9PositionToResourceService {
      */
     List<Resource> listSubResources(String positionId, String resourceId, AuthorityEnum authority);
 
-    /**
-     * 分页获取岗位有权限的应用列表
-     *
-     * @param positionId 岗位 id
-     * @param authority 权限类型
-     * @param pageQuery 分页查询参数
-     * @return {@code Page<String>}
-     */
-    Page<String> pageAppIdByAuthority(String positionId, AuthorityEnum authority, Y9PageQuery pageQuery);
+    List<Resource> listSubResourcesByCustomId(String positionId, String customId, AuthorityEnum authority);
 
     void deleteByAuthorizationId(String authorizationId);
 

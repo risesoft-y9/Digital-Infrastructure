@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.model.platform.resource.App;
-import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.model.platform.resource.VueMenu;
 import net.risesoft.pojo.Y9Result;
@@ -73,19 +72,19 @@ public interface PositionResourceApi {
         @RequestParam("resourceId") @NotBlank String resourceId);
 
     /**
-     * 获得某一资源下，岗位有相应操作权限的菜单资源集合
+     * 递归获得 customId 对应的某一资源下，岗位有相应权限的菜单和按钮（树形）
      *
      * @param tenantId 租户id
-     * @param positionId 岗位id
+     * @param positionId 人员id
      * @param authority 权限类型 {@link AuthorityEnum}
-     * @param resourceId 资源id
-     * @return {@code Y9Result<List<Menu>>} 通用请求返回对象 - data 是有权限的菜单资源集合
-     * @since 9.6.0
+     * @param customId 自定义id
+     * @return {@code Y9Result<List<VueMenu>>} 通用请求返回对象 - data 是有权限的菜单和按钮（树形）
+     * @since 9.6.10
      */
-    @GetMapping("/listSubMenus")
-    Y9Result<List<Menu>> listSubMenus(@RequestParam("tenantId") @NotBlank String tenantId,
+    @GetMapping("/listMenusRecursivelyByCustomId")
+    Y9Result<List<VueMenu>> listMenusRecursivelyByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
-        @RequestParam("resourceId") @NotBlank String resourceId);
+        @RequestParam("customId") @NotBlank String customId);
 
     /**
      * 获得某一资源下，岗位有相应操作权限的子资源集合
@@ -103,7 +102,22 @@ public interface PositionResourceApi {
         @RequestParam(name = "resourceId", required = false) String resourceId);
 
     /**
-     * 根据人员id和操作类型，获取有权限的应用列表
+     * 获得 customId 对应的某一资源下，岗位有相应操作权限的子资源集合
+     *
+     * @param tenantId 租户id
+     * @param positionId 岗位id
+     * @param authority 权限类型 {@link AuthorityEnum}
+     * @param customId 自定义id
+     * @return {@code Y9Result<List<Resource>>} 有权限的子资源集合
+     * @since 9.6.10
+     */
+    @GetMapping("/listSubResourcesByCustomId")
+    Y9Result<List<Resource>> listSubResourcesByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
+        @RequestParam("customId") @NotBlank String customId);
+
+    /**
+     * 根据岗位id和操作类型，获取有权限的应用列表
      *
      * @param tenantId 租户id
      * @param positionId 岗位id

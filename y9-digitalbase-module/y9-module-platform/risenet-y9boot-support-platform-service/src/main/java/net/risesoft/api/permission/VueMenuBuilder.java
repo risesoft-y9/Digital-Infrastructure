@@ -18,6 +18,8 @@ import net.risesoft.model.platform.resource.VueButton;
 import net.risesoft.model.platform.resource.VueMenu;
 import net.risesoft.service.permission.cache.Y9PersonToResourceService;
 import net.risesoft.service.permission.cache.Y9PositionToResourceService;
+import net.risesoft.y9public.entity.resource.Y9ResourceBase;
+import net.risesoft.y9public.manager.resource.CompositeResourceManager;
 import net.risesoft.y9public.service.resource.Y9MenuService;
 import net.risesoft.y9public.service.resource.Y9OperationService;
 
@@ -31,6 +33,8 @@ import net.risesoft.y9public.service.resource.Y9OperationService;
 @Component
 @RequiredArgsConstructor
 public class VueMenuBuilder {
+
+    private final CompositeResourceManager compositeResourceManager;
 
     private final Y9MenuService y9MenuService;
     private final Y9OperationService y9OperationService;
@@ -124,5 +128,11 @@ public class VueMenuBuilder {
                 vueMenuList.add(vueMenu);
             }
         }
+    }
+
+    public void buildVueMenusByCustomId(IdentityTypeEnum identityTypeEnum, String personId, AuthorityEnum authority,
+        String customId, List<VueMenu> vueMenuList) {
+        Y9ResourceBase y9ResourceBase = compositeResourceManager.getByCustomId(customId);
+        buildVueMenus(identityTypeEnum, personId, authority, y9ResourceBase.getId(), vueMenuList);
     }
 }

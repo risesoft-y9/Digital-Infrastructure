@@ -132,7 +132,9 @@ public class Y9AppServiceImpl implements Y9AppService {
 
     @Override
     public List<App> listByCustomId(String customId) {
-        List<Y9App> y9AppList = y9AppRepository.findByCustomId(customId);
+        List<Y9App> y9AppList = new ArrayList<>();
+        Optional<Y9App> y9AppOptional = y9AppRepository.findByCustomId(customId);
+        y9AppOptional.ifPresent(y9AppList::add);
         return entityToModel(y9AppList);
     }
 
@@ -238,6 +240,11 @@ public class Y9AppServiceImpl implements Y9AppService {
         Y9AssertUtil.isEmpty(y9TenantAppList, ResourceErrorCodeEnum.APP_IS_REGISTERED_BY_TENANT, id);
 
         this.delete(id);
+    }
+
+    @Override
+    public Optional<App> findByCustomId(String customId) {
+        return y9AppRepository.findByCustomId(customId).map(Y9AppServiceImpl::entityToModel);
     }
 
     @Override
