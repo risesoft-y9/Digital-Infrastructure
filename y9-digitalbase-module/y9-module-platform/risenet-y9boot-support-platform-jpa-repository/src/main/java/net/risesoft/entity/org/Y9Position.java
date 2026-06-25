@@ -66,7 +66,7 @@ public class Y9Position extends Y9OrgBase {
     /** 职位名称 */
     @Column(name = "JOB_NAME", length = 255, nullable = false)
     @Comment("职位名称")
-    private String JobName;
+    private String jobName;
 
     /** 排序序列号 */
     @Column(name = "ORDERED_PATH", length = 500)
@@ -104,7 +104,7 @@ public class Y9Position extends Y9OrgBase {
         }
         this.parentId = parent.getId();
         this.jobId = y9Job.getId();
-        this.JobName = y9Job.getName();
+        this.jobName = y9Job.getName();
         this.name = buildName(positionNameTemplate, y9Job.getName(), Collections.emptyList());
         this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.POSITION, this.name, parent.getDn());
         this.guidPath = Y9OrgUtil.buildGuidPath(parent.getGuidPath(), this.id);
@@ -158,7 +158,7 @@ public class Y9Position extends Y9OrgBase {
     }
 
     public void changeJob(Y9Job y9Job, String positionNameTemplate, Y9OrgBase parent, List<Y9Person> y9PersonList) {
-        this.JobName = y9Job.getName();
+        this.jobName = y9Job.getName();
         this.name = buildName(positionNameTemplate, y9Job.getName(), y9PersonList);
         this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.POSITION, this.name, parent.getDn());
     }

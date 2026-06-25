@@ -29,7 +29,7 @@ public class Position extends OrgUnit implements Serializable {
     /**
      * 职位名称
      */
-    private String JobName;
+    private String jobName;
 
     /**
      * 排序序列号

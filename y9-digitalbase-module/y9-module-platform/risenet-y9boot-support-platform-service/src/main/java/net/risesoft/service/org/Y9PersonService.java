@@ -20,13 +20,13 @@ import net.risesoft.y9.exception.Y9NotFoundException;
 public interface Y9PersonService {
 
     /**
-     * 检查caid是否可用
+     * 检查caId是否可用
      *
      * @param personId 人员id
-     * @param caid ca唯一标识
+     * @param caId ca唯一标识
      * @return boolean
      */
-    boolean isCaidAvailable(String personId, String caid);
+    boolean isCaidAvailable(String personId, String caId);
 
     /**
      * 根据personIds和parentId添加人员集合

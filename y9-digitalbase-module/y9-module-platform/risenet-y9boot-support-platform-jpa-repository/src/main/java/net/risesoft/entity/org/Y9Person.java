@@ -68,7 +68,7 @@ public class Y9Person extends Y9OrgBase {
      */
     @Column(name = "CAID", length = 255)
     @Comment("CA认证码")
-    private String caid;
+    private String caId;
 
     /**
      * 电子邮箱

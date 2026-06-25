@@ -39,7 +39,7 @@ public class CreatePersonDTO extends CreateOrgUnitBaseDTO {
     /**
      * CA认证码
      */
-    private String caid;
+    private String caId;
 
     /**
      * 电子邮箱

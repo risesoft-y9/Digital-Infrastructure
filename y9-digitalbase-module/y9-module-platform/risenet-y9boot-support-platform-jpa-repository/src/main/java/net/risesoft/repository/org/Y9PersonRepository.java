@@ -28,7 +28,7 @@ public interface Y9PersonRepository extends JpaRepository<Y9Person, String>, Jpa
 
     Optional<Y9Person> findByLoginNameAndOriginalTrue(String loginName);
 
-    Optional<Y9Person> findByCaidAndOriginalTrue(String caid);
+    Optional<Y9Person> findByCaIdAndOriginalTrue(String caId);
 
     Optional<Y9Person> findByLoginNameAndParentId(String loginName, String parentId);
 
@@ -68,5 +68,5 @@ public interface Y9PersonRepository extends JpaRepository<Y9Person, String>, Jpa
     @Query("select o.id from Y9Person o where o.dn like %?1%")
     List<String> findIdByDnContaining(String name);
 
-    List<Y9Person> findByCaid(String caid);
+    List<Y9Person> findByCaId(String caId);
 }
