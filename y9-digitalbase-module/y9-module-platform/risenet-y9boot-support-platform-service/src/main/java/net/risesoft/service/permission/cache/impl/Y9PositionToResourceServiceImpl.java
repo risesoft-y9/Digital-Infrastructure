@@ -8,9 +8,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +24,6 @@ import net.risesoft.model.platform.permission.cache.PositionToResource;
 import net.risesoft.model.platform.resource.App;
 import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
-import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.permission.cache.position.Y9PositionToResourceRepository;
 import net.risesoft.service.permission.cache.Y9PositionToResourceService;
 import net.risesoft.util.PlatformModelConvertUtil;
@@ -101,9 +97,8 @@ public class Y9PositionToResourceServiceImpl implements Y9PositionToResourceServ
 
     @Override
     public boolean hasPermissionByCustomId(String positionId, String customId, AuthorityEnum authority) {
-        List<Y9ResourceBase> y9ResourceBaseList = compositeResourceManager.findByCustomId(customId);
-        return y9ResourceBaseList.stream()
-            .anyMatch(y9ResourceBase -> hasPermission(positionId, y9ResourceBase.getId(), authority));
+        Y9ResourceBase y9ResourceBase = compositeResourceManager.getByCustomId(customId);
+        return hasPermission(positionId, y9ResourceBase.getId(), authority);
     }
 
     @Override
@@ -116,10 +111,10 @@ public class Y9PositionToResourceServiceImpl implements Y9PositionToResourceServ
     private List<Y9PositionToResource> list(String positionId, String parentResourceId, AuthorityEnum authority) {
         if (StringUtils.isBlank(parentResourceId)) {
             List<Y9PositionToResource> list = new ArrayList<>();
-            list.addAll(y9PositionToResourceRepository
-                .findByPositionIdAndParentResourceIdIsNullAndAuthority(positionId, authority));
-            list.addAll(y9PositionToResourceRepository
-                .findByPositionIdAndParentResourceIdAndAuthority(positionId, "", authority));
+            list.addAll(y9PositionToResourceRepository.findByPositionIdAndParentResourceIdIsNullAndAuthority(positionId,
+                authority));
+            list.addAll(y9PositionToResourceRepository.findByPositionIdAndParentResourceIdAndAuthority(positionId, "",
+                authority));
             return list;
         }
         return y9PositionToResourceRepository.findByPositionIdAndParentResourceIdAndAuthority(positionId,
@@ -130,8 +125,8 @@ public class Y9PositionToResourceServiceImpl implements Y9PositionToResourceServ
     public List<PositionToResource> list(String positionId, String parentResourceId, ResourceTypeEnum resourceType,
         AuthorityEnum authority) {
         List<Y9PositionToResource> y9PositionToResourceList =
-            y9PositionToResourceRepository.findByPositionIdAndParentResourceIdAndAuthorityAndResourceType(
-                positionId, parentResourceId, authority, resourceType);
+            y9PositionToResourceRepository.findByPositionIdAndParentResourceIdAndAuthorityAndResourceType(positionId,
+                parentResourceId, authority, resourceType);
         return entityToModel(y9PositionToResourceList);
     }
 
@@ -155,13 +150,6 @@ public class Y9PositionToResourceServiceImpl implements Y9PositionToResourceServ
             .sorted()
             .map(y9App -> PlatformModelConvertUtil.convert(y9App, App.class))
             .collect(Collectors.toList());
-    }
-
-    @Override
-    public Page<String> pageAppIdByAuthority(String positionId, AuthorityEnum authority, Y9PageQuery pageQuery) {
-        return y9PositionToResourceRepository.findResourceIdByPositionIdAndAuthorityAndResourceType(
-            positionId, authority, ResourceTypeEnum.APP,
-            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by("resourceId")));
     }
 
     @Override
@@ -190,6 +178,13 @@ public class Y9PositionToResourceServiceImpl implements Y9PositionToResourceServ
             .sorted()
             .map(PlatformModelConvertUtil::resourceBaseToResource)
             .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Resource> listSubResourcesByCustomId(String positionId, String customId, AuthorityEnum authority) {
+        Y9ResourceBase y9ResourceBase = compositeResourceManager.getByCustomId(customId);
+        return this.listSubResources(positionId, y9ResourceBase.getId(), authority);
     }
 
     @Override

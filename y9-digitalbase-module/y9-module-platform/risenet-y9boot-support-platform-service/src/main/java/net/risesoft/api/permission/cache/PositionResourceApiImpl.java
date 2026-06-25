@@ -5,22 +5,21 @@ import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
-import net.risesoft.api.permission.VueMenuBuilder;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.permission.VueMenuBuilder;
 import net.risesoft.api.platform.permission.cache.PositionResourceApi;
 import net.risesoft.enums.platform.org.IdentityTypeEnum;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
-import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.model.platform.resource.App;
-import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.model.platform.resource.VueMenu;
 import net.risesoft.pojo.Y9Result;
@@ -107,24 +106,26 @@ public class PositionResourceApiImpl implements PositionResourceApi {
     }
 
     /**
-     * 获得某一资源下，岗位有相应操作权限的菜单资源集合
+     * 递归获得 customId 对应的某一资源下，岗位有相应权限的菜单和按钮（树形）
      *
      * @param tenantId 租户id
-     * @param positionId 岗位id
+     * @param positionId 人员id
      * @param authority 权限类型 {@link AuthorityEnum}
-     * @param resourceId 资源id
-     * @return {@code Y9Result<List<Menu>>} 通用请求返回对象 - data 是有权限的菜单资源集合
-     * @since 9.6.0
+     * @param customId 自定义id
+     * @return {@code Y9Result<List<VueMenu>>} 通用请求返回对象 - data 是有权限的菜单和按钮（树形）
+     * @since 9.6.10
      */
+    @GetMapping("/listMenusRecursivelyByCustomId")
     @Override
-    public Y9Result<List<Menu>> listSubMenus(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<VueMenu>> listMenusRecursivelyByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
-        @RequestParam("resourceId") @NotBlank String resourceId) {
+        @RequestParam("customId") @NotBlank String customId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Menu> menuList =
-            y9PositionToResourceService.listSubMenus(positionId, resourceId, ResourceTypeEnum.MENU, authority);
-        return Y9Result.success(menuList);
+        List<VueMenu> vueMenuList = new ArrayList<>();
+        vueMenuBuilder.buildVueMenusByCustomId(IdentityTypeEnum.POSITION, positionId, authority, customId, vueMenuList);
+
+        return Y9Result.success(vueMenuList);
     }
 
     /**
@@ -149,7 +150,28 @@ public class PositionResourceApiImpl implements PositionResourceApi {
     }
 
     /**
-     * 根据人员id和操作类型，获取有权限的应用列表
+     * 获得 customId 对应的某一资源下，岗位有相应操作权限的子资源集合
+     *
+     * @param tenantId 租户id
+     * @param positionId 岗位id
+     * @param authority 权限类型 {@link AuthorityEnum}
+     * @param customId 自定义id
+     * @return {@code Y9Result<List<Resource>>} 有权限的子资源集合
+     * @since 9.6.10
+     */
+    @Override
+    public Y9Result<List<Resource>> listSubResourcesByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
+        @RequestParam("customId") @NotBlank String customId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        List<Resource> returnResourceList =
+            y9PositionToResourceService.listSubResourcesByCustomId(positionId, customId, authority);
+        return Y9Result.success(returnResourceList);
+    }
+
+    /**
+     * 根据岗位id和操作类型，获取有权限的应用列表
      *
      * @param tenantId 租户id
      * @param positionId 岗位id

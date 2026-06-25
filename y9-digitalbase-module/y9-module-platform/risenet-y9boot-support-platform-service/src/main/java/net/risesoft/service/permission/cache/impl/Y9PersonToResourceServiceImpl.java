@@ -1,14 +1,13 @@
 package net.risesoft.service.permission.cache.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +23,6 @@ import net.risesoft.model.platform.permission.cache.PersonToResource;
 import net.risesoft.model.platform.resource.App;
 import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
-import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.permission.cache.person.Y9PersonToResourceRepository;
 import net.risesoft.service.permission.cache.Y9PersonToResourceService;
 import net.risesoft.util.PlatformModelConvertUtil;
@@ -90,36 +88,41 @@ public class Y9PersonToResourceServiceImpl implements Y9PersonToResourceService 
 
     @Override
     public boolean hasPermission(String personId, String resourceId, AuthorityEnum authority) {
-        return !y9PersonToResourceRepository
-            .findByPersonIdAndResourceIdAndAuthority(personId, resourceId, authority)
+        return !y9PersonToResourceRepository.findByPersonIdAndResourceIdAndAuthority(personId, resourceId, authority)
             .isEmpty();
     }
 
     @Override
     public boolean hasPermissionByCustomId(String personId, String resourceCustomId, AuthorityEnum authority) {
-        List<Y9ResourceBase> y9ResourceBaseList = compositeResourceManager.findByCustomId(resourceCustomId);
-        return y9ResourceBaseList.stream()
-            .anyMatch(y9ResourceBase -> hasPermission(personId, y9ResourceBase.getId(), authority));
+        Y9ResourceBase y9ResourceBase = compositeResourceManager.getByCustomId(resourceCustomId);
+        return hasPermission(personId, y9ResourceBase.getId(), authority);
     }
 
     @Override
     public List<PersonToResource> list(String personId) {
-        List<Y9PersonToResource> y9PersonToResourceList =
-            y9PersonToResourceRepository.findByPersonId(personId);
+        List<Y9PersonToResource> y9PersonToResourceList = y9PersonToResourceRepository.findByPersonId(personId);
         return entityToModel(y9PersonToResourceList);
     }
 
     private List<Y9PersonToResource> list(String personId, String parentResourceId, AuthorityEnum authority) {
-        return y9PersonToResourceRepository.findByPersonIdAndParentResourceIdAndAuthority(personId,
-            parentResourceId, authority);
+        if (StringUtils.isEmpty(parentResourceId)) {
+            List<Y9PersonToResource> list = new ArrayList<>();
+            list.addAll(
+                y9PersonToResourceRepository.findByPersonIdAndParentResourceIdIsNullAndAuthority(personId, authority));
+            list.addAll(
+                y9PersonToResourceRepository.findByPersonIdAndParentResourceIdAndAuthority(personId, "", authority));
+            return list;
+        }
+        return y9PersonToResourceRepository.findByPersonIdAndParentResourceIdAndAuthority(personId, parentResourceId,
+            authority);
     }
 
     @Override
     public List<PersonToResource> list(String personId, String parentResourceId, ResourceTypeEnum resourceType,
         AuthorityEnum authority) {
         List<Y9PersonToResource> y9PersonToResourceList =
-            y9PersonToResourceRepository.findByPersonIdAndParentResourceIdAndAuthorityAndResourceType(
-                personId, parentResourceId, authority, resourceType);
+            y9PersonToResourceRepository.findByPersonIdAndParentResourceIdAndAuthorityAndResourceType(personId,
+                parentResourceId, authority, resourceType);
         return entityToModel(y9PersonToResourceList);
     }
 
@@ -143,13 +146,6 @@ public class Y9PersonToResourceServiceImpl implements Y9PersonToResourceService 
             .sorted()
             .map(y9App -> PlatformModelConvertUtil.convert(y9App, App.class))
             .collect(Collectors.toList());
-    }
-
-    @Override
-    public Page<String> pageAppIdByAuthority(String personId, AuthorityEnum authority, Y9PageQuery pageQuery) {
-        return y9PersonToResourceRepository.findResourceIdByPersonIdAndAuthorityAndResourceType(personId,
-            authority, ResourceTypeEnum.APP,
-            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by("resourceId")));
     }
 
     @Override
@@ -183,6 +179,13 @@ public class Y9PersonToResourceServiceImpl implements Y9PersonToResourceService 
 
     @Override
     @Transactional(readOnly = true)
+    public List<Resource> listSubResourcesByCustomId(String personId, String customId, AuthorityEnum authority) {
+        Y9ResourceBase y9ResourceBase = compositeResourceManager.getByCustomId(customId);
+        return this.listSubResources(personId, y9ResourceBase.getId(), authority);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<Menu> listSubMenus(String personId, String resourceId, AuthorityEnum authority) {
         List<PersonToResource> y9PersonToResourceAndAuthorityList =
             this.list(personId, resourceId, ResourceTypeEnum.MENU, authority);
@@ -199,7 +202,6 @@ public class Y9PersonToResourceServiceImpl implements Y9PersonToResourceService 
         }
         return menuSet.stream().sorted().map(PlatformModelConvertUtil::y9MenuToMenu).collect(Collectors.toList());
     }
-
 
     private List<PersonToResource> entityToModel(List<Y9PersonToResource> y9PersonToResourceList) {
         return PlatformModelConvertUtil.convert(y9PersonToResourceList, PersonToResource.class);

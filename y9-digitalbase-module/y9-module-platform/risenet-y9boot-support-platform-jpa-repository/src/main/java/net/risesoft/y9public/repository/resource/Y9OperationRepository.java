@@ -20,7 +20,7 @@ public interface Y9OperationRepository extends JpaRepository<Y9Operation, String
 
     List<Y9Operation> findByAppId(String appId);
 
-    List<Y9Operation> findByCustomId(String customId);
+    Optional<Y9Operation> findByCustomId(String customId);
 
     List<Y9Operation> findByNameContainingOrderByTabIndex(String name);
 

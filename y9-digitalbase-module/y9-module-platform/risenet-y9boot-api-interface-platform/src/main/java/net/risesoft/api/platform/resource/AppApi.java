@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.model.platform.resource.App;
 import net.risesoft.pojo.Y9Result;
 
@@ -67,8 +66,8 @@ public interface AppApi {
      * @return {@code Y9Result<List<App>>} 通用请求返回对象 - data 是应用列表
      * @since 9.6.0
      */
-    @GetMapping("/listByCustomId")
-    Y9Result<List<App>> listByCustomId(@RequestParam("customId") @NotBlank String customId);
+    @GetMapping("/findByCustomId")
+    Y9Result<App> findByCustomId(@RequestParam("customId") @NotBlank String customId);
 
     /**
      * 根据 systemId ，获取应用列表

@@ -20,14 +20,11 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.api.platform.resource.AppApi;
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
-import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.enums.platform.resource.AppOpenTypeEnum;
 import net.risesoft.enums.platform.resource.AppTypeEnum;
 import net.risesoft.model.platform.System;
 import net.risesoft.model.platform.resource.App;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.permission.cache.Y9PersonToResourceService;
-import net.risesoft.service.permission.cache.Y9PositionToResourceService;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.service.resource.Y9AppService;
@@ -51,9 +48,6 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 @RequiredArgsConstructor
 @Slf4j
 public class AppApiImpl implements AppApi {
-
-    private final Y9PersonToResourceService y9PersonToResourceService;
-    private final Y9PositionToResourceService y9PositionToResourceService;
 
     private final Y9AppService y9AppService;
     private final Y9SystemService y9SystemService;
@@ -111,8 +105,8 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<List<App>> listByCustomId(@RequestParam("customId") @NotBlank String customId) {
-        return Y9Result.success(y9AppService.listByCustomId(customId));
+    public Y9Result<App> findByCustomId(@RequestParam("customId") @NotBlank String customId) {
+        return Y9Result.success(y9AppService.findByCustomId(customId).orElse(null));
     }
 
     /**

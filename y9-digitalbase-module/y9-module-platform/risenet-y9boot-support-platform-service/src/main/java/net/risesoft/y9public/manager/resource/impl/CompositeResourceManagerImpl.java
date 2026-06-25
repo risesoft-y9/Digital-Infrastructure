@@ -105,12 +105,28 @@ public class CompositeResourceManagerImpl implements CompositeResourceManager {
     }
 
     @Override
-    public List<Y9ResourceBase> findByCustomId(String customId) {
-        List<Y9ResourceBase> y9ResourceBaseList = new ArrayList<>();
-        y9ResourceBaseList.addAll(y9AppRepository.findByCustomId(customId));
-        y9ResourceBaseList.addAll(y9MenuRepository.findByCustomId(customId));
-        y9ResourceBaseList.addAll(y9OperationRepository.findByCustomId(customId));
-        return y9ResourceBaseList;
+    public Y9ResourceBase getByCustomId(String customId) {
+        Optional<Y9App> y9AppOptional = y9AppRepository.findByCustomId(customId);
+        if (y9AppOptional.isPresent()) {
+            return y9AppOptional.get();
+        }
+
+        Optional<Y9Menu> y9MenuOptional = y9MenuRepository.findByCustomId(customId);
+        if (y9MenuOptional.isPresent()) {
+            return y9MenuOptional.get();
+        }
+
+        Optional<Y9Operation> y9OperationOptional = y9OperationRepository.findByCustomId(customId);
+        if (y9OperationOptional.isPresent()) {
+            return y9OperationOptional.get();
+        }
+
+        Optional<Y9DataCatalog> y9DataCatalogOptional = y9DataCatalogRepository.findByCustomId(customId);
+        if (y9DataCatalogOptional.isPresent()) {
+            return y9DataCatalogOptional.get();
+        }
+        
+        throw Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.RESOURCE_NOT_FOUND, customId);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.example;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +13,7 @@ import net.risesoft.api.platform.permission.cache.PersonResourceApi;
 import net.risesoft.api.platform.resource.AppApi;
 import net.risesoft.enums.platform.org.OrgTreeTypeEnum;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.org.Organization;
@@ -75,8 +77,13 @@ public class PlatformApiExampleController {
         // 获取当前系统第一个应用，当前用户有权限的菜单
         List<Menu> menuList = new ArrayList<>();
         if (!appList.isEmpty()) {
-            menuList = personResourceApi.listSubMenus(tenantId, personId, AuthorityEnum.BROWSE, appList.get(0).getId())
-                .getData();
+            menuList =
+                personResourceApi.listSubResources(tenantId, personId, AuthorityEnum.BROWSE, appList.get(0).getId())
+                    .getData()
+                    .stream()
+                    .filter(resource -> ResourceTypeEnum.MENU.equals(resource.getResourceType()))
+                    .map(resource -> (Menu)resource)
+                    .collect(Collectors.toList());
         }
         return Y9Result.success(menuList);
     }

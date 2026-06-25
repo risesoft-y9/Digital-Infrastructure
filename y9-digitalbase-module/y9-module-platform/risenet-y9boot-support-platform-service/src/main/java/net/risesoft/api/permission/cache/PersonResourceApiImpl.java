@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
-import net.risesoft.api.permission.VueMenuBuilder;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -15,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.permission.VueMenuBuilder;
 import net.risesoft.api.platform.permission.cache.PersonResourceApi;
 import net.risesoft.enums.platform.org.IdentityTypeEnum;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.model.platform.resource.App;
-import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.model.platform.resource.VueMenu;
 import net.risesoft.pojo.Y9Result;
@@ -106,22 +105,25 @@ public class PersonResourceApiImpl implements PersonResourceApi {
     }
 
     /**
-     * 获得某一资源下，人员有相应操作权限的菜单资源集合
+     * 递归获得某一资源下，人员有相应权限的菜单和按钮（树形）
      *
      * @param tenantId 租户id
      * @param personId 人员id
      * @param authority 权限类型 {@link AuthorityEnum}
-     * @param resourceId 资源id
-     * @return {@code Y9Result<List<Menu>>} 通用请求返回对象 - data 是有权限的菜单资源集合
+     * @param customId 自定义id
+     * @return {@code Y9Result<List<VueMenu>>} 通用请求返回对象 - data 是有权限的菜单和按钮（树形）
      * @since 9.6.0
      */
     @Override
-    public Y9Result<List<Menu>> listSubMenus(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<VueMenu>> listMenusRecursivelyByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
-        @RequestParam("resourceId") @NotBlank String resourceId) {
+        @RequestParam("customId") @NotBlank String customId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result.success(y9PersonToResourceService.listSubMenus(personId, resourceId, authority));
+        List<VueMenu> vueMenuList = new ArrayList<>();
+        vueMenuBuilder.buildVueMenusByCustomId(IdentityTypeEnum.PERSON, personId, authority, customId, vueMenuList);
+
+        return Y9Result.success(vueMenuList);
     }
 
     /**
@@ -137,10 +139,29 @@ public class PersonResourceApiImpl implements PersonResourceApi {
     @Override
     public Y9Result<List<Resource>> listSubResources(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
-        @RequestParam("resourceId") @NotBlank String resourceId) {
+        @RequestParam(name = "resourceId", required = false) @NotBlank String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PersonToResourceService.listSubResources(personId, resourceId, authority));
+    }
+
+    /**
+     * 获得某一资源下，人员有相应操作权限的子资源集合
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @param authority 权限类型 {@link AuthorityEnum}
+     * @param customId 自定义id
+     * @return {@code Y9Result<List<Resource>>} 有权限的子资源集合
+     * @since 9.6.10
+     */
+    @Override
+    public Y9Result<List<Resource>> listSubResourcesByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
+        @RequestParam("customId") @NotBlank String customId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        return Y9Result.success(y9PersonToResourceService.listSubResourcesByCustomId(personId, customId, authority));
     }
 
     /**
@@ -148,7 +169,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @param authority 操作类型(如：BROWSE、ADMIN)
+     * @param authority 权限类型 {@link AuthorityEnum}
      * @return {@code Y9Result<List<App>>} 通用请求返回对象 - data 是有权限的应用列表
      * @since 9.6.0
      */

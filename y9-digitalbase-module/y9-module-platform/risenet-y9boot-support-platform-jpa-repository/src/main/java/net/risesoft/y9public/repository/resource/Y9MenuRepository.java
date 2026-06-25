@@ -20,7 +20,7 @@ public interface Y9MenuRepository extends JpaRepository<Y9Menu, String> {
 
     List<Y9Menu> findByAppId(String appId);
 
-    List<Y9Menu> findByCustomId(String customId);
+    Optional<Y9Menu> findByCustomId(String customId);
 
     List<Y9Menu> findByNameContainingOrderByTabIndex(String name);
 
