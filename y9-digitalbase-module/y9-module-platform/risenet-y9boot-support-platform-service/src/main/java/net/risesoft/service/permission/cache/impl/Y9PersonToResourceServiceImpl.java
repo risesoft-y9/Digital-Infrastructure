@@ -172,7 +172,7 @@ public class Y9PersonToResourceServiceImpl implements Y9PersonToResourceService 
     public List<Resource> listSubResources(String personId, String resourceId, AuthorityEnum authority,
         ResourceTypeEnum resourceType) {
         Set<Y9ResourceBase> returnResourceSet = new HashSet<>();
-        
+
         List<Y9PersonToResource> y9PersonToResourceList = this.list2(personId, resourceId, resourceType, authority);
         for (Y9PersonToResource personResource : y9PersonToResourceList) {
             Y9ResourceBase y9ResourceBase = compositeResourceManager

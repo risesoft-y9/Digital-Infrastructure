@@ -239,7 +239,7 @@ public class IdentityResourceRelatedEventListener {
         } else {
             y9PersonToResourceService.deleteByAuthorizationId(y9Authorization.getId());
             y9PositionToResourceService.deleteByAuthorizationId(y9Authorization.getId());
-        } 
+        }
     }
 
     @TransactionalEventListener

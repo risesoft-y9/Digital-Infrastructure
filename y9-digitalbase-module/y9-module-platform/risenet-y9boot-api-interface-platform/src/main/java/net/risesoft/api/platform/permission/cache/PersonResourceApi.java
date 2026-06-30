@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.model.platform.resource.App;
+import net.risesoft.model.platform.resource.FrontendMenu;
 import net.risesoft.model.platform.resource.Resource;
-import net.risesoft.model.platform.resource.VueMenu;
 import net.risesoft.pojo.Y9Result;
 
 /**
@@ -58,32 +58,32 @@ public interface PersonResourceApi {
         @RequestParam("authority") AuthorityEnum authority);
 
     /**
-     * 递归获得某一资源下，人员有相应权限的菜单和按钮（树形）
+     * 递归获得某一资源下，人员有相应权限的前端菜单和按钮（树形）
      *
      * @param tenantId 租户id
      * @param personId 人员id
      * @param authority 权限类型 {@link AuthorityEnum}
      * @param resourceId 资源id
-     * @return {@code Y9Result<List<VueMenu>>} 通用请求返回对象 - data 是有权限的菜单和按钮（树形）
+     * @return {@code Y9Result<List<FrontendMenu>>} 通用请求返回对象 - data 是有权限的菜单和按钮（树形）
      * @since 9.6.0
      */
     @GetMapping("/listMenusRecursively")
-    Y9Result<List<VueMenu>> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<FrontendMenu>> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam("resourceId") @NotBlank String resourceId);
 
     /**
-     * 递归获得 customId 对应的某一资源下，人员有相应权限的菜单和按钮（树形）
+     * 递归获得 customId 对应的某一资源下，人员有相应权限的前端菜单和按钮（树形）
      *
      * @param tenantId 租户id
      * @param personId 人员id
      * @param authority 权限类型 {@link AuthorityEnum}
      * @param customId 自定义id
-     * @return {@code Y9Result<List<VueMenu>>} 通用请求返回对象 - data 是有权限的菜单和按钮（树形）
+     * @return {@code Y9Result<List<FrontendMenu>>} 通用请求返回对象 - data 是有权限的菜单和按钮（树形）
      * @since 9.6.0
      */
     @GetMapping("/listMenusRecursivelyByCustomId")
-    Y9Result<List<VueMenu>> listMenusRecursivelyByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<FrontendMenu>> listMenusRecursivelyByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam("customId") @NotBlank String customId);
 

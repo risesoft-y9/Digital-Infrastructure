@@ -46,8 +46,8 @@ public class Y9PersonToResourceAndAuthorityManagerImpl implements Y9PersonToReso
     public void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Person person, Y9Authorization y9Authorization,
         Boolean inherit) {
         Optional<Y9PersonToResource> optionalY9PersonToResourceAndAuthority =
-            y9PersonToResourceRepository.findByPersonIdAndResourceIdAndAuthorizationIdAndAuthority(
-                person.getId(), y9ResourceBase.getId(), y9Authorization.getId(), y9Authorization.getAuthority());
+            y9PersonToResourceRepository.findByPersonIdAndResourceIdAndAuthorizationIdAndAuthority(person.getId(),
+                y9ResourceBase.getId(), y9Authorization.getId(), y9Authorization.getAuthority());
         Y9PersonToResource y9PersonToResource;
         if (optionalY9PersonToResourceAndAuthority.isEmpty()) {
             y9PersonToResource = new Y9PersonToResource();

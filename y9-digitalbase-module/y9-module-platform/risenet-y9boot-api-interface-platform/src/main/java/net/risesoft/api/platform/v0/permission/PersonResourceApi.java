@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.model.platform.resource.FrontendMenu;
 import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
-import net.risesoft.model.platform.resource.VueMenu;
 
 /**
  * 人员资源权限组件
@@ -67,7 +67,7 @@ public interface PersonResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/listMenusRecursively")
-    List<VueMenu> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
+    List<FrontendMenu> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority,
         @RequestParam("resourceId") @NotBlank String resourceId);
 

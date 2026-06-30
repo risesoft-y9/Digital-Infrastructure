@@ -83,9 +83,9 @@ public interface Y9PersonalAppService {
     /**
      * 根据人员id获取图标分页列表
      *
-     * @param orgUnitId   人员id（或岗位id）
+     * @param orgUnitId 人员id（或岗位id）
      * @param categoryId 分类 id
-     * @param pageQuery  分页查询参数
+     * @param pageQuery 分页查询参数
      * @return
      */
     Page<Y9PersonalApp> pageByOrgUnitId(String orgUnitId, String categoryId, Y9PageQuery pageQuery);
@@ -93,7 +93,7 @@ public interface Y9PersonalAppService {
     /**
      * 获取租用的人员id分页列表
      *
-     * @param appId     应用id
+     * @param appId 应用id
      * @param deptName
      * @param pageQuery
      * @return
@@ -114,7 +114,6 @@ public interface Y9PersonalAppService {
      * @param appIds 应用id数组
      */
     void saveCommApps(String orgUnitId, String[] appIds);
-
 
     void sort(String orgUnitId, List<String> appIdList);
 }

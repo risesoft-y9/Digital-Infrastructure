@@ -104,15 +104,17 @@ public interface Y9PersonToResourceService {
     /**
      * 获得某一资源下,有相应操作权限的子节点
      *
-     * @param personId     人员id
-     * @param resourceId   资源id
-     * @param authority    权限类型
+     * @param personId 人员id
+     * @param resourceId 资源id
+     * @param authority 权限类型
      * @param resourceType
      * @return {@code List<Y9ResourceBase>}
      */
-    List<Resource> listSubResources(String personId, String resourceId, AuthorityEnum authority, ResourceTypeEnum resourceType);
+    List<Resource> listSubResources(String personId, String resourceId, AuthorityEnum authority,
+        ResourceTypeEnum resourceType);
 
-    List<Resource> listSubResourcesByCustomId(String personId, String customId, AuthorityEnum authority, ResourceTypeEnum resourceType);
+    List<Resource> listSubResourcesByCustomId(String personId, String customId, AuthorityEnum authority,
+        ResourceTypeEnum resourceType);
 
     void deleteByAuthorizationId(String authorizationId);
 

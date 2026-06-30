@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.api.permission.VueMenuBuilder;
+import net.risesoft.api.permission.FrontendMenuBuilder;
 import net.risesoft.api.platform.permission.cache.PersonResourceApi;
 import net.risesoft.enums.platform.org.IdentityTypeEnum;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.model.platform.resource.App;
+import net.risesoft.model.platform.resource.FrontendMenu;
 import net.risesoft.model.platform.resource.Resource;
-import net.risesoft.model.platform.resource.VueMenu;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.permission.cache.Y9PersonToResourceService;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -43,7 +43,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
 public class PersonResourceApiImpl implements PersonResourceApi {
 
     private final Y9PersonToResourceService y9PersonToResourceService;
-    private final VueMenuBuilder vueMenuBuilder;
+    private final FrontendMenuBuilder frontendMenuBuilder;
 
     /**
      * 判断人员对资源是否有指定的操作权限
@@ -84,47 +84,48 @@ public class PersonResourceApiImpl implements PersonResourceApi {
     }
 
     /**
-     * 递归获得某一资源下，人员有相应权限的菜单和按钮（树形）
+     * 递归获得某一资源下，人员有相应权限的前端菜单和按钮（树形）
      *
      * @param tenantId 租户id
      * @param personId 人员id
      * @param authority 权限类型 {@link AuthorityEnum}
      * @param resourceId 资源id
-     * @return {@code Y9Result<List<VueMenu>>} 通用请求返回对象 - data 是有权限的菜单和按钮（树形）
+     * @return {@code Y9Result<List<FrontendMenu>>} 通用请求返回对象 - data 是有权限的菜单和按钮（树形）
      * @since 9.6.0
      */
     @Override
-    public Y9Result<List<VueMenu>> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<FrontendMenu>> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam("resourceId") @NotBlank String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<VueMenu> vueMenuList = new ArrayList<>();
-        vueMenuBuilder.buildVueMenus(IdentityTypeEnum.PERSON, personId, authority, resourceId, vueMenuList);
+        List<FrontendMenu> frontendMenuList = new ArrayList<>();
+        frontendMenuBuilder.buildFrontendMenus(IdentityTypeEnum.PERSON, personId, authority, resourceId, frontendMenuList);
 
-        return Y9Result.success(vueMenuList);
+        return Y9Result.success(frontendMenuList);
     }
 
     /**
-     * 递归获得某一资源下，人员有相应权限的菜单和按钮（树形）
+     * 递归获得 customId 对应的某一资源下，人员有相应权限的前端菜单和按钮（树形）
      *
      * @param tenantId 租户id
      * @param personId 人员id
      * @param authority 权限类型 {@link AuthorityEnum}
      * @param customId 自定义id
-     * @return {@code Y9Result<List<VueMenu>>} 通用请求返回对象 - data 是有权限的菜单和按钮（树形）
+     * @return {@code Y9Result<List<FrontendMenu>>} 通用请求返回对象 - data 是有权限的菜单和按钮（树形）
      * @since 9.6.0
      */
     @Override
-    public Y9Result<List<VueMenu>> listMenusRecursivelyByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
-        @RequestParam("customId") @NotBlank String customId) {
+    public Y9Result<List<FrontendMenu>> listMenusRecursivelyByCustomId(
+        @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId,
+        @RequestParam("authority") AuthorityEnum authority, @RequestParam("customId") @NotBlank String customId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<VueMenu> vueMenuList = new ArrayList<>();
-        vueMenuBuilder.buildVueMenusByCustomId(IdentityTypeEnum.PERSON, personId, authority, customId, vueMenuList);
+        List<FrontendMenu> frontendMenuList = new ArrayList<>();
+        frontendMenuBuilder.buildFrontendMenusByCustomId(IdentityTypeEnum.PERSON, personId, authority, customId,
+            frontendMenuList);
 
-        return Y9Result.success(vueMenuList);
+        return Y9Result.success(frontendMenuList);
     }
 
     /**
@@ -150,7 +151,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
     }
 
     /**
-     * 获得某一资源下，人员有相应操作权限的子资源集合
+     * 获得 customId 对应的某一资源下，人员有相应操作权限的子资源集合
      *
      * @param tenantId 租户id
      * @param personId 人员id

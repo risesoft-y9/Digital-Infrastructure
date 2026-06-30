@@ -26,8 +26,8 @@ import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.pojo.AppCategory;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.setting.Y9AppCategoryRepository;
-import net.risesoft.service.setting.Y9AppCategoryService;
 import net.risesoft.service.dictionary.Y9OptionValueService;
+import net.risesoft.service.setting.Y9AppCategoryService;
 import net.risesoft.y9public.service.resource.Y9AppService;
 
 /**
@@ -125,8 +125,7 @@ public class Y9AppCategoryServiceImpl implements Y9AppCategoryService {
 
         List<OptionValue> optionValues = y9OptionValueService.listByType(OptionClassConsts.APP_CATEGORY);
         for (OptionValue resource : optionValues) {
-            List<Y9AppCategory> appList =
-                y9AppCategoryRepository.findByCategoryIdOrderByTabIndex(resource.getCode());
+            List<Y9AppCategory> appList = y9AppCategoryRepository.findByCategoryIdOrderByTabIndex(resource.getCode());
             for (Y9AppCategory order : appList) {
                 App y9App = y9AppService.findById(order.getAppId()).orElse(null);
                 if (y9App != null && Boolean.TRUE.equals(y9App.getEnabled())) {

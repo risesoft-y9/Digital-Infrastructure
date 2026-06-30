@@ -16,9 +16,9 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.v0.permission.PersonResourceApi;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.model.platform.resource.FrontendMenu;
 import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
-import net.risesoft.model.platform.resource.VueMenu;
 import net.risesoft.service.permission.cache.Y9PersonToResourceService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9EnumUtil;
@@ -94,16 +94,16 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      * @since 9.6.0
      */
     @Override
-    public List<VueMenu> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
+    public List<FrontendMenu> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority,
         @RequestParam("resourceId") @NotBlank String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<VueMenu> vueMenuList = new ArrayList<>();
+        List<FrontendMenu> frontendMenuList = new ArrayList<>();
         vueMenuBuilder.buildVueMenus(personId, Y9EnumUtil.valueOf(AuthorityEnum.class, authority), resourceId,
-            vueMenuList);
+            frontendMenuList);
 
-        return vueMenuList;
+        return frontendMenuList;
     }
 
     /**

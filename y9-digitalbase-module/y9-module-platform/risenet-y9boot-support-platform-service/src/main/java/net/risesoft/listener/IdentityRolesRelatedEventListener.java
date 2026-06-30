@@ -166,7 +166,7 @@ public class IdentityRolesRelatedEventListener {
             LOGGER.debug("岗位[{}]删除同时删除角色缓存执行完成", position.getId());
         }
     }
-    
+
     @TransactionalEventListener
     public void onRoleDeleted(Y9EntityDeletedEvent<Y9Role> event) {
         Y9Role entity = event.getEntity();

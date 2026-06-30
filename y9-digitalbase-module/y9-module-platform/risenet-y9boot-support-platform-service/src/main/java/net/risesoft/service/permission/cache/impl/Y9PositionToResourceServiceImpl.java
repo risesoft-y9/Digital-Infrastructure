@@ -176,7 +176,7 @@ public class Y9PositionToResourceServiceImpl implements Y9PositionToResourceServ
     public List<Resource> listSubResources(String positionId, String resourceId, AuthorityEnum authority,
         ResourceTypeEnum resourceType) {
         Set<Y9ResourceBase> returnResourceSet = new HashSet<>();
-        
+
         List<Y9PositionToResource> y9PositionToResourceList =
             this.list2(positionId, resourceId, resourceType, authority);
         for (Y9PositionToResource positionResource : y9PositionToResourceList) {

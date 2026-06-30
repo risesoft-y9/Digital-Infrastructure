@@ -53,8 +53,7 @@ public class Manager extends OrgUnit implements Serializable {
     private String mobile;
 
     /**
-     * 密码
-     * 敏感字段 不返回
+     * 密码 敏感字段 不返回
      */
     @JsonIgnore
     private String password;

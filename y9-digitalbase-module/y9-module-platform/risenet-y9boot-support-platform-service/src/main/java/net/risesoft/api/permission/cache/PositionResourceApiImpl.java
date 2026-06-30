@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.api.permission.VueMenuBuilder;
+import net.risesoft.api.permission.FrontendMenuBuilder;
 import net.risesoft.api.platform.permission.cache.PositionResourceApi;
 import net.risesoft.enums.platform.org.IdentityTypeEnum;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.model.platform.resource.App;
+import net.risesoft.model.platform.resource.FrontendMenu;
 import net.risesoft.model.platform.resource.Resource;
-import net.risesoft.model.platform.resource.VueMenu;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.permission.cache.Y9PositionToResourceService;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -44,7 +44,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
 public class PositionResourceApiImpl implements PositionResourceApi {
 
     private final Y9PositionToResourceService y9PositionToResourceService;
-    private final VueMenuBuilder vueMenuBuilder;
+    private final FrontendMenuBuilder frontendMenuBuilder;
 
     /**
      * 判断岗位对资源是否有指定的操作权限
@@ -91,19 +91,19 @@ public class PositionResourceApiImpl implements PositionResourceApi {
      * @param positionId 人员id
      * @param authority 权限类型 {@link AuthorityEnum}
      * @param resourceId 资源id
-     * @return {@code Y9Result<List<VueMenu>>} 通用请求返回对象 - data 是有权限的菜单和按钮（树形）
+     * @return {@code Y9Result<List<FrontendMenu>>} 通用请求返回对象 - data 是有权限的菜单和按钮（树形）
      * @since 9.6.8
      */
     @Override
-    public Y9Result<List<VueMenu>> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<FrontendMenu>> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam("resourceId") @NotBlank String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<VueMenu> vueMenuList = new ArrayList<>();
-        vueMenuBuilder.buildVueMenus(IdentityTypeEnum.POSITION, positionId, authority, resourceId, vueMenuList);
+        List<FrontendMenu> frontendMenuList = new ArrayList<>();
+        frontendMenuBuilder.buildFrontendMenus(IdentityTypeEnum.POSITION, positionId, authority, resourceId, frontendMenuList);
 
-        return Y9Result.success(vueMenuList);
+        return Y9Result.success(frontendMenuList);
     }
 
     /**
@@ -113,20 +113,21 @@ public class PositionResourceApiImpl implements PositionResourceApi {
      * @param positionId 人员id
      * @param authority 权限类型 {@link AuthorityEnum}
      * @param customId 自定义id
-     * @return {@code Y9Result<List<VueMenu>>} 通用请求返回对象 - data 是有权限的菜单和按钮（树形）
+     * @return {@code Y9Result<List<FrontendMenu>>} 通用请求返回对象 - data 是有权限的菜单和按钮（树形）
      * @since 9.6.10
      */
     @GetMapping("/listMenusRecursivelyByCustomId")
     @Override
-    public Y9Result<List<VueMenu>> listMenusRecursivelyByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
-        @RequestParam("customId") @NotBlank String customId) {
+    public Y9Result<List<FrontendMenu>> listMenusRecursivelyByCustomId(
+        @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId,
+        @RequestParam("authority") AuthorityEnum authority, @RequestParam("customId") @NotBlank String customId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<VueMenu> vueMenuList = new ArrayList<>();
-        vueMenuBuilder.buildVueMenusByCustomId(IdentityTypeEnum.POSITION, positionId, authority, customId, vueMenuList);
+        List<FrontendMenu> frontendMenuList = new ArrayList<>();
+        frontendMenuBuilder.buildFrontendMenusByCustomId(IdentityTypeEnum.POSITION, positionId, authority, customId,
+            frontendMenuList);
 
-        return Y9Result.success(vueMenuList);
+        return Y9Result.success(frontendMenuList);
     }
 
     /**

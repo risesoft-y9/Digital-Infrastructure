@@ -12,10 +12,10 @@ import net.risesoft.enums.platform.org.IdentityTypeEnum;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.model.platform.permission.cache.IdentityToResourceBase;
+import net.risesoft.model.platform.resource.FrontendButton;
+import net.risesoft.model.platform.resource.FrontendMenu;
 import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Operation;
-import net.risesoft.model.platform.resource.VueButton;
-import net.risesoft.model.platform.resource.VueMenu;
 import net.risesoft.service.permission.cache.Y9PersonToResourceService;
 import net.risesoft.service.permission.cache.Y9PositionToResourceService;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
@@ -24,7 +24,7 @@ import net.risesoft.y9public.service.resource.Y9MenuService;
 import net.risesoft.y9public.service.resource.Y9OperationService;
 
 /**
- * 根据人员权限列表构建 vue 菜单组件
+ * 根据人员权限列表构建前端菜单组件
  * 
  * @author shidaobang
  * @date 2023/07/11
@@ -32,7 +32,7 @@ import net.risesoft.y9public.service.resource.Y9OperationService;
  */
 @Component
 @RequiredArgsConstructor
-public class VueMenuBuilder {
+public class FrontendMenuBuilder {
 
     private final CompositeResourceManager compositeResourceManager;
 
@@ -42,8 +42,8 @@ public class VueMenuBuilder {
     private final Y9PersonToResourceService y9PersonToResourceService;
     private final Y9PositionToResourceService y9PositionToResourceService;
 
-    private VueButton buildVueButton(Operation operation) {
-        VueButton button = new VueButton();
+    private FrontendButton buildFrontendButton(Operation operation) {
+        FrontendButton button = new FrontendButton();
         button.setName(operation.getName());
         button.setIcon(operation.getIconUrl());
         button.setButtonId(operation.getCustomId());
@@ -53,8 +53,8 @@ public class VueMenuBuilder {
         return button;
     }
 
-    private List<VueButton> buildVueButtons(IdentityTypeEnum identityType, String personId, AuthorityEnum authority,
-        String menuId) {
+    private List<FrontendButton> buildFrontendButtons(IdentityTypeEnum identityType, String personId,
+        AuthorityEnum authority, String menuId) {
         List<Operation> operationList;
         if (IdentityTypeEnum.PERSON.equals(identityType)) {
             operationList = y9PersonToResourceService.list(personId, menuId, ResourceTypeEnum.OPERATION, authority)
@@ -74,36 +74,36 @@ public class VueMenuBuilder {
                 .collect(Collectors.toList());
         }
 
-        List<VueButton> buttonList = new ArrayList<>();
+        List<FrontendButton> buttonList = new ArrayList<>();
         for (Operation operation : operationList) {
             if (operation.getEnabled()) {
-                buttonList.add(buildVueButton(operation));
+                buttonList.add(buildFrontendButton(operation));
             }
         }
         return buttonList;
     }
 
-    private VueMenu buildVueMenu(IdentityTypeEnum identityType, String personId, AuthorityEnum authority, String menuId,
-        Menu menu) {
-        VueMenu vueMenu = new VueMenu();
-        vueMenu.setName(menu.getName());
-        vueMenu.setPath(menu.getUrl());
-        vueMenu.setRedirect(menu.getRedirect());
-        vueMenu.setComponent(menu.getComponent());
-        vueMenu.setMeta(menu.getMeta());
-        vueMenu.setTarget(menu.getTarget());
+    private FrontendMenu buildFrontendMenu(IdentityTypeEnum identityType, String personId, AuthorityEnum authority,
+        String menuId, Menu menu) {
+        FrontendMenu frontendMenu = new FrontendMenu();
+        frontendMenu.setName(menu.getName());
+        frontendMenu.setPath(menu.getUrl());
+        frontendMenu.setRedirect(menu.getRedirect());
+        frontendMenu.setComponent(menu.getComponent());
+        frontendMenu.setMeta(menu.getMeta());
+        frontendMenu.setTarget(menu.getTarget());
 
-        List<VueMenu> subVueMenuList = new ArrayList<>();
-        buildVueMenus(identityType, personId, authority, menuId, subVueMenuList);
-        vueMenu.setChildren(subVueMenuList);
+        List<FrontendMenu> subFrontendMenuList = new ArrayList<>();
+        buildFrontendMenus(identityType, personId, authority, menuId, subFrontendMenuList);
+        frontendMenu.setChildren(subFrontendMenuList);
 
-        List<VueButton> buttonList = buildVueButtons(identityType, personId, authority, menuId);
-        vueMenu.setButtons(buttonList);
-        return vueMenu;
+        List<FrontendButton> buttonList = buildFrontendButtons(identityType, personId, authority, menuId);
+        frontendMenu.setButtons(buttonList);
+        return frontendMenu;
     }
 
-    public void buildVueMenus(IdentityTypeEnum identityType, String personId, AuthorityEnum authority,
-        String resourceId, List<VueMenu> vueMenuList) {
+    public void buildFrontendMenus(IdentityTypeEnum identityType, String personId, AuthorityEnum authority,
+        String resourceId, List<FrontendMenu> frontendMenuList) {
         List<Menu> menuList;
         if (IdentityTypeEnum.PERSON.equals(identityType)) {
             menuList = y9PersonToResourceService.list(personId, resourceId, ResourceTypeEnum.MENU, authority)
@@ -124,15 +124,15 @@ public class VueMenuBuilder {
         }
         for (Menu menu : menuList) {
             if (menu.getEnabled()) {
-                VueMenu vueMenu = buildVueMenu(identityType, personId, authority, menu.getId(), menu);
-                vueMenuList.add(vueMenu);
+                FrontendMenu frontendMenu = buildFrontendMenu(identityType, personId, authority, menu.getId(), menu);
+                frontendMenuList.add(frontendMenu);
             }
         }
     }
 
-    public void buildVueMenusByCustomId(IdentityTypeEnum identityTypeEnum, String personId, AuthorityEnum authority,
-        String customId, List<VueMenu> vueMenuList) {
+    public void buildFrontendMenusByCustomId(IdentityTypeEnum identityTypeEnum, String personId,
+        AuthorityEnum authority, String customId, List<FrontendMenu> frontendMenuList) {
         Y9ResourceBase y9ResourceBase = compositeResourceManager.getByCustomId(customId);
-        buildVueMenus(identityTypeEnum, personId, authority, y9ResourceBase.getId(), vueMenuList);
+        buildFrontendMenus(identityTypeEnum, personId, authority, y9ResourceBase.getId(), frontendMenuList);
     }
 }

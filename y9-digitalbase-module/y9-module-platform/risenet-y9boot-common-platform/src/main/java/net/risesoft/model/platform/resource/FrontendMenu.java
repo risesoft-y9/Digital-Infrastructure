@@ -6,13 +6,13 @@ import java.util.List;
 import lombok.Data;
 
 /**
- * vue 的菜单
+ * 前端菜单
  *
  * @author shidaobang
  * @date 2022/09/05
  */
 @Data
-public class VueMenu implements Serializable {
+public class FrontendMenu implements Serializable {
     private static final long serialVersionUID = 6129308144423022536L;
 
     /** 名称 */
@@ -34,9 +34,9 @@ public class VueMenu implements Serializable {
     private String target;
 
     /** 子菜单 */
-    private List<VueMenu> children;
+    private List<FrontendMenu> children;
 
     /** 子按钮 */
-    private List<VueButton> buttons;
+    private List<FrontendButton> buttons;
 
 }

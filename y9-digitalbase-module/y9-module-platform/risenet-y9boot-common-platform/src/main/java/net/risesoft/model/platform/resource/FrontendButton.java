@@ -7,13 +7,13 @@ import lombok.Data;
 import net.risesoft.enums.platform.resource.OperationDisplayTypeEnum;
 
 /**
- * vue 按钮
+ * 前端按钮
  *
  * @author shidaobang
  * @date 2022/09/16
  */
 @Data
-public class VueButton implements Serializable {
+public class FrontendButton implements Serializable {
     private static final long serialVersionUID = -2080919486450511351L;
 
     /** 名称 */

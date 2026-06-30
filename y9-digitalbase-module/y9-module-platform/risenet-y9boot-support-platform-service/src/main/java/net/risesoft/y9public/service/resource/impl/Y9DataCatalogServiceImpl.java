@@ -80,8 +80,8 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
                 Y9DataCatalog originalDataCatalog = Y9ModelConvertUtil.convert(currentDataCatalog, Y9DataCatalog.class);
 
                 currentDataCatalog.update(dataCatalog, findParent(dataCatalog.getParentId()).orElse(null));
-                return PlatformModelConvertUtil.convert(y9DataCatalogManager.update(currentDataCatalog, originalDataCatalog),
-                    DataCatalog.class);
+                return PlatformModelConvertUtil
+                    .convert(y9DataCatalogManager.update(currentDataCatalog, originalDataCatalog), DataCatalog.class);
             }
         }
 
