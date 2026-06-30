@@ -144,7 +144,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Resource> y9ResourceBaseList = y9PersonToResourceService.listSubResources(personId, resourceId,
-            Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
+            Y9EnumUtil.valueOf(AuthorityEnum.class, authority), null);
         return y9ResourceBaseList;
     }
 }

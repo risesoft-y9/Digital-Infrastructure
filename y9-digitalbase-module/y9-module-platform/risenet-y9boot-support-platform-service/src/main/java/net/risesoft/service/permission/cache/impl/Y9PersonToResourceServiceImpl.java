@@ -104,17 +104,26 @@ public class Y9PersonToResourceServiceImpl implements Y9PersonToResourceService 
         return entityToModel(y9PersonToResourceList);
     }
 
-    private List<Y9PersonToResource> list(String personId, String parentResourceId, AuthorityEnum authority) {
+    private List<Y9PersonToResource> list2(String personId, String parentResourceId, ResourceTypeEnum resourceType,
+        AuthorityEnum authority) {
+        List<Y9PersonToResource> list = new ArrayList<>();
+
         if (StringUtils.isEmpty(parentResourceId)) {
-            List<Y9PersonToResource> list = new ArrayList<>();
             list.addAll(
                 y9PersonToResourceRepository.findByPersonIdAndParentResourceIdIsNullAndAuthority(personId, authority));
             list.addAll(
                 y9PersonToResourceRepository.findByPersonIdAndParentResourceIdAndAuthority(personId, "", authority));
-            return list;
+        } else {
+            list.addAll(y9PersonToResourceRepository.findByPersonIdAndParentResourceIdAndAuthority(personId,
+                parentResourceId, authority));
         }
-        return y9PersonToResourceRepository.findByPersonIdAndParentResourceIdAndAuthority(personId, parentResourceId,
-            authority);
+
+        if (resourceType != null) {
+            return list.stream()
+                .filter(y9PersonToResource -> y9PersonToResource.getResourceType().equals(resourceType))
+                .collect(Collectors.toList());
+        }
+        return list;
     }
 
     @Override
@@ -160,10 +169,11 @@ public class Y9PersonToResourceServiceImpl implements Y9PersonToResourceService 
 
     @Override
     @Transactional(readOnly = true)
-    public List<Resource> listSubResources(String personId, String resourceId, AuthorityEnum authority) {
+    public List<Resource> listSubResources(String personId, String resourceId, AuthorityEnum authority,
+        ResourceTypeEnum resourceType) {
         Set<Y9ResourceBase> returnResourceSet = new HashSet<>();
-        List<Y9PersonToResource> y9PersonToResourceList = this.list(personId, resourceId, authority);
-
+        
+        List<Y9PersonToResource> y9PersonToResourceList = this.list2(personId, resourceId, resourceType, authority);
         for (Y9PersonToResource personResource : y9PersonToResourceList) {
             Y9ResourceBase y9ResourceBase = compositeResourceManager
                 .findByIdAndResourceType(personResource.getResourceId(), personResource.getResourceType());
@@ -179,9 +189,10 @@ public class Y9PersonToResourceServiceImpl implements Y9PersonToResourceService 
 
     @Override
     @Transactional(readOnly = true)
-    public List<Resource> listSubResourcesByCustomId(String personId, String customId, AuthorityEnum authority) {
+    public List<Resource> listSubResourcesByCustomId(String personId, String customId, AuthorityEnum authority,
+        ResourceTypeEnum resourceType) {
         Y9ResourceBase y9ResourceBase = compositeResourceManager.getByCustomId(customId);
-        return this.listSubResources(personId, y9ResourceBase.getId(), authority);
+        return this.listSubResources(personId, y9ResourceBase.getId(), authority, resourceType);
     }
 
     @Override

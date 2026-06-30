@@ -120,6 +120,6 @@ public class PositionResourceApiImpl implements PositionResourceApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PositionToResourceService.listSubResources(positionId, resourceId,
-            Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
+            Y9EnumUtil.valueOf(AuthorityEnum.class, authority), null);
     }
 }

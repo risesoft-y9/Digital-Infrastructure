@@ -77,13 +77,13 @@ public class PlatformApiExampleController {
         // 获取当前系统第一个应用，当前用户有权限的菜单
         List<Menu> menuList = new ArrayList<>();
         if (!appList.isEmpty()) {
-            menuList =
-                personResourceApi.listSubResources(tenantId, personId, AuthorityEnum.BROWSE, appList.get(0).getId())
-                    .getData()
-                    .stream()
-                    .filter(resource -> ResourceTypeEnum.MENU.equals(resource.getResourceType()))
-                    .map(resource -> (Menu)resource)
-                    .collect(Collectors.toList());
+            menuList = personResourceApi
+                .listSubResources(tenantId, personId, AuthorityEnum.BROWSE, appList.get(0).getId(),
+                    ResourceTypeEnum.MENU)
+                .getData()
+                .stream()
+                .map(resource -> (Menu)resource)
+                .collect(Collectors.toList());
         }
         return Y9Result.success(menuList);
     }

@@ -18,6 +18,7 @@ import net.risesoft.api.permission.VueMenuBuilder;
 import net.risesoft.api.platform.permission.cache.PersonResourceApi;
 import net.risesoft.enums.platform.org.IdentityTypeEnum;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.model.platform.resource.App;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.model.platform.resource.VueMenu;
@@ -133,16 +134,19 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      * @param personId 人员id
      * @param authority 权限类型 {@link AuthorityEnum}
      * @param resourceId 资源id
+     * @param resourceType 资源类型
      * @return {@code Y9Result<List<Resource>>} 有权限的子资源集合
      * @since 9.6.0
      */
     @Override
     public Y9Result<List<Resource>> listSubResources(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
-        @RequestParam(name = "resourceId", required = false) @NotBlank String resourceId) {
+        @RequestParam(name = "resourceId", required = false) String resourceId,
+        @RequestParam(name = "resourceType", required = false) ResourceTypeEnum resourceType) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result.success(y9PersonToResourceService.listSubResources(personId, resourceId, authority));
+        return Y9Result
+            .success(y9PersonToResourceService.listSubResources(personId, resourceId, authority, resourceType));
     }
 
     /**
@@ -152,16 +156,19 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      * @param personId 人员id
      * @param authority 权限类型 {@link AuthorityEnum}
      * @param customId 自定义id
+     * @param resourceType 资源类型
      * @return {@code Y9Result<List<Resource>>} 有权限的子资源集合
      * @since 9.6.10
      */
     @Override
     public Y9Result<List<Resource>> listSubResourcesByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
-        @RequestParam("customId") @NotBlank String customId) {
+        @RequestParam("customId") @NotBlank String customId,
+        @RequestParam(name = "resourceType", required = false) ResourceTypeEnum resourceType) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result.success(y9PersonToResourceService.listSubResourcesByCustomId(personId, customId, authority));
+        return Y9Result
+            .success(y9PersonToResourceService.listSubResourcesByCustomId(personId, customId, authority, resourceType));
     }
 
     /**

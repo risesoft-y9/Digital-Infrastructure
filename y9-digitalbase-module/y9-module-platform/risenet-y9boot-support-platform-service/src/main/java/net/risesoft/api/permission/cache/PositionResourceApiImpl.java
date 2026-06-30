@@ -19,6 +19,7 @@ import net.risesoft.api.permission.VueMenuBuilder;
 import net.risesoft.api.platform.permission.cache.PositionResourceApi;
 import net.risesoft.enums.platform.org.IdentityTypeEnum;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.model.platform.resource.App;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.model.platform.resource.VueMenu;
@@ -135,17 +136,19 @@ public class PositionResourceApiImpl implements PositionResourceApi {
      * @param positionId 岗位id
      * @param authority 权限类型 {@link AuthorityEnum}
      * @param resourceId 资源id
+     * @param resourceType 资源类型，为空时不筛选
      * @return {@code Y9Result<List<Resource>>} 有权限的子资源集合
      * @since 9.6.0
      */
     @Override
     public Y9Result<List<Resource>> listSubResources(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
-        @RequestParam(name = "resourceId", required = false) String resourceId) {
+        @RequestParam(name = "resourceId", required = false) String resourceId,
+        @RequestParam(name = "resourceType", required = false) ResourceTypeEnum resourceType) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Resource> returnResourceList =
-            y9PositionToResourceService.listSubResources(positionId, resourceId, authority);
+            y9PositionToResourceService.listSubResources(positionId, resourceId, authority, resourceType);
         return Y9Result.success(returnResourceList);
     }
 
@@ -156,17 +159,19 @@ public class PositionResourceApiImpl implements PositionResourceApi {
      * @param positionId 岗位id
      * @param authority 权限类型 {@link AuthorityEnum}
      * @param customId 自定义id
+     * @param resourceType 资源类型，为空时不筛选
      * @return {@code Y9Result<List<Resource>>} 有权限的子资源集合
      * @since 9.6.10
      */
     @Override
     public Y9Result<List<Resource>> listSubResourcesByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
-        @RequestParam("customId") @NotBlank String customId) {
+        @RequestParam("customId") @NotBlank String customId,
+        @RequestParam(name = "resourceType", required = false) ResourceTypeEnum resourceType) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Resource> returnResourceList =
-            y9PositionToResourceService.listSubResourcesByCustomId(positionId, customId, authority);
+            y9PositionToResourceService.listSubResourcesByCustomId(positionId, customId, authority, resourceType);
         return Y9Result.success(returnResourceList);
     }
 

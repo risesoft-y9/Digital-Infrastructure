@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.enums.platform.permission.AuthorityEnum;
+import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.model.platform.resource.App;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.model.platform.resource.VueMenu;
@@ -93,13 +94,15 @@ public interface PersonResourceApi {
      * @param personId 人员id
      * @param authority 权限类型 {@link AuthorityEnum}
      * @param resourceId 资源id
+     * @param resourceType 资源类型，为空时不筛选
      * @return {@code Y9Result<List<Resource>>} 有权限的子资源集合
      * @since 9.6.0
      */
     @GetMapping("/listSubResources")
     Y9Result<List<Resource>> listSubResources(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
-        @RequestParam(name = "resourceId", required = false) @NotBlank String resourceId);
+        @RequestParam(name = "resourceId", required = false) String resourceId,
+        @RequestParam(name = "resourceType", required = false) ResourceTypeEnum resourceType);
 
     /**
      * 获得 customId 对应的某一资源下，人员有相应操作权限的子资源集合
@@ -108,13 +111,15 @@ public interface PersonResourceApi {
      * @param personId 人员id
      * @param authority 权限类型 {@link AuthorityEnum}
      * @param customId 自定义id
+     * @param resourceType 资源类型，为空时不筛选
      * @return {@code Y9Result<List<Resource>>} 有权限的子资源集合
      * @since 9.6.10
      */
     @GetMapping("/listSubResourcesByCustomId")
     Y9Result<List<Resource>> listSubResourcesByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
-        @RequestParam("customId") @NotBlank String customId);
+        @RequestParam("customId") @NotBlank String customId,
+        @RequestParam(name = "resourceType", required = false) ResourceTypeEnum resourceType);
 
     /**
      * 根据人员id和操作类型，获取有权限的应用列表
