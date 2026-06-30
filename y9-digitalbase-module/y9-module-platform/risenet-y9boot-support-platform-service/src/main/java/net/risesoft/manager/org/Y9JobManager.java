@@ -52,6 +52,4 @@ public interface Y9JobManager {
     Y9Job insert(Y9Job job);
 
     Integer getMaxTabIndex();
-
-    boolean isNameAvailable(String name, String id);
 }

@@ -17,6 +17,7 @@ import net.risesoft.entity.org.Y9Department;
 import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.enums.AuditLogEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9DepartmentManager;
 import net.risesoft.model.platform.org.Department;
@@ -31,6 +32,7 @@ import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 
 /**
@@ -333,6 +335,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional
     public Department saveOrUpdate(Department department) {
+        checkCustomIdAvailable(department.getCustomId(), department.getId());
+
         if (StringUtils.isNotBlank(department.getId())) {
             Optional<Y9Department> departmentOptional = y9DepartmentManager.findById(department.getId());
             if (departmentOptional.isPresent()) {
@@ -376,6 +380,15 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         Y9Context.publishEvent(auditLogEvent);
 
         return PlatformModelConvertUtil.y9DepartmentToDepartment(savedDepartment);
+    }
+
+    private void checkCustomIdAvailable(String customId, String id) {
+        if (StringUtils.isBlank(customId)) {
+            return;
+        }
+        Optional<Y9Department> y9DepartmentOptional = y9DepartmentRepository.findByCustomId(customId);
+        Y9AssertUtil.isTrue(y9DepartmentOptional.isEmpty() || y9DepartmentOptional.get().getId().equals(id),
+            OrgUnitErrorCodeEnum.CUSTOM_ID_USED, customId);
     }
 
     @Override

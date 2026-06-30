@@ -5,6 +5,7 @@ import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ColumnDefault;
@@ -34,7 +35,8 @@ import net.risesoft.y9.util.Y9BeanUtil;
  * @date 2022/2/10
  */
 @Entity
-@Table(name = "Y9_COMMON_APP_STORE")
+@Table(name = "Y9_COMMON_APP_STORE",
+    uniqueConstraints = {@UniqueConstraint(name = Y9App.UK_CUSTOM_ID, columnNames = {"CUSTOM_ID"})})
 @DynamicUpdate
 @org.hibernate.annotations.Table(comment = "应用市场表", appliesTo = "Y9_COMMON_APP_STORE")
 @Data
@@ -42,6 +44,8 @@ import net.risesoft.y9.util.Y9BeanUtil;
 public class Y9App extends Y9ResourceBase {
 
     private static final long serialVersionUID = 1771730705695533602L;
+
+    public static final String UK_CUSTOM_ID = "UK_APP_CUSTOM_ID";
 
     {
         super.setResourceType(ResourceTypeEnum.APP);
@@ -117,6 +121,10 @@ public class Y9App extends Y9ResourceBase {
         if (StringUtils.isBlank(this.id)) {
             this.id = Y9IdGenerator.genId(IdType.SNOWFLAKE);
         }
+        if (StringUtils.isBlank(this.customId)) {
+            // customId 字段有唯一约束，不同数据库对唯一约束的允许不一致，此处保证 customId 列始终有值，所有数据库通用
+            this.customId = this.id;
+        }
         if (this.tabIndex == null || DefaultConsts.TAB_INDEX.equals(this.tabIndex)) {
             this.tabIndex = nextTabIndex;
         }
@@ -134,8 +142,21 @@ public class Y9App extends Y9ResourceBase {
         return null;
     }
 
+    @Override
+    public String getCustomId() {
+        if (StringUtils.equals(this.customId, this.id)) {
+            // 对上层隐藏“非必填”的 customId 字段唯一索引的实现细节
+            return null;
+        }
+        return this.customId;
+    }
+
     public void update(App app) {
         Y9BeanUtil.copyProperties(app, this);
+        if (StringUtils.isBlank(this.customId)) {
+            // customId 字段有唯一约束，不同数据库对唯一约束的允许不一致，此处保证 customId 列始终有值，所有数据库通用
+            this.customId = this.id;
+        }
         // 每次保存都更改审核状态为未审核
         this.checked = Boolean.FALSE;
         rebuildGuidPath(null);

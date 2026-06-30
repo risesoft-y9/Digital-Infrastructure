@@ -333,6 +333,8 @@ public class Y9AppServiceImpl implements Y9AppService {
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public App saveOrUpdate(App app) {
+        checkCustomIdAvailable(app.getCustomId(), app.getId());
+
         if (StringUtils.isNotBlank(app.getId())) {
             Optional<Y9App> y9AppOptional = y9AppManager.findById(app.getId());
             if (y9AppOptional.isPresent()) {
@@ -368,6 +370,15 @@ public class Y9AppServiceImpl implements Y9AppService {
         Y9Context.publishEvent(auditLogEvent);
 
         return entityToModel(savedApp);
+    }
+
+    private void checkCustomIdAvailable(String customId, String id) {
+        if (StringUtils.isBlank(customId)) {
+            return;
+        }
+        Optional<Y9App> y9AppOptional = y9AppRepository.findByCustomId(customId);
+        Y9AssertUtil.isTrue(y9AppOptional.isEmpty() || y9AppOptional.get().getId().equals(id),
+            ResourceErrorCodeEnum.CUSTOM_ID_USED, customId);
     }
 
     private Integer getNextTabIndex(String systemId) {

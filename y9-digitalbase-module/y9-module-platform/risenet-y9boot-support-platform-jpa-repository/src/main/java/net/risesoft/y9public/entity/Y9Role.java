@@ -5,6 +5,7 @@ import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ColumnDefault;
@@ -35,7 +36,8 @@ import net.risesoft.y9.util.Y9BeanUtil;
  * @date 2022/2/10
  */
 @Entity
-@Table(name = "Y9_ORG_ROLE")
+@Table(name = "Y9_ORG_ROLE",
+    uniqueConstraints = {@UniqueConstraint(name = Y9Role.UK_CUSTOM_ID, columnNames = {"CUSTOM_ID"})})
 @DynamicUpdate
 @org.hibernate.annotations.Table(comment = "角色表", appliesTo = "Y9_ORG_ROLE")
 @NoArgsConstructor
@@ -43,6 +45,8 @@ import net.risesoft.y9.util.Y9BeanUtil;
 public class Y9Role extends BaseEntity implements Comparable<Y9Role> {
 
     private static final long serialVersionUID = 4830591654511156717L;
+
+    public static final String UK_CUSTOM_ID = "UK_ROLE_CUSTOM_ID";
 
     /** 主键 */
     @Id
@@ -119,6 +123,11 @@ public class Y9Role extends BaseEntity implements Comparable<Y9Role> {
     @Comment("序列号")
     private Integer tabIndex = DefaultConsts.TAB_INDEX;
 
+    @Override
+    public int compareTo(Y9Role o) {
+        return this.tabIndex.compareTo(o.getTabIndex());
+    }
+
     public RoleLevelEnum getLevel() {
         // appId systemId 都为空则当前角色属于公共级角色
         // systemId 不为空则当前角色属于系统级角色
@@ -135,12 +144,26 @@ public class Y9Role extends BaseEntity implements Comparable<Y9Role> {
         return RoleLevelEnum.APP;
     }
 
+    public String getCustomId() {
+        if (StringUtils.equals(this.customId, this.id)) {
+            // 对上层隐藏“非必填”的 customId 字段唯一索引的实现细节
+            return null;
+        }
+        return this.customId;
+    }
+
     public Y9Role(Role role, Y9Role parentRole, Integer nextTabIndex, String currentTenantId) {
         Y9BeanUtil.copyProperties(role, this);
 
         if (StringUtils.isBlank(this.id)) {
             this.id = Y9IdGenerator.genId();
         }
+
+        if (StringUtils.isBlank(this.customId)) {
+            // customId 字段有唯一约束，不同数据库对唯一约束的允许不一致，此处保证 customId 列始终有值，所有数据库通用
+            this.customId = this.id;
+        }
+
         if (DefaultConsts.TAB_INDEX.equals(this.tabIndex)) {
             this.tabIndex = nextTabIndex;
         }
@@ -152,11 +175,6 @@ public class Y9Role extends BaseEntity implements Comparable<Y9Role> {
         }
 
         rebuildProperties(parentRole);
-    }
-
-    @Override
-    public int compareTo(Y9Role o) {
-        return this.tabIndex.compareTo(o.getTabIndex());
     }
 
     public void changeParent(Y9Role parentRole, Integer nextTabIndex) {
@@ -174,6 +192,11 @@ public class Y9Role extends BaseEntity implements Comparable<Y9Role> {
 
     public void update(Role role, Y9Role parentRole, String currentTenantId) {
         Y9BeanUtil.copyProperties(role, this);
+
+        if (StringUtils.isBlank(this.customId)) {
+            // customId 字段有唯一约束，不同数据库对唯一约束的允许不一致，此处保证 customId 列始终有值，所有数据库通用
+            this.customId = this.id;
+        }
 
         if (InitDataConsts.OPERATION_TENANT_ID.equals(currentTenantId)) {
             this.tenantId = null;

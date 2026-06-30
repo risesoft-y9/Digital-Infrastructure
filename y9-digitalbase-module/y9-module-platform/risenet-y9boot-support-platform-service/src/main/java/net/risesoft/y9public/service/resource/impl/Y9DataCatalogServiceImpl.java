@@ -23,6 +23,7 @@ import net.risesoft.entity.org.Y9Department;
 import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.enums.platform.resource.DataCatalogTypeEnum;
+import net.risesoft.exception.ResourceErrorCodeEnum;
 import net.risesoft.model.platform.dictionary.OptionValue;
 import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.resource.DataCatalog;
@@ -36,6 +37,7 @@ import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9DataCatalog;
@@ -73,6 +75,8 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public DataCatalog saveOrUpdate(DataCatalog dataCatalog) {
+        checkCustomIdAvailable(dataCatalog.getCustomId(), dataCatalog.getId());
+
         if (StringUtils.isNotBlank(dataCatalog.getId())) {
             Optional<Y9DataCatalog> y9DataCatalogOptional = y9DataCatalogManager.findById(dataCatalog.getId());
             if (y9DataCatalogOptional.isPresent()) {
@@ -88,6 +92,15 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
         Y9DataCatalog y9DataCatalog = new Y9DataCatalog(dataCatalog, findParent(dataCatalog.getParentId()).orElse(null),
             getNextTabIndex(dataCatalog.getParentId()), Y9LoginUserHolder.getTenantId());
         return PlatformModelConvertUtil.convert(y9DataCatalogManager.insert(y9DataCatalog), DataCatalog.class);
+    }
+
+    private void checkCustomIdAvailable(String customId, String id) {
+        if (StringUtils.isBlank(customId)) {
+            return;
+        }
+        Optional<Y9DataCatalog> y9DataCatalogOptional = y9DataCatalogRepository.findByCustomId(customId);
+        Y9AssertUtil.isTrue(y9DataCatalogOptional.isEmpty() || y9DataCatalogOptional.get().getId().equals(id),
+            ResourceErrorCodeEnum.CUSTOM_ID_USED, customId);
     }
 
     @Override

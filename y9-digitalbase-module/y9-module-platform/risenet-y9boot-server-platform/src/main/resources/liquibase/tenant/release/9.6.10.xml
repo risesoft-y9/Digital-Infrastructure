@@ -61,4 +61,103 @@
         </createIndex>
     </changeSet>
 
+
+    <changeSet id="1782462216835-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_ORG_DEPARTMENT" constraintName="UK_DEPARTMENT_CUSTOM_ID"/>
+            </not>
+        </preConditions>
+        <update tableName="Y9_ORG_DEPARTMENT">
+            <column name="CUSTOM_ID" valueComputed="ID"/>
+            <where>CUSTOM_ID = '' OR CUSTOM_ID IS NULL</where>
+        </update>
+        <addUniqueConstraint columnNames="CUSTOM_ID" constraintName="UK_DEPARTMENT_CUSTOM_ID"
+                             tableName="Y9_ORG_DEPARTMENT"/>
+    </changeSet>
+
+    <changeSet id="1782462216835-2" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_ORG_GROUP" constraintName="UK_GROUP_CUSTOM_ID"/>
+            </not>
+        </preConditions>
+        <update tableName="Y9_ORG_GROUP">
+            <column name="CUSTOM_ID" valueComputed="ID"/>
+            <where>CUSTOM_ID = '' OR CUSTOM_ID IS NULL</where>
+        </update>
+        <addUniqueConstraint columnNames="CUSTOM_ID" constraintName="UK_GROUP_CUSTOM_ID"
+                             tableName="Y9_ORG_GROUP"/>
+    </changeSet>
+
+    <changeSet id="1782462216835-3" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_ORG_MANAGER" constraintName="UK_MANAGER_CUSTOM_ID"/>
+            </not>
+        </preConditions>
+        <update tableName="Y9_ORG_MANAGER">
+            <column name="CUSTOM_ID" valueComputed="ID"/>
+            <where>CUSTOM_ID = '' OR CUSTOM_ID IS NULL</where>
+        </update>
+        <addUniqueConstraint columnNames="CUSTOM_ID" constraintName="UK_MANAGER_CUSTOM_ID"
+                             tableName="Y9_ORG_MANAGER"/>
+    </changeSet>
+
+    <changeSet id="1782462216835-4" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_ORG_ORGANIZATION" constraintName="UK_ORGANIZATION_CUSTOM_ID"/>
+            </not>
+        </preConditions>
+        <update tableName="Y9_ORG_ORGANIZATION">
+            <column name="CUSTOM_ID" valueComputed="ID"/>
+            <where>CUSTOM_ID = '' OR CUSTOM_ID IS NULL</where>
+        </update>
+        <addUniqueConstraint columnNames="CUSTOM_ID" constraintName="UK_ORGANIZATION_CUSTOM_ID"
+                             tableName="Y9_ORG_ORGANIZATION"/>
+    </changeSet>
+
+    <changeSet id="1782462216835-5" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_ORG_PERSON" constraintName="UK_PERSON_CUSTOM_ID"/>
+            </not>
+        </preConditions>
+        <update tableName="Y9_ORG_PERSON">
+            <column name="CUSTOM_ID" valueComputed="ID"/>
+            <where>CUSTOM_ID = '' OR CUSTOM_ID IS NULL</where>
+        </update>
+        <addUniqueConstraint columnNames="CUSTOM_ID" constraintName="UK_PERSON_CUSTOM_ID"
+                             tableName="Y9_ORG_PERSON"/>
+    </changeSet>
+
+    <changeSet id="1782462216835-6" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_ORG_POSITION" constraintName="UK_POSITION_CUSTOM_ID"/>
+            </not>
+        </preConditions>
+        <update tableName="Y9_ORG_POSITION">
+            <column name="CUSTOM_ID" valueComputed="ID"/>
+            <where>CUSTOM_ID = '' OR CUSTOM_ID IS NULL</where>
+        </update>
+        <addUniqueConstraint columnNames="CUSTOM_ID" constraintName="UK_POSITION_CUSTOM_ID"
+                             tableName="Y9_ORG_POSITION"/>
+    </changeSet>
+
+    <changeSet id="1782462216835-7" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_ORG_CUSTOM_GROUP" constraintName="UK_CUSTOM_GROUP_CUSTOM_ID"/>
+            </not>
+        </preConditions>
+        <update tableName="Y9_ORG_CUSTOM_GROUP">
+            <column name="CUSTOM_ID" valueComputed="ID"/>
+            <where>CUSTOM_ID = '' OR CUSTOM_ID IS NULL</where>
+        </update>
+        <addUniqueConstraint columnNames="CUSTOM_ID" constraintName="UK_CUSTOM_GROUP_CUSTOM_ID"
+                             tableName="Y9_ORG_CUSTOM_GROUP"/>
+    </changeSet>
+
 </databaseChangeLog>

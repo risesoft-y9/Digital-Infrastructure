@@ -24,4 +24,76 @@
         </update>
     </changeSet>
 
+
+    <changeSet id="1782461857835-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_COMMON_APP_STORE" constraintName="UK_APP_CUSTOM_ID"/>
+            </not>
+        </preConditions>
+        <update tableName="Y9_COMMON_APP_STORE">
+            <column name="CUSTOM_ID" valueComputed="ID"/>
+            <where>CUSTOM_ID = '' OR CUSTOM_ID IS NULL</where>
+        </update>
+        <addUniqueConstraint columnNames="CUSTOM_ID" constraintName="UK_APP_CUSTOM_ID"
+                             tableName="Y9_COMMON_APP_STORE"/>
+    </changeSet>
+
+    <changeSet id="1782461857835-2" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_COMMON_DATA_CATALOG" constraintName="UK_DATA_CATALOG_CUSTOM_ID"/>
+            </not>
+        </preConditions>
+        <update tableName="Y9_COMMON_DATA_CATALOG">
+            <column name="CUSTOM_ID" valueComputed="ID"/>
+            <where>CUSTOM_ID = '' OR CUSTOM_ID IS NULL</where>
+        </update>
+        <addUniqueConstraint columnNames="CUSTOM_ID" constraintName="UK_DATA_CATALOG_CUSTOM_ID"
+                             tableName="Y9_COMMON_DATA_CATALOG"/>
+    </changeSet>
+
+    <changeSet id="1782461857835-3" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_COMMON_MENU" constraintName="UK_MENU_CUSTOM_ID"/>
+            </not>
+        </preConditions>
+        <update tableName="Y9_COMMON_MENU">
+            <column name="CUSTOM_ID" valueComputed="ID"/>
+            <where>CUSTOM_ID = '' OR CUSTOM_ID IS NULL</where>
+        </update>
+        <addUniqueConstraint columnNames="CUSTOM_ID" constraintName="UK_MENU_CUSTOM_ID"
+                             tableName="Y9_COMMON_MENU"/>
+    </changeSet>
+
+    <changeSet id="1782461857835-4" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_COMMON_OPERATION" constraintName="UK_OPERATION_CUSTOM_ID"/>
+            </not>
+        </preConditions>
+        <update tableName="Y9_COMMON_OPERATION">
+            <column name="CUSTOM_ID" valueComputed="ID"/>
+            <where>CUSTOM_ID = '' OR CUSTOM_ID IS NULL</where>
+        </update>
+        <addUniqueConstraint columnNames="CUSTOM_ID" constraintName="UK_OPERATION_CUSTOM_ID"
+                             tableName="Y9_COMMON_OPERATION"/>
+    </changeSet>
+
+    <changeSet id="1782461857835-5" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_ORG_ROLE" constraintName="UK_ROLE_CUSTOM_ID"/>
+            </not>
+        </preConditions>
+        <update tableName="Y9_ORG_ROLE">
+            <column name="CUSTOM_ID" valueComputed="ID"/>
+            <where>CUSTOM_ID = '' OR CUSTOM_ID IS NULL</where>
+        </update>
+        <addUniqueConstraint columnNames="CUSTOM_ID" constraintName="UK_ROLE_CUSTOM_ID"
+                             tableName="Y9_ORG_ROLE"/>
+    </changeSet>
+
+
 </databaseChangeLog>

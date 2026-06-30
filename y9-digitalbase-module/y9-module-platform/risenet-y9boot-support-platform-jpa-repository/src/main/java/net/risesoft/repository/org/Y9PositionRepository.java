@@ -23,6 +23,8 @@ public interface Y9PositionRepository extends JpaRepository<Y9Position, String> 
 
     int countByJobId(String jobId);
 
+    Optional<Y9Position> findByCustomId(String customId);
+
     List<Y9Position> findByDn(String dn);
 
     List<Y9Position> findByJobId(String jobId);

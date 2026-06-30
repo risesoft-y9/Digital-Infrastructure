@@ -21,6 +21,7 @@ import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.org.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.enums.AuditLogEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9JobManager;
 import net.risesoft.manager.org.Y9PersonManager;
@@ -37,7 +38,7 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
-import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 
@@ -221,21 +222,6 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     @Override
     @Transactional
-    public Position save(Position position) {
-        Y9Position y9Position;
-        if (StringUtils.isNotBlank(position.getId())) {
-            y9Position = y9PositionManager.getById(position.getId());
-            Y9BeanUtil.copyProperties(position, y9Position);
-        } else {
-            y9Position = PlatformModelConvertUtil.convert(position, Y9Position.class);
-        }
-
-        Y9Position savedPosition = y9PositionManager.save(y9Position);
-        return PlatformModelConvertUtil.y9PositionToPosition(savedPosition);
-    }
-
-    @Override
-    @Transactional
     public List<Position> saveOrder(List<String> positionIds) {
         List<Y9Position> orgPositionList = new ArrayList<>();
 
@@ -256,6 +242,8 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Override
     @Transactional
     public Position saveOrUpdate(Position position) {
+        checkCustomIdAvailable(position.getCustomId(), position.getId());
+
         if (StringUtils.isNotEmpty(position.getId())) {
             Optional<Y9Position> positionOptional = y9PositionManager.findById(position.getId());
             if (positionOptional.isPresent()) {
@@ -305,6 +293,15 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         Y9Context.publishEvent(auditLogEvent);
 
         return PlatformModelConvertUtil.y9PositionToPosition(savedPosition);
+    }
+
+    private void checkCustomIdAvailable(String customId, String id) {
+        if (StringUtils.isBlank(customId)) {
+            return;
+        }
+        Optional<Y9Position> y9PositionOptional = y9PositionRepository.findByCustomId(customId);
+        Y9AssertUtil.isTrue(y9PositionOptional.isEmpty() || y9PositionOptional.get().getId().equals(id),
+            OrgUnitErrorCodeEnum.CUSTOM_ID_USED, customId);
     }
 
     @Override

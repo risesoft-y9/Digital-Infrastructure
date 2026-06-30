@@ -3,6 +3,7 @@ package net.risesoft.y9public.entity.resource;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Comment;
@@ -27,7 +28,8 @@ import net.risesoft.y9.util.Y9BeanUtil;
  * @date 2022/2/10
  */
 @Entity
-@Table(name = "Y9_COMMON_MENU")
+@Table(name = "Y9_COMMON_MENU",
+    uniqueConstraints = {@UniqueConstraint(name = Y9Menu.UK_CUSTOM_ID, columnNames = {"CUSTOM_ID"})})
 @DynamicUpdate
 @org.hibernate.annotations.Table(comment = "应用的菜单表", appliesTo = "Y9_COMMON_MENU")
 @Data
@@ -35,6 +37,8 @@ import net.risesoft.y9.util.Y9BeanUtil;
 public class Y9Menu extends Y9ResourceBase {
 
     private static final long serialVersionUID = 7952871346132443097L;
+
+    public static final String UK_CUSTOM_ID = "UK_MENU_CUSTOM_ID";
 
     {
         super.setResourceType(ResourceTypeEnum.MENU);
@@ -70,18 +74,6 @@ public class Y9Menu extends Y9ResourceBase {
     @Comment("元信息")
     private String meta;
 
-    public Y9Menu(Menu menu, Y9ResourceBase parentResource, Integer nextTabIndex) {
-        Y9BeanUtil.copyProperties(menu, this);
-
-        if (StringUtils.isBlank(this.id)) {
-            this.id = Y9IdGenerator.genId(IdType.SNOWFLAKE);
-        }
-        if (this.tabIndex == null || DefaultConsts.TAB_INDEX.equals(this.tabIndex)) {
-            this.tabIndex = nextTabIndex;
-        }
-        rebuildGuidPath(parentResource);
-    }
-
     @Override
     public String getAppId() {
         return this.appId;
@@ -92,8 +84,37 @@ public class Y9Menu extends Y9ResourceBase {
         return this.parentId;
     }
 
+    @Override
+    public String getCustomId() {
+        if (StringUtils.equals(this.customId, this.id)) {
+            // 对上层隐藏“非必填”的 customId 字段唯一索引的实现细节
+            return null;
+        }
+        return this.customId;
+    }
+
+    public Y9Menu(Menu menu, Y9ResourceBase parentResource, Integer nextTabIndex) {
+        Y9BeanUtil.copyProperties(menu, this);
+
+        if (StringUtils.isBlank(this.id)) {
+            this.id = Y9IdGenerator.genId(IdType.SNOWFLAKE);
+        }
+        if (StringUtils.isBlank(this.customId)) {
+            // customId 字段有唯一约束，不同数据库对唯一约束的允许不一致，此处保证 customId 列始终有值，所有数据库通用
+            this.customId = this.id;
+        }
+        if (this.tabIndex == null || DefaultConsts.TAB_INDEX.equals(this.tabIndex)) {
+            this.tabIndex = nextTabIndex;
+        }
+        rebuildGuidPath(parentResource);
+    }
+
     public void update(Menu menu, Y9ResourceBase parentResource) {
         Y9BeanUtil.copyProperties(menu, this);
+        if (StringUtils.isBlank(this.customId)) {
+            // customId 字段有唯一约束，不同数据库对唯一约束的允许不一致，此处保证 customId 列始终有值，所有数据库通用
+            this.customId = this.id;
+        }
         rebuildGuidPath(parentResource);
     }
 }

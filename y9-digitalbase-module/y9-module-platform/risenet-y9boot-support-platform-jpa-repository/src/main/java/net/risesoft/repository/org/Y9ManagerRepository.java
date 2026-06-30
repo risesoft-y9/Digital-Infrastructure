@@ -24,6 +24,8 @@ public interface Y9ManagerRepository extends JpaRepository<Y9Manager, String> {
 
     Optional<Y9Manager> findByLoginName(String loginName);
 
+    Optional<Y9Manager> findByCustomId(String customId);
+
     List<Y9Manager> findByNameContainingAndDnContaining(String name, String dnName);
 
     List<Y9Manager> findByNameContainingAndDnContainingAndDisabled(String name, String dnName, Boolean disabled);

@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ColumnDefault;
@@ -40,7 +41,8 @@ import cn.hutool.core.date.DateUtil;
  * @date 2022/2/10
  */
 @Entity
-@Table(name = "Y9_ORG_MANAGER")
+@Table(name = "Y9_ORG_MANAGER",
+    uniqueConstraints = {@UniqueConstraint(name = Y9Manager.UK_CUSTOM_ID, columnNames = {"CUSTOM_ID"})})
 @DynamicUpdate
 @org.hibernate.annotations.Table(comment = "三员表", appliesTo = "Y9_ORG_MANAGER")
 @Data
@@ -48,6 +50,8 @@ import cn.hutool.core.date.DateUtil;
 public class Y9Manager extends Y9OrgBase {
 
     private static final long serialVersionUID = -6531424704457510017L;
+
+    public static final String UK_CUSTOM_ID = "UK_MANAGER_CUSTOM_ID";
 
     {
         super.setOrgType(OrgTypeEnum.MANAGER);
@@ -144,6 +148,20 @@ public class Y9Manager extends Y9OrgBase {
     @Column(name = "LAST_REVIEW_LOG_TIME")
     private Date lastReviewLogTime;
 
+    @Override
+    public String getCustomId() {
+        if (StringUtils.equals(this.customId, this.id)) {
+            // 对上层隐藏“非必填”的 customId 字段唯一索引的实现细节
+            return null;
+        }
+        return this.customId;
+    }
+
+    @Override
+    public String getParentId() {
+        return this.parentId;
+    }
+
     public Y9Manager(
         Manager manager,
         Y9OrgBase parent,
@@ -154,6 +172,10 @@ public class Y9Manager extends Y9OrgBase {
 
         if (StringUtils.isBlank(this.id)) {
             this.id = Y9IdGenerator.genId(IdType.SNOWFLAKE);
+        }
+        if (StringUtils.isBlank(this.customId)) {
+            // customId 字段有唯一约束，不同数据库对唯一约束的允许不一致，此处保证 customId 列始终有值，所有数据库通用
+            this.customId = this.id;
         }
         if (!globalManager) {
             // 系统管理员新建的子域三员默认禁用 需安全管理员启用
@@ -166,9 +188,16 @@ public class Y9Manager extends Y9OrgBase {
         this.orderedPath = Y9OrgUtil.buildOrderedPath(this, ancestorList);;
     }
 
-    @Override
-    public String getParentId() {
-        return this.parentId;
+    public void update(Manager manager, Y9OrgBase parent, List<Y9OrgBase> ancestorList) {
+        Y9BeanUtil.copyProperties(manager, this);
+
+        if (StringUtils.isBlank(this.customId)) {
+            // customId 字段有唯一约束，不同数据库对唯一约束的允许不一致，此处保证 customId 列始终有值，所有数据库通用
+            this.customId = this.id;
+        }
+        this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.MANAGER, this.name, parent.getDn());
+        this.guidPath = Y9OrgUtil.buildGuidPath(parent.getGuidPath(), this.id);
+        this.orderedPath = Y9OrgUtil.buildOrderedPath(this, ancestorList);;
     }
 
     public Boolean changeDisabled() {

@@ -145,9 +145,7 @@ public class Y9JobServiceImpl implements Y9JobService {
     public Job saveOrUpdate(Job job) {
         Y9Job y9Job = PlatformModelConvertUtil.convert(job, Y9Job.class);
 
-        // 检查名称是否可用
-        Y9AssertUtil.isTrue(y9JobManager.isNameAvailable(y9Job.getName(), y9Job.getId()),
-            OrgUnitErrorCodeEnum.JOB_EXISTS, y9Job.getName());
+        checkNameAvailable(y9Job.getName(), y9Job.getId());
 
         if (StringUtils.isNotBlank(y9Job.getId())) {
             // 修改职位
@@ -183,6 +181,14 @@ public class Y9JobServiceImpl implements Y9JobService {
         return entityToModel(savedJob);
     }
 
+    private void checkNameAvailable(String name, String id) {
+        Optional<Y9Job> y9JobOptional = y9JobRepository.findByName(name);
+        // 不存在同名的职位、编辑职位时没修改名称同样认为可用
+        Y9AssertUtil.isTrue(y9JobOptional.isEmpty() || y9JobOptional.get().getId().equals(id),
+                OrgUnitErrorCodeEnum.JOB_EXISTS, name);
+    }
+
+    
     private Job entityToModel(Y9Job y9Job) {
         return PlatformModelConvertUtil.convert(y9Job, Job.class);
     }

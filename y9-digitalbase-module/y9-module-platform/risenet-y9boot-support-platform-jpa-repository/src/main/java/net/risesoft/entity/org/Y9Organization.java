@@ -3,6 +3,7 @@ package net.risesoft.entity.org;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ColumnDefault;
@@ -32,7 +33,8 @@ import net.risesoft.y9.util.Y9BeanUtil;
  * @date 2022/2/10
  */
 @Entity
-@Table(name = "Y9_ORG_ORGANIZATION")
+@Table(name = "Y9_ORG_ORGANIZATION",
+    uniqueConstraints = {@UniqueConstraint(name = Y9Organization.UK_CUSTOM_ID, columnNames = {"CUSTOM_ID"})})
 @DynamicUpdate
 @org.hibernate.annotations.Table(comment = "组织机构实体表", appliesTo = "Y9_ORG_ORGANIZATION")
 @Data
@@ -40,6 +42,8 @@ import net.risesoft.y9.util.Y9BeanUtil;
 public class Y9Organization extends Y9OrgBase {
 
     private static final long serialVersionUID = -5379834937852013780L;
+
+    public static final String UK_CUSTOM_ID = "UK_ORGANIZATION_CUSTOM_ID";
 
     {
         super.setOrgType(OrgTypeEnum.ORGANIZATION);
@@ -73,6 +77,10 @@ public class Y9Organization extends Y9OrgBase {
         if (StringUtils.isBlank(this.id)) {
             this.id = Y9IdGenerator.genId(IdType.SNOWFLAKE);
         }
+        if (StringUtils.isBlank(this.customId)) {
+            // customId 字段有唯一约束，不同数据库对唯一约束的允许不一致，此处保证 customId 列始终有值，所有数据库通用
+            this.customId = this.id;
+        }
         if (DefaultConsts.TAB_INDEX.equals(this.tabIndex)) {
             this.tabIndex = nextTabIndex;
         }
@@ -83,6 +91,15 @@ public class Y9Organization extends Y9OrgBase {
     @Override
     public String getParentId() {
         return null;
+    }
+
+    @Override
+    public String getCustomId() {
+        if (StringUtils.equals(this.customId, this.id)) {
+            // 对上层隐藏“非必填”的 customId 字段唯一索引的实现细节
+            return null;
+        }
+        return this.customId;
     }
 
     public void changeProperties(String properties) {
@@ -101,6 +118,10 @@ public class Y9Organization extends Y9OrgBase {
     public void update(Organization organization) {
         Y9BeanUtil.copyProperties(organization, this);
 
+        if (StringUtils.isBlank(this.customId)) {
+            // customId 字段有唯一约束，不同数据库对唯一约束的允许不一致，此处保证 customId 列始终有值，所有数据库通用
+            this.customId = this.id;
+        }
         this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.ORGANIZATION, this.name, null);
         this.guidPath = Y9OrgUtil.buildGuidPath(null, this.id);
     }

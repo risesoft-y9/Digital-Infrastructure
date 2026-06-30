@@ -112,17 +112,4 @@ public class Y9JobManagerImpl implements Y9JobManager {
     public Integer getMaxTabIndex() {
         return y9JobRepository.findTopByOrderByTabIndexDesc().map(Y9Job::getTabIndex).orElse(0);
     }
-
-    @Override
-    public boolean isNameAvailable(String name, String id) {
-        Optional<Y9Job> y9JobOptional = y9JobRepository.findByName(name);
-
-        if (y9JobOptional.isEmpty()) {
-            // 不存在同名的职位肯定可用
-            return true;
-        }
-
-        // 编辑职位时没修改名称同样认为可用
-        return y9JobOptional.get().getId().equals(id);
-    }
 }

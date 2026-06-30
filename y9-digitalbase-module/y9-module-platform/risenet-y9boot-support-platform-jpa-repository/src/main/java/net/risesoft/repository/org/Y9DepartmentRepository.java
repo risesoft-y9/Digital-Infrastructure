@@ -23,7 +23,7 @@ public interface Y9DepartmentRepository
 
     long countByDisabledAndGuidPathContaining(Boolean disabled, String guidPath);
 
-    List<Y9Department> findByBureauAndDnContainingOrderByTabIndexAsc(Boolean bureau, String dn);
+    Optional<Y9Department> findByCustomId(String customId);
 
     List<Y9Department> findByBureauAndGuidPathContainingAndDisabledOrderByTabIndexAsc(Boolean bureau,
         String organizationId, Boolean disabled);

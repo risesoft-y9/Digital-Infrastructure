@@ -26,6 +26,7 @@ import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.org.Y9PersonExt;
 import net.risesoft.entity.org.Y9Position;
 import net.risesoft.enums.AuditLogEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
@@ -52,6 +53,7 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 
@@ -440,6 +442,8 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Transactional
     public Person saveOrUpdate(Person person, PersonExt personExt) {
         Y9PersonExt y9PersonExt = PlatformModelConvertUtil.convert(personExt, Y9PersonExt.class);
+        
+        checkCustomIdAvailable(person.getCustomId(), person.getId());
 
         if (StringUtils.isNotBlank(person.getId())) {
             Optional<Y9Person> personOptional = y9PersonManager.findById(person.getId());
@@ -488,6 +492,15 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Context.publishEvent(auditLogEvent);
 
         return PlatformModelConvertUtil.y9PersonToPerson(savedPerson);
+    }
+
+    private void checkCustomIdAvailable(String customId, String id) {
+        if (StringUtils.isBlank(customId)) {
+            return;
+        }
+        Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByCustomId(customId);
+        Y9AssertUtil.isTrue(y9PersonOptional.isEmpty() || y9PersonOptional.get().getId().equals(id),
+            OrgUnitErrorCodeEnum.CUSTOM_ID_USED, customId);
     }
 
     @Override

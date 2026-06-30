@@ -4,7 +4,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -23,7 +25,8 @@ import net.risesoft.consts.DefaultConsts;
  * @date 2022/2/10
  */
 @Entity
-@Table(name = "Y9_ORG_CUSTOM_GROUP")
+@Table(name = "Y9_ORG_CUSTOM_GROUP",
+    uniqueConstraints = {@UniqueConstraint(name = Y9CustomGroup.UK_CUSTOM_ID, columnNames = {"CUSTOM_ID"})})
 @DynamicUpdate
 @org.hibernate.annotations.Table(comment = "自定义群组", appliesTo = "Y9_ORG_CUSTOM_GROUP")
 @NoArgsConstructor
@@ -31,6 +34,8 @@ import net.risesoft.consts.DefaultConsts;
 public class Y9CustomGroup extends BaseTenantEntity {
 
     private static final long serialVersionUID = -1149700156942236281L;
+
+    public static final String UK_CUSTOM_ID = "UK_CUSTOM_GROUP_CUSTOM_ID";
 
     /** 主键 */
     @Id
@@ -63,4 +68,11 @@ public class Y9CustomGroup extends BaseTenantEntity {
     @Column(name = "TAB_INDEX", nullable = false)
     private Integer tabIndex = DefaultConsts.TAB_INDEX;
 
+    public String getCustomId() {
+        if (StringUtils.equals(this.customId, this.id)) {
+            // 对上层隐藏“非必填”的 customId 字段唯一索引的实现细节
+            return null;
+        }
+        return this.customId;
+    }
 }

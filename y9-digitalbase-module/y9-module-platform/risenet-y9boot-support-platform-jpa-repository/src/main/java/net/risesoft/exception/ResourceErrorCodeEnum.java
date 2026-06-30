@@ -21,7 +21,8 @@ public enum ResourceErrorCodeEnum implements ErrorCode {
     IP_NOT_VALID(5, "IP 地址[{}]格式不合法"),
     RESOURCE_PARENT_NOT_FOUND(6, "资源父节点[{}]不存在"),
     RESOURCE_NOT_FOUND(7, "资源节点[{}]不存在"),
-    APP_IS_REGISTERED_BY_TENANT(8, "应用[{}]已有租户租用"),;
+    APP_IS_REGISTERED_BY_TENANT(8, "应用[{}]已有租户租用"),
+    CUSTOM_ID_USED(9, "自定义 ID[{}]已经被使用"),;
 
     private final int moduleErrorCode;
     private final String description;

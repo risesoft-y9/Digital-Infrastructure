@@ -137,14 +137,6 @@ public interface Y9PositionService {
     Position move(String id, String parentId);
 
     /**
-     * 保存岗位
-     *
-     * @param position 岗位
-     * @return {@link Position}
-     */
-    Position save(Position position);
-
-    /**
      * 保存或者修改此岗位的信息
      *
      * @param position 岗位对象

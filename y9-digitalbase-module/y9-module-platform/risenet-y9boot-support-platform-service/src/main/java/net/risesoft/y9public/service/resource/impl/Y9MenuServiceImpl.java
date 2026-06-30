@@ -15,11 +15,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.enums.AuditLogEnum;
+import net.risesoft.exception.ResourceErrorCodeEnum;
 import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
@@ -163,6 +165,8 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Menu saveOrUpdate(Menu menu) {
+        checkCustomIdAvailable(menu.getCustomId(), menu.getId());
+
         if (StringUtils.isNotBlank(menu.getId())) {
             Optional<Y9Menu> y9MenuOptional = y9MenuManager.findById(menu.getId());
             if (y9MenuOptional.isPresent()) {
@@ -198,6 +202,15 @@ public class Y9MenuServiceImpl implements Y9MenuService {
         Y9Context.publishEvent(auditLogEvent);
 
         return entityToModel(savedMenu);
+    }
+
+    private void checkCustomIdAvailable(String customId, String id) {
+        if (StringUtils.isBlank(customId)) {
+            return;
+        }
+        Optional<Y9Menu> y9MenuOptional = y9MenuRepository.findByCustomId(customId);
+        Y9AssertUtil.isTrue(y9MenuOptional.isEmpty() || y9MenuOptional.get().getId().equals(id),
+            ResourceErrorCodeEnum.CUSTOM_ID_USED, customId);
     }
 
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)

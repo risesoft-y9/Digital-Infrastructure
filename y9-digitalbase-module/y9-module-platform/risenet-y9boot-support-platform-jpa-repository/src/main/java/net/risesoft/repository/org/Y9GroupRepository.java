@@ -21,6 +21,8 @@ public interface Y9GroupRepository extends JpaRepository<Y9Group, String> {
 
     long countByDisabledAndGuidPathContaining(Boolean diabled, String guidPath);
 
+    Optional<Y9Group> findByCustomId(String customId);
+
     List<Y9Group> findByDn(String dn);
 
     List<Y9Group> findByDnAndDisabled(String dn, Boolean disabled);

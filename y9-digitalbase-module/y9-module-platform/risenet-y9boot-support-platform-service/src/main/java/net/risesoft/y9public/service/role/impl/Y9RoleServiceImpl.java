@@ -26,6 +26,7 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.Y9Role;
 import net.risesoft.y9public.entity.Y9System;
@@ -165,6 +166,8 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public Role saveOrUpdate(Role role) {
+        checkCustomIdAvailable(role.getCustomId(), role.getId());
+
         if (StringUtils.isNotEmpty(role.getId())) {
             Optional<Y9Role> y9RoleOptional = y9RoleManager.findById(role.getId());
             if (y9RoleOptional.isPresent()) {
@@ -201,6 +204,16 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         Y9Context.publishEvent(auditLogEvent);
 
         return entityToModel(savedRole);
+    }
+
+    private void checkCustomIdAvailable(String customId, String id) {
+        if (StringUtils.isBlank(customId)) {
+            return;
+        }
+        List<Y9Role> y9RoleList = y9RoleRepository.findByCustomId(customId);
+        Y9AssertUtil.isTrue(
+            y9RoleList.isEmpty() || y9RoleList.stream().allMatch(role -> StringUtils.equals(role.getId(), id)),
+            RoleErrorCodeEnum.CUSTOM_ID_USED, customId);
     }
 
     @Override

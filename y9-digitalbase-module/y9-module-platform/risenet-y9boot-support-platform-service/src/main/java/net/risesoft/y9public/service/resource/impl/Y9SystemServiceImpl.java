@@ -261,8 +261,8 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public System saveOrUpdate(System system) {
         Y9System y9System = PlatformModelConvertUtil.convert(system, Y9System.class);
-        Y9AssertUtil.isTrue(isNameAvailable(y9System.getId(), y9System.getName()),
-            SystemErrorCodeEnum.SYSTEM_WITH_SPECIFIC_NAME_EXISTS, y9System.getName());
+
+        checkNameAvailable(y9System.getId(), y9System.getName());
 
         if (StringUtils.isNotBlank(y9System.getId())) {
             Optional<Y9System> y9SystemOptional = y9SystemManager.findById(y9System.getId());
@@ -304,13 +304,10 @@ public class Y9SystemServiceImpl implements Y9SystemService {
         return entityToModel(savedSystem);
     }
 
-    private boolean isNameAvailable(String id, String name) {
+    private void checkNameAvailable(String id, String name) {
         Optional<Y9System> y9SystemOptional = y9SystemRepository.findByName(name);
-        if (y9SystemOptional.isEmpty()) {
-            return true;
-        }
-        // 修改系统时的检查也为可用
-        return y9SystemOptional.get().getId().equals(id);
+        Y9AssertUtil.isTrue(y9SystemOptional.isEmpty() || y9SystemOptional.get().getId().equals(id),
+            SystemErrorCodeEnum.SYSTEM_WITH_SPECIFIC_NAME_EXISTS, name);
     }
 
     private List<System> entityToModel(List<Y9System> y9SystemList) {

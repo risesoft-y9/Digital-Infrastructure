@@ -19,7 +19,6 @@ import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
-import net.risesoft.manager.org.Y9DepartmentManager;
 import net.risesoft.model.platform.org.Manager;
 import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.pojo.AuditLogEvent;
@@ -34,6 +33,7 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 
@@ -50,7 +50,6 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     private final Y9ManagerRepository y9ManagerRepository;
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
-    private final Y9DepartmentManager y9DepartmentManager;
     private final Y9SettingService y9SettingService;
 
     private final Y9PlatformProperties y9PlatformProperties;
@@ -278,13 +277,17 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     @Override
     @Transactional
     public Manager saveOrUpdate(Manager manager) {
+        checkCustomIdAvailable(manager.getCustomId(), manager.getId());
+
         if (StringUtils.isNotBlank(manager.getId())) {
             Optional<Y9Manager> y9ManagerOptional = y9ManagerRepository.findById(manager.getId());
             if (y9ManagerOptional.isPresent()) {
                 Y9Manager originalManager = PlatformModelConvertUtil.convert(y9ManagerOptional.get(), Y9Manager.class);
                 Y9Manager y9Manager = y9ManagerOptional.get();
 
-                Y9BeanUtil.copyProperties(manager, y9Manager);
+                Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(manager.getParentId());
+                List<Y9OrgBase> ancestorList = compositeOrgBaseManager.listOrgUnitAndAncestor(manager.getParentId());
+                y9Manager.update(manager, parent, ancestorList);
 
                 Y9Manager savedManager = this.update(y9Manager, originalManager);
 
@@ -329,6 +332,15 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         Y9Manager y9Manager = this.get(managerId);
         y9Manager.setLastReviewLogTime(checkTime);
         y9ManagerRepository.save(y9Manager);
+    }
+
+    private void checkCustomIdAvailable(String customId, String id) {
+        if (StringUtils.isBlank(customId)) {
+            return;
+        }
+        Optional<Y9Manager> y9ManagerOptional = y9ManagerRepository.findByCustomId(customId);
+        Y9AssertUtil.isTrue(y9ManagerOptional.isEmpty() || y9ManagerOptional.get().getId().equals(id),
+            OrgUnitErrorCodeEnum.CUSTOM_ID_USED, customId);
     }
 
     @Override
