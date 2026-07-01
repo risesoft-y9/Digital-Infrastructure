@@ -16,6 +16,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
+import net.risesoft.consts.DefaultConsts;
 import net.risesoft.enums.platform.PersonalAppTabIndexTypeEnum;
 import net.risesoft.persistence.EnumConverter;
 
@@ -74,6 +75,6 @@ public class Y9PersonalApp extends BaseEntity implements Serializable {
     /** 排列序号 */
     @Comment("排列序号")
     @Column(name = "TAB_INDEX", nullable = false)
-    private Integer tabIndex = 0;
+    private Integer tabIndex = DefaultConsts.TAB_INDEX;
 
 }

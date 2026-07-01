@@ -42,7 +42,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="TAB_INDEX_TYPE" remarks="排列序号类别 1:配置的默认排序 2:个人排序" type="INT"/>
-            <column name="TAB_INDEX" remarks="排列序号" type="INT"/>
+            <column name="TAB_INDEX" remarks="排列序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 

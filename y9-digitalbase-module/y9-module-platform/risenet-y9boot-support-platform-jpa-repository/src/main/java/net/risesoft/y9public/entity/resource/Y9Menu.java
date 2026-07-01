@@ -29,7 +29,8 @@ import net.risesoft.y9.util.Y9BeanUtil;
  */
 @Entity
 @Table(name = "Y9_COMMON_MENU",
-    uniqueConstraints = {@UniqueConstraint(name = Y9Menu.UK_CUSTOM_ID, columnNames = {"CUSTOM_ID"})})
+    uniqueConstraints = {@UniqueConstraint(name = Y9Menu.UK_CUSTOM_ID, columnNames = {"CUSTOM_ID"}),
+        @UniqueConstraint(name = Y9Menu.UK_GUID_PATH, columnNames = {"GUID_PATH"})})
 @DynamicUpdate
 @org.hibernate.annotations.Table(comment = "应用的菜单表", appliesTo = "Y9_COMMON_MENU")
 @Data
@@ -39,6 +40,8 @@ public class Y9Menu extends Y9ResourceBase {
     private static final long serialVersionUID = 7952871346132443097L;
 
     public static final String UK_CUSTOM_ID = "UK_MENU_CUSTOM_ID";
+
+    public static final String UK_GUID_PATH = "UK_MENU_GUID_PATH";
 
     {
         super.setResourceType(ResourceTypeEnum.MENU);

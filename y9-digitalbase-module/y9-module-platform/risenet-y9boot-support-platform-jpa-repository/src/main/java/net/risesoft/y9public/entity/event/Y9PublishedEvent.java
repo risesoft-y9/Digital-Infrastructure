@@ -54,7 +54,7 @@ public class Y9PublishedEvent extends BaseEntity {
     private String eventName;
 
     /** 事件处理对象id */
-    @Column(name = "OBJ_ID", length = 255, nullable = true)
+    @Column(name = "OBJ_ID", length = 38, nullable = true)
     @Comment("事件处理对象id")
     private String objId;
 

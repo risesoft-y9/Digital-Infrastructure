@@ -31,7 +31,8 @@ import net.risesoft.y9.util.Y9BeanUtil;
  */
 @Entity
 @Table(name = "Y9_COMMON_DATA_CATALOG",
-    uniqueConstraints = {@UniqueConstraint(name = Y9DataCatalog.UK_CUSTOM_ID, columnNames = {"CUSTOM_ID"})})
+    uniqueConstraints = {@UniqueConstraint(name = Y9DataCatalog.UK_CUSTOM_ID, columnNames = {"CUSTOM_ID"}),
+        @UniqueConstraint(name = Y9DataCatalog.UK_GUID_PATH, columnNames = {"GUID_PATH"})})
 @DynamicUpdate
 @org.hibernate.annotations.Table(comment = "数据目录", appliesTo = "Y9_COMMON_DATA_CATALOG")
 @Data
@@ -42,6 +43,8 @@ public class Y9DataCatalog extends Y9ResourceBase {
 
     public static final String UK_CUSTOM_ID = "UK_DATA_CATALOG_CUSTOM_ID";
 
+    public static final String UK_GUID_PATH = "UK_DATA_CATALOG_GUID_PATH";
+
     {
         super.setResourceType(ResourceTypeEnum.DATA_CATALOG);
     }
@@ -50,7 +53,7 @@ public class Y9DataCatalog extends Y9ResourceBase {
      * 父节点ID
      */
     @Comment("父节点ID")
-    @Column(name = "PARENT_ID", length = 38, nullable = false)
+    @Column(name = "PARENT_ID", length = 38)
     private String parentId;
 
     /**

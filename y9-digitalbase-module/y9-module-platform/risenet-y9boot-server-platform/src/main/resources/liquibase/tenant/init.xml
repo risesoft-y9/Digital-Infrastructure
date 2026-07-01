@@ -210,10 +210,10 @@
             <column name="CATEGORY" remarks="类别" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="DEPT_ID" remarks="部门唯一标示" type="VARCHAR(50)">
+            <column name="DEPT_ID" remarks="部门唯一标示" type="VARCHAR(38)">
                 <constraints nullable="false"/>
             </column>
-            <column name="ORG_BASE_ID" remarks="组织唯一标示" type="VARCHAR(50)">
+            <column name="ORG_BASE_ID" remarks="组织唯一标示" type="VARCHAR(38)">
                 <constraints nullable="false"/>
             </column>
             <column name="TAB_INDEX" remarks="排序号" type="INT">
@@ -551,7 +551,7 @@
             <column defaultValueNumeric="1" name="ORIGINAL" remarks="0:添加的人员，1：新增的人员" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="ORIGINAL_ID" remarks="原始人员id" type="VARCHAR(255)"/>
+            <column name="ORIGINAL_ID" remarks="原始人员id" type="VARCHAR(38)"/>
             <column name="PARENT_ID" remarks="父节点id" type="VARCHAR(38)">
                 <constraints nullable="false"/>
             </column>

@@ -45,7 +45,7 @@ public class Y9CustomGroup extends BaseTenantEntity {
 
     /** 自定义id */
     @Comment("自定义id")
-    @Column(name = "CUSTOM_ID")
+    @Column(name = "CUSTOM_ID", length = 255)
     private String customId;
 
     /** 群组名称 */

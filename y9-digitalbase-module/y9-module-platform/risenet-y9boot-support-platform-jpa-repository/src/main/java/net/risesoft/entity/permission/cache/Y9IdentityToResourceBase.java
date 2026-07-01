@@ -34,7 +34,7 @@ public abstract class Y9IdentityToResourceBase extends BaseTenantEntity {
 
     /** 主键id */
     @Id
-    @Column(name = "ID")
+    @Column(name = "ID", length = 38)
     @Comment("主键id")
     protected String id;
 

@@ -9,6 +9,13 @@ package net.risesoft.consts;
  */
 public class DefaultConsts {
 
-    public static Integer TAB_INDEX = 0;
+    /** RC8当前版本(用于数据库存版本号) */
+    public static final Integer Y9_VERSION = 0;
+
+    public static final Integer TAB_INDEX = 0;
+    
+    public static final Integer ID_LENGTH = 38;
+    
+    public static final Integer CUSTOM_ID_LENGTH = 255;
 
 }

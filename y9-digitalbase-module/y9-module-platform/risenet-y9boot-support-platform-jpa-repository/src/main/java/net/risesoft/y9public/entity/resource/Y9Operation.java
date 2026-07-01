@@ -33,7 +33,8 @@ import net.risesoft.y9.util.Y9BeanUtil;
  */
 @Entity
 @Table(name = "Y9_COMMON_OPERATION",
-    uniqueConstraints = {@UniqueConstraint(name = Y9Operation.UK_CUSTOM_ID, columnNames = {"CUSTOM_ID"})})
+    uniqueConstraints = {@UniqueConstraint(name = Y9Operation.UK_CUSTOM_ID, columnNames = {"CUSTOM_ID"}),
+        @UniqueConstraint(name = Y9Operation.UK_GUID_PATH, columnNames = {"GUID_PATH"})})
 @DynamicUpdate
 @org.hibernate.annotations.Table(comment = "页面按钮操作表", appliesTo = "Y9_COMMON_OPERATION")
 @Data
@@ -43,6 +44,8 @@ public class Y9Operation extends Y9ResourceBase {
     private static final long serialVersionUID = -138076174688809730L;
 
     public static final String UK_CUSTOM_ID = "UK_OPERATION_CUSTOM_ID";
+
+    public static final String UK_GUID_PATH = "UK_OPERATION_GUID_PATH";
 
     {
         super.setResourceType(ResourceTypeEnum.OPERATION);

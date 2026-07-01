@@ -95,5 +95,45 @@
                              tableName="Y9_ORG_ROLE"/>
     </changeSet>
 
+    <changeSet id="1782891434335-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_COMMON_APP_STORE" constraintName="UK_APP_GUID_PATH"/>
+            </not>
+        </preConditions>
+        <addUniqueConstraint columnNames="GUID_PATH" constraintName="UK_APP_GUID_PATH"
+                             tableName="Y9_COMMON_APP_STORE"/>
+    </changeSet>
+
+    <changeSet id="1782891434335-2" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_COMMON_DATA_CATALOG" constraintName="UK_DATA_CATALOG_GUID_PATH"/>
+            </not>
+        </preConditions>
+        <addUniqueConstraint columnNames="GUID_PATH" constraintName="UK_DATA_CATALOG_GUID_PATH"
+                             tableName="Y9_COMMON_DATA_CATALOG"/>
+    </changeSet>
+
+    <changeSet id="1782891434335-3" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_COMMON_MENU" constraintName="UK_MENU_GUID_PATH"/>
+            </not>
+        </preConditions>
+        <addUniqueConstraint columnNames="GUID_PATH" constraintName="UK_MENU_GUID_PATH"
+                             tableName="Y9_COMMON_MENU"/>
+    </changeSet>
+
+    <changeSet id="1782891434335-4" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_COMMON_OPERATION" constraintName="UK_OPERATION_GUID_PATH"/>
+            </not>
+        </preConditions>
+        <addUniqueConstraint columnNames="GUID_PATH" constraintName="UK_OPERATION_GUID_PATH"
+                             tableName="Y9_COMMON_OPERATION"/>
+    </changeSet>
+
 
 </databaseChangeLog>

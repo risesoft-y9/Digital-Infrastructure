@@ -36,7 +36,8 @@ import net.risesoft.y9.util.Y9BeanUtil;
  */
 @Entity
 @Table(name = "Y9_COMMON_APP_STORE",
-    uniqueConstraints = {@UniqueConstraint(name = Y9App.UK_CUSTOM_ID, columnNames = {"CUSTOM_ID"})})
+    uniqueConstraints = {@UniqueConstraint(name = Y9App.UK_CUSTOM_ID, columnNames = {"CUSTOM_ID"}),
+        @UniqueConstraint(name = Y9App.UK_GUID_PATH, columnNames = {"GUID_PATH"})})
 @DynamicUpdate
 @org.hibernate.annotations.Table(comment = "应用市场表", appliesTo = "Y9_COMMON_APP_STORE")
 @Data
@@ -46,6 +47,8 @@ public class Y9App extends Y9ResourceBase {
     private static final long serialVersionUID = 1771730705695533602L;
 
     public static final String UK_CUSTOM_ID = "UK_APP_CUSTOM_ID";
+
+    public static final String UK_GUID_PATH = "UK_APP_GUID_PATH";
 
     {
         super.setResourceType(ResourceTypeEnum.APP);

@@ -17,7 +17,7 @@
             </column>
             <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
             <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
-            <column name="CUSTOM_ID" remarks="自定义id" type="VARCHAR(500)"/>
+            <column name="CUSTOM_ID" remarks="自定义id" type="VARCHAR(255)"/>
             <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
             <column defaultValueNumeric="1" name="ENABLED" remarks="启用状态:1=启用,0=禁用" type="INT">
                 <constraints nullable="false"/>
@@ -62,7 +62,9 @@
             </not>
         </preConditions>
         <addColumn tableName="Y9_COMMON_DATA_CATALOG">
-            <column name="TENANT_ID" type="VARCHAR(38)" remarks="租户id"/>
+            <column name="TENANT_ID" type="VARCHAR(38)" remarks="租户id">
+                <constraints nullable="false"/>
+            </column>
         </addColumn>
     </changeSet>
 

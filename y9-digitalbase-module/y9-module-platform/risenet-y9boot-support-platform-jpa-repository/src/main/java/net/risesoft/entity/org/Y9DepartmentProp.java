@@ -39,12 +39,12 @@ public class Y9DepartmentProp extends BaseEntity {
     private String id;
 
     /** 部门唯一标示 */
-    @Column(name = "DEPT_ID", length = 50, nullable = false)
+    @Column(name = "DEPT_ID", length = 38, nullable = false)
     @Comment("部门唯一标示")
     private String deptId;
 
     /** 组织唯一标示 */
-    @Column(name = "ORG_BASE_ID", length = 50, nullable = false)
+    @Column(name = "ORG_BASE_ID", length = 38, nullable = false)
     @Comment("组织唯一标示")
     private String orgBaseId;
 

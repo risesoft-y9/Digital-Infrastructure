@@ -42,7 +42,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="ORIGINAL_ID" remarks="原始人员id" type="VARCHAR(38)"/>
-            <column name="PARENT_ID" remarks="父节点id" type="VARCHAR(255)"/>
+            <column name="PARENT_ID" remarks="父节点id" type="VARCHAR(38)"/>
             <column name="PASSWORD" remarks="密码" type="VARCHAR(255)"/>
             <column name="PERSON_ID" remarks="人员id" type="VARCHAR(38)">
                 <constraints nullable="false"/>
@@ -97,7 +97,7 @@
             </column>
             <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
             <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
-            <column name="CUSTOM_ID" remarks="自定义id" type="VARCHAR(500)"/>
+            <column name="CUSTOM_ID" remarks="自定义id" type="VARCHAR(255)"/>
             <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
             <column defaultValueNumeric="1" name="ENABLED" remarks="启用状态:1=启用,0=禁用" type="INT">
                 <constraints nullable="false"/>
@@ -214,7 +214,7 @@
             </column>
             <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
             <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
-            <column name="CUSTOM_ID" remarks="自定义id" type="VARCHAR(500)"/>
+            <column name="CUSTOM_ID" remarks="自定义id" type="VARCHAR(255)"/>
             <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
             <column defaultValueNumeric="1" name="ENABLED" remarks="启用状态:1=启用,0=禁用" type="INT">
                 <constraints nullable="false"/>
@@ -263,7 +263,7 @@
             </column>
             <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
             <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
-            <column name="CUSTOM_ID" remarks="自定义id" type="VARCHAR(500)"/>
+            <column name="CUSTOM_ID" remarks="自定义id" type="VARCHAR(255)"/>
             <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
             <column defaultValueNumeric="1" name="ENABLED" remarks="启用状态:1=启用,0=禁用" type="INT">
                 <constraints nullable="false"/>
@@ -476,7 +476,7 @@
             <column defaultValueNumeric="0" name="TENANT_CUSTOM" remarks="租户自定义" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="TENANT_ID" remarks="tenantCustom=true时的租户id" type="VARCHAR(255)"/>
+            <column name="TENANT_ID" remarks="tenantCustom=true时的租户id" type="VARCHAR(38)"/>
             <column defaultValue="role" name="TYPE" remarks="类型：role、folder" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -507,7 +507,7 @@
             <column name="EVENT_TYPE" remarks="事件类型" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="OBJ_ID" remarks="事件处理对象id" type="VARCHAR(255)"/>
+            <column name="OBJ_ID" remarks="事件处理对象id" type="VARCHAR(38)"/>
             <column name="OPERATOR" remarks="事件操作者" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>

@@ -135,7 +135,7 @@ public class Y9User extends BaseEntity {
     private String name;
 
     /** 父节点id */
-    @Column(name = "PARENT_ID", length = 255)
+    @Column(name = "PARENT_ID", length = 38)
     @Comment("父节点id")
     private String parentId;
 

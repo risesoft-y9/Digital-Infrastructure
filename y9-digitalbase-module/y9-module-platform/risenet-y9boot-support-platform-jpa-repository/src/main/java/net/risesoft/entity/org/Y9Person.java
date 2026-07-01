@@ -178,7 +178,7 @@ public class Y9Person extends Y9OrgBase {
     /**
      * 原始人员id
      */
-    @Column(name = "ORIGINAL_ID", length = 255)
+    @Column(name = "ORIGINAL_ID", length = 38)
     @Comment("原始人员id")
     private String originalId;
 

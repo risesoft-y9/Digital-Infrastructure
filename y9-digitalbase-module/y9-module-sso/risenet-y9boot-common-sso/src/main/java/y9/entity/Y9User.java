@@ -129,7 +129,7 @@ public class Y9User implements Serializable {
     @Comment("名称")
     private String name;
 
-    @Column(name = "PARENT_ID", length = 255)
+    @Column(name = "PARENT_ID", length = 38)
     @Comment("父节点id")
     private String parentId;
 
