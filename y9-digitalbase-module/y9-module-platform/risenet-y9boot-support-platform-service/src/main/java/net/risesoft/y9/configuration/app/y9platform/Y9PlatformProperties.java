@@ -3,9 +3,12 @@ package net.risesoft.y9.configuration.app.y9platform;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import net.risesoft.y9.configuration.app.y9platform.schedule.ScheduleProperties;
 
 @Getter
 @Setter
@@ -80,5 +83,7 @@ public class Y9PlatformProperties {
      * 数据目录档案保密期限
      */
     private List<String> dataCatalogConfidentialityPeriods = List.of("10", "20", "30");
-
+    
+    @NestedConfigurationProperty
+    private ScheduleProperties schedule = new ScheduleProperties();
 }

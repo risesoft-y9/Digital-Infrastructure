@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -47,9 +46,8 @@ public class ScheduledTask {
     private AccessLogReporter accessLogReporter;
 
     /**
-     * 每天凌晨1点检查是否登录系统进行审查
+     * 检查是否登录系统进行审查
      */
-    @Scheduled(cron = "0 0 1 * * ?")
     @SchedulerLock(name = "checkManagerLogReviewLock", lockAtLeastFor = "PT30M")
     public void checkManagerLogReview() {
         LOGGER.info("********************检查三员审查情况-开始**********************");
@@ -112,9 +110,8 @@ public class ScheduledTask {
     }
 
     /**
-     * 每天凌晨1点检查三员密码是不是按时修改
+     * 检查三员密码是不是按时修改
      */
-    @Scheduled(cron = "0 0 1 * * ?")
     @SchedulerLock(name = "checkManagerPasswordModificationLock", lockAtLeastFor = "PT30M")
     public void checkManagerPasswordModification() {
         LOGGER.info("********************检查三员密码修改情况-开始**********************");
@@ -178,9 +175,8 @@ public class ScheduledTask {
     }
 
     /**
-     * 每天凌晨2点同步授权主体的资源权限
+     * 同步授权主体的资源权限
      */
-    @Scheduled(cron = "0 0 2 * * ?")
     @SchedulerLock(name = "syncIdentityResourceLock", lockAtLeastFor = "PT30M")
     public void syncIdentityResource() {
         List<Tenant> y9TenantList = y9TenantService.listAll();
@@ -197,9 +193,8 @@ public class ScheduledTask {
     }
 
     /**
-     * 每天凌晨4点同步授权主体的角色
+     * 同步授权主体的角色
      */
-    @Scheduled(cron = "0 0 4 * * ?")
     @SchedulerLock(name = "syncIdentityRoleLock", lockAtLeastFor = "PT30M")
     public void syncIdentityRole() {
         List<Tenant> y9TenantList = y9TenantService.listAll();
