@@ -1,3 +1,56 @@
+## v9.6.10 2026-06-25
+
+### Added
+
+- 新增应用分类及个人应用分类相关能力
+- 新增角色级别，权限授权展示和判断支持角色级别信息
+- 增加根据自定义 id 查询有权限的子资源接口
+- platform 针对组织、人员、岗位、角色等实体添加批量获取接口
+- 增加根据组织节点 id 和部门属性类型查找部门属性对应部门列表的接口
+- 新增 risenet-y9boot-starter-system-registration，支持应用启动时自动往数字底座注册系统
+- 自定义 Spring Boot 应用 banner，启动时打印更有用的应用信息
+- 日志查询支持根据 paramsJson 模糊查询，审计日志支持根据系统名查询
+- 支持打包 docker 镜像时切换镜像仓库
+
+### Changed
+
+- 组织架构、权限、资源、应用分类等接口调整到更合理的包结构，并优化接口命名
+- 组织架构接口和单点登录返回信息不再包含密码字段
+- 权限相关展示数据优化，补充对“隐藏”操作权限的说明
+- 组织架构树搜索优化，批量获取接口的 id 列表增加默认值和去重处理
+- 微服务间 API 调用改为注入接口而不是具体实现
+- 审计日志能力提取至 risenet-y9boot-support-audit
+- redis 的值使用 Jackson 替代 JDK 序列化、反序列化
+- 使用 lombok 将强依赖字段注入改为构造注入，并生成 SLF4J Logger 字段
+- 提取公共 lombok.config 配置到根目录，移除子模块中重复配置文件
+- 从 risenet-y9boot-common-util 拆分 risenet-y9boot-common-poi
+
+### Fixed
+
+- 数据目录新增和修改后未触发权限缓存重新计算的问题
+- 岗位禁用状态修改、人员岗位列表排序时，登录账号 positionIds 没有同步更新的问题
+- 分类 id 为空时的处理问题
+- liquibase includeAll 默认字典序排序导致按版本号命名的 changelog 执行顺序不正确的问题
+- Elasticsearch 操作偶尔出现 Connection reset by peer 的问题
+- feign client 一个方法中不能同时使用多个 @SpringQueryMap 的问题
+- Jackson 反序列化不能忽略类中不存在字段的问题
+- 时间字段序列化时区不正确的问题
+- 根据条件筛选资源、null 值查询和参数判空相关问题
+- 新增应用角色没有系统 id 的问题
+- 运维三员租户 id 报错的问题
+- 同一个系统新增应用 tabIndex 都为 0 的问题
+- 系统部署多个实例时，系统被租用后只有其中一个实例刷新数据源的问题
+- 异步任务在线程池复用线程时没有传递 ThreadLocal 值的问题
+- 新建人员或三员不能同步到账号表的问题
+- 有 @RiseLog 注解且开关打开时才记录日志，避免其他情况误记录
+- docker 镜像 tag 从 v9.6.x 调整为 9.6.x
+- Element Plus 组件 size 从 mini 调整为 small
+- 修正 maxWaithThreadCount 拼写为 maxWaitThreadCount
+
+### Dependency Upgrades
+
+- 升级 central-publishing-maven-plugin 版本
+
 ## v9.6.9 2026-02-03
 
 ### Added
