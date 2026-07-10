@@ -442,7 +442,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Transactional
     public Person saveOrUpdate(Person person, PersonExt personExt) {
         Y9PersonExt y9PersonExt = PlatformModelConvertUtil.convert(personExt, Y9PersonExt.class);
-        
+
         checkCustomIdAvailable(person.getCustomId(), person.getId());
 
         if (StringUtils.isNotBlank(person.getId())) {

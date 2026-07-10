@@ -4,7 +4,6 @@ import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,15 +26,16 @@ import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.util.PlatformModelConvertUtil;
-import net.risesoft.y9.TenantCache;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.Y9System;
+import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.resource.Y9SystemManager;
+import net.risesoft.y9public.manager.tenant.Y9TenantManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
 import net.risesoft.y9public.repository.Y9SystemRepository;
 import net.risesoft.y9public.repository.resource.Y9AppRepository;
@@ -60,6 +60,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     private final Y9AppManager y9AppManager;
     private final Y9TenantSystemManager y9TenantSystemManager;
     private final Y9SystemManager y9SystemManager;
+    private final Y9TenantManager y9TenantManager;
 
     private static System entityToModel(Y9System savedSystem) {
         return PlatformModelConvertUtil.convert(savedSystem, System.class);
@@ -229,15 +230,14 @@ public class Y9SystemServiceImpl implements Y9SystemService {
             y9TenantSystemManager.saveTenantSystem(savedSystem.getId(), Y9LoginUserHolder.getTenantId());
             return savedSystem;
         } else {
-            Set<String> tenantIdSet = TenantCache.getTenantIdSet();
+            Optional<Y9Tenant> y9TenantOptional = y9TenantManager.findIfSingleTenant();
             // 单租户时默认租用
-            if (tenantIdSet.size() == 1) {
-                for (String tenantId : tenantIdSet) {
-                    y9System.setTenantId(tenantId);
-                    System savedSystem = this.saveOrUpdate(y9System);
-                    y9TenantSystemManager.saveTenantSystem(savedSystem.getId(), tenantId);
-                    return savedSystem;
-                }
+            if (y9TenantOptional.isPresent()) {
+                String tenantId = y9TenantOptional.get().getId();
+                y9System.setTenantId(tenantId);
+                System savedSystem = this.saveOrUpdate(y9System);
+                y9TenantSystemManager.saveTenantSystem(savedSystem.getId(), tenantId);
+                return savedSystem;
             }
         }
 

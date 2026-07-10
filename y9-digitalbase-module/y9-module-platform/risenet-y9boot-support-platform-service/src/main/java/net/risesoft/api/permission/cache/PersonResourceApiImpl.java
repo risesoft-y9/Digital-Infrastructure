@@ -100,7 +100,8 @@ public class PersonResourceApiImpl implements PersonResourceApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<FrontendMenu> frontendMenuList = new ArrayList<>();
-        frontendMenuBuilder.buildFrontendMenus(IdentityTypeEnum.PERSON, personId, authority, resourceId, frontendMenuList);
+        frontendMenuBuilder.buildFrontendMenus(IdentityTypeEnum.PERSON, personId, authority, resourceId,
+            frontendMenuList);
 
         return Y9Result.success(frontendMenuList);
     }

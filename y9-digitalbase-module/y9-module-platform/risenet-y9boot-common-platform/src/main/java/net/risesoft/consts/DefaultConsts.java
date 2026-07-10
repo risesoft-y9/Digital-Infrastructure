@@ -13,9 +13,9 @@ public class DefaultConsts {
     public static final Integer Y9_VERSION = 0;
 
     public static final Integer TAB_INDEX = 0;
-    
+
     public static final Integer ID_LENGTH = 38;
-    
+
     public static final Integer CUSTOM_ID_LENGTH = 255;
 
 }

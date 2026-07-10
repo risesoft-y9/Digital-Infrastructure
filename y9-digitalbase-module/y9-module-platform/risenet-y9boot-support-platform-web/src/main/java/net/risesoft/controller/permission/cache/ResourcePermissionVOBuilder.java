@@ -104,7 +104,7 @@ public class ResourcePermissionVOBuilder {
         Set<Resource> resourceSet = getResourcesWithHierarchy(permissionList);
         Set<String> idSet = resourceSet.stream().map(Resource::getId).collect(Collectors.toSet());
         List<Resource> topResourceList = resourceSet.stream()
-            .filter(r -> (r.getParentId() == null || !idSet.contains(r.getParentId())))
+            .filter(r -> (r.getParentId() == null || !idSet.contains(r.getParentId()))) // 父节点为空或父节点为系统 id 之类的就是资源顶节点
             .sorted()
             .collect(Collectors.toList());
 

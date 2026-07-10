@@ -34,7 +34,6 @@ import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9AssertUtil;
-import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 
 /**

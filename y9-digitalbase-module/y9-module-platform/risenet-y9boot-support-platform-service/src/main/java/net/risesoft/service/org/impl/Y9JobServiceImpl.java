@@ -185,10 +185,9 @@ public class Y9JobServiceImpl implements Y9JobService {
         Optional<Y9Job> y9JobOptional = y9JobRepository.findByName(name);
         // 不存在同名的职位、编辑职位时没修改名称同样认为可用
         Y9AssertUtil.isTrue(y9JobOptional.isEmpty() || y9JobOptional.get().getId().equals(id),
-                OrgUnitErrorCodeEnum.JOB_EXISTS, name);
+            OrgUnitErrorCodeEnum.JOB_EXISTS, name);
     }
 
-    
     private Job entityToModel(Y9Job y9Job) {
         return PlatformModelConvertUtil.convert(y9Job, Job.class);
     }

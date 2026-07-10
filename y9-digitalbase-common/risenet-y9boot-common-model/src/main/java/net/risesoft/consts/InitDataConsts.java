@@ -11,24 +11,8 @@ package net.risesoft.consts;
  */
 public class InitDataConsts {
 
-    /** 系统id */
-    public static final String SYSTEM_ID = "11111111-1111-1111-1111-111111111111";
-    /** 应用id */
-    public static final String APP_ID = "11111111-1111-1111-1111-111111111112";
-
-    /** 租户id */
-    public static final String TENANT_ID = "11111111-1111-1111-1111-111111111113";
     /** 运维租户id */
     public static final String OPERATION_TENANT_ID = "11111111-1111-1111-1111-111111111120";
-    /** 数据源id */
-    public static final String DATASOURCE_ID = "11111111-1111-1111-1111-111111111114";
-
-    /** 运维系统管理员id */
-    public static final String OPERATION_SYSTEM_MANAGER_ID = "11111111-1111-1111-1111-111111111117";
-    /** 运维安全保密员id */
-    public static final String OPERATION_SECURITY_MANAGER_ID = "11111111-1111-1111-1111-111111111118";
-    /** 运维安全审计员id */
-    public static final String OPERATION_AUDIT_MANAGER_ID = "11111111-1111-1111-1111-111111111119";
 
     public static final String DEFAULT_SYSTEM_MANAGER = "systemManager";
     public static final String DEFAULT_SECURITY_MANAGER = "securityManager";

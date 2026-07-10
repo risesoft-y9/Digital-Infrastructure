@@ -1,5 +1,7 @@
 package net.risesoft;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.InitDataConsts;
 import net.risesoft.entity.org.Y9Department;
 import net.risesoft.entity.org.Y9Job;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
@@ -31,12 +32,14 @@ import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.service.permission.Y9AuthorizationService;
 import net.risesoft.service.permission.cache.Y9PersonToResourceService;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.resource.Y9MenuService;
 import net.risesoft.y9public.service.resource.Y9OperationService;
 import net.risesoft.y9public.service.resource.Y9SystemService;
+import net.risesoft.y9public.service.tenant.Y9TenantService;
 
 @SpringBootTest
 @Slf4j
@@ -56,6 +59,8 @@ public class TestPlatform {
     private Y9JobService y9JobService;
 
     @Autowired
+    private Y9TenantService y9TenantService;
+    @Autowired
     private Y9SystemService y9SystemService;
     @Autowired
     private Y9AppService y9AppService;
@@ -69,9 +74,14 @@ public class TestPlatform {
     @Autowired
     private Y9PersonToResourceService y9PersonToResourceService;
 
+    @Autowired
+    private Y9Properties y9Properties;
+
     @Test
     public void test() throws InterruptedException {
-        Y9LoginUserHolder.setTenantId(InitDataConsts.TENANT_ID);
+        y9TenantService.listAll().stream().findFirst().ifPresent(y9Tenant -> {
+            Y9LoginUserHolder.setTenantId(y9Tenant.getId());
+        });
 
         Organization organization = createTestOrganization();
         Department department = createTestDepartment(organization);
@@ -80,8 +90,8 @@ public class TestPlatform {
         Person person = createTestPerson(department);
         // Y9Position position = createTestPosition(department, job);
 
-        System system = y9SystemService.getById(InitDataConsts.SYSTEM_ID);
-        App app = createTestApp(system);
+        Optional<System> systemOptional = y9SystemService.findByName(y9Properties.getSystemName());
+        App app = createTestApp(systemOptional.orElseGet(null));
         // Y9Menu menu = createTestMenu(app);
         // Y9Operation operation = createTestOperation(menu);
 

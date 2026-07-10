@@ -122,4 +122,5 @@ public interface Y9TenantSystemService {
     List<TenantSystem> saveTenantSystems(String[] systemIds, String tenantId);
 
     TenantSystem getById(String id);
+
 }

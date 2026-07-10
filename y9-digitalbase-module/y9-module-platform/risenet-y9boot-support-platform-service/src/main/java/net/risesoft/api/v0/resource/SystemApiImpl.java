@@ -1,11 +1,7 @@
 package net.risesoft.api.v0.resource;
 
-import java.util.List;
-import java.util.Optional;
-
 import javax.validation.constraints.NotBlank;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -16,11 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.v0.resource.SystemApi;
-import net.risesoft.consts.InitDataConsts;
 import net.risesoft.model.platform.System;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.util.PlatformModelConvertUtil;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 
@@ -79,36 +73,13 @@ public class SystemApiImpl implements SystemApi {
      */
     @Override
     public Y9Result<System> registrySystem(String name, String cnName, String contextPath, String isvGuid) {
-        List<System> y9Systems = y9SystemService.listByContextPath(contextPath);
-        if (!y9Systems.isEmpty()) {
-            return Y9Result.failure("该系统上下文已存在，请重新输入！");
-        }
-        Optional<System> y9SystemOptional = y9SystemService.findByName(name);
-        if (y9SystemOptional.isPresent()) {
-            return Y9Result.failure("该系统名称已存在，请重新输入！");
-        }
-        if (StringUtils.isBlank(isvGuid)) {
-            isvGuid = InitDataConsts.TENANT_ID;
-        }
-        Y9LoginUserHolder.setTenantId(isvGuid);
+        System system = new System();
+        system.setName(name);
+        system.setCnName(cnName);
+        system.setContextPath(contextPath);
+        System savedSystem = y9SystemService.saveAndRegister4Tenant(system);
 
-        try {
-            System system = new System();
-            system.setTenantId(isvGuid);
-            system.setName(name);
-            system.setCnName(cnName);
-            system.setContextPath(contextPath);
-            System savedSystem = y9SystemService.saveOrUpdate(system);
-
-            // 自动租用
-            y9TenantSystemService.saveTenantSystem(savedSystem.getId(), Y9LoginUserHolder.getTenantId());
-
-            return Y9Result.success(PlatformModelConvertUtil.convert(savedSystem, System.class), "注册应用成功！");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Y9Result.failure("创建失败！");
-        }
-
+        return Y9Result.success(PlatformModelConvertUtil.convert(savedSystem, System.class), "注册应用成功！");
     }
 
 }

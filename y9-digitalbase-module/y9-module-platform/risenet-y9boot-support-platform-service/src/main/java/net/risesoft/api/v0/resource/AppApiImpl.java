@@ -1,7 +1,6 @@
 package net.risesoft.api.v0.resource;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.constraints.NotBlank;
 
@@ -17,8 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.api.platform.v0.resource.AppApi;
-import net.risesoft.consts.InitDataConsts;
-import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.enums.platform.resource.AppOpenTypeEnum;
 import net.risesoft.enums.platform.resource.AppTypeEnum;
@@ -184,125 +181,49 @@ public class AppApiImpl implements AppApi {
     @Override
     public Y9Result<App> registryApp(@NotBlank String systemName, @NotBlank String name, @NotBlank String url,
         String customId, String tenantGuid) {
-        Optional<System> y9SystemOptional = y9SystemService.findByName(systemName);
-        if (y9SystemOptional.isEmpty()) {
-            return Y9Result.failure("该系统不存在，请重新输入！");
-        }
-        if (StringUtils.isBlank(tenantGuid)) {
-            tenantGuid = InitDataConsts.TENANT_ID;
-        }
-        Y9LoginUserHolder.setTenantId(tenantGuid);
-        String systemId = y9SystemOptional.get().getId();
-        App saveIsvApp;
-        String appId = null;
-        String msg = "注册应用成功！";
-        try {
-            LOGGER.info("创建应用");
-            App app = new App();
-            app.setName(name);
-            app.setSystemId(systemId);
-            app.setUrl(url);
-            app.setEnabled(true);
-            if (StringUtils.isNotBlank(customId)) {
-                app.setCustomId(customId);
-            }
-            app.setShowNumber(false);
-            app.setOpentype(AppOpenTypeEnum.DESKTOP);
-            app.setType(AppTypeEnum.BUSINESS_COLLABORATION);
-            saveIsvApp = y9AppService.saveOrUpdate(app);
-            appId = saveIsvApp.getId();
-            y9AppService.verifyApp(appId, true, ManagerLevelEnum.SYSTEM_MANAGER.getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (appId != null) {
-                y9AppService.delete(appId);
-            }
-            return Y9Result.failure("创建失败！原因为：" + e.getMessage());
-        }
 
-        try {
-            LOGGER.info("租用系统");
-            y9TenantSystemService.saveTenantSystem(systemId, tenantGuid);
-            y9TenantAppService.save(appId, tenantGuid, "系统默认租用");
-        } catch (Exception e) {
-            e.printStackTrace();
-            LOGGER.info("系统、应用已创建成功！但自动应用租用失败，请收到进行租用！");
-            msg = "系统、应用已创建成功！但自动应用租用失败，请收到进行租用！";
+        String systemId = y9SystemService.getByName(systemName).getId();
+
+        LOGGER.info("创建应用");
+        App app = new App();
+        app.setName(name);
+        app.setSystemId(systemId);
+        app.setUrl(url);
+        app.setEnabled(true);
+        if (StringUtils.isNotBlank(customId)) {
+            app.setCustomId(customId);
         }
-        return Y9Result.success(PlatformModelConvertUtil.convert(saveIsvApp, App.class), msg);
+        app.setShowNumber(false);
+        app.setOpentype(AppOpenTypeEnum.DESKTOP);
+        app.setType(AppTypeEnum.BUSINESS_COLLABORATION);
+        App saveIsvApp = y9AppService.saveAndRegister4Tenant(app);
+
+        return Y9Result.success(PlatformModelConvertUtil.convert(saveIsvApp, App.class), "注册应用成功！");
     }
 
     @Override
     public Y9Result<App> registrySystemAndApp(@NotBlank String systemName, @NotBlank String systemCnName,
         String isvGuid, String contextPath, @NotBlank String appName, @NotBlank String url, String customId) {
 
-        List<System> y9Systems = y9SystemService.listByContextPath(contextPath);
-        if (!y9Systems.isEmpty()) {
-            return Y9Result.failure("该系统上下文已存在，请重新输入！");
-        }
-        Optional<System> y9SystemOptional = y9SystemService.findByName(systemName);
-        if (y9SystemOptional.isPresent()) {
-            return Y9Result.failure("该系统名称已存在，请重新输入！");
-        }
-        if (StringUtils.isBlank(isvGuid)) {
-            isvGuid = InitDataConsts.TENANT_ID;
-        }
-        Y9LoginUserHolder.setTenantId(isvGuid);
-        String systemId = null;
-        String msg = "创建成功!";
-        try {
-            System y9System = new System();
-            y9System.setTenantId(isvGuid);
-            y9System.setName(systemName);
-            y9System.setCnName(systemCnName);
-            y9System.setContextPath(contextPath);
-            System system = y9SystemService.saveOrUpdate(y9System);
-            systemId = system.getId();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Y9Result.failure("创建系统失败！");
-        }
-        try {
-            y9TenantSystemService.saveTenantSystem(systemId, isvGuid);
-        } catch (Exception e) {
-            y9SystemService.delete(systemId);
-            e.printStackTrace();
-            return Y9Result.failure("租用系统失败！");
-        }
-        String appId = null;
-        App saveIsvApp = null;
-        try {
-            App app = new App();
-            app.setName(appName);
-            app.setSystemId(systemId);
-            app.setUrl(url);
-            app.setEnabled(true);
-            if (StringUtils.isNotBlank(customId)) {
-                app.setCustomId(customId);
-            }
-            app.setShowNumber(false);
-            app.setOpentype(AppOpenTypeEnum.DESKTOP);
-            app.setType(AppTypeEnum.BUSINESS_COLLABORATION);
+        System system = new System();
+        system.setName(systemName);
+        system.setCnName(systemCnName);
+        system.setContextPath(contextPath);
+        System savedSystem = y9SystemService.saveOrUpdate(system);
 
-            saveIsvApp = y9AppService.saveOrUpdate(app);
-            appId = saveIsvApp.getId();
-            y9AppService.verifyApp(appId, true, ManagerLevelEnum.SYSTEM_MANAGER.getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-            y9TenantSystemService.deleteByTenantIdAndSystemId(isvGuid, systemId);
-            y9SystemService.delete(systemId);
-            if (appId != null) {
-                y9AppService.delete(appId);
-            }
-            return Y9Result.failure("系统创建成功，但应用添加失败！");
+        App app = new App();
+        app.setName(appName);
+        app.setSystemId(savedSystem.getId());
+        app.setUrl(url);
+        app.setEnabled(true);
+        if (StringUtils.isNotBlank(customId)) {
+            app.setCustomId(customId);
         }
-        try {
-            y9TenantAppService.save(appId, isvGuid, "开发使用");
-        } catch (Exception e) {
-            e.printStackTrace();
-            msg = "系统、应用已创建成功！但自动应用租用失败，请收到进行租用";
-        }
-        return Y9Result.success(PlatformModelConvertUtil.convert(saveIsvApp, App.class), msg);
+        app.setShowNumber(false);
+        app.setType(AppTypeEnum.BUSINESS_COLLABORATION);
+        App savedApp = y9AppService.saveAndRegister4Tenant(app);
+
+        return Y9Result.success(PlatformModelConvertUtil.convert(savedApp, App.class), "创建成功!");
     }
 
     /**

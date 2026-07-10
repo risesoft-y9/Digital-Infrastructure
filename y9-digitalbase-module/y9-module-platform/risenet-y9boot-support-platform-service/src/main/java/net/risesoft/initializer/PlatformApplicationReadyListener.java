@@ -14,21 +14,15 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.RoleTypeEnum;
-import net.risesoft.id.IdType;
-import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.model.platform.Role;
 import net.risesoft.model.platform.System;
-import net.risesoft.model.platform.resource.App;
 import net.risesoft.model.platform.tenant.DataSourceInfo;
 import net.risesoft.model.platform.tenant.Tenant;
-import net.risesoft.model.platform.tenant.TenantSystem;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
-import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.role.Y9RoleService;
 import net.risesoft.y9public.service.tenant.Y9DataSourceService;
-import net.risesoft.y9public.service.tenant.Y9TenantAppService;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
 import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 
@@ -48,33 +42,15 @@ public class PlatformApplicationReadyListener implements ApplicationListener<App
 
     private final Y9TenantService y9TenantService;
     private final Y9SystemService y9SystemService;
-    private final Y9AppService y9AppService;
+    private final Y9RoleService y9RoleService;
     private final Y9DataSourceService y9DataSourceService;
     private final Y9TenantSystemService y9TenantSystemService;
+
     private final Y9Properties y9Properties;
     private final Y9PlatformProperties y9PlatformProperties;
-    private final Y9RoleService y9RoleService;
-    private final Y9TenantAppService y9TenantAppService;
 
-    private void createApp(String appId, String systemId) {
-        if (!y9AppService.existsById(appId)) {
-            App app = new App();
-            app.setId(appId);
-            app.setSystemId(systemId);
-            app.setName("数据目录");
-            app.setAliasName("数据目录");
-            app.setEnabled(true);
-            app.setHidden(false);
-            app.setUrl(y9Properties.getCommon().getOrgBaseUrl());
-            app.setInherit(false);
-            app.setChecked(false);
-            app.setShowNumber(false);
-            y9AppService.saveOrUpdate(app);
-        }
-    }
-
-    private DataSourceInfo createDataSource(String dbName, String datasourceId) {
-        return y9DataSourceService.createTenantDefaultDataSource(dbName, datasourceId);
+    private DataSourceInfo createOrFindDataSource(String dbName) {
+        return y9DataSourceService.createTenantDefaultDataSource(dbName);
     }
 
     private void createPublicRoleTopNode() {
@@ -90,51 +66,34 @@ public class PlatformApplicationReadyListener implements ApplicationListener<App
         }
     }
 
-    private void createSystem(String systemId) {
-        Optional<System> systemOptional = y9SystemService.findById(systemId);
+    private System createOrFindSystem(String name, String cnName, String contextPath) {
+        Optional<System> systemOptional = y9SystemService.findByName(y9Properties.getSystemName());
         if (systemOptional.isEmpty()) {
             System system = new System();
-            system.setId(systemId);
-            system.setContextPath(y9Properties.getContextPath());
-            system.setName(y9Properties.getSystemName());
-            system.setCnName(y9Properties.getSystemCnName());
-            system.setEnabled(true);
+            system.setName(name);
+            system.setCnName(cnName);
+            system.setContextPath(contextPath);
             system.setAutoInit(true);
-            system.setTabIndex(10000);
-            y9SystemService.saveOrUpdate(system);
+            // 租用系统会发送 租户租用系统事件 系统做监听做数据初始化
+            System savedSystem = y9SystemService.saveAndRegister4Tenant(system);
+
+            return savedSystem;
         }
+        return systemOptional.get();
     }
 
-    private void createTenant(String tenantId, String dataSourceId) {
-        Optional<Tenant> tenantOptional = y9TenantService.findById(tenantId);
+    private Tenant createOrFindTenant(String dataSourceId, String tenantName) {
+        Optional<Tenant> tenantOptional = y9TenantService.findByShortName(tenantName);
         if (tenantOptional.isEmpty()) {
             Tenant tenant = new Tenant();
-            tenant.setId(tenantId);
             tenant.setDefaultDataSourceId(dataSourceId);
-            tenant.setShortName(y9PlatformProperties.getInitTenantName());
-            tenant.setName(y9PlatformProperties.getInitTenantName());
+            tenant.setShortName(tenantName);
+            tenant.setName(tenantName);
             tenant.setEnabled(true);
             tenant.setTabIndex(10000);
-            y9TenantService.saveOrUpdate(tenant);
+            return y9TenantService.saveOrUpdate(tenant);
         }
-    }
-
-    private void createTenantApp(String appId, String tenantId) {
-        y9TenantAppService.save(appId, tenantId, "系统默认租用");
-    }
-
-    private void createTenantSystem(String tenantId, String systemId, String dataSourceId) {
-        Optional<TenantSystem> tenantSystemOptional =
-            y9TenantSystemService.getByTenantIdAndSystemId(tenantId, systemId);
-        if (tenantSystemOptional.isEmpty()) {
-            TenantSystem tenantSystem = new TenantSystem();
-            tenantSystem.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-            tenantSystem.setTenantId(tenantId);
-            tenantSystem.setTenantDataSource(dataSourceId);
-            tenantSystem.setSystemId(systemId);
-            tenantSystem.setInitialized(false);
-            y9TenantSystemService.save(tenantSystem);
-        }
+        return tenantOptional.get();
     }
 
     @Override
@@ -142,13 +101,9 @@ public class PlatformApplicationReadyListener implements ApplicationListener<App
     public void onApplicationEvent(ApplicationReadyEvent event) {
         LOGGER.info("platform ApplicationReady...");
 
-        createDataSource(y9PlatformProperties.getInitTenantSchema(), InitDataConsts.DATASOURCE_ID);
-        createTenant(InitDataConsts.TENANT_ID, InitDataConsts.DATASOURCE_ID);
-        createSystem(InitDataConsts.SYSTEM_ID);
-        // 租用系统会发送 租户租用系统事件 系统做监听做数据初始化
-        createTenantSystem(InitDataConsts.TENANT_ID, InitDataConsts.SYSTEM_ID, InitDataConsts.DATASOURCE_ID);
-        createApp(InitDataConsts.APP_ID, InitDataConsts.SYSTEM_ID);
-        createTenantApp(InitDataConsts.APP_ID, InitDataConsts.TENANT_ID);
+        DataSourceInfo defaultDataSource = createOrFindDataSource(y9PlatformProperties.getInitTenantSchema());
+        createOrFindTenant(defaultDataSource.getId(), y9PlatformProperties.getInitTenantName());
+        createOrFindSystem(y9Properties.getSystemName(), y9Properties.getSystemCnName(), y9Properties.getContextPath());
         createPublicRoleTopNode();
     }
 

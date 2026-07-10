@@ -33,6 +33,7 @@ import net.risesoft.service.permission.cache.Y9PersonToResourceService;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
@@ -40,8 +41,10 @@ import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9public.entity.Y9System;
 import net.risesoft.y9public.entity.resource.Y9DataCatalog;
 import net.risesoft.y9public.manager.resource.Y9DataCatalogManager;
+import net.risesoft.y9public.manager.resource.Y9SystemManager;
 import net.risesoft.y9public.repository.resource.Y9DataCatalogRepository;
 import net.risesoft.y9public.service.resource.Y9DataCatalogService;
 
@@ -58,9 +61,11 @@ import net.risesoft.y9public.service.resource.Y9DataCatalogService;
 public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
 
     private final Y9PlatformProperties y9PlatformProperties;
+    private final Y9Properties y9Properties;
 
     private final Y9DataCatalogRepository y9DataCatalogRepository;
     private final Y9DataCatalogManager y9DataCatalogManager;
+    private final Y9SystemManager y9SystemManager;
 
     private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9PersonToResourceService y9PersonToResourceService;
@@ -89,8 +94,10 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
             }
         }
 
+        Optional<Y9System> y9SystemOptional = y9SystemManager.findByName(y9Properties.getSystemName());
         Y9DataCatalog y9DataCatalog = new Y9DataCatalog(dataCatalog, findParent(dataCatalog.getParentId()).orElse(null),
-            getNextTabIndex(dataCatalog.getParentId()), Y9LoginUserHolder.getTenantId());
+            getNextTabIndex(dataCatalog.getParentId()), y9SystemOptional.get().getId(),
+            Y9LoginUserHolder.getTenantId());
         return PlatformModelConvertUtil.convert(y9DataCatalogManager.insert(y9DataCatalog), DataCatalog.class);
     }
 

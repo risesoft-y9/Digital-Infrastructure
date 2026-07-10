@@ -83,7 +83,7 @@ public class Y9PlatformProperties {
      * 数据目录档案保密期限
      */
     private List<String> dataCatalogConfidentialityPeriods = List.of("10", "20", "30");
-    
+
     @NestedConfigurationProperty
     private ScheduleProperties schedule = new ScheduleProperties();
 }

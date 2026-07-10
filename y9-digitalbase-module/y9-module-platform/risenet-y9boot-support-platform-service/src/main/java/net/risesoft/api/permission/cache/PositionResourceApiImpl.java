@@ -101,7 +101,8 @@ public class PositionResourceApiImpl implements PositionResourceApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<FrontendMenu> frontendMenuList = new ArrayList<>();
-        frontendMenuBuilder.buildFrontendMenus(IdentityTypeEnum.POSITION, positionId, authority, resourceId, frontendMenuList);
+        frontendMenuBuilder.buildFrontendMenus(IdentityTypeEnum.POSITION, positionId, authority, resourceId,
+            frontendMenuList);
 
         return Y9Result.success(frontendMenuList);
     }

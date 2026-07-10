@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -25,16 +24,17 @@ import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.util.PlatformModelConvertUtil;
-import net.risesoft.y9.TenantCache;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.Y9System;
 import net.risesoft.y9public.entity.resource.Y9App;
+import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
+import net.risesoft.y9public.manager.tenant.Y9TenantManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
 import net.risesoft.y9public.repository.Y9SystemRepository;
 import net.risesoft.y9public.repository.resource.Y9AppRepository;
@@ -54,6 +54,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     protected final Y9TenantAppManager y9TenantAppManager;
     private final Y9AppManager y9AppManager;
     private final Y9TenantSystemManager y9TenantSystemManager;
+    private final Y9TenantManager y9TenantManager;
 
     private final Y9AppRepository y9AppRepository;
     private final Y9SystemRepository y9SystemRepository;
@@ -178,13 +179,12 @@ public class Y9AppServiceImpl implements Y9AppService {
             // 租用应用
             y9TenantAppManager.save(savedApp.getId(), Y9LoginUserHolder.getTenantId(), "系统默认租用");
         } else {
-            Set<String> tenantIdSet = TenantCache.getTenantIdSet();
+            Optional<Y9Tenant> y9TenantOptional = y9TenantManager.findIfSingleTenant();
             // 单租户时默认租用
-            if (tenantIdSet.size() == 1) {
-                for (String tenantId : tenantIdSet) {
-                    y9TenantSystemManager.saveTenantSystem(savedApp.getSystemId(), tenantId);
-                    y9TenantAppManager.save(savedApp.getId(), tenantId, "系统默认租用");
-                }
+            if (y9TenantOptional.isPresent()) {
+                String tenantId = y9TenantOptional.get().getId();
+                y9TenantSystemManager.saveTenantSystem(savedApp.getSystemId(), tenantId);
+                y9TenantAppManager.save(savedApp.getId(), tenantId, "系统默认租用");
             }
         }
         return savedApp;

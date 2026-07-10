@@ -14,7 +14,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.consts.DefaultConsts;
-import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.resource.DataCatalogTypeEnum;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.id.Y9IdGenerator;
@@ -87,7 +86,7 @@ public class Y9DataCatalog extends Y9ResourceBase {
 
     @Override
     public String getAppId() {
-        return InitDataConsts.APP_ID;
+        return "";
     }
 
     @Override
@@ -104,7 +103,12 @@ public class Y9DataCatalog extends Y9ResourceBase {
         return this.customId;
     }
 
-    public Y9DataCatalog(DataCatalog dataCatalog, Y9DataCatalog parent, Integer nextTabIndex, String currentTenantId) {
+    public Y9DataCatalog(
+        DataCatalog dataCatalog,
+        Y9DataCatalog parent,
+        Integer nextTabIndex,
+        String systemId,
+        String currentTenantId) {
         Y9BeanUtil.copyProperties(dataCatalog, this);
 
         if (StringUtils.isBlank(this.id)) {
@@ -115,7 +119,7 @@ public class Y9DataCatalog extends Y9ResourceBase {
             this.customId = this.id;
         }
         this.tenantId = currentTenantId;
-        this.systemId = InitDataConsts.SYSTEM_ID;
+        this.systemId = systemId;
         this.inherit = Boolean.TRUE;
         if (this.tabIndex == null || DefaultConsts.TAB_INDEX.equals(this.tabIndex)) {
             this.tabIndex = nextTabIndex;

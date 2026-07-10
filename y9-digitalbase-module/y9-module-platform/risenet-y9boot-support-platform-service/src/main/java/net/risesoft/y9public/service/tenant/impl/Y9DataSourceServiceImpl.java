@@ -109,8 +109,8 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public DataSourceInfo createTenantDefaultDataSource(String dbName, String id) {
-        Y9DataSource y9DataSource = y9DataSourceManager.createDataSourceIfNotExists(dbName, id);
+    public DataSourceInfo createTenantDefaultDataSource(String dbName) {
+        Y9DataSource y9DataSource = y9DataSourceManager.createDataSourceIfNotExists(dbName, null);
         return entityToModel(y9DataSource);
     }
 
