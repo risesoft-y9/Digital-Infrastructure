@@ -74,17 +74,6 @@ public class Y9TenantServiceImpl implements Y9TenantService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public Tenant createTenant(String tenantName, String tenantShortName, String dataSourceId) {
-        Tenant y9Tenant = new Tenant();
-        y9Tenant.setName(tenantName);
-        y9Tenant.setShortName(tenantShortName);
-        y9Tenant.setEnabled(Boolean.TRUE);
-        y9Tenant.setDefaultDataSourceId(dataSourceId);
-        return this.saveOrUpdate(y9Tenant);
-    }
-
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void delete(String id) {
         y9UserService.deleteByTenantId(id);
         y9TenantRepository.deleteById(id);
@@ -238,25 +227,18 @@ public class Y9TenantServiceImpl implements Y9TenantService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public void register(String cnName, String enName) {
-        String dataSourceId = Y9IdGenerator.genId();
-
-        LOGGER.info("创建租户{}", cnName);
-        Tenant tenant = this.createTenant(cnName, enName, dataSourceId);
-        String tenantId = tenant.getId();
-
-        LOGGER.info("创建数据库和数据源{}", enName);
-        y9DataSourceManager.createDataSourceIfNotExists(tenant.getShortName(), null, dataSourceId);
+    public void register(Tenant tenant) {
+        Tenant savedTenant = this.saveAndInitDataSource(tenant);
 
         LOGGER.info("租用可自动租用的系统和应用");
-        this.subscribeSystemsAndApps(tenantId);
+        this.subscribeSystemsAndApps(savedTenant.getId());
 
         if (TransactionSynchronizationManager.isActualTransactionActive()) {
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
                 @Override
                 public void afterCompletion(int status) {
                     if (status == TransactionSynchronization.STATUS_ROLLED_BACK) {
-                        y9DataSourceManager.dropTenantDefaultDataSource(dataSourceId);
+                        y9DataSourceManager.dropTenantDefaultDataSource(savedTenant.getDefaultDataSourceId());
                     }
                 }
             });
@@ -264,9 +246,8 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     }
 
     private void subscribeSystemsAndApps(String tenantId) {
-        List<String> systemIds = y9SystemManager.listByAutoInit(true);
-        String[] ids = systemIds.toArray(new String[systemIds.size()]);
-        List<Y9TenantSystem> y9TenantSystems = y9TenantSystemManager.saveTenantSystems(ids, tenantId);
+        List<String> systemIdList = y9SystemManager.listByAutoInit(true);
+        List<Y9TenantSystem> y9TenantSystems = y9TenantSystemManager.saveTenantSystems(systemIdList, tenantId);
         for (Y9TenantSystem y9TenantSystem : y9TenantSystems) {
             List<Y9App> y9AppList = y9AppRepository
                 .findBySystemIdAndAutoInitAndCheckedOrderByCreateTime(y9TenantSystem.getSystemId(), true, true);

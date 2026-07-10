@@ -23,16 +23,6 @@ public interface Y9TenantService {
     Tenant changeDisabled(String id);
 
     /**
-     * 创建租户
-     *
-     * @param tenantName 租户中文名称
-     * @param tenantShortName 租户英文名称
-     * @param dataSourceId 默认租户数据源
-     * @return {@link Tenant}
-     */
-    Tenant createTenant(String tenantName, String tenantShortName, String dataSourceId);
-
-    /**
      * 根据id删除租户
      *
      * @param id 唯一标识
@@ -116,10 +106,10 @@ public interface Y9TenantService {
     /**
      * 保存租户信息
      *
-     * @param y9Tenant 实体类
+     * @param tenant 实体类
      * @return Tenant
      */
-    Tenant saveAndInitDataSource(Tenant y9Tenant);
+    Tenant saveAndInitDataSource(Tenant tenant);
 
     /**
      * 保存租户排序信息
@@ -129,10 +119,9 @@ public interface Y9TenantService {
     void saveTenantOrders(String[] tenantIds);
 
     /**
-     * 租户一键生成
+     * 保存租户、数据源、租用系统和应用
      *
-     * @param cnName 中文名
-     * @param enName 英文名
+     * @param tenant 租户
      */
-    void register(String cnName, String enName);
+    void register(Tenant tenant);
 }

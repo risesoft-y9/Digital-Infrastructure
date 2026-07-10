@@ -186,7 +186,7 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
     }
 
     @Override
-    public List<Y9TenantSystem> saveTenantSystems(String[] systemIds, String tenantId) {
+    public List<Y9TenantSystem> saveTenantSystems(List<String> systemIds, String tenantId) {
         List<Y9TenantSystem> y9TenantSystemList = new ArrayList<>();
         for (String systemId : systemIds) {
             y9TenantSystemList.add(saveTenantSystem(systemId, tenantId));

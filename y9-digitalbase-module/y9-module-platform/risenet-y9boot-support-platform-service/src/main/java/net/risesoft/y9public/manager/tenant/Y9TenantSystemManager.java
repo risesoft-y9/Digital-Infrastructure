@@ -24,5 +24,5 @@ public interface Y9TenantSystemManager {
 
     Y9TenantSystem saveTenantSystem(String systemId, String tenantId);
 
-    List<Y9TenantSystem> saveTenantSystems(String[] systemIds, String tenantId);
+    List<Y9TenantSystem> saveTenantSystems(List<String> systemIds, String tenantId);
 }

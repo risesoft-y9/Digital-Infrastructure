@@ -119,7 +119,7 @@ public interface Y9TenantSystemService {
      * @param tenantId 租户id
      * @return {@code List<}{@link TenantSystem}{@code >}
      */
-    List<TenantSystem> saveTenantSystems(String[] systemIds, String tenantId);
+    List<TenantSystem> saveTenantSystems(List<String> systemIds, String tenantId);
 
     TenantSystem getById(String id);
 

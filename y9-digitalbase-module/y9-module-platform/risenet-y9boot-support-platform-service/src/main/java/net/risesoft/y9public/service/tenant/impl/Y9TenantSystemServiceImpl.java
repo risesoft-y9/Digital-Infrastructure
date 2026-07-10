@@ -139,7 +139,7 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public List<TenantSystem> saveTenantSystems(String[] systemIds, String tenantId) {
+    public List<TenantSystem> saveTenantSystems(List<String> systemIds, String tenantId) {
         return entityToModel(y9TenantSystemManager.saveTenantSystems(systemIds, tenantId));
     }
 
