@@ -2,6 +2,7 @@ package net.risesoft.initializer;
 
 import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -24,7 +25,6 @@ import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.role.Y9RoleService;
 import net.risesoft.y9public.service.tenant.Y9DataSourceService;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
-import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 
 /**
  * 应用启动监听器 <br>
@@ -44,16 +44,11 @@ public class PlatformApplicationReadyListener implements ApplicationListener<App
     private final Y9SystemService y9SystemService;
     private final Y9RoleService y9RoleService;
     private final Y9DataSourceService y9DataSourceService;
-    private final Y9TenantSystemService y9TenantSystemService;
 
     private final Y9Properties y9Properties;
     private final Y9PlatformProperties y9PlatformProperties;
 
-    private DataSourceInfo createOrFindDataSource(String dbName) {
-        return y9DataSourceService.createTenantDefaultDataSource(dbName);
-    }
-
-    private void createPublicRoleTopNode() {
+    private void initPublicRoleTopNode() {
         Optional<Role> roleOptional = y9RoleService.findById(InitDataConsts.TOP_PUBLIC_ROLE_ID);
         if (roleOptional.isEmpty()) {
             Role publicRole = new Role();
@@ -66,7 +61,7 @@ public class PlatformApplicationReadyListener implements ApplicationListener<App
         }
     }
 
-    private System createOrFindSystem(String name, String cnName, String contextPath) {
+    private void initSystem(String name, String cnName, String contextPath) {
         Optional<System> systemOptional = y9SystemService.findByName(y9Properties.getSystemName());
         if (systemOptional.isEmpty()) {
             System system = new System();
@@ -75,25 +70,28 @@ public class PlatformApplicationReadyListener implements ApplicationListener<App
             system.setContextPath(contextPath);
             system.setAutoInit(true);
             // 租用系统会发送 租户租用系统事件 系统做监听做数据初始化
-            System savedSystem = y9SystemService.saveAndRegister4Tenant(system);
 
-            return savedSystem;
+            y9SystemService.saveAndRegister4Tenant(system);
         }
-        return systemOptional.get();
     }
 
-    private Tenant createOrFindTenant(String dataSourceId, String tenantName) {
-        Optional<Tenant> tenantOptional = y9TenantService.findByShortName(tenantName);
-        if (tenantOptional.isEmpty()) {
-            Tenant tenant = new Tenant();
-            tenant.setDefaultDataSourceId(dataSourceId);
-            tenant.setShortName(tenantName);
-            tenant.setName(tenantName);
-            tenant.setEnabled(true);
-            tenant.setTabIndex(10000);
-            return y9TenantService.saveOrUpdate(tenant);
+    private void createTenant(String dataSourceId, String tenantName) {
+        Tenant tenant = new Tenant();
+        tenant.setDefaultDataSourceId(dataSourceId);
+        tenant.setShortName(tenantName);
+        tenant.setName(tenantName);
+        tenant.setEnabled(true);
+        tenant.setTabIndex(10000);
+        y9TenantService.saveOrUpdate(tenant);
+    }
+
+    private void initTenantAndDataSource() {
+        List<Tenant> tenantList = y9TenantService.listAll();
+        if (tenantList.isEmpty()) {
+            DataSourceInfo defaultDataSource =
+                y9DataSourceService.createDataSource(y9PlatformProperties.getInitTenantSchema());
+            createTenant(defaultDataSource.getId(), y9PlatformProperties.getInitTenantName());
         }
-        return tenantOptional.get();
     }
 
     @Override
@@ -101,10 +99,9 @@ public class PlatformApplicationReadyListener implements ApplicationListener<App
     public void onApplicationEvent(ApplicationReadyEvent event) {
         LOGGER.info("platform ApplicationReady...");
 
-        DataSourceInfo defaultDataSource = createOrFindDataSource(y9PlatformProperties.getInitTenantSchema());
-        createOrFindTenant(defaultDataSource.getId(), y9PlatformProperties.getInitTenantName());
-        createOrFindSystem(y9Properties.getSystemName(), y9Properties.getSystemCnName(), y9Properties.getContextPath());
-        createPublicRoleTopNode();
+        initTenantAndDataSource();
+        initSystem(y9Properties.getSystemName(), y9Properties.getSystemCnName(), y9Properties.getContextPath());
+        initPublicRoleTopNode();
     }
 
 }

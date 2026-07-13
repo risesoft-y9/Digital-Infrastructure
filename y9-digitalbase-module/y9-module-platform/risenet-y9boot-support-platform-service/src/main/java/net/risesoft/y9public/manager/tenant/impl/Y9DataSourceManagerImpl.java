@@ -101,9 +101,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             databaseManagerList.stream().filter(dm -> dm.support(dbType)).findFirst().orElse(null);
         if (databaseManager != null) {
             createdDataSource = databaseManager.createSchema(dbName, jdbcTemplate4Public);
-        }
-
-        if (createdDataSource == null) {
+        } else {
             throw new Y9BusinessException(DataSourceErrorCodeEnum.DATABASE_NOT_FULLY_SUPPORTED.getCode(),
                 DataSourceErrorCodeEnum.DATABASE_NOT_FULLY_SUPPORTED.getDescription());
         }

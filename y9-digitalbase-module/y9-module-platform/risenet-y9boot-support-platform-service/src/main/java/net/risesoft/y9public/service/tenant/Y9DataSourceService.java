@@ -26,7 +26,7 @@ public interface Y9DataSourceService {
      */
     void changePassword(String id, String oldPassword, String newPassword);
 
-    DataSourceInfo createTenantDefaultDataSource(String dbName);
+    DataSourceInfo createDataSource(String dbName);
 
     /**
      * 根据id删除数据源
