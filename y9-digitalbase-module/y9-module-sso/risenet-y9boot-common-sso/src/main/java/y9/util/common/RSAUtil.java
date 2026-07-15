@@ -103,13 +103,29 @@ public class RSAUtil {
         return new String(bytesDecrypt, StandardCharsets.UTF_8);
     }
 
-    public static String toPem(PrivateKey privateKey) {
+    public static String privateKeyToPem(PrivateKey privateKey) {
         StringBuilder sb = new StringBuilder();
+
         sb.append("-----BEGIN PRIVATE KEY-----\n");
 
         String base64 = Base64.getMimeEncoder(64, "\n".getBytes()).encodeToString(privateKey.getEncoded());
         sb.append(base64);
+
         sb.append("\n-----END PRIVATE KEY-----");
+
+        return sb.toString();
+    }
+
+    public static String publicKeyToPem(PublicKey publicKey) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("-----BEGIN PUBLIC KEY-----\n");
+
+        String base64 = Base64.getMimeEncoder(64, "\n".getBytes()).encodeToString(publicKey.getEncoded());
+        sb.append(base64);
+
+        sb.append("\n-----END PUBLIC KEY-----");
+
         return sb.toString();
     }
 
