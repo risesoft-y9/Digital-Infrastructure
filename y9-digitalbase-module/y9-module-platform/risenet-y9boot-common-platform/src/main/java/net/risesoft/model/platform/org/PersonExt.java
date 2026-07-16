@@ -8,7 +8,6 @@ import lombok.Data;
 
 import net.risesoft.enums.platform.org.MaritalStatusEnum;
 import net.risesoft.model.BaseModel;
-import net.risesoft.y9.validation.IdNumber;
 
 /**
  * 人员信息扩展
@@ -77,7 +76,6 @@ public class PersonExt extends BaseModel {
     /**
      * 证件号码
      */
-    @IdNumber
     private String idNum;
 
     /**

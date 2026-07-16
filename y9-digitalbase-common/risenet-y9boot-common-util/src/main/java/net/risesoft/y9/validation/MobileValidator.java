@@ -5,8 +5,6 @@ import javax.validation.ConstraintValidatorContext;
 
 import org.apache.commons.lang3.StringUtils;
 
-import cn.hutool.core.lang.Validator;
-
 /**
  * 手机号验证器
  *
@@ -21,6 +19,6 @@ public class MobileValidator implements ConstraintValidator<Mobile, String> {
             // 手机号非必填 为空直接验证通过
             return true;
         }
-        return Validator.isMobile(mobile);
+        return ValidateUtil.isMobile(mobile);
     }
 }

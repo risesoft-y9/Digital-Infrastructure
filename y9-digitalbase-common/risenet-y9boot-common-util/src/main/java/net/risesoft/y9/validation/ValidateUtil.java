@@ -1,19 +1,42 @@
 package net.risesoft.y9.validation;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-import org.apache.commons.lang3.StringUtils;
-
+import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.IdcardUtil;
 
 /**
- * 身份证件号验证器
+ * 校验工具类
  *
  * @author shidaobang
- * @date 2022/08/04
+ * @date 2026/07/16
  */
-public class IdNumberValidator implements ConstraintValidator<IdNumber, String> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class ValidateUtil {
+
+    /**
+     * 是否为有效手机号码（中国）
+     *
+     * @param mobile 手机号码
+     * @return boolean 
+     */
+    public static boolean isMobile(String mobile) {
+        return Validator.isMobile(mobile);
+    }
+
+    /**
+     * 是否为有效身份证号
+     *
+     * @param idCardNumber 身份证号码
+     * @return boolean
+     */
+    public static boolean isIdCardNumber(String idCardNumber) {
+        if (IdcardUtil.isValidCard(idCardNumber)) {
+            return true;
+        }
+        return isHkIdCardNumber(idCardNumber);
+    }
 
     /**
      * 验证香港身份证号码(存在Bug，部份特殊身份证无法检查)
@@ -26,20 +49,9 @@ public class IdNumberValidator implements ConstraintValidator<IdNumber, String> 
      * @param idCard 身份证号码
      * @return 验证码是否符合
      */
-    public static boolean isValidHKCard(String idCard) {
+    public static boolean isHkIdCardNumber(String idCard) {
         String regularExpression = "^([A-Z]\\d{6,10}(\\(\\w{1}\\))?)$";
         return idCard.matches(regularExpression);
     }
 
-    @Override
-    public boolean isValid(String idNumber, ConstraintValidatorContext constraintValidatorContext) {
-        if (StringUtils.isEmpty(idNumber)) {
-            // 身份证号非必填 为空直接验证通过
-            return true;
-        }
-        if (IdcardUtil.isValidCard(idNumber)) {
-            return true;
-        }
-        return isValidHKCard(idNumber);
-    }
 }

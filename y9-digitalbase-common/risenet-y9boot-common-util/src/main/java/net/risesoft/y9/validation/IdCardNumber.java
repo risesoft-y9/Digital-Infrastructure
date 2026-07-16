@@ -18,8 +18,8 @@ import javax.validation.Payload;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-@Constraint(validatedBy = IdNumberValidator.class)
-public @interface IdNumber {
+@Constraint(validatedBy = IdCardNumberValidator.class)
+public @interface IdCardNumber {
 
     // 分组
     Class<?>[] groups() default {};
