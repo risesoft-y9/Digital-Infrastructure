@@ -54,7 +54,20 @@ public interface Y9CustomGroupMembersService {
      */
     boolean saveOrder(List<String> memberIdList);
 
+    /**
+     * 根据查询条件获取自定义用户组成员列表
+     *
+     * @param customGroupMemberQuery 查询条件
+     * @return {@code List<CustomGroupMember>}
+     */
     List<CustomGroupMember> list(CustomGroupMemberQuery customGroupMemberQuery);
 
+    /**
+     * 分页查询自定义用户组成员
+     *
+     * @param customGroupMemberQuery 查询条件
+     * @param pageQuery 分页查询参数
+     * @return {@code Y9Page<CustomGroupMember>}
+     */
     Y9Page<CustomGroupMember> page(CustomGroupMemberQuery customGroupMemberQuery, Y9PageQuery pageQuery);
 }

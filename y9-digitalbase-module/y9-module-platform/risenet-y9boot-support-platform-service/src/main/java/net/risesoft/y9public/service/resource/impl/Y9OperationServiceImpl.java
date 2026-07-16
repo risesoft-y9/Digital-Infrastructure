@@ -143,11 +143,6 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     @Override
-    public boolean existsById(String id) {
-        return y9OperationRepository.existsById(id);
-    }
-
-    @Override
     public Optional<Operation> findById(String id) {
         return y9OperationManager.findByIdFromCache(id).map(Y9OperationServiceImpl::entityToModel);
     }

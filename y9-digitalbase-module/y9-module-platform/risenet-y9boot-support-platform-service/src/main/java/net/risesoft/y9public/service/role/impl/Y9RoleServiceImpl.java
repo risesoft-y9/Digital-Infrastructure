@@ -103,12 +103,6 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     }
 
     @Override
-    public List<Role> listByName(String name) {
-        List<Y9Role> y9RoleList = y9RoleRepository.findByNameContainingOrderByTabIndexAsc(name);
-        return entityToModel(y9RoleList);
-    }
-
-    @Override
     public List<Role> listByParentId(String parentId) {
         List<Y9Role> y9RoleList = y9RoleRepository.findByParentIdOrderByTabIndexAsc(parentId);
         return entityToModel(y9RoleList);

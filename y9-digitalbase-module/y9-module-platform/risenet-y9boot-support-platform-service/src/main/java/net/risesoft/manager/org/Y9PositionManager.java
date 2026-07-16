@@ -8,8 +8,19 @@ import net.risesoft.y9.exception.Y9NotFoundException;
 
 public interface Y9PositionManager {
 
+    /**
+     * 删除岗位
+     *
+     * @param y9Position 岗位信息
+     */
     void delete(Y9Position y9Position);
 
+    /**
+     * 根据id获取岗位信息
+     *
+     * @param id 岗位id
+     * @return {@code Optional<Y9Position>}
+     */
     Optional<Y9Position> findByIdFromCache(String id);
 
     /**
@@ -34,12 +45,34 @@ public interface Y9PositionManager {
      *
      * @param id 唯一标识
      * @return {@link Y9Position} 岗位对象
+     * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     Y9Position getById(String id);
 
+    /**
+     * 新增岗位
+     *
+     * @param position 岗位信息
+     * @return {@link Y9Position}
+     */
     Y9Position insert(Y9Position position);
 
+    /**
+     * 更新岗位
+     *
+     * @param position 岗位信息
+     * @param originalPosition 原岗位信息
+     * @return {@link Y9Position}
+     */
     Y9Position update(Y9Position position, Y9Position originalPosition);
 
+    /**
+     * 根据人员id获取岗位列表
+     *
+     * @param personId 人员id
+     * @param disabled 是否禁用
+     * @return {@code List<Y9Position>}
+     * @throws Y9NotFoundException 人员关联的岗位不存在的情况
+     */
     List<Y9Position> listByPersonId(String personId, Boolean disabled);
 }

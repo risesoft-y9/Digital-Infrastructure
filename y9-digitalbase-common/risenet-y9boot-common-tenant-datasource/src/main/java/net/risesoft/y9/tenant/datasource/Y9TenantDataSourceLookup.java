@@ -26,7 +26,6 @@ import com.alibaba.druid.pool.DruidDataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.DataSourceTypeEnum;
 import net.risesoft.y9.TenantCache;
 import net.risesoft.y9.util.base64.Y9Base64Util;
@@ -215,7 +214,6 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
             createMultiTenantDataSource(publicJdbcTemplate);
         }
 
-
         // 3 初始化租户的数据库连接池
         Collection<DruidDataSource> druidDataSources = loadedTenantIdDataSourceMap.values();
         if (!druidDataSources.isEmpty()) {
@@ -234,9 +232,9 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
      */
     private void createSingleTenantDataSource(JdbcTemplate publicJdbcTemplate, String tenantId) {
         List<Map<String, Object>> defaultTenant = publicJdbcTemplate
-                .queryForList("SELECT ID, DEFAULT_DATA_SOURCE_ID FROM Y9_COMMON_TENANT WHERE ID=?", tenantId);
+            .queryForList("SELECT ID, DEFAULT_DATA_SOURCE_ID FROM Y9_COMMON_TENANT WHERE ID=?", tenantId);
         List<Map<String, Object>> defaultDataSource = publicJdbcTemplate.queryForList(
-                "SELECT * FROM Y9_COMMON_DATASOURCE T WHERE T.ID = ?", defaultTenant.get(0).get("DEFAULT_DATA_SOURCE_ID"));
+            "SELECT * FROM Y9_COMMON_DATASOURCE T WHERE T.ID = ?", defaultTenant.get(0).get("DEFAULT_DATA_SOURCE_ID"));
         if (!defaultTenant.isEmpty() && !defaultDataSource.isEmpty()) {
             createOrUpdateDataSource(defaultDataSource.get(0), null, tenantId);
         }
@@ -250,17 +248,17 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         String systemId = null;
         try {
             systemId = publicJdbcTemplate.queryForObject("SELECT ID FROM Y9_COMMON_SYSTEM WHERE NAME=?", String.class,
-                    this.systemName);
+                this.systemName);
         } catch (EmptyResultDataAccessException ignoreException) {
         }
 
         // 系统存在(已在数字底座的应用系统管理添加系统),重新设置租户的连接池
         if (systemId != null) {
             List<Map<String, Object>> tenantSystems = publicJdbcTemplate.queryForList(
-                    "SELECT TENANT_ID, TENANT_DATA_SOURCE FROM Y9_COMMON_TENANT_SYSTEM WHERE SYSTEM_ID = ?", systemId);
+                "SELECT TENANT_ID, TENANT_DATA_SOURCE FROM Y9_COMMON_TENANT_SYSTEM WHERE SYSTEM_ID = ?", systemId);
             Set<String> tenantIdSet = tenantSystems.stream()
-                    .map(tenantSystem -> (String)tenantSystem.get("TENANT_ID"))
-                    .collect(Collectors.toSet());
+                .map(tenantSystem -> (String)tenantSystem.get("TENANT_ID"))
+                .collect(Collectors.toSet());
 
             // 有租户租用系统
             if (!tenantSystems.isEmpty()) {
@@ -278,13 +276,13 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
 
                     String tenantDataSource = (String)tenantSystem.get("TENANT_DATA_SOURCE");
                     List<Map<String, Object>> dataSources = publicJdbcTemplate
-                            .queryForList("SELECT * FROM Y9_COMMON_DATASOURCE WHERE ID = ?", tenantDataSource);
+                        .queryForList("SELECT * FROM Y9_COMMON_DATASOURCE WHERE ID = ?", tenantDataSource);
                     if (!dataSources.isEmpty()) {
                         Map<String, Object> dsMap = dataSources.get(0);
                         createOrUpdateDataSource(dsMap, ds, tenantId);
                     }
                 }
-            } 
+            }
         }
     }
 

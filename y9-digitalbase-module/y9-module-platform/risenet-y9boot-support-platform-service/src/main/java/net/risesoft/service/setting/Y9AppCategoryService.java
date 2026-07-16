@@ -26,28 +26,6 @@ public interface Y9AppCategoryService {
     void delete(String[] ids);
 
     /**
-     * 根据应用id，删除图标排序
-     *
-     * @param appId 应用id
-     */
-    void deleteByAppId(String appId);
-
-    /**
-     * 根据资源id，删除图标排序
-     *
-     * @param categoryId 资源id
-     */
-    void deleteByCategoryId(String categoryId);
-
-    /**
-     * 根据应用id，获取图标排序
-     *
-     * @param appId 应用id
-     * @return
-     */
-    Y9AppCategory findByAppId(String appId);
-
-    /**
      * 根据id，获取图标排序
      *
      * @param id 唯一标识

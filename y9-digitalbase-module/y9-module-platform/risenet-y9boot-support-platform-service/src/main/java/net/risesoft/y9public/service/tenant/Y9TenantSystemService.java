@@ -8,6 +8,7 @@ import net.risesoft.model.platform.tenant.Tenant;
 import net.risesoft.model.platform.tenant.TenantSystem;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
  * @author dingzhaojun
@@ -23,21 +24,6 @@ public interface Y9TenantSystemService {
      * @param id 租户应用主键id
      */
     void delete(String id);
-
-    /**
-     * 按租户id删除
-     *
-     * @param tenantId 租户id
-     */
-    void deleteByTenantId(String tenantId);
-
-    /**
-     * 根据租户id和系统id删除
-     *
-     * @param tenantId 租户id
-     * @param systemId 系统id
-     */
-    void deleteByTenantIdAndSystemId(String tenantId, String systemId);
 
     /**
      * 根据id查找租户应用
@@ -64,6 +50,12 @@ public interface Y9TenantSystemService {
      */
     List<TenantSystem> listBySystemId(String systemId);
 
+    /**
+     * 根据租户 id 查询关联的系统列表
+     *
+     * @param tenantId 租户 id
+     * @return {@code List<System>}
+     */
     List<System> listSystemByTenantId(String tenantId);
 
     /**
@@ -74,8 +66,20 @@ public interface Y9TenantSystemService {
      */
     List<String> listSystemIdByTenantId(String tenantId);
 
+    /**
+     * 根据系统 id 查询关联的租户列表
+     *
+     * @param systemId 系统 id
+     * @return {@code List<Tenant>}
+     */
     List<Tenant> listTenantBySystemId(String systemId);
 
+    /**
+     * 根据系统名称查询关联的租户列表
+     *
+     * @param systemName 系统名称
+     * @return {@code List<Tenant>}
+     */
     List<Tenant> listTenantBySystemName(String systemName);
 
     /**
@@ -104,15 +108,6 @@ public interface Y9TenantSystemService {
     TenantSystem save(TenantSystem entity);
 
     /**
-     * 保存租户租用的系统
-     *
-     * @param systemId 系统id
-     * @param tenantId 租户id
-     * @return {@link TenantSystem}
-     */
-    TenantSystem saveTenantSystem(String systemId, String tenantId);
-
-    /**
      * 批量保存租户租用的系统
      *
      * @param systemIds 系统id数组
@@ -121,6 +116,13 @@ public interface Y9TenantSystemService {
      */
     List<TenantSystem> saveTenantSystems(List<String> systemIds, String tenantId);
 
+    /**
+     * 根据 id 获取租户系统
+     *
+     * @param id 租户系统主键 id
+     * @return {@link TenantSystem}
+     * @throws Y9NotFoundException id 对应的记录不存在的情况
+     */
     TenantSystem getById(String id);
 
 }

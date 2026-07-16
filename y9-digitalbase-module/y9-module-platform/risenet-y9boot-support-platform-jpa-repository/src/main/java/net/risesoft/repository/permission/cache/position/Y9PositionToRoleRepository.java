@@ -3,8 +3,6 @@ package net.risesoft.repository.permission.cache.position;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -39,11 +37,7 @@ public interface Y9PositionToRoleRepository extends JpaRepository<Y9PositionToRo
 
     List<Y9PositionToRole> findByPositionId(String positionId);
 
-    Page<Y9PositionToRole> findByPositionId(String positionId, Pageable pageable);
-
     Optional<Y9PositionToRole> findByPositionIdAndRoleId(String positionId, String roleId);
-
-    List<Y9PositionToRole> findByRoleId(String roleId);
 
     @Query("select distinct p.roleId from Y9PositionToRole p where p.positionId = ?1")
     List<String> listRoleIdsByPositionId(String positionId);

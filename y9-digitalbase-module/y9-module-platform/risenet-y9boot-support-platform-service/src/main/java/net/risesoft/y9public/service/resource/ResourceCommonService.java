@@ -61,14 +61,6 @@ public interface ResourceCommonService<T extends Resource> {
     T enable(String id);
 
     /**
-     * 根据id判断资源是否存在
-     *
-     * @param id 资源id
-     * @return 对应的资源是否存在
-     */
-    boolean existsById(String id);
-
-    /**
      * 根据id获取资源
      *
      * @param id 资源id

@@ -82,7 +82,22 @@ public interface Y9OrgBasesToRolesService {
      */
     void removeOrgBases(String roleId, List<String> orgIds);
 
+    /**
+     * 分页查询角色与组织节点的关联关系
+     *
+     * @param pageQuery 分页查询参数
+     * @param roleId 角色id
+     * @param unitName 组织节点名称
+     * @return {@code Y9Page<OrgBasesToRoles>}
+     */
     Y9Page<OrgBasesToRoles> page(Y9PageQuery pageQuery, String roleId, String unitName);
 
+    /**
+     * 根据角色id和关联类型获取组织节点id列表
+     *
+     * @param roleId 角色id
+     * @param negative 是否为负角色关联
+     * @return 组织节点id列表
+     */
     List<String> listOrgUnitIdByRoleId(String roleId, Boolean negative);
 }

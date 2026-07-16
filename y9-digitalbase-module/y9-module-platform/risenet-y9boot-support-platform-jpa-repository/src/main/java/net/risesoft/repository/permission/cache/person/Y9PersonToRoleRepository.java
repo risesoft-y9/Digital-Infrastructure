@@ -41,8 +41,6 @@ public interface Y9PersonToRoleRepository extends JpaRepository<Y9PersonToRole, 
 
     Optional<Y9PersonToRole> findByPersonIdAndRoleId(String personId, String roleId);
 
-    List<Y9PersonToRole> findByRoleId(String roleId);
-
     @Query("select p.personId from Y9PersonToRole p where p.roleId = ?1")
     List<String> findPersonIdByRoleId(String roleId);
 

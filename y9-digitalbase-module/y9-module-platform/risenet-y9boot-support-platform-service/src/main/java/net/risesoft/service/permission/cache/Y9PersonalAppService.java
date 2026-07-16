@@ -18,6 +18,11 @@ import net.risesoft.pojo.Y9PageQuery;
  */
 public interface Y9PersonalAppService {
 
+    /**
+     * 根据组织节点id更新个人应用
+     *
+     * @param orgUnitId 组织节点id
+     */
     void buildPersonalAppByOrgUnitId(String orgUnitId);
 
     /**
@@ -25,14 +30,14 @@ public interface Y9PersonalAppService {
      *
      * @param deptId 部门id
      */
-    void buildDeptAppIconForPerson(String deptId);
+    void buildDeptPersonalAppForPerson(String deptId);
 
     /**
      * 更新部门下全部岗位的图标
      *
      * @param deptId 部门id
      */
-    void buildDeptAppIconForPosition(String deptId);
+    void buildDeptPersonalAppForPosition(String deptId);
 
     /**
      * 更新个人图标
@@ -113,7 +118,13 @@ public interface Y9PersonalAppService {
      * @param orgUnitId 人员id
      * @param appIds 应用id数组
      */
-    void saveCommApps(String orgUnitId, String[] appIds);
+    void starApps(String orgUnitId, String[] appIds);
 
+    /**
+     * 对人员/岗位的应用进行排序
+     *
+     * @param orgUnitId 组织节点id
+     * @param appIdList 应用id列表
+     */
     void sort(String orgUnitId, List<String> appIdList);
 }

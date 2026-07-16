@@ -5,6 +5,7 @@ import java.util.List;
 import net.risesoft.model.platform.Role;
 import net.risesoft.model.platform.org.Position;
 import net.risesoft.model.platform.permission.cache.PositionToRole;
+import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
  * @author dingzhaojun
@@ -14,10 +15,34 @@ import net.risesoft.model.platform.permission.cache.PositionToRole;
  */
 public interface Y9PositionToRoleService {
 
+    /**
+     * 判断岗位是否拥有指定名称的公共角色
+     *
+     * @param positionId 岗位id
+     * @param roleName 角色名称
+     * @return boolean
+     */
     boolean hasPublicRole(String positionId, String roleName);
 
+    /**
+     * 判断岗位是否拥有指定角色
+     *
+     * @param positionId 岗位id
+     * @param roleId 角色id
+     * @return boolean
+     */
     boolean hasRole(String positionId, String roleId);
 
+    /**
+     * 判断岗位是否拥有指定系统、名称和扩展属性的角色
+     *
+     * @param positionId 岗位id
+     * @param systemName 系统名称
+     * @param roleName 角色名称
+     * @param properties 扩展属性
+     * @return boolean
+     * @throws Y9NotFoundException 系统名称对应的系统不存在
+     */
     boolean hasRole(String positionId, String systemName, String roleName, String properties);
 
     /**

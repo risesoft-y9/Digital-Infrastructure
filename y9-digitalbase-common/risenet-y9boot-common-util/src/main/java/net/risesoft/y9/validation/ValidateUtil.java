@@ -19,7 +19,7 @@ public class ValidateUtil {
      * 是否为有效手机号码（中国）
      *
      * @param mobile 手机号码
-     * @return boolean 
+     * @return boolean
      */
     public static boolean isMobile(String mobile) {
         return Validator.isMobile(mobile);

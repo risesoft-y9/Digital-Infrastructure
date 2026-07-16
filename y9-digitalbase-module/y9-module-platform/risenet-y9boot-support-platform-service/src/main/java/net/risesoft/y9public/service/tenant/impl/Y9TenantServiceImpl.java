@@ -72,20 +72,14 @@ public class Y9TenantServiceImpl implements Y9TenantService {
         return PlatformModelConvertUtil.y9TenantToTenant(y9TenantRepository.save(y9Tenant));
     }
 
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public void delete(String id) {
-        y9UserService.deleteByTenantId(id);
-        y9TenantRepository.deleteById(id);
-    }
-
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     @Override
     public void deleteAfterCheck(String id) {
-        long appCount = y9TenantSystemRepository.countByTenantId(id);
-        Y9AssertUtil.isTrue(appCount == 0, TenantErrorCodeEnum.TENANT_HAS_REGISTERED_SYSTEM);
+        long tenantSystemCount = y9TenantSystemRepository.countByTenantId(id);
+        Y9AssertUtil.isTrue(tenantSystemCount == 0, TenantErrorCodeEnum.TENANT_HAS_REGISTERED_SYSTEM);
 
-        this.delete(id);
+        y9UserService.deleteByTenantId(id);
+        y9TenantRepository.deleteById(id);
     }
 
     @Override

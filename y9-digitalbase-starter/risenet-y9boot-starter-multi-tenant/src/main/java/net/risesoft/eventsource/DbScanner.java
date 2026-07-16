@@ -13,7 +13,6 @@ import org.springframework.context.event.EventListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.InitDataConsts;
 import net.risesoft.dao.MultiTenantDao;
 import net.risesoft.model.platform.tenant.TenantApp;
 import net.risesoft.model.platform.tenant.TenantSystem;

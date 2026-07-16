@@ -137,11 +137,6 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     }
 
     @Override
-    public boolean existsById(String id) {
-        return y9ManagerRepository.existsById(id);
-    }
-
-    @Override
     public boolean existsByLoginName(String loginName) {
         return y9ManagerRepository.existsByLoginName(loginName);
     }

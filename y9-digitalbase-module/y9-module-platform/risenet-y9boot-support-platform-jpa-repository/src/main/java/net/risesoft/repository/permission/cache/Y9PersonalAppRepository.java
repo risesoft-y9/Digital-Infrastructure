@@ -1,7 +1,6 @@
 package net.risesoft.repository.permission.cache;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,12 +33,6 @@ public interface Y9PersonalAppRepository extends JpaRepository<Y9PersonalApp, St
 
     Page<Y9PersonalApp> findByOrgUnitIdInAndAppId(List<String> orgUnitId, String appId, Pageable pageable);
 
-    List<Y9PersonalApp> findByOrgUnitIdAndCategoryIdOrderByTabIndex(String orgUnitId, String categoryId);
-
     List<Y9PersonalApp> findByOrgUnitIdOrderByTabIndex(String orgUnitId);
-
-    Y9PersonalApp findTopByOrgUnitIdAndTabIndex(String orgUnitId, Integer tabIndex);
-
-    Optional<Y9PersonalApp> findTopByOrgUnitIdOrderByTabIndexDesc(String orgUnitId);
 
 }

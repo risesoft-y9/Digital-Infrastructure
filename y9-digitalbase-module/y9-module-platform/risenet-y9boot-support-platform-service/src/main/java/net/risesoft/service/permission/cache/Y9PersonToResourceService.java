@@ -8,6 +8,7 @@ import net.risesoft.model.platform.permission.cache.PersonToResource;
 import net.risesoft.model.platform.resource.App;
 import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
+import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
  * @author dingzhaojun
@@ -67,6 +68,12 @@ public interface Y9PersonToResourceService {
      */
     boolean hasPermissionByCustomId(String personId, String resourceCustomId, AuthorityEnum authority);
 
+    /**
+     * 根据人员id查找资源权限缓存
+     *
+     * @param personId 人员id
+     * @return {@code List<PersonToResource>}
+     */
     List<PersonToResource> list(String personId);
 
     /**
@@ -113,10 +120,30 @@ public interface Y9PersonToResourceService {
     List<Resource> listSubResources(String personId, String resourceId, AuthorityEnum authority,
         ResourceTypeEnum resourceType);
 
+    /**
+     * 根据父资源自定义id获取人员拥有相应权限的子资源
+     *
+     * @param personId 人员id
+     * @param customId 父资源自定义id
+     * @param authority 权限类型{@link AuthorityEnum}
+     * @param resourceType 资源类型{@link ResourceTypeEnum}
+     * @return {@code List<Resource>}
+     * @throws Y9NotFoundException 自定义id对应的资源不存在
+     */
     List<Resource> listSubResourcesByCustomId(String personId, String customId, AuthorityEnum authority,
         ResourceTypeEnum resourceType);
 
+    /**
+     * 根据授权配置id删除人员资源权限缓存
+     *
+     * @param authorizationId 授权配置id
+     */
     void deleteByAuthorizationId(String authorizationId);
 
+    /**
+     * 根据资源id删除人员资源权限缓存
+     *
+     * @param resourceId 资源id
+     */
     void deleteByResourceId(String resourceId);
 }

@@ -15,12 +15,37 @@ import net.risesoft.y9public.entity.Y9Role;
  */
 public interface Y9RoleManager {
 
+    /**
+     * 根据id删除角色
+     *
+     * @param id 角色id
+     * @throws Y9NotFoundException id 对应的记录不存在的情况
+     */
     void delete(String id);
 
+    /**
+     * 根据id获取角色信息（直接读取数据库）
+     *
+     * @param id 角色id
+     * @return {@code Optional<Y9Role>}
+     */
     Optional<Y9Role> findById(String id);
 
+    /**
+     * 根据id获取角色信息
+     *
+     * @param id 角色id
+     * @return {@code Optional<Y9Role>}
+     */
     Optional<Y9Role> findByIdFromCache(String id);
 
+    /**
+     * 根据id获取角色信息（直接读取数据库）
+     *
+     * @param id 角色id
+     * @return {@link Y9Role}
+     * @throws Y9NotFoundException id 对应的记录不存在的情况
+     */
     Y9Role getById(String id);
 
     /**
@@ -37,6 +62,7 @@ public interface Y9RoleManager {
      *
      * @param orgUnitId 组织节点id
      * @return {@code  List<String>}
+     * @throws Y9NotFoundException orgUnitId 或关联组织节点对应的记录不存在的情况
      */
     List<String> listOrgUnitIdRecursively(String orgUnitId);
 
@@ -45,10 +71,23 @@ public interface Y9RoleManager {
      *
      * @param orgUnitId 组织节点id
      * @return {@code List<Y9Role>}
+     * @throws Y9NotFoundException 组织节点、关联组织节点或角色对应的记录不存在的情况
      */
     List<Y9Role> listOrgUnitRelatedWithoutNegative(String orgUnitId);
 
+    /**
+     * 新增角色
+     *
+     * @param y9Role 角色信息
+     * @return {@link Y9Role}
+     */
     Y9Role insert(Y9Role y9Role);
 
+    /**
+     * 更新角色
+     *
+     * @param y9Role 角色信息
+     * @return {@link Y9Role}
+     */
     Y9Role update(Y9Role y9Role);
 }

@@ -41,7 +41,7 @@ public class PersonalAppController {
     @RiseLog(operationName = "更新部门图标", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/sync4Dept")
     public Y9Result<Object> sync4Dept(@NotBlank String deptId) {
-        y9PersonalAppService.buildDeptAppIconForPosition(deptId);
+        y9PersonalAppService.buildDeptPersonalAppForPosition(deptId);
         return Y9Result.successMsg("更新部门图标成功!");
     }
 

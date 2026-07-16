@@ -202,11 +202,6 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     }
 
     @Override
-    public List<System> listByContextPath(String contextPath) {
-        return entityToModel(y9SystemRepository.findByContextPath(contextPath));
-    }
-
-    @Override
     public List<System> listByIds(List<String> ids) {
         return entityToModel(y9SystemRepository.findAllById(ids));
     }

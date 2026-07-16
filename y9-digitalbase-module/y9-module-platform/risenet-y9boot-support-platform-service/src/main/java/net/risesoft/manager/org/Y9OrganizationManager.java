@@ -14,8 +14,19 @@ import net.risesoft.y9.exception.Y9NotFoundException;
  */
 public interface Y9OrganizationManager {
 
+    /**
+     * 删除组织机构
+     *
+     * @param y9Organization 组织机构信息
+     */
     void delete(Y9Organization y9Organization);
 
+    /**
+     * 根据id获取组织机构信息
+     *
+     * @param id 组织机构id
+     * @return {@code Optional<Y9Organization>}
+     */
     Optional<Y9Organization> findByIdFromCache(String id);
 
     /**
@@ -40,10 +51,24 @@ public interface Y9OrganizationManager {
      *
      * @param id 组织机构id
      * @return {@link Y9Organization}
+     * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     Y9Organization getById(String id);
 
+    /**
+     * 新增组织机构
+     *
+     * @param organization 组织机构信息
+     * @return {@link Y9Organization}
+     */
     Y9Organization insert(Y9Organization organization);
 
+    /**
+     * 更新组织机构
+     *
+     * @param organization 组织机构信息
+     * @param originalOrganization 原组织机构信息
+     * @return {@link Y9Organization}
+     */
     Y9Organization update(Y9Organization organization, Y9Organization originalOrganization);
 }

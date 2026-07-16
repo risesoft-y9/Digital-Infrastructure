@@ -135,12 +135,6 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    public List<Position> findByJobId(String jobId) {
-        List<Y9Position> y9PositionList = y9PositionRepository.findByJobId(jobId);
-        return PlatformModelConvertUtil.y9PositionToPosition(y9PositionList);
-    }
-
-    @Override
     public List<String> findIdByGuidPathStartingWith(String guidPath) {
         return y9PositionRepository.findIdByGuidPathStartingWith(guidPath);
     }

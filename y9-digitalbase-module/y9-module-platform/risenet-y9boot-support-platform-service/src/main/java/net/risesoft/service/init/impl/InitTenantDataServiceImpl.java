@@ -1,6 +1,7 @@
 package net.risesoft.service.init.impl;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -331,13 +332,17 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     @Transactional
     public void initManagers() {
         // 新建租户三员及他们所在的虚拟组织
-        boolean virtualOrganizationNotExists = y9OrganizationService.list(true, false).isEmpty();
-        if (virtualOrganizationNotExists) {
-            Organization y9Organization = y9OrganizationService.create("虚拟组织", Boolean.TRUE);
-            createSystemManager(y9Organization.getId());
-            createSecurityManager(y9Organization.getId());
-            createAuditManager(y9Organization.getId());
+        Organization organization;
+        List<Organization> virtualOrganizationList = y9OrganizationService.list(true, false);
+        if (virtualOrganizationList.isEmpty()) {
+            organization = y9OrganizationService.create("虚拟组织", Boolean.TRUE);
+        } else {
+            organization = virtualOrganizationList.get(0);
         }
+
+        createSystemManager(organization.getId());
+        createSecurityManager(organization.getId());
+        createAuditManager(organization.getId());
     }
 
     @Override
@@ -357,15 +362,15 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     public void initOrg() {
         boolean organizationNotExists = y9OrganizationService.list(false, false).isEmpty();
         if (organizationNotExists) {
-            Job y9Job = y9JobService.create("无", "001");
+            Job job = y9JobService.create("无", "001");
 
-            Organization y9Organization = y9OrganizationService.create("组织", Boolean.FALSE);
+            Organization organization = y9OrganizationService.create("组织", Boolean.FALSE);
 
-            Person y9Person = y9PersonService.create(y9Organization.getId(), "业务用户", "user", "13511111111");
+            Person person = y9PersonService.create(organization.getId(), "业务用户", "user", "13511111111");
 
-            Position y9Position = y9PositionService.create(y9Organization.getId(), y9Job.getId());
+            Position position = y9PositionService.create(organization.getId(), job.getId());
 
-            y9PersonsToPositionsService.addPositions(y9Person.getId(), new String[] {y9Position.getId()});
+            y9PersonsToPositionsService.addPositions(person.getId(), new String[] {position.getId()});
         }
     }
 }

@@ -6,10 +6,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +30,10 @@ import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.setting.Y9AppCategoryRepository;
 import net.risesoft.service.dictionary.Y9OptionValueService;
 import net.risesoft.service.setting.Y9AppCategoryService;
+import net.risesoft.util.Y9PlatformUtil;
+import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
+import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.service.resource.Y9AppService;
 
 /**
@@ -53,27 +59,6 @@ public class Y9AppCategoryServiceImpl implements Y9AppCategoryService {
         for (String id : ids) {
             y9AppCategoryRepository.deleteById(id);
         }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void deleteByAppId(String appId) {
-        Y9AppCategory oder = y9AppCategoryRepository.findByAppId(appId);
-        if (null != oder) {
-            y9AppCategoryRepository.delete(oder);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void deleteByCategoryId(String categoryId) {
-        List<Y9AppCategory> appList = y9AppCategoryRepository.findByCategoryIdOrderByTabIndex(categoryId);
-        y9AppCategoryRepository.deleteAll(appList);
-    }
-
-    @Override
-    public Y9AppCategory findByAppId(String appId) {
-        return y9AppCategoryRepository.findByAppId(appId);
     }
 
     @Override
@@ -164,11 +149,11 @@ public class Y9AppCategoryServiceImpl implements Y9AppCategoryService {
     @Transactional(readOnly = false)
     public Y9AppCategory saveOrUpdate(Y9AppCategory y9AppCategory) {
         if (StringUtils.isNotEmpty(y9AppCategory.getId())) {
-            Y9AppCategory order = this.findById(y9AppCategory.getId());
-            order.setAppId(y9AppCategory.getAppId());
-            order.setTabIndex(y9AppCategory.getTabIndex());
-            y9AppCategoryRepository.save(order);
-            return order;
+            Y9AppCategory originalAppCategory = this.findById(y9AppCategory.getId());
+            originalAppCategory.setAppId(y9AppCategory.getAppId());
+            originalAppCategory.setTabIndex(y9AppCategory.getTabIndex());
+            y9AppCategoryRepository.save(originalAppCategory);
+            return originalAppCategory;
         }
         if (StringUtils.isEmpty(y9AppCategory.getId())) {
             y9AppCategory.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
@@ -183,19 +168,37 @@ public class Y9AppCategoryServiceImpl implements Y9AppCategoryService {
     @Transactional(readOnly = false)
     public void saveOrUpdate(String[] appIds, String categoryId) {
         for (int i = 0; i < appIds.length; i++) {
-            Y9AppCategory appCategoryMapping = y9AppCategoryRepository.findByAppId(appIds[i]);
+            Y9AppCategory y9AppCategory = y9AppCategoryRepository.findByAppId(appIds[i]);
             App app = y9AppService.findById(appIds[i]).orElse(null);
             if (app != null) {
-                if (appCategoryMapping == null) {
-                    appCategoryMapping = new Y9AppCategory();
-                    appCategoryMapping.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-                    appCategoryMapping.setAppId(app.getId());
+                if (y9AppCategory == null) {
+                    y9AppCategory = new Y9AppCategory();
+                    y9AppCategory.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+                    y9AppCategory.setAppId(app.getId());
                 }
                 Integer maxTabIndex = getMaxIndex(categoryId);
-                appCategoryMapping.setTabIndex(maxTabIndex + 1);
-                appCategoryMapping.setCategoryId(categoryId);
-                y9AppCategoryRepository.save(appCategoryMapping);
+                y9AppCategory.setTabIndex(maxTabIndex + 1);
+                y9AppCategory.setCategoryId(categoryId);
+                y9AppCategoryRepository.save(y9AppCategory);
             }
         }
+    }
+
+    @EventListener
+    public void onAppDeleted(Y9EntityDeletedEvent<Y9App> event) {
+        Y9App entity = event.getEntity();
+        for (String tenantId : Y9PlatformUtil.getTenantIds()) {
+            deleteByResource(tenantId, entity);
+        }
+    }
+
+    @Async
+    protected void deleteByResource(String tenantId, Y9App y9App) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9AppCategory y9AppCategory = y9AppCategoryRepository.findByAppId(y9App.getId());
+        if (null != y9AppCategory) {
+            y9AppCategoryRepository.delete(y9AppCategory);
+        }
+        LOGGER.trace("{}资源[{}]删除时同步删除租户[{}]的应用排序", y9App.getResourceType().getName(), y9App.getId(), tenantId);
     }
 }

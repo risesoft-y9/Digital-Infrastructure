@@ -8,6 +8,8 @@ import net.risesoft.enums.platform.permission.AuthorizationPrincipalTypeEnum;
 import net.risesoft.model.platform.permission.Authorization;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.y9.exception.Y9BusinessException;
+import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
  * @author dingzhaojun
@@ -98,11 +100,38 @@ public interface Y9AuthorizationService {
      */
     Y9Page<Authorization> pageByPrincipalId(String principalId, Y9PageQuery pageQuery);
 
+    /**
+     * 保存授权配置
+     *
+     * @param authority 权限类型{@link AuthorityEnum}
+     * @param principalId 授权主体id
+     * @param principalType 授权主体类型{@link AuthorizationPrincipalTypeEnum}
+     * @param resourceIds 资源id数组
+     * @throws Y9NotFoundException 授权主体不存在
+     * @throws Y9BusinessException 组织节点已包含在资源授权中
+     */
     void save(AuthorityEnum authority, String principalId, AuthorizationPrincipalTypeEnum principalType,
         String[] resourceIds);
 
+    /**
+     * 保存资源的组织节点授权配置
+     *
+     * @param authority 权限类型{@link AuthorityEnum}
+     * @param resourceId 资源id
+     * @param principleIds 授权主体id数组
+     * @throws Y9NotFoundException 授权主体不存在
+     * @throws Y9BusinessException 组织节点已包含在资源授权中
+     */
     void saveByOrg(AuthorityEnum authority, String resourceId, String[] principleIds);
 
+    /**
+     * 保存资源的角色授权配置
+     *
+     * @param authority 权限类型{@link AuthorityEnum}
+     * @param resourceId 资源id
+     * @param roleIds 角色id数组
+     * @throws Y9NotFoundException 角色不存在
+     */
     void saveByRoles(AuthorityEnum authority, String resourceId, String[] roleIds);
 
     /**
@@ -139,7 +168,21 @@ public interface Y9AuthorizationService {
      */
     List<Authorization> listInheritByPrincipalTypeIsOrgUnitAndResourceId(String resourceId);
 
+    /**
+     * 根据授权主体id和权限类型获取资源id列表
+     *
+     * @param roleId 授权主体id
+     * @param authority 权限类型{@link AuthorityEnum}
+     * @return 资源id列表
+     */
     List<String> listResourceIdByPrincipleId(String roleId, AuthorityEnum authority);
 
+    /**
+     * 根据资源id和权限类型获取授权主体id列表
+     *
+     * @param resourceId 资源id
+     * @param authority 权限类型{@link AuthorityEnum}
+     * @return 授权主体id列表
+     */
     List<String> listPrincipalIdByResourceId(String resourceId, AuthorityEnum authority);
 }

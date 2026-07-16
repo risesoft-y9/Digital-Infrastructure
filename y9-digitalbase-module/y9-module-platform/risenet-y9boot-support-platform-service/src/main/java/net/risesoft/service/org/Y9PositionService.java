@@ -61,14 +61,6 @@ public interface Y9PositionService {
     Optional<Position> findById(String id);
 
     /**
-     * 根据职位id查找岗位
-     *
-     * @param jobId 职位id
-     * @return {@code List<Position>}
-     */
-    List<Position> findByJobId(String jobId);
-
-    /**
      * 查找 guidPath 包含传入参数的对应岗的 id
      *
      * @param guidPath guid path

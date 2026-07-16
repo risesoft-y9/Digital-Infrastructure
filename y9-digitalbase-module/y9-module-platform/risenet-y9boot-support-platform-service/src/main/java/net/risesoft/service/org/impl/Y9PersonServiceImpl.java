@@ -153,11 +153,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    public long countByGuidPathLikeAndDisabledAndDeletedFalse(String guidPath) {
-        return y9PersonRepository.countByDisabledAndGuidPathContaining(Boolean.FALSE, guidPath);
-    }
-
-    @Override
     @Transactional
     public Person create(String parentId, String name, String loginName, String mobile) {
         Optional<Person> y9PersonOptional = this.findByLoginName(loginName);

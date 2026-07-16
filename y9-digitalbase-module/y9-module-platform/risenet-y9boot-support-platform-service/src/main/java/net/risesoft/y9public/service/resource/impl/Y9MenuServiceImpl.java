@@ -142,11 +142,6 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     }
 
     @Override
-    public boolean existsById(String id) {
-        return y9MenuRepository.existsById(id);
-    }
-
-    @Override
     public Optional<Menu> findById(String id) {
         return y9MenuManager.findByIdFromCache(id).map(Y9MenuServiceImpl::entityToModel);
     }

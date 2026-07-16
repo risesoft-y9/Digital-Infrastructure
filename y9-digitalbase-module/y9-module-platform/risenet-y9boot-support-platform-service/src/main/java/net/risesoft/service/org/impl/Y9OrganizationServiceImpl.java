@@ -96,11 +96,6 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     }
 
     @Override
-    public boolean existsById(String id) {
-        return y9OrganizationRepository.existsById(id);
-    }
-
-    @Override
     public Optional<Organization> findById(String id) {
         return y9OrganizationManager.findByIdFromCache(id).map(PlatformModelConvertUtil::y9OrganizationToOrganization);
     }
@@ -142,12 +137,6 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
             y9OrganizationList = y9OrganizationRepository.findByVirtualAndDisabledOrderByTabIndexAsc(virtual, disabled);
         }
 
-        return PlatformModelConvertUtil.y9OrganizationToOrganization(y9OrganizationList);
-    }
-
-    @Override
-    public List<Organization> listByDn(String dn) {
-        List<Y9Organization> y9OrganizationList = y9OrganizationRepository.findByDn(dn);
         return PlatformModelConvertUtil.y9OrganizationToOrganization(y9OrganizationList);
     }
 

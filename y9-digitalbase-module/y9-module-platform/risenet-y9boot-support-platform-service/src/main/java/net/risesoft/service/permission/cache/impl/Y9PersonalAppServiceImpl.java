@@ -131,7 +131,7 @@ public class Y9PersonalAppServiceImpl implements Y9PersonalAppService {
 
     @Override
     @Transactional(readOnly = false)
-    public void buildDeptAppIconForPerson(String deptId) {
+    public void buildDeptPersonalAppForPerson(String deptId) {
         List<AppCategory> appCategoryList = y9AppCategoryService.buildDefaultAppCategoryList();
         List<Person> persons = compositeOrgBaseService.listAllDescendantPersons(deptId, false);
         for (Person person : persons) {
@@ -144,7 +144,7 @@ public class Y9PersonalAppServiceImpl implements Y9PersonalAppService {
 
     @Override
     @Transactional(readOnly = false)
-    public void buildDeptAppIconForPosition(String deptId) {
+    public void buildDeptPersonalAppForPosition(String deptId) {
         List<AppCategory> appCategoryList = y9AppCategoryService.buildDefaultAppCategoryList();
         List<Position> positions = compositeOrgBaseService.listAllDescendantPositions(deptId);
         for (Position position : positions) {
@@ -265,18 +265,18 @@ public class Y9PersonalAppServiceImpl implements Y9PersonalAppService {
 
     @Override
     @Transactional(readOnly = false)
-    public void saveCommApps(String orgUnitId, String[] appIds) {
-        List<Y9PersonalApp> commApps = y9PersonalAppRepository.findByOrgUnitIdAndStar(orgUnitId, Boolean.TRUE);
-        for (Y9PersonalApp comm : commApps) {
-            comm.setStar(Boolean.FALSE);
+    public void starApps(String orgUnitId, String[] appIds) {
+        List<Y9PersonalApp> y9PersonalAppList = y9PersonalAppRepository.findByOrgUnitIdAndStar(orgUnitId, Boolean.TRUE);
+        for (Y9PersonalApp personalApp : y9PersonalAppList) {
+            personalApp.setStar(Boolean.FALSE);
         }
-        y9PersonalAppRepository.saveAll(commApps);
+        y9PersonalAppRepository.saveAll(y9PersonalAppList);
 
         for (String appId : appIds) {
-            Y9PersonalApp icon = y9PersonalAppRepository.findByOrgUnitIdAndAppId(orgUnitId, appId);
-            if (icon != null) {
-                icon.setStar(Boolean.TRUE);
-                y9PersonalAppRepository.save(icon);
+            Y9PersonalApp y9PersonalApp = y9PersonalAppRepository.findByOrgUnitIdAndAppId(orgUnitId, appId);
+            if (y9PersonalApp != null) {
+                y9PersonalApp.setStar(Boolean.TRUE);
+                y9PersonalAppRepository.save(y9PersonalApp);
             }
         }
 

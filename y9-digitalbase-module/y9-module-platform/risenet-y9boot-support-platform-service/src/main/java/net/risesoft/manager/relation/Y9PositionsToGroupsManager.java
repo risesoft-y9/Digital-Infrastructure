@@ -8,6 +8,11 @@ package net.risesoft.manager.relation;
  */
 public interface Y9PositionsToGroupsManager {
 
+    /**
+     * 根据岗位id删除岗位与用户组的关联
+     *
+     * @param positionId 岗位id
+     */
     void deleteByPositionId(String positionId);
 
 }

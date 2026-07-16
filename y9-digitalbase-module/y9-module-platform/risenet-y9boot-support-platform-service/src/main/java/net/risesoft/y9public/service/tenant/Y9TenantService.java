@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import net.risesoft.model.platform.tenant.Tenant;
+import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
@@ -23,12 +24,11 @@ public interface Y9TenantService {
     Tenant changeDisabled(String id);
 
     /**
-     * 根据id删除租户
+     * 检查租户关联关系后根据 id 删除
      *
-     * @param id 唯一标识
+     * @param id 租户 id
+     * @throws Y9BusinessException 租户已租用系统的情况
      */
-    void delete(String id);
-
     void deleteAfterCheck(String id);
 
     /**

@@ -74,12 +74,6 @@ public class Y9OptionClassServiceImpl implements Y9OptionClassService {
     }
 
     @Override
-    public boolean hasData() {
-        long count = y9OptionClassRepository.count();
-        return count > 0;
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public List<OptionClass> list() {
         List<Y9OptionClass> y9OptionClassList = y9OptionClassRepository.findAll();

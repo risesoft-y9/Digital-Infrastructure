@@ -57,14 +57,6 @@ public interface Y9ManagerService {
     void delete(String id);
 
     /**
-     * 根据id判断管理员是否存在
-     *
-     * @param id 管理员id
-     * @return boolean
-     */
-    boolean existsById(String id);
-
-    /**
      * 根据登录名判断管理员是否存在
      *
      * @param loginName 管理员id
@@ -80,6 +72,12 @@ public interface Y9ManagerService {
      */
     Optional<Manager> findById(String id);
 
+    /**
+     * 根据登录名查找管理员
+     *
+     * @param loginName 登录名
+     * @return {@code Optional<Manager>}
+     */
     Optional<Manager> findByLoginName(String loginName);
 
     /**
@@ -91,8 +89,20 @@ public interface Y9ManagerService {
      */
     Manager getById(String id);
 
+    /**
+     * 获取管理员密码修改周期
+     *
+     * @param managerLevel 管理员级别
+     * @return 密码修改周期
+     */
     int getPasswordModifiedCycle(ManagerLevelEnum managerLevel);
 
+    /**
+     * 获取管理员日志审查周期
+     *
+     * @param managerLevel 管理员级别
+     * @return 日志审查周期
+     */
     int getReviewLogCycle(ManagerLevelEnum managerLevel);
 
     /**
@@ -113,6 +123,13 @@ public interface Y9ManagerService {
      */
     boolean isLoginNameAvailable(String id, String loginName);
 
+    /**
+     * 判断管理员密码是否过期
+     *
+     * @param id 管理员id
+     * @return {@link Boolean}
+     * @throws Y9NotFoundException id对应的管理员不存在
+     */
     Boolean isPasswordExpired(String id);
 
     /**

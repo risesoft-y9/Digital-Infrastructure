@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.org.PersonsPositions;
+import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
  * @author dingzhaojun
@@ -56,6 +57,12 @@ public interface Y9PersonsToPositionsService {
      */
     String getPositionIdsByPersonId(String personId, Boolean disabled);
 
+    /**
+     * 根据人员id获取人员与岗位的关联关系
+     *
+     * @param personId 人员id
+     * @return {@code List<PersonsPositions>}
+     */
     List<PersonsPositions> listByPersonId(String personId);
 
     /**
@@ -65,14 +72,6 @@ public interface Y9PersonsToPositionsService {
      * @return {@code List<PersonsPositions>}
      */
     List<PersonsPositions> listByPositionId(String positionId);
-
-    /**
-     * 根据人员id获取岗位ID
-     *
-     * @param personId 人员id
-     * @return {@code List<String>}
-     */
-    List<String> listPositionIdsByPersonId(String personId);
 
     /**
      * 保存排序结果
@@ -92,7 +91,20 @@ public interface Y9PersonsToPositionsService {
      */
     List<PersonsPositions> orderPositions(String personId, String[] positionIds);
 
+    /**
+     * 保存或更新人员与岗位的关联关系
+     *
+     * @param y9PersonsToPositions 人员与岗位的关联关系
+     * @throws Y9NotFoundException 人员或岗位不存在
+     */
     void saveOrUpdate(PersonsPositions y9PersonsToPositions);
 
+    /**
+     * 根据岗位id获取人员列表
+     *
+     * @param positionId 岗位id
+     * @return {@code List<Person>}
+     * @throws Y9NotFoundException 关联关系对应的人员不存在
+     */
     List<Person> listPersonByPositionId(String positionId);
 }

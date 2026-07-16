@@ -29,13 +29,6 @@ public interface Y9OptionClassService {
     Optional<OptionClass> findByType(String type);
 
     /**
-     * 字典类型表中是否有数据
-     *
-     * @return boolean
-     */
-    boolean hasData();
-
-    /**
      * 字曲典类型列表
      *
      * @return {@code List<OptionClass>}

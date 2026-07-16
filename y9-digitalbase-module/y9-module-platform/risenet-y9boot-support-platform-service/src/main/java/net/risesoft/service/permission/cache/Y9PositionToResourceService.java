@@ -8,6 +8,7 @@ import net.risesoft.model.platform.permission.cache.PositionToResource;
 import net.risesoft.model.platform.resource.App;
 import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
+import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
  * @author dingzhaojun
@@ -120,10 +121,30 @@ public interface Y9PositionToResourceService {
     List<Resource> listSubResources(String positionId, String resourceId, AuthorityEnum authority,
         ResourceTypeEnum resourceType);
 
+    /**
+     * 根据父资源自定义id获取岗位拥有相应权限的子资源
+     *
+     * @param positionId 岗位id
+     * @param customId 父资源自定义id
+     * @param authority 权限类型{@link AuthorityEnum}
+     * @param resourceType 资源类型{@link ResourceTypeEnum}
+     * @return {@code List<Resource>}
+     * @throws Y9NotFoundException 自定义id对应的资源不存在
+     */
     List<Resource> listSubResourcesByCustomId(String positionId, String customId, AuthorityEnum authority,
         ResourceTypeEnum resourceType);
 
+    /**
+     * 根据授权配置id删除岗位资源权限缓存
+     *
+     * @param authorizationId 授权配置id
+     */
     void deleteByAuthorizationId(String authorizationId);
 
+    /**
+     * 根据资源id删除岗位资源权限缓存
+     *
+     * @param resourceId 资源id
+     */
     void deleteByResourceId(String resourceId);
 }

@@ -310,11 +310,6 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    public boolean existsById(String id) {
-        return y9AppRepository.existsById(id);
-    }
-
-    @Override
     public Optional<App> findById(String id) {
         return y9AppManager.findByIdFromCache(id).map(y9App -> entityToModel(y9App));
     }

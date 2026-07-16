@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -39,12 +38,8 @@ public interface Y9AuthorizationRepository extends JpaRepository<Y9Authorization
     List<Y9Authorization> findByPrincipalIdAndPrincipalType(String principalId,
         AuthorizationPrincipalTypeEnum principalType);
 
-    List<Y9Authorization> findByPrincipalIdAndResourceId(String roleId, String resourceId, Sort sort);
-
     Optional<Y9Authorization> findByPrincipalIdAndResourceIdAndAuthority(String roleId, String resourceId,
         AuthorityEnum authority);
-
-    List<Y9Authorization> findByPrincipalIdOrderByCreateTime(String principalId);
 
     List<Y9Authorization> findByResourceIdAndPrincipalType(String resourceId,
         AuthorizationPrincipalTypeEnum principalType);
@@ -56,9 +51,6 @@ public interface Y9AuthorizationRepository extends JpaRepository<Y9Authorization
 
     List<Y9Authorization> findByResourceIdAndAuthorityAndPrincipalIdIn(String resourceId, AuthorityEnum authority,
         List<String> principalIds);
-
-    Page<Y9Authorization> findByResourceIdAndPrincipalType(String resourceId,
-        AuthorizationPrincipalTypeEnum principalType, Pageable pageRequest);
 
     List<Y9Authorization> getByPrincipalIdIn(List<String> principalIds);
 

@@ -7,6 +7,8 @@ import java.util.Optional;
 import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.org.Y9Position;
+import net.risesoft.y9.exception.Y9BusinessException;
+import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
  * @author dingzhaojun
@@ -21,6 +23,7 @@ public interface CompositeOrgBaseManager {
      *
      * @param orgUnitId 组织节点id
      * @return 所有后代组织节点都已禁用返回true，否则返回false
+     * @throws Y9NotFoundException orgUnitId 对应的组织节点不存在的情况
      */
     boolean isAllDescendantsDisabled(String orgUnitId);
 
@@ -69,6 +72,7 @@ public interface CompositeOrgBaseManager {
      *
      * @param orgUnitId 组织节点id
      * @return {@code Y9OrgBase }
+     * @throws Y9BusinessException orgUnitId 对应的人员或岗位不存在的情况
      */
     Y9OrgBase getPersonOrPosition(String orgUnitId);
 
@@ -85,6 +89,7 @@ public interface CompositeOrgBaseManager {
      *
      * @param orgUnitId 组织节点id
      * @return {@link Y9OrgBase}
+     * @throws Y9NotFoundException orgUnitId 对应的组织节点不存在的情况
      */
     Y9OrgBase getOrgUnit(String orgUnitId);
 
@@ -93,6 +98,7 @@ public interface CompositeOrgBaseManager {
      *
      * @param orgUnitId 组织节点id
      * @return {@link Y9OrgBase}
+     * @throws Y9NotFoundException orgUnitId 对应的父组织节点不存在的情况
      */
     Y9OrgBase getOrgUnitAsParent(String orgUnitId);
 
@@ -101,6 +107,7 @@ public interface CompositeOrgBaseManager {
      *
      * @param orgUnitId 组织节点id
      * @return {@link Y9OrgBase}
+     * @throws Y9NotFoundException orgUnitId 对应的组织节点或其所在委办局不存在的情况
      */
     Y9OrgBase getOrgUnitBureau(String orgUnitId);
 
@@ -109,6 +116,7 @@ public interface CompositeOrgBaseManager {
      *
      * @param orgUnitId 组织节点id
      * @return ORGBase
+     * @throws Y9NotFoundException orgUnitId 对应的组织节点或父节点不存在的情况
      */
     Y9OrgBase getOrgUnitParent(String orgUnitId);
 
@@ -151,6 +159,7 @@ public interface CompositeOrgBaseManager {
      * @param orgUnitId 组织节点 id
      * @param stopOrgUnitId 终止组织节点 id，为 null 时表示查到根节点
      * @param orgBaseCollection 组织节点集合
+     * @throws Y9NotFoundException orgUnitId 对应的组织节点不存在的情况
      */
     void fillWithOrgUnitAndAncestor(String orgUnitId, String stopOrgUnitId, Collection<Y9OrgBase> orgBaseCollection);
 
@@ -159,6 +168,7 @@ public interface CompositeOrgBaseManager {
      *
      * @param orgUnitId 组织节点 id
      * @return {@code List<Y9OrgBase> }
+     * @throws Y9NotFoundException orgUnitId 对应的组织节点不存在的情况
      */
     List<Y9OrgBase> listOrgUnitAndAncestor(String orgUnitId);
 }

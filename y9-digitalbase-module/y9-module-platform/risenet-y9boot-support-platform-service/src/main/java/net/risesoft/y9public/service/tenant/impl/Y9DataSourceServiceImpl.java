@@ -54,8 +54,6 @@ import net.risesoft.y9public.service.tenant.Y9DataSourceService;
 @RequiredArgsConstructor
 public class Y9DataSourceServiceImpl implements Y9DataSourceService {
 
-    private static final String DEFAULT_PASSWORD = "111111";
-
     private final Y9DataSourceRepository datasourceRepository;
     private final Y9TenantSystemRepository y9TenantSystemRepository;
 
@@ -184,18 +182,6 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
         Page<Y9DataSource> y9DataSourcePage = datasourceRepository.findAll(pageable);
         return Y9Page.success(pageQuery.getPage(), y9DataSourcePage.getTotalPages(),
             y9DataSourcePage.getTotalElements(), entityToModel(y9DataSourcePage.getContent()));
-    }
-
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public void resetDefaultPassword(String id) {
-        Y9DataSource y9DataSource = y9DataSourceManager.getById(id);
-        // 数据源类型不能为 jndi 才能修改密码
-        Y9AssertUtil.isNotTrue(Objects.equals(y9DataSource.getType(), DataSourceTypeEnum.JNDI),
-            DataSourceErrorCodeEnum.JNDI_DATA_SOURCE_RESET_PASSWORD_NOT_ALLOWED);
-
-        y9DataSource.setPassword(DEFAULT_PASSWORD);
-        y9DataSourceManager.save(y9DataSource);
     }
 
     @Override
