@@ -15,33 +15,23 @@ import lombok.Setter;
 @Setter
 public class AppCategoryVO implements Serializable {
 
-    /**
-     * ID
-     */
+    private static final long serialVersionUID = 1L;
+
+    /** ID */
     private String id;
 
-    /**
-     * 应用所属分类id
-     */
+    /** 应用所属分类id */
     private String categoryId;
 
-    /**
-     * 应用id
-     */
+    /** 应用id */
     private String appId;
 
-    /**
-     * 应用名
-     */
+    /** 应用名 */
     private String appName;
 
-    /**
-     * 应用 URL
-     */
+    /** 应用 URL */
     private String appUrl;
 
-    /**
-     * 排序号
-     */
+    /** 排序号 */
     private Integer tabIndex;
 }

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,6 +26,7 @@ import net.risesoft.model.platform.org.Department;
 import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.org.Position;
+import net.risesoft.model.platform.permission.cache.PersonalApp;
 import net.risesoft.model.platform.resource.App;
 import net.risesoft.pojo.AppCategory;
 import net.risesoft.pojo.Y9PageQuery;
@@ -227,21 +229,36 @@ public class Y9PersonalAppServiceImpl implements Y9PersonalAppService {
     }
 
     @Override
-    public List<Y9PersonalApp> listByOrgUnitId(String orgUnitId) {
-        return y9PersonalAppRepository.findByOrgUnitIdOrderByTabIndex(orgUnitId);
+    public List<PersonalApp> listByOrgUnitId(String orgUnitId) {
+        return entityToModel(y9PersonalAppRepository.findByOrgUnitIdOrderByTabIndex(orgUnitId));
     }
 
     @Override
-    public Page<Y9PersonalApp> pageByOrgUnitId(String orgUnitId, String categoryId, Y9PageQuery pageQuery) {
+    public List<App> listAppsByOrgUnitId(String orgUnitId) {
+        return y9PersonalAppRepository.findByOrgUnitIdOrderByTabIndex(orgUnitId)
+            .stream()
+            .map(Y9PersonalApp::getAppId)
+            .map(y9AppService::findById)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<PersonalApp> pageByOrgUnitId(String orgUnitId, String categoryId, Y9PageQuery pageQuery) {
         Pageable pageable = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by("tabIndex"));
+        Page<Y9PersonalApp> y9PersonalAppPage;
         if (StringUtils.isNotBlank(categoryId)) {
-            return y9PersonalAppRepository.findByOrgUnitIdAndCategoryId(orgUnitId, categoryId, pageable);
+            y9PersonalAppPage = y9PersonalAppRepository.findByOrgUnitIdAndCategoryId(orgUnitId, categoryId, pageable);
+        } else {
+            y9PersonalAppPage = y9PersonalAppRepository.findByOrgUnitId(orgUnitId, pageable);
         }
-        return y9PersonalAppRepository.findByOrgUnitId(orgUnitId, pageable);
+        return new PageImpl<>(entityToModel(y9PersonalAppPage.getContent()), pageable,
+            y9PersonalAppPage.getTotalElements());
     }
 
     @Override
-    public Page<Y9PersonalApp> pageOrgUnitIdByAppId(String appId, String deptName, Y9PageQuery pageQuery) {
+    public Page<OrgUnit> pageOrgUnitByAppId(String appId, String deptName, Y9PageQuery pageQuery) {
         Pageable pageable = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by("createTime"));
         List<Department> departmentList = y9DepartmentService.listByNameLike(deptName, Boolean.FALSE);
         List<Position> positionList = new ArrayList<>();
@@ -250,11 +267,43 @@ public class Y9PersonalAppServiceImpl implements Y9PersonalAppService {
         }
         List<String> orgUnitIdList = positionList.stream().map(OrgUnit::getId).collect(Collectors.toList());
 
+        Page<Y9PersonalApp> y9PersonalAppPage;
         if (orgUnitIdList.isEmpty()) {
-            return y9PersonalAppRepository.findByAppId(appId, pageable);
+            y9PersonalAppPage = y9PersonalAppRepository.findByAppId(appId, pageable);
         } else {
-            return y9PersonalAppRepository.findByOrgUnitIdInAndAppId(orgUnitIdList, appId, pageable);
+            y9PersonalAppPage = y9PersonalAppRepository.findByOrgUnitIdInAndAppId(orgUnitIdList, appId, pageable);
         }
+        List<OrgUnit> orgUnitList = y9PersonalAppPage.getContent()
+            .stream()
+            .map(Y9PersonalApp::getOrgUnitId)
+            .map(compositeOrgBaseService::findPersonOrPosition)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .collect(Collectors.toList());
+        return new PageImpl<>(orgUnitList, pageable, y9PersonalAppPage.getTotalElements());
+    }
+
+    private List<PersonalApp> entityToModel(List<Y9PersonalApp> y9PersonalAppList) {
+        List<PersonalApp> personalAppList = new ArrayList<>();
+        for (Y9PersonalApp y9PersonalApp : y9PersonalAppList) {
+            App app = y9AppService.findById(y9PersonalApp.getAppId()).orElse(null);
+            if (app == null || !Boolean.TRUE.equals(app.getEnabled())) {
+                continue;
+            }
+            PersonalApp personalApp = new PersonalApp();
+            personalApp.setAppId(app.getId());
+            personalApp.setAppName(app.getName());
+            personalApp.setUrl(app.getUrl());
+            personalApp.setIconUrl(app.getIconUrl());
+            personalApp.setIconData(app.getIconData());
+            personalApp.setShowNumber(app.getShowNumber());
+            personalApp.setNumberUrl(app.getNumberUrl());
+            personalApp.setOpentype(app.getOpentype());
+            personalApp.setTabIndex(y9PersonalApp.getTabIndex());
+            personalApp.setStar(y9PersonalApp.getStar());
+            personalAppList.add(personalApp);
+        }
+        return personalAppList;
     }
 
     @Override

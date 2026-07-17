@@ -61,11 +61,6 @@ public class Y9AppCategoryServiceImpl implements Y9AppCategoryService {
         }
     }
 
-    @Override
-    public Y9AppCategory findById(String id) {
-        return y9AppCategoryRepository.findById(id).orElse(null);
-    }
-
     private Integer getMaxIndex(String resourceId) {
         return y9AppCategoryRepository.findTopByCategoryIdOrderByTabIndexDesc(resourceId)
             .map(Y9AppCategory::getTabIndex)
@@ -104,17 +99,16 @@ public class Y9AppCategoryServiceImpl implements Y9AppCategoryService {
         return appCategoryList;
     }
 
-    @Override
-    public List<Y9AppCategory> listByAllAppCategory() {
+    private List<Y9AppCategory> listByAllAppCategory() {
         List<Y9AppCategory> appCategoryMappingList = new ArrayList<>();
 
         List<OptionValue> optionValues = y9OptionValueService.listByType(OptionClassConsts.APP_CATEGORY);
         for (OptionValue resource : optionValues) {
             List<Y9AppCategory> appList = y9AppCategoryRepository.findByCategoryIdOrderByTabIndex(resource.getCode());
-            for (Y9AppCategory order : appList) {
-                App y9App = y9AppService.findById(order.getAppId()).orElse(null);
+            for (Y9AppCategory y9AppCategory : appList) {
+                App y9App = y9AppService.findById(y9AppCategory.getAppId()).orElse(null);
                 if (y9App != null && Boolean.TRUE.equals(y9App.getEnabled())) {
-                    appCategoryMappingList.add(order);
+                    appCategoryMappingList.add(y9AppCategory);
                 }
             }
         }
@@ -122,46 +116,40 @@ public class Y9AppCategoryServiceImpl implements Y9AppCategoryService {
     }
 
     @Override
-    public List<Y9AppCategory> listByCategoryId(String categoryId) {
-        return y9AppCategoryRepository.findByCategoryIdOrderByTabIndex(categoryId);
+    public List<AppCategory> listByCategoryId(String categoryId) {
+        return entityToModel(y9AppCategoryRepository.findByCategoryIdOrderByTabIndex(categoryId));
     }
 
     @Override
-    public Page<Y9AppCategory> pageByCategoryId(String categoryId, Y9PageQuery pageQuery) {
+    public Page<AppCategory> pageByCategoryId(String categoryId, Y9PageQuery pageQuery) {
         Pageable pageable =
             PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.ASC, "tabIndex"));
-        return y9AppCategoryRepository.findPageByCategoryId(categoryId, pageable);
+        return y9AppCategoryRepository.findPageByCategoryId(categoryId, pageable).map(this::entityToModel);
+    }
+
+    private List<AppCategory> entityToModel(List<Y9AppCategory> y9AppCategoryList) {
+        return y9AppCategoryList.stream().map(this::entityToModel).collect(Collectors.toList());
+    }
+
+    private AppCategory entityToModel(Y9AppCategory y9AppCategory) {
+        AppCategory appCategory = new AppCategory();
+        appCategory.setId(y9AppCategory.getId());
+        appCategory.setCategoryId(y9AppCategory.getCategoryId());
+        appCategory.setTabIndex(y9AppCategory.getTabIndex());
+        appCategory.setAppId(y9AppCategory.getAppId());
+        return appCategory;
     }
 
     @Override
     @Transactional(readOnly = false)
     public void saveOrder(String[] ids) {
         for (int i = 0; i < ids.length; i++) {
-            Y9AppCategory order = y9AppCategoryRepository.findById(ids[i]).orElse(null);
-            if (null != order) {
-                order.setTabIndex(i);
-                y9AppCategoryRepository.save(order);
+            Y9AppCategory y9AppCategory = y9AppCategoryRepository.findById(ids[i]).orElse(null);
+            if (null != y9AppCategory) {
+                y9AppCategory.setTabIndex(i);
+                y9AppCategoryRepository.save(y9AppCategory);
             }
         }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9AppCategory saveOrUpdate(Y9AppCategory y9AppCategory) {
-        if (StringUtils.isNotEmpty(y9AppCategory.getId())) {
-            Y9AppCategory originalAppCategory = this.findById(y9AppCategory.getId());
-            originalAppCategory.setAppId(y9AppCategory.getAppId());
-            originalAppCategory.setTabIndex(y9AppCategory.getTabIndex());
-            y9AppCategoryRepository.save(originalAppCategory);
-            return originalAppCategory;
-        }
-        if (StringUtils.isEmpty(y9AppCategory.getId())) {
-            y9AppCategory.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        }
-        Integer maxTabIndex = getMaxIndex(y9AppCategory.getCategoryId());
-        y9AppCategory.setTabIndex(maxTabIndex + 1);
-        y9AppCategoryRepository.save(y9AppCategory);
-        return y9AppCategory;
     }
 
     @Override

@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 import net.risesoft.entity.permission.cache.Y9PersonalApp;
+import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.permission.cache.PersonalApp;
+import net.risesoft.model.platform.resource.App;
 import net.risesoft.pojo.AppCategory;
 import net.risesoft.pojo.Y9PageQuery;
 
@@ -83,7 +86,15 @@ public interface Y9PersonalAppService {
      * @param orgUnitId 人员id
      * @return
      */
-    List<Y9PersonalApp> listByOrgUnitId(String orgUnitId);
+    List<PersonalApp> listByOrgUnitId(String orgUnitId);
+
+    /**
+     * 根据组织节点id获取应用列表
+     *
+     * @param orgUnitId 组织节点id
+     * @return 应用列表
+     */
+    List<App> listAppsByOrgUnitId(String orgUnitId);
 
     /**
      * 根据人员id获取图标分页列表
@@ -93,7 +104,7 @@ public interface Y9PersonalAppService {
      * @param pageQuery 分页查询参数
      * @return
      */
-    Page<Y9PersonalApp> pageByOrgUnitId(String orgUnitId, String categoryId, Y9PageQuery pageQuery);
+    Page<PersonalApp> pageByOrgUnitId(String orgUnitId, String categoryId, Y9PageQuery pageQuery);
 
     /**
      * 获取租用的人员id分页列表
@@ -103,7 +114,7 @@ public interface Y9PersonalAppService {
      * @param pageQuery
      * @return
      */
-    Page<Y9PersonalApp> pageOrgUnitIdByAppId(String appId, String deptName, Y9PageQuery pageQuery);
+    Page<OrgUnit> pageOrgUnitByAppId(String appId, String deptName, Y9PageQuery pageQuery);
 
     /**
      * 保存个人图标信息
