@@ -204,7 +204,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
 
         Tenant savedTenant = this.saveOrUpdate(tenant);
 
-        y9DataSourceManager.createDataSourceIfNotExists(savedTenant.getShortName(), null, tenantDataSourceId);
+        y9DataSourceManager.createDataSourceIfNotExists(savedTenant.getShortName(), null, true, tenantDataSourceId);
 
         return savedTenant;
     }

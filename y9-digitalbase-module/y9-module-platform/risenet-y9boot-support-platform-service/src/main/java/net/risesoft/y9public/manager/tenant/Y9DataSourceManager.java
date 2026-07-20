@@ -27,21 +27,24 @@ public interface Y9DataSourceManager {
      *
      * @param tenantShortName 租户短名称
      * @param systemName 系统名称
+     * @param createSchema 是否创建数据库、schema
      * @param specifyId 指定的数据源id
      * @return {@link Y9DataSource}
      * @throws Y9BusinessException 当前数据库类型不支持创建数据源的情况
      */
-    Y9DataSource createDataSourceIfNotExists(String tenantShortName, String systemName, String specifyId);
+    Y9DataSource createDataSourceIfNotExists(String tenantShortName, String systemName, boolean createSchema,
+        String specifyId);
 
     /**
      * 创建数据源（不存在时）
      *
      * @param dbName 数据库名称
      * @param specifyId 指定的数据源id
+     * @param createSchema 是否创建数据库、schema
      * @return {@link Y9DataSource}
      * @throws Y9BusinessException 当前数据库类型不支持创建数据源的情况
      */
-    Y9DataSource createDataSourceIfNotExists(String dbName, String specifyId);
+    Y9DataSource createDataSourceIfNotExists(String dbName, boolean createSchema, String specifyId);
 
     /**
      * 根据id删除数据源

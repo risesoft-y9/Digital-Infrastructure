@@ -174,8 +174,8 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
         if (Boolean.TRUE.equals(y9System.getSingleDatasource())) {
             String datasoureId = tenant.getDefaultDataSourceId();
             try {
-                Y9DataSource y9DataSource =
-                    y9DataSourceManager.createDataSourceIfNotExists(tenant.getShortName(), y9System.getName(), null);
+                Y9DataSource y9DataSource = y9DataSourceManager.createDataSourceIfNotExists(tenant.getShortName(),
+                    y9System.getName(), true, null);
                 datasoureId = y9DataSource.getId();
             } catch (Exception e) {
                 LOGGER.warn(e.getMessage(), e);

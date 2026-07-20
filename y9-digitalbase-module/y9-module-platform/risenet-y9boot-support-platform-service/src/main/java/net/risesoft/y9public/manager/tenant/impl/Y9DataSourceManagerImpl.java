@@ -16,7 +16,6 @@ import net.risesoft.enums.platform.DataSourceTypeEnum;
 import net.risesoft.exception.DataSourceErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 import net.risesoft.y9.db.DbType;
 import net.risesoft.y9.db.DbUtil;
 import net.risesoft.y9.exception.Y9BusinessException;
@@ -48,7 +47,6 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
 
     public Y9DataSourceManagerImpl(
         @Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public,
-        Y9PlatformProperties y9PlatformProperties,
         Y9DataSourceRepository y9DataSourceRepository,
         List<AbstractDatabaseManager> databaseManagerList) {
         this.jdbcTemplate4Public = jdbcTemplate4Public;
@@ -65,7 +63,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
     private String buildDataSourceName(String tenantShortName, String systemName) {
         String dataSourceName = tenantShortName;
         if (!"default".equals(tenantShortName)) {
-            dataSourceName = "yt_" + tenantShortName + "_" + RandomUtil.randomStringUpper(4);
+            dataSourceName = "yt_" + tenantShortName + "_" + RandomUtil.randomStringLowerWithoutStr(4, "");
         }
         if (StringUtils.isNotBlank(systemName)) {
             dataSourceName = dataSourceName + "_" + systemName;
@@ -74,13 +72,14 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
     }
 
     @Override
-    public Y9DataSource createDataSourceIfNotExists(String tenantShortName, String systemName, String specifyId) {
+    public Y9DataSource createDataSourceIfNotExists(String tenantShortName, String systemName, boolean createSchema,
+        String specifyId) {
         String dataSourceName = this.buildDataSourceName(tenantShortName, systemName);
-        return this.createDataSourceIfNotExists(dataSourceName, specifyId);
+        return this.createDataSourceIfNotExists(dataSourceName, createSchema, specifyId);
     }
 
     @Override
-    public Y9DataSource createDataSourceIfNotExists(String dbName, String specifyId) {
+    public Y9DataSource createDataSourceIfNotExists(String dbName, boolean createSchema, String specifyId) {
         if (StringUtils.isNotBlank(specifyId)) {
             Optional<Y9DataSource> y9DataSourceOptional = y9DataSourceRepository.findById(specifyId);
             if (y9DataSourceOptional.isPresent()) {
@@ -100,7 +99,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         AbstractDatabaseManager databaseManager =
             databaseManagerList.stream().filter(dm -> dm.support(dbType)).findFirst().orElse(null);
         if (databaseManager != null) {
-            createdDataSource = databaseManager.createSchema(dbName, jdbcTemplate4Public);
+            createdDataSource = databaseManager.buildAndCreateSchema(dbName, jdbcTemplate4Public, createSchema);
         } else {
             throw new Y9BusinessException(DataSourceErrorCodeEnum.DATABASE_NOT_FULLY_SUPPORTED.getCode(),
                 DataSourceErrorCodeEnum.DATABASE_NOT_FULLY_SUPPORTED.getDescription());

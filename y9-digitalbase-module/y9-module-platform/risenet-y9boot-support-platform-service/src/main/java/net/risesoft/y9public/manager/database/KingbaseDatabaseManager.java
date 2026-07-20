@@ -20,21 +20,17 @@ public class KingbaseDatabaseManager extends AbstractDatabaseManager {
     }
 
     @Override
-    protected CreatedDataSource createSchemaInternal(JdbcTemplate jdbcTemplate, String dbName, String originalUrl,
-        String originalUsername, String originalPassword) {
+    protected CreatedDataSource buildInternal(String dbName, String originalUrl, String originalUsername,
+        String originalPassword) {
         String url = replaceSchemaNameInJdbcUrlParam(originalUrl, dbName);
+        return new CreatedDataSource(url, originalUsername, originalPassword);
+    }
+
+    @Override
+    protected void createInternal(JdbcTemplate jdbcTemplate, CreatedDataSource createdDataSource, String dbName) {
         // 创建模式
         String sql1 = Y9StringUtil.format("CREATE SCHEMA {}", dbName);
         jdbcTemplate.update(sql1);
-        // url = replaceDatabaseNameInJdbcUrl(dds.getUrl(), dbName);
-        // username = dds.getUsername();
-        // password = dds.getPassword();
-        // String sql1 = Y9StringUtil.format(
-        // "CREATE DATABASE {} WITH OWNER = \"{}\" ENCODING 'UTF8' TEMPLATE template0 lc_ctype = 'C' lc_collate =
-        // 'C';",
-        // dbName, username);
-        // jdbcTemplate.update(sql1);
-        return new CreatedDataSource(url, originalUsername, originalPassword);
     }
 
     @Override

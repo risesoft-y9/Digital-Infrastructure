@@ -8,6 +8,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import net.risesoft.y9.configuration.app.y9platform.init.InitProperties;
 import net.risesoft.y9.configuration.app.y9platform.schedule.ScheduleProperties;
 
 @Getter
@@ -60,21 +61,6 @@ public class Y9PlatformProperties {
     private String userDefaultPassword = USER_PASSWORD_DEFAULT;
 
     /**
-     * 初始化租户名称
-     */
-    private String initTenantName = "default";
-
-    /**
-     * 初始化租户数据库 schema
-     */
-    private String initTenantSchema = "y9_default";
-
-    /**
-     * 新建的表空间存储目录 不指定一般会存储在数据库的默认路径下 例子：/u01/app/oracle/oradata/orcl/
-     */
-    private String newTableSpacePath = "";
-
-    /**
      * 数据目录档案保留期限
      */
     private List<String> dataCatalogRetentionPeriods = List.of("永久", "30", "10");
@@ -86,4 +72,7 @@ public class Y9PlatformProperties {
 
     @NestedConfigurationProperty
     private ScheduleProperties schedule = new ScheduleProperties();
+
+    @NestedConfigurationProperty
+    private InitProperties init = new InitProperties();
 }

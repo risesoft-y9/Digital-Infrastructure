@@ -89,8 +89,9 @@ public class PlatformApplicationReadyListener implements ApplicationListener<App
         List<Tenant> tenantList = y9TenantService.listAll();
         if (tenantList.isEmpty()) {
             DataSourceInfo defaultDataSource =
-                y9DataSourceService.createDataSource(y9PlatformProperties.getInitTenantSchema());
-            createTenant(defaultDataSource.getId(), y9PlatformProperties.getInitTenantName());
+                y9DataSourceService.createDataSource(y9PlatformProperties.getInit().getTenantSchemaName(),
+                    y9PlatformProperties.getInit().isCreateSchemaEnabled());
+            createTenant(defaultDataSource.getId(), y9PlatformProperties.getInit().getTenantName());
         }
     }
 

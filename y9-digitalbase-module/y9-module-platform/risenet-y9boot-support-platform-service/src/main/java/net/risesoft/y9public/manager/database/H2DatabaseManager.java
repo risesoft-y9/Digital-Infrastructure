@@ -19,10 +19,15 @@ public class H2DatabaseManager extends AbstractDatabaseManager {
     }
 
     @Override
-    protected CreatedDataSource createSchemaInternal(JdbcTemplate jdbcTemplate, String dbName, String originalUrl,
-        String originalUsername, String originalPassword) {
+    protected CreatedDataSource buildInternal(String dbName, String originalUrl, String originalUsername,
+        String originalPassword) {
         String url = "jdbc:h2:mem:" + dbName;
         return new CreatedDataSource(url, originalUsername, originalPassword);
+    }
+
+    @Override
+    protected void createInternal(JdbcTemplate jdbcTemplate, CreatedDataSource createdDataSource, String dbName) {
+
     }
 
     @Override

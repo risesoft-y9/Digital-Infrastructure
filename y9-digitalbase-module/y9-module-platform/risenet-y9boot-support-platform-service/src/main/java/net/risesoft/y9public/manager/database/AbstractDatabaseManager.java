@@ -20,14 +20,22 @@ public abstract class AbstractDatabaseManager {
 
     abstract public boolean support(DbType dbType);
 
-    abstract protected CreatedDataSource createSchemaInternal(JdbcTemplate jdbcTemplate, String dbName,
-        String originalUrl, String originalUsername, String originalPassword);
+    abstract protected CreatedDataSource buildInternal(String dbName, String originalUrl, String originalUsername,
+        String originalPassword);
+
+    abstract protected void createInternal(JdbcTemplate jdbcTemplate, CreatedDataSource createdDataSource,
+        String dbName);
 
     abstract public void dropSchema(String dbName, JdbcTemplate jdbcTemplate);
 
-    public CreatedDataSource createSchema(String dbName, JdbcTemplate jdbcTemplate) {
+    public CreatedDataSource buildAndCreateSchema(String dbName, JdbcTemplate jdbcTemplate,
+        boolean createSchemaEnabled) {
         DruidDataSource dds = (DruidDataSource)jdbcTemplate.getDataSource();
-        return createSchemaInternal(jdbcTemplate, dbName, dds.getUrl(), dds.getUsername(), dds.getPassword());
+        CreatedDataSource createdDataSource = buildInternal(dbName, dds.getUrl(), dds.getUsername(), dds.getPassword());
+        if (createSchemaEnabled) {
+            createInternal(jdbcTemplate, createdDataSource, dbName);
+        }
+        return createdDataSource;
     }
 
     /**

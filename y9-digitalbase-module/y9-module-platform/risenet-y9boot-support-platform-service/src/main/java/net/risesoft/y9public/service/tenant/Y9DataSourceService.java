@@ -31,9 +31,10 @@ public interface Y9DataSourceService {
      * 根据数据库名称创建数据源
      *
      * @param dbName 数据库名称
+     * @param createSchema 是否创建数据库、schema
      * @return {@link DataSourceInfo}
      */
-    DataSourceInfo createDataSource(String dbName);
+    DataSourceInfo createDataSource(String dbName, boolean createSchema);
 
     /**
      * 根据id删除数据源

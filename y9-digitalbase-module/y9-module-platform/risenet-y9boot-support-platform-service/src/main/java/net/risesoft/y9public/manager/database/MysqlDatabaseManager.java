@@ -22,15 +22,17 @@ public class MysqlDatabaseManager extends AbstractDatabaseManager {
     }
 
     @Override
-    protected CreatedDataSource createSchemaInternal(JdbcTemplate jdbcTemplate, String dbName, String originalUrl,
-        String originalUsername, String originalPassword) {
+    protected CreatedDataSource buildInternal(String dbName, String originalUrl, String originalUsername,
+        String originalPassword) {
         String url = replaceDatabaseNameInJdbcUrl(originalUrl, dbName);
-
-        String sql =
-            Y9StringUtil.format("CREATE DATABASE IF NOT EXISTS {} DEFAULT CHARACTER SET UTF8 COLLATE UTF8_BIN", dbName);
-
-        jdbcTemplate.update(sql);
         return new CreatedDataSource(url, originalUsername, originalPassword);
+    }
+
+    @Override
+    protected void createInternal(JdbcTemplate jdbcTemplate, CreatedDataSource createdDataSource, String dbName) {
+        String sql =
+            Y9StringUtil.format("CREATE DATABASE IF NOT EXISTS {} DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin", dbName);
+        jdbcTemplate.update(sql);
     }
 
     @Override
