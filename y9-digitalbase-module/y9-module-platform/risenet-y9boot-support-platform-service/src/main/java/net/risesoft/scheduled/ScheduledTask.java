@@ -27,7 +27,7 @@ import net.risesoft.service.permission.cache.IdentityResourceCalculator;
 import net.risesoft.service.permission.cache.IdentityRoleCalculator;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
 
 @Service
@@ -56,7 +56,7 @@ public class ScheduledTask {
         String systemName = Y9Context.getSystemName();
         List<String> tenantIds = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIds) {
-            Y9LoginUserHolder.setTenantId(tenantId);
+            Y9TenantHolder.setCurrentTenantId(tenantId);
             LOGGER.debug("检查租户[{}]三员审查情况", tenantId);
 
             List<Manager> managerList = y9ManagerService.listAll();
@@ -120,7 +120,7 @@ public class ScheduledTask {
         String systemName = Y9Context.getSystemName();
         List<String> tenantIds = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIds) {
-            Y9LoginUserHolder.setTenantId(tenantId);
+            Y9TenantHolder.setCurrentTenantId(tenantId);
             LOGGER.debug("检查租户[{}]三员密码修改情况", tenantId);
 
             List<Manager> managerList = y9ManagerService.listAll();
@@ -181,7 +181,7 @@ public class ScheduledTask {
     public void syncIdentityResource() {
         List<Tenant> y9TenantList = y9TenantService.listAll();
         for (Tenant y9Tenant : y9TenantList) {
-            Y9LoginUserHolder.setTenantId(y9Tenant.getId());
+            Y9TenantHolder.setCurrentTenantId(y9Tenant.getId());
             LOGGER.debug("同步租户[{}]授权主体的资源权限", y9Tenant.getId());
 
             for (Organization y9Organization : y9OrganizationService.list()) {
@@ -199,7 +199,7 @@ public class ScheduledTask {
     public void syncIdentityRole() {
         List<Tenant> y9TenantList = y9TenantService.listAll();
         for (Tenant y9Tenant : y9TenantList) {
-            Y9LoginUserHolder.setTenantId(y9Tenant.getId());
+            Y9TenantHolder.setCurrentTenantId(y9Tenant.getId());
             LOGGER.debug("同步租户[{}]授权主体的角色", y9Tenant.getId());
 
             for (Organization y9Organization : y9OrganizationService.list()) {

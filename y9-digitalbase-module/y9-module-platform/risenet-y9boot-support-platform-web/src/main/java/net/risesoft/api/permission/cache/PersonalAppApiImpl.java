@@ -19,7 +19,6 @@ import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.permission.cache.Y9PersonalAppService;
-import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 人员图标管理组件
@@ -40,7 +39,6 @@ public class PersonalAppApiImpl implements PersonalAppApi {
     @Override
     public Y9Result<Object> buildPersonalAppIconByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         y9PersonalAppService.buildPersonalAppByOrgUnitId(orgUnitId);
 
@@ -50,7 +48,6 @@ public class PersonalAppApiImpl implements PersonalAppApi {
     @Override
     public Y9Result<List<PersonalApp>> listByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PersonalAppService.listByOrgUnitId(orgUnitId));
     }
@@ -59,7 +56,6 @@ public class PersonalAppApiImpl implements PersonalAppApi {
     public Y9Page<PersonalApp> pageByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId,
         @RequestParam(name = "categoryId", required = false) String categoryId, @Validated Y9PageQuery pageQuery) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         Page<PersonalApp> appList = y9PersonalAppService.pageByOrgUnitId(orgUnitId, categoryId, pageQuery);
         return Y9Page.success(pageQuery.getPage(), appList.getTotalPages(), appList.getTotalElements(),
@@ -69,7 +65,6 @@ public class PersonalAppApiImpl implements PersonalAppApi {
     @Override
     public Y9Result<Object> sort(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") String orgUnitId, @RequestParam("appIdList") List<String> appIdList) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         y9PersonalAppService.sort(orgUnitId, appIdList);
 

@@ -25,7 +25,6 @@ import net.risesoft.model.platform.resource.FrontendMenu;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.permission.cache.Y9PositionToResourceService;
-import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 岗位资源权限组件
@@ -60,7 +59,6 @@ public class PositionResourceApiImpl implements PositionResourceApi {
     public Y9Result<Boolean> hasPermission(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId,
         @RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("authority") AuthorityEnum authority) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PositionToResourceService.hasPermission(positionId, resourceId, authority));
     }
@@ -79,7 +77,6 @@ public class PositionResourceApiImpl implements PositionResourceApi {
     public Y9Result<Boolean> hasPermissionByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId,
         @RequestParam("authority") AuthorityEnum authority) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PositionToResourceService.hasPermissionByCustomId(positionId, customId, authority));
     }
@@ -98,7 +95,6 @@ public class PositionResourceApiImpl implements PositionResourceApi {
     public Y9Result<List<FrontendMenu>> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam("resourceId") @NotBlank String resourceId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         List<FrontendMenu> frontendMenuList = new ArrayList<>();
         frontendMenuBuilder.buildFrontendMenus(IdentityTypeEnum.POSITION, positionId, authority, resourceId,
@@ -122,7 +118,6 @@ public class PositionResourceApiImpl implements PositionResourceApi {
     public Y9Result<List<FrontendMenu>> listMenusRecursivelyByCustomId(
         @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId,
         @RequestParam("authority") AuthorityEnum authority, @RequestParam("customId") @NotBlank String customId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         List<FrontendMenu> frontendMenuList = new ArrayList<>();
         frontendMenuBuilder.buildFrontendMenusByCustomId(IdentityTypeEnum.POSITION, positionId, authority, customId,
@@ -147,7 +142,6 @@ public class PositionResourceApiImpl implements PositionResourceApi {
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam(name = "resourceId", required = false) String resourceId,
         @RequestParam(name = "resourceType", required = false) ResourceTypeEnum resourceType) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Resource> returnResourceList =
             y9PositionToResourceService.listSubResources(positionId, resourceId, authority, resourceType);
@@ -170,7 +164,6 @@ public class PositionResourceApiImpl implements PositionResourceApi {
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam("customId") @NotBlank String customId,
         @RequestParam(name = "resourceType", required = false) ResourceTypeEnum resourceType) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Resource> returnResourceList =
             y9PositionToResourceService.listSubResourcesByCustomId(positionId, customId, authority, resourceType);
@@ -189,7 +182,6 @@ public class PositionResourceApiImpl implements PositionResourceApi {
     @Override
     public Y9Result<List<App>> listApps(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PositionToResourceService.listAppsByAuthority(positionId, authority));
     }

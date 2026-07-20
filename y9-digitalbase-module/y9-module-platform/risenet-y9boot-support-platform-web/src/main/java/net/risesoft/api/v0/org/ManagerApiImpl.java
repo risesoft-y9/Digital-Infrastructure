@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.api.platform.v0.org.ManagerApi;
 import net.risesoft.model.platform.org.Manager;
 import net.risesoft.service.org.Y9ManagerService;
-import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 三员服务组件
@@ -46,7 +45,6 @@ public class ManagerApiImpl implements ManagerApi {
     @Override
     public Manager getManagerById(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("userId") @NotBlank String userId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9ManagerService.findById(userId).orElse(null);
     }
@@ -54,7 +52,6 @@ public class ManagerApiImpl implements ManagerApi {
     @Override
     public Manager getManagerByLoginName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("loginName") @NotBlank String loginName) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9ManagerService.findByLoginName(loginName).orElse(null);
     }
@@ -71,7 +68,6 @@ public class ManagerApiImpl implements ManagerApi {
     @Override
     public boolean isDeptManager(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("managerId") @NotBlank String managerId, @RequestParam("deptId") @NotBlank String deptId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9ManagerService.isDeptManager(managerId, deptId);
     }

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +30,7 @@ import net.risesoft.repository.setting.Y9AppCategoryRepository;
 import net.risesoft.service.dictionary.Y9OptionValueService;
 import net.risesoft.service.setting.Y9AppCategoryService;
 import net.risesoft.util.Y9PlatformUtil;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.service.resource.Y9AppService;
@@ -182,7 +181,7 @@ public class Y9AppCategoryServiceImpl implements Y9AppCategoryService {
 
     @Async
     protected void deleteByResource(String tenantId, Y9App y9App) {
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         Y9AppCategory y9AppCategory = y9AppCategoryRepository.findByAppId(y9App.getId());
         if (null != y9AppCategory) {
             y9AppCategoryRepository.delete(y9AppCategory);

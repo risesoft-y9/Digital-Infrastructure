@@ -20,7 +20,6 @@ import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.service.permission.cache.Y9PositionToResourceService;
 import net.risesoft.util.PlatformModelConvertUtil;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9EnumUtil;
 
 /**
@@ -56,7 +55,6 @@ public class PositionResourceApiImpl implements PositionResourceApi {
     public boolean hasPermission(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId,
         @RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("authority") Integer authority) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PositionToResourceService.hasPermission(positionId, resourceId,
             Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
@@ -76,7 +74,6 @@ public class PositionResourceApiImpl implements PositionResourceApi {
     public boolean hasPermissionByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId,
         @RequestParam("authority") Integer authority) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PositionToResourceService.hasPermissionByCustomId(positionId, customId,
             Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
@@ -96,7 +93,6 @@ public class PositionResourceApiImpl implements PositionResourceApi {
     public List<Resource> listSubMenus(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority,
         @RequestParam("resourceId") @NotBlank String resourceId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Menu> y9MenuList = y9PositionToResourceService.listSubMenus(positionId, resourceId, ResourceTypeEnum.MENU,
             Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
@@ -117,7 +113,6 @@ public class PositionResourceApiImpl implements PositionResourceApi {
     public List<Resource> listSubResources(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority,
         @RequestParam(name = "resourceId", required = false) String resourceId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PositionToResourceService.listSubResources(positionId, resourceId,
             Y9EnumUtil.valueOf(AuthorityEnum.class, authority), null);

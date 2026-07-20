@@ -20,7 +20,6 @@ import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.org.Organization;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9EnumUtil;
 
 /**
@@ -54,7 +53,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     @Override
     public OrgUnit getBureau(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return compositeOrgBaseService.findOrgUnitBureau(orgUnitId).orElse(null);
     }
@@ -70,7 +68,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     @Override
     public List<Department> getDeptTrees(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9DepartmentService.listRecursivelyByParentId(orgUnitId, Boolean.FALSE);
     }
@@ -86,7 +83,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     @Override
     public OrgUnit getOrgUnit(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return compositeOrgBaseService.findOrgUnit(orgUnitId).orElse(null);
     }
@@ -102,7 +98,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     @Override
     public OrgUnit getOrgUnitDeletedById(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return compositeOrgBaseService.findOrgUnitDeleted(orgUnitId).orElse(null);
     }
@@ -118,7 +113,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     @Override
     public Organization getOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return compositeOrgBaseService.getOrgUnitOrganization(orgUnitId);
     }
@@ -134,7 +128,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     @Override
     public OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return compositeOrgBaseService.findOrgUnitParent(orgUnitId).orElse(null);
     }
@@ -152,7 +145,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     @Override
     public List<OrgUnit> getSubTree(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("treeType") @NotBlank String treeType) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return compositeOrgBaseService.getTree(orgUnitId, Y9EnumUtil.valueOf(OrgTreeTypeEnum.class, treeType), false);
     }
@@ -170,7 +162,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     @Override
     public List<OrgUnit> treeSearch(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("name") @NotBlank String name, @RequestParam("treeType") @NotBlank String treeType) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return compositeOrgBaseService.treeSearch(null, name, Y9EnumUtil.valueOf(OrgTreeTypeEnum.class, treeType),
             false, true);
@@ -191,7 +182,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     public List<OrgUnit> treeSearchByDn(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("name") @NotBlank String name, @RequestParam("treeType") @NotBlank String treeType,
         @RequestParam("dnName") @NotBlank String dnName) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return compositeOrgBaseService.treeSearch2(name, Y9EnumUtil.valueOf(OrgTreeTypeEnum.class, treeType), dnName,
             false);

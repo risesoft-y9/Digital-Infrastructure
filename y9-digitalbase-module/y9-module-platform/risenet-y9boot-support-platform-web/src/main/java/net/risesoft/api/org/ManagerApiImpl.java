@@ -15,7 +15,6 @@ import net.risesoft.api.platform.org.ManagerApi;
 import net.risesoft.model.platform.org.Manager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9ManagerService;
-import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 三员服务组件
@@ -46,7 +45,6 @@ public class ManagerApiImpl implements ManagerApi {
     @Override
     public Y9Result<Manager> get(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("managerId") @NotBlank String managerId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9ManagerService.findById(managerId).orElse(null));
     }
@@ -62,7 +60,6 @@ public class ManagerApiImpl implements ManagerApi {
     @Override
     public Y9Result<Manager> getByLoginName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("loginName") @NotBlank String loginName) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9ManagerService.findByLoginName(loginName).orElse(null));
     }
@@ -80,7 +77,6 @@ public class ManagerApiImpl implements ManagerApi {
     public Y9Result<Boolean> isDeptManager(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("managerId") @NotBlank String managerId,
         @RequestParam("departmentId") @NotBlank String departmentId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9ManagerService.isDeptManager(managerId, departmentId));
     }

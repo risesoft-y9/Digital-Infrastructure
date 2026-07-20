@@ -21,7 +21,7 @@ import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.util.Y9PlatformUtil;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
 
 /**
  * 同步信息
@@ -51,7 +51,7 @@ public class SyncPasswordController {
     @RequestMapping("/resetPersonPwd/{tenantId}")
     @RiseLog(operationName = "修改", operationType = OperationTypeEnum.MODIFY)
     public Y9Result<String> resetAllPersonPwdByTenantId(@PathVariable String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         List<Person> persons = y9PersonService.listAll();
         for (Person person : persons) {
             y9PersonService.resetDefaultPassword(person.getId());
@@ -75,7 +75,7 @@ public class SyncPasswordController {
     public Y9Result<String> resetAllPersonPwdInAllTenants() {
         List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIdList) {
-            Y9LoginUserHolder.setTenantId(tenantId);
+            Y9TenantHolder.setCurrentTenantId(tenantId);
             LOGGER.debug("同步租户[{}]人员密码", tenantId);
             List<Organization> organizationList = y9OrganizationService.list();
             for (Organization organization : organizationList) {
@@ -104,7 +104,7 @@ public class SyncPasswordController {
     @RiseLog(operationType = OperationTypeEnum.MODIFY, operationName = "根据租户id和登陆名称，更改个人密码")
     public Y9Result<String> resetPwdByTenantIdAndLoginName(@PathVariable String tenantId,
         @PathVariable String loginName) {
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         Person person = y9PersonService.getPersonByLoginName(loginName);
         if (person != null) {
             y9PersonService.resetDefaultPassword(person.getId());
@@ -122,7 +122,7 @@ public class SyncPasswordController {
     @RequestMapping("/resetAllManagerPwdByTenantId/{tenantId}")
     @RiseLog(operationName = "修改", operationType = OperationTypeEnum.MODIFY)
     public Y9Result<String> resetAllManagerPwdByTenantId(@PathVariable String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         List<Manager> manageList = y9ManagerService.listAll();
         for (Manager manager : manageList) {
             y9ManagerService.resetDefaultPassword(manager.getId());
@@ -141,7 +141,7 @@ public class SyncPasswordController {
     public Y9Result<String> resetAllManagerPwdInAllTenants() {
         List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIdList) {
-            Y9LoginUserHolder.setTenantId(tenantId);
+            Y9TenantHolder.setCurrentTenantId(tenantId);
             LOGGER.debug("同步租户管理员[{}]人员密码", tenantId);
             List<Manager> manageList = y9ManagerService.listAll();
             for (Manager manager : manageList) {

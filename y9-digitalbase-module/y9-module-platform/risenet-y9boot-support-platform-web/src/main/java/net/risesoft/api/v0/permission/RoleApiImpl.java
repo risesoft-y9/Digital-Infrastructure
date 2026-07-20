@@ -27,7 +27,6 @@ import net.risesoft.model.platform.permission.OrgBasesToRoles;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9EnumUtil;
 import net.risesoft.y9public.service.role.Y9RoleService;
 
@@ -66,7 +65,6 @@ public class RoleApiImpl implements RoleApi {
     @Override
     public boolean addPerson(@RequestParam("personId") @NotBlank String personId,
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         y9OrgBasesToRolesService.addOrgUnitsForRole(roleId, Collections.singletonList(personId), Boolean.TRUE);
         return true;
@@ -155,7 +153,6 @@ public class RoleApiImpl implements RoleApi {
     @Override
     public List<OrgUnit> listOrgUnitsById(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgType") @NotBlank String orgType) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         List<OrgBasesToRoles> orgBasesToRolesList = y9OrgBasesToRolesService.listByRoleId(roleId);
         List<OrgUnit> orgUnitList = new ArrayList<>();
@@ -183,7 +180,6 @@ public class RoleApiImpl implements RoleApi {
     @Override
     public List<Person> listPersonsById(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleId") @NotBlank String roleId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         List<OrgBasesToRoles> orgBasesToRolesList = y9OrgBasesToRolesService.listByRoleId(roleId);
         List<Person> persons = new ArrayList<>();
@@ -223,7 +219,6 @@ public class RoleApiImpl implements RoleApi {
     @Override
     public boolean removePerson(@RequestParam("personId") @NotBlank String personId,
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         try {
             y9OrgBasesToRolesService.removeOrgBases(roleId, Collections.singletonList(personId));

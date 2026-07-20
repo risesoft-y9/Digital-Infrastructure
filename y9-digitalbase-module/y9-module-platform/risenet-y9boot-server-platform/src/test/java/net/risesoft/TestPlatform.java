@@ -31,7 +31,7 @@ import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.service.permission.Y9AuthorizationService;
 import net.risesoft.service.permission.cache.Y9PersonToResourceService;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
@@ -80,7 +80,7 @@ public class TestPlatform {
     @Test
     public void test() throws InterruptedException {
         y9TenantService.listAll().stream().findFirst().ifPresent(y9Tenant -> {
-            Y9LoginUserHolder.setTenantId(y9Tenant.getId());
+            Y9TenantHolder.setCurrentTenantId(y9Tenant.getId());
         });
 
         Organization organization = createTestOrganization();

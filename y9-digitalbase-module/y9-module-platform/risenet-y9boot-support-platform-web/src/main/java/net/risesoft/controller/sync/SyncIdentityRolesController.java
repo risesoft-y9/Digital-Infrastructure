@@ -17,7 +17,7 @@ import net.risesoft.model.platform.tenant.Tenant;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.service.permission.cache.IdentityRoleCalculator;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
 
 /**
@@ -53,7 +53,7 @@ public class SyncIdentityRolesController {
 
         List<Tenant> tenantList = y9TenantService.listAll();
         for (Tenant tenant : tenantList) {
-            Y9LoginUserHolder.setTenantId(tenant.getId());
+            Y9TenantHolder.setCurrentTenantId(tenant.getId());
             LOGGER.debug("同步租户[{}]人员/岗位角色", tenant.getId());
             for (Organization organization : y9OrganizationService.list()) {
                 identityRoleCalculator.recalculateByOrgUnitId(organization.getId());
@@ -81,7 +81,7 @@ public class SyncIdentityRolesController {
         double start = System.currentTimeMillis();
         LOGGER.info("更新人员/岗位角色开始时间：{},租户id--->{}", fdf.format(new Date()), tenantId);
 
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         identityRoleCalculator.recalculateByOrgUnitId(orgUnitId);
 
         double end = System.currentTimeMillis();
@@ -103,7 +103,7 @@ public class SyncIdentityRolesController {
         double start = System.currentTimeMillis();
         LOGGER.info("更新人员/岗位角色开始时间：{},租户id--->{}", fdf.format(new Date()), tenantId);
 
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         for (Organization organization : y9OrganizationService.list()) {
             identityRoleCalculator.recalculateByOrgUnitId(organization.getId());
         }

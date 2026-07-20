@@ -24,7 +24,6 @@ import net.risesoft.service.org.Y9GroupService;
 import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
-import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 机构服务组件
@@ -60,7 +59,6 @@ public class OrganizationApiImpl implements OrganizationApi {
     @Override
     public Organization getOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("organizationId") @NotBlank String organizationId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return orgOrganizationService.findById(organizationId).orElse(null);
     }
@@ -76,7 +74,6 @@ public class OrganizationApiImpl implements OrganizationApi {
     @Override
     public List<Department> listAllBureaus(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("organizationId") @NotBlank String organizationId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9DepartmentService.listBureau(organizationId, false);
     }
@@ -90,7 +87,6 @@ public class OrganizationApiImpl implements OrganizationApi {
      */
     @Override
     public List<Organization> listAllOrganizations(@RequestParam("tenantId") @NotBlank String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return orgOrganizationService.list(false, false);
     }
@@ -106,7 +102,6 @@ public class OrganizationApiImpl implements OrganizationApi {
     @Override
     public List<Organization> listByType(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("virtual") Boolean virtual) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return orgOrganizationService.list(virtual, false);
     }
@@ -122,7 +117,6 @@ public class OrganizationApiImpl implements OrganizationApi {
     @Override
     public List<Department> listDepartments(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("organizationId") @NotBlank String organizationId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9DepartmentService.listByParentId(organizationId, false);
     }
@@ -138,7 +132,6 @@ public class OrganizationApiImpl implements OrganizationApi {
     @Override
     public List<Group> listGroups(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("organizationId") @NotBlank String organizationId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return orgGroupService.listByParentId(organizationId, false);
     }
@@ -154,7 +147,6 @@ public class OrganizationApiImpl implements OrganizationApi {
     @Override
     public List<Person> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("organizationId") @NotBlank String organizationId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return orgPersonService.listByParentId(organizationId, false);
     }
@@ -170,7 +162,6 @@ public class OrganizationApiImpl implements OrganizationApi {
     @Override
     public List<Position> listPositions(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("organizationId") @NotBlank String organizationId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return orgPositionService.listByParentId(organizationId, false);
     }

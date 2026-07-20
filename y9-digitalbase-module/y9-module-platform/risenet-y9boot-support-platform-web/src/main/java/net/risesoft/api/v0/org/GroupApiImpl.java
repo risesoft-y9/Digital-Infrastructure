@@ -21,7 +21,6 @@ import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9GroupService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.relation.Y9PersonsToGroupsService;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
 
 /**
@@ -58,7 +57,6 @@ public class GroupApiImpl implements GroupApi {
     @Override
     public boolean addPerson2Group(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId, @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         y9PersonsToGroupsService.addPersons(groupId, new String[] {personId});
         return true;
@@ -75,7 +73,6 @@ public class GroupApiImpl implements GroupApi {
     @Override
     public Group createGroup(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupJson") @NotBlank String groupJson) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         Group y9Group = Y9JsonUtil.readValue(groupJson, Group.class);
         return y9GroupService.saveOrUpdate(y9Group);
@@ -92,7 +89,6 @@ public class GroupApiImpl implements GroupApi {
     @Override
     public boolean deleteGroup(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         y9GroupService.delete(groupId);
         return true;
@@ -108,7 +104,6 @@ public class GroupApiImpl implements GroupApi {
      */
     @Override
     public Group getGroup(@RequestParam @NotBlank String tenantId, @RequestParam @NotBlank String groupId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9GroupService.findById(groupId).orElse(null);
     }
@@ -124,7 +119,6 @@ public class GroupApiImpl implements GroupApi {
     @Override
     public OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return compositeOrgBaseService.findOrgUnitParent(groupId).orElse(null);
     }
@@ -140,7 +134,6 @@ public class GroupApiImpl implements GroupApi {
     @Override
     public List<Group> listByDn(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("dn") @NotBlank String dn) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9GroupService.listByDn(dn, false);
     }
@@ -156,7 +149,6 @@ public class GroupApiImpl implements GroupApi {
     @Override
     public List<Person> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonService.listByGroupId(groupId, Boolean.FALSE);
     }
@@ -173,7 +165,6 @@ public class GroupApiImpl implements GroupApi {
     @Override
     public boolean removePerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId, @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         y9PersonsToGroupsService.removePersons(groupId, new String[] {personId});
         return true;
@@ -190,7 +181,6 @@ public class GroupApiImpl implements GroupApi {
     @Override
     public Group updateGroup(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupJson") @NotBlank String groupJson) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         Group y9Group = Y9JsonUtil.readValue(groupJson, Group.class);
         return y9GroupService.saveOrUpdate(y9Group);

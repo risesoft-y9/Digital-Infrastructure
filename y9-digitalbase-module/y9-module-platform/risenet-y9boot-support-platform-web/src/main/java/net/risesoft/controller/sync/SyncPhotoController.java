@@ -19,7 +19,7 @@ import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9PersonExtService;
 import net.risesoft.service.org.Y9PersonService;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
 
 /**
  * 同步照片
@@ -77,7 +77,7 @@ public class SyncPhotoController {
         String sql = "select id from y9_common_tenant";
         List<String> tenantIdList = jdbcTemplate.queryForList(sql, String.class);
         for (String tenantId : tenantIdList) {
-            Y9LoginUserHolder.setTenantId(tenantId);
+            Y9TenantHolder.setCurrentTenantId(tenantId);
             LOGGER.debug("同步租户[{}]人员头像信息", tenantId);
             List<Person> personList = y9PersonService.listAll();
             for (Person person : personList) {
@@ -97,7 +97,7 @@ public class SyncPhotoController {
     @RequestMapping("/syncTenantPersonPhoto")
     @RiseLog(operationName = "同步人员信息", operationType = OperationTypeEnum.MODIFY)
     public Y9Result<String> syncPersonPhoto2(@RequestParam String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         List<Person> personList = y9PersonService.listAll();
         for (Person person : personList) {
             y9PersonExtService.savePersonPhoto(person, getPhotoById(person.getId()));
@@ -116,7 +116,7 @@ public class SyncPhotoController {
     @RequestMapping("/syncPersonPhotoByPersonId")
     @RiseLog(operationName = "同步人员信息", operationType = OperationTypeEnum.MODIFY)
     public Y9Result<String> syncPersonPhotoByPersonId(@RequestParam String tenantId, @RequestParam String id) {
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         Person person = y9PersonService.getById(id);
         if (person != null && person.getId() != null) {
             y9PersonExtService.savePersonPhoto(person, getPhotoById(person.getId()));

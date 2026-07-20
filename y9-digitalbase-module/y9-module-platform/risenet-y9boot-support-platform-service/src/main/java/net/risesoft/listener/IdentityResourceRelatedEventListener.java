@@ -35,7 +35,7 @@ import net.risesoft.service.relation.Y9OrgBasesToRolesService;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.util.Y9ResourceUtil;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
@@ -394,7 +394,7 @@ public class IdentityResourceRelatedEventListener {
 
     @Async
     protected void deleteByResource(String tenantId, Y9ResourceBase entity) {
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
 
         y9PersonToResourceService.deleteByResourceId(entity.getId());
         LOGGER.debug("{}资源[{}]删除时同步删除租户[{}]的人员授权缓存数据", entity.getResourceType().getName(), entity.getId(), tenantId);
@@ -405,7 +405,7 @@ public class IdentityResourceRelatedEventListener {
 
     @Async
     protected void deleteByTenantApp(Y9TenantApp entity) {
-        Y9LoginUserHolder.setTenantId(entity.getTenantId());
+        Y9TenantHolder.setCurrentTenantId(entity.getTenantId());
         List<Y9ResourceBase> y9ResourceList = compositeResourceManager.findByAppId(entity.getAppId());
         for (Y9ResourceBase y9ResourceBase : y9ResourceList) {
             y9PersonToResourceService.deleteByResourceId(y9ResourceBase.getId());

@@ -23,7 +23,6 @@ import net.risesoft.service.org.Y9GroupService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.relation.Y9PersonsToGroupsService;
 import net.risesoft.util.PlatformModelConvertUtil;
-import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 用户组服务组件
@@ -57,7 +56,6 @@ public class GroupApiImpl implements GroupApi {
     @Override
     public Y9Result<Object> addPerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId, @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         y9PersonsToGroupsService.addPersons(groupId, new String[] {personId});
         return Y9Result.success();
@@ -74,7 +72,6 @@ public class GroupApiImpl implements GroupApi {
     @Override
     public Y9Result<Group> create(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestBody @Validated CreateGroupDTO createGroupDTO) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         Group group = PlatformModelConvertUtil.convert(createGroupDTO, Group.class);
         return Y9Result.success(y9GroupService.saveOrUpdate(group));
@@ -91,7 +88,6 @@ public class GroupApiImpl implements GroupApi {
     @Override
     public Y9Result<Object> delete(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam @NotBlank String groupId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         y9GroupService.delete(groupId);
         return Y9Result.success();
@@ -107,7 +103,6 @@ public class GroupApiImpl implements GroupApi {
      */
     @Override
     public Y9Result<Group> get(@RequestParam @NotBlank String tenantId, @RequestParam @NotBlank String groupId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9GroupService.findById(groupId).orElse(null));
     }
@@ -123,7 +118,6 @@ public class GroupApiImpl implements GroupApi {
     @Override
     public Y9Result<List<Group>> listByIds(@RequestParam @NotBlank String tenantId,
         @RequestParam(value = "ids", defaultValue = "") List<String> ids) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9GroupService.listByIds(ids));
     }
@@ -139,7 +133,6 @@ public class GroupApiImpl implements GroupApi {
     @Override
     public Y9Result<List<Group>> listByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("parentId") @NotBlank String parentId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9GroupService.listByParentId(parentId, Boolean.FALSE));
     }
@@ -155,7 +148,6 @@ public class GroupApiImpl implements GroupApi {
     @Override
     public Y9Result<List<Person>> listPersonsByGroupId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PersonService.listByGroupId(groupId, Boolean.FALSE));
     }
@@ -172,7 +164,6 @@ public class GroupApiImpl implements GroupApi {
     @Override
     public Y9Result<Object> removePerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId, @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         y9PersonsToGroupsService.removePersons(groupId, new String[] {personId});
         return Y9Result.success();

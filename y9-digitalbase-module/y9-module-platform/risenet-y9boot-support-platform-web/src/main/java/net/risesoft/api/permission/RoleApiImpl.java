@@ -20,7 +20,6 @@ import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.model.platform.Role;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.service.role.Y9RoleService;
 
 /**
@@ -54,7 +53,6 @@ public class RoleApiImpl implements RoleApi {
     @Override
     public Y9Result<Object> addPerson(@RequestParam("personId") @NotBlank String personId,
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         y9OrgBasesToRolesService.addOrgUnitsForRole(roleId, Collections.singletonList(personId), Boolean.FALSE);
         return Y9Result.success();
@@ -167,7 +165,6 @@ public class RoleApiImpl implements RoleApi {
     @Override
     public Y9Result<Object> removePerson(@RequestParam("personId") @NotBlank String personId,
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
         y9OrgBasesToRolesService.removeOrgBases(roleId, Collections.singletonList(personId));
         return Y9Result.success();
     }

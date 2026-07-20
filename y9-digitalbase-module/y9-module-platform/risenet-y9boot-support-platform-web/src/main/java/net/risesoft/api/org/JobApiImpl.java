@@ -20,7 +20,6 @@ import net.risesoft.model.platform.org.Job;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9JobService;
 import net.risesoft.util.PlatformModelConvertUtil;
-import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 职位服务组件
@@ -52,14 +51,12 @@ public class JobApiImpl implements JobApi {
     @Override
     public Y9Result<Job> create(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestBody @Validated CreateJobDTO createJobDTO) {
-        Y9LoginUserHolder.setTenantId(tenantId);
         Job job = PlatformModelConvertUtil.convert(createJobDTO, Job.class);
         return Y9Result.success(y9JobService.saveOrUpdate(job));
     }
 
     @Override
     public Y9Result<List<Job>> listAll(@RequestParam("tenantId") @NotBlank String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
         return Y9Result.success(y9JobService.listAll());
     }
 }

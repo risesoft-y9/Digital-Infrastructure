@@ -18,7 +18,6 @@ import net.risesoft.model.platform.Role;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.permission.cache.Y9PersonToRoleService;
-import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 人员角色组件
@@ -50,7 +49,6 @@ public class PersonRoleApiImpl implements PersonRoleApi {
     @Override
     public Y9Result<Boolean> hasPublicRole(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PersonToRoleService.hasPublicRole(personId, roleName));
     }
@@ -67,7 +65,6 @@ public class PersonRoleApiImpl implements PersonRoleApi {
     @Override
     public Y9Result<Boolean> hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PersonToRoleService.hasRole(personId, roleId));
     }
@@ -88,7 +85,6 @@ public class PersonRoleApiImpl implements PersonRoleApi {
         @RequestParam("systemName") @NotBlank String systemName,
         @RequestParam(value = "properties", required = false) String properties,
         @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PersonToRoleService.hasRole(personId, systemName, roleName, properties));
     }
@@ -105,7 +101,6 @@ public class PersonRoleApiImpl implements PersonRoleApi {
     @Override
     public Y9Result<Boolean> hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PersonToRoleService.hasRoleByCustomId(personId, customId));
     }
@@ -121,7 +116,6 @@ public class PersonRoleApiImpl implements PersonRoleApi {
     @Override
     public Y9Result<List<Person>> listPersonsByRoleId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleId") @NotBlank String roleId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PersonToRoleService.listPersonsByRoleId(roleId, Boolean.FALSE));
     }
@@ -137,7 +131,6 @@ public class PersonRoleApiImpl implements PersonRoleApi {
     @Override
     public Y9Result<List<Role>> listRolesByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PersonToRoleService.listRolesByPersonId(personId));
     }

@@ -19,7 +19,7 @@ import net.risesoft.repository.permission.cache.position.Y9PositionToRoleReposit
 import net.risesoft.service.permission.cache.IdentityRoleCalculator;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.util.Y9PlatformUtil;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
@@ -177,7 +177,7 @@ public class IdentityRolesRelatedEventListener {
 
     @Async
     protected void deleteByRole(String tenantId, Y9Role entity) {
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
 
         y9PersonToRoleRepository.deleteByRoleId(entity.getId());
         LOGGER.debug("角色[{}]删除时同步删除租户[{}]的人员角色缓存数据", entity.getId(), tenantId);

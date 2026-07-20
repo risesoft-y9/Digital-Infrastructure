@@ -77,7 +77,6 @@ public class OrgSyncApiImpl implements OrgSyncApi {
     public Y9Result<MessageOrg> fullSync(@RequestParam("appName") @NotBlank String appName,
         @RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("organizationId") @NotBlank String organizationId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         Date syncTime = new Date();
         HashMap<String, Serializable> dateMap =
@@ -98,7 +97,6 @@ public class OrgSyncApiImpl implements OrgSyncApi {
     @Override
     public Y9Result<List<MessageOrg>> incrSync(@RequestParam("appName") @NotBlank String appName,
         @RequestParam("tenantId") @NotBlank String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         Date syncTime = new Date();
         Date startTime = null;

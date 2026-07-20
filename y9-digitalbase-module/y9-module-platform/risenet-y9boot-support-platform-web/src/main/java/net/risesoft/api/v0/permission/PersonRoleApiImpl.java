@@ -17,7 +17,6 @@ import net.risesoft.api.platform.v0.permission.PersonRoleApi;
 import net.risesoft.model.platform.Role;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.service.permission.cache.Y9PersonToRoleService;
-import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 人员角色组件
@@ -49,7 +48,6 @@ public class PersonRoleApiImpl implements PersonRoleApi {
     @Override
     public long countByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonToRoleService.countByPersonId(personId);
     }
@@ -66,7 +64,6 @@ public class PersonRoleApiImpl implements PersonRoleApi {
     @Override
     public Boolean hasPublicRole(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonToRoleService.hasPublicRole(personId, roleName);
     }
@@ -83,7 +80,6 @@ public class PersonRoleApiImpl implements PersonRoleApi {
     @Override
     public Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonToRoleService.hasRole(personId, roleId);
     }
@@ -104,7 +100,6 @@ public class PersonRoleApiImpl implements PersonRoleApi {
         @RequestParam("systemName") @NotBlank String systemName,
         @RequestParam(value = "properties", required = false) String properties,
         @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonToRoleService.hasRole(personId, systemName, roleName, properties);
     }
@@ -121,7 +116,6 @@ public class PersonRoleApiImpl implements PersonRoleApi {
     @Override
     public Boolean hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonToRoleService.hasRoleByCustomId(personId, customId);
     }
@@ -137,7 +131,6 @@ public class PersonRoleApiImpl implements PersonRoleApi {
     @Override
     public List<Person> listPersonsByRoleId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleId") @NotBlank String roleId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonToRoleService.listPersonsByRoleId(roleId, Boolean.FALSE);
     }
@@ -153,7 +146,6 @@ public class PersonRoleApiImpl implements PersonRoleApi {
     @Override
     public List<Role> listRolesByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonToRoleService.listRolesByPersonId(personId);
     }

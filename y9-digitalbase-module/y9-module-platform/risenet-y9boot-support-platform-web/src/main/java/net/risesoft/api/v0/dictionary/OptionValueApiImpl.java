@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.api.platform.v0.dictionary.OptionValueApi;
 import net.risesoft.model.platform.dictionary.OptionValue;
 import net.risesoft.service.dictionary.Y9OptionValueService;
-import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 字典表管理组件
@@ -48,7 +47,6 @@ public class OptionValueApiImpl implements OptionValueApi {
     @Override
     public List<OptionValue> listByType(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("type") @NotBlank String type) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return optionValueService.listByType(type);
     }

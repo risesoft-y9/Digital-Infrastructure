@@ -20,7 +20,6 @@ import net.risesoft.model.platform.org.Organization;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9OrganizationService;
-import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 实体服务组件
@@ -52,7 +51,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     @Override
     public Y9Result<OrgUnit> getOrgUnitBureau(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(compositeOrgBaseService.findOrgUnitBureau(orgUnitId).orElse(null));
     }
@@ -68,7 +66,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     @Override
     public Y9Result<OrgUnit> getOrgUnit(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
         return Y9Result.success(compositeOrgBaseService.findOrgUnit(orgUnitId).orElse(null));
     }
 
@@ -83,7 +80,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     @Override
     public Y9Result<OrgUnit> getOrgUnitDeleted(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(compositeOrgBaseService.findOrgUnitDeleted(orgUnitId).orElse(null));
     }
@@ -99,7 +95,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     @Override
     public Y9Result<OrgUnit> getPersonOrPosition(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(compositeOrgBaseService.findPersonOrPosition(orgUnitId).orElse(null));
     }
@@ -115,7 +110,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     @Override
     public Y9Result<Organization> getOrgUnitOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(compositeOrgBaseService.getOrgUnitOrganization(orgUnitId));
     }
@@ -132,7 +126,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     @Override
     public Y9Result<OrgUnit> getOrgUnitParent(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(compositeOrgBaseService.findOrgUnitParent(orgUnitId).orElse(null));
     }
@@ -149,7 +142,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     @Override
     public Y9Result<OrgUnit> getOrgUnitAsParent(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(compositeOrgBaseService.findOrgUnitAsParent(orgUnitId).orElse(null));
     }
@@ -167,7 +159,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     public Y9Result<List<OrgUnit>> getSubTree(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("parentOrgUnitId") @NotBlank String parentOrgUnitId,
         @RequestParam("treeType") OrgTreeTypeEnum treeType) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(compositeOrgBaseService.getTree(parentOrgUnitId, treeType, Boolean.FALSE));
     }
@@ -185,7 +176,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     public Y9Result<List<OrgUnit>> treeSearch(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam(value = "orgUnitId", required = false) String orgUnitId,
         @RequestParam("name") @NotBlank String name, @RequestParam("treeType") OrgTreeTypeEnum treeType) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(compositeOrgBaseService.treeSearch(orgUnitId, name, treeType, Boolean.FALSE, false));
     }
@@ -201,7 +191,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     @Override
     public Y9Result<List<OrgUnit>> listPersonOrPositionByIds(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam(value = "ids", defaultValue = "") List<String> ids) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(compositeOrgBaseService.listPersonOrPositionByIds(ids));
     }

@@ -20,7 +20,6 @@ import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.service.relation.Y9PersonsToPositionsService;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
 
 /**
@@ -60,7 +59,6 @@ public class PositionApiImpl implements PositionApi {
         if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(positionId) || StringUtils.isBlank(personId)) {
             return false;
         }
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         orgPositionsPersonsService.addPersons(positionId, new String[] {personId});
         return true;
@@ -79,7 +77,6 @@ public class PositionApiImpl implements PositionApi {
         if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(positionJson)) {
             return null;
         }
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         Position y9Position = Y9JsonUtil.readValue(positionJson, Position.class);
         return y9PositionService.saveOrUpdate(y9Position);
@@ -98,7 +95,6 @@ public class PositionApiImpl implements PositionApi {
         if (StringUtils.isBlank(positionId)) {
             return false;
         }
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         y9PositionService.deleteById(positionId);
         return true;
@@ -114,7 +110,6 @@ public class PositionApiImpl implements PositionApi {
      */
     @Override
     public OrgUnit getParent(@RequestParam String tenantId, @RequestParam String positionId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return compositeOrgBaseService.findOrgUnitParent(positionId).orElse(null);
     }
@@ -129,7 +124,6 @@ public class PositionApiImpl implements PositionApi {
      */
     @Override
     public Position getPosition(@RequestParam String tenantId, @RequestParam String positionId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PositionService.findById(positionId).orElse(null);
     }
@@ -146,7 +140,6 @@ public class PositionApiImpl implements PositionApi {
     @Override
     public boolean hasPosition(@RequestParam String tenantId, @RequestParam String positionName,
         @RequestParam String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PositionService.hasPosition(positionName, personId);
     }
@@ -161,7 +154,6 @@ public class PositionApiImpl implements PositionApi {
      */
     @Override
     public List<Position> listByParentId(@RequestParam String tenantId, @RequestParam String parentId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PositionService.listByParentId(parentId, false);
     }
@@ -176,7 +168,6 @@ public class PositionApiImpl implements PositionApi {
      */
     @Override
     public List<Position> listByPersonId(@RequestParam String tenantId, @RequestParam String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PositionService.listByPersonId(personId, Boolean.FALSE);
     }
@@ -191,7 +182,6 @@ public class PositionApiImpl implements PositionApi {
      */
     @Override
     public List<Person> listPersons(@RequestParam String tenantId, @RequestParam String positionId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return orgPersonService.listByPositionId(positionId, Boolean.FALSE);
     }
@@ -208,7 +198,6 @@ public class PositionApiImpl implements PositionApi {
     @Override
     public boolean removePerson(@RequestParam String tenantId, @RequestParam String positionId,
         @RequestParam String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         orgPositionsPersonsService.deletePersons(positionId, new String[] {personId});
         return true;
@@ -224,7 +213,6 @@ public class PositionApiImpl implements PositionApi {
      */
     @Override
     public Position updatePosition(@RequestParam String tenantId, @RequestParam String positionJson) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         Position y9Position = Y9JsonUtil.readValue(positionJson, Position.class);
         return y9PositionService.saveOrUpdate(y9Position);

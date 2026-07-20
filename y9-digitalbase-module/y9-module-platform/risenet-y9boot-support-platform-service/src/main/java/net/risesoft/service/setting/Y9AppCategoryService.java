@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
-import net.risesoft.entity.setting.Y9AppCategory;
 import net.risesoft.pojo.AppCategory;
 import net.risesoft.pojo.Y9PageQuery;
 

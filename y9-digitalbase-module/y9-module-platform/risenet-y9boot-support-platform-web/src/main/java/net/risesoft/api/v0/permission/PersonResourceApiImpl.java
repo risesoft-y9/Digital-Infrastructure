@@ -20,7 +20,6 @@ import net.risesoft.model.platform.resource.FrontendMenu;
 import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.service.permission.cache.Y9PersonToResourceService;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9EnumUtil;
 
 /**
@@ -57,7 +56,6 @@ public class PersonResourceApiImpl implements PersonResourceApi {
     public boolean hasPermission(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("resourceId") @NotBlank String resourceId,
         @RequestParam("authority") Integer authority) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonToResourceService.hasPermission(personId, resourceId,
             Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
@@ -77,7 +75,6 @@ public class PersonResourceApiImpl implements PersonResourceApi {
     public boolean hasPermissionByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId,
         @RequestParam("authority") Integer authority) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonToResourceService.hasPermissionByCustomId(personId, customId,
             Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
@@ -97,7 +94,6 @@ public class PersonResourceApiImpl implements PersonResourceApi {
     public List<FrontendMenu> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority,
         @RequestParam("resourceId") @NotBlank String resourceId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         List<FrontendMenu> frontendMenuList = new ArrayList<>();
         vueMenuBuilder.buildVueMenus(personId, Y9EnumUtil.valueOf(AuthorityEnum.class, authority), resourceId,
@@ -120,7 +116,6 @@ public class PersonResourceApiImpl implements PersonResourceApi {
     public List<Menu> listSubMenus(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority,
         @RequestParam("resourceId") @NotBlank String resourceId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Menu> y9MenuList = y9PersonToResourceService.listSubMenus(personId, resourceId,
             Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
@@ -141,7 +136,6 @@ public class PersonResourceApiImpl implements PersonResourceApi {
     public List<Resource> listSubResources(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority,
         @RequestParam("resourceId") @NotBlank String resourceId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Resource> y9ResourceBaseList = y9PersonToResourceService.listSubResources(personId, resourceId,
             Y9EnumUtil.valueOf(AuthorityEnum.class, authority), null);

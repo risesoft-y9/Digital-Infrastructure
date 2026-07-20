@@ -24,7 +24,6 @@ import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9DepartmentPropService;
 import net.risesoft.service.org.Y9DepartmentService;
 import net.risesoft.util.PlatformModelConvertUtil;
-import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 部门服务组件
@@ -56,7 +55,6 @@ public class DepartmentApiImpl implements DepartmentApi {
     @Override
     public Y9Result<Department> create(@RequestParam("tenantId") @NotBlank String tenantId,
         @Validated @RequestBody CreateDepartmentDTO createDepartmentDTO) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         Department department = PlatformModelConvertUtil.convert(createDepartmentDTO, Department.class);
         return Y9Result.success(y9DepartmentService.saveOrUpdate(department));
@@ -73,7 +71,6 @@ public class DepartmentApiImpl implements DepartmentApi {
     @Override
     public Y9Result<Object> delete(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         y9DepartmentService.delete(departmentId);
         return Y9Result.success();
@@ -90,7 +87,6 @@ public class DepartmentApiImpl implements DepartmentApi {
     @Override
     public Y9Result<Object> disable(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         y9DepartmentService.changeDisable(departmentId);
 
@@ -108,7 +104,6 @@ public class DepartmentApiImpl implements DepartmentApi {
     @Override
     public Y9Result<Department> get(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9DepartmentService.findById(departmentId).orElse(null));
     }
@@ -123,7 +118,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      */
     @Override
     public Y9Result<List<Department>> listBureauByNameLike(@NotBlank String tenantId, String name) {
-        Y9LoginUserHolder.setTenantId(tenantId);
         return Y9Result.success(y9DepartmentService.listBureauByNameLike(name, Boolean.FALSE));
     }
 
@@ -138,7 +132,6 @@ public class DepartmentApiImpl implements DepartmentApi {
     @Override
     public Y9Result<List<Department>> listByIds(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam(value = "ids", defaultValue = "") List<String> ids) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9DepartmentService.listByIds(ids));
     }
@@ -154,7 +147,6 @@ public class DepartmentApiImpl implements DepartmentApi {
     @Override
     public Y9Result<List<Department>> listByName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("name") @NotBlank String name) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9DepartmentService.listByNameLike(name, Boolean.FALSE));
     }
@@ -170,7 +162,6 @@ public class DepartmentApiImpl implements DepartmentApi {
     @Override
     public Y9Result<List<Department>> listByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("parentId") @NotBlank String parentId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9DepartmentService.listByParentId(parentId, Boolean.FALSE));
     }
@@ -188,7 +179,6 @@ public class DepartmentApiImpl implements DepartmentApi {
     public Y9Result<List<Department>> listByOrgUnitIdAndDepartmentPropCategory(
         @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId,
         @RequestParam("category") Integer category) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9DepartmentService.listByOrgUnitIdAndDepartmentPropCategory(orgUnitId, category));
     }
@@ -206,7 +196,6 @@ public class DepartmentApiImpl implements DepartmentApi {
     public Y9Result<List<DepartmentProp>> listDepartmentPropByOrgUnitIdAndCategory(
         @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId,
         @RequestParam("category") Integer category) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9DepartmentPropService.listByOrgBaseIdAndCategory(orgUnitId, category));
     }
@@ -225,7 +214,6 @@ public class DepartmentApiImpl implements DepartmentApi {
     public Y9Result<List<OrgUnit>> listDepartmentPropOrgUnits(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("category") Integer category,
         @RequestParam(name = "isInherit", required = false) Boolean isInherit) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result
             .success(y9DepartmentService.listDepartmentPropOrgUnits(departmentId, category, isInherit, Boolean.FALSE));
@@ -242,7 +230,6 @@ public class DepartmentApiImpl implements DepartmentApi {
     @Override
     public Y9Result<List<Department>> listRecursivelyByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("parentId") @NotBlank String parentId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9DepartmentService.listRecursivelyByParentId(parentId, Boolean.FALSE));
     }

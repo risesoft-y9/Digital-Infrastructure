@@ -39,7 +39,6 @@ import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.service.permission.cache.Y9PersonToRoleService;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9public.entity.Y9FileStore;
@@ -85,7 +84,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public boolean changeDisabled(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         y9PersonService.changeDisabled(personId);
         return true;
@@ -103,7 +101,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public boolean checkLoginName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("loginName") @NotBlank String loginName) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonService.isLoginNameAvailable(personId, loginName);
     }
@@ -119,7 +116,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public Person createPerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personJson") @NotBlank String personJson) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         Person y9Person = Y9JsonUtil.readValue(personJson, Person.class);
         return y9PersonService.saveOrUpdate(y9Person, null);
@@ -136,7 +132,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public boolean deleteById(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         y9PersonService.delete(personId);
         return true;
@@ -153,7 +148,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public OrgUnit getBureau(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return compositeOrgBaseService.findOrgUnitBureau(personId).orElse(null);
     }
@@ -170,7 +164,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public Person getByLoginNameAndParentId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("loginName") @NotBlank String loginName, @RequestParam("parentId") @NotBlank String parentId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonService.getByLoginNameAndParentId(loginName, parentId).orElse(null);
     }
@@ -186,7 +179,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return compositeOrgBaseService.findOrgUnitParent(personId).orElse(null);
     }
@@ -202,7 +194,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public Person getPerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonService.findById(personId).orElse(null);
     }
@@ -218,7 +209,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public Person getPersonByLoginNameAndTenantId(@RequestParam("loginName") @NotBlank String loginName,
         @RequestParam("tenantId") @NotBlank String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonService.findByLoginName(loginName).orElse(null);
     }
@@ -234,7 +224,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public PersonExt getPersonExtByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonExtService.findByPersonId(personId).orElse(null);
     }
@@ -250,7 +239,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public String getPersonPhoto(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonExtService.getEncodePhotoByPersonId(personId);
     }
@@ -264,7 +252,6 @@ public class PersonApiImpl implements PersonApi {
      */
     @Override
     public List<Person> listAllPersons(@RequestParam("tenantId") @NotBlank String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Person> y9PersonList = y9PersonService.list(false);
         Collections.sort(y9PersonList);
@@ -283,7 +270,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public List<Person> listByIdTypeAndIdNum(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("idType") @NotBlank String idType, @RequestParam("idNum") @NotBlank String idNum) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonService.listByIdTypeAndIdNum(idType, idNum, false);
     }
@@ -299,7 +285,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public List<Person> listByNameLike(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam(name = "name", required = false) String name) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonService.listByNameLike(name, false);
     }
@@ -315,7 +300,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public List<Group> listGroups(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9GroupService.listByPersonId(personId, Boolean.FALSE);
     }
@@ -330,7 +314,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public List<OrgUnit> listParents(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonService.listParents(personId);
     }
@@ -346,7 +329,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public List<Map<String, Object>> listPersonInfoByNameLike(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam(name = "name", required = false) String name) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Person> y9PersonList = y9PersonService.listByNameLike(name, false);
         List<Map<String, Object>> infoList = new ArrayList<>();
@@ -392,7 +374,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public List<Position> listPositions(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PositionService.listByPersonId(personId, Boolean.FALSE);
     }
@@ -408,7 +389,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public List<Role> listRoles(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonToRoleService.listRolesByPersonId(personId);
     }
@@ -426,7 +406,6 @@ public class PersonApiImpl implements PersonApi {
     public Person modifyPassword(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId,
         @RequestParam("newPassword") @NotBlank String newPassword) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonService.modifyPassword(personId, null, newPassword);
     }
@@ -443,7 +422,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public Y9Page<Person> pageByNameLike(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam(required = false) String name, @RequestParam("page") int page, @RequestParam("rows") int rows) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         PersonQuery personQuery = PersonQuery.builder().name(name).build();
         return y9PersonService.page(personQuery, new Y9PageQuery(page, rows));
@@ -464,7 +442,6 @@ public class PersonApiImpl implements PersonApi {
     public Y9Page<Person> pageByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("parentId") @NotBlank String parentId, @RequestParam("disabled") boolean disabled,
         @RequestParam("page") int page, @RequestParam("rows") int rows) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         PersonQuery personQuery = PersonQuery.builder().parentId(parentId).disabled(disabled).build();
         return y9PersonService.page(personQuery, new Y9PageQuery(page, rows));
@@ -487,7 +464,6 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("parentId") @NotBlank String parentId, @RequestParam("disabled") boolean disabled,
         @RequestParam("userName") @NotBlank String userName, @RequestParam("page") int page,
         @RequestParam("rows") int rows) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         PersonQuery personQuery = PersonQuery.builder().parentId(parentId).disabled(disabled).name(userName).build();
         return y9PersonService.page(personQuery, new Y9PageQuery(page, rows));
@@ -504,7 +480,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public Person savePerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personJson") @NotBlank String personJson) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         Person y9Person = Y9JsonUtil.readValue(personJson, Person.class);
         PersonExt y9PersonExt = Y9JsonUtil.readValue(personJson, PersonExt.class);
@@ -523,7 +498,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public Person savePersonAvator(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("avator") @NotBlank String avator) {
-        Y9LoginUserHolder.setTenantId(tenantId);
         return y9PersonService.saveAvator(personId, avator);
     }
 
@@ -541,7 +515,6 @@ public class PersonApiImpl implements PersonApi {
     public Person savePersonAvatorByBase64(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("picnote") @NotBlank String picnote,
         @RequestParam("fileExt") String fileExt) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         Person y9Person = y9PersonService.getById(personId);
         try {
@@ -582,7 +555,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public Boolean savePersonPhoto(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("photo") @NotBlank String photo) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         Person person = y9PersonService.getById(personId);
         y9PersonExtService.savePersonPhoto(person, photo);
@@ -602,7 +574,6 @@ public class PersonApiImpl implements PersonApi {
     public Person savePersonWithExt(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personJson") @NotBlank String personJson,
         @RequestParam("personextJson") @NotBlank String personextJson) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         Person y9Person = Y9JsonUtil.readValue(personJson, Person.class);
         PersonExt y9PersonExt = Y9JsonUtil.readValue(personextJson, PersonExt.class);
@@ -621,7 +592,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     public Person saveWeixinId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("weixinId") @NotBlank String weixinId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonService.saveWeixinId(personId, weixinId);
     }

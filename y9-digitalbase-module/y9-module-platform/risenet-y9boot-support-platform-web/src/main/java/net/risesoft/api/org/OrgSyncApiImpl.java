@@ -21,7 +21,6 @@ import net.risesoft.api.platform.org.OrgSyncApi;
 import net.risesoft.model.platform.MessageOrg;
 import net.risesoft.model.platform.PublishedEvent;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9public.service.event.Y9PublishedEventService;
 
@@ -55,7 +54,6 @@ public class OrgSyncApiImpl implements OrgSyncApi {
     public Y9Result<List<MessageOrg<Serializable>>> incrSync(
         @RequestParam("since") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date since,
         @RequestParam("tenantId") @NotBlank String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         List<PublishedEvent> list = y9PublishedEventService.listByTenantId(tenantId, since);
         List<MessageOrg<Serializable>> eventList = new ArrayList<>();

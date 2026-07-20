@@ -41,7 +41,7 @@ import net.risesoft.service.permission.Y9AuthorizationService;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
@@ -405,7 +405,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
 
     @Async
     protected void deleteByResource(String tenantId, Y9ResourceBase entity) {
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         y9AuthorizationRepository.deleteByResourceId(entity.getId());
         LOGGER.debug("{}资源[{}]删除时同步删除租户[{}]的授权数据", entity.getResourceType().getName(), entity.getId(), tenantId);
     }
@@ -418,7 +418,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
 
     @Async
     protected void deleteByTenantApp(Y9TenantApp entity) {
-        Y9LoginUserHolder.setTenantId(entity.getTenantId());
+        Y9TenantHolder.setCurrentTenantId(entity.getTenantId());
         List<Y9ResourceBase> y9ResourceList = compositeResourceManager.findByAppId(entity.getAppId());
         for (Y9ResourceBase y9ResourceBase : y9ResourceList) {
             y9AuthorizationRepository.deleteByResourceId(y9ResourceBase.getId());
@@ -436,7 +436,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
 
     @Async
     protected void deleteByRole(String tenantId, Y9Role entity) {
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         List<Y9Authorization> authorizationList = y9AuthorizationRepository
             .findByPrincipalIdAndPrincipalType(entity.getId(), AuthorizationPrincipalTypeEnum.ROLE);
         for (Y9Authorization y9Authorization : authorizationList) {

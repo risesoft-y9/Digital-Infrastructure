@@ -17,7 +17,7 @@ import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.service.permission.cache.IdentityResourceCalculator;
 import net.risesoft.util.Y9PlatformUtil;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
 
 /**
  * 同步人员、岗位对应资源
@@ -49,7 +49,7 @@ public class SyncIdentityResourceController {
 
         List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIdList) {
-            Y9LoginUserHolder.setTenantId(tenantId);
+            Y9TenantHolder.setCurrentTenantId(tenantId);
             LOGGER.info("更新人员与（资源、权限）关系表租户id---->>{}", tenantId);
             for (Organization organization : y9OrganizationService.list()) {
                 this.identityResources(tenantId, organization.getId());
@@ -75,7 +75,7 @@ public class SyncIdentityResourceController {
         double start = System.currentTimeMillis();
         LOGGER.info("更新人员与（资源、权限）关系表开始时间---->>{},租户id---->>{}", fdf.format(new Date()), tenantId);
 
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         for (Organization organization : y9OrganizationService.list()) {
             this.identityResources(tenantId, organization.getId());
         }
@@ -101,7 +101,7 @@ public class SyncIdentityResourceController {
         LOGGER.info("更新人员与（资源、权限）关系表开始时间---->>{},租户id---->>{},组织id---->>>{}", fdf.format(new Date()), tenantId,
             orgUnitId);
 
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         identityResourceCalculator.recalculateByOrgUnitId(orgUnitId);
 
         double end = System.currentTimeMillis();

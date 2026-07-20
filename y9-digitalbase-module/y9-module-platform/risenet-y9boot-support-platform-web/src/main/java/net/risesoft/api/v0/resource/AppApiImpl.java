@@ -25,7 +25,6 @@ import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.permission.cache.Y9PersonToResourceService;
 import net.risesoft.service.permission.cache.Y9PositionToResourceService;
 import net.risesoft.util.PlatformModelConvertUtil;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9EnumUtil;
 import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.resource.Y9SystemService;
@@ -107,7 +106,6 @@ public class AppApiImpl implements AppApi {
     @Override
     public List<App> listAccessAppForPerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonToResourceService.listAppsByAuthority(personId,
             Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
@@ -125,7 +123,6 @@ public class AppApiImpl implements AppApi {
     @Override
     public List<App> listAccessAppForPosition(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PositionToResourceService.listAppsByAuthority(positionId,
             Y9EnumUtil.valueOf(AuthorityEnum.class, authority));

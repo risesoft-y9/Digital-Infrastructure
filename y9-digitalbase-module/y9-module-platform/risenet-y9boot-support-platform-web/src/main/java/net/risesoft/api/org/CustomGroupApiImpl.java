@@ -28,7 +28,6 @@ import net.risesoft.query.platform.CustomGroupMemberQuery;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9CustomGroupService;
 import net.risesoft.service.relation.Y9CustomGroupMembersService;
-import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 自定义用户组
@@ -63,7 +62,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
     public Y9Result<Object> addMember(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("customGroupId") @NotBlank String customGroupId,
         @RequestParam("orgUnitList") @NotEmpty List<String> orgUnitList) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         customGroupMembersService.save(orgUnitList, customGroupId);
         return Y9Result.success();
@@ -92,7 +90,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
     @Override
     public Y9Result<Object> deleteAllGroup(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupIds") @NotEmpty List<String> groupIds) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         customGroupService.delete(groupIds);
         return Y9Result.success();
@@ -109,7 +106,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
     @Override
     public Y9Result<CustomGroup> findCustomGroupByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("customId") @NotBlank String customId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(customGroupService.findByCustomId(customId).orElse(null));
     }
@@ -126,7 +122,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
     @Override
     public Y9Result<CustomGroup> findCustomGroupById(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("groupId") @NotBlank String groupId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(customGroupService.findById(groupId).orElse(null));
     }
@@ -142,7 +137,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
     @Override
     public Y9Result<List<Person>> listAllPersonByGroupId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(customGroupMembersService.listAllPersonsByGroupId(groupId));
     }
@@ -158,7 +152,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
     @Override
     public Y9Result<List<CustomGroup>> listCustomGroupByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         List<CustomGroup> customGroupList = customGroupService.listByPersonId(personId);
         if (!customGroupList.isEmpty()) {
@@ -170,7 +163,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
     @Override
     public Y9Result<List<CustomGroupMember>> listCustomGroupMember(String tenantId,
         CustomGroupMemberQuery customGroupMemberQuery) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(customGroupMembersService.list(customGroupMemberQuery));
     }
@@ -187,7 +179,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
     @Override
     public Y9Page<CustomGroup> pageCustomGroupByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @Validated Y9PageQuery pageQuery) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Page<CustomGroup> customGroupY9Page = customGroupService.pageByPersonId(personId, pageQuery);
         return Y9Page.success(pageQuery.getPage(), customGroupY9Page.getTotalPages(), customGroupY9Page.getTotal(),
@@ -198,7 +189,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
     public Y9Page<CustomGroupMember> pageCustomGroupMember(@RequestParam("tenantId") @NotBlank String tenantId,
         @Validated CustomGroupMemberQuery customGroupMemberQuery, @RequestParam("page") Integer page,
         @RequestParam("size") Integer size) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return customGroupMembersService.page(customGroupMemberQuery, new Y9PageQuery(page, size));
     }
@@ -214,7 +204,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
     @Override
     public Y9Result<Object> removeMembers(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("memberIds") @NotEmpty List<String> memberIds) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         customGroupMembersService.delete(memberIds);
         return Y9Result.success();
@@ -231,7 +220,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
     @Override
     public Y9Result<CustomGroup> saveCustomGroup(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestBody CustomGroup customGroup) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(customGroupService.save(customGroup));
     }
@@ -247,7 +235,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
     @Override
     public Y9Result<Object> saveCustomGroupOrder(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("sortIds") @NotEmpty List<String> sortIds) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         customGroupService.saveCustomGroupOrder(sortIds);
         return Y9Result.success();
@@ -264,7 +251,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
     @Override
     public Y9Result<Object> saveMemberOrder(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("memberIds") @NotEmpty List<String> memberIds) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         customGroupMembersService.saveOrder(memberIds);
         return Y9Result.success();
@@ -286,7 +272,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
         @RequestParam("personId") @NotBlank String personId,
         @RequestParam("personIds") @NotEmpty List<String> personIds, @RequestParam("groupId") String groupId,
         @RequestParam("groupName") @NotBlank String groupName) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(customGroupService.saveOrUpdate(personId, personIds, groupId, groupName));
     }
@@ -304,7 +289,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
     public Y9Result<Object> shareCustomGroup(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personIds") @NotEmpty List<String> personIds,
         @RequestParam("groupIds") @NotEmpty List<String> groupIds) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         customGroupService.share(personIds, groupIds);
         return Y9Result.success();

@@ -19,7 +19,6 @@ import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.idcode.Y9IdCodeService;
 import net.risesoft.service.org.Y9PersonService;
-import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 统一码服务组件
@@ -49,7 +48,6 @@ public class IdCodeApiImpl {
     @GetMapping("/getPerson")
     public Y9Result<Person> getPerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("code") @NotBlank String code) {
-        Y9LoginUserHolder.setTenantId(tenantId);
         Optional<IdCode> idCodeOptional = y9IdCodeService.findById(code);
         if (idCodeOptional.isEmpty()) {
             return Y9Result.failure("统一码不存在");

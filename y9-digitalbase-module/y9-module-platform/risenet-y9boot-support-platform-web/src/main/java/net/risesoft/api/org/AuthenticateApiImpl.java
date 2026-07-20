@@ -18,7 +18,7 @@ import net.risesoft.model.platform.AuthenticateResult;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.AuthService;
 import net.risesoft.util.Y9PlatformUtil;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
 
 /**
  * 用户身份验证服务组件
@@ -54,7 +54,7 @@ public class AuthenticateApiImpl implements AuthenticateApi {
         List<String> tenantIds = Y9PlatformUtil.getTenantByLoginName(tenantShortName);
         if (!tenantIds.isEmpty()) {
             String tenantId = tenantIds.get(0);
-            Y9LoginUserHolder.setTenantId(tenantId);
+            Y9TenantHolder.setCurrentTenantId(tenantId);
         }
         return Y9Result.success(authService.authenticate3(loginName, base64EncodedPassword));
     }
@@ -75,7 +75,7 @@ public class AuthenticateApiImpl implements AuthenticateApi {
         List<String> tenantIds = Y9PlatformUtil.getTenantByLoginName(tenantShortName);
         if (!tenantIds.isEmpty()) {
             String tenantId = tenantIds.get(0);
-            Y9LoginUserHolder.setTenantId(tenantId);
+            Y9TenantHolder.setCurrentTenantId(tenantId);
         }
         return Y9Result.success(authService.authenticate5(mobile, base64EncodedPassword));
     }

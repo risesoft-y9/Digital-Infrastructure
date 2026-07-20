@@ -18,7 +18,6 @@ import net.risesoft.api.platform.resource.DataCatalogApi;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.model.platform.resource.DataCatalog;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.service.resource.Y9DataCatalogService;
 
 /**
@@ -45,7 +44,6 @@ public class DataCatalogApiImpl implements DataCatalogApi {
         @RequestParam(name = "tenantId") String tenantId,
         @RequestParam(name = "personId", required = false) String personId,
         @RequestParam(name = "authority", required = false) AuthorityEnum authority) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9DataCatalogService.getTree(tenantId, parentId, treeType, Boolean.TRUE,
             includeAllDescendant, authority, personId));
@@ -56,7 +54,6 @@ public class DataCatalogApiImpl implements DataCatalogApi {
         @RequestParam("name") String name, @RequestParam("tenantId") String tenantId,
         @RequestParam(name = "personId", required = false) String personId,
         @RequestParam(name = "authority", required = false) AuthorityEnum authority) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9DataCatalogService.treeSearch(tenantId, name, treeType, authority, personId));
     }
@@ -64,7 +61,6 @@ public class DataCatalogApiImpl implements DataCatalogApi {
     @Override
     public Y9Result<DataCatalog> getById(@RequestParam(name = "tenantId") String tenantId,
         @RequestParam(name = "id") @NotBlank String id) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9DataCatalogService.getDataCatalogById(id));
     }
@@ -72,7 +68,6 @@ public class DataCatalogApiImpl implements DataCatalogApi {
     @Override
     public Y9Result<DataCatalog> getTreeRoot(@RequestParam("tenantId") String tenantId,
         @RequestParam(name = "id") @NotBlank String id) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9DataCatalogService.getTreeRoot(id));
     }

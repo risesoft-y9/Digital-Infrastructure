@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.v0.permission.PositionRoleApi;
 import net.risesoft.service.permission.cache.Y9PositionToRoleService;
-import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 岗位角色组件
@@ -44,7 +43,6 @@ public class PositionRoleApiImpl implements PositionRoleApi {
     @Override
     public Boolean hasPublicRole(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleName") @NotBlank String roleName, @RequestParam("positionId") @NotBlank String positionId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PositionToRoleService.hasPublicRole(positionId, roleName);
     }
@@ -61,7 +59,6 @@ public class PositionRoleApiImpl implements PositionRoleApi {
     @Override
     public Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("positionId") @NotBlank String positionId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PositionToRoleService.hasRole(positionId, roleId);
     }
@@ -82,7 +79,6 @@ public class PositionRoleApiImpl implements PositionRoleApi {
         @RequestParam("systemName") @NotBlank String systemName,
         @RequestParam(value = "properties", required = false) String properties,
         @RequestParam("roleName") @NotBlank String roleName, @RequestParam("positionId") @NotBlank String positionId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PositionToRoleService.hasRole(positionId, systemName, roleName, properties);
     }
@@ -99,7 +95,6 @@ public class PositionRoleApiImpl implements PositionRoleApi {
     @Override
     public Boolean hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PositionToRoleService.hasRoleByCustomId(positionId, customId);
     }

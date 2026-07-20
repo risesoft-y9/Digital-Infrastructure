@@ -23,7 +23,6 @@ import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.service.relation.Y9PersonsToPositionsService;
 import net.risesoft.util.PlatformModelConvertUtil;
-import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 岗位服务组件
@@ -57,7 +56,6 @@ public class PositionApiImpl implements PositionApi {
     @Override
     public Y9Result<Object> addPerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         y9PersonsToPositionsService.addPersons(positionId, new String[] {personId});
         return Y9Result.success();
@@ -74,7 +72,6 @@ public class PositionApiImpl implements PositionApi {
     @Override
     public Y9Result<Position> create(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestBody @Validated CreatePositionDTO createPositionDTO) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         Position position = PlatformModelConvertUtil.convert(createPositionDTO, Position.class);
         return Y9Result.success(y9PositionService.saveOrUpdate(position));
@@ -91,7 +88,6 @@ public class PositionApiImpl implements PositionApi {
     @Override
     public Y9Result<Object> delete(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         y9PositionService.deleteById(positionId);
         return Y9Result.success();
@@ -108,7 +104,6 @@ public class PositionApiImpl implements PositionApi {
     @Override
     public Y9Result<Position> get(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PositionService.findById(positionId).orElse(null));
     }
@@ -126,7 +121,6 @@ public class PositionApiImpl implements PositionApi {
     public Y9Result<Boolean> hasPosition(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionName") @NotBlank String positionName,
         @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PositionService.hasPosition(positionName, personId));
     }
@@ -142,7 +136,6 @@ public class PositionApiImpl implements PositionApi {
     @Override
     public Y9Result<List<Position>> listByIds(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam(value = "ids", defaultValue = "") List<String> ids) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PositionService.listByIds(ids));
     }
@@ -158,7 +151,6 @@ public class PositionApiImpl implements PositionApi {
     @Override
     public Y9Result<List<Position>> listByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("parentId") @NotBlank String parentId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PositionService.listByParentId(parentId, Boolean.FALSE));
     }
@@ -174,7 +166,6 @@ public class PositionApiImpl implements PositionApi {
     @Override
     public Y9Result<List<Position>> listByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PositionService.listByPersonId(personId, Boolean.FALSE));
     }
@@ -190,7 +181,6 @@ public class PositionApiImpl implements PositionApi {
     @Override
     public Y9Result<List<Person>> listPersonsByPositionId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PersonService.listByPositionId(positionId, Boolean.FALSE));
     }
@@ -207,7 +197,6 @@ public class PositionApiImpl implements PositionApi {
     @Override
     public Y9Result<Object> removePerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         y9PersonsToPositionsService.deletePersons(positionId, new String[] {personId});
         return Y9Result.success();
@@ -224,7 +213,6 @@ public class PositionApiImpl implements PositionApi {
     @Override
     public Y9Result<Position> updatePosition(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestBody @Validated CreatePositionDTO createPositionDTO) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         Position position = PlatformModelConvertUtil.convert(createPositionDTO, Position.class);
         return Y9Result.success(y9PositionService.saveOrUpdate(position));

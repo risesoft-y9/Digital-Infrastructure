@@ -19,7 +19,6 @@ import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.permission.Authorization;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.permission.Y9AuthorizationService;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9EnumUtil;
 
 /**
@@ -56,7 +55,6 @@ public class AuthorizationApiImpl implements AuthorizationApi {
     public void save(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("resourceId") @NotBlank String resourceId,
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("authority") Integer authority) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         Person y9Person = y9PersonService.getById(personId);
         Authorization y9Authorization = new Authorization();

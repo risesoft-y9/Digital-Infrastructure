@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -26,9 +27,11 @@ import com.alibaba.druid.pool.DruidDataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.consts.FilterOrderConsts;
 import net.risesoft.dao.MultiTenantDao;
 import net.risesoft.eventsource.DbScanner;
 import net.risesoft.eventsource.KafkaMessageCommon;
+import net.risesoft.filter.Y9MultiTenantFilter;
 import net.risesoft.liquibase.Y9MultiTenantSpringLiquibase;
 import net.risesoft.listener.ApplicationReadyEventListener;
 import net.risesoft.listener.TenantAppEventListener;
@@ -53,6 +56,16 @@ import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 @Slf4j
 @AutoConfiguration
 public class Y9MultiTenantAutoConfiguration {
+
+    @Bean
+    public FilterRegistrationBean<Y9MultiTenantFilter> y9MultiTenantFilter() {
+        final FilterRegistrationBean<Y9MultiTenantFilter> filterBean = new FilterRegistrationBean<>();
+        filterBean.setFilter(new Y9MultiTenantFilter());
+        filterBean.setAsyncSupported(false);
+        filterBean.setOrder(FilterOrderConsts.MULTI_TENANT_ORDER);
+
+        return filterBean;
+    }
 
     @ConditionalOnMissingBean(name = "y9TenantDataSourceLookup")
     @Bean("y9TenantDataSourceLookup")

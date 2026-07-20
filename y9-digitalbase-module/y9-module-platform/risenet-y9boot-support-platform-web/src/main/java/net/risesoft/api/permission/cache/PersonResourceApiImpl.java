@@ -24,7 +24,6 @@ import net.risesoft.model.platform.resource.FrontendMenu;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.permission.cache.Y9PersonToResourceService;
-import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 人员资源权限查看组件
@@ -59,7 +58,6 @@ public class PersonResourceApiImpl implements PersonResourceApi {
     public Y9Result<Boolean> hasPermission(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("resourceId") @NotBlank String resourceId,
         @RequestParam("authority") AuthorityEnum authority) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PersonToResourceService.hasPermission(personId, resourceId, authority));
     }
@@ -78,7 +76,6 @@ public class PersonResourceApiImpl implements PersonResourceApi {
     public Y9Result<Boolean> hasPermissionByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId,
         @RequestParam("authority") AuthorityEnum authority) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PersonToResourceService.hasPermissionByCustomId(personId, customId, authority));
     }
@@ -97,7 +94,6 @@ public class PersonResourceApiImpl implements PersonResourceApi {
     public Y9Result<List<FrontendMenu>> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam("resourceId") @NotBlank String resourceId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         List<FrontendMenu> frontendMenuList = new ArrayList<>();
         frontendMenuBuilder.buildFrontendMenus(IdentityTypeEnum.PERSON, personId, authority, resourceId,
@@ -120,7 +116,6 @@ public class PersonResourceApiImpl implements PersonResourceApi {
     public Y9Result<List<FrontendMenu>> listMenusRecursivelyByCustomId(
         @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId,
         @RequestParam("authority") AuthorityEnum authority, @RequestParam("customId") @NotBlank String customId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         List<FrontendMenu> frontendMenuList = new ArrayList<>();
         frontendMenuBuilder.buildFrontendMenusByCustomId(IdentityTypeEnum.PERSON, personId, authority, customId,
@@ -145,7 +140,6 @@ public class PersonResourceApiImpl implements PersonResourceApi {
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam(name = "resourceId", required = false) String resourceId,
         @RequestParam(name = "resourceType", required = false) ResourceTypeEnum resourceType) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result
             .success(y9PersonToResourceService.listSubResources(personId, resourceId, authority, resourceType));
@@ -167,7 +161,6 @@ public class PersonResourceApiImpl implements PersonResourceApi {
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam("customId") @NotBlank String customId,
         @RequestParam(name = "resourceType", required = false) ResourceTypeEnum resourceType) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result
             .success(y9PersonToResourceService.listSubResourcesByCustomId(personId, customId, authority, resourceType));
@@ -185,7 +178,6 @@ public class PersonResourceApiImpl implements PersonResourceApi {
     @Override
     public Y9Result<List<App>> listApps(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority) {
-        Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PersonToResourceService.listAppsByAuthority(personId, authority));
     }
