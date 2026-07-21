@@ -3,19 +3,19 @@ package y9.autoconfiguration.tenant;
 
 import static net.risesoft.consts.JpaTenantConsts.TENANT_TRANSACTION_MANAGER;
 
-import java.sql.SQLException;
-import java.util.Collections;
-import java.util.StringTokenizer;
-
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -47,7 +47,7 @@ import y9.jpa.extension.Y9EnableJpaRepositories;
 
 @Configuration
 @AutoConfigureBefore(DruidDataSourceAutoConfigure.class)
-@EnableConfigurationProperties(JpaProperties.class)
+@EnableConfigurationProperties({JpaProperties.class, HibernateProperties.class})
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
 @Y9EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryTenant}"},
     includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},
@@ -55,164 +55,20 @@ import y9.jpa.extension.Y9EnableJpaRepositories;
 @Slf4j
 public class JpaMultiTenantConfiguration {
 
-    // @ConfigurationProperties("spring.datasource.druid.tenantDefault")
     @Bean("defaultDataSource")
     @ConditionalOnMissingBean(name = "defaultDataSource")
     public DruidDataSource defaultDataSource(Environment environment) {
         DruidDataSource dataSource = DruidDataSourceBuilder.create().build();
+        dataSource.setName("defaultDataSource");
 
         // 比如：spring.datasource.druid.tenantDefault=spring.datasource.druid.y9-public
-        String tenantDefault = environment.getProperty("spring.datasource.druid.tenantDefault", String.class);
-        if (!StringUtils.hasText(tenantDefault)) {
-            tenantDefault = "spring.datasource.druid.y9-public";
+        String prefix = environment.getProperty("spring.datasource.druid.tenantDefault", String.class);
+        if (!StringUtils.hasText(prefix)) {
+            prefix = "spring.datasource.druid.y9-public";
         }
-        String prefix = tenantDefault + ".";
 
-        String jdbcUrl = environment.getProperty(prefix + "url", String.class);
-        String username = environment.getProperty(prefix + "username", String.class);
-        String password = environment.getProperty(prefix + "password", String.class);
-        Boolean testWhileIdle = environment.getProperty(prefix + "testWhileIdle", Boolean.class);
-        Boolean testOnBorrow = environment.getProperty(prefix + "testOnBorrow", Boolean.class);
-        Boolean testOnReturn = environment.getProperty(prefix + "testOnReturn", Boolean.class);
-        String validationQuery = environment.getProperty(prefix + "validationQuery", String.class);
-        Boolean useGlobalDataSourceStat = environment.getProperty(prefix + "useGlobalDataSourceStat", Boolean.class);
-        String filters = environment.getProperty(prefix + "filters", String.class);
-        Boolean clearFiltersEnable = environment.getProperty(prefix + "clearFiltersEnable", Boolean.class);
-        Boolean resetStatEnable = environment.getProperty(prefix + "resetStatEnable", Boolean.class);
-        Integer notFullTimeoutRetryCount = environment.getProperty(prefix + "notFullTimeoutRetryCount", Integer.class);
-        Long timeBetweenEvictionRunsMillis =
-            environment.getProperty(prefix + "timeBetweenEvictionRunsMillis", Long.class);
-        Integer maxWaitThreadCount = environment.getProperty(prefix + "maxWaitThreadCount", Integer.class);
-        Long maxWaitMillis = environment.getProperty(prefix + "maxWaitMillis", Long.class);
-        Boolean failFast = environment.getProperty(prefix + "failFast", Boolean.class);
-        Long phyTimeoutMillis = environment.getProperty(prefix + "phyTimeoutMillis", Long.class);
-        Long phyMaxUseCount = environment.getProperty(prefix + "phyMaxUseCount", Long.class);
-        Long minEvictableIdleTimeMillis = environment.getProperty(prefix + "minEvictableIdleTimeMillis", Long.class);
-        Long maxEvictableIdleTimeMillis = environment.getProperty(prefix + "maxEvictableIdleTimeMillis", Long.class);
-        Boolean keepAlive = environment.getProperty(prefix + "keepAlive", Boolean.class);
-        Long keepAliveBetweenTimeMillis = environment.getProperty(prefix + "keepAliveBetweenTimeMillis", Long.class);
-        Boolean poolPreparedStatements = environment.getProperty(prefix + "poolPreparedStatements", Boolean.class);
-        Boolean initVariants = environment.getProperty(prefix + "initVariants", Boolean.class);
-        Boolean initGlobalVariants = environment.getProperty(prefix + "initGlobalVariants", Boolean.class);
-        Boolean useUnfairLock = environment.getProperty(prefix + "useUnfairLock", Boolean.class);
-        String driverClassName = environment.getProperty(prefix + "driverClassName", String.class);
-        Integer initialSize = environment.getProperty(prefix + "initialSize", Integer.class);
-        Integer minIdle = environment.getProperty(prefix + "minIdle", Integer.class);
-        Integer maxActive = environment.getProperty(prefix + "maxActive", Integer.class);
-        Boolean killWhenSocketReadTimeout =
-            environment.getProperty(prefix + "killWhenSocketReadTimeout", Boolean.class);
-        String connectionProperties = environment.getProperty(prefix + "connectionProperties", String.class);
-        Integer maxPoolPreparedStatementPerConnectionSize =
-            environment.getProperty(prefix + "maxPoolPreparedStatementPerConnectionSize", Integer.class);
-        String initConnectionSqls = environment.getProperty(prefix + "initConnectionSqls", String.class);
-
-        if (jdbcUrl != null) {
-            dataSource.setUrl(jdbcUrl);
-        }
-        if (username != null) {
-            dataSource.setUsername(username);
-        }
-        if (password != null) {
-            dataSource.setPassword(password);
-        }
-        if (testWhileIdle != null) {
-            dataSource.setTestWhileIdle(testWhileIdle);
-        }
-        if (testOnBorrow != null) {
-            dataSource.setTestOnBorrow(testOnBorrow);
-        }
-        if (testOnReturn != null) {
-            dataSource.setTestOnReturn(testOnReturn);
-        }
-        if (validationQuery != null) {
-            dataSource.setValidationQuery(validationQuery);
-        }
-        if (useGlobalDataSourceStat != null) {
-            dataSource.setUseGlobalDataSourceStat(useGlobalDataSourceStat);
-        }
-        if (filters != null) {
-            try {
-                dataSource.setFilters(filters);
-            } catch (SQLException e) {
-                LOGGER.warn(e.getMessage(), e);
-            }
-        }
-        if (clearFiltersEnable != null) {
-            dataSource.setClearFiltersEnable(clearFiltersEnable);
-        }
-        if (resetStatEnable != null) {
-            dataSource.setResetStatEnable(resetStatEnable);
-        }
-        if (notFullTimeoutRetryCount != null) {
-            dataSource.setNotFullTimeoutRetryCount(notFullTimeoutRetryCount);
-        }
-        if (timeBetweenEvictionRunsMillis != null) {
-            dataSource.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
-        }
-        if (maxWaitThreadCount != null) {
-            dataSource.setMaxWaitThreadCount(maxWaitThreadCount);
-        }
-        if (maxWaitMillis != null) {
-            dataSource.setMaxWait(maxWaitMillis);
-        }
-        if (failFast != null) {
-            dataSource.setFailFast(failFast);
-        }
-        if (phyTimeoutMillis != null) {
-            dataSource.setPhyTimeoutMillis(phyTimeoutMillis);
-        }
-        if (phyMaxUseCount != null) {
-            dataSource.setPhyMaxUseCount(phyMaxUseCount);
-        }
-        if (minEvictableIdleTimeMillis != null) {
-            dataSource.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
-        }
-        if (maxEvictableIdleTimeMillis != null) {
-            dataSource.setMaxEvictableIdleTimeMillis(maxEvictableIdleTimeMillis);
-        }
-        if (keepAlive != null) {
-            dataSource.setKeepAlive(keepAlive);
-        }
-        if (keepAliveBetweenTimeMillis != null) {
-            dataSource.setKeepAliveBetweenTimeMillis(keepAliveBetweenTimeMillis);
-        }
-        if (poolPreparedStatements != null) {
-            dataSource.setPoolPreparedStatements(poolPreparedStatements);
-        }
-        if (initVariants != null) {
-            dataSource.setInitVariants(initVariants);
-        }
-        if (initGlobalVariants != null) {
-            dataSource.setInitGlobalVariants(initGlobalVariants);
-        }
-        if (useUnfairLock != null) {
-            dataSource.setUseUnfairLock(useUnfairLock);
-        }
-        if (driverClassName != null) {
-            dataSource.setDriverClassName(driverClassName);
-        }
-        if (initialSize != null) {
-            dataSource.setInitialSize(initialSize);
-        }
-        if (minIdle != null) {
-            dataSource.setMinIdle(minIdle);
-        }
-        if (maxActive != null) {
-            dataSource.setMaxActive(maxActive);
-        }
-        if (killWhenSocketReadTimeout != null) {
-            dataSource.setKillWhenSocketReadTimeout(killWhenSocketReadTimeout);
-        }
-        if (connectionProperties != null) {
-            dataSource.setConnectionProperties(connectionProperties);
-        }
-        if (maxPoolPreparedStatementPerConnectionSize != null) {
-            dataSource.setMaxPoolPreparedStatementPerConnectionSize(maxPoolPreparedStatementPerConnectionSize);
-        }
-        if (initConnectionSqls != null) {
-            StringTokenizer tokenizer = new StringTokenizer(initConnectionSqls, ";");
-            dataSource.setConnectionInitSqls(Collections.list(tokenizer));
-        }
+        Binder binder = Binder.get(environment);
+        binder.bind(prefix, Bindable.ofInstance(dataSource));
 
         return dataSource;
     }
@@ -225,22 +81,33 @@ public class JpaMultiTenantConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public JpaVendorAdapter jpaVendorAdapter() {
-        return new HibernateJpaVendorAdapter();
+    public JpaVendorAdapter jpaVendorAdapter(JpaProperties jpaProperties) {
+        HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
+        adapter.setShowSql(jpaProperties.isShowSql());
+        if (jpaProperties.getDatabase() != null) {
+            adapter.setDatabase(jpaProperties.getDatabase());
+        }
+        if (jpaProperties.getDatabasePlatform() != null) {
+            adapter.setDatabasePlatform(jpaProperties.getDatabasePlatform());
+        }
+        adapter.setGenerateDdl(jpaProperties.isGenerateDdl());
+        return adapter;
     }
 
     @Primary
     @Bean({"rsTenantEntityManagerFactory", "entityManagerFactory"})
     public LocalContainerEntityManagerFactoryBean rsTenantEntityManagerFactory(
-        @Qualifier("y9TenantDataSource") DataSource ds, JpaProperties jpaProperties, Environment environment) {
+        @Qualifier("y9TenantDataSource") DataSource ds, JpaProperties jpaProperties,
+        HibernateProperties hibernateProperties, JpaVendorAdapter jpaVendorAdapter, Environment environment) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setPersistenceUnitName("y9Tenant");
         em.setDataSource(ds);
-        em.setJpaVendorAdapter(jpaVendorAdapter());
+        em.setJpaVendorAdapter(jpaVendorAdapter);
 
         String basePackages = environment.getProperty("y9.feature.jpa.packagesToScanEntityTenant");
         em.setPackagesToScan(basePackages.split(","));
-        em.setJpaPropertyMap(jpaProperties.getProperties());
+        em.setJpaPropertyMap(
+            hibernateProperties.determineHibernateProperties(jpaProperties.getProperties(), new HibernateSettings()));
         // EntityManagerFactory 初始化过程不触发表结构更新及数据库元数据的获取
         em.getJpaPropertyMap().put("hibernate.hbm2ddl.auto", "none");
         em.getJpaPropertyMap().put("hibernate.temp.use_jdbc_metadata_defaults", "false");

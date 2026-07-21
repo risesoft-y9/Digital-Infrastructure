@@ -7,6 +7,8 @@ import javax.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -36,7 +38,7 @@ import y9.jpa.extension.Y9EnableJpaRepositories;
 
 @Configuration
 @AutoConfigureBefore(DruidDataSourceAutoConfigure.class)
-@EnableConfigurationProperties({JpaProperties.class, Y9JpaProperties.class})
+@EnableConfigurationProperties({JpaProperties.class, HibernateProperties.class, Y9JpaProperties.class})
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
 @Y9EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryPublic}"},
     includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},
@@ -51,21 +53,32 @@ public class JpaPublicConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public JpaVendorAdapter jpaVendorAdapter() {
-        return new HibernateJpaVendorAdapter();
+    public JpaVendorAdapter jpaVendorAdapter(JpaProperties jpaProperties) {
+        HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
+        adapter.setShowSql(jpaProperties.isShowSql());
+        if (jpaProperties.getDatabase() != null) {
+            adapter.setDatabase(jpaProperties.getDatabase());
+        }
+        if (jpaProperties.getDatabasePlatform() != null) {
+            adapter.setDatabasePlatform(jpaProperties.getDatabasePlatform());
+        }
+        adapter.setGenerateDdl(jpaProperties.isGenerateDdl());
+        return adapter;
     }
 
     @Bean
     public LocalContainerEntityManagerFactoryBean rsPublicEntityManagerFactory(
-        @Qualifier("y9PublicDS") DruidDataSource y9PublicDS, JpaProperties jpaProperties, Environment environment) {
+        @Qualifier("y9PublicDS") DruidDataSource y9PublicDS, JpaProperties jpaProperties,
+        HibernateProperties hibernateProperties, JpaVendorAdapter jpaVendorAdapter, Environment environment) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setPersistenceUnitName("y9Public");
         em.setDataSource(y9PublicDS);
-        em.setJpaVendorAdapter(jpaVendorAdapter());
+        em.setJpaVendorAdapter(jpaVendorAdapter);
 
         String basePackages = environment.getProperty("y9.feature.jpa.packagesToScanEntityPublic");
         em.setPackagesToScan(basePackages.split(","));
-        em.setJpaPropertyMap(jpaProperties.getProperties());
+        em.setJpaPropertyMap(
+            hibernateProperties.determineHibernateProperties(jpaProperties.getProperties(), new HibernateSettings()));
         return em;
     }
 
@@ -88,6 +101,7 @@ public class JpaPublicConfiguration {
     @ConditionalOnMissingBean(name = "y9PublicDS")
     public DruidDataSource y9PublicDS() {
         DruidDataSource dataSource = DruidDataSourceBuilder.create().build();
+        dataSource.setName("y9PublicDS");
         return dataSource;
     }
 }
