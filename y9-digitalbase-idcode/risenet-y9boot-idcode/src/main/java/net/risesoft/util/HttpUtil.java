@@ -2,17 +2,16 @@ package net.risesoft.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -22,163 +21,121 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-/**
- * http处理工具
- *
- */
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class HttpUtil {
 
-    public String get(String url) {
-        CloseableHttpClient client = HttpClients.createDefault();
-        HttpGet get = new HttpGet(url);
-        String responseContent = null; // 响应内容
-        CloseableHttpResponse response = null;
-        try {
-            response = client.execute(get);
-            if (response.getStatusLine().getStatusCode() == 200) {
-                HttpEntity entity = response.getEntity();
-                responseContent = EntityUtils.toString(entity, "UTF-8");
-            }
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (response != null)
-                    response.close();
+    private static final int DEFAULT_TIMEOUT = 30000;
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (client != null)
-                        client.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+    private static final CloseableHttpClient HTTP_CLIENT = HttpClients.custom()
+        .setDefaultRequestConfig(RequestConfig.custom().setConnectTimeout(DEFAULT_TIMEOUT)
+            .setSocketTimeout(DEFAULT_TIMEOUT).setConnectionRequestTimeout(DEFAULT_TIMEOUT).build())
+        .setRetryHandler(new DefaultHttpRequestRetryHandler(2, true)).build();
+
+    public static String get(String url) {
+        if (url == null || url.isEmpty())
+            return null;
+        HttpGet get = new HttpGet(url);
+        try (CloseableHttpResponse response = HTTP_CLIENT.execute(get)) {
+            int statusCode = response.getStatusLine().getStatusCode();
+            HttpEntity entity = response.getEntity();
+            if (statusCode == 200 && entity != null) {
+                return EntityUtils.toString(entity, StandardCharsets.UTF_8);
+            } else {
+                EntityUtils.consume(entity);
+                LOGGER.warn("HTTP GET 请求返回非200状态码，URL: {}, 状态码: {}", url, statusCode);
             }
+        } catch (IOException e) {
+            LOGGER.error("HTTP GET 请求发生网络异常，URL: {}", url, e);
+        } finally {
+            get.releaseConnection();
         }
-        return responseContent;
+        return null;
     }
 
-    public String post(String url, HttpEntity data, ContentType ct) {
-        CloseableHttpClient client = HttpClients.createDefault();
+    public static String post(String url, HttpEntity data, ContentType ct) {
+        if (url == null || url.isEmpty())
+            return null;
         HttpPost post = new HttpPost(url);
-        post.setEntity(data);// 设置请求体
-        String responseContent = null; // 响应内容
-        CloseableHttpResponse response = null;
-        try {
-            response = client.execute(post);
+        if (ct != null) {
+            post.setHeader("Content-Type", ct.toString());
+        }
+        post.setEntity(data);
+
+        try (CloseableHttpResponse response = HTTP_CLIENT.execute(post)) {
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode == 200) {
-                HttpEntity entity = response.getEntity();
-                responseContent = EntityUtils.toString(entity, "UTF-8");
+                return EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
             }
             if (statusCode == 307) {
-                Header header = response.getFirstHeader("location"); // 跳转的目标地址是在 HTTP-HEAD上
-                url = header.getValue();
-                responseContent = post(url, data, ct);
-            }
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (response != null)
-                    response.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (client != null)
-                        client.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                Header header = response.getFirstHeader("location");
+                if (header != null && header.getValue() != null && !header.getValue().isEmpty()) {
+                    return post(header.getValue(), data, ct);
                 }
+            } else {
+                EntityUtils.consume(response.getEntity());
+                LOGGER.warn("HTTP POST 请求返回非200状态码，URL: {}, 状态码: {}", url, statusCode);
             }
+        } catch (IOException e) {
+            LOGGER.error("HTTP POST 请求发生网络异常，URL: {}", url, e);
+        } finally {
+            post.releaseConnection();
         }
-        return responseContent;
+        return null;
     }
 
-    public String postMap(String url, Map<String, Object> data) {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        for (String key : data.keySet()) {
-            params.add(new BasicNameValuePair(key, data.get(key).toString()));
+    public static String postMap(String url, Map<String, Object> data) {
+        if (url == null || url.isEmpty() || data == null || data.isEmpty())
+            return null;
+        List<NameValuePair> params = new ArrayList<>();
+        for (Map.Entry<String, Object> entry : data.entrySet()) {
+            if (entry.getValue() != null) {
+                params.add(new BasicNameValuePair(entry.getKey(), entry.getValue().toString()));
+            }
         }
-        UrlEncodedFormEntity urlEntity = null;
         try {
-            urlEntity = new UrlEncodedFormEntity(params, "UTF-8");
-            return post(url, urlEntity, ContentType.APPLICATION_FORM_URLENCODED);
-        } catch (UnsupportedEncodingException e1) {
-            e1.printStackTrace();
+            return post(url, new UrlEncodedFormEntity(params, StandardCharsets.UTF_8),
+                ContentType.APPLICATION_FORM_URLENCODED);
+        } catch (Exception e) {
+            LOGGER.error("HTTP POST Map 构建参数异常，URL: {}", url, e);
             return null;
         }
     }
 
-    public String postMapContainFile(String url, Map<String, Object> data, Map<String, File> files) {
+    public static String postMapContainFile(String url, Map<String, Object> data, Map<String, File> files) {
         return httpPostFormMultipart(url, data, files, null, null);
     }
 
-    public String postParams(String url, List<NameValuePair> params) {
-        UrlEncodedFormEntity urlEntity = null;
+    public static String postParams(String url, List<NameValuePair> params) {
+        if (url == null || url.isEmpty() || params == null || params.isEmpty())
+            return null;
         try {
-            urlEntity = new UrlEncodedFormEntity(params, "UTF-8");
-            return post(url, urlEntity, ContentType.APPLICATION_FORM_URLENCODED);
-        } catch (UnsupportedEncodingException e1) {
-            e1.printStackTrace();
+            return post(url, new UrlEncodedFormEntity(params, StandardCharsets.UTF_8),
+                ContentType.APPLICATION_FORM_URLENCODED);
+        } catch (Exception e) {
+            LOGGER.error("HTTP POST Params 构建参数异常，URL: {}", url, e);
             return null;
         }
     }
 
-    public String postJson(String url, String postData) {
-        CloseableHttpClient client = HttpClients.createDefault();
-        HttpPost post = new HttpPost(url);
-        post.addHeader("Content-type", "application/json; charset=utf-8");
-        post.setHeader("Accept", "application/json");
-        StringEntity myEntity = new StringEntity(postData, ContentType.APPLICATION_JSON);// 构造请求数据
-        post.setEntity(myEntity);// 设置请求体
-
-        String responseContent = null; // 响应内容
-        CloseableHttpResponse response = null;
-        try {
-            response = client.execute(post);
-            if (response.getStatusLine().getStatusCode() == 200) {
-                HttpEntity entity = response.getEntity();
-                responseContent = EntityUtils.toString(entity, "UTF-8");
-            }
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (response != null)
-                    response.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (client != null)
-                        client.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return responseContent;
+    public static String postJson(String url, String postData) {
+        if (url == null || url.isEmpty() || postData == null)
+            return null;
+        HttpEntity entity = new StringEntity(postData, ContentType.APPLICATION_JSON);
+        return post(url, entity, ContentType.APPLICATION_JSON);
     }
 
-    public String postString(String url, String postData) {
-        StringEntity myEntity = new StringEntity(postData, ContentType.APPLICATION_FORM_URLENCODED);// 构造请求数据
-        return post(url, myEntity, ContentType.APPLICATION_FORM_URLENCODED);
+    public static String postString(String url, String postData) {
+        if (url == null || url.isEmpty() || postData == null)
+            return null;
+        return post(url, new StringEntity(postData, ContentType.APPLICATION_FORM_URLENCODED),
+            ContentType.APPLICATION_FORM_URLENCODED);
     }
 
     /**
@@ -186,63 +143,56 @@ public class HttpUtil {
      */
     public static String httpPostFormMultipart(String url, Map<String, Object> params, Map<String, File> files,
         Map<String, String> headers, String encode) {
-        String content = null;
-        if (encode == null) {
-            encode = "utf-8";
-        }
-        CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
+        if (url == null || url.isEmpty())
+            return null;
+        String charset = (encode != null) ? encode : StandardCharsets.UTF_8.name();
         HttpPost httpost = new HttpPost(url);
-
-        // 设置header
-        if (headers != null && headers.size() > 0) {
-            for (Map.Entry<String, String> entry : headers.entrySet()) {
-                httpost.setHeader(entry.getKey(), entry.getValue());
-            }
-        }
-        MultipartEntityBuilder mEntityBuilder = MultipartEntityBuilder.create();
-        mEntityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-        mEntityBuilder.setCharset(Charset.forName(encode));
-
-        // 普通参数
-        ContentType contentType = ContentType.create("text/plain", Charset.forName(encode));// 解决中文乱码
-        if (params != null && params.size() > 0) {
-            Set<String> keySet = params.keySet();
-            for (String key : keySet) {
-                if (params.get(key) instanceof File)
-                    continue;
-                mEntityBuilder.addTextBody(key, params.get(key).toString(), contentType);
-            }
-        }
-        // 二进制参数
-        if (files != null && files.size() > 0) {
-            Set<String> keySet = files.keySet();
-            for (String key : keySet) {
-                File file = files.get(key);
-                ContentType contentType1 = ContentType.create("application/octet-stream", Charset.forName(encode));// 解决中文乱码
-                mEntityBuilder.addBinaryBody(key, file, contentType1, file.getName());
-            }
-        }
-        httpost.setEntity(mEntityBuilder.build());
-
-        CloseableHttpResponse httpResponse = null;
         try {
-            httpResponse = closeableHttpClient.execute(httpost);
-            HttpEntity entity = httpResponse.getEntity();
-            content = EntityUtils.toString(entity, encode);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                httpResponse.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (headers != null && !headers.isEmpty()) {
+                for (Map.Entry<String, String> entry : headers.entrySet()) {
+                    httpost.setHeader(entry.getKey(), entry.getValue());
+                }
             }
-        }
-        try { // 关闭连接、释放资源
-            closeableHttpClient.close();
+            MultipartEntityBuilder mEntityBuilder = MultipartEntityBuilder.create();
+            mEntityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+            mEntityBuilder.setCharset(Charset.forName(charset));
+
+            ContentType contentType = ContentType.create("text/plain", Charset.forName(charset));
+            if (params != null && !params.isEmpty()) {
+                for (Map.Entry<String, Object> entry : params.entrySet()) {
+                    if (!(entry.getValue() instanceof File) && entry.getValue() != null) {
+                        mEntityBuilder.addTextBody(entry.getKey(), entry.getValue().toString(), contentType);
+                    }
+                }
+            }
+            if (files != null && !files.isEmpty()) {
+                ContentType binaryContentType =
+                    ContentType.create("application/octet-stream", Charset.forName(charset));
+                for (Map.Entry<String, File> entry : files.entrySet()) {
+                    File file = entry.getValue();
+                    if (file != null && file.exists()) {
+                        mEntityBuilder.addBinaryBody(entry.getKey(), file, binaryContentType, file.getName());
+                    }
+                }
+            }
+            httpost.setEntity(mEntityBuilder.build());
+
+            try (CloseableHttpResponse httpResponse = HTTP_CLIENT.execute(httpost)) {
+                int statusCode = httpResponse.getStatusLine().getStatusCode();
+                HttpEntity entity = httpResponse.getEntity();
+                if (statusCode == 200 && entity != null) {
+                    return EntityUtils.toString(entity, charset);
+                } else {
+                    EntityUtils.consume(entity);
+                    LOGGER.warn("HTTP POST Multipart 请求返回非200状态码，URL: {}, 状态码: {}", url, statusCode);
+                    return null;
+                }
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("HTTP POST Multipart 文件上传异常，URL: {}", url, e);
+        } finally {
+            httpost.releaseConnection();
         }
-        return content;
+        return null;
     }
 }
