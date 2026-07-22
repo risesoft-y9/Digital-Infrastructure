@@ -107,22 +107,18 @@ spring:
                 useGlobalDataSourceStat: true
                 validationQuery: SELECT 1 FROM DUAL
     jpa:
-        generate-ddl: true
         database-platform: org.hibernate.dialect.MySQL8Dialect
+        open-in-view: false
+        show-sql: true
         hibernate:
             ddl-auto: none
             naming:
                 implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
                 physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-        open-in-view: false
         properties:
             hibernate:
-                hbm2ddl:
-                    auto: none
-                dialect: org.hibernate.dialect.MySQL8Dialect
                 jdbc:
                     batch_size: 100
-                show_sql: true
     kafka:
         bootstrap-servers: localhost:9092
         consumer:
