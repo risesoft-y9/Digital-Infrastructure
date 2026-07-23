@@ -5,6 +5,8 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
@@ -30,20 +32,30 @@ public class JpaPublicConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public JpaVendorAdapter jpaVendorAdapter() {
-        return new HibernateJpaVendorAdapter();
+    public JpaVendorAdapter jpaVendorAdapter(JpaProperties jpaProperties) {
+        HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
+        adapter.setShowSql(jpaProperties.isShowSql());
+        if (jpaProperties.getDatabase() != null) {
+            adapter.setDatabase(jpaProperties.getDatabase());
+        }
+        if (jpaProperties.getDatabasePlatform() != null) {
+            adapter.setDatabasePlatform(jpaProperties.getDatabasePlatform());
+        }
+        adapter.setGenerateDdl(jpaProperties.isGenerateDdl());
+        return adapter;
     }
 
     @Primary
     @Bean
     public LocalContainerEntityManagerFactoryBean rsPublicEntityManagerFactory(DataSource dataSource,
-        JpaProperties jpaProperties) {
+        JpaProperties jpaProperties, HibernateProperties hibernateProperties, JpaVendorAdapter jpaVendorAdapter) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setPersistenceUnitName("y9Public");
         em.setDataSource(dataSource);
-        em.setJpaVendorAdapter(jpaVendorAdapter());
+        em.setJpaVendorAdapter(jpaVendorAdapter);
         em.setPackagesToScan("y9");
-        em.setJpaPropertyMap(jpaProperties.getProperties());
+        em.setJpaPropertyMap(
+            hibernateProperties.determineHibernateProperties(jpaProperties.getProperties(), new HibernateSettings()));
         return em;
     }
 
