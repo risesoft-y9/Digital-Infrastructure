@@ -50,7 +50,9 @@ import cn.hutool.json.JSONObject;
  * @author qinman
  * @author mengjuhua
  * @date 2022/2/10
+ * @deprecated Use {@link Y9RemoteClientUtil} instead. This method will be removed in version 9.6.12.
  */
+@Deprecated(since = "9.6.11", forRemoval = true)
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RemoteCallUtil {
