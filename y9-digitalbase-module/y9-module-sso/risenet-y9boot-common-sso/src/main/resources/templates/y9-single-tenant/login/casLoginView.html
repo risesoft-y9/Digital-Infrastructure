@@ -36,12 +36,13 @@
         body .logo img {
             width: auto;
             height: 50px;
+            display: none;
         }
     </style>
 </head>
 
 <body>
-<div class="logo"><img id="logo-img" th:src="@{/y9static/y9-single-tenant/img/cloud.png}"><span id="logo-name"></span></div>
+<div class="logo"><img alt="" id="logo-img" th:data-default-src="@{/y9static/y9-single-tenant/img/cloud.png}"><span id="logo-name"></span></div>
 <div class="login" id="tunnel">
     <div class="login_title">
         <span>用户登录</span>
@@ -80,7 +81,6 @@
             <input tabindex="3" type="button" value="登录"/>
         </div>
     </div>
-
 </div>
 
 <script charset="utf-8" th:src="@{/y9static/js/verify-img/verify.js(v=1.4)}" type="text/javascript"></script>
@@ -100,16 +100,13 @@
             dataType: 'json',
             success: function (data) {
                 $("#tenantShortName").val(data.shortName);
-                if (data.logoIcon && data.logoIcon != null) {
-                    // 获取图片元素
-                    var image = document.getElementById('logo-img');
-                    image.src = data.logoIcon;
+                var logoImage = $("#logo-img");
+                logoImage.attr("src", data.logoIcon || logoImage.attr("data-default-src")).show();
+                if (data.description) {
+                    $('#logo-name').text(data.description);
                 }
-                if (data.description && data.description != null) {
-                    document.getElementById('logo-name').innerHTML = data.description;
-                }
-                if (data.footer && data.footer != null) {
-                    document.title = data.footer;
+                if (data.name) {
+                    document.title = data.name;
                 }
             },
             error: function () {

@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import y9.controller.dto.Tenant;
+import y9.controller.dto.TenantVO;
 import y9.entity.Y9Tenant;
 import y9.entity.Y9User;
 import y9.service.Y9TenantService;
@@ -50,10 +50,10 @@ public class TenantController {
     public ResponseEntity<String> allTenants() {
         try {
             List<Y9Tenant> tenants = y9TenantService.listByEnabled(Boolean.TRUE);
-            List<Tenant> tenants1 = convertAndSort(tenants);
+            List<TenantVO> tenantVOList = convertAndSort(tenants);
 
             ObjectMapper mapper = new ObjectMapper();
-            String jsonStr = mapper.writeValueAsString(tenants1);
+            String jsonStr = mapper.writeValueAsString(tenantVOList);
 
             final HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -123,13 +123,14 @@ public class TenantController {
         }
     }
 
-    private List<Tenant> convertAndSort(List<Y9Tenant> tenantList) {
-        List<Tenant> newTenantList = new ArrayList<>();
+    private List<TenantVO> convertAndSort(List<Y9Tenant> tenantList) {
+        List<TenantVO> newTenantVOList = new ArrayList<>();
         for (Y9Tenant tenant : tenantList) {
-            newTenantList.add(new Tenant(tenant.getName(), tenant.getShortName()));
+            newTenantVOList.add(
+                new TenantVO(tenant.getName(), tenant.getShortName(), tenant.getLogoIcon(), tenant.getDescription()));
         }
         // 运维租户总是放在最后
-        newTenantList.add(Tenant.OPERATION_TENANT);
-        return newTenantList;
+        newTenantVOList.add(TenantVO.operationTenantVO);
+        return newTenantVOList;
     }
 }
