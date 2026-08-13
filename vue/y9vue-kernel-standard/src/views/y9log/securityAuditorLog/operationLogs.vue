@@ -308,7 +308,7 @@
         }
     };
     const elapsedTimeFormat = (row?, column?, cellValue?) => {
-        var msec = cellValue / 1000 / 1000;
+        var msec = cellValue;
         if (msec < 1) {
             let s = msec / 1000;
             return Math.round(s * Math.pow(10, 6)) / Math.pow(10, 6) + '秒';
@@ -326,7 +326,7 @@
     // 表格 配置
     let operationLogsTable = ref({
         columns: [
-            { title: computed(() => t('序号')), showOverflowTooltip: false, type: 'index', width:  60 },
+            { title: computed(() => t('序号')), showOverflowTooltip: false, type: 'index', width: 60 },
             { title: computed(() => t('用户名称')), key: 'userName', width: 130 },
             { title: computed(() => t('客户端IP')), key: 'userHostIp', width: 150 },
             { title: computed(() => t('系统名称')), key: 'systemName', width: 120 },

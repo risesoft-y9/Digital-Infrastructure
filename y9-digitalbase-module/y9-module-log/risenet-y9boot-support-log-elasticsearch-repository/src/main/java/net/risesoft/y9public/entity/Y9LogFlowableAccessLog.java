@@ -110,9 +110,7 @@ public class Y9LogFlowableAccessLog implements Serializable {
     @Field(type = FieldType.Keyword, store = true)
     private String methodName;
 
-    /**
-     * 用时
-     */
+    /** 用时（毫秒） */
     @Field(type = FieldType.Long, store = true)
     private long elapsedTime;
 

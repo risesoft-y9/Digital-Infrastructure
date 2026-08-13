@@ -57,7 +57,7 @@ public class LogFilter implements Filter {
             throwable = buildExceptionMessage(e);
         } finally {
             long endTime = System.nanoTime();
-            long elapsedTime = endTime - startTime;
+            long elapsedTime = (endTime - startTime) / 1_000_000;
             String y9aoplog = response.getHeader("y9aoplog");
             if (!"true".equals(y9aoplog)) {
                 remoteSaveLog(request, Y9LoginUserHolder.getUserInfo(), elapsedTime, success, errorMessage, throwable);

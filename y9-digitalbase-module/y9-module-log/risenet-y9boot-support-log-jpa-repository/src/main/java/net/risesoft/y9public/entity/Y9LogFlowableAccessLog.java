@@ -139,7 +139,7 @@ public class Y9LogFlowableAccessLog implements Serializable {
     @Comment(value = "方法类和名称")
     private String methodName;
 
-    /** 用时 */
+    /** 用时（毫秒） */
     @Column(name = "ELAPSED_TIME")
     @Comment(value = "用时")
     private long elapsedTime;

@@ -70,7 +70,7 @@ public class Y9LogAccessLog implements Serializable {
     @Field(type = FieldType.Keyword, index = true, store = true)
     private String operateName;
 
-    /** 用时 */
+    /** 用时（毫秒） */
     @Field(type = FieldType.Long, index = true, store = true)
     private long elapsedTime;
 

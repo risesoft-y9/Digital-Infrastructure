@@ -7,6 +7,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,10 +19,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.api.log.AccessLogApi;
+import net.risesoft.api.platform.user.UserApi;
+import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.log.domain.Y9LogAccessLogDO;
 import net.risesoft.model.log.AccessLog;
+import net.risesoft.model.log.AccessLogDTO;
 import net.risesoft.model.log.AccessLogQuery;
+import net.risesoft.model.user.UserInfo;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
@@ -45,6 +50,8 @@ public class AccessLogApiController implements AccessLogApi {
 
     private final Y9logAccessLogService accessLogService;
 
+    private final UserApi userApi;
+
     /**
      * 异步保存访问日志
      *
@@ -65,7 +72,7 @@ public class AccessLogApiController implements AccessLogApi {
     }
 
     /**
-     * 保存日志 保存访问日志
+     * 保存访问日志
      *
      * @param accessLog 访问日志实体对象
      * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
@@ -77,6 +84,36 @@ public class AccessLogApiController implements AccessLogApi {
     public Y9Result<Object> saveLog(@RequestBody AccessLog accessLog) {
         Y9LogAccessLogDO y9LogAccessLogDO = Y9ModelConvertUtil.convert(accessLog, Y9LogAccessLogDO.class);
         accessLog.setLogTime(new Date());
+        accessLogService.save(y9LogAccessLogDO);
+        return Y9Result.success();
+    }
+
+    /**
+     * 保存访问日志
+     *
+     * @param accessLogDTO 访问日志实体对象
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
+     * @since 9.6.11
+     */
+    @RiseLog(enable = false)
+    @Override
+    @PostMapping("/save")
+    public Y9Result<Object> save(@RequestBody @Validated AccessLogDTO accessLogDTO) {
+        Y9LogAccessLogDO y9LogAccessLogDO = Y9ModelConvertUtil.convert(accessLogDTO, Y9LogAccessLogDO.class);
+
+        UserInfo userInfo = userApi.get(accessLogDTO.getTenantId(), accessLogDTO.getPersonId()).getData();
+        if (userInfo != null) {
+            y9LogAccessLogDO.setTenantId(userInfo.getTenantId());
+            y9LogAccessLogDO.setTenantName(userInfo.getTenantName());
+            y9LogAccessLogDO.setUserId(userInfo.getPersonId());
+            y9LogAccessLogDO.setUserName(userInfo.getName());
+            y9LogAccessLogDO.setLoginName(userInfo.getLoginName());
+            y9LogAccessLogDO.setDn(userInfo.getDn());
+            y9LogAccessLogDO.setGuidPath(userInfo.getGuidPath());
+            y9LogAccessLogDO.setManagerLevel(userInfo.getManagerLevel().getValue());
+        }
+
+        y9LogAccessLogDO.setId(Y9IdGenerator.genId());
         accessLogService.save(y9LogAccessLogDO);
         return Y9Result.success();
     }

@@ -77,7 +77,7 @@ public class ScheduledTask {
                     long now = System.currentTimeMillis();
                     if (calendar.getTimeInMillis() < now) {
                         long end = System.nanoTime();
-                        long elapsedTime = end - start;
+                        long elapsedTime = (end - start) / 1_000_000;
                         AccessLog log = new AccessLog();
                         log.setLogLevel(LogLevelEnum.MANAGERLOG.toString());
                         log.setLogTime(new Date());
@@ -141,7 +141,7 @@ public class ScheduledTask {
                 }
                 if (saveLog) {
                     long end = System.nanoTime();
-                    long elapsedTime = end - start;
+                    long elapsedTime = (end - start) / 1_000_000;
                     AccessLog accessLog = new AccessLog();
                     accessLog.setLogLevel(LogLevelEnum.MANAGERLOG.toString());
                     accessLog.setLogTime(new Date());

@@ -90,7 +90,7 @@ public class Y9LogAccessLog implements Serializable {
     @Comment(value = "操作名称")
     private String operateName;
 
-    /** 用时 */
+    /** 用时（毫秒） */
     @Column(name = "ELAPSED_TIME")
     @Comment(value = "用时")
     private long elapsedTime;

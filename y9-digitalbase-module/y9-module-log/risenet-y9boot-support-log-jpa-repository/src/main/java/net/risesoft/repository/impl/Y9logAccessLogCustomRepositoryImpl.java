@@ -274,7 +274,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         Date sDay = null;
         Date eDay = null;
         List<Long> list = new ArrayList<>();
-        long[] longArray = {1L, 1000000L, 10000000L, 100000000L, 1000000000L, 5000000000L, 10000000000L};
+        long[] longArray = {0, 1L, 10L, 100L, 1000L, 5000L, 10000L};
 
         if (StringUtils.isNotBlank(startDay)) {
             try {
