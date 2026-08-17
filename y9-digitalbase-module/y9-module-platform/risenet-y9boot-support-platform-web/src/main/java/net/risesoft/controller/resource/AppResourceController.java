@@ -40,7 +40,7 @@ import net.risesoft.y9public.service.resource.Y9AppService;
 @RequestMapping(value = "/api/rest/resource/app", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @RequiredArgsConstructor
-@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
+@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
 public class AppResourceController {
 
     private final Y9AppService y9AppService;
@@ -90,7 +90,7 @@ public class AppResourceController {
      */
     @RiseLog(operationName = "根据应用id获取应用详情")
     @GetMapping(value = "/{id}")
-    @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
+    @IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER,
         ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
     public Y9Result<App> getById(@PathVariable @NotBlank String id) {
         return Y9Result.success(y9AppService.getById(id), "成功获取应用详情");

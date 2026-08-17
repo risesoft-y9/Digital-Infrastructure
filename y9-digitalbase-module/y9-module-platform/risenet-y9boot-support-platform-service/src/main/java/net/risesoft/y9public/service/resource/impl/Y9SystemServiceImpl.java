@@ -101,7 +101,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void deleteForManager(String id) {
-        if (Y9LoginUserHolder.getUserInfo().getManagerLevel().isOperationManager()) {
+        if (Y9LoginUserHolder.getUserInfo().isOperationManager()) {
             this.deleteAfterCheck(id);
             return;
         }
@@ -219,12 +219,14 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public System saveAndRegister4Tenant(System y9System) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-        if (userInfo != null && userInfo.getManagerLevel().isTenantManager()) {
+        if (userInfo != null && userInfo.isTenantManager()) {
+            // 租户系统管理员手动注册
             y9System.setTenantId(Y9LoginUserHolder.getTenantId());
             System savedSystem = this.saveOrUpdate(y9System);
             y9TenantSystemManager.saveTenantSystem(savedSystem.getId(), Y9LoginUserHolder.getTenantId());
             return savedSystem;
         } else {
+            // 系统启动自动注册
             Optional<Y9Tenant> y9TenantOptional = y9TenantManager.findIfSingleTenant();
             // 单租户时默认租用
             if (y9TenantOptional.isPresent()) {
@@ -236,6 +238,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
             }
         }
 
+        // 运维系统管理员手动注册
         y9System.setTenantId(null);
         return this.saveOrUpdate(y9System);
     }

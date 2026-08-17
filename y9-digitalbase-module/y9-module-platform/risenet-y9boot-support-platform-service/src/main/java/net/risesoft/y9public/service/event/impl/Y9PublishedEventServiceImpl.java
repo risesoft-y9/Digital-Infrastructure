@@ -60,7 +60,7 @@ public class Y9PublishedEventServiceImpl implements Y9PublishedEventService {
 
     @Override
     public Y9Page<PublishedEvent> pageForManager(Y9PageQuery pageQuery, PublishedEventQuery query) {
-        if (Y9LoginUserHolder.getUserInfo().getManagerLevel().isTenantManager()) {
+        if (Y9LoginUserHolder.getUserInfo().isTenantManager()) {
             query.setTenantId(Y9LoginUserHolder.getTenantId());
         }
         return page(pageQuery, query);

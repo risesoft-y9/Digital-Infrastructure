@@ -2,17 +2,24 @@ package net.risesoft.vo.role;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import lombok.Getter;
 import lombok.Setter;
 
+import net.risesoft.consts.InitDataConsts;
+import net.risesoft.consts.RoleLevelConsts;
 import net.risesoft.enums.TreeTypeEnum;
+import net.risesoft.enums.platform.RoleLevelEnum;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.enums.platform.TreeNodeType;
 import net.risesoft.model.platform.Role;
 import net.risesoft.model.platform.System;
 import net.risesoft.model.platform.resource.App;
+import net.risesoft.model.user.UserInfo;
 import net.risesoft.vo.TreeNodeVO;
+import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9public.service.resource.Y9SystemService;
 
 /**
  * 角色树节点vo
@@ -41,7 +48,7 @@ public class RoleTreeNodeVO extends TreeNodeVO {
      */
     private String tenantId;
 
-    public static RoleTreeNodeVO convertRole(Role role) {
+    public static RoleTreeNodeVO convertRole(Role role, Y9SystemService y9SystemService) {
         RoleTreeNodeVO roleTreeNodeVO = new RoleTreeNodeVO();
         roleTreeNodeVO.setId(role.getId());
         roleTreeNodeVO.setSystemId(role.getSystemId());
@@ -52,13 +59,35 @@ public class RoleTreeNodeVO extends TreeNodeVO {
         roleTreeNodeVO.setTabIndex(role.getTabIndex());
         roleTreeNodeVO.setHasChild(RoleTypeEnum.FOLDER.equals(role.getType()));
         roleTreeNodeVO.setNodeType(role.getType().getValue());
+        
+        boolean manageable = isRoleManageable(role, y9SystemService);
+        roleTreeNodeVO.setManageable(manageable);
+        roleTreeNodeVO.setDeletable(manageable);
         return roleTreeNodeVO;
     }
+    
+    private static boolean isRoleManageable(Role role, Y9SystemService y9SystemService) {
+        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
+        if (userInfo.isOperationSystemManager()) {
+            return true;
+        }
+        if (userInfo.isTenantSystemManager()) {
+            if (RoleLevelEnum.PUBLIC.equals(role.getLevel())) {
+                return true;
+            }
+            System system = y9SystemService.getById(role.getSystemId());
+            if (Objects.equals(system.getTenantId(), userInfo.getTenantId())) {
+                return true;
+            }
+        }
 
-    public static List<RoleTreeNodeVO> convertRoleList(List<Role> roleList) {
+        return false;
+    }
+
+    public static List<RoleTreeNodeVO> convertRoleList(List<Role> roleList, Y9SystemService y9SystemService) {
         List<RoleTreeNodeVO> roleTreeNodeVOList = new ArrayList<>();
         for (Role role : roleList) {
-            roleTreeNodeVOList.add(convertRole(role));
+            roleTreeNodeVOList.add(convertRole(role, y9SystemService));
         }
         return roleTreeNodeVOList;
     }
@@ -73,6 +102,8 @@ public class RoleTreeNodeVO extends TreeNodeVO {
         roleTreeNodeVO.setTabIndex(app.getTabIndex());
         roleTreeNodeVO.setHasChild(true);
         roleTreeNodeVO.setNodeType(app.getResourceType().toString());
+        roleTreeNodeVO.setManageable(Y9LoginUserHolder.getUserInfo().isSystemManager());
+        roleTreeNodeVO.setDeletable(false);
         return roleTreeNodeVO;
     }
 
@@ -93,6 +124,8 @@ public class RoleTreeNodeVO extends TreeNodeVO {
         roleTreeNodeVO.setTabIndex(system.getTabIndex());
         roleTreeNodeVO.setHasChild(true);
         roleTreeNodeVO.setNodeType(TreeNodeType.SYSTEM.toString());
+        roleTreeNodeVO.setDeletable(false);
+        roleTreeNodeVO.setManageable(false);
         return roleTreeNodeVO;
     }
 

@@ -2,6 +2,7 @@ package net.risesoft.vo.resource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +12,10 @@ import net.risesoft.enums.platform.TreeNodeType;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
 import net.risesoft.model.platform.System;
 import net.risesoft.model.platform.resource.Resource;
+import net.risesoft.model.user.UserInfo;
 import net.risesoft.vo.TreeNodeVO;
+import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9public.service.resource.Y9SystemService;
 
 /**
  * 资源树节点vo
@@ -46,7 +50,7 @@ public class ResourceTreeNodeVO extends TreeNodeVO {
      */
     private Boolean inherit;
 
-    public static ResourceTreeNodeVO convertResource(Resource resource) {
+    private static ResourceTreeNodeVO convertResource(Resource resource, Y9SystemService y9SystemService) {
         ResourceTreeNodeVO resourceTreeNodeVO = new ResourceTreeNodeVO();
         resourceTreeNodeVO.setId(resource.getId());
         resourceTreeNodeVO.setAppId(resource.getAppId());
@@ -62,13 +66,29 @@ public class ResourceTreeNodeVO extends TreeNodeVO {
         resourceTreeNodeVO.setSystemId(resource.getSystemId());
         resourceTreeNodeVO.setEnabled(resource.getEnabled());
         resourceTreeNodeVO.setInherit(resource.getInherit());
+
+        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
+
+        if (userInfo.isOperationSystemManager()) {
+            resourceTreeNodeVO.setDeletable(true);
+            resourceTreeNodeVO.setManageable(true);
+        }
+        if (userInfo.isTenantSystemManager()) {
+            System system = y9SystemService.getById(resource.getSystemId());
+            if (Objects.equals(system.getTenantId(), userInfo.getTenantId())) {
+                resourceTreeNodeVO.setDeletable(true);
+                resourceTreeNodeVO.setManageable(true);
+            }
+        }
+
         return resourceTreeNodeVO;
     }
 
-    public static List<ResourceTreeNodeVO> convertResource(List<? extends Resource> resourceList) {
+    public static List<ResourceTreeNodeVO> convertResource(List<? extends Resource> resourceList,
+        Y9SystemService y9SystemService) {
         List<ResourceTreeNodeVO> roleTreeNodeVOList = new ArrayList<>();
         for (Resource resource : resourceList) {
-            roleTreeNodeVOList.add(convertResource(resource));
+            roleTreeNodeVOList.add(convertResource(resource, y9SystemService));
         }
         return roleTreeNodeVOList;
     }
@@ -85,6 +105,7 @@ public class ResourceTreeNodeVO extends TreeNodeVO {
         resourceTreeNodeVO.setSystemId(null);
         resourceTreeNodeVO.setEnabled(system.getEnabled());
         resourceTreeNodeVO.setTenantId(system.getTenantId());
+        resourceTreeNodeVO.setManageable(false);
         return resourceTreeNodeVO;
     }
 

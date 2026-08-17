@@ -46,7 +46,7 @@ import net.risesoft.util.Config;
 @RequestMapping(value = "/api/rest/idCode", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @RequiredArgsConstructor
-@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER})
+@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER})
 public class IdCodeController {
 
     private final Y9IdCodeService y9IdCodeService;

@@ -35,8 +35,8 @@ import net.risesoft.y9public.service.resource.Y9SystemService;
 @RestController
 @RequestMapping(value = "/api/rest/system", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER,
-    ManagerLevelEnum.SECURITY_MANAGER})
+@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER,
+    ManagerLevelEnum.TENANT_SECURITY_MANAGER})
 public class SystemController {
 
     private final Y9SystemService y9SystemService;

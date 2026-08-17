@@ -2,13 +2,17 @@ package net.risesoft.vo.resource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import net.risesoft.enums.TreeTypeEnum;
+import net.risesoft.enums.platform.TreeNodeType;
 import net.risesoft.model.platform.System;
+import net.risesoft.model.user.UserInfo;
 import net.risesoft.vo.TreeNodeVO;
+import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 系统树节点vo
@@ -37,9 +41,16 @@ public class SystemTreeNodeVO extends TreeNodeVO {
         systemTreeNodeVO.setParentId(null);
         systemTreeNodeVO.setTabIndex(system.getTabIndex());
         systemTreeNodeVO.setHasChild(true);
-        systemTreeNodeVO.setNodeType("SYSTEM");
+        systemTreeNodeVO.setNodeType(TreeNodeType.SYSTEM.toString());
         systemTreeNodeVO.setSystemId(system.getId());
         systemTreeNodeVO.setTenantId(system.getTenantId());
+
+        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
+        boolean manageable = userInfo.isOperationSystemManager()
+            || (userInfo.isTenantSystemManager() && Objects.equals(userInfo.getTenantId(), system.getTenantId()));
+        systemTreeNodeVO.setManageable(manageable);
+        systemTreeNodeVO.setDeletable(manageable);
+
         return systemTreeNodeVO;
     }
 

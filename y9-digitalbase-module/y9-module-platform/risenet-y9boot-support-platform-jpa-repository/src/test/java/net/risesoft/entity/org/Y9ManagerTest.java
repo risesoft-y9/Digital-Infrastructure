@@ -45,7 +45,7 @@ class Y9ManagerTest {
         manager.setEmail("test@example.com");
         manager.setMobile("13800138000");
         manager.setSex(SexEnum.MALE);
-        manager.setManagerLevel(ManagerLevelEnum.SYSTEM_MANAGER);
+        manager.setManagerLevel(ManagerLevelEnum.TENANT_SYSTEM_MANAGER);
         manager.setGlobalManager(false);
 
         // 调用有参构造函数创建Y9Manager实例

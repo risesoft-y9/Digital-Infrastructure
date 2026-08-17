@@ -170,13 +170,13 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     @Override
     public int getReviewLogCycle(ManagerLevelEnum managerLevel) {
         int checkCycle = 0;
-        if (ManagerLevelEnum.SYSTEM_MANAGER.equals(managerLevel)) {
+        if (ManagerLevelEnum.TENANT_SYSTEM_MANAGER.equals(managerLevel)) {
             checkCycle = y9PlatformProperties.getSystemManagerReviewLogCycle();
         }
-        if (ManagerLevelEnum.SECURITY_MANAGER.equals(managerLevel)) {
+        if (ManagerLevelEnum.TENANT_SECURITY_MANAGER.equals(managerLevel)) {
             checkCycle = y9PlatformProperties.getSecurityManagerReviewLogCycle();
         }
-        if (ManagerLevelEnum.AUDIT_MANAGER.equals(managerLevel)) {
+        if (ManagerLevelEnum.TENANT_AUDIT_MANAGER.equals(managerLevel)) {
             checkCycle = y9PlatformProperties.getAuditManagerReviewLogCycle();
         }
         return checkCycle;

@@ -173,7 +173,7 @@ public class Y9AppServiceImpl implements Y9AppService {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         // 审核应用
         this.verifyApp(savedApp.getId(), true, userInfo == null ? "系统" : userInfo.getName());
-        if (userInfo != null && userInfo.getManagerLevel().isTenantManager()) {
+        if (userInfo != null && userInfo.isTenantManager()) {
             // 租用系统
             y9TenantSystemManager.saveTenantSystem(savedApp.getSystemId(), Y9LoginUserHolder.getTenantId());
             // 租用应用

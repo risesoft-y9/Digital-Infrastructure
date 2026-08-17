@@ -33,7 +33,7 @@ import net.risesoft.vo.permission.ResourcePermissionVO;
 @RequestMapping(value = "/api/rest/personResources", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
+@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER})
 public class PersonResourcesController {
 
     private final Y9PersonToResourceService y9PersonToResourceService;

@@ -31,7 +31,7 @@ import net.risesoft.y9public.service.resource.Y9OperationService;
 @RestController
 @RequestMapping(value = "/api/rest/resource/operation", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
+@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
 public class OperationResourceController {
 
     private final Y9OperationService y9OperationService;
@@ -81,7 +81,7 @@ public class OperationResourceController {
      */
     @RiseLog(operationName = "根据id获取操作按钮资源详情")
     @GetMapping(value = "/{id}")
-    @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
+    @IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER,
         ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
     public Y9Result<Operation> getById(@PathVariable @NotBlank String id) {
         return Y9Result.success(y9OperationService.getById(id), "根据id获取操作按钮资源详情成功");

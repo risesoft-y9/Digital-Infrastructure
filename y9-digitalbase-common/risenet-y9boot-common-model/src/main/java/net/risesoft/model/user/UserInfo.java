@@ -102,4 +102,57 @@ public class UserInfo implements Serializable {
     /** 微信id */
     private String weixinId;
 
+    public boolean isGeneralUser() {
+        return managerLevel == ManagerLevelEnum.GENERAL_USER;
+    }
+
+    /**
+     * 是否为租户三员
+     *
+     * @return boolean
+     */
+    public boolean isTenantManager() {
+        return managerLevel == ManagerLevelEnum.TENANT_SYSTEM_MANAGER
+            || managerLevel == ManagerLevelEnum.TENANT_SECURITY_MANAGER
+            || managerLevel == ManagerLevelEnum.TENANT_AUDIT_MANAGER;
+    }
+
+    /**
+     * 是否为运维三员
+     *
+     * @return boolean
+     */
+    public boolean isOperationManager() {
+        return managerLevel == ManagerLevelEnum.OPERATION_SYSTEM_MANAGER
+            || managerLevel == ManagerLevelEnum.OPERATION_SECURITY_MANAGER
+            || managerLevel == ManagerLevelEnum.OPERATION_AUDIT_MANAGER;
+    }
+
+    /**
+     * 是否为租户或运维的系统管理员
+     *
+     * @return boolean
+     */
+    public boolean isSystemManager() {
+        return managerLevel == ManagerLevelEnum.OPERATION_SYSTEM_MANAGER
+            || managerLevel == ManagerLevelEnum.TENANT_SYSTEM_MANAGER;
+    }
+
+    /**
+     * 是否为租户系统管理员
+     *
+     * @return boolean
+     */
+    public boolean isTenantSystemManager() {
+        return managerLevel == ManagerLevelEnum.TENANT_SYSTEM_MANAGER;
+    }
+
+    /**
+     * 是否为运维系统管理员
+     *
+     * @return boolean
+     */
+    public boolean isOperationSystemManager() {
+        return managerLevel == ManagerLevelEnum.OPERATION_SYSTEM_MANAGER;
+    }
 }

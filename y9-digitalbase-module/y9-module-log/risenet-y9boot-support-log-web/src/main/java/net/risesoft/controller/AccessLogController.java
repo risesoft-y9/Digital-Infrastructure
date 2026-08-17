@@ -170,7 +170,7 @@ public class AccessLogController {
     @RequestMapping(value = "/pageBySecurityManagers")
     public Y9Page<Y9LogAccessLogDO> pageBySecurityManagers(String userId, Y9PageQuery pageQuery, String sort) {
         String tenantId = Y9LoginUserHolder.getTenantId();
-        Integer managerLevel = ManagerLevelEnum.SECURITY_MANAGER.getValue();
+        Integer managerLevel = ManagerLevelEnum.TENANT_SECURITY_MANAGER.getValue();
         if (InitDataConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_SECURITY_MANAGER.getValue();
         }
@@ -192,7 +192,7 @@ public class AccessLogController {
     @RequestMapping(value = "/pageBySystemManagers")
     public Y9Page<Y9LogAccessLogDO> pageBySystemManagers(String userId, Y9PageQuery pageQuery, String sort) {
         String tenantId = Y9LoginUserHolder.getTenantId();
-        Integer managerLevel = ManagerLevelEnum.SYSTEM_MANAGER.getValue();
+        Integer managerLevel = ManagerLevelEnum.TENANT_SYSTEM_MANAGER.getValue();
         if (InitDataConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.getValue();
         }
@@ -226,7 +226,7 @@ public class AccessLogController {
     @RequestMapping(value = "/searchAuditManagers")
     public Y9Page<Y9LogAccessLogDO> searchAuditManagers(AccessLogQuery accessLogQuery, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
-        Integer managerLevel = ManagerLevelEnum.AUDIT_MANAGER.getValue();
+        Integer managerLevel = ManagerLevelEnum.TENANT_AUDIT_MANAGER.getValue();
         if (InitDataConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_AUDIT_MANAGER.getValue();
         }
@@ -247,7 +247,7 @@ public class AccessLogController {
     @RequestMapping(value = "/searchSecurityManagers")
     public Y9Page<Y9LogAccessLogDO> searchSecurityManagers(AccessLogQuery accessLogQuery, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
-        Integer managerLevel = ManagerLevelEnum.SECURITY_MANAGER.getValue();
+        Integer managerLevel = ManagerLevelEnum.TENANT_SECURITY_MANAGER.getValue();
         if (InitDataConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_SECURITY_MANAGER.getValue();
         }
@@ -268,7 +268,7 @@ public class AccessLogController {
     @RequestMapping(value = "/searchSystemManagers")
     public Y9Page<Y9LogAccessLogDO> searchSystemManagers(AccessLogQuery accessLogQuery, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
-        Integer managerLevel = ManagerLevelEnum.SYSTEM_MANAGER.getValue();
+        Integer managerLevel = ManagerLevelEnum.TENANT_SYSTEM_MANAGER.getValue();
         if (InitDataConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.getValue();
         }

@@ -50,7 +50,7 @@ import net.risesoft.y9public.service.tenant.Y9TenantAppService;
 @RequestMapping(value = "/api/rest/appCategory", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-@IsAnyManager(value = {ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
+@IsAnyManager(value = {ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER})
 public class AppCategoryController {
 
     private final Y9AppService y9AppService;

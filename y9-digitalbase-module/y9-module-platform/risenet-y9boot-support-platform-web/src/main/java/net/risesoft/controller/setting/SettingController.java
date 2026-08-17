@@ -23,7 +23,7 @@ import net.risesoft.service.setting.impl.TenantSetting;
 @RestController
 @RequestMapping(value = "/api/rest/setting", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
+@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER,
     ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
 @Slf4j
 public class SettingController {

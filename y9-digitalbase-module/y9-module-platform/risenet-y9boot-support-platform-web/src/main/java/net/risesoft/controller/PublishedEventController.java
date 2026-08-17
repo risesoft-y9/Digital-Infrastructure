@@ -28,7 +28,7 @@ import net.risesoft.y9public.service.event.Y9PublishedEventService;
 @RequestMapping(value = "/api/rest/publishedEvent", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-@IsAnyManager({ManagerLevelEnum.OPERATION_SECURITY_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
+@IsAnyManager({ManagerLevelEnum.OPERATION_SECURITY_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER})
 public class PublishedEventController {
 
     private final Y9PublishedEventService y9PublishedEventService;

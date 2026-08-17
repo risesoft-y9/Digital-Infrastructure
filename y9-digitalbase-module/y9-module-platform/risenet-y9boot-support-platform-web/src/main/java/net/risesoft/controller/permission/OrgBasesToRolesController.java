@@ -41,7 +41,7 @@ import net.risesoft.vo.role.RoleMemberVO;
 @RequestMapping(value = "/api/rest/orgBasesToRoles", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-@IsAnyManager(ManagerLevelEnum.SECURITY_MANAGER)
+@IsAnyManager(ManagerLevelEnum.TENANT_SECURITY_MANAGER)
 public class OrgBasesToRolesController {
 
     private final CompositeOrgBaseService compositeOrgBaseService;

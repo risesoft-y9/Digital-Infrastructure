@@ -35,7 +35,7 @@ import net.risesoft.service.org.Y9JobService;
 @RestController
 @RequestMapping("/api/rest/job")
 @RequiredArgsConstructor
-@IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
+@IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
 public class JobController {
 
     private final Y9JobService y9JobService;

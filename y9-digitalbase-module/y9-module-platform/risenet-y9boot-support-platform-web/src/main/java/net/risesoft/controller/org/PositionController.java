@@ -36,7 +36,7 @@ import net.risesoft.service.relation.Y9PersonsToPositionsService;
 @RestController
 @RequestMapping(value = "/api/rest/position", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER})
+@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER})
 public class PositionController {
 
     private final Y9PersonsToPositionsService y9PersonsToPositionsService;

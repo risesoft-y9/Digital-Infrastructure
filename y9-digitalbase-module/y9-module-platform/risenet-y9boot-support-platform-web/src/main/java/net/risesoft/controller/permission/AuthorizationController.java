@@ -56,7 +56,7 @@ import net.risesoft.y9public.service.role.Y9RoleService;
 @RequestMapping(value = "/api/rest/authorization", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @RequiredArgsConstructor
-@IsAnyManager(ManagerLevelEnum.SECURITY_MANAGER)
+@IsAnyManager(ManagerLevelEnum.TENANT_SECURITY_MANAGER)
 public class AuthorizationController {
 
     private final Y9AuthorizationService y9AuthorizationService;

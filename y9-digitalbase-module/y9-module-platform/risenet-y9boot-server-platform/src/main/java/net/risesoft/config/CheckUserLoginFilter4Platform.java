@@ -44,7 +44,7 @@ public class CheckUserLoginFilter4Platform implements Filter {
         if (loginUser == null) {
             loginUser = Y9LoginUserHolder.getUserInfo();
         }
-        if (loginUser.getManagerLevel().isGeneralUser()) {
+        if (loginUser.isGeneralUser()) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             try {
                 response.getWriter().write("该用户不是管理员，没有权限!");

@@ -17,14 +17,15 @@ import net.risesoft.enums.ValuedEnum;
 @Getter
 @AllArgsConstructor
 public enum ManagerLevelEnum implements ValuedEnum<Integer> {
+
     /** 一般用户 */
     GENERAL_USER(0, "一般用户"),
     /** 系统管理员 */
-    SYSTEM_MANAGER(1, "系统管理员"),
+    TENANT_SYSTEM_MANAGER(1, "系统管理员"),
     /** 安全保密员 */
-    SECURITY_MANAGER(2, "安全保密员"),
+    TENANT_SECURITY_MANAGER(2, "安全保密员"),
     /** 安全审计员 */
-    AUDIT_MANAGER(3, "安全审计员"),
+    TENANT_AUDIT_MANAGER(3, "安全审计员"),
     /** 云系统管理员 */
     OPERATION_SYSTEM_MANAGER(4, "云系统管理员"),
     /** 云安全保密员 */
@@ -35,15 +36,4 @@ public enum ManagerLevelEnum implements ValuedEnum<Integer> {
     private final Integer value;
     private final String name;
 
-    public boolean isGeneralUser() {
-        return value == 0;
-    }
-
-    public boolean isTenantManager() {
-        return value >= 1 && value <= 3;
-    }
-
-    public boolean isOperationManager() {
-        return value >= 4 && value <= 6;
-    }
 }

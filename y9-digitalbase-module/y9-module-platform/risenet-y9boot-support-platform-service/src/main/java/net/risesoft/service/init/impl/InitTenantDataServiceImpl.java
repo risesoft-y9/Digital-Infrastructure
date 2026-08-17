@@ -108,10 +108,10 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
         if (!y9ManagerService.existsByLoginName(InitDataConsts.DEFAULT_AUDIT_MANAGER)) {
             Manager auditManager = new Manager();
             auditManager.setParentId(parentId);
-            auditManager.setName(ManagerLevelEnum.AUDIT_MANAGER.getName());
+            auditManager.setName(ManagerLevelEnum.TENANT_AUDIT_MANAGER.getName());
             auditManager.setLoginName(InitDataConsts.DEFAULT_AUDIT_MANAGER);
             auditManager.setGlobalManager(true);
-            auditManager.setManagerLevel(ManagerLevelEnum.AUDIT_MANAGER);
+            auditManager.setManagerLevel(ManagerLevelEnum.TENANT_AUDIT_MANAGER);
             auditManager.setUserHostIp("");
             auditManager.setLastReviewLogTime(new Date());
             auditManager.setLastModifyPasswordTime(new Date());
@@ -291,10 +291,10 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
         if (!y9ManagerService.existsByLoginName(InitDataConsts.DEFAULT_SECURITY_MANAGER)) {
             Manager securityManager = new Manager();
             securityManager.setParentId(parentId);
-            securityManager.setName(ManagerLevelEnum.SECURITY_MANAGER.getName());
+            securityManager.setName(ManagerLevelEnum.TENANT_SECURITY_MANAGER.getName());
             securityManager.setLoginName(InitDataConsts.DEFAULT_SECURITY_MANAGER);
             securityManager.setGlobalManager(true);
-            securityManager.setManagerLevel(ManagerLevelEnum.SECURITY_MANAGER);
+            securityManager.setManagerLevel(ManagerLevelEnum.TENANT_SECURITY_MANAGER);
             securityManager.setUserHostIp("");
             securityManager.setLastReviewLogTime(new Date());
             securityManager.setLastModifyPasswordTime(new Date());
@@ -306,10 +306,10 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
         if (!y9ManagerService.existsByLoginName(InitDataConsts.DEFAULT_SYSTEM_MANAGER)) {
             Manager systemManager = new Manager();
             systemManager.setParentId(parentId);
-            systemManager.setName(ManagerLevelEnum.SYSTEM_MANAGER.getName());
+            systemManager.setName(ManagerLevelEnum.TENANT_SYSTEM_MANAGER.getName());
             systemManager.setLoginName(InitDataConsts.DEFAULT_SYSTEM_MANAGER);
             systemManager.setGlobalManager(true);
-            systemManager.setManagerLevel(ManagerLevelEnum.SYSTEM_MANAGER);
+            systemManager.setManagerLevel(ManagerLevelEnum.TENANT_SYSTEM_MANAGER);
             systemManager.setUserHostIp("");
             systemManager.setLastReviewLogTime(new Date());
             systemManager.setLastModifyPasswordTime(new Date());

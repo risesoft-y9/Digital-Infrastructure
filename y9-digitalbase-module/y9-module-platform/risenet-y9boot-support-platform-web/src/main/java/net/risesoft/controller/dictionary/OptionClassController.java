@@ -33,7 +33,7 @@ import net.risesoft.service.dictionary.Y9OptionClassService;
 @RestController
 @RequestMapping(value = "/api/rest/optionClass", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
+@IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
 public class OptionClassController {
 
     private final Y9OptionClassService y9OptionClassService;

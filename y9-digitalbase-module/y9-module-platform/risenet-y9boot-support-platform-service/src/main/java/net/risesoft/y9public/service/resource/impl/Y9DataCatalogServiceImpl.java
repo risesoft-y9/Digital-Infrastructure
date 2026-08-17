@@ -308,8 +308,8 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
                 orgUnitDataCatalog.setParentId(parentDataCatalogId);
                 orgUnitDataCatalog.setType(DataCatalogTypeEnum.ORG_UNIT);
                 orgUnitDataCatalog.setTreeType(treeType);
-                this.saveOrUpdate(orgUnitDataCatalog);
-                recursivelySaveOrgUnitDataCatalog(orgUnitDataCatalog.getId(), treeType, y9OrgBase.getId());
+                DataCatalog savedDataCatalog = this.saveOrUpdate(orgUnitDataCatalog);
+                recursivelySaveOrgUnitDataCatalog(savedDataCatalog.getId(), treeType, y9OrgBase.getId());
             }
         }
     }

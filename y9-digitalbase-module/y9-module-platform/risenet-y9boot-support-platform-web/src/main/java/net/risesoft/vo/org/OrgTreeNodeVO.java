@@ -14,8 +14,10 @@ import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.enums.platform.org.SexEnum;
 import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.user.UserInfo;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.vo.TreeNodeVO;
+import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 组织树节点vo
@@ -47,8 +49,8 @@ public class OrgTreeNodeVO extends TreeNodeVO {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean original;
 
-    public static OrgTreeNodeVO convertOrgUnit(OrgUnit orgUnit, OrgTreeTypeEnum treeType, boolean countMember,
-        CompositeOrgBaseService compositeOrgBaseService) {
+    private static OrgTreeNodeVO convertOrgUnit(OrgUnit orgUnit, OrgTreeTypeEnum treeType, boolean countMember,
+        CompositeOrgBaseService compositeOrgBaseService, OrgUnit managerParent) {
         OrgTreeNodeVO orgTreeNodeVO = new OrgTreeNodeVO();
         orgTreeNodeVO.setId(orgUnit.getId());
         orgTreeNodeVO.setGuidPath(orgUnit.getGuidPath());
@@ -67,14 +69,24 @@ public class OrgTreeNodeVO extends TreeNodeVO {
             || OrgTypeEnum.ORGANIZATION.equals(orgUnit.getOrgType()))) {
             orgTreeNodeVO.setMemberCount(compositeOrgBaseService.countByGuidPath(orgUnit.getGuidPath(), treeType));
         }
+
+        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
+        if (userInfo.isGlobalManager() || managerParent.isDescendantOf(orgUnit)) {
+            orgTreeNodeVO.setManageable(true);
+            orgTreeNodeVO.setDeletable(true);
+        }
         return orgTreeNodeVO;
     }
 
     public static List<OrgTreeNodeVO> convertOrgUnitList(List<? extends OrgUnit> orgUnitList, OrgTreeTypeEnum treeType,
         boolean countMember, CompositeOrgBaseService compositeOrgBaseService) {
+        OrgUnit managerParent =
+            compositeOrgBaseService.getOrgUnitAsParent(Y9LoginUserHolder.getUserInfo().getParentId());
+
         List<OrgTreeNodeVO> roleTreeNodeVOList = new ArrayList<>();
         for (OrgUnit orgUnit : orgUnitList) {
-            roleTreeNodeVOList.add(convertOrgUnit(orgUnit, treeType, countMember, compositeOrgBaseService));
+            roleTreeNodeVOList
+                .add(convertOrgUnit(orgUnit, treeType, countMember, compositeOrgBaseService, managerParent));
         }
         return roleTreeNodeVOList;
     }

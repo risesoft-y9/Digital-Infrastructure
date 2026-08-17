@@ -1,6 +1,7 @@
 package net.risesoft.model.platform.org;
 
 import java.util.Comparator;
+import java.util.Objects;
 
 import javax.validation.constraints.NotBlank;
 
@@ -100,5 +101,15 @@ public abstract class OrgUnit extends BaseModel implements Comparable<OrgUnit> {
         return Comparator.comparing(OrgUnit::getParentId, Comparator.nullsFirst(String::compareTo))
             .thenComparing(OrgUnit::getTabIndex)
             .compare(this, o);
+    }
+
+    /**
+     * 当前组织节点是否为组织节点 orgUnit 的子孙节点
+     *
+     * @param orgUnit 组织节点 orgUnit
+     * @return boolean
+     */
+    public boolean isDescendantOf(OrgUnit orgUnit) {
+        return getGuidPath().contains(orgUnit.getGuidPath()) && !Objects.equals(getGuidPath(), orgUnit.getGuidPath());
     }
 }

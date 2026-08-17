@@ -35,7 +35,7 @@ import net.risesoft.service.dictionary.Y9OptionValueService;
 @RestController
 @RequestMapping(value = "/api/rest/optionValue", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
+@IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
 public class OptionValueController {
 
     private final Y9OptionValueService y9OptionValueService;

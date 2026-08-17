@@ -45,7 +45,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
 @RestController
 @RequestMapping(value = "/api/rest/org", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
+@IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
 public class OrgController {
 
     private final Y9DepartmentService y9DepartmentService;
@@ -100,7 +100,7 @@ public class OrgController {
      */
     @RiseLog(operationName = "获取机构树子节点")
     @GetMapping(value = "/getTree2")
-    @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
+    @IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER})
     public Y9Result<List<OrgTreeNodeVO>> getTree2(@RequestParam @NotBlank String id,
         @RequestParam OrgTreeTypeEnum treeType, @RequestParam(required = false) Boolean disabled) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
@@ -118,7 +118,7 @@ public class OrgController {
      */
     @RiseLog(operationName = "获取组织架构列表")
     @GetMapping(value = "/list2")
-    @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
+    @IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER})
     public Y9Result<List<OrgTreeNodeVO>> list2(@RequestParam OrgTreeTypeEnum treeType,
         @RequestParam(required = false) boolean virtual) {
         List<Organization> organizationList;
@@ -141,7 +141,7 @@ public class OrgController {
      * @param orgId 组织机构id
      * @return {@code Y9Result<String>}
      */
-    @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
+    @IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER})
     @RiseLog(operationName = "删除机构", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
     public Y9Result<String> remove(@RequestParam @NotBlank String orgId) {
@@ -216,7 +216,7 @@ public class OrgController {
      */
     @RiseLog(operationName = "查询机构主体")
     @GetMapping(value = "/treeSearch2")
-    @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
+    @IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER})
     public Y9Result<List<OrgTreeNodeVO>> treeSearch2(@RequestParam String name, @RequestParam OrgTreeTypeEnum treeType,
         @RequestParam(required = false) Boolean disabled) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
