@@ -3,17 +3,17 @@
  * @Author: shidaobang
  * @Date: 2025-06-16 10:16:08
  * @LastEditors: mengjuhua
- * @LastEditTime: 2025-12-24 09:28:09
- * @Descripttion: 组织关联授权继承
+ * @LastEditTime: 2025-12-24 09:31:03
+ * @Descripttion: 角色关联授权继承
 -->
 <template>
     <div>
         <!-- 表格 -->
-        <y9Table :config="tableOrgConfig">
+        <y9Table :config="tableRoleConfig">
             <template #expandRowSlot="props">
                 <div class="expand-rows">
-                    <p>组织节点名称路径: {{ props.row.orgUnitNamePath }}</p>
-                    <p>组织节点类型: {{ props.row.orgType }}</p>
+                    <p>角色名称: {{ props.row.roleNamePath }}</p>
+                    <p>角色级别: {{ props.row.roleLevelStr }}</p>
                     <p>权限来自的资源名称: {{ props.row.resourceName }}</p>
                     <p>权限类型: {{ props.row.authorityStr }}</p>
                     <p>授权者: {{ props.row.authorizer }}</p>
@@ -33,7 +33,7 @@
 
 <script lang="ts" setup>
     import { computed, onMounted, reactive, toRefs, watch } from 'vue';
-    import { getInheritOrgList } from '@/api/grantAuthorize/index';
+    import { getInheritRoleList } from '@/api/authorization';
     import { useI18n } from 'vue-i18n';
     import { useSettingStore } from '@/store/modules/settingStore';
 
@@ -50,13 +50,13 @@
     // 变量 对象
     const state = reactive({
         // 角色关联 表格的 配置信息
-        tableOrgConfig: {
+        tableRoleConfig: {
             columns: [
                 // { title: '', type: 'selection', fixed: 'left' },
                 { title: computed(() => t('序号')), type: 'index', width: 60, fixed: 'left' },
                 { type: 'expand', width: 40, slot: 'expandRowSlot' },
-                { title: computed(() => t('组织节点名称路径')), align: 'left', key: 'orgUnitNamePath' },
-                { title: computed(() => t('组织节点类型')), key: 'orgType', width: 150 },
+                { title: computed(() => t('角色名称路径')), align: 'left', key: 'roleNamePath' },
+                { title: computed(() => t('角色级别')), key: 'roleLevelStr', width: 100 },
                 { title: computed(() => t('权限来自的资源名称')), key: 'resourceName' },
                 { title: computed(() => t('权限类型')), key: 'authorityStr', width: 100, slot: 'authoritySlot' }
             ],
@@ -65,7 +65,7 @@
         }
     });
 
-    let { tableOrgConfig } = toRefs(state);
+    let { tableRoleConfig } = toRefs(state);
 
     onMounted(() => {
         initList();
@@ -82,8 +82,8 @@
 
     // 请求 列表接口
     async function initList() {
-        let result = await getInheritOrgList(props.id);
-        tableOrgConfig.value.tableData = result.data;
+        let result = await getInheritRoleList(props.id);
+        tableRoleConfig.value.tableData = result.data;
     }
 </script>
 <style lang="scss" scoped>

@@ -54,7 +54,7 @@
             <div v-if="currData.id">
                 <y9Card :title="`${$t('基本信息')} - ${currData.cnName ? currData.cnName : ''}`">
                     <template v-slot>
-                        <div v-show="currData.isManageable" class="basic-btns">
+                        <div v-show="currData.manageable" class="basic-btns">
                             <span class="btn-top">
                                 <el-button
                                     v-if="editBtnFlag"
@@ -128,14 +128,14 @@
                     </template>
                 </y9Card>
                 <y9Card
-                    v-show="currData.isManageable"
+                    v-show="currData.manageable"
                     :title="`${$t('应用管理')} - ${currData.cnName ? currData.cnName : ''}`"
                 >
                     <template v-slot>
                         <ApplicatManager :id="currData.id" />
                     </template>
                 </y9Card>
-                <audit-log v-show="currData.isManageable" :currTreeNodeInfo="currData"></audit-log>
+                <audit-log v-show="currData.manageable" :currTreeNodeInfo="currData"></audit-log>
             </div>
         </template>
     </fixedTreeModule>
@@ -160,7 +160,7 @@
     import y9_storage from '@/utils/storage';
     import settings from '@/settings';
     // 基本信息
-    import BasicInfo from './comps/BasicInfo.vue';
+    import BasicInfo from '@/views/authorization/comps/SystemBasicInfo.vue';
     // 应用管理
     import ApplicatManager from './comps/ApplicatMana.vue';
     import auditLog from '@/views/y9log/entityAuditLog/index.vue';

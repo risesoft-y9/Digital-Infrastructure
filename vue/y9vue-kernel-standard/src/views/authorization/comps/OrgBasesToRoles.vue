@@ -120,12 +120,12 @@
 
 <script lang="ts" setup>
     import { computed, inject, onMounted, ref, watch } from 'vue';
-    import { addOrgUnits, listOrgUnitIdByRoleId, removeOrgUnits, searchByUnitName } from '@/api/role/index';
-    import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
-    // 基本信息
-    import boolWarningCell from '@/components/BoolWarningCell/index.vue';
+    import { addOrgUnits, listOrgUnitIdByRoleId, removeOrgUnits, searchByUnitName } from '@/api/role';
+    import { getTreeItemById, searchByName, treeInterface } from '@/api/org';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useI18n } from 'vue-i18n';
+
+    import boolWarningCell from '@/components/BoolWarningCell/index.vue';
 
     const { t } = useI18n();
     const settingStore = useSettingStore();

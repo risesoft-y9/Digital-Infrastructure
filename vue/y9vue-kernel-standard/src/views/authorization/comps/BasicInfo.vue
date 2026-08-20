@@ -13,9 +13,11 @@
 <script lang="ts" setup>
     import { computed, h, onMounted, ref, watch } from 'vue';
     import { useI18n } from 'vue-i18n';
-    import { getMenuInfo, getOperationInfo } from '@/api/resource/index';
-    import { applicationInfoGet, systemInfoGet } from '@/api/system/index';
+    import { getMenuInfo, getOperationInfo } from '@/api/resource';
+    import { applicationInfoGet, systemInfoGet } from '@/api/system';
     import { useSettingStore } from '@/store/modules/settingStore';
+
+    import { getDataCatalog } from '@/api/dataCatalog';
 
     const settingStore = useSettingStore();
     const { t } = useI18n();
@@ -85,11 +87,12 @@
                 type: 'text',
                 type1: 'text', //自定义字段-编辑时显示的类型
                 type2: 'text', //自定义字段-非编辑状态显示文本类型
-                label: computed(() => t('系统标识')),
+                prop: 'enabled',
+                label: computed(() => t('是否启用')),
                 props: {
                     render: () => {
                         //text类型渲染的内容
-                        return h('span', basicInfo.value?.systemId);
+                        return h('span', basicInfo.value?.enabled ? '是' : '否');
                     }
                 }
             },
@@ -120,22 +123,10 @@
                                 ? t('应用')
                                 : basicInfo.value.resourceType === 1
                                 ? t('菜单')
-                                : t('按钮')
+                                : basicInfo.value.resourceType === 2
+                                ? t('按钮')
+                                : t('数据目录')
                         );
-                    }
-                }
-            },
-            {
-                type: 'text',
-                type1: 'textarea', //自定义字段-编辑时显示的类型
-                type2: 'text', //自定义字段-非编辑状态显示文本类型
-                prop: 'url',
-                label: computed(() => t('链接地址')),
-                span: 2,
-                props: {
-                    render: () => {
-                        //text类型渲染的内容
-                        return h('span', basicInfo.value?.url);
                     }
                 }
             },
@@ -282,9 +273,11 @@
         } else if (props.type === 'MENU') {
             // 菜单
             responseInfo = await getMenuInfo(props.id);
-        } else {
+        } else if (props.type === 'OPERATION') {
             // 按钮
             responseInfo = await getOperationInfo(props.id);
+        } else {
+            responseInfo = await getDataCatalog(props.id);
         }
         basicInfo.value = responseInfo.data;
     }

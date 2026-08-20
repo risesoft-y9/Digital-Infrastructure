@@ -10,13 +10,17 @@
 import { routerBeforeEach } from '@/router/checkRouter';
 import NProgress from 'nprogress';
 import { createRouter, createWebHistory } from 'vue-router';
+
+import authRouter from './modules/authRouter';
 import appResourceRouter from './modules/appResourceRouter';
 import appRoleRouter from './modules/appRoleRouter';
 import publicRoleRouter from './modules/publicRoleRouter';
 import appSystemRouter from './modules/appSystemRouter';
-import authRouter from './modules/authRouter';
 import dictionaryRouter from './modules/dictionaryRouter';
-import grantAuthorizeRouter from './modules/grantAuthorizeRouter';
+import authorizationDataCatalogRouter from './modules/authorizationDataCatalogRouter';
+import authorizationPublicRoleRouter from './modules/authorizationPublicRoleRouter';
+import authorizationResourceRouter from './modules/authorizationResourceRouter';
+import authorizationRoleRouter from './modules/authorizationRoleRouter';
 import homeRouter from './modules/homeRouter';
 import appCategoryRouter from './modules/appCategoryRouter';
 import iconManagerRouter from './modules/iconManagerRouter';
@@ -30,10 +34,10 @@ import subDomainRouter from './modules/subDomainRouter';
 import sysManagerLogRouter from './modules/sysManagerLogRouter';
 import userLogRouter from './modules/userLogRouter';
 import jobRouter from './modules/jobRouter';
-import permission from './modules/permission';
+import permissionRouter from './modules/permissionRouter';
 import settingRouter from './modules/settingRouter';
 import dataCatalogRouter from './modules/dataCatalogRouter';
-import passwordRouter from './modules/password';
+import passwordRouter from './modules/passwordRouter';
 
 //constantRoutes为不需要动态判断权限的路由，如登录、404、500等
 export const constantRoutes: Array<any> = [
@@ -80,10 +84,13 @@ export const asyncRoutes = [
     appRoleRouter,
     publicRoleRouter,
     appResourceRouter,
-    grantAuthorizeRouter,
+    authorizationRoleRouter,
+    authorizationPublicRoleRouter,
+    authorizationResourceRouter,
+    authorizationDataCatalogRouter,
     dataCatalogRouter,
     subDomainRouter,
-    permission,
+    permissionRouter,
     dictionaryRouter,
     appCategoryRouter,
     iconManagerRouter,

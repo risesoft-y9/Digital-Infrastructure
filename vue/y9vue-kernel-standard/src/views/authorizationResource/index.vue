@@ -11,16 +11,12 @@
             ref="fixedTreeRef"
             :showNodeDelete="false"
             :treeApiObj="treeApiObj"
-            @onDeleteTree="roleRemove"
             @onTreeClick="handlerTreeClick"
         >
             <template v-if="currData.id" v-slot:rightContainer>
                 <!-- 右边卡片 -->
                 <div v-if="currData.nodeType === 'SYSTEM'">
-                    <y9Card
-                        v-if="currData.nodeType === 'SYSTEM'"
-                        :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`"
-                    >
+                    <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
                         <template v-slot>
                             <BasicInfo :id="currData.id" :type="currData.nodeType" />
                         </template>
@@ -69,16 +65,15 @@
 <script lang="ts" setup>
     import { reactive, ref, toRefs } from 'vue';
     import { useI18n } from 'vue-i18n';
-    import { menuDelete, operationDel, resourceTree, treeSearch } from '@/api/resource/index';
-    import { applicationDel } from '@/api/system/index';
+    import { resourceTree, treeSearch } from '@/api/resource/index';
     // 基本信息
-    import BasicInfo from './comps/BasicInfo.vue';
+    import BasicInfo from '@/views/authorization/comps/BasicInfo.vue';
     // 角色 关联
-    import RelationRole from './comps/RelationRole.vue';
+    import RelationRole from '@/views/authorization/comps/RelationRole.vue';
     // 组织 关联
-    import RelationOrg from './comps/RelationOrg.vue';
-    import InheritRole from '@/views/grantAuthorize/comps/InheritRole.vue';
-    import InheritOrg from '@/views/grantAuthorize/comps/InheritOrg.vue';
+    import RelationOrg from '@/views/authorization/comps/RelationOrg.vue';
+    import InheritRole from '@/views/authorization/comps/InheritRole.vue';
+    import InheritOrg from '@/views/authorization/comps/InheritOrg.vue';
 
     const { t } = useI18n();
 
@@ -121,61 +116,6 @@
         // 将拿到的节点信息 储存起来
         currData.value = data;
     }
-
-    // 删除资源
-    function roleRemove(data) {
-        ElMessageBox.confirm(`${t('是否删除')}【${data.name}】?`, t('提示'), {
-            confirmButtonText: t('确定'),
-            cancelButtonText: t('取消'),
-            type: 'info'
-        })
-            .then(async () => {
-                // 进行 删除 操作 --
-                loading.value = true;
-                let result;
-                if (data.nodeType === 'APP') {
-                    result = await applicationDel([data.id]);
-                } else if (data.nodeType === 'MENU') {
-                    result = await menuDelete(data.id);
-                } else {
-                    result = await operationDel(data.id);
-                }
-
-                /**
-                 * 对树进行操作
-                 */
-                //1.删除前，需要手动点击的节点信息，如果有父节点则默认点击父节点，没有则点击tree数据的第一个节点
-                const treeData = fixedTreeRef.value.getTreeData(); //获取tree数据
-                let clickNode = null;
-                if (data.parentId) {
-                    clickNode = fixedTreeRef.value.findNode(treeData, data.parentId); //找到父节点的信息
-                    fixedTreeRef.value?.y9TreeRef?.remove(data); //删除此节点
-                } else if (treeData.length > 0) {
-                    fixedTreeRef.value?.y9TreeRef?.remove(data); //删除此节点
-                    clickNode = treeData[0];
-                }
-                if (clickNode) {
-                    fixedTreeRef.value?.handClickNode(clickNode); //手动设置点击当前节点
-                }
-
-                loading.value = false;
-                ElNotification({
-                    message: result.success ? t('删除成功') : t('删除失败'),
-                    type: result.success ? 'success' : 'error',
-                    duration: 2000,
-                    offset: 80
-                });
-            })
-            .catch(() => {
-                ElMessage({
-                    type: 'info',
-                    message: t('已取消删除'),
-                    offset: 65
-                });
-            });
-    }
-
-    function handlerEditSave(data) {}
 </script>
 <style lang="scss" scoped>
     // .btn-class {

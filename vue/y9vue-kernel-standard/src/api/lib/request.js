@@ -74,24 +74,11 @@ function y9Request(baseUrl = '') {
                 requestList.delete(error.config.url);
                 let data = error.response.data;
                 console.warn('error.response   ' + data);
-                if (error.response.status === 401 && (data.code === 101 || data.code === 102 || data.code === 100)) {
-                    // 令牌已失效（过期或其他标签页单点登出）
-                    ElMessageBox({
-                        title: t('提示'),
-                        showClose: false,
-                        closeOnClickModal: false,
-                        closeOnPressEscape: false,
-                        message: t('当前用户登入信息已失效，请重新登入再操作'),
-                        beforeClose: (action, instance, done) => {
-                            if (isExternal(settings.serverLoginUrl)) {
-                                window.location.href = settings.serverLoginUrl;
-                            } else {
-                                $y9_SSO.clearCurrentSessionStorage();
-                                window.location.reload();
-                            }
-                        }
-                    });
-                } else if (error.response.status === 400) {
+                if (error.response.status === 401) {
+                    $y9_SSO.clearCurrentSessionStorage();
+                    $y9_SSO.checkLogin();
+                }
+ else if (error.response.status === 400) {
                     // 参数、业务上的错误统一返回 http 状态 400，返回原始 body 到请求处自行处理
                     return data;
                 } else if (error.response.status === 500) {

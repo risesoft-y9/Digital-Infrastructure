@@ -164,25 +164,24 @@
 
 <script lang="ts" setup>
     import { computed, inject, onMounted, ref, watch } from 'vue';
-    import y9_storage from '@/utils/storage';
     import {
         getRelateResourceList,
         listResourceIdByRoleId,
         removeAuthPermissionRecord,
         saveOrUpdateRelateResource
-    } from '@/api/role/index';
-    import { appTreeRoot, resourceTree, resourceTreeRoot, systemTreeRoot, treeSearch } from '@/api/resource/index';
-    import boolWarningCell from '@/components/BoolWarningCell/index.vue';
+    } from '@/api/role';
+    import { dataCatalogTree, dataCatalogTreeSearch, getTreeTypeList } from '@/api/dataCatalog';
+    import { appTreeRoot, resourceTree, resourceTreeRoot, systemTreeRoot, treeSearch } from '@/api/resource';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useI18n } from 'vue-i18n';
-    import { dataCatalogTree, dataCatalogTreeSearch, getTreeTypeList } from '@/api/dataCatalog';
-    import HiddenAuthorityAlert from '@/views/grantAuthorize/comps/HiddenAuthorityAlert.vue';
+
+    import boolWarningCell from '@/components/BoolWarningCell/index.vue';
+    import HiddenAuthorityAlert from '@/views/authorization/comps/HiddenAuthorityAlert.vue';
 
     const { t } = useI18n();
     const settingStore = useSettingStore();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
-    const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
 
     const props = defineProps({
         id: String, // 系统id
@@ -226,9 +225,7 @@
     watch(
         () => props.id,
         (newVal) => {
-            if (managerLevel === 2) {
-                getRelateResourceListFn();
-            }
+            getRelateResourceListFn();
         }
     );
 

@@ -6,7 +6,7 @@
  * @Description:
  */
 
-const grantAuthorizeRouter = {
+const permissionRouter = {
     path: '/permission',
     component: () => import('@/layouts/index.vue'),
     redirect: '/permission',
@@ -40,4 +40,4 @@ const grantAuthorizeRouter = {
     ]
 };
 
-export default grantAuthorizeRouter;
+export default permissionRouter;

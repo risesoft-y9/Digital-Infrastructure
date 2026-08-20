@@ -82,11 +82,12 @@
 
 <script lang="ts" setup>
     import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
-    import { getRelationRoleList, removeRole, saveOrUpdateRole } from '@/api/grantAuthorize/index';
-    import { appRoleTree, getPublicRoleTree, listPrincipalIdByResourceId, roleTreeList } from '@/api/role/index';
+    import { getRelationRoleList, removeRole, saveOrUpdateRole } from '@/api/authorization';
+    import { appRoleTree, getPublicRoleTree, listPrincipalIdByResourceId, roleTreeList } from '@/api/role';
     import { useI18n } from 'vue-i18n';
     import { useSettingStore } from '@/store/modules/settingStore';
-    import HiddenAuthorityAlert from '@/views/grantAuthorize/comps/HiddenAuthorityAlert.vue';
+
+    import HiddenAuthorityAlert from '@/views/authorization/comps/HiddenAuthorityAlert.vue';
 
     const settingStore = useSettingStore();
     // 注入 字体对象

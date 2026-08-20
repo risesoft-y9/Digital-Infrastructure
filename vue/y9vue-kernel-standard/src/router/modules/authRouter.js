@@ -12,7 +12,7 @@ const authRouter = [
     },
     {
         path: '/auth',
-        redirect: '/grantAuthorize',
+        redirect: '/authorizationRole',
         name: 'authOrg',
         hidden: true,
         meta: {

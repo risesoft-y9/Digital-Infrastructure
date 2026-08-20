@@ -5,17 +5,15 @@
  * @LastEditTime: 2022-07-05 16:05:03
  * @Description:
  */
-import y9_storage from '@/utils/storage';
 
-const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
 const publicRoleRouter = {
     path: '/publicRole',
     component: () => import('@/layouts/index.vue'),
     redirect: '/publicRole',
     name: 'publicRole',
     meta: {
-        title: managerLevel === 2 ? '公共角色关联' : '公共角色管理',
-        roles: ['systemAdmin', 'securityAdmin']
+        title: '公共角色管理',
+        roles: ['systemAdmin']
     },
     children: [
         {
@@ -23,9 +21,9 @@ const publicRoleRouter = {
             component: () => import('@/views/role/publicIndex.vue'),
             name: 'publicRoleIndex',
             meta: {
-                title: managerLevel === 2 ? '公共角色关联' : '公共角色管理',
+                title: '公共角色管理',
                 icon: 'ri-contacts-line',
-                roles: ['systemAdmin', 'securityAdmin']
+                roles: ['systemAdmin']
             }
         }
     ]

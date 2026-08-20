@@ -28,9 +28,33 @@
                         <i class="ri-user-line"></i>{{ $t('个人中心') }}
                     </div>
                 </el-dropdown-item>
-                <!--  
-                    <el-divider style="padding-bottom: 5px;margin: 0px;"></el-divider> 
-                -->
+                <!-- <el-dropdown-item command="signIn">
+                    <div class="el-dropdown-item" :style="{'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight}">
+                        <i class="ri-calendar-check-line"></i>{{ $t("已签到") }}
+                    </div>
+                </el-dropdown-item>
+                <el-dropdown-item command="signOut">
+                    <div class="el-dropdown-item" :style="{'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight}">
+                        <i class="ri-bookmark-line"></i>{{ $t("已签退") }}
+                    </div>
+                </el-dropdown-item>
+                <el-divider style="padding-bottom: 12px;margin: 0px;margin-top: 6px;"></el-divider>
+                <el-dropdown-item command="changeDept">
+                    <div class="el-dropdown-item" :style="{'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight}">
+                        <i class="ri-route-line"></i>{{ $t("选择切换部门") }}
+                    </div>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                    <div
+                        class="el-dropdown-item"
+                        :style="{'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight}"
+                        v-for="item in departmentMapList"
+                        :key="item.departmentId"
+                        style="text-align: center"
+                        @click="changeDept(item.departmentId)"
+                    >{{ item.departmentName }}</div>
+                </el-dropdown-item>
+                <el-divider style="padding-bottom: 5px;margin: 0px;"></el-divider> -->
                 <el-dropdown-item command="logout">
                     <div
                         :style="{ 'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight }"

@@ -164,16 +164,7 @@
                     if (item.disabled) {
                         item.newName = item.name + '[禁用]'; //显示名称
                     }
-                    // 子域管理员不能删除组织
-                    if (isGlobalManager) {
-                        item.delete_icon = props.showNodeDelete;
-                    } else {
-                        item.delete_icon = false;
-                    }
-
-                    if (item.treeType === 'DATA_CATALOG') {
-                        item.delete_icon = false;
-                    }
+                    item.delete_icon = props.showNodeDelete && item.deletable;
 
                     break;
 
@@ -187,21 +178,7 @@
                     if (item.disabled) {
                         item.newName = item.name + '[禁用]'; //显示名称
                     }
-
-                    //判断是否有权限删除
-                    const guidPathArr = item.guidPath ? item.guidPath.split(',') : [];
-                    if (isGlobalManager) {
-                        item.delete_icon = props.showNodeDelete;
-                    } else if (!guidPathArr.includes(parentId) || item.id === parentId) {
-                        item.delete_icon = false;
-                    } else {
-                        item.delete_icon = props.showNodeDelete;
-                    }
-
-                    if (item.treeType === 'DATA_CATALOG') {
-                        item.delete_icon = false;
-                    }
-
+                    item.delete_icon = props.showNodeDelete && item.deletable;
                     break;
 
                 case 'Group': //组
@@ -221,6 +198,7 @@
                         item.newName = item.name + '[禁用]'; //显示名称
                     }
                     break;
+
                 case 'Manager': //子域三元
                     item.title_icon = 'ri-women-line'; //设置图标
                     item.newName = item.name; //显示名称
@@ -228,6 +206,7 @@
                         item.title_icon = 'ri-men-line'; //设置图标
                     }
                     break;
+
                 case 'Person': //人员
                     item.isLeaf = true; //叶子节点（即没有展开按钮）
                     item.title_icon = 'ri-women-line'; //设置图标
@@ -246,44 +225,17 @@
                         }
                     }
                     break;
+
                 case 'SYSTEM':
                     item.title_icon = 'ri-settings-line';
                     item.newName = item.name; //显示名称
-                    let manageable = false;
-                    if (item.treeType === 'ROLE') {
-                        item.delete_icon = false;
-                        manageable = managerLevel === 1 || managerLevel === 4;
-                    }
-                    if (item.treeType === 'RESOURCE') {
-                        item.delete_icon = false;
-                    }
-                    if (item.treeType === 'SYSTEM') {
-                        manageable = isSystemManageableByCurrentTenant(item.tenantId);
-                        if (!manageable) {
-                            item.delete_icon = false;
-                        }
-                    }
-                    item.isManageable = manageable;
+                    item.delete_icon = item.deletable;
                     break;
+
                 case 'APP': //应用
                     item.title_icon = 'ri-apps-line';
-                    if (isTopLevel) {
-                        item.delete_icon = false;
-                    }
+                    item.delete_icon = item.deletable;
 
-                    if (props.showNodeDelete === true) {
-                        if (item.treeType === 'ROLE') {
-                            item.delete_icon = false;
-                            item.isManageable = managerLevel !== 2;
-                        }
-                        if (item.treeType === 'RESOURCE') {
-                            let resourceManageableByCurrentTenant = isResourceManageableByCurrentTenant(item.systemId);
-                            item.delete_icon = resourceManageableByCurrentTenant;
-                            item.isManageable = resourceManageableByCurrentTenant;
-                        }
-                    } else {
-                        item.delete_icon = false;
-                    }
                     item.newName = item.name;
                     if (!item.enabled) {
                         item.newName = item.name + '[禁用]'; //显示名称
@@ -292,11 +244,7 @@
 
                 case 'MENU': //菜单
                     item.title_icon = 'ri-menu-4-line';
-                    if (isResourceManageableByCurrentTenant(item.systemId)) {
-                        item.isManageable = true;
-                    } else {
-                        item.delete_icon = false;
-                    }
+                    item.delete_icon = item.deletable;
                     item.newName = item.name;
                     if (!item.enabled) {
                         item.newName = item.name + '[禁用]'; //显示名称
@@ -305,11 +253,7 @@
 
                 case 'OPERATION': //按钮
                     item.title_icon = 'ri-checkbox-multiple-blank-line';
-                    if (isResourceManageableByCurrentTenant(item.systemId)) {
-                        item.isManageable = true;
-                    } else {
-                        item.delete_icon = false;
-                    }
+                    item.delete_icon = item.deletable;
                     item.newName = item.name;
                     if (!item.enabled) {
                         item.newName = item.name + '[禁用]'; //显示名称
@@ -327,36 +271,18 @@
                     if (!item.enabled) {
                         item.newName = item.name + '[禁用]'; //显示名称
                     }
-                    if (props.showNodeDelete === true) {
-                        let isManageable = isDataCatalogManageable();
-                        item.isManageable = isManageable;
-                        item.delete_icon = isManageable;
-                    } else {
-                        item.delete_icon = false;
-                    }
+                    item.delete_icon = props.showNodeDelete && item.deletable;
                     break;
 
                 case 'role': //角色
                     item.title_icon = 'ri-contacts-line';
-                    if (props.showNodeDelete === true) {
-                        let isManageable = isRoleManageableByCurrentTenant(item.tenantId, item.parentId, true);
-                        item.delete_icon = isManageable;
-                        item.isManageable = isManageable;
-                    } else {
-                        item.delete_icon = false;
-                    }
+                    item.delete_icon = props.showNodeDelete && item.deletable;
                     item.isLeaf = true;
                     break;
 
                 case 'folder': //角色文件夹
                     item.title_icon = 'ri-folder-2-line';
-                    if (props.showNodeDelete === true) {
-                        let isManageable = isRoleManageableByCurrentTenant(item.tenantId, item.parentId, true);
-                        item.delete_icon = isManageable;
-                        item.isManageable = isManageable;
-                    } else {
-                        item.delete_icon = false;
-                    }
+                    item.delete_icon = props.showNodeDelete && item.deletable;
                     break;
             }
 
@@ -440,14 +366,19 @@
         if (node.$level === 0) {
             //1.获取数据
             let data = [];
+            if (props.virtualScroll) {
+                paginationConfig.value.pagination = true;
+            } else {
+                paginationConfig.value.pagination = false;
+            }
             const topLevelParams = props.treeApiObj?.topLevel?.params;
             if (topLevelParams) {
                 // 组织架构使用分页配置，测试分页效果
-                if (props.virtualScroll) {
-                    paginationConfig.value.pagination = true;
-                } else {
-                    paginationConfig.value.pagination = false;
-                }
+                // if (topLevelParams.treeType === 'tree_type_org_person') {
+                //     paginationConfig.value.pagination = true;
+                // } else {
+                //     paginationConfig.value.pagination = false;
+                // }
                 let params = {};
                 Object.assign(params, topLevelParams);
                 const res = await props.treeApiObj?.topLevel?.api(params);
@@ -556,9 +487,10 @@
                 //格式化tree数据
                 await formatLazyTreeData(data, true);
 
-                // nodeType 为App 的parentId 为空
                 await data?.map((item) => {
-                    if (item.nodeType == 'App') {
+                    let child = data.filter((resultItem) => item.parentId === resultItem.id);
+                    if (child.length == 0) {
+                        // 处理查询的数据不存在根节点时，找到这部分数据的顶节点作为树的根节点
                         item.parentId = '';
                     }
                 });
@@ -634,73 +566,6 @@
                 y9TreeRef.value?.setExpandKeys([node.id]); //设置展开
             }
         });
-    }
-
-    /**
-     * 系统是否可管理，仅当前租户创建的系统或运维管理员可管理
-     */
-    function isSystemManageableByCurrentTenant(owningTenantId) {
-        const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
-        if (managerLevel === 4) {
-            return true;
-        }
-
-        const currentTenantId = y9_storage.getObjectItem('ssoUserInfo', 'tenantId');
-        return currentTenantId === owningTenantId;
-    }
-
-    /**
-     * 角色是否可管理，仅当前租户创建的角色或运维管理员可管理
-     * owningTenantId 所属租户id
-     * parentId 父节点id
-     * systemManagerDelAble 系统管理员是否可删除
-     */
-    function isRoleManageableByCurrentTenant(owningTenantId, parentId, systemManagerDelAble) {
-        const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
-        if (managerLevel === 4) {
-            return true;
-        }
-        if (managerLevel === 2) {
-            return false;
-        }
-
-        //kernel-standard 系统管理员可以删除公共角色
-        if (systemManagerDelAble) {
-            if (parentId == '11111111-1111-1111-1111-111111111121' && managerLevel === 1) {
-                return true;
-            }
-        }
-
-        const currentTenantId = y9_storage.getObjectItem('ssoUserInfo', 'tenantId');
-        return currentTenantId === owningTenantId;
-    }
-
-    /**
-     * 资源是否可管理，仅当前租户创建的系统下的资源或运维管理员可管理
-     */
-    function isResourceManageableByCurrentTenant(resourceSystemId) {
-        const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
-        if (managerLevel === 4) {
-            return true;
-        }
-
-        const currentTenantId = y9_storage.getObjectItem('ssoUserInfo', 'tenantId');
-        const systemNode = findNode(getTreeData(), resourceSystemId);
-        return currentTenantId === systemNode.tenantId;
-    }
-
-    function isDataCatalogManageable() {
-        const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
-
-        if (managerLevel === 1) {
-            return true;
-        }
-
-        if (managerLevel === 2) {
-            return false;
-        }
-
-        return false;
     }
 
     //刷新tree

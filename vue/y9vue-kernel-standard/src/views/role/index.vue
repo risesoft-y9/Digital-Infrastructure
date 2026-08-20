@@ -18,7 +18,7 @@
             <div v-if="currData.id">
                 <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
                     <template v-slot>
-                        <div v-show="currData.isManageable" class="basic-btns">
+                        <div v-show="currData.manageable" class="basic-btns">
                             <div class="btn-top">
                                 <span
                                     v-if="currData.nodeType == 'role' || currData.nodeType == 'folder'"
@@ -138,27 +138,7 @@
                         <SystemBasicInfo v-if="currData.nodeType === 'SYSTEM'" :id="currData.id" :editFlag="true" />
                     </template>
                 </y9Card>
-                <audit-log v-show="currData.isManageable" :currTreeNodeInfo="currData"></audit-log>
-                <!-- 角色成员 -->
-                <y9Card
-                    v-if="managerLevel === 2 && currData.nodeType === 'role'"
-                    :title="`${$t('角色成员')} - ${currData.name ? currData.name : ''}`"
-                >
-                    <OrgBasesToRoles :id="currData.id"></OrgBasesToRoles>
-                </y9Card>
-
-                <y9Card
-                    v-if="managerLevel === 2 && currData.nodeType === 'role'"
-                    :title="`${$t('授权列表')} - ${currData.name ? currData.name : ''}`"
-                >
-                    <Authorization
-                        :id="currData.id"
-                        :appId="currData.appId"
-                        :parentId="currData.parentId"
-                        type="private"
-                    >
-                    </Authorization>
-                </y9Card>
+                <audit-log :currTreeNodeInfo="currData"></audit-log>
             </div>
         </template>
     </fixedTreeModule>
@@ -205,10 +185,8 @@
     } from '@/api/role/index';
     // 基本信息
     import BasicInfo from './comps/BasicInfo.vue';
-    import SystemBasicInfo from '@/views/system/comps/BasicInfo.vue';
+    import SystemBasicInfo from '@/views/authorization/comps/SystemBasicInfo.vue';
     import auditLog from '@/views/y9log/entityAuditLog/index.vue';
-    import OrgBasesToRoles from './comps/OrgBasesToRoles.vue';
-    import Authorization from './comps/Authorization.vue';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useI18n } from 'vue-i18n';
 

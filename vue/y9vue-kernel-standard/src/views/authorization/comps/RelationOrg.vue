@@ -89,14 +89,14 @@
 </template>
 
 <script lang="ts" setup>
-    import { getRelationOrgList, removeRole, saveOrUpdateOrg } from '@/api/grantAuthorize/index';
-    import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
+    import { getRelationOrgList, removeRole, saveOrUpdateOrg } from '@/api/authorization';
+    import { getTreeItemById, searchByName, treeInterface } from '@/api/org';
+    import { listPrincipalIdByResourceId } from '@/api/role';
     import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
     import { useSettingStore } from '@/store/modules/settingStore';
-
     import { useI18n } from 'vue-i18n';
-    import { listPrincipalIdByResourceId } from '@/api/role';
-    import HiddenAuthorityAlert from '@/views/grantAuthorize/comps/HiddenAuthorityAlert.vue';
+
+    import HiddenAuthorityAlert from '@/views/authorization/comps/HiddenAuthorityAlert.vue';
 
     const { t } = useI18n();
     const settingStore = useSettingStore();

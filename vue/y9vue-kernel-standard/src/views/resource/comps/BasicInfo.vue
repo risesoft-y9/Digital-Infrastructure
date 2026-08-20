@@ -8,7 +8,7 @@
 <template>
     <y9Card :title="`${$t('基本信息')} - ${currTreeNodeInfo.name ? currTreeNodeInfo.name : ''}`">
         <template v-slot>
-            <div v-show="currTreeNodeInfo.isManageable" class="basic-btns">
+            <div v-show="currTreeNodeInfo.manageable" class="basic-btns">
                 <span v-if="editBtnFlag">
                     <el-button
                         :size="fontSizeObj.buttonSize"
