@@ -30,8 +30,8 @@ public class MysqlDatabaseManager extends AbstractDatabaseManager {
 
     @Override
     protected void createInternal(JdbcTemplate jdbcTemplate, CreatedDataSource createdDataSource, String dbName) {
-        String sql =
-            Y9StringUtil.format("CREATE DATABASE IF NOT EXISTS {} DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin", dbName);
+        String sql = Y9StringUtil
+            .format("CREATE DATABASE IF NOT EXISTS {} DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin", dbName);
         jdbcTemplate.update(sql);
     }
 

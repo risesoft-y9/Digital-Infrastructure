@@ -57,7 +57,8 @@ import net.risesoft.y9public.service.resource.Y9SystemService;
 @Slf4j
 @RequiredArgsConstructor
 @Validated
-@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
+@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER,
+    ManagerLevelEnum.SYSTEM_VENDOR})
 public class ImportExportController {
 
     private final Y9PersonDataHandler y9PersonDataHandler;

@@ -21,10 +21,12 @@ import net.risesoft.enums.AuditLogEnum;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.exception.SystemErrorCodeEnum;
 import net.risesoft.model.platform.System;
+import net.risesoft.model.platform.org.Manager;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -62,6 +64,8 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     private final Y9SystemManager y9SystemManager;
     private final Y9TenantManager y9TenantManager;
 
+    private final Y9ManagerService y9ManagerService;
+
     private static System entityToModel(Y9System savedSystem) {
         return PlatformModelConvertUtil.convert(savedSystem, System.class);
     }
@@ -73,6 +77,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
         y9AppManager.deleteBySystemId(id);
         y9TenantSystemManager.deleteBySystemId(id);
         y9SystemManager.delete(id);
+        y9ManagerService.deleteBySystemId(id);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.SYSTEM_DELETE.getAction())
@@ -189,6 +194,12 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     public List<System> listByManager() {
         if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
             return this.listAll();
+        }
+
+        if (Y9LoginUserHolder.getUserInfo().isSystemVendor()) {
+            Manager manager = y9ManagerService.getById(Y9LoginUserHolder.getPersonId());
+            Y9System y9System = y9SystemManager.getById(manager.getSystemId());
+            return List.of(entityToModel(y9System));
         }
 
         // 租户租用的系统

@@ -42,4 +42,6 @@ public interface Y9ManagerRepository extends JpaRepository<Y9Manager, String> {
     List<Y9Manager> findByParentIdOrderByTabIndex(String parentId);
 
     Optional<Y9Manager> findTopByParentIdOrderByTabIndexDesc(String parentId);
+
+    List<Y9Manager> findBySystemIdOrderByTabIndex(String systemId);
 }

@@ -33,7 +33,8 @@ import net.risesoft.vo.permission.RolePermissionVO;
 @RequestMapping(value = "/api/rest/positionRoles", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER})
+@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER,
+    ManagerLevelEnum.SYSTEM_VENDOR})
 public class PositionRolesController {
 
     private final RolePermissionVOBuilder rolePermissionVOBuilder;

@@ -36,7 +36,7 @@ import net.risesoft.y9public.service.resource.Y9DataCatalogService;
 @RestController
 @RequestMapping(value = "/api/rest/dataCatalog", produces = MediaType.APPLICATION_JSON_VALUE)
 @IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER,
-    ManagerLevelEnum.TENANT_SECURITY_MANAGER})
+    ManagerLevelEnum.TENANT_SECURITY_MANAGER, ManagerLevelEnum.SYSTEM_VENDOR})
 @RequiredArgsConstructor
 public class DataCatalogController {
 

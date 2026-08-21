@@ -32,6 +32,8 @@ public class SystemTreeNodeVO extends TreeNodeVO {
     private String systemId;
     /** 租户id */
     private String tenantId;
+    /** 是否启用 */
+    private boolean enabled;
 
     public static SystemTreeNodeVO convertSystem(System system) {
         SystemTreeNodeVO systemTreeNodeVO = new SystemTreeNodeVO();
@@ -44,10 +46,12 @@ public class SystemTreeNodeVO extends TreeNodeVO {
         systemTreeNodeVO.setNodeType(TreeNodeType.SYSTEM.toString());
         systemTreeNodeVO.setSystemId(system.getId());
         systemTreeNodeVO.setTenantId(system.getTenantId());
+        systemTreeNodeVO.setEnabled(system.getEnabled());
 
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         boolean manageable = userInfo.isOperationSystemManager()
-            || (userInfo.isTenantSystemManager() && Objects.equals(userInfo.getTenantId(), system.getTenantId()));
+            || (userInfo.isTenantSystemManager() && Objects.equals(userInfo.getTenantId(), system.getTenantId()))
+            || userInfo.isSystemVendor();
         systemTreeNodeVO.setManageable(manageable);
         systemTreeNodeVO.setDeletable(manageable);
 

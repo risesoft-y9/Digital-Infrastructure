@@ -7,8 +7,6 @@ import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.consts.InitDataConsts;
-import net.risesoft.consts.RoleLevelConsts;
 import net.risesoft.enums.TreeTypeEnum;
 import net.risesoft.enums.platform.RoleLevelEnum;
 import net.risesoft.enums.platform.RoleTypeEnum;
@@ -59,19 +57,19 @@ public class RoleTreeNodeVO extends TreeNodeVO {
         roleTreeNodeVO.setTabIndex(role.getTabIndex());
         roleTreeNodeVO.setHasChild(RoleTypeEnum.FOLDER.equals(role.getType()));
         roleTreeNodeVO.setNodeType(role.getType().getValue());
-        
+
         boolean manageable = isRoleManageable(role, y9SystemService);
         roleTreeNodeVO.setManageable(manageable);
         roleTreeNodeVO.setDeletable(manageable);
         return roleTreeNodeVO;
     }
-    
+
     private static boolean isRoleManageable(Role role, Y9SystemService y9SystemService) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         if (userInfo.isOperationSystemManager()) {
             return true;
         }
-        if (userInfo.isTenantSystemManager()) {
+        if (userInfo.isTenantSystemManager() || userInfo.isSystemVendor()) {
             if (RoleLevelEnum.PUBLIC.equals(role.getLevel())) {
                 return true;
             }
@@ -92,7 +90,7 @@ public class RoleTreeNodeVO extends TreeNodeVO {
         return roleTreeNodeVOList;
     }
 
-    public static RoleTreeNodeVO convertApp(App app) {
+    public static RoleTreeNodeVO convertApp(App app, Y9SystemService y9SystemService) {
         RoleTreeNodeVO roleTreeNodeVO = new RoleTreeNodeVO();
         roleTreeNodeVO.setId(app.getId());
         roleTreeNodeVO.setSystemId(app.getSystemId());
@@ -102,15 +100,30 @@ public class RoleTreeNodeVO extends TreeNodeVO {
         roleTreeNodeVO.setTabIndex(app.getTabIndex());
         roleTreeNodeVO.setHasChild(true);
         roleTreeNodeVO.setNodeType(app.getResourceType().toString());
-        roleTreeNodeVO.setManageable(Y9LoginUserHolder.getUserInfo().isSystemManager());
+        roleTreeNodeVO.setManageable(isAppManageable(app, y9SystemService));
         roleTreeNodeVO.setDeletable(false);
         return roleTreeNodeVO;
     }
 
-    public static List<RoleTreeNodeVO> convertAppList(List<App> appList) {
+    private static boolean isAppManageable(App app, Y9SystemService y9SystemService) {
+        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
+        if (userInfo.isOperationSystemManager()) {
+            return true;
+        }
+        if (userInfo.isTenantSystemManager() || userInfo.isSystemVendor()) {
+            System system = y9SystemService.getById(app.getSystemId());
+            if (Objects.equals(system.getTenantId(), userInfo.getTenantId())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static List<RoleTreeNodeVO> convertAppList(List<App> appList, Y9SystemService y9SystemService) {
         List<RoleTreeNodeVO> roleTreeNodeVOList = new ArrayList<>();
         for (App app : appList) {
-            roleTreeNodeVOList.add(convertApp(app));
+            roleTreeNodeVOList.add(convertApp(app, y9SystemService));
         }
         return roleTreeNodeVOList;
     }
@@ -125,8 +138,22 @@ public class RoleTreeNodeVO extends TreeNodeVO {
         roleTreeNodeVO.setHasChild(true);
         roleTreeNodeVO.setNodeType(TreeNodeType.SYSTEM.toString());
         roleTreeNodeVO.setDeletable(false);
-        roleTreeNodeVO.setManageable(false);
+        roleTreeNodeVO.setManageable(isSystemManageable(system));
         return roleTreeNodeVO;
+    }
+
+    private static boolean isSystemManageable(System system) {
+        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
+        if (userInfo.isOperationSystemManager()) {
+            return true;
+        }
+        if (userInfo.isTenantSystemManager() || userInfo.isSystemVendor()) {
+            if (Objects.equals(system.getTenantId(), userInfo.getTenantId())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static List<RoleTreeNodeVO> convertSystemList(List<System> systemList) {

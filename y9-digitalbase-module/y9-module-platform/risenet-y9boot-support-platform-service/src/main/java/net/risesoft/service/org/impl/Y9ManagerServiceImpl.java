@@ -228,6 +228,12 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     }
 
     @Override
+    public List<Manager> listBySystemId(String systemId) {
+        List<Y9Manager> y9ManagerList = y9ManagerRepository.findBySystemIdOrderByTabIndex(systemId);
+        return PlatformModelConvertUtil.convert(y9ManagerList, Manager.class);
+    }
+
+    @Override
     @Transactional
     public Manager resetDefaultPassword(String id) {
         Y9Manager currentManager = this.get(id);
@@ -279,8 +285,12 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
                 Y9Manager originalManager = PlatformModelConvertUtil.convert(y9ManagerOptional.get(), Y9Manager.class);
                 Y9Manager y9Manager = y9ManagerOptional.get();
 
-                Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(manager.getParentId());
-                List<Y9OrgBase> ancestorList = compositeOrgBaseManager.listOrgUnitAndAncestor(manager.getParentId());
+                Y9OrgBase parent = null;
+                List<Y9OrgBase> ancestorList = new ArrayList<>();
+                if (StringUtils.isNoneBlank(manager.getParentId())) {
+                    parent = compositeOrgBaseManager.getOrgUnitAsParent(manager.getParentId());
+                    ancestorList = compositeOrgBaseManager.listOrgUnitAndAncestor(manager.getParentId());
+                }
                 y9Manager.update(manager, parent, ancestorList);
 
                 Y9Manager savedManager = this.update(y9Manager, originalManager);
@@ -300,9 +310,14 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         }
 
         String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(manager.getParentId());
-        Integer nextSubTabIndex = compositeOrgBaseManager.getNextSubTabIndex(manager.getParentId());
-        List<Y9OrgBase> ancestorList = compositeOrgBaseManager.listOrgUnitAndAncestor(manager.getParentId());
+        Y9OrgBase parent = null;
+        Integer nextSubTabIndex = 0;
+        List<Y9OrgBase> ancestorList = new ArrayList<>();
+        if (StringUtils.isNoneBlank(manager.getParentId())) {
+            parent = compositeOrgBaseManager.getOrgUnitAsParent(manager.getParentId());
+            nextSubTabIndex = compositeOrgBaseManager.getNextSubTabIndex(manager.getParentId());
+            ancestorList = compositeOrgBaseManager.listOrgUnitAndAncestor(manager.getParentId());
+        }
 
         Y9Manager y9Manager = new Y9Manager(manager, parent, nextSubTabIndex, ancestorList, defaultPassword);
         Y9Manager savedManager = this.insert(y9Manager);
@@ -348,6 +363,12 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
             }
         }
         return managableOrgUnitList;
+    }
+
+    @Override
+    public void deleteBySystemId(String systemId) {
+        List<Y9Manager> y9ManagerList = y9ManagerRepository.findBySystemIdOrderByTabIndex(systemId);
+        y9ManagerRepository.deleteAll(y9ManagerList);
     }
 
     @EventListener

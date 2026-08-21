@@ -43,7 +43,8 @@ import net.risesoft.y9public.service.resource.Y9AppIconService;
 @Slf4j
 @RequiredArgsConstructor
 @Validated
-@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
+@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER,
+    ManagerLevelEnum.SYSTEM_VENDOR})
 public class AppIconController {
 
     private final Y9AppIconService appIconService;

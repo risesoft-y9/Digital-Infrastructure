@@ -36,7 +36,7 @@ import net.risesoft.vo.manager.PersonalCenterManagerVO;
 @RequiredArgsConstructor
 @Validated
 @IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER,
-    ManagerLevelEnum.TENANT_AUDIT_MANAGER})
+    ManagerLevelEnum.TENANT_AUDIT_MANAGER, ManagerLevelEnum.SYSTEM_VENDOR})
 public class PersonalCenterController {
 
     private final Y9ManagerService y9ManagerService;

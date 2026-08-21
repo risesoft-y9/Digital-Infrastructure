@@ -71,7 +71,7 @@ public class OrgTreeNodeVO extends TreeNodeVO {
         }
 
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-        if (userInfo.isGlobalManager() || managerParent.isDescendantOf(orgUnit)) {
+        if (userInfo.isGlobalManager() || managerParent != null && managerParent.isDescendantOf(orgUnit)) {
             orgTreeNodeVO.setManageable(true);
             orgTreeNodeVO.setDeletable(true);
         }
@@ -80,8 +80,10 @@ public class OrgTreeNodeVO extends TreeNodeVO {
 
     public static List<OrgTreeNodeVO> convertOrgUnitList(List<? extends OrgUnit> orgUnitList, OrgTreeTypeEnum treeType,
         boolean countMember, CompositeOrgBaseService compositeOrgBaseService) {
-        OrgUnit managerParent =
-            compositeOrgBaseService.getOrgUnitAsParent(Y9LoginUserHolder.getUserInfo().getParentId());
+        OrgUnit managerParent = null;
+        if (Y9LoginUserHolder.getUserInfo().isTenantManager()) {
+            managerParent = compositeOrgBaseService.getOrgUnitAsParent(Y9LoginUserHolder.getUserInfo().getParentId());
+        }
 
         List<OrgTreeNodeVO> roleTreeNodeVOList = new ArrayList<>();
         for (OrgUnit orgUnit : orgUnitList) {

@@ -2,7 +2,6 @@ package net.risesoft.controller.role;
 
 import java.util.List;
 
-import net.risesoft.y9public.service.resource.Y9SystemService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +16,7 @@ import net.risesoft.model.platform.Role;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.vo.role.RoleTreeNodeVO;
+import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.role.Y9RoleService;
 
 /**
@@ -30,7 +30,7 @@ import net.risesoft.y9public.service.role.Y9RoleService;
 @RequestMapping(value = "/api/rest/publicRole", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER,
-    ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
+    ManagerLevelEnum.OPERATION_SYSTEM_MANAGER, ManagerLevelEnum.SYSTEM_VENDOR})
 public class PublicRoleController {
 
     private final Y9RoleService y9RoleService;

@@ -31,7 +31,9 @@ public enum ManagerLevelEnum implements ValuedEnum<Integer> {
     /** 云安全保密员 */
     OPERATION_SECURITY_MANAGER(5, "云安全保密员"),
     /** 云安全审计员 */
-    OPERATION_AUDIT_MANAGER(6, "云安全审计员");
+    OPERATION_AUDIT_MANAGER(6, "云安全审计员"),
+    /** 系统开发商 */
+    SYSTEM_VENDOR(7, "系统开发商");
 
     private final Integer value;
     private final String name;

@@ -33,7 +33,8 @@ import net.risesoft.vo.permission.ResourcePermissionVO;
 @RequestMapping(value = "/api/rest/positionResources", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER})
+@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER,
+    ManagerLevelEnum.SYSTEM_VENDOR})
 public class PositionResourcesController {
 
     private final Y9PositionToResourceService y9PositionToResourceService;

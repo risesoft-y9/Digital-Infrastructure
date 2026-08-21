@@ -156,6 +156,14 @@ public interface Y9ManagerService {
     List<Manager> listByParentId(String parentId);
 
     /**
+     * 根据系统ID获取管理员列表
+     *
+     * @param systemId 系统id
+     * @return {@code List<Manager> }
+     */
+    List<Manager> listBySystemId(String systemId);
+
+    /**
      * 重置为默认密码
      *
      * @param id 管理员id
@@ -187,4 +195,11 @@ public interface Y9ManagerService {
      * @return {@code List<OrgUnit> }
      */
     List<OrgUnit> filterManagableOrgUnitList(String managerParentId, List<String> orgUnitIdList);
+
+    /**
+     * 根据系统ID删除管理员
+     *
+     * @param systemId 系统id
+     */
+    void deleteBySystemId(String systemId);
 }

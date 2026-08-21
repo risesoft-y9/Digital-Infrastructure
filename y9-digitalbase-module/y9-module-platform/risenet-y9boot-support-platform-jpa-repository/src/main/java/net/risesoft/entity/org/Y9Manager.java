@@ -135,6 +135,13 @@ public class Y9Manager extends Y9OrgBase {
     private String userHostIp;
 
     /**
+     * 系统开发商绑定的系统 id
+     */
+    @Comment(value = "系统开发商绑定的系统 id")
+    @Column(name = "SYSTEM_ID", length = 38)
+    private String systemId;
+
+    /**
      * 修改密码时间
      */
     @Comment("上一次密码修改时间")
@@ -179,12 +186,17 @@ public class Y9Manager extends Y9OrgBase {
         }
         if (!globalManager) {
             // 系统管理员新建的子域三员默认禁用 需安全管理员启用
-            this.disabled = Boolean.TRUE;
+            // this.disabled = Boolean.TRUE;
         }
         this.tabIndex = nextSubTabIndex;
         this.password = Y9MessageDigestUtil.bcrypt(defaultPassword);
-        this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.MANAGER, this.name, parent.getDn());
-        this.guidPath = Y9OrgUtil.buildGuidPath(parent.getGuidPath(), this.id);
+        if (parent == null) {
+            this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.MANAGER, this.name, null);
+            this.guidPath = Y9OrgUtil.buildGuidPath(null, this.id);
+        } else {
+            this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.MANAGER, this.name, parent.getDn());
+            this.guidPath = Y9OrgUtil.buildGuidPath(parent.getGuidPath(), this.id);
+        }
         this.orderedPath = Y9OrgUtil.buildOrderedPath(this, ancestorList);;
     }
 
@@ -195,8 +207,13 @@ public class Y9Manager extends Y9OrgBase {
             // customId 字段有唯一约束，不同数据库对唯一约束的允许不一致，此处保证 customId 列始终有值，所有数据库通用
             this.customId = this.id;
         }
-        this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.MANAGER, this.name, parent.getDn());
-        this.guidPath = Y9OrgUtil.buildGuidPath(parent.getGuidPath(), this.id);
+        if (parent == null) {
+            this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.MANAGER, this.name, null);
+            this.guidPath = Y9OrgUtil.buildGuidPath(null, this.id);
+        } else {
+            this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.MANAGER, this.name, parent.getDn());
+            this.guidPath = Y9OrgUtil.buildGuidPath(parent.getGuidPath(), this.id);
+        }
         this.orderedPath = Y9OrgUtil.buildOrderedPath(this, ancestorList);;
     }
 

@@ -96,7 +96,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     private List<String> filterAccessibleOrgUnitIds(List<String> orgIds) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-        if (userInfo == null || userInfo.isGlobalManager()) {
+        if (userInfo == null || userInfo.isGlobalManager() || userInfo.isSystemVendor()) {
             return orgIds;
         }
         return y9ManagerService.filterManagableOrgUnitList(Y9LoginUserHolder.getDeptId(), orgIds)

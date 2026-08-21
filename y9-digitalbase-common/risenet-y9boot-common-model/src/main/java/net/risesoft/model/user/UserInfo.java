@@ -155,4 +155,13 @@ public class UserInfo implements Serializable {
     public boolean isOperationSystemManager() {
         return managerLevel == ManagerLevelEnum.OPERATION_SYSTEM_MANAGER;
     }
+
+    /**
+     * 是否为系统开发商
+     *
+     * @return boolean
+     */
+    public boolean isSystemVendor() {
+        return managerLevel == ManagerLevelEnum.SYSTEM_VENDOR;
+    }
 }

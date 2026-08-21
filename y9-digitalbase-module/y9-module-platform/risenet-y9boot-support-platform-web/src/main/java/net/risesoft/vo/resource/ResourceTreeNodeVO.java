@@ -68,12 +68,11 @@ public class ResourceTreeNodeVO extends TreeNodeVO {
         resourceTreeNodeVO.setInherit(resource.getInherit());
 
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-
         if (userInfo.isOperationSystemManager()) {
             resourceTreeNodeVO.setDeletable(true);
             resourceTreeNodeVO.setManageable(true);
         }
-        if (userInfo.isTenantSystemManager()) {
+        if (userInfo.isTenantSystemManager() || userInfo.isSystemVendor()) {
             System system = y9SystemService.getById(resource.getSystemId());
             if (Objects.equals(system.getTenantId(), userInfo.getTenantId())) {
                 resourceTreeNodeVO.setDeletable(true);

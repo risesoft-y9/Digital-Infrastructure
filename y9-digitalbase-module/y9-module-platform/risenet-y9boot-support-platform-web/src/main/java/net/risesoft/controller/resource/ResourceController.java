@@ -24,10 +24,12 @@ import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.platform.System;
+import net.risesoft.model.platform.org.Manager;
 import net.risesoft.model.platform.resource.App;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.vo.resource.ResourceBaseVO;
 import net.risesoft.vo.resource.ResourceTreeNodeVO;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -48,7 +50,7 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 @RequiredArgsConstructor
 @Validated
 @IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER,
-    ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
+    ManagerLevelEnum.OPERATION_SYSTEM_MANAGER, ManagerLevelEnum.SYSTEM_VENDOR})
 public class ResourceController {
 
     private final CompositeResourceService compositeResourceService;
@@ -56,6 +58,7 @@ public class ResourceController {
     private final Y9TenantAppService y9TenantAppService;
     private final Y9TenantSystemService y9TenantSystemService;
     private final Y9SystemService y9SystemService;
+    private final Y9ManagerService y9ManagerService;
 
     /**
      * 根据父资源id获取子资源列表
@@ -97,10 +100,30 @@ public class ResourceController {
         List<ResourceTreeNodeVO> resourceTreeNodeVOList;
         if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
             resourceTreeNodeVOList = treeByOperationSystemManager(parentId, parentNodeType);
+        } else if (Y9LoginUserHolder.getUserInfo().isSystemVendor()) {
+            resourceTreeNodeVOList = treeBySystemVendor(parentId, parentNodeType);
         } else {
             resourceTreeNodeVOList = treeBySystemManager(parentId, parentNodeType);
         }
         return Y9Result.success(resourceTreeNodeVOList, "查询所有的根资源成功");
+    }
+
+    private List<ResourceTreeNodeVO> treeBySystemVendor(String parentId, TreeNodeType parentNodeType) {
+        List<ResourceTreeNodeVO> resourceTreeNodeVOList = new ArrayList<>();
+        if (StringUtils.isBlank(parentId)) {
+            // 根节点为系统
+            Manager manager = y9ManagerService.getById(Y9LoginUserHolder.getPersonId());
+            System system = y9SystemService.getById(manager.getSystemId());
+            resourceTreeNodeVOList.add(ResourceTreeNodeVO.convertSystem(system));
+        } else if (TreeNodeType.SYSTEM.equals(parentNodeType)) {
+            // 系统节点下为应用
+            List<App> appList = y9AppService.listBySystemId(parentId);
+            resourceTreeNodeVOList.addAll(ResourceTreeNodeVO.convertResource(appList, y9SystemService));
+        } else {
+            List<Resource> y9ResourceBaseList = compositeResourceService.listByParentId(parentId);
+            resourceTreeNodeVOList.addAll(ResourceTreeNodeVO.convertResource(y9ResourceBaseList, y9SystemService));
+        }
+        return resourceTreeNodeVOList;
     }
 
     private List<ResourceTreeNodeVO> treeByOperationSystemManager(String parentId, TreeNodeType parentNodeType) {
@@ -149,7 +172,8 @@ public class ResourceController {
     @GetMapping(value = "/appTreeRoot/{appId}")
     public Y9Result<List<ResourceTreeNodeVO>> treeRootByAppId(@PathVariable @NotBlank String appId) {
         App app = y9AppService.getById(appId);
-        return Y9Result.success(ResourceTreeNodeVO.convertResource(Collections.singletonList(app), y9SystemService), "根据应用id查询资源成功");
+        return Y9Result.success(ResourceTreeNodeVO.convertResource(Collections.singletonList(app), y9SystemService),
+            "根据应用id查询资源成功");
     }
 
     /**
@@ -231,7 +255,7 @@ public class ResourceController {
 
         List<System> systemList = new ArrayList<>();
         if (StringUtils.isNotBlank(systemId)) {
-            System system = y9SystemService.findById(systemId).get();
+            System system = y9SystemService.getById(systemId);
             systemList.add(system);
 
             // 筛选出该系统下的资源
