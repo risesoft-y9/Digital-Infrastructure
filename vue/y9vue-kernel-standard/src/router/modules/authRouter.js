@@ -32,6 +32,17 @@ const authRouter = [
             roles: ['systemAdmin', 'subSystemAdmin'],
             notShowAdmin: true
         }
+    },
+    {
+        path: '/auth',
+        redirect: '/system',
+        name: 'authSystem',
+        hidden: true,
+        meta: {
+            title: '系统管理员',
+            icon: 'el-icon-s-custom',
+            roles: ['systemVendor']
+        }
     }
 ];
 

@@ -50,7 +50,7 @@ export const treeSearch = async (value) => {
     console.log(value)
     if (value?.appId) {
         params = { name: value.key, appId: value.appId };
-    } if (value?.systemId) {
+    } else if (value?.systemId) {
         params = { name: value.key, systemId: value.systemId };
     } else {
         params = { name: value.key };
@@ -63,9 +63,6 @@ export const treeSearch = async (value) => {
         params
     });
 };
-
-
-
 
 // 菜单 详情
 export const getMenuInfo = async (id) => {

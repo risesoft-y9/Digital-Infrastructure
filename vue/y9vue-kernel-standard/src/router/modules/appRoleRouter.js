@@ -13,7 +13,7 @@ const appRoleRouter = {
     name: 'role',
     meta: {
         title: '应用角色管理',
-        roles: ['systemAdmin', 'subSystemAdmin']
+        roles: ['systemAdmin', 'subSystemAdmin', 'systemVendor']
     },
     children: [
         {
@@ -23,7 +23,7 @@ const appRoleRouter = {
             meta: {
                 title: '应用角色管理',
                 icon: 'ri-contacts-line',
-                roles: ['systemAdmin', 'subSystemAdmin']
+                roles: ['systemAdmin', 'subSystemAdmin', 'systemVendor']
             }
         }
     ]

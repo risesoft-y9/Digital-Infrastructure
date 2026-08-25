@@ -5,7 +5,7 @@ const authorizationRoleRouter = {
     name: 'authorizationRole',
     meta: {
         title: '应用角色关联',
-        roles: ['securityAdmin', 'subSecurityAdmin']
+        roles: ['securityAdmin', 'subSecurityAdmin', 'systemVendor']
     },
     children: [
         {
@@ -15,7 +15,7 @@ const authorizationRoleRouter = {
             meta: {
                 title: '应用角色关联',
                 icon: 'ri-contacts-line',
-                roles: ['securityAdmin', 'subSecurityAdmin']
+                roles: ['securityAdmin', 'subSecurityAdmin', 'systemVendor']
             }
         }
     ]

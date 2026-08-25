@@ -14,7 +14,7 @@ const permissionRouter = {
     meta: {
         title: '权限树',
         icon: 'ri-admin-line',
-        roles: ['systemAdmin', 'subSystemAdmin', 'securityAdmin', 'subSecurityAdmin']
+        roles: ['systemAdmin', 'subSystemAdmin', 'securityAdmin', 'subSecurityAdmin', 'systemVendor']
     },
     children: [
         {
@@ -24,7 +24,7 @@ const permissionRouter = {
             meta: {
                 title: '资源权限树',
                 icon: 'ri-admin-line',
-                roles: ['systemAdmin', 'subSystemAdmin', 'securityAdmin', 'subSecurityAdmin']
+                roles: ['systemAdmin', 'subSystemAdmin', 'securityAdmin', 'subSecurityAdmin', 'systemVendor']
             }
         },
         {
@@ -34,7 +34,7 @@ const permissionRouter = {
             meta: {
                 title: '角色权限树',
                 icon: 'ri-admin-line',
-                roles: ['systemAdmin', 'subSystemAdmin', 'securityAdmin', 'subSecurityAdmin']
+                roles: ['systemAdmin', 'subSystemAdmin', 'securityAdmin', 'subSecurityAdmin', 'systemVendor']
             }
         }
     ]

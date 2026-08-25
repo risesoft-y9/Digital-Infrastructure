@@ -13,7 +13,7 @@ const appResourceRouter = {
     name: 'resource',
     meta: {
         title: '应用资源管理',
-        roles: ['systemAdmin', 'subSystemAdmin']
+        roles: ['systemAdmin', 'subSystemAdmin', 'systemVendor']
     },
     children: [
         {
@@ -23,7 +23,7 @@ const appResourceRouter = {
             meta: {
                 title: '应用资源管理',
                 icon: 'ri-dashboard-line',
-                roles: ['systemAdmin', 'subSystemAdmin']
+                roles: ['systemAdmin', 'subSystemAdmin', 'systemVendor']
             }
         }
     ]

@@ -172,7 +172,6 @@
 
 <script lang="ts" setup>
     import { computed, inject, ref } from 'vue';
-    import y9_storage from '@/utils/storage';
     import {
         appRoleTree,
         deleteRoleById,
@@ -194,7 +193,6 @@
     const settingStore = useSettingStore();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
-    const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
 
     // 全局 loading
     let loading = ref(false);

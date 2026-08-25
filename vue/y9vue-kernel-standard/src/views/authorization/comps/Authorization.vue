@@ -86,7 +86,6 @@
                         <span>{{ $t('刷新') }}</span>
                     </el-button>
 
-                    <input autocomplete="new-password" hidden type="password" />
                     <el-input
                         v-model="searchKey"
                         :placeholder="$t('请搜索')"
@@ -107,7 +106,7 @@
         </y9Filter>
         <!-- tree树 -->
         <selectTree
-            v-if="type == 'private' && appId != null"
+            v-if="type == 'private'"
             ref="resourceSelectTree"
             :defaultCheckedKeys="resourceTreeDefaultCheckedKeys"
             :selectField="selectResourceField"
@@ -171,7 +170,7 @@
         saveOrUpdateRelateResource
     } from '@/api/role';
     import { dataCatalogTree, dataCatalogTreeSearch, getTreeTypeList } from '@/api/dataCatalog';
-    import { appTreeRoot, resourceTree, resourceTreeRoot, systemTreeRoot, treeSearch } from '@/api/resource';
+    import { appTreeRoot, resourceTree, systemTreeRoot, treeSearch } from '@/api/resource';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useI18n } from 'vue-i18n';
 
@@ -187,7 +186,7 @@
         id: String, // 系统id
         parentId: String,
         appId: String,
-        type: String //角色/公共角色（public）。角色管理（private）
+        type: String //公共角色（public） 系统、应用级角色（private）
     });
 
     async function getResourceTreeDefaultCheckedKeys() {
@@ -381,12 +380,11 @@
         onOk: () => {
             return new Promise(async (resolve, reject) => {
                 let checkedIds = [];
-                if (props.type == 'private' && props.appId != null) {
+                if (props.type == 'private') {
                     checkedIds = resourceSelectTree.value?.y9TreeRef?.getCheckedKeys();
                 } else {
                     checkedIds = resourcePublicSelectTree.value?.y9TreeRef?.getCheckedKeys();
                 }
-                console.log(props.type == 'private' && props.appId != null, checkedIds);
 
                 // 只需要新选中的 id 数组
                 const ids = checkedIds.filter((item) => !resourceTreeDefaultCheckedKeys.value.includes(item));
@@ -608,17 +606,20 @@
             value: ['APP', 'MENU', 'OPERATION']
         }
     ];
-    // 应用资源授权 请求的tree接口
+    // 系统+应用角色 资源授权 请求的tree接口
     let resourceTreeApiObj = ref({
         topLevel: async () => {
-            console.log(props.type, props.appId, props.parentId);
             let result = { success: false, msg: '', data: {} as any };
-            result = await appTreeRoot(props.appId);
+            if (props.appId) {
+                result = await appTreeRoot(props.appId);
+            } else {
+                result = await systemTreeRoot(props.parentId);
+            }
             return result.data;
         },
         childLevel: {
             //子级（二级及二级以上）tree接口
-            api: resourceTreeRoot,
+            api: resourceTree,
             params: {}
         },
         search: {
@@ -647,16 +648,10 @@
             params: {}
         }
     });
-    //系统角色+公共角色 应用资源授权
+    //公共角色 资源授权
     let resourceTreePublicApiObj = ref({
         topLevel: async () => {
-            let result = { success: false, msg: '', data: {} as any };
-            if (props.type == 'public') {
-                result = await resourceTree({});
-            } else {
-                result = await systemTreeRoot(props.parentId);
-            }
-
+            let result = await resourceTree({});
             return result.data;
         },
         childLevel: {
@@ -690,14 +685,14 @@
     function onSearchKeyChange(searchVal) {
         clearTimeout(searchTimer);
         searchTimer = setTimeout(() => {
-            resourceTreeApiObj.value.search.params.key = searchVal;
             if (props.type == 'private') {
+                resourceTreeApiObj.value.search.params.key = searchVal;
                 if (props.appId) {
                     resourceTreeApiObj.value.search.params.appId = props.appId;
                 } else {
-                    resourceTreePublicApiObj.value.search.params.systemId = props.parentId;
-                    resourceTreePublicApiObj.value.search.params.key = searchVal;
+                    resourceTreeApiObj.value.search.params.systemId = props.parentId;
                 }
+                console.log(resourceTreeApiObj.value.search.params);
             } else {
                 resourceTreePublicApiObj.value.search.params.key = searchVal;
             }

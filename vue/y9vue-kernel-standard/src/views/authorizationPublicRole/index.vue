@@ -47,7 +47,6 @@
 </template>
 
 <script lang="ts" setup>
-    import y9_storage from '@/utils/storage';
     import { inject, ref, watch } from 'vue';
     import { useI18n } from 'vue-i18n';
     import { useSettingStore } from '@/store/modules/settingStore';
@@ -62,7 +61,6 @@
     const { t } = useI18n();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
-    const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
 
     // 全局 loading
     let loading = ref(false);

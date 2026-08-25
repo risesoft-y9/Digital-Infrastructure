@@ -5,7 +5,7 @@ const authorizationResourceRouter = {
     name: 'authorizationResource',
     meta: {
         title: '应用资源授权',
-        roles: ['securityAdmin', 'subSecurityAdmin']
+        roles: ['securityAdmin', 'subSecurityAdmin', 'systemVendor']
     },
     children: [
         {
@@ -15,7 +15,7 @@ const authorizationResourceRouter = {
             meta: {
                 title: '应用资源授权',
                 icon: 'ri-dashboard-line',
-                roles: ['securityAdmin', 'subSecurityAdmin']
+                roles: ['securityAdmin', 'subSecurityAdmin', 'systemVendor']
             }
         }
     ]

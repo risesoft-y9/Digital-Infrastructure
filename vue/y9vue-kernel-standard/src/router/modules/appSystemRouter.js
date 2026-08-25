@@ -13,7 +13,7 @@ const appSystemRouter = {
     name: 'system',
     meta: {
         title: '应用系统管理',
-        roles: ['systemAdmin', 'subSystemAdmin']
+        roles: ['systemAdmin', 'subSystemAdmin', 'systemVendor']
     },
     children: [
         {
@@ -24,6 +24,16 @@ const appSystemRouter = {
                 title: '应用系统管理',
                 icon: 'ri-apps-line',
                 roles: ['systemAdmin', 'subSystemAdmin']
+            }
+        },
+        {
+            path: '/system',
+            component: () => import('@/views/system/index4SystemVendor.vue'),
+            name: 'systemIndex',
+            meta: {
+                title: '应用系统管理',
+                icon: 'ri-apps-line',
+                roles: ['systemVendor']
             }
         }
     ]

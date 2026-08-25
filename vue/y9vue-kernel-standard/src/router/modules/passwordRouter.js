@@ -5,7 +5,7 @@ const passwordRouter = {
     hidden: true,
     meta: {
         title: '修改密码',
-        roles: ['systemAdmin', 'securityAdmin', 'auditAdmin', 'subSystemAdmin', 'subSecurityAdmin', 'subAuditAdmin']
+        roles: ['systemAdmin', 'securityAdmin', 'auditAdmin', 'subSystemAdmin', 'subSecurityAdmin', 'subAuditAdmin', 'systemVendor']
     }
 };
 

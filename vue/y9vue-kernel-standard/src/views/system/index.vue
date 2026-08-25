@@ -52,89 +52,19 @@
         </template>
         <template v-slot:rightContainer>
             <div v-if="currData.id">
-                <y9Card :title="`${$t('基本信息')} - ${currData.cnName ? currData.cnName : ''}`">
-                    <template v-slot>
-                        <div v-show="currData.manageable" class="basic-btns">
-                            <span class="btn-top">
-                                <el-button
-                                    v-if="editBtnFlag"
-                                    :size="fontSizeObj.buttonSize"
-                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                    class="global-btn-main"
-                                    type="primary"
-                                    @click="editBtnFlag = false"
-                                >
-                                    <i class="ri-edit-line"></i>
-                                    {{ $t('编辑') }}
-                                </el-button>
-                                <span v-else>
-                                    <el-button
-                                        :loading="saveBtnLoading"
-                                        :size="fontSizeObj.buttonSize"
-                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                        class="global-btn-main"
-                                        type="primary"
-                                        @click="saveBtnClick = true"
-                                    >
-                                        <i class="ri-save-line"></i>
-                                        {{ $t('保存') }}
-                                    </el-button>
-                                    <el-button
-                                        :size="fontSizeObj.buttonSize"
-                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                        class="global-btn-second"
-                                        @click="editBtnFlag = true"
-                                    >
-                                        <i class="ri-close-line"></i>
-                                        {{ $t('取消') }}
-                                    </el-button>
-                                </span>
-                            </span>
-                            <span>
-                                <!-- <el-upload accept=".json" :http-request="handlerUpload" style="display: inline-block; margin: 0 15px" :show-file-list="false">
-                                            <el-button class="global-btn-second" :size="fontSizeObj.buttonSize"
-                                            :style="{ fontSize: fontSizeObj.baseFontSize }">
-                                                <i class="ri-file-download-line"></i>
-                                                {{ $t("导入") }}
-                                            </el-button>
-                                        </el-upload> -->
-                                <el-button
-                                    :size="fontSizeObj.buttonSize"
-                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                    class="global-btn-second"
-                                    @click="handlerExport"
-                                >
-                                    <i class="ri-file-upload-line" />
-                                    {{ $t('导出') }}
-                                </el-button>
-                                <el-button
-                                    v-loading.fullscreen.lock="loading"
-                                    :size="fontSizeObj.buttonSize"
-                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                    class="global-btn-second"
-                                    @click="handlerDisable"
-                                >
-                                    <i class="ri-user-unfollow-line"></i>
-                                    {{ currData.enabled ? $t('禁用') : $t('启用') }}
-                                </el-button>
-                            </span>
-                        </div>
-                        <BasicInfo
-                            :id="currData.id"
-                            :editFlag="editBtnFlag"
-                            :saveClickFlag="saveBtnClick"
-                            @getSystemData="handlerEditSave"
-                        />
-                    </template>
-                </y9Card>
+                <BasicInfo :currTreeNodeInfo="currData" />
+
                 <y9Card
                     v-show="currData.manageable"
                     :title="`${$t('应用管理')} - ${currData.cnName ? currData.cnName : ''}`"
                 >
                     <template v-slot>
-                        <ApplicatManager :id="currData.id" />
+                        <AppList :id="currData.id" />
                     </template>
                 </y9Card>
+
+                <add-manager v-if="currData.manageable" :id="currData.id" />
+
                 <audit-log v-show="currData.manageable" :currTreeNodeInfo="currData"></audit-log>
             </div>
         </template>
@@ -155,24 +85,14 @@
 
 <script lang="ts" setup>
     import type { FormRules } from 'element-plus';
-    import { inject, reactive, ref } from 'vue';
+    import { computed, inject, reactive, ref } from 'vue';
     import { useI18n } from 'vue-i18n';
-    import y9_storage from '@/utils/storage';
-    import settings from '@/settings';
-    // 基本信息
-    import BasicInfo from '@/views/authorization/comps/SystemBasicInfo.vue';
-    // 应用管理
-    import ApplicatManager from './comps/ApplicatMana.vue';
+
+    import BasicInfo from '@/views/system/comps/BasicInfo.vue';
+    import AppList from './comps/AppList.vue';
+    import AddManager from './comps/AddManager.vue';
     import auditLog from '@/views/y9log/entityAuditLog/index.vue';
-    import {
-        importSystemJSON,
-        removeSystem,
-        systemAdd,
-        systemDisabled,
-        systemEnabled,
-        systemList,
-        systemSaveOrder
-    } from '@/api/system/index';
+    import { importSystemJSON, removeSystem, systemAdd, systemList, systemSaveOrder } from '@/api/system/index';
 
     const { t } = useI18n();
     // 注入 字体对象
@@ -185,7 +105,6 @@
 
     // 点击树  拿到对应数据
     function handlerTreeClick(currTreeNode) {
-        if (!editBtnFlag.value) editBtnFlag.value = true;
         // 将拿到的数据 里的id赋值给 系统id变量
         currData.value = currTreeNode;
     }
@@ -475,44 +394,6 @@
         });
     };
 
-    // 点击保存按钮 的 flag
-    let saveBtnClick = ref(false);
-    // 控制 基本信息 编辑按钮 与 保存，取消按钮的显示与隐藏
-    let editBtnFlag = ref(true);
-    // 保存 按钮 loading
-    let saveBtnLoading = ref(false);
-
-    // 基本信息 点击保存 后 进行 接口操作
-    async function handlerEditSave(data) {
-        saveBtnLoading.value = true;
-        // 更新基本信息 接口操作 --
-        // data 为基本信息 数据
-        let res = { success: false, msg: '' } as any;
-        res = await systemAdd(data);
-        if (res.success) {
-            /**
-             * 对树进行操作：手动更新节点信息
-             */
-            //1.更新当前节点的信息
-            const treeData = fixedTreeRef.value.getTreeData(); //获取tree数据
-            const currNode = fixedTreeRef.value.findNode(treeData, currData.value.id); //找到树节点对应的节点信息
-            Object.assign(currNode, data); //合并节点信息
-            //2.手动设置点击当前节点
-            fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
-        }
-        ElNotification({
-            title: res.success ? t('成功') : t('失败'),
-            message: res.success ? t('更新成功') : res.msg,
-            type: res.success ? 'success' : 'error',
-            duration: 2000,
-            offset: 80
-        });
-        // loading为false 编辑 按钮出现 保存按钮未点击状态
-        saveBtnLoading.value = false;
-        editBtnFlag.value = true;
-        saveBtnClick.value = false;
-    }
-
     // 导入
     function handlerUpload(params) {
         importSystemJSON(params.file).then((res) => {
@@ -529,67 +410,5 @@
             }
         });
     }
-
-    // 导出
-    function handlerExport() {
-        const url =
-            import.meta.env.VUE_APP_CONTEXT +
-            'api/rest/impExp/exportSystemJSON?systemId=' +
-            currData.value.id +
-            '&access_token=' +
-            y9_storage.getObjectItem(settings.siteTokenKey, 'access_token');
-        window.open(url);
-    }
-
-    // 启用  禁用系统
-    function handlerDisable() {
-        const text = currData.value.enabled ? '禁用' : '启用';
-        ElMessageBox.confirm(t(`是否${text}该系统?`), t('提示'), {
-            confirmButtonText: t('确定'),
-            cancelButtonText: t('取消'),
-            type: 'info'
-        })
-            .then(async () => {
-                loading.value = true;
-                let result;
-                if (text === '禁用') {
-                    // 禁用系统 接口操作
-                    result = await systemDisabled(currData.value.id);
-                } else {
-                    // 启用 系统 接口操作
-                    result = await systemEnabled(currData.value.id);
-                }
-                loading.value = false;
-                if (result.success) {
-                    ElNotification({
-                        title: t('成功'),
-                        message: t(`${text}成功`),
-                        type: 'success',
-                        duration: 2000,
-                        offset: 80
-                    });
-                }
-            })
-            .catch(() => {
-                loading.value = false;
-                ElMessage({
-                    type: 'info',
-                    message: t(`已取消${text}`),
-                    offset: 65
-                });
-            });
-    }
 </script>
-<style lang="scss" scoped>
-    :deep(.custom-right) {
-        display: flex;
-        align-items: center;
-    }
-
-    .basic-btns {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        margin-bottom: 20px;
-    }
-</style>
+<style lang="scss" scoped></style>

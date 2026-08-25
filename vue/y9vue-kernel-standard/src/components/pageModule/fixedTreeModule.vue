@@ -67,7 +67,6 @@
 <script lang="ts" setup>
     import { useSettingStore } from '@/store/modules/settingStore';
     import { computed, inject, nextTick, onMounted, ref, watch } from 'vue';
-    import y9_storage from '@/utils/storage';
     // import y9Tree from './y9Tree';
 
     const props = defineProps({
@@ -143,11 +142,6 @@
 
     //格式化懒加载的数据
     async function formatLazyTreeData(data, isTopLevel?) {
-        const treeType = props.treeApiObj?.childLevel?.params?.treeType; //二级接口的请求参数treeType
-        const parentId = y9_storage.getObjectItem('ssoUserInfo', 'parentId');
-        const isGlobalManager = y9_storage.getObjectItem('ssoUserInfo', 'globalManager');
-        const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
-
         for (let i = 0; i < data.length; i++) {
             const item = data[i];
             item.delete_icon = props.showNodeDelete; //是否显示删除icon
@@ -229,12 +223,12 @@
                 case 'SYSTEM':
                     item.title_icon = 'ri-settings-line';
                     item.newName = item.name; //显示名称
-                    item.delete_icon = item.deletable;
+                    item.delete_icon = props.showNodeDelete && item.deletable;
                     break;
 
                 case 'APP': //应用
                     item.title_icon = 'ri-apps-line';
-                    item.delete_icon = item.deletable;
+                    item.delete_icon = props.showNodeDelete && item.deletable;
 
                     item.newName = item.name;
                     if (!item.enabled) {
@@ -244,7 +238,7 @@
 
                 case 'MENU': //菜单
                     item.title_icon = 'ri-menu-4-line';
-                    item.delete_icon = item.deletable;
+                    item.delete_icon = props.showNodeDelete && item.deletable;
                     item.newName = item.name;
                     if (!item.enabled) {
                         item.newName = item.name + '[禁用]'; //显示名称
@@ -253,7 +247,7 @@
 
                 case 'OPERATION': //按钮
                     item.title_icon = 'ri-checkbox-multiple-blank-line';
-                    item.delete_icon = item.deletable;
+                    item.delete_icon = props.showNodeDelete && item.deletable;
                     item.newName = item.name;
                     if (!item.enabled) {
                         item.newName = item.name + '[禁用]'; //显示名称

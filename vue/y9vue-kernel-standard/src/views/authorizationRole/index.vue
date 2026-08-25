@@ -6,7 +6,13 @@
  * @Description: 应用角色关联 + 应用角色管理
 -->
 <template>
-    <fixedTreeModule ref="fixedTreeRef" :hiddenSearch="false" :treeApiObj="treeApiObj" @onTreeClick="handlerTreeClick">
+    <fixedTreeModule
+        ref="fixedTreeRef"
+        :hiddenSearch="false"
+        :treeApiObj="treeApiObj"
+        :showNodeDelete="false"
+        @onTreeClick="handlerTreeClick"
+    >
         <template v-slot:rightContainer>
             <!-- 右边卡片 -->
             <div v-if="currData.id">
