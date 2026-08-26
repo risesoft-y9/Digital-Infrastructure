@@ -49,7 +49,7 @@ public class QRCodeController {
             String uuid = UUID.randomUUID().toString();
             String url = name + "sso/login?url=" + name + "sso/api/saveScanResult&uuid=" + uuid;
             InputStream imgis =
-                this.getClass().getClassLoader().getResourceAsStream("static/y9static/y9new/img/qrCodeLogo.png");
+                this.getClass().getClassLoader().getResourceAsStream("static/y9static/images/qrCodeLogo.png");
             String img = Y9QRCode.encode(url, 512, 512, imgis);
             y9KeyValueService.put("QRCode:" + uuid, "2", 2);
             map.put("img", img);

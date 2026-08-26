@@ -27,8 +27,44 @@ body .logo img {
     opacity: 0.9;
 }
 
-body ::-webkit-input-placeholder {
-    color: #4E546D;
+body .logo--dynamic {
+    color: white;
+    font-size: 20px;
+}
+
+body .logo--dynamic #logo-name {
+    padding-left: 10px;
+}
+
+body .logo--dynamic img {
+    display: none;
+    width: auto;
+    height: 50px;
+}
+
+body .logo--text {
+    color: white;
+    font-size: 24px;
+}
+
+:-moz-placeholder {
+    color: #CECFD2;
+    opacity: 1;
+}
+
+::-moz-placeholder {
+    color: #CECFD2;
+    opacity: 1;
+}
+
+input:-ms-input-placeholder {
+    color: #CECFD2;
+    opacity: 1;
+}
+
+input::-webkit-input-placeholder {
+    color: #CECFD2;
+    opacity: 1;
 }
 
 body .authent {
@@ -286,9 +322,18 @@ body .linkOtherSystem a:nth-of-type(6):hover {
 }
 
 body .disclaimer p {
+    margin-bottom: 5px;
     text-align: center;
     font-size: 13px;
     cursor: pointer;
+}
+
+body .disclaimer p:nth-of-type(2) {
+    display: none;
+}
+
+body .disclaimer .related-system-highlight {
+    color: rgb(255, 238, 0);
 }
 
 body .disclaimer p:hover {
@@ -356,6 +401,45 @@ body .login_fields__user, body .login_fields__password {
     margin: auto;
 }
 
+.login_fields__password .password-toggle {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    right: 10px;
+    padding: 4px;
+    transform: translateY(-50%);
+    border: 0;
+    background: transparent;
+    color: #DFDFDF;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.login_fields__password:hover .password-toggle,
+.login_fields__password:focus-within .password-toggle,
+.login_fields__password #password:focus ~ .password-toggle {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.login_fields__password .password-toggle svg {
+    display: block;
+}
+
+body .login_fields__password .validation {
+    right: 52px;
+}
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
 body .login_fields__submit {
     position: relative;
     width: 290px;
@@ -413,6 +497,7 @@ body .login_fields .alert {
 
 
 body .toolTips {
+    display: none;
     width: 285px;
     position: relative;
     top: -140px;
