@@ -110,20 +110,6 @@ public class DeptManagerController {
     }
 
     /**
-     * 根据系统 id，获取管理员列表
-     *
-     * @param systemId 系统 id
-     * @return {@code Y9Result<List<Y9Manager>>}
-     * @since 9.6.1
-     */
-    @RiseLog(operationName = "获取人员列表")
-    @RequestMapping(value = "/listManagersBySystemId")
-    @IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.SYSTEM_VENDOR})
-    public Y9Result<List<Manager>> listManagersBySystemId(@RequestParam @NotBlank String systemId) {
-        return Y9Result.success(y9ManagerService.listBySystemId(systemId), "获取人员列表成功！");
-    }
-
-    /**
      * 根据id数组，删除人员
      *
      * @param ids 人员id数组

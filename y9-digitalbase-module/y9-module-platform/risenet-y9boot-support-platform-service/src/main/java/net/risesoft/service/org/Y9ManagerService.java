@@ -148,20 +148,20 @@ public interface Y9ManagerService {
     List<Manager> listByGlobalManager(boolean globalManager);
 
     /**
+     * 根据管理员类型获取管理员列表
+     *
+     * @param managerLevel 管理员类型
+     * @return {@code List<Manager>}
+     */
+    List<Manager> listByManagerLevel(ManagerLevelEnum managerLevel);
+
+    /**
      * 根据父节点id获取管理员列表
      *
      * @param parentId 父节点id
      * @return {@code List<Manager>}
      */
     List<Manager> listByParentId(String parentId);
-
-    /**
-     * 根据系统ID获取管理员列表
-     *
-     * @param systemId 系统id
-     * @return {@code List<Manager> }
-     */
-    List<Manager> listBySystemId(String systemId);
 
     /**
      * 重置为默认密码
@@ -196,10 +196,4 @@ public interface Y9ManagerService {
      */
     List<OrgUnit> filterManagableOrgUnitList(String managerParentId, List<String> orgUnitIdList);
 
-    /**
-     * 根据系统ID删除管理员
-     *
-     * @param systemId 系统id
-     */
-    void deleteBySystemId(String systemId);
 }

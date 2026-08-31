@@ -30,12 +30,11 @@ import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.platform.Role;
 import net.risesoft.model.platform.System;
-import net.risesoft.model.platform.org.Manager;
 import net.risesoft.model.platform.resource.App;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.org.Y9ManagerService;
+import net.risesoft.service.relation.Y9SystemVendorService;
 import net.risesoft.vo.role.RoleTreeNodeVO;
 import net.risesoft.vo.role.RoleVO;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -67,7 +66,7 @@ public class RoleController {
     private final Y9TenantAppService y9TenantAppService;
     private final Y9TenantSystemService y9TenantSystemService;
     private final Y9SystemService y9SystemService;
-    private final Y9ManagerService y9ManagerService;
+    private final Y9SystemVendorService y9SystemVendorService;
 
     /**
      * 删除角色节点
@@ -201,9 +200,9 @@ public class RoleController {
         List<RoleTreeNodeVO> roleTreeNodeVOList = new ArrayList<>();
         if (StringUtils.isBlank(parentId)) {
             // 根节点为系统
-            Manager manager = y9ManagerService.getById(Y9LoginUserHolder.getPersonId());
-            System system = y9SystemService.getById(manager.getSystemId());
-            roleTreeNodeVOList.add(RoleTreeNodeVO.convertSystem(system));
+            List<String> systemIds = y9SystemVendorService.listSystemIdByManagerId(Y9LoginUserHolder.getPersonId());
+            List<System> systemList = y9SystemService.listByIds(systemIds);
+            roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertSystemList(systemList));
         } else if (TreeNodeType.SYSTEM.equals(parentNodeType)) {
             // 系统下所有应用共用的角色
             List<Role> roleList = y9RoleService.listByParentId(parentId);
@@ -292,14 +291,16 @@ public class RoleController {
     private List<RoleTreeNodeVO> treeSearchBySystemVendor(String name) {
         List<RoleTreeNodeVO> roleTreeNodeVOList = new ArrayList<>();
 
-        Manager manager = y9ManagerService.getById(Y9LoginUserHolder.getPersonId());
-        String systemId = manager.getSystemId();
+        List<String> systemIds = y9SystemVendorService.listSystemIdByManagerId(Y9LoginUserHolder.getPersonId());
         String tenantId = Y9LoginUserHolder.getTenantId();
-        List<String> appIdList = y9TenantAppService.listAppIdBySystemIdAndTenantId(systemId, tenantId, true, true);
+        Set<String> appIdSet = systemIds.stream()
+            .map(systemId -> y9TenantAppService.listAppIdBySystemIdAndTenantId(systemId, tenantId, true, true))
+            .flatMap(Collection::stream)
+            .collect(Collectors.toSet());
         List<Role> roleList = y9RoleService.treeSearch(name)
             .stream()
-            .filter(role -> StringUtils.equals(systemId, role.getSystemId()))
-            .filter(role -> StringUtils.isBlank(role.getAppId()) || appIdList.contains(role.getAppId()))
+            .filter(role -> systemIds.contains(role.getSystemId()))
+            .filter(role -> StringUtils.isBlank(role.getAppId()) || appIdSet.contains(role.getAppId()))
             .filter(role -> StringUtils.isBlank(role.getAppId()) || StringUtils.isBlank(role.getTenantId())
                 || StringUtils.equals(tenantId, role.getTenantId()))
             .collect(Collectors.toList());
@@ -310,10 +311,9 @@ public class RoleController {
         Collections.sort(appList);
         roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertAppList(appList, y9SystemService));
 
-        if (!roleList.isEmpty()) {
-            System system = y9SystemService.getById(systemId);
-            roleTreeNodeVOList.add(RoleTreeNodeVO.convertSystem(system));
-        }
+        List<String> roleRelatedSystemIds =
+            roleList.stream().map(Role::getSystemId).distinct().collect(Collectors.toList());
+        roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertSystemList(y9SystemService.listByIds(roleRelatedSystemIds)));
 
         roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertRoleList(roleList, y9SystemService));
         return roleTreeNodeVOList;

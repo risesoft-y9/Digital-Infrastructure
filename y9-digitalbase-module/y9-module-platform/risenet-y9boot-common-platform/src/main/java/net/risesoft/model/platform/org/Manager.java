@@ -84,11 +84,6 @@ public class Manager extends OrgUnit implements Serializable {
     private String userHostIp;
 
     /**
-     * 系统开发商绑定的系统 id
-     */
-    private String systemId;
-
-    /**
      * 修改密码时间
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

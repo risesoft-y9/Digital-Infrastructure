@@ -24,12 +24,11 @@ import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.platform.System;
-import net.risesoft.model.platform.org.Manager;
 import net.risesoft.model.platform.resource.App;
 import net.risesoft.model.platform.resource.Resource;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.org.Y9ManagerService;
+import net.risesoft.service.relation.Y9SystemVendorService;
 import net.risesoft.vo.resource.ResourceBaseVO;
 import net.risesoft.vo.resource.ResourceTreeNodeVO;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -58,7 +57,7 @@ public class ResourceController {
     private final Y9TenantAppService y9TenantAppService;
     private final Y9TenantSystemService y9TenantSystemService;
     private final Y9SystemService y9SystemService;
-    private final Y9ManagerService y9ManagerService;
+    private final Y9SystemVendorService y9SystemVendorService;
 
     /**
      * 根据父资源id获取子资源列表
@@ -112,9 +111,9 @@ public class ResourceController {
         List<ResourceTreeNodeVO> resourceTreeNodeVOList = new ArrayList<>();
         if (StringUtils.isBlank(parentId)) {
             // 根节点为系统
-            Manager manager = y9ManagerService.getById(Y9LoginUserHolder.getPersonId());
-            System system = y9SystemService.getById(manager.getSystemId());
-            resourceTreeNodeVOList.add(ResourceTreeNodeVO.convertSystem(system));
+            List<String> systemIds = y9SystemVendorService.listSystemIdByManagerId(Y9LoginUserHolder.getPersonId());
+            List<System> systemList = y9SystemService.listByIds(systemIds);
+            resourceTreeNodeVOList.addAll(ResourceTreeNodeVO.convertSystem(systemList));
         } else if (TreeNodeType.SYSTEM.equals(parentNodeType)) {
             // 系统节点下为应用
             List<App> appList = y9AppService.listBySystemId(parentId);

@@ -135,13 +135,6 @@ public class Y9Manager extends Y9OrgBase {
     private String userHostIp;
 
     /**
-     * 系统开发商绑定的系统 id
-     */
-    @Comment(value = "系统开发商绑定的系统 id")
-    @Column(name = "SYSTEM_ID", length = 38)
-    private String systemId;
-
-    /**
      * 修改密码时间
      */
     @Comment("上一次密码修改时间")

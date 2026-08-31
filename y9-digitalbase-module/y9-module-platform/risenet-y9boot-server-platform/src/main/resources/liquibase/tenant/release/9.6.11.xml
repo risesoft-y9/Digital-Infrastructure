@@ -5,17 +5,37 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
-
     <changeSet id="1787284008633-1" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
-                <columnExists tableName="Y9_ORG_MANAGER" columnName="SYSTEM_ID"/>
+                <tableExists tableName="Y9_COMMON_SYSTEM_VENDOR"/>
             </not>
         </preConditions>
-        <addColumn tableName="Y9_ORG_MANAGER">
-            <column name="SYSTEM_ID" remarks="系统开发商绑定的系统 id" type="VARCHAR(38)"/>
-        </addColumn>
+        <createTable remarks="系统开发商和系统关联表" tableName="Y9_COMMON_SYSTEM_VENDOR">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="MANAGER_ID" remarks="管理员 id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SYSTEM_ID" remarks="系统 id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1787284008633-2" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="Y9_COMMON_SYSTEM_VENDOR" indexName="UK_SYSTEM_VENDOR"/>
+            </not>
+        </preConditions>
+        <createIndex tableName="Y9_COMMON_SYSTEM_VENDOR" indexName="UK_SYSTEM_VENDOR" unique="true">
+            <column name="MANAGER_ID"/>
+            <column name="SYSTEM_ID"/>
+        </createIndex>
     </changeSet>
 
 </databaseChangeLog>
-

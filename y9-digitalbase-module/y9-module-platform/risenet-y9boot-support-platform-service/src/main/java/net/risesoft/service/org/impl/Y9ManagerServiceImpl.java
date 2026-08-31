@@ -24,6 +24,7 @@ import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.org.Y9ManagerRepository;
 import net.risesoft.service.org.Y9ManagerService;
+import net.risesoft.service.relation.Y9SystemVendorService;
 import net.risesoft.service.setting.Y9SettingService;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.util.Y9OrgUtil;
@@ -47,6 +48,7 @@ import net.risesoft.y9.util.Y9StringUtil;
 public class Y9ManagerServiceImpl implements Y9ManagerService {
 
     private final Y9ManagerRepository y9ManagerRepository;
+    private final Y9SystemVendorService y9SystemVendorService;
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9SettingService y9SettingService;
@@ -121,6 +123,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     @Transactional
     public void delete(String id) {
         Y9Manager y9Manager = this.get(id);
+        y9SystemVendorService.deleteByManagerId(id);
         y9ManagerRepository.delete(y9Manager);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
@@ -222,14 +225,13 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     }
 
     @Override
-    public List<Manager> listByParentId(String parentId) {
-        List<Y9Manager> y9ManagerList = y9ManagerRepository.findByParentIdOrderByTabIndex(parentId);
-        return PlatformModelConvertUtil.convert(y9ManagerList, Manager.class);
+    public List<Manager> listByManagerLevel(ManagerLevelEnum managerLevel) {
+        return entityToModel(y9ManagerRepository.findByManagerLevelOrderByTabIndex(managerLevel));
     }
 
     @Override
-    public List<Manager> listBySystemId(String systemId) {
-        List<Y9Manager> y9ManagerList = y9ManagerRepository.findBySystemIdOrderByTabIndex(systemId);
+    public List<Manager> listByParentId(String parentId) {
+        List<Y9Manager> y9ManagerList = y9ManagerRepository.findByParentIdOrderByTabIndex(parentId);
         return PlatformModelConvertUtil.convert(y9ManagerList, Manager.class);
     }
 
@@ -363,12 +365,6 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
             }
         }
         return managableOrgUnitList;
-    }
-
-    @Override
-    public void deleteBySystemId(String systemId) {
-        List<Y9Manager> y9ManagerList = y9ManagerRepository.findBySystemIdOrderByTabIndex(systemId);
-        y9ManagerRepository.deleteAll(y9ManagerList);
     }
 
     @EventListener

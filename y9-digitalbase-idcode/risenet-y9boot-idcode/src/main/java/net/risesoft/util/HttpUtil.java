@@ -34,9 +34,13 @@ public class HttpUtil {
     private static final int DEFAULT_TIMEOUT = 30000;
 
     private static final CloseableHttpClient HTTP_CLIENT = HttpClients.custom()
-        .setDefaultRequestConfig(RequestConfig.custom().setConnectTimeout(DEFAULT_TIMEOUT)
-            .setSocketTimeout(DEFAULT_TIMEOUT).setConnectionRequestTimeout(DEFAULT_TIMEOUT).build())
-        .setRetryHandler(new DefaultHttpRequestRetryHandler(2, true)).build();
+        .setDefaultRequestConfig(RequestConfig.custom()
+            .setConnectTimeout(DEFAULT_TIMEOUT)
+            .setSocketTimeout(DEFAULT_TIMEOUT)
+            .setConnectionRequestTimeout(DEFAULT_TIMEOUT)
+            .build())
+        .setRetryHandler(new DefaultHttpRequestRetryHandler(2, true))
+        .build();
 
     public static String get(String url) {
         if (url == null || url.isEmpty())
