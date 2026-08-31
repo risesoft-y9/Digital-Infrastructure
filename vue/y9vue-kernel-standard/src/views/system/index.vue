@@ -63,8 +63,6 @@
                     </template>
                 </y9Card>
 
-                <add-manager v-if="currData.manageable" :id="currData.id" />
-
                 <audit-log v-show="currData.manageable" :currTreeNodeInfo="currData"></audit-log>
             </div>
         </template>
@@ -90,7 +88,6 @@
 
     import BasicInfo from '@/views/system/comps/BasicInfo.vue';
     import AppList from './comps/AppList.vue';
-    import AddManager from './comps/AddManager.vue';
     import auditLog from '@/views/y9log/entityAuditLog/index.vue';
     import { importSystemJSON, removeSystem, systemAdd, systemList, systemSaveOrder } from '@/api/system/index';
 

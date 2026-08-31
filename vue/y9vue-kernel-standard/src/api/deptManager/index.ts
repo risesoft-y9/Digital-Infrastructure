@@ -42,20 +42,6 @@ export const getManagersByParentId = async (parentId) => {
 };
 
 /**
- * 根据系统id，获取人员列表
- * @param {*} systemId
- * @returns
- */
-export const getManagersBySystemId = async ( systemId) => {
-    return await platformRequest({
-        url: '/api/rest/deptManager/listManagersBySystemId',
-        method: 'GET',
-        cType: false,
-        params: { systemId: systemId }
-    });
-};
-
-/**
  * 批量删除人员
  * @param {ids:[]} IDs
  */

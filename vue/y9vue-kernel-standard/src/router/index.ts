@@ -31,6 +31,7 @@ import securityAuditorLogRouter from './modules/securityAuditorLogRouter';
 import securityUserLogRouter from './modules/securityUserLogRouter';
 import auditLogRouter from './modules/auditLogRouter';
 import subDomainRouter from './modules/subDomainRouter';
+import systemVendorRouter from './modules/systemVendorRouter';
 import sysManagerLogRouter from './modules/sysManagerLogRouter';
 import userLogRouter from './modules/userLogRouter';
 import jobRouter from './modules/jobRouter';
@@ -90,6 +91,7 @@ export const asyncRoutes = [
     authorizationDataCatalogRouter,
     dataCatalogRouter,
     subDomainRouter,
+    systemVendorRouter,
     permissionRouter,
     dictionaryRouter,
     appCategoryRouter,
