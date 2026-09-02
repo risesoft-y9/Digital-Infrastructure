@@ -6,8 +6,10 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.Signature;
 import java.security.spec.MGF1ParameterSpec;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.PSSParameterSpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
@@ -21,12 +23,24 @@ public class RSAUtil {
 
     public static final String RSA = "RSA";
 
+    /**
+     * 加解密算法
+     */
     public static final String RSA_OAEP_SHA256_PADDING = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding";
+
+    /**
+     * 签名算法
+     */
+    public static final String RSA_PSS = "RSASSA-PSS";
 
     private static final OAEPParameterSpec OAEP_PARAMETER_SPEC =
         new OAEPParameterSpec("SHA-256", "MGF1", new MGF1ParameterSpec("SHA-256"), PSource.PSpecified.DEFAULT);
 
-    private static final int KEY_SIZE = 1024;
+    private static final PSSParameterSpec PSS_PARAMETER_SPEC =
+        new PSSParameterSpec("SHA-256", "MGF1", new MGF1ParameterSpec("SHA-256"), 32,
+            PSSParameterSpec.TRAILER_FIELD_BC);
+
+    private static final int KEY_SIZE = 3072;
 
     /**
      * 获取RSA公私钥匙对
@@ -103,28 +117,60 @@ public class RSAUtil {
         return new String(bytesDecrypt, StandardCharsets.UTF_8);
     }
 
-    public static String privateKeyToPem(PrivateKey privateKey) {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("-----BEGIN PRIVATE KEY-----\n");
-
-        String base64 = Base64.getMimeEncoder(64, "\n".getBytes()).encodeToString(privateKey.getEncoded());
-        sb.append(base64);
-
-        sb.append("\n-----END PRIVATE KEY-----");
-
-        return sb.toString();
+    /**
+     * 使用RSA-PSS私钥签名，签名结果使用Base64编码
+     *
+     * @param content 待签名内容
+     * @param privateKey Base64编码的PKCS#8私钥
+     * @return Base64编码的签名
+     */
+    public static String sign(String content, String privateKey) throws Exception {
+        Signature signature = Signature.getInstance(RSA_PSS);
+        signature.initSign(string2PrivateKey(privateKey));
+        signature.setParameter(PSS_PARAMETER_SPEC);
+        signature.update(content.getBytes(StandardCharsets.UTF_8));
+        return Y9Base64.byteToBase64(signature.sign());
     }
 
-    public static String publicKeyToPem(PublicKey publicKey) {
+    /**
+     * 使用RSA-PSS公钥验签
+     *
+     * @param content 待验签内容
+     * @param signBase64 Base64编码的签名
+     * @param publicKey Base64编码的X.509公钥
+     * @return 验签是否成功
+     */
+    public static boolean verify(String content, String signBase64, String publicKey) throws Exception {
+        Signature signature = Signature.getInstance(RSA_PSS);
+        signature.initVerify(string2PublicKey(publicKey));
+        signature.setParameter(PSS_PARAMETER_SPEC);
+        signature.update(content.getBytes(StandardCharsets.UTF_8));
+        return signature.verify(Y9Base64.base64ToByte(signBase64));
+    }
+
+    /**
+     * 将Base64编码的私钥转换为PEM格式
+     */
+    public static String privateKeyToPem(String privateKey) {
+        return keyToPem(Y9Base64.base64ToByte(privateKey), "PRIVATE KEY");
+    }
+
+    /**
+     * 将Base64编码的公钥转换为PEM格式
+     */
+    public static String publicKeyToPem(String publicKey) {
+        return keyToPem(Y9Base64.base64ToByte(publicKey), "PUBLIC KEY");
+    }
+
+    private static String keyToPem(byte[] key, String keyType) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("-----BEGIN PUBLIC KEY-----\n");
+        sb.append("-----BEGIN ").append(keyType).append("-----\n");
 
-        String base64 = Base64.getMimeEncoder(64, "\n".getBytes()).encodeToString(publicKey.getEncoded());
+        String base64 = Base64.getMimeEncoder(64, "\n".getBytes(StandardCharsets.US_ASCII)).encodeToString(key);
         sb.append(base64);
 
-        sb.append("\n-----END PUBLIC KEY-----");
+        sb.append("\n-----END ").append(keyType).append("-----");
 
         return sb.toString();
     }
@@ -134,11 +180,17 @@ public class RSAUtil {
             String[] arr = genKeyPair();
             System.out.println("publicKey:" + arr[0]);
             System.out.println("privateKey:" + arr[1]);
+            System.out.println("publicKeyPem:\n" + publicKeyToPem(arr[0]));
+            System.out.println("privateKeyPem:\n" + privateKeyToPem(arr[1]));
 
             String encryptString = publicEncrypt("Risesoft@2023", arr[0]);
             System.out.println("公钥加密后字符串:" + encryptString);
             String decryptString = privateDecrypt(encryptString, arr[1]);
             System.out.println("私钥解密后字符串:" + decryptString);
+
+            String signString = sign("Risesoft@2023", arr[1]);
+            System.out.println("RSA-PSS签名:" + signString);
+            System.out.println("RSA-PSS验签:" + verify("Risesoft@2023", signString, arr[0]));
         } catch (Exception e) {
             e.printStackTrace();
         }
