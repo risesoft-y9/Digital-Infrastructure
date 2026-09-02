@@ -7,7 +7,7 @@ function unicodetoBytes(s) {
     var result = new Array();
     if (s == null || s == "")
         return result;
-    result.push(255); // add "FE" to head 
+    result.push(255); // add "FE" to head
     result.push(254);
     for (var i = 0; i < s.length; i++) {
         var c = s.charCodeAt(i).toString(16);
@@ -29,7 +29,7 @@ function bytesToUnicode(bs) {
     var result = "";
     var offset = 0;
     if (bs.length >= 2 && bs[0] == 255 && bs[1] == 254)
-        offset = 2; // delete "FE" 
+        offset = 2; // delete "FE"
     for (var i = offset; i < bs.length; i += 2) {
         var code = bs[i] + (bs[i + 1] << 8);
         result += String.fromCharCode(code);
@@ -77,7 +77,7 @@ export function decode64(input) {
     var enc1, enc2, enc3, enc4 = "";
     var i = 0;
 
-    // remove all characters that are not A-Z, a-z, 0-9, +, /, or = 
+    // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
     var base64test = /[^A-Za-z0-9/+///=]/g;
     if (base64test.exec(input)) {
         alert("There were invalid base64 characters in the input text./n"
