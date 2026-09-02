@@ -390,7 +390,7 @@ body .login_fields__user, body .login_fields__password {
 
 .login_fields__password .password-toggle {
     position: absolute;
-    z-index: 2;
+    z-index: 0;
     top: 50%;
     right: 10px;
     padding: 4px;
