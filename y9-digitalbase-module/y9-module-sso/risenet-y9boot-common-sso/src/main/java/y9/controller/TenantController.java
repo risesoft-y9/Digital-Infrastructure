@@ -21,14 +21,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.y9.json.Y9JsonUtil;
+import net.risesoft.y9.validation.ValidateUtil;
+
 import y9.controller.dto.TenantVO;
 import y9.entity.Y9Tenant;
 import y9.entity.Y9User;
 import y9.service.Y9TenantService;
 import y9.service.Y9UserService;
-import y9.util.MobileUtil;
 import y9.util.common.XSSCheckUtil;
-import y9.util.json.Y9JacksonUtil;
 
 @Lazy(false)
 @Controller
@@ -75,7 +76,7 @@ public class TenantController {
         List<Map<String, Object>> list = new ArrayList<>();
         try {
             loginName = XSSCheckUtil.filter(loginName);
-            if (MobileUtil.isMobile(loginName)) {
+            if (ValidateUtil.isMobile(loginName)) {
                 List<Y9User> users = y9UserService.findByMobileAndOriginal(loginName, Boolean.TRUE);
                 if (users.size() > 0) {
                     for (Y9User user : users) {
@@ -116,7 +117,7 @@ public class TenantController {
             Optional<Y9Tenant> tenantOptional = tenants.stream().findFirst();
             final HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            return new ResponseEntity<>(Y9JacksonUtil.writeValueAsString(tenantOptional.get()), headers, HttpStatus.OK);
+            return new ResponseEntity<>(Y9JsonUtil.writeValueAsString(tenantOptional.get()), headers, HttpStatus.OK);
         } catch (final Throwable e) {
             LOGGER.error(e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

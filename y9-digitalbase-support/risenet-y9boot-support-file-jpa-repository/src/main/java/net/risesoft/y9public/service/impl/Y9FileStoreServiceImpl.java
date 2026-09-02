@@ -25,7 +25,6 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.configuration.feature.file.Y9FileProperties;
 import net.risesoft.y9.util.crypto.AesUtil;
-import net.risesoft.y9.util.crypto.RsaUtil;
 import net.risesoft.y9public.entity.Y9FileStore;
 import net.risesoft.y9public.repository.Y9FileStoreRepository;
 import net.risesoft.y9public.service.StoreService;
@@ -50,8 +49,6 @@ public class Y9FileStoreServiceImpl implements Y9FileStoreService {
     private final StoreService storeService;
 
     private boolean encryptionFileContent = false;
-    private String privateKey = "";
-    private String publicKey = "";
     private String prefix = "";
 
     private String buildFullPath(String prefix, String customPath) {
@@ -90,7 +87,7 @@ public class Y9FileStoreServiceImpl implements Y9FileStoreService {
         byte[] bytes = storeService.retrieveFileBytes(y9FileStore.getFullPath(), y9FileStore.getRealFileName());
         if (decryptionRequired(y9FileStore)) {
             try {
-                String key = RsaUtil.decryptByPubKey(y9FileStore.getFileEnvelope(), this.publicKey);
+                String key = y9FileStore.getFileEnvelope();
                 bytes = AesUtil.decryptByte(key, bytes);
             } catch (Exception e) {
                 LOGGER.warn(e.getMessage(), e);
@@ -104,7 +101,7 @@ public class Y9FileStoreServiceImpl implements Y9FileStoreService {
         Y9FileStore y9FileStore = this.getById(id);
         if (decryptionRequired(y9FileStore)) {
             try {
-                String key = RsaUtil.decryptByPubKey(y9FileStore.getFileEnvelope(), this.publicKey);
+                String key = y9FileStore.getFileEnvelope();
                 storeService.retrieveFileStream(y9FileStore.getFullPath(), y9FileStore.getRealFileName(),
                     AesUtil.decryptStream(key, outputStream));
             } catch (Exception e) {
@@ -129,8 +126,6 @@ public class Y9FileStoreServiceImpl implements Y9FileStoreService {
     @PostConstruct
     public void init() {
         this.encryptionFileContent = this.y9FileProperties.isEncryptionFileContent();
-        this.privateKey = this.y9FileProperties.getPrivateKey();
-        this.publicKey = this.y9FileProperties.getPublicKey();
         this.prefix = this.y9FileProperties.getPrefix();
     }
 
@@ -194,11 +189,9 @@ public class Y9FileStoreServiceImpl implements Y9FileStoreService {
         if (encryptionFileContent) {
             try {
                 // 获得随机AES密钥
-                String aesKey = AesUtil.getSecretKey();
-                // 对随机AES密钥进行RSA加密
-                fileEnvelope = RsaUtil.encryptByPriKey(aesKey, this.privateKey);
+                fileEnvelope = AesUtil.getSecretKey();
 
-                inputStream = AesUtil.encryptStream(aesKey, inputStream);
+                inputStream = AesUtil.encryptStream(fileEnvelope, inputStream);
             } catch (Exception e) {
                 LOGGER.warn(e.getMessage(), e);
             }

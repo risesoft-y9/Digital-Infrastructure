@@ -11,12 +11,13 @@ import org.springframework.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.y9.Y9Context;
+
 import y9.entity.Y9LoginUser;
 import y9.entity.Y9User;
 import y9.repository.Y9LoginUserRepository;
 import y9.repository.Y9UserRepository;
 import y9.service.Y9LoginUserService;
-import y9.util.Y9Context;
 import y9.util.common.UserAgentUtil;
 
 import cz.mallat.uasparser.UserAgentInfo;

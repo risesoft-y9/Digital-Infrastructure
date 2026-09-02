@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
-import y9.util.json.Y9JacksonUtil;
+import net.risesoft.y9.json.Y9JsonUtil;
 
 /**
  * This is {@link OAuth20IntrospectionEndpointController}.
@@ -179,7 +179,7 @@ public class OAuth20IntrospectionEndpointController<T extends OAuth20Configurati
                     map.put(key, attributes.get(key).get(0));
                 }
             }
-            introspect.setAttr(Y9JacksonUtil.writeValueAsString(map));
+            introspect.setAttr(Y9JsonUtil.writeValueAsString(map));
             // y9 end
 
             val methods = authentication.getAttributes().get(AuthenticationManager.AUTHENTICATION_METHOD_ATTRIBUTE);

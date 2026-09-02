@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import y9.util.Y9Context;
-import y9.util.Y9Result;
+import net.risesoft.pojo.Y9Result;
+import net.risesoft.y9.Y9Context;
 
 @Lazy(false)
 @Controller

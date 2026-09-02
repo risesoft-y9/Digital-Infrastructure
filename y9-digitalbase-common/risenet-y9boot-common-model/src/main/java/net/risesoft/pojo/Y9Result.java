@@ -2,6 +2,7 @@ package net.risesoft.pojo;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -73,6 +74,8 @@ public class Y9Result<T> implements Serializable {
     /**
      * 错误代码
      */
+    // 如果 ObjectMapper 默认配置为 @JsonInclude(JsonInclude.Include.DEFAULT)，需要这个注解才能在 code 为 0 时正常返回
+    @JsonInclude
     private int code;
 
     /**

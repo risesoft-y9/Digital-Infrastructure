@@ -1,30 +1,27 @@
 package net.risesoft.y9.util.crypto;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
-import java.security.spec.InvalidKeySpecException;
 import java.security.spec.MGF1ParameterSpec;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.PSSParameterSpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.OAEPParameterSpec;
 import javax.crypto.spec.PSource;
 
-import org.apache.commons.codec.binary.Base64;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import net.risesoft.y9.util.base64.Y9Base64Util;
 
 /**
  * RSA加密工具类
@@ -36,171 +33,25 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RsaUtil {
 
-    /**
-     * 数字签名，密钥算法
-     */
-    private static final String RSA = "RSA";
+    public static final String RSA = "RSA";
 
+    /**
+     * 加解密算法
+     */
     public static final String RSA_OAEP_SHA256_PADDING = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding";
+
+    /**
+     * 签名算法
+     */
+    public static final String RSA_PSS = "RSASSA-PSS";
 
     private static final OAEPParameterSpec OAEP_PARAMETER_SPEC =
         new OAEPParameterSpec("SHA-256", "MGF1", new MGF1ParameterSpec("SHA-256"), PSource.PSpecified.DEFAULT);
 
-    /**
-     * 数字签名签名/验证算法
-     */
-    private static final String SIGNATURE_ALGORITHM = "MD5withRSA";
+    private static final PSSParameterSpec PSS_PARAMETER_SPEC = new PSSParameterSpec("SHA-256", "MGF1",
+        new MGF1ParameterSpec("SHA-256"), 32, PSSParameterSpec.TRAILER_FIELD_BC);
 
-    /**
-     * RSA密钥长度，RSA算法的默认密钥长度是1024密钥长度必须是64的倍数，在512到65536位之间
-     */
-    private static final int KEY_SIZE = 1024;
-
-    /**
-     * 密钥转成byte[]
-     *
-     * @param key 密钥
-     * @return byte[] 密钥
-     */
-    private static byte[] decodeBase64(String key) {
-        return Base64.decodeBase64(key);
-    }
-
-    /**
-     * 私钥解密
-     *
-     * @param data 待解密的数据
-     * @param priKey 私钥
-     * @return byte[] 解密的数据
-     * @throws Exception 异常
-     */
-    public static byte[] decryptByPriKey(byte[] data, byte[] priKey) throws Exception {
-        Cipher cipher = Cipher.getInstance(RSA_OAEP_SHA256_PADDING);
-        cipher.init(Cipher.DECRYPT_MODE, byteArrayToPrivateKey(priKey), OAEP_PARAMETER_SPEC);
-        return cipher.doFinal(data);
-    }
-
-    private static PrivateKey byteArrayToPrivateKey(byte[] priKey)
-        throws NoSuchAlgorithmException, InvalidKeySpecException {
-        PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(priKey);
-        KeyFactory keyFactory = KeyFactory.getInstance(RSA);
-        return keyFactory.generatePrivate(pkcs8KeySpec);
-    }
-
-    /**
-     * 私钥解密
-     *
-     * @param data 解密前的字符串
-     * @param privateKey 私钥
-     * @return String 解密后的字符串
-     * @throws Exception 异常
-     */
-    public static String decryptByPriKey(String data, String privateKey) throws Exception {
-        byte[] priKey = decodeBase64(privateKey);
-        byte[] design = decryptByPriKey(decodeBase64(data), priKey);
-        return new String(design);
-    }
-
-    /**
-     * 公钥解密
-     *
-     * @param data 待解密的数据
-     * @param pubKey 公钥
-     * @return String 解密后的数据
-     * @throws Exception 异常
-     */
-    public static byte[] decryptByPubKey(byte[] data, byte[] pubKey) throws Exception {
-        Cipher cipher = Cipher.getInstance(RSA_OAEP_SHA256_PADDING);
-        cipher.init(Cipher.DECRYPT_MODE, byteArrayToPublicKey(pubKey), OAEP_PARAMETER_SPEC);
-        return cipher.doFinal(data);
-    }
-
-    private static PublicKey byteArrayToPublicKey(byte[] pubKey)
-        throws NoSuchAlgorithmException, InvalidKeySpecException {
-        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(pubKey);
-        KeyFactory keyFactory = KeyFactory.getInstance(RSA);
-        return keyFactory.generatePublic(x509KeySpec);
-    }
-
-    /**
-     * 公钥解密
-     *
-     * @param data 解密前的字符串
-     * @param publicKey 公钥
-     * @return String 解密后的字符串
-     * @throws Exception 异常
-     */
-    public static String decryptByPubKey(String data, String publicKey) throws Exception {
-        byte[] pubKey = decodeBase64(publicKey);
-        byte[] design = decryptByPubKey(decodeBase64(data), pubKey);
-        return new String(design);
-    }
-
-    /**
-     * 密钥转成字符串
-     *
-     * @param key 密钥
-     * @return String 密钥转成的字符串
-     */
-    private static String encodeBase64String(byte[] key) {
-        return Base64.encodeBase64String(key);
-    }
-
-    /**
-     * 私钥加密
-     *
-     * @param data 待加密的数据
-     * @param priKey 私钥
-     * @return byte[] 加密后的数据
-     * @throws Exception 异常
-     */
-    public static byte[] encryptByPriKey(byte[] data, byte[] priKey) throws Exception {
-        Cipher cipher = Cipher.getInstance(RSA_OAEP_SHA256_PADDING);
-        cipher.init(Cipher.ENCRYPT_MODE, byteArrayToPrivateKey(priKey), OAEP_PARAMETER_SPEC);
-        return cipher.doFinal(data);
-    }
-
-    /**
-     * 私钥加密
-     *
-     * @param data 加密前的字符串
-     * @param privateKey 私钥
-     * @return String 加密后的字符串
-     * @throws Exception 异常
-     */
-    public static String encryptByPriKey(String data, String privateKey) throws Exception {
-        byte[] priKey = decodeBase64(privateKey);
-        byte[] enSign = encryptByPriKey(data.getBytes(), priKey);
-        return encodeBase64String(enSign);
-    }
-
-    /**
-     * 公钥加密
-     *
-     * @param data 待加密数据
-     * @param pubKey 公钥
-     * @return byte[] 加密数据
-     * @throws Exception 异常
-     */
-    public static byte[] encryptByPubKey(byte[] data, byte[] pubKey) throws Exception {
-        Cipher cipher = Cipher.getInstance(RSA_OAEP_SHA256_PADDING);
-        cipher.init(Cipher.ENCRYPT_MODE, byteArrayToPublicKey(pubKey), OAEP_PARAMETER_SPEC);
-        return cipher.doFinal(data);
-    }
-
-    /**
-     * 公钥加密
-     *
-     * @param data 加密前的字符串
-     * @param publicKey 公钥
-     * @return String 加密后的字符串
-     * @throws Exception 异常
-     */
-    public static String encryptByPubKey(String data, String publicKey) throws Exception {
-        byte[] pubKey = decodeBase64(publicKey);
-        byte[] enSign = encryptByPubKey(data.getBytes(), pubKey);
-        return encodeBase64String(enSign);
-    }
+    private static final int KEY_SIZE = 3072;
 
     /**
      * 获取RSA公私钥匙对
@@ -217,7 +68,7 @@ public class RsaUtil {
     private static String getPublicKey(KeyPair keyPair) {
         PublicKey publicKey = keyPair.getPublic();
         byte[] bytes = publicKey.getEncoded();
-        return encodeBase64String(bytes);
+        return Y9Base64Util.byteToBase64(bytes);
     }
 
     /**
@@ -226,7 +77,7 @@ public class RsaUtil {
     private static String getPrivateKey(KeyPair keyPair) {
         PrivateKey privateKey = keyPair.getPrivate();
         byte[] bytes = privateKey.getEncoded();
-        return encodeBase64String(bytes);
+        return Y9Base64Util.byteToBase64(bytes);
     }
 
     public static String[] genKeyPair() throws Exception {
@@ -238,68 +89,121 @@ public class RsaUtil {
     }
 
     /**
-     * 生成文件保存秘钥
-     *
-     * @param filePath 文件路径
-     * @param keyStr 秘钥
+     * 将Base64编码后的公钥转换成PublicKey对象
      */
-    public static void saveKeyForFile(String filePath, String keyStr) {
-        File file = new File(filePath);
-        if (!file.exists()) {
-            file.mkdir();
-        }
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-            bw.write(keyStr);
-            bw.flush();
-        } catch (IOException e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-    }
-
-    /**
-     * RSA签名
-     *
-     * @param data 待签名数据
-     * @param priKey 私钥
-     * @return String 签名
-     * @throws Exception 异常
-     */
-    public static String sign(byte[] data, byte[] priKey) throws Exception {
-        // 取得私钥
-        PrivateKey privateKey = byteArrayToPrivateKey(priKey);
-        // 实例化Signature
-        Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
-        // 初始化Signature
-        signature.initSign(privateKey);
-        // 更新
-        signature.update(data);
-        return encodeBase64String(signature.sign());
-    }
-
-    /**
-     * RSA校验数字签名
-     *
-     * @param data 待校验数据
-     * @param sign 数字签名
-     * @param pubKey 公钥
-     * @return boolean 校验成功返回true，失败返回false
-     * @exception Exception error
-     */
-    public boolean verify(byte[] data, byte[] sign, byte[] pubKey) throws Exception {
-        // 实例化密钥工厂
+    public static PublicKey string2PublicKey(String pubStr) throws Exception {
+        byte[] keyBytes = Y9Base64Util.base64ToByte(pubStr);
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance(RSA);
-        // 初始化公钥
-        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(pubKey);
-        // 产生公钥
-        PublicKey publicKey = keyFactory.generatePublic(x509KeySpec);
-        // 实例化Signature
-        Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
-        // 初始化Signature
-        signature.initVerify(publicKey);
-        // 更新
-        signature.update(data);
-        // 验证
-        return signature.verify(sign);
+        return keyFactory.generatePublic(keySpec);
     }
 
+    /**
+     * 将Base64编码后的私钥转换成PrivateKey对象
+     */
+    private static PrivateKey string2PrivateKey(String priStr) throws Exception {
+        byte[] keyBytes = Y9Base64Util.base64ToByte(priStr);
+        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
+        KeyFactory keyFactory = KeyFactory.getInstance(RSA);
+        return keyFactory.generatePrivate(keySpec);
+    }
+
+    /**
+     * 公钥加密
+     */
+    public static String publicEncrypt(String content, String publicKey) throws Exception {
+        Cipher cipher = Cipher.getInstance(RSA_OAEP_SHA256_PADDING);
+        cipher.init(Cipher.ENCRYPT_MODE, string2PublicKey(publicKey), OAEP_PARAMETER_SPEC);
+        byte[] byteEncrypt = cipher.doFinal(content.getBytes(StandardCharsets.UTF_8));
+        return Y9Base64Util.byteToBase64(byteEncrypt);
+    }
+
+    /**
+     * 私钥解密
+     */
+    public static String privateDecrypt(String contentBase64, String privateKey) throws Exception {
+        Cipher cipher = Cipher.getInstance(RSA_OAEP_SHA256_PADDING);
+        cipher.init(Cipher.DECRYPT_MODE, string2PrivateKey(privateKey), OAEP_PARAMETER_SPEC);
+        byte[] bytesDecrypt = cipher.doFinal(Y9Base64Util.base64ToByte(contentBase64));
+        return new String(bytesDecrypt, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * 使用RSA-PSS私钥签名，签名结果使用Base64编码
+     *
+     * @param content 待签名内容
+     * @param privateKey Base64编码的PKCS#8私钥
+     * @return Base64编码的签名
+     */
+    public static String sign(String content, String privateKey) throws Exception {
+        Signature signature = Signature.getInstance(RSA_PSS);
+        signature.initSign(string2PrivateKey(privateKey));
+        signature.setParameter(PSS_PARAMETER_SPEC);
+        signature.update(content.getBytes(StandardCharsets.UTF_8));
+        return Y9Base64Util.byteToBase64(signature.sign());
+    }
+
+    /**
+     * 使用RSA-PSS公钥验签
+     *
+     * @param content 待验签内容
+     * @param signBase64 Base64编码的签名
+     * @param publicKey Base64编码的X.509公钥
+     * @return 验签是否成功
+     */
+    public static boolean verify(String content, String signBase64, String publicKey) throws Exception {
+        Signature signature = Signature.getInstance(RSA_PSS);
+        signature.initVerify(string2PublicKey(publicKey));
+        signature.setParameter(PSS_PARAMETER_SPEC);
+        signature.update(content.getBytes(StandardCharsets.UTF_8));
+        return signature.verify(Y9Base64Util.base64ToByte(signBase64));
+    }
+
+    /**
+     * 将Base64编码的私钥转换为PEM格式
+     */
+    public static String privateKeyToPem(String privateKey) {
+        return keyToPem(Y9Base64Util.base64ToByte(privateKey), "PRIVATE KEY");
+    }
+
+    /**
+     * 将Base64编码的公钥转换为PEM格式
+     */
+    public static String publicKeyToPem(String publicKey) {
+        return keyToPem(Y9Base64Util.base64ToByte(publicKey), "PUBLIC KEY");
+    }
+
+    private static String keyToPem(byte[] key, String keyType) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("-----BEGIN ").append(keyType).append("-----\n");
+
+        String base64 = Base64.getMimeEncoder(64, "\n".getBytes(StandardCharsets.US_ASCII)).encodeToString(key);
+        sb.append(base64);
+
+        sb.append("\n-----END ").append(keyType).append("-----");
+
+        return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        try {
+            String[] arr = genKeyPair();
+            System.out.println("publicKey:" + arr[0]);
+            System.out.println("privateKey:" + arr[1]);
+            System.out.println("publicKeyPem:\n" + publicKeyToPem(arr[0]));
+            System.out.println("privateKeyPem:\n" + privateKeyToPem(arr[1]));
+
+            String encryptString = publicEncrypt("Risesoft@2023", arr[0]);
+            System.out.println("公钥加密后字符串:" + encryptString);
+            String decryptString = privateDecrypt(encryptString, arr[1]);
+            System.out.println("私钥解密后字符串:" + decryptString);
+
+            String signString = sign("Risesoft@2023", arr[1]);
+            System.out.println("RSA-PSS签名:" + signString);
+            System.out.println("RSA-PSS验签:" + verify("Risesoft@2023", signString, arr[0]));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

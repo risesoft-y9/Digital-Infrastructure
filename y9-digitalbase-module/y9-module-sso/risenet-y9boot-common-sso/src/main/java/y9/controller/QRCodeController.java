@@ -18,12 +18,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.pojo.Y9Result;
+import net.risesoft.y9.json.Y9JsonUtil;
+import net.risesoft.y9.util.Y9Util;
+import net.risesoft.y9.util.base64.Y9Base64Util;
+
 import y9.service.Y9KeyValueService;
-import y9.util.Y9Base64;
 import y9.util.Y9QRCode;
-import y9.util.Y9Result;
-import y9.util.common.Y9Util;
-import y9.util.json.Y9JacksonUtil;
 
 @Lazy(false)
 @Controller
@@ -97,22 +98,21 @@ public class QRCodeController {
         try {
             if (StringUtils.isEmpty(uuid) || StringUtils.isEmpty(userId)) {
                 Y9Util.renderJson(response,
-                    Y9JacksonUtil.writeValueAsString(Y9Result.failure(400, "请求参数有问题：uuid或userId不能为空")));
+                    Y9JsonUtil.writeValueAsString(Y9Result.failure(400, "请求参数有问题：uuid或userId不能为空")));
                 return;
             }
-            userId = Y9Base64.decode(userId);
+            userId = Y9Base64Util.decode(userId);
             String obj = y9KeyValueService.get("QRCode:" + uuid);
             if (null != obj) {
                 if (obj.contains("1$")) {
-                    Y9Util.renderJson(response,
-                        Y9JacksonUtil.writeValueAsString(Y9Result.failure(419, "二维码已过期：已被扫描。")));
+                    Y9Util.renderJson(response, Y9JsonUtil.writeValueAsString(Y9Result.failure(419, "二维码已过期：已被扫描。")));
                 } else {
                     y9KeyValueService.put("QRCode:" + uuid, 1 + "$" + userId, 5);
-                    Y9Util.renderJson(response, Y9JacksonUtil.writeValueAsString(Y9Result.successMsg("扫码成功")));
+                    Y9Util.renderJson(response, Y9JsonUtil.writeValueAsString(Y9Result.successMsg("扫码成功")));
                 }
             } else {
                 Y9Util.renderJson(response,
-                    Y9JacksonUtil.writeValueAsString(Y9Result.failure(419, "二维码已过期：uuid已过期自动清除。")));
+                    Y9JsonUtil.writeValueAsString(Y9Result.failure(419, "二维码已过期：uuid已过期自动清除。")));
             }
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);

@@ -12,13 +12,14 @@ import org.springframework.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.json.Y9JsonUtil;
+
 import y9.entity.Y9LoginUser;
 import y9.entity.Y9User;
 import y9.repository.Y9UserRepository;
 import y9.service.Y9LoginUserService;
-import y9.util.Y9Context;
 import y9.util.common.UserAgentUtil;
-import y9.util.json.Y9JacksonUtil;
 
 import cz.mallat.uasparser.UserAgentInfo;
 
@@ -100,7 +101,7 @@ public class Y9LoginUserKafkaServiceImpl implements Y9LoginUserService {
             user.setScreenResolution(screenResolution);
             user.setOsName(uaInfo.getOsName());
             user.setManagerLevel(managerLevel);
-            String jsonString = Y9JacksonUtil.writeValueAsString(user);
+            String jsonString = Y9JsonUtil.writeValueAsString(user);
             y9KafkaTemplate.send("y9_userLoginInfo_message", jsonString);
             LOGGER.info("保存登录日志成功至Kafka成功,登录信息：{}", user.getLogMessage());
 

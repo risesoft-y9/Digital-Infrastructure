@@ -20,12 +20,13 @@ import org.springframework.web.filter.ForwardedHeaderFilter;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.y9.Y9Context;
+
 import y9.repository.Y9LoginUserRepository;
 import y9.repository.Y9UserRepository;
 import y9.service.Y9KeyValueService;
 import y9.service.Y9LoginUserService;
 import y9.service.impl.Y9LoginUserJpaServiceImpl;
-import y9.util.Y9Context;
 
 @Lazy(false)
 @EnableConfigurationProperties(Y9Properties.class)

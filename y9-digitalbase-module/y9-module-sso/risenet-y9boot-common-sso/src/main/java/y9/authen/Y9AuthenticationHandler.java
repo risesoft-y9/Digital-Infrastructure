@@ -27,13 +27,14 @@ import com.google.common.collect.Lists;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.util.crypto.RsaUtil;
+import net.risesoft.y9.util.signing.Y9MessageDigestUtil;
+
 import y9.Y9Properties;
 import y9.entity.Y9User;
 import y9.service.Y9LoginUserService;
 import y9.service.Y9UserService;
-import y9.util.Y9Context;
-import y9.util.Y9MessageDigest;
-import y9.util.common.RSAUtil;
 
 @Slf4j
 public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
@@ -122,8 +123,8 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         String loginMsg = "登录成功";
         try {
             String rsaPrivateKey = y9Properties.getRsaPrivateKey();
-            String plainUsername = RSAUtil.privateDecrypt(encryptedUsername, rsaPrivateKey);
-            String plainPassword = RSAUtil.privateDecrypt(encryptedPassword, rsaPrivateKey);
+            String plainUsername = RsaUtil.privateDecrypt(encryptedUsername, rsaPrivateKey);
+            String plainPassword = RsaUtil.privateDecrypt(encryptedPassword, rsaPrivateKey);
             if (plainUsername.contains("&")) {
                 String agentUserName = plainUsername.substring(plainUsername.indexOf("&") + 1);
                 String agentTenantShortName = "operation";
@@ -139,7 +140,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
                 } else {
                     y9User = agentUsers.get(0);
                     String hashed = y9User.getPassword();
-                    if (!Y9MessageDigest.bcryptMatch(plainPassword, hashed)) {
+                    if (!Y9MessageDigestUtil.bcryptMatch(plainPassword, hashed)) {
                         loginMsg = "代理用户密码错误。";
                         throw new FailedLoginException("代理用户密码错误。");
                     } else {
@@ -167,7 +168,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
                 } else {
                     y9User = users.get(0);
                     String hashed = y9User.getPassword();
-                    if (!Y9MessageDigest.bcryptMatch(plainPassword, hashed)) {
+                    if (!Y9MessageDigestUtil.bcryptMatch(plainPassword, hashed)) {
                         loginMsg = "用户密码错误。";
                         throw new FailedLoginException("用户密码错误。");
                     }
@@ -219,7 +220,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         }
 
         if ("qrCode".equals(loginType)) {
-            String userId = RSAUtil.privateDecrypt(username, y9Properties.getRsaPrivateKey());
+            String userId = RsaUtil.privateDecrypt(username, y9Properties.getRsaPrivateKey());
             if (StringUtils.isNotBlank(userId)) {
                 return y9UserService.findByPersonIdAndOriginal(userId, Boolean.TRUE);
             } else {
