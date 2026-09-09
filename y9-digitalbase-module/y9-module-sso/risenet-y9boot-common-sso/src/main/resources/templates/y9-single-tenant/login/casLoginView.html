@@ -108,14 +108,14 @@
             type: 'GET',
             dataType: 'json',
             success: function (data) {
-                $("#tenantShortName").val(data.shortName);
+                $("#tenantShortName").val(data.tenantShortName);
                 var logoImage = $("#logo-img");
                 logoImage.attr("src", data.logoIcon || logoImage.attr("data-default-src")).show();
                 if (data.description) {
                     $('#logo-name').text(data.description);
                 }
-                if (data.name) {
-                    document.title = data.name;
+                if (data.tenantName) {
+                    document.title = data.tenantName;
                 }
             },
             error: function () {

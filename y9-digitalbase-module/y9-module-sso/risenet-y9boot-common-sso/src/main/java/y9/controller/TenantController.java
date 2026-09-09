@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
@@ -114,10 +113,14 @@ public class TenantController {
     public ResponseEntity<String> singleTenant() {
         try {
             List<Y9Tenant> tenants = y9TenantService.listByEnabled(Boolean.TRUE);
-            Optional<Y9Tenant> tenantOptional = tenants.stream().findFirst();
+            TenantVO tenantVO = tenants.stream()
+                .findFirst()
+                .map(tenant -> new TenantVO(tenant.getName(), tenant.getShortName(), tenant.getLogoIcon(),
+                    tenant.getDescription()))
+                .get();
             final HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            return new ResponseEntity<>(Y9JsonUtil.writeValueAsString(tenantOptional.get()), headers, HttpStatus.OK);
+            return new ResponseEntity<>(Y9JsonUtil.writeValueAsString(tenantVO), headers, HttpStatus.OK);
         } catch (final Throwable e) {
             LOGGER.error(e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
