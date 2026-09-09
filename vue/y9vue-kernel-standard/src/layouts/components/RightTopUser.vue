@@ -1,18 +1,17 @@
 <template>
     <el-dropdown :hide-on-click="true" class="user-el-dropdown" @command="onMenuClick">
-        <div class="name" @click="(e) => e.preventDefault()">
+        <div class="name">
             <!-- show & if 的vue指令 仅用于适配移动端 -->
             <div v-show="settingStore.getWindowWidth > 425">
-                <span>{{ $t(`${userInfo.name}`) }}</span>
-                <span>{{ initInfo?.department?.name }}</span>
+                <span>{{ $t(userInfo.name) }}</span>
             </div>
             <el-avatar
                 v-if="settingStore.device === 'mobile'"
-                :src="userInfo.avator ? userInfo.avator : ''"
+                :src="userInfo.avator || ''"
                 :style="{
-                    'font-size': fontSizeObj.baseFontSize,
-                    'background-color': 'var(--el-color-primary)',
-                    'margin-top': '8px'
+                    fontSize: fontSizeObj?.baseFontSize,
+                    backgroundColor: 'var(--el-color-primary)',
+                    marginTop: '8px'
                 }"
             >
                 {{ userInfo.loginName }}
@@ -22,88 +21,54 @@
             <el-dropdown-menu>
                 <el-dropdown-item command="personalCenter">
                     <div
-                        :style="{ 'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight }"
                         class="el-dropdown-item"
+                        :style="{ 'font-size': fontSizeObj?.baseFontSize, 'line-height': fontSizeObj?.lineHeight }"
                     >
-                        <i class="ri-user-line"></i>{{ $t('个人中心') }}
+                        <i class="ri-user-line"></i>
+                        <span>{{ $t('个人中心') }}</span>
                     </div>
                 </el-dropdown-item>
-                <!-- <el-dropdown-item command="signIn">
-                    <div class="el-dropdown-item" :style="{'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight}">
-                        <i class="ri-calendar-check-line"></i>{{ $t("已签到") }}
-                    </div>
-                </el-dropdown-item>
-                <el-dropdown-item command="signOut">
-                    <div class="el-dropdown-item" :style="{'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight}">
-                        <i class="ri-bookmark-line"></i>{{ $t("已签退") }}
-                    </div>
-                </el-dropdown-item>
-                <el-divider style="padding-bottom: 12px;margin: 0px;margin-top: 6px;"></el-divider>
-                <el-dropdown-item command="changeDept">
-                    <div class="el-dropdown-item" :style="{'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight}">
-                        <i class="ri-route-line"></i>{{ $t("选择切换部门") }}
-                    </div>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                    <div
-                        class="el-dropdown-item"
-                        :style="{'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight}"
-                        v-for="item in departmentMapList"
-                        :key="item.departmentId"
-                        style="text-align: center"
-                        @click="changeDept(item.departmentId)"
-                    >{{ item.departmentName }}</div>
-                </el-dropdown-item>
-                <el-divider style="padding-bottom: 5px;margin: 0px;"></el-divider> -->
+                <!-- <el-divider style="padding-bottom: 5px;margin: 0px;"></el-divider> -->
                 <el-dropdown-item command="logout">
                     <div
-                        :style="{ 'font-size': fontSizeObj.baseFontSize, 'line-height': fontSizeObj.lineHeight }"
                         class="el-dropdown-item"
+                        :style="{ 'font-size': fontSizeObj?.baseFontSize, 'line-height': fontSizeObj?.lineHeight }"
                     >
-                        <i class="ri-logout-box-r-line"></i>{{ $t('退出') }}
+                        <i class="ri-logout-box-r-line"></i>
+                        <span>{{ $t('退出') }}</span>
                     </div>
                 </el-dropdown-item>
             </el-dropdown-menu>
         </template>
     </el-dropdown>
 </template>
-<script lang="ts" setup>
+
+<script setup lang="ts">
     import { inject } from 'vue';
     import { useRouter } from 'vue-router';
     import { useSettingStore } from '@/store/modules/settingStore';
-    import y9_storage from '@/utils/storage';
     import { $y9_SSO } from '@/main';
 
-    interface RightTopUserSetupData {
-        settingStore?: any;
-        userInfo: Object;
-        initInfo: Object;
-        departmentMapList: Object;
-        onMenuClick: (event: any) => Promise<void>;
-        fontSizeObj: Object;
-    }
-
     const settingStore = useSettingStore();
-    // 注入 字体变量
-    const fontSizeObj: any = inject('sizeObjInfo');
     const router = useRouter();
-    // const personInfo = ref();
-    // 获取当前登录用户信息
-    const userInfo = JSON.parse(sessionStorage.getItem('ssoUserInfo'));
 
-    const initInfo = y9_storage.getObjectItem('initInfo');
+    const fontSizeObj = inject('sizeObjInfo') as Record<string, string> | undefined;
+
+    const getSafeUserInfo = () => {
+        try {
+            return JSON.parse(sessionStorage.getItem('ssoUserInfo') || '{}');
+        } catch (e) {
+            console.error('解析 ssoUserInfo 失败:', e);
+            return {};
+        }
+    };
+    const userInfo = getSafeUserInfo();
+
     // 点击菜单
     const onMenuClick = async (command: string) => {
         switch (command) {
             case 'personalCenter':
-                // personInfo.value.show(userInfo.personId);
                 router.push({ name: 'personInfo' });
-                break;
-            case 'signIn':
-                break;
-            case 'signOut':
-                break;
-            case 'changeDept':
                 break;
             case 'logout':
                 try {
@@ -111,20 +76,20 @@
                         redirect_uri: window.location.origin + import.meta.env.VUE_APP_PUBLIC_PATH
                     };
                     $y9_SSO.ssoLogout(params);
-                } catch (error) {
+                } catch (error: any) {
                     ElMessage({
                         message: error.message || 'Has Error',
                         type: 'error',
-                        duration: 5 * 1000
+                        duration: 5000
                     });
                 }
                 break;
-
             default:
                 break;
         }
     };
 </script>
+
 <style lang="scss" scoped>
     @import '@/theme/global-vars.scss';
 
@@ -141,7 +106,7 @@
 
     .name {
         color: var(--el-text-color-primary);
-        font-size: v-bind('fontSizeObj.baseFontSize');
+        font-size: v-bind('fontSizeObj?.baseFontSize');
         display: flex;
         outline: none;
 
@@ -166,5 +131,6 @@
     .el-dropdown-item {
         width: 100%;
         display: flex;
+        align-items: center; // 6. 优化：图标和文字垂直居中
     }
 </style>

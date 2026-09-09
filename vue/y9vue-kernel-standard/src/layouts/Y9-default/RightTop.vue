@@ -1,7 +1,9 @@
 <script lang="ts" setup>
     import { inject } from 'vue';
-    import RightTopUser from '../components/RightTopUser.vue';
     import { useSettingStore } from '@/store/modules/settingStore';
+
+    import RightTopUser from '../components/RightTopUser.vue';
+    import UseDark from '../components/UseDark/index.vue';
 
     // 个人信息 —— 头像
     const userInfo = JSON.parse(sessionStorage.getItem('ssoUserInfo'));
@@ -27,14 +29,6 @@
             menuCollapsed: !settingStore.getMenuCollapsed
         });
     };
-
-    // 白天黑夜功能
-    const isDark = useDark({
-        selector: 'html',
-        valueDark: 'theme-dark',
-        valueLight: ''
-    });
-    const toggleDark = useToggle(isDark);
 
     // 锁屏
     const lockScreenFunc = () => {
@@ -67,9 +61,9 @@
                 <span>{{ $t('锁屏') }}</span>
             </div>
             <!-- <div class="item search" @click="searchFunc" v-show="settingStore.getSearch">
-          <i class="ri-search-line"></i>
-          <span>{{ $t("搜索") }}</span>
-      </div> -->
+                <i class="ri-search-line"></i>
+                <span>{{ $t('搜索') }}</span>
+            </div> -->
             <div v-show="settingStore.getRefresh" class="item" @click="refreshFunc">
                 <i class="ri-refresh-line"></i>
                 <span>{{ $t('刷新') }}</span>
@@ -83,18 +77,14 @@
                 <span>{{ $t('设置') }}</span>
             </div>
             <!-- <div class="item notify" v-show="settingStore.getNotify">
-          <el-badge :value="3" class="badge"></el-badge>
-          <i class="ri-notification-line"></i>
-      </div> -->
-            <!-- <div class="item isDark">
-          <i class="ri-moon-line" @click="toggleDark" v-if="!isDark"></i>
-          <i class="ri-sun-line" @click="toggleDark" v-else></i>
-      </div> -->
+                <el-badge :value="3" class="badge"></el-badge>
+                <i class="ri-notification-line"></i>
+            </div> -->
+            <!-- <UseDark /> -->
             <div class="item user">
                 <RightTopUser />
             </div>
             <div class="item user">
-                <!-- 头像测试链接地址：https://www.youshengyun.com/fileManager/files/e6b5d41fd2bd4cdda538139f9b7848c7.jpg -->
                 <el-avatar :src="userInfo.avator ? userInfo.avator : ''"> {{ $t(`${userInfo.loginName}`) }}</el-avatar>
             </div>
         </div>

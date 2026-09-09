@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-13 17:31:19
- * @LastEditTime: 2023-08-03 09:46:26
+ * @LastEditTime: 2026-09-08 09:50:42
  * @LastEditors: mengjuhua
  * @Description:    卡片式标签页
 -->
@@ -38,7 +38,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-    import { computed } from 'vue';
+    import { computed, Ref } from 'vue';
     import { useRouter } from 'vue-router';
     import { useRouterStore } from '@/store/modules/routerStore';
     import { useSettingStore } from '@/store/modules/settingStore';

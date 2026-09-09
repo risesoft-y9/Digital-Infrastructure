@@ -1,109 +1,140 @@
-<!--
- * @Author: hongzhew
- * @Date: 2022-03-28 09:48:44
- * @LastEditors: mengjuhua
- * @LastEditTime: 2023-12-26 11:20:54
- * @Description: 
--->
 <script lang="ts" setup>
-    import { inject } from 'vue';
+    import { inject, onMounted, ref } from 'vue';
     import SiderMenu from '@/layouts/components/SiderMenu.vue';
-    // 注入 字体变量
-    const fontSizeObj: any = inject('sizeObjInfo');
 
-    const props = defineProps({
-        menuCollapsed: {
-            type: Boolean,
-            default: false
-        },
-        belongTopMenu: {
-            type: String,
-            default: ''
-        },
-        defaultActive: {
-            type: String,
-            default: ''
-        },
-        menuData: {
-            type: Array,
-            default: () => {
-                return [];
-            }
+    // --- 类型定义与注入 ---
+    interface SizeObjInfo {
+        largeFontSize?: string;
+        [key: string]: any;
+    }
+
+    // 提供默认值，防止 inject 失败导致报错
+    const fontSizeObj = inject<SizeObjInfo>('sizeObjInfo', { largeFontSize: '16px' });
+
+    // --- Props 定义 ---
+    interface Props {
+        menuCollapsed?: boolean;
+        belongTopMenu?: string;
+        defaultActive?: string;
+        menuData?: any[];
+    }
+
+    const props = withDefaults(defineProps<Props>(), {
+        menuCollapsed: false,
+        belongTopMenu: '',
+        defaultActive: '',
+        menuData: () => []
+    });
+
+    // --- 滚动逻辑 ---
+    const menuContainerRef = ref<HTMLElement | null>(null);
+
+    onMounted(() => {
+        const container = menuContainerRef.value;
+        if (container) {
+            // 监听滚轮事件，将垂直滚动转换为水平滚动
+            const handleWheel = (evt: WheelEvent) => {
+                // 仅当内容宽度超过容器宽度时生效
+                if (container.scrollWidth > container.clientWidth) {
+                    // 阻止默认的页面垂直滚动
+                    evt.preventDefault();
+                    // 将滚轮的 deltaY 转换为 scrollLeft 的变化
+                    container.scrollLeft += evt.deltaY;
+                }
+            };
+
+            // passive: false 允许调用 preventDefault
+            container.addEventListener('wheel', handleWheel, { passive: false });
         }
     });
 </script>
-
 <template>
-    <div id="header-menus">
+    <!-- 绑定 ref 用于 JS 控制滚动 -->
+    <div ref="menuContainerRef" class="header-menu-container">
         <sider-menu
-            :belongTopMenu="belongTopMenu"
-            :defaultActive="defaultActive"
-            :menuCollapsed="menuCollapsed"
-            :menuData="menuData"
-            menuMode="horizontal"
-        ></sider-menu>
+            :belong-top-menu="belongTopMenu"
+            :default-active="defaultActive"
+            :menu-collapsed="menuCollapsed"
+            :menu-data="menuData"
+            class="custom-horizontal-menu"
+            menu-mode="horizontal"
+            popper-class="my-custom-popup"
+        />
     </div>
 </template>
 
 <style lang="scss" scoped>
     @import '@/theme/global-vars.scss';
 
-    #header-menus {
+    .header-menu-container {
         width: 100%;
-        overflow: auto;
+        background-color: var(--el-bg-color);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        z-index: 100;
+        position: relative;
+
+        // --- 核心滚动样式 ---
+        overflow-x: auto; // 允许横向滚动
+        overflow-y: hidden; // 隐藏纵向滚动
+
+        // 隐藏滚动条 (Chrome, Safari, Edge)
+        &::-webkit-scrollbar {
+            display: none;
+        }
+        // 隐藏滚动条 (Firefox)
         scrollbar-width: none;
-        box-shadow: 2px 2px 2px 1px rgb(0 0 0 / 6%);
-        z-index: 2;
 
-        & > ul {
-            border-right: none;
+        // 确保菜单项单行排列，不换行
+        :deep(.custom-horizontal-menu) {
+            // 去除 el-link 或 router-link 的下划线
+            .el-link,
+            a {
+                text-decoration: none !important;
+            }
+            .el-menu {
+                display: flex;
+                flex-wrap: nowrap; // 强制不换行
+                min-width: max-content; // 宽度由内容决定，不被容器压缩
+                border-right: none;
+                border-bottom: none;
+            }
 
-            :deep(a) {
-                text-decoration: none;
+            .el-menu-item,
+            .el-sub-menu__title {
+                color: var(--el-text-color-primary);
+                background-color: transparent;
+                transition: all 0.3s ease;
 
-                & > li {
-                    color: var(--el-text-color-primary);
-                    background-color: var(--el-bg-color);
-                    height: 100%;
+                // 防止文字换行导致高度不一致
+                white-space: nowrap;
 
-                    i {
-                        margin-right: 10px;
-                        font-size: v-bind('fontSizeObj.largeFontSize');
-                    }
-
-                    &.is-active {
-                        color: var(--el-color-primary);
-                        background-color: $background-color;
-                    }
+                i {
+                    margin-right: 10px;
+                    // 3. 优化：v-bind 增加安全访问符，防止对象为空时样式编译报错
+                    font-size: v-bind('fontSizeObj?.largeFontSize || "16px"');
                 }
 
-                & > li:hover {
+                &:hover {
                     background-color: var(--el-color-primary-light-9);
+                    color: var(--el-color-primary);
+                }
+
+                &.is-active {
+                    color: var(--el-color-primary);
+                    background-color: var(--el-color-primary-light-9);
+                    border-bottom: 2px solid var(--el-color-primary);
                 }
             }
         }
     }
-
-    :deep(.y9-el-sub-menu.is-active) {
-        background-color: var(--el-color-primary-light-9);
-    }
-
-    :deep(.y9-el-sub-menu) {
-        background: var(--el-bg-color);
-    }
-
-    .el-menu--horizontal {
-        width: 100%;
-    }
 </style>
 
-<!-- Workaround bug #6378 -->
 <style lang="scss">
-    // 精确定位，尽量避开全局污染
-    .el-menu--horizontal > ul.el-menu.el-menu--popup.el-menu--popup-bottom-start > a {
+    // 全局样式：专门用于 popper 弹出层，因为 popper 默认挂载在 body 下，scoped 无法穿透
+    .my-custom-popup.el-menu--popup {
         text-decoration: none;
 
-        & > li.el-menu-item {
+        .el-menu-item {
             text-align: center;
             color: var(--el-text-color-primary);
             background-color: var(--el-bg-color);
@@ -111,10 +142,10 @@
             i {
                 margin-right: 10px;
             }
-        }
 
-        & > li.el-menu-item:hover {
-            background-color: var(--el-color-primary-light-9);
+            &:hover {
+                background-color: var(--el-color-primary-light-9);
+            }
         }
     }
 </style>

@@ -10,6 +10,7 @@ export const useSettingStore = defineStore('settingStore', {
             webLanguage: 'zh', // 语言
             fontSize: 'default', // 字号大小
             themeName: 'theme-default', // 主题
+            lightThemeName: 'theme-default', // 暗黑模式关闭后恢复的主题
             isDark: false, // 是否暗黑主题
             menuAnimation: 'rtl', // 菜单动画方向——仅mobile
             menuStyle: 'Light', // 菜单样式

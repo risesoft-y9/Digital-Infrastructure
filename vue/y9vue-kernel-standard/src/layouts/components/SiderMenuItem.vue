@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-11 18:38:31
- * @LastEditTime: 2023-12-26 11:21:17
+ * @LastEditTime: 2026-09-08 09:50:23
  * @LastEditors: mengjuhua
  * @Description: 二级菜单
 -->
@@ -10,11 +10,11 @@
         <template v-if="item.children && Array.isArray(item.children) && hasChildRoute(item.children)">
             <el-sub-menu :index="item.path" class="y9-el-sub-menu">
                 <template #title>
-                    <i v-if="item.meta.icon" :class="['icon', item.meta.icon]" />
-                    <el-icon v-else-if="item.meta.elIcon">
-                        <component :is="item.meta.elIcon"></component>
+                    <i v-if="item.meta?.icon" :class="['icon', item.meta?.icon]" />
+                    <el-icon v-else-if="item.meta?.elIcon">
+                        <component :is="item.meta?.elIcon"></component>
                     </el-icon>
-                    <span>{{ $t(`${item.meta.title}`) }}</span>
+                    <span>{{ $t(`${item.meta?.title}`) }}</span>
                 </template>
                 <sider-menu-item
                     v-for="item2 in item.children"
@@ -27,19 +27,18 @@
         <template v-else>
             <a-link :to="item.path">
                 <el-menu-item :index="item.path" @click="toggleCollapsedFunc">
-                    <!-- <Icon v-if="item.meta.icon" :type="item.meta.icon" class="icon" /> -->
-                    <i v-if="item.meta.icon" :class="['icon', item.meta.icon]" />
-                    <el-icon v-else-if="item.meta.elIcon">
-                        <component :is="item.meta.elIcon"></component>
+                    <i v-if="item.meta?.icon" :class="['icon', item.meta?.icon]" />
+                    <el-icon v-else-if="item.meta?.elIcon">
+                        <component :is="item.meta?.elIcon"></component>
                     </el-icon>
-                    <template #title>{{ $t(`${item.meta.title}`) }}</template>
+                    <template #title>{{ $t(`${item.meta?.title}`) }}</template>
                 </el-menu-item>
             </a-link>
         </template>
     </template>
 </template>
 <script lang="ts" setup>
-    import { computed, ComputedRef, inject, PropType, ref, Ref, toRefs } from 'vue';
+    import { computed, ComputedRef, inject, PropType, Ref, toRefs } from 'vue';
     import { getRouteBelongTopMenu, hasChildRoute, RoutesDataItem } from '@/utils/routes';
     import { useSettingStore } from '@/store/modules/settingStore';
     import ALink from '@/layouts/components/ALink/index.vue';
@@ -65,7 +64,7 @@
 
     const { routeItem } = toRefs(props);
     const topMenuPath = computed<string>(() => getRouteBelongTopMenu(routeItem.value as RoutesDataItem));
-    let item = ref();
+    const item = routeItem;
     const settingStore = useSettingStore();
     const { toggleCollapsed } = settingStore;
     const toggleCollapsedFunc = () => {
@@ -75,8 +74,6 @@
     };
     // 注入 字体变量
     const fontSizeObj: any = inject('sizeObjInfo');
-
-    item.value = routeItem.value;
 </script>
 
 <style lang="scss" scoped>

@@ -78,6 +78,7 @@
         { value: 'theme-default', label: '默认' },
         { value: 'theme-green', label: '绿' },
         { value: 'theme-blue', label: '蓝' },
+        { value: 'theme-dark', label: '暗黑' },
         { value: 'theme-red', label: '红', disabled: true }
     ];
 
@@ -219,6 +220,15 @@
                 allLayoutList: getAllPcLayoutList
             });
         }
+        if (key === 'themeName') {
+            settingStore.$patch({
+                themeName: form.themeName,
+                isDark: form.themeName === 'theme-dark',
+                lightThemeName: form.themeName === 'theme-dark' ? settingStore.lightThemeName : form.themeName
+            });
+            return;
+        }
+
         settingStore.$patch({
             [key]: form[key]
         });
@@ -254,6 +264,8 @@
             webLanguage: form.webLanguage,
             fontSize: form.fontSize,
             themeName: form.themeName,
+            lightThemeName: 'theme-default',
+            isDark: false,
             menuAnimation: form.menuAnimation,
             menuWidth: form.menuWidth,
             menuBg: '',

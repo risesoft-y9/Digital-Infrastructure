@@ -1,7 +1,9 @@
 <script lang="ts" setup>
     import { inject } from 'vue';
-    import RightTopUser from '../components/RightTopUser.vue';
     import { useSettingStore } from '@/store/modules/settingStore';
+
+    import RightTopUser from '../components/RightTopUser.vue';
+    import UseDark from '../components/UseDark/index.vue';
 
     const settingStore = useSettingStore();
     // 注入 字体变量
@@ -9,14 +11,6 @@
     // 全屏功能
     const { isFullscreen, toggle } = useFullscreen();
     const toggleFullScreen = toggle;
-
-    // 白天黑夜功能
-    const isDark = useDark({
-        selector: 'html',
-        valueDark: 'theme-dark',
-        valueLight: ''
-    });
-    const toggleDark = useToggle(isDark);
 
     // 锁屏
     const lockScreenFunc = () => {
@@ -45,16 +39,16 @@
         </div>
         <!-- <div class="center">
 
-    </div> -->
+        </div> -->
         <div class="right">
             <div class="item full-screen" @click="toggleFullScreen">
                 <i class="ri-fullscreen-line"></i>
                 <span>{{ $t('全屏') }}</span>
             </div>
             <!-- <div class="item search" @click="searchFunc" v-show="settingStore.getSearch">
-          <i class="ri-search-line"></i>
-          <span></span>
-      </div> -->
+                <i class="ri-search-line"></i>
+                <span></span>
+            </div> -->
             <div v-show="settingStore.getLock" class="item" @click="lockScreenFunc">
                 <i class="ri-lock-2-line"></i>
                 <span>{{ $t('锁屏') }}</span>
@@ -64,22 +58,18 @@
                 <span>{{ $t('设置') }}</span>
             </div>
             <!-- <div class="item notify">
-          <el-badge :value="3" class="badge"></el-badge>
-          <i class="ri-notification-line"></i>
-      </div> -->
+                <el-badge :value="3" class="badge"></el-badge>
+                <i class="ri-notification-line"></i>
+            </div> -->
             <div v-show="settingStore.getRefresh" class="item" @click="refreshFunc">
                 <i class="ri-refresh-line"></i>
                 <span>{{ $t('刷新') }}</span>
             </div>
-            <!-- <div class="item isDark">
-          <i class="ri-moon-line" @click="toggleDark" v-if="!isDark"></i>
-          <i class="ri-sun-line" @click="toggleDark" v-else></i>
-      </div> -->
+            <!-- <UseDark /> -->
             <div class="item user">
                 <RightTopUser style="z-index: 9999" />
             </div>
             <div class="item user">
-                <!-- <img src="@/assets/images/app-icon.png"> -->
                 <el-avatar :src="userInfo.avator ? userInfo.avator : ''"> {{ userInfo.loginName }}</el-avatar>
             </div>
         </div>
