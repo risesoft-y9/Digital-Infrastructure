@@ -302,9 +302,9 @@ spring:
             config:
                 enabled: false
                 group: DEFAULT_GROUP
-                namespace: local
-                server-addr: http://localhost:8848
-                username: nacos
+                namespace: ${NACOS_NAMESPACE:local}
+                server-addr: ${NACOS_SERVER_ADDR:http://localhost:8848}
+                username: ${NACOS_USERNAME:nacos}
                 password: ${NACOS_PASSWORD:111111}
             discovery:
                 enabled: false

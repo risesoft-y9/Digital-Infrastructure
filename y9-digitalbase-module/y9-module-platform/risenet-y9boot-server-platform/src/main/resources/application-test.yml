@@ -4,9 +4,9 @@ spring:
             config:
                 enabled: true
                 group: DEFAULT_GROUP
-                namespace: test
-                server-addr: nacos:8848
-                username: nacos
+                namespace: ${NACOS_NAMESPACE:test}
+                server-addr: ${NACOS_SERVER_ADDR:http://nacos:8848}
+                username: ${NACOS_USERNAME:nacos}
                 password: ${NACOS_PASSWORD:111111}
     config:
         import:

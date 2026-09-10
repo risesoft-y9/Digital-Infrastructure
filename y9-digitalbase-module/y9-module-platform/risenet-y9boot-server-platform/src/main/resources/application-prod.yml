@@ -3,10 +3,10 @@ spring:
         nacos:
             config:
                 enabled: true
+                namespace: ${NACOS_NAMESPACE:prod}
                 group: DEFAULT_GROUP
-                namespace: vue
-                server-addr: nacos:8848
-                username: nacos
+                server-addr: ${NACOS_SERVER_ADDR:http://nacos:8848}
+                username: ${NACOS_USERNAME:nacos}
                 password: ${NACOS_PASSWORD:111111}
     config:
         import:
