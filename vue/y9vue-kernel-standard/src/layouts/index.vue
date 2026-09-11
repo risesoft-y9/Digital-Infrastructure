@@ -55,7 +55,7 @@
         document.documentElement.className = newTheme;
 
         // 安全更新主题样式链接，避免路径拼接错误
-        const themeLink = document.getElementById('theme-link') as HTMLLinkElement | null;
+        const themeLink = document.getElementById('head') as HTMLLinkElement | null;
         if (!themeLink?.href) return;
 
         try {
