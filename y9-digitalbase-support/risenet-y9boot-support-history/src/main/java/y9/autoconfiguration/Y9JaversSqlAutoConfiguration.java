@@ -1,4 +1,4 @@
-package y9.autocofiguration;
+package y9.autoconfiguration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
