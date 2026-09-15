@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    <logger name="y9.autoconfiguration" level="DEBUG"/>
+
+    <!-- Spring Boot 默认日志格式、颜色转换器等 -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <property name="LOG_FILE_NAME" value="y9demo-elasticsearch.log"/>
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/${LOG_FILE_NAME}}"/>
+    <property name="LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE"
+              value="${LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE:-100MB}"/>
+    <property name="LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP"
+              value="${LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP:-10GB}"/>
+    <property name="LOGBACK_ROLLINGPOLICY_MAX_HISTORY"
+              value="${LOGBACK_ROLLINGPOLICY_MAX_HISTORY:-14}"/>
+
+    <!-- 控制台和滚动文件输出 -->
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml"/>
+
+    <logger name="y9" level="DEBUG"/>
     <logger name="net.risesoft" level="DEBUG"/>
-    <logger name="com.alibaba.cloud.nacos" level="INFO"/>
-    <logger name="org.springframework.cloud.endpoint.event" level="INFO"/>
-    <logger name="org.mongodb" level="WARN"/>
+
     <logger name="org.hibernate" level="WARN"/>
 
-    <!--	<logger name="org.hibernate.SQL" level="DEBUG"/>-->
-    <!--	<logger name="org.hibernate.type.descriptor.sql" level="trace"/>-->
-
-    <logger name="org.apache.catalina.startup.Catalina" level="INFO"/>
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </root>
+
 </configuration>
