@@ -64,40 +64,40 @@ export const useSettingStore = defineStore('settingStore', {
             return state.fontSize == 'small'
                 ? '24px'
                 : state.fontSize == 'default'
-                ? '28px'
-                : state.fontSize == 'large'
-                ? '32px'
-                : '28px';
+                    ? '28px'
+                    : state.fontSize == 'large'
+                        ? '32px'
+                        : '28px';
         },
         //根据字号获取表格操作列3个按钮宽度（每个按钮2个汉字）
         getThreeBtnWidth: (state) => {
             return state.fontSize == 'small'
                 ? 180
                 : state.fontSize == 'default'
-                ? 200
-                : state.fontSize == 'large'
-                ? 210
-                : 180;
+                    ? 200
+                    : state.fontSize == 'large'
+                        ? 210
+                        : 180;
         },
         //根据字号获取表格操作列2个按钮宽度（每个按钮2个汉字）
         getTwoBtnWidth: (state) => {
             return state.fontSize == 'small'
                 ? 130
                 : state.fontSize == 'default'
-                ? 140
-                : state.fontSize == 'large'
-                ? 150
-                : 160;
+                    ? 140
+                    : state.fontSize == 'large'
+                        ? 150
+                        : 160;
         },
         //根据字号获取表格数据列时间戳显示宽度
         getDatetimeSpan: (state) => {
             return state.fontSize == 'small'
                 ? 140
                 : state.fontSize == 'default'
-                ? 170
-                : state.fontSize == 'large'
-                ? 180
-                : 160;
+                    ? 170
+                    : state.fontSize == 'large'
+                        ? 180
+                        : 160;
         },
         // 根据字号 获取对应的icon宽度大小
         getLogoWidth: (state) => {
@@ -137,7 +137,7 @@ export const useSettingStore = defineStore('settingStore', {
             }
             return layout;
         },
-        getLayoutList: () => {},
+        getLayoutList: () => { },
         //查询全局还是单一
         getAllPcLayout: (state) => {
             return state.allPcLayout;

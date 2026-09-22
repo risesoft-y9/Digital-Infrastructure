@@ -1,8 +1,8 @@
 /*
  * @Author: haifengy
  * @Date: 2022-03-28 09:49:09
- * @LastEditors: hongzhew
- * @LastEditTime: 2022-04-07 18:07:15
+ * @LastEditors: mengjuhua
+ * @LastEditTime: 2026-09-17 16:01:20
  * @Description:
  */
 
@@ -29,7 +29,7 @@ const appSystemRouter = {
         {
             path: '/system',
             component: () => import('@/views/system/index4SystemVendor.vue'),
-            name: 'systemIndex',
+            name: 'index4SystemVendor',
             meta: {
                 title: '应用系统管理',
                 icon: 'ri-apps-line',

@@ -1,12 +1,15 @@
 import { remove } from 'lodash';
 import { defineStore } from 'pinia';
+import type { TabNavItem } from '@/utils/routes';
 
 export const useRouterStore = defineStore('routerStore', {
     state: () => {
         return {
             PermissionRoutes: [],
-            tabs: [],
-            activeRoute: '/index'
+            tabs: [] as any,
+            activeRoute: '/index',
+            // 补全原有缺失的标签导航状态，完全匹配项目原有字段
+            headTabNavList: [] as TabNavItem[]
         };
     },
     getters: {
@@ -18,6 +21,10 @@ export const useRouterStore = defineStore('routerStore', {
         },
         getActiveRoute: (state) => {
             return state.activeRoute;
+        },
+        // 补全原代码中用到的标签列表 getter
+        getHeadTabNavList: (state): TabNavItem[] => {
+            return state.headTabNavList;
         }
     },
     actions: {
@@ -36,7 +43,7 @@ export const useRouterStore = defineStore('routerStore', {
             }
             // tabs是否超过6个
         },
-        removeTab(tabName: String, tabPosition: String) {
+        removeTab(tabName: string, tabPosition: string) {
             // 位置是top时  移除时，如果有则留下一个名为首页的标签
             if (tabPosition === 'top' && tabName !== '首页') {
                 this.tabs = remove(this.tabs, (item) => item.path !== tabName);
@@ -45,6 +52,10 @@ export const useRouterStore = defineStore('routerStore', {
             if (tabPosition !== 'top') {
                 this.tabs = remove(this.tabs, (item) => item.path !== tabName);
             }
+        },
+        // 补全缺失的标签列表更新action，完全兼容原有调用逻辑
+        setHeadTabNavList(list: TabNavItem[]) {
+            this.headTabNavList = list;
         }
     }
 });

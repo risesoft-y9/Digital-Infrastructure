@@ -35,7 +35,7 @@
     <Lock v-show="settingStore.getLockScreen" />
 
     <!-- 搜索组件 -->
-    <Search />
+    <!-- <Search /> -->
 </template>
 
 <script lang="ts" setup>
@@ -54,16 +54,19 @@
     const settingPageStyle = computed(() => settingStore.getSettingPageStyle);
 
     // 修正Props类型定义，避免Ref包装类型传入
-    const props = defineProps<{
-        layoutName: string;
-        layoutSubName: string;
-        menuData: RoutesDataItem[];
-        menuCollapsed?: boolean;
-        belongTopMenu: string;
-        defaultActive: string;
-        breadCrumbs: BreadcrumbType[];
-        routeItem: RoutesDataItem;
-    }>();
+    const props = withDefaults(
+        defineProps<{
+            layoutName: string;
+            layoutSubName: string;
+            menuData: RoutesDataItem[];
+            menuCollapsed: boolean;
+            belongTopMenu: string;
+            defaultActive: string;
+            breadCrumbs: BreadcrumbType[];
+            routeItem: RoutesDataItem;
+        }>(),
+        { menuCollapsed: false }
+    );
 
     // 刷新主内容区，销毁重建组件重置状态
     const refreshContent = ref(0);

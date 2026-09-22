@@ -435,63 +435,6 @@
         width: 100% !important;
     }
 
-    .personal {
-        margin-top: 60px;
-        // tab图标 与 文字的间隔
-        .custom-tabs-label {
-            i {
-                margin-right: 2px;
-                vertical-align: middle;
-            }
-        }
-
-        :deep(.el-tabs) {
-            .el-tabs__content {
-                overflow: auto;
-                height: calc(100vh - 303px);
-            }
-
-            .el-tabs__nav-wrap::after {
-                height: 1px;
-            }
-        }
-
-        :deep(.el-form) {
-            margin: 20px 80px;
-
-            .el-form-item {
-                margin: 9px 0;
-            }
-
-            .el-form-item__label {
-                padding: 0 20px 0 0;
-            }
-
-            .el-divider--horizontal {
-                margin: 24px -14%;
-            }
-
-            .el-descriptions__label.el-descriptions__cell.is-bordered-label {
-                text-align: center;
-                font-weight: 800;
-                width: 28%;
-            }
-        }
-
-        .icon-list {
-            display: block;
-        }
-    }
-
-    :deep(.fixed-herder-horizontal) {
-        margin-top: 130px;
-        height: calc(100vh - 60px - 60px - 95px - 90px);
-
-        .y9-card {
-            height: calc(100vh - 60px - 60px - 95px - 90px);
-        }
-    }
-
     :deep(.el-card) {
         border-radius: 5px;
     }

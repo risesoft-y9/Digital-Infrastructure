@@ -2,16 +2,9 @@
     import { inject, onMounted, ref } from 'vue';
     import SiderMenu from '@/layouts/components/SiderMenu.vue';
 
-    // --- 类型定义与注入 ---
-    interface SizeObjInfo {
-        largeFontSize?: string;
-        [key: string]: any;
-    }
+    // 注入字体变量
+    const fontSizeObj: any = inject('sizeObjInfo');
 
-    // 提供默认值，防止 inject 失败导致报错
-    const fontSizeObj = inject<SizeObjInfo>('sizeObjInfo', { largeFontSize: '16px' });
-
-    // --- Props 定义 ---
     interface Props {
         menuCollapsed?: boolean;
         belongTopMenu?: string;
@@ -49,7 +42,6 @@
     });
 </script>
 <template>
-    <!-- 绑定 ref 用于 JS 控制滚动 -->
     <div ref="menuContainerRef" class="header-menu-container">
         <sider-menu
             :belong-top-menu="belongTopMenu"
@@ -109,8 +101,6 @@
                 white-space: nowrap;
 
                 i {
-                    margin-right: 10px;
-                    // 3. 优化：v-bind 增加安全访问符，防止对象为空时样式编译报错
                     font-size: v-bind('fontSizeObj?.largeFontSize || "16px"');
                 }
 
@@ -124,6 +114,13 @@
                     background-color: var(--el-color-primary-light-9);
                     border-bottom: 2px solid var(--el-color-primary);
                 }
+            }
+
+            // 选中二级菜单后，一级菜单标题也显示选中样式
+            .el-sub-menu.is-active > .el-sub-menu__title {
+                color: var(--el-color-primary);
+                border-bottom: 2px solid var(--el-color-primary);
+                height: 95%;
             }
         }
     }

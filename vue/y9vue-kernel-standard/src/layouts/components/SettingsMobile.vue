@@ -12,6 +12,7 @@
     // 监听设置事件
     let webSettingTimer: ReturnType<typeof setTimeout> | null = null;
     let webSettingHandler: (() => void) | null = null;
+
     onMounted(async () => {
         await nextTick();
         webSettingTimer = setTimeout(() => {
@@ -25,6 +26,7 @@
             el.addEventListener('click', webSettingHandler);
         }, 500);
     });
+
     onUnmounted(() => {
         if (webSettingTimer) {
             clearTimeout(webSettingTimer);
@@ -98,7 +100,9 @@
         form.settingAnimation = settingStore.getSettingAnimation;
         form.settingWidth = settingStore.getSettingWidth;
     }
+
     syncForm();
+
     watch(webSettingVisible, (visible) => {
         if (!visible) return;
         syncForm();
@@ -153,6 +157,7 @@
         new URL('../../assets/images/menu-bg9.png', import.meta.url).href,
         new URL('../../assets/images/menu-bg10.png', import.meta.url).href
     ];
+
     // 把已选中的背景排在第一位
     const currentMenuBg = computed(() => settingStore.getMenuBg);
 
@@ -171,6 +176,7 @@
         { key: 'bg4', src: menuBgs[3] },
         { key: 'bg5', src: menuBgs[4] }
     ];
+
     // 菜单宽度
     const menuWidthOptions = [
         { value: '60%', label: '60%' },
@@ -249,7 +255,7 @@
             const validValues = settingWidthOptions.map((opt) => opt.value);
             if (!validValues.includes(form.settingWidth)) {
                 form.settingWidth = settingWidthOptions[1].value;
-                settingChange('settingWidth');
+                settingStore.$patch({ settingWidth: form.settingWidth });
             }
         },
         { immediate: true }
@@ -413,14 +419,7 @@
         custom-class="indexlayout-settings"
     >
         <el-form id="webSettingForm">
-            <el-form-item
-                :label="$t('布局')"
-                :rules="[
-                    {
-                        required: true
-                    }
-                ]"
-            >
+            <el-form-item :label="$t('布局')" :rules="[{ required: true }]">
                 <el-select
                     v-model="form.pcLayout"
                     :disabled="device === 'mobile' ? true : false"
@@ -435,49 +434,28 @@
                     />
                 </el-select>
             </el-form-item>
-            <!--            <el-form-item :label="$t('布局影响')" :rules="[{ required: true }]">-->
-            <!--                <el-radio-group v-model="form.allPcLayout" @change="settingChange('allPcLayout')">-->
-            <!--                    <el-radio v-for="item in allLayoutOptions" :key="item.label" :label="item.label" size="large"-->
-            <!--                        >{{ $t(item.value) }}-->
-            <!--                    </el-radio>-->
-            <!--                </el-radio-group>-->
-            <!--            </el-form-item>-->
-            <el-form-item
-                :label="$t('语言')"
-                :rules="[
-                    {
-                        required: true
-                    }
-                ]"
-            >
+            <!-- <el-form-item :label="$t('布局影响')" :rules="[{ required: true }]">
+                <el-radio-group v-model="form.allPcLayout" @change="settingChange('allPcLayout')">
+                    <el-radio v-for="item in allLayoutOptions" :key="item.label" :label="item.label" size="large"
+                        >{{ $t(item.value) }}
+                    </el-radio>
+                </el-radio-group>
+            </el-form-item> -->
+            <el-form-item :label="$t('语言')" :rules="[{ required: true }]">
                 <el-radio-group v-model="form.webLanguage" @change="settingChange('webLanguage')">
                     <el-radio v-for="item in webLanguageOptions" :key="item.value" :label="item.label" size="large"
                         >{{ $t(`${item.value}`) }}
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item
-                :label="$t('字号')"
-                :rules="[
-                    {
-                        required: true
-                    }
-                ]"
-            >
+            <el-form-item :label="$t('字号')" :rules="[{ required: true }]">
                 <el-radio-group v-model="form.fontSize" @change="settingChange('fontSize')">
                     <el-radio v-for="item in fontSizeOptions" :key="item.label" :label="item.label" size="large"
                         >{{ $t(`${item.value}`) }}
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item
-                :label="$t('主题')"
-                :rules="[
-                    {
-                        required: true
-                    }
-                ]"
-            >
+            <el-form-item :label="$t('主题')" :rules="[{ required: true }]">
                 <el-select v-model="form.themeName" placeholder="选择" @change="settingChange('themeName')">
                     <el-option
                         v-for="item in themeOptions"

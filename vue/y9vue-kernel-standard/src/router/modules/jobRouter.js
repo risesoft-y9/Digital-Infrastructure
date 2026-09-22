@@ -1,8 +1,8 @@
 /*
  * @Author: haifengy
  * @Date: 2022-03-28 09:49:09
- * @LastEditors: hongzhew
- * @LastEditTime: 2022-04-07 17:59:34
+ * @LastEditors: mengjuhua
+ * @LastEditTime: 2026-09-16 15:33:31
  * @Description:
  */
 
@@ -20,7 +20,7 @@ const jobRouter = {
         {
             path: '/jobManage',
             component: () => import('@/views/job/index.vue'),
-            name: 'jobManage',
+            name: 'jobManageIndex',
             meta: {
                 title: '职位管理',
                 icon: 'ri-folder-user-line',

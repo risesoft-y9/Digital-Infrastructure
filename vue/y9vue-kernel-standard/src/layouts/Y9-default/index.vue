@@ -1,11 +1,11 @@
 <template>
     <div
         id="indexlayout"
-        :class="[
-            layout,
-            !settingStore.getFixedHeader ? 'fixedHeader' : '',
-            settingStore.getMenuCollapsed && !settingStore.getFixedHeader ? 'fixedHeader-menuCollapsed' : ''
-        ]"
+        :class="{
+            fixedHeader: !settingStore.getFixedHeader,
+            'fixedHeader-menuCollapsed': settingStore.getMenuCollapsed && !settingStore.getFixedHeader,
+            [layout]: true
+        }"
     >
         <div id="indexlayout-left" ref="layoutLeftRef">
             <Left
@@ -18,17 +18,18 @@
         </div>
         <div id="indexlayout-right" ref="layoutRightRef" class="right">
             <RightTop :menuCollapsed="menuCollapsed" @refresh="refreshFunc" />
+            <!-- <component :is="showTab ? Tabs : ''"></component> -->
             <BreadCrumbs :layoutSubName="layoutSubName" :list="breadCrumbs" :menuCollapsed="menuCollapsed" />
 
             <div
                 :key="refreshContent"
-                :class="[
-                    'indexlayout-right-main',
-                    layoutSubName === 'sidebar-separate' ? 'sidebar-separate' : '',
-                    menuCollapsed && layoutSubName === 'sidebar-separate' ? 'sidebar-separate-menuCollapsed' : '',
-                    routerStore.getTabs.length && settingStore.getLabelStyle === 'left' ? 'tabs-position-left' : '',
-                    routerStore.getTabs.length && settingStore.getLabelStyle === 'right' ? 'tabs-position-right' : ''
-                ]"
+                :class="{
+                    'indexlayout-right-main': true,
+                    'sidebar-separate': layoutSubName === 'sidebar-separate',
+                    'sidebar-separate-menuCollapsed': menuCollapsed && layoutSubName === 'sidebar-separate',
+                    'tabs-position-left': routerStore.getTabs.length && settingStore.getLabelStyle === 'left',
+                    'tabs-position-right': routerStore.getTabs.length && settingStore.getLabelStyle === 'right'
+                }"
             >
                 <router-view></router-view>
             </div>
@@ -36,11 +37,11 @@
     </div>
     <component :is="settingPageStyle === 'Admin-plus' ? Settings : ''"></component>
     <Lock v-show="settingStore.getLockScreen" />
-    <Search />
+    <!-- <Search /> -->
 </template>
 
 <script lang="ts" setup>
-    import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+    import { computed, onBeforeUnmount, onMounted, ref, watchEffect } from 'vue';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useRouterStore } from '@/store/modules/routerStore';
     import type { BreadcrumbType, RoutesDataItem } from '@/utils/routes';
@@ -50,20 +51,23 @@
     import RightTop from './RightTop.vue';
     import Settings from '@/layouts/components/SettingsMobile.vue';
     import BreadCrumbs from '@/layouts/components/BreadCrumbs/index.vue';
-    import Search from '@/layouts/components/search/index.vue';
+    // import Tabs from "@/layouts/components/Tabs/index.vue"
 
     const settingStore = useSettingStore();
     const routerStore = useRouterStore();
+
     const layoutLeftRef = ref<HTMLElement | null>(null);
     const layoutRightRef = ref<HTMLElement | null>(null);
-    const settingPageStyle = computed(() => settingStore.getSettingPageStyle);
     const scrollListenerActive = ref(false);
+
+    const settingPageStyle = computed(() => settingStore.getSettingPageStyle);
+    const showTab = computed(() => settingStore.getShowLabel);
 
     const props = defineProps<{
         layoutName: string;
         layoutSubName: string;
         menuData: RoutesDataItem[];
-        menuCollapsed?: boolean;
+        menuCollapsed: boolean;
         belongTopMenu: string;
         defaultActive: string;
         breadCrumbs: BreadcrumbType[];
@@ -72,11 +76,13 @@
 
     const layout = computed(() => settingStore.getLayout);
 
+    // 封装侧边栏宽度更新逻辑，避免重复DOM操作
     function updateSidebarWidth(width: string) {
         const sidebar = layoutLeftRef.value?.firstElementChild as HTMLElement | null;
         if (sidebar) sidebar.style.width = width;
     }
 
+    // 滚动监听逻辑完全重构，基于ref操作DOM，避免全局window滚动冲突
     function listener() {
         const classList = layoutLeftRef.value?.classList;
         if (!classList) return;
@@ -111,16 +117,16 @@
         layoutLeftRef.value?.classList.remove('fixed-header-after-scroll');
     }
 
-    onMounted(() => {
-        if (layout.value.includes('sidebar-separate')) addScrollListener();
+    // 自动监听布局变化，自动注册/移除滚动监听
+    watchEffect((onInvalidate) => {
+        if (layout.value.includes('sidebar-separate') && layoutRightRef.value) {
+            addScrollListener();
+        }
+        onInvalidate(() => removeScrollListener());
     });
 
-    watch(layout, (newLayout) => {
-        if (newLayout.includes('sidebar-separate')) {
-            addScrollListener();
-        } else {
-            removeScrollListener();
-        }
+    onMounted(() => {
+        if (layout.value.includes('sidebar-separate')) addScrollListener();
     });
 
     onBeforeUnmount(removeScrollListener);
@@ -178,7 +184,8 @@
             }
         }
 
-        & > .breadcrumbs {
+        // 补全深度选择器，让面包屑子组件样式正常生效
+        & > :deep(.breadcrumbs) {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -187,7 +194,7 @@
             padding: 0 35px;
             color: var(--el-text-color-primary) !important;
 
-            :deep(a) {
+            a {
                 color: var(--el-text-color-primary) !important;
             }
 
@@ -234,6 +241,7 @@
         transition-duration: 0.2s;
     }
 
+    // 原有深度选择器保留，适配Left子组件内部样式
     #indexlayout-left.fixed-header-after-scroll > :deep(div) {
         top: 0;
         left: 0;

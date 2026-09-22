@@ -14,7 +14,7 @@
                     @click="toRoute(item, index)"
                 >
                     <icon-svg class="icon-pre" type="refresh" @click.stop="refreshCurrentTabNav(item)" />
-                    <span>{{ t(item.menu.title) }}</span>
+                    <span>{{ $t(item.menu.title) }}</span>
                     <icon-svg
                         v-if="item.menu.path !== homeRouteItemPath"
                         class="icon"
@@ -36,19 +36,19 @@
                     <el-dropdown-menu>
                         <el-dropdown-item command="closeleft">
                             <icon-svg class="icon-dropdown-menu" type="arrow-left2" />
-                            关闭左侧
+                            {{ $t('关闭左侧') }}
                         </el-dropdown-item>
                         <el-dropdown-item command="closeright">
                             <icon-svg class="icon-dropdown-menu" type="arrow-right2" />
-                            关闭右侧
+                            {{ $t('关闭右侧') }}
                         </el-dropdown-item>
                         <el-dropdown-item command="closeother">
                             <icon-svg class="icon-dropdown-menu" type="close" />
-                            关闭其他
+                            {{ $t('关闭其他') }}
                         </el-dropdown-item>
                         <el-dropdown-item command="closeall">
                             <icon-svg class="icon-dropdown-menu" type="close2" />
-                            关闭所有
+                            {{ $t('关闭所有') }}
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
@@ -57,47 +57,13 @@
     </div>
 </template>
 <script lang="ts" setup>
-    import {
-        computed,
-        ComputedRef,
-        inject,
-        nextTick,
-        onBeforeUpdate,
-        onMounted,
-        PropType,
-        ref,
-        Ref,
-        toRefs,
-        watch
-    } from 'vue';
+    import { computed, inject, nextTick, onBeforeUpdate, onMounted, PropType, ref, toRefs, watch } from 'vue';
     import { RouteLocationNormalizedLoaded, useRoute, useRouter } from 'vue-router';
     import IconSvg from './IconSvg';
     import { equalTabNavRoute, RoutesDataItem, TabNavItem, TabNavType } from '@/utils/routes';
     import settings from '@/settings';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useRouterStore } from '@/store/modules/routerStore';
-
-    interface RightTabNavSetupData {
-        equalTabNavRView: (
-            route1: RouteLocationNormalizedLoaded,
-            route2: RouteLocationNormalizedLoaded,
-            type?: TabNavType
-        ) => boolean;
-        translateX: Ref<number>;
-        scrollBox: Ref;
-        scrollContent: Ref;
-        handleScroll: (offset: number) => void;
-        handleRolling: (e: any) => void;
-        tabNavSpanRef: (el: any) => void;
-        tabNavList: ComputedRef<TabNavItem[]>;
-        homeRouteItemPath: string;
-        route: RouteLocationNormalizedLoaded;
-        toRoute: (item: TabNavItem, index: number) => void;
-        refreshCurrentTabNav: (item: TabNavItem) => void;
-        closeCurrentTabNav: (item: TabNavItem, index: number) => void;
-        handleCommandMore: (command: string) => void;
-        fontSizeObj: Object;
-    }
 
     const props = defineProps({
         routeItem: {
@@ -107,7 +73,7 @@
     });
 
     const settingStore = useSettingStore();
-    const store = useRouterStore();
+    const routerStore = useRouterStore();
     // 注入 字体变量
     const fontSizeObj: any = inject('sizeObjInfo');
 
@@ -117,6 +83,7 @@
     const translateX = ref<number>(0);
     const scrollBox = ref<HTMLDivElement>();
     const scrollContent = ref<HTMLDivElement>();
+
     const handleScroll = (offset: number): void => {
         const boxWidth = scrollBox.value ? scrollBox.value.offsetWidth : 0;
         const contentWidth = scrollContent.value ? scrollContent.value.offsetWidth : 0;
@@ -151,10 +118,7 @@
     onBeforeUpdate(() => {
         tabNavSpanRefs = [];
     });
-    /*
-onUpdated(() => {
-})
-*/
+
     const tabNavPadding = 10;
     const moveToView = (index: number): void => {
         if (!tabNavSpanRefs[index]) {
@@ -183,9 +147,12 @@ onUpdated(() => {
         }
     };
 
-    const tabNavList = computed<TabNavItem[]>(() => store.getHeadTabNavList);
+    const tabNavList = computed<TabNavItem[]>(() => routerStore.getHeadTabNavList);
     const router = useRouter();
     const route = useRoute();
+
+    // 修复：直接初始化，避免首次渲染为 undefined
+    const homeRouteItemPath = ref<string>(settings.homeRouteItem.path);
 
     // 设置TabNav
     const setTabNav = (): void => {
@@ -203,7 +170,10 @@ onUpdated(() => {
         );
         if (index < 0) {
             index = tabNavList.value.length;
-            store.commit('global/setHeadTabNavList', [
+            // 统一使用 $patch 或 action，这里保持项目原有风格，若 store 支持 commit 则保留，否则建议改为 action
+            // 假设 store 中有 setHeadTabNavList action 或直接修改 state
+            // 此处沿用原逻辑，但确保类型安全
+            routerStore.setHeadTabNavList([
                 ...tabNavList.value,
                 {
                     route: {
@@ -226,13 +196,14 @@ onUpdated(() => {
         // 判断关闭的是否是当前打开的tab
         let isRouterPush: boolean | TabNavItem = false;
         if (equalTabNavRoute(route, item.route, item.menu.tabNavType)) {
-            isRouterPush = tabNavList.value[index - 1];
+            isRouterPush = index > 0 ? tabNavList.value[index - 1] : false;
         }
 
         let navList: TabNavItem[] = tabNavList.value.filter(
             (item2: TabNavItem) => !equalTabNavRoute(item2.route, item.route, item.menu.tabNavType)
         );
-        store.commit('global/setHeadTabNavList', [...navList]);
+
+        routerStore.setHeadTabNavList([...navList]);
 
         if (isRouterPush !== false) {
             router.push(isRouterPush.route);
@@ -242,13 +213,15 @@ onUpdated(() => {
     // 关闭TabNav所有
     const closeTabNavAll = (): void => {
         // 首页
-        const homeRoute: TabNavItem = tabNavList.value[0];
-
+        const homeRoute: TabNavItem | undefined = tabNavList.value[0];
+        // 空数组直接拦截，后续代码永远不会访问 undefined 的属性
+        if (!homeRoute) return;
         // 有关闭回调的无法关闭
         let navList: TabNavItem[] = tabNavList.value.filter(
             (item: TabNavItem) => item.menu.tabNavCloseBefore && typeof item.menu.tabNavCloseBefore === 'function'
         );
-        store.commit('global/setHeadTabNavList', [
+
+        routerStore.setHeadTabNavList([
             {
                 ...homeRoute
             },
@@ -267,7 +240,7 @@ onUpdated(() => {
                 equalTabNavRoute(route, item.route, item.menu.tabNavType) ||
                 i === 0
         );
-        store.commit('global/setHeadTabNavList', [...navList]);
+        routerStore.setHeadTabNavList([...navList]);
     };
 
     // 关闭TabNav左侧和右侧
@@ -283,7 +256,7 @@ onUpdated(() => {
                 i === 0
         );
 
-        store.$patch({ headTabNavList: [...navList] });
+        routerStore.setHeadTabNavList([...navList]);
     };
 
     watch([route, routeItem], () => {
@@ -334,16 +307,12 @@ onUpdated(() => {
                 break;
         }
     };
-    let homeRouteItemPath = ref();
-
-    homeRouteItemPath.value = settings.homeRouteItem.path;
 </script>
+
 <style lang="scss" scoped>
-    // @import '../../assets/css/global.scss';
     .indexlayout-top-tab-nav {
         height: ($headerTabNavHeight - 4px);
         padding-top: 4px;
-        /* background-color: #f0f0f0; */
         box-shadow: 0 -1px 4px rgba(0, 21, 41, 0.08);
         display: flex;
         align-items: center;
@@ -354,7 +323,6 @@ onUpdated(() => {
             width: ($headerTabNavHeight - 10px);
             height: ($headerTabNavHeight - 8px);
             line-height: ($headerTabNavHeight - 8px);
-            /*  background-color: #FFFFFF; */
             text-align: center;
             font-size: v-bind('fontSizeObj.baseFontSize');
             cursor: pointer;

@@ -9,10 +9,7 @@
         <div class="indexlayout-left-logo">
             <router-link class="logo-url" to="/">
                 <img alt="y9-logo" src="@/assets/images/yunLogo.png" />
-                <!-- 增加空值保护，防止 fontSizeObj 未注入时报错 -->
-                <span v-if="!menuCollapsed" class="logo-title">
-                    {{ $t('数字底座') }}
-                </span>
+                <span v-if="!menuCollapsed" class="logo-title">{{ $t('数字底座') }}</span>
             </router-link>
         </div>
         <div class="indexlayout-left-menu">
@@ -21,49 +18,38 @@
                 :default-active="defaultActive"
                 :menu-collapsed="menuCollapsed"
                 :menu-data="menuData"
-            />
+            ></sider-menu>
         </div>
     </div>
 </template>
-
 <script lang="ts" setup>
-    import { computed, inject } from 'vue';
+    import { inject } from 'vue';
     import SiderMenu from '@/layouts/components/SiderMenu.vue';
-    import type { RoutesDataItem } from '@/utils/routes'; // 假设你有这个类型定义
 
-    // 1. 正确定义 Props 接口
-    interface LeftLayoutProps {
+    // 注入字体变量
+    const fontSizeObj: any = inject('sizeObjInfo');
+
+    // 定义 Props 接口
+    interface Props {
         menuCollapsed: boolean;
-        belongTopMenu: string;
-        defaultActive: string;
-        menuData: RoutesDataItem[];
+        belongTopMenu?: string;
+        defaultActive?: string;
+        menuData?: any[]; // 建议根据实际菜单数据结构定义更详细的类型，如 MenuItem[]
         layoutSubName: string;
     }
 
-    // 2. 使用泛型 defineProps
-    const props = withDefaults(defineProps<LeftLayoutProps>(), {
+    // 使用 withDefaults 设置默认值
+    const props = withDefaults(defineProps<Props>(), {
         belongTopMenu: '',
         defaultActive: '',
         menuData: () => []
-    });
-
-    // 3. 安全地注入字体变量
-    // 提供默认值，防止 inject 返回 undefined 导致 CSS v-bind 出错
-    const fontSizeObj = inject('sizeObjInfo', { largeFontSize: '14px' });
-
-    // 如果 sizeObjInfo 是响应式对象，v-bind 会自动追踪变化
-    // 如果不是响应式，可能需要将其转换为 ref 或 computed
-    // 假设 inject 返回的是一个响应式对象或普通对象
-    const fontSizeVars = computed(() => {
-        return {
-            '--font-size-large': fontSizeObj?.largeFontSize || '14px'
-        };
     });
 </script>
 
 <style lang="scss" scoped>
     @import '@/theme/global-vars.scss';
 
+    // 计算分离式侧边栏的 margin 和 height
     $sidebar-separate-margin-top: calc(#{$sidebar-separate-margin-left} + #{$headerHeight});
     $sidebar-separate-menu-height: calc(100vh - #{$sidebar-separate-margin-top});
 
@@ -76,15 +62,15 @@
         transition-duration: 0.1s;
         transition-property: width; // 明确过渡属性，性能更好
 
+        // 分离式侧边栏样式
         &.sidebar-separate {
             position: absolute;
             z-index: 1;
             left: $sidebar-separate-margin-left;
             top: $sidebar-separate-margin-top;
             height: $sidebar-separate-menu-height;
-            // 分离模式下可能需要圆角或阴影
-            // border-radius: 4px;
-            // box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+            // 通常分离式需要添加阴影或边框以区分层级
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .indexlayout-left-logo {
@@ -106,8 +92,8 @@
                 .logo-title {
                     display: inline-block;
                     margin-left: 15px;
-                    // 使用 CSS 变量或直接绑定，确保安全性
-                    font-size: v-bind('fontSizeVars["--font-size-large"]');
+                    // 使用 v-bind 将 JS 变量绑定到 CSS
+                    font-size: v-bind('fontSizeObj.largeFontSize');
                     font-family: Roboto, sans-serif;
                     color: var(--el-text-color-primary);
                     white-space: nowrap; // 防止文字换行
@@ -117,48 +103,54 @@
             img {
                 width: $logoWidth;
                 vertical-align: middle;
+                object-fit: contain; // 保持图片比例
             }
         }
 
         .indexlayout-left-menu {
             flex: 1;
-            overflow: hidden auto;
-            position: relative;
+            overflow: hidden auto; // 允许菜单滚动
 
-            // 深度选择器优化
-            :deep(.el-menu) {
+            :deep(ul) {
                 border-right: none;
-                background-color: transparent; // 通常菜单背景由容器控制
+                background-color: var(--el-bg-color);
+            }
 
-                .el-menu-item,
-                .el-sub-menu__title {
+            :deep(a) {
+                text-decoration: none;
+                display: block;
+
+                .is-active {
+                    color: var(--el-color-primary);
+                }
+
+                li {
                     color: var(--el-text-color-primary);
+                    transition: background-color 0.2s;
 
                     i {
                         margin-right: 10px;
-                        font-size: v-bind('fontSizeVars["--font-size-large"]');
+                        font-size: v-bind('fontSizeObj.largeFontSize');
                     }
+                }
 
-                    &.is-active {
-                        color: var(--el-color-primary);
-                    }
-
-                    &:hover {
-                        background-color: var(--el-menu-hover-bg-color, rgba(0, 0, 0, 0.05));
-                    }
+                li:hover {
+                    background-color: var(--el-fill-color-light); // 使用 Element Plus 变量
                 }
             }
         }
 
+        // 折叠状态样式
         &.narrow {
             width: $menu-collapsed-width;
 
-            // 折叠时隐藏文字，只显示图标
             .logo-title {
-                display: none;
+                opacity: 0;
+                visibility: hidden;
             }
         }
 
+        // 引入全局滚动条样式 mixin
         @include scrollbar;
     }
 </style>

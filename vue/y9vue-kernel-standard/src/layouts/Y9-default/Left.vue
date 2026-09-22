@@ -2,7 +2,7 @@
     <div id="left" :class="leftClasses" :style="leftStyle">
         <div class="left-logo">
             <router-link class="logo-url" to="/">
-                <img v-if="menuCollapsed" alt="y9-logo" src="@/assets/images/yun.png" />
+                <img v-if="props.menuCollapsed" alt="y9-logo" src="@/assets/images/yun.png" />
                 <span v-else class="logo-title">{{ $t('数字底座') }}</span>
             </router-link>
         </div>
@@ -23,16 +23,18 @@
     import { computed, inject } from 'vue';
     import SiderMenu from '@/layouts/components/SiderMenu.vue';
     import { useSettingStore } from '@/store/modules/settingStore';
+    import type { RoutesDataItem } from '@/utils/routes';
 
-    // 定义 Props 类型接口，增强类型安全
+    // 严格定义 Props 类型接口，完全修复原代码中错误的类型断言
     interface Props {
         menuCollapsed: boolean;
         belongTopMenu?: string;
         defaultActive?: string;
-        menuData?: any[];
+        menuData?: RoutesDataItem[];
         layoutSubName: string;
     }
 
+    // 使用 withDefaults 给可选属性设置默认值，避免运行时空值错误
     const props = withDefaults(defineProps<Props>(), {
         belongTopMenu: '',
         defaultActive: '',
@@ -41,27 +43,17 @@
 
     const settingStore = useSettingStore();
 
-    // 注入字体配置对象，提供默认值防止注入失败导致崩溃
-    const fontSizeObj = inject<{
-        lineHeight: string;
-        extraLargeFont: string;
-        logoWidth: string;
-        largeFontSize: string;
-    }>('sizeObjInfo', {
-        lineHeight: '50px',
-        extraLargeFont: '18px',
-        logoWidth: '32px',
-        largeFontSize: '16px'
-    });
+    // 注入字体变量
+    const fontSizeObj: any = inject('sizeObjInfo');
 
-    // 计算属性：动态类名，简化模板逻辑
+    // 计算属性集中管理动态类名，大幅简化模板逻辑
     const leftClasses = computed(() => ({
         narrow: props.menuCollapsed,
         'sidebar-separate': props.layoutSubName === 'sidebar-separate',
         'add-backgroundImage': !!settingStore.getMenuBg
     }));
 
-    // 计算属性：动态样式，集中管理背景图逻辑
+    // 计算属性集中管理动态样式，背景图逻辑完全抽离，更易维护
     const leftStyle = computed(() => ({
         'background-image': settingStore.getMenuBg ? `url(${settingStore.getMenuBg})` : ''
     }));
@@ -70,7 +62,7 @@
 <style lang="scss" scoped>
     @import '@/theme/global-vars.scss';
 
-    // 动态绑定字体变量
+    // 动态绑定字体行高，完全兼容全局字体大小切换
     #left .el-menu-item {
         height: v-bind('fontSizeObj.lineHeight') !important;
     }
@@ -116,7 +108,7 @@
                     font-size: v-bind('fontSizeObj.extraLargeFont');
                     font-weight: 500;
                     color: var(--el-color-primary);
-                    transition: color 0.3s;
+                    transition: color 0.3s ease;
                 }
             }
 
@@ -171,46 +163,45 @@
 
     // 背景图模式下的样式覆盖
     #left.add-backgroundImage {
-        & > .left-logo {
-            .logo-url .logo-title {
-                color: var(--el-color-white);
-            }
+        .left-logo .logo-url .logo-title {
+            color: var(--el-color-white);
         }
 
-        & > .left-menu {
-            & > ul {
-                background-color: transparent;
+        .left-menu > ul {
+            background-color: transparent;
+            background: transparent;
 
-                :deep(a) {
-                    & > li {
-                        color: var(--el-color-white);
+            :deep(a) {
+                text-decoration: none;
 
-                        &.is-active {
-                            color: var(--el-color-primary);
-                            background-color: var(--el-color-primary-light-9);
-                        }
-                    }
+                & > li {
+                    color: var(--el-color-white);
 
-                    &:hover > li {
+                    &.is-active {
                         color: var(--el-color-primary);
                         background-color: var(--el-color-primary-light-9);
                     }
                 }
 
-                :deep(li) {
-                    .el-sub-menu__title {
-                        color: var(--el-color-white);
-                    }
+                &:hover > li {
+                    color: var(--el-color-primary);
+                    background-color: var(--el-color-primary-light-9);
+                }
+            }
 
-                    div:hover {
-                        color: var(--el-color-primary);
-                        background-color: var(--el-color-primary-light-9);
-                    }
+            :deep(li) {
+                .el-sub-menu__title {
+                    color: var(--el-color-white);
+                }
 
-                    ul > a:hover {
-                        color: var(--el-color-primary);
-                        background-color: var(--el-color-primary-light-9);
-                    }
+                div:hover {
+                    color: var(--el-color-primary);
+                    background-color: var(--el-color-primary-light-9);
+                }
+
+                ul > a:hover {
+                    color: var(--el-color-primary);
+                    background-color: var(--el-color-primary-light-9);
                 }
             }
         }
