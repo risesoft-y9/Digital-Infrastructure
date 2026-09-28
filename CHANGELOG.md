@@ -1,3 +1,84 @@
+## v9.6.11 2026-09-28
+
+### Added
+
+- 新增公私钥转 pem 方法
+- 新增 rsa 签名算法
+- 初始化时可选是否创建数据库、schema（会存在已提前创建的情况或由于权限问题不能自动创建的问题）
+- 引入Apache HttpClient 4.x，新增Y9RemoteClientUtil用来替换原来的RemoteCallUtil，并将RemoteCallUtil标记成过时代码。
+- 新增系统开发商账号管理，该账号可管理多个系统、以及相关系统的授权。
+- 日志管理系统添加日志保存接口，同时调整访问操作用时记录的单位为毫秒
+
+### Changed
+
+- 移除常量中的某些固定 id
+- 重新整理租户相关接口
+- 将 rest 接口移入 risenet-y9boot-support-platform-web 中
+- 单点登录页面的图标和 title 显示调整，同时增加输入的密码可查看的功能
+- nacos 的 server-addr、namespace、username 可从系统环境变量里获取
+- 优化工程日志输出
+- 数字底座前端工程将树节点能否删除、管理的逻辑挪到后端
+- 重构数字底座前端工程的layouts代码
+
+### Fixed
+
+- 仅在 idType 为身份证时校验 idNum
+- jpa 及 jpaVendor 相关配置属性的优先级对齐 Spring Boot，移除无用及重复项jpa配置。
+- 单点登录示例工程切换oidc认证.以及更新单点登录的前端示例工程
+
+## v9.6.10 2026-06-25
+
+### Added
+
+- 新增应用分类及个人应用分类相关能力
+- 新增角色级别，权限授权展示和判断支持角色级别信息
+- 增加根据自定义 id 查询有权限的子资源接口
+- platform 针对组织、人员、岗位、角色等实体添加批量获取接口
+- 增加根据组织节点 id 和部门属性类型查找部门属性对应部门列表的接口
+- 新增 risenet-y9boot-starter-system-registration，支持应用启动时自动往数字底座注册系统
+- 自定义 Spring Boot 应用 banner，启动时打印更有用的应用信息
+- 日志查询支持根据 paramsJson 模糊查询，审计日志支持根据系统名查询
+- 支持打包 docker 镜像时切换镜像仓库
+
+### Changed
+
+- 组织架构、权限、资源、应用分类等接口调整到更合理的包结构，并优化接口命名
+- 组织架构接口和单点登录返回信息不再包含密码字段
+- 权限相关展示数据优化，补充对“隐藏”操作权限的说明
+- 组织架构树搜索优化，批量获取接口的 id 列表增加默认值和去重处理
+- 微服务间 API 调用改为注入接口而不是具体实现
+- 审计日志能力提取至 risenet-y9boot-support-audit
+- redis 的值使用 Jackson 替代 JDK 序列化、反序列化
+- 使用 lombok 将强依赖字段注入改为构造注入，并生成 SLF4J Logger 字段
+- 提取公共 lombok.config 配置到根目录，移除子模块中重复配置文件
+- 从 risenet-y9boot-common-util 拆分 risenet-y9boot-common-poi
+
+### Fixed
+
+- 数据目录新增和修改后未触发权限缓存重新计算的问题
+- 岗位禁用状态修改、人员岗位列表排序时，登录账号 positionIds 没有同步更新的问题
+- 分类 id 为空时的处理问题
+- liquibase includeAll 默认字典序排序导致按版本号命名的 changelog 执行顺序不正确的问题
+- Elasticsearch 操作偶尔出现 Connection reset by peer 的问题
+- feign client 一个方法中不能同时使用多个 @SpringQueryMap 的问题
+- Jackson 反序列化不能忽略类中不存在字段的问题
+- 时间字段序列化时区不正确的问题
+- 根据条件筛选资源、null 值查询和参数判空相关问题
+- 新增应用角色没有系统 id 的问题
+- 运维三员租户 id 报错的问题
+- 同一个系统新增应用 tabIndex 都为 0 的问题
+- 系统部署多个实例时，系统被租用后只有其中一个实例刷新数据源的问题
+- 异步任务在线程池复用线程时没有传递 ThreadLocal 值的问题
+- 新建人员或三员不能同步到账号表的问题
+- 有 @RiseLog 注解且开关打开时才记录日志，避免其他情况误记录
+- docker 镜像 tag 从 v9.6.x 调整为 9.6.x
+- Element Plus 组件 size 从 mini 调整为 small
+- 修正 maxWaithThreadCount 拼写为 maxWaitThreadCount
+
+### Dependency Upgrades
+
+- 升级 central-publishing-maven-plugin 版本
+
 ## v9.6.9 2026-02-03
 
 ### Added
@@ -21,7 +102,7 @@
   对于已经前后端分离的后端工程名做了修改，应用上下文统一小写，举例：risenet-y9boot-webapp-addressbook ->
   risenet-y9boot-server-addressbook，对应的上下文 /server-addressbook
 - 移除risenet-y9boot-common-util的webService接口调用
-- 修改默认的岗位名模板："#jobName.equals('无') ? #personNames : #personNames+ '（' + #jobName + '）'"
+- 修改默认的岗位名模板："#jobName.equals ('无') ? #personNames : #personNames+ '（' + #jobName + '）'"
 - 移除 ftpStoreService 的 @Primary 注解，所有文件存储服务同级，通过开关控制只有一个存储服务注入
 - 应用的 docker 基础镜像 tomcat 更新至 9.0.107-jdk11-temurin
 - 将登录表单的提交的代码挪回页面中，清晰整个登录提交流程，与点选验证码的代码解耦，以及调整点选验证码样式，移除未使用的页面
@@ -48,7 +129,7 @@
 - version 无需手动设置以及实体的 tenantId 无需手动设置
 - 操作日志展示字段调整，优化日志记录功能，方法和类级别的注解 RiseLog 属性 moduleName 的“合并”
 - ID 生成器工具类不依赖 Spring 容器
-- 移除 Y9FileStoreService 的 Y9FileStore uploadFile(MultipartFile multipartFile, String customPath, String fileName) 方法
+- 移除 Y9FileStoreService 的 Y9FileStore uploadFile (MultipartFile multipartFile, String customPath, String fileName) 方法
 
 ### Fixed
 
@@ -247,7 +328,7 @@
 - 部门属性类型使用字典表代替枚举以实现动态的增删
 - 单点登录（sso）拆分两个版本，引入纯净版仅使用关系型数据库。
 - 数字底座分布式锁（ShedLock provider） 由 redis 切换到 JdbcTemplate
-- 日志保存插件更新，新增属性y9.feature.log.logSaveTarget(用来切换日志保存方式)：kafka或者api，默认为kafka。
+- 日志保存插件更新，新增属性y9.feature.log.logSaveTarget (用来切换日志保存方式)：kafka或者api，默认为kafka。
 - 单点登录插件保存用户在线和访问日志日志的方法增加切换方式)：kafka或者api，默认为kafka。
 
 ## v9.6.4 2024-03-13
