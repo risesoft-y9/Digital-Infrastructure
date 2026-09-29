@@ -38,7 +38,7 @@ import net.risesoft.vo.org.OrgTreeNodeVO;
 @RestController
 @RequestMapping(value = "/api/rest/dept", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
+@IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
 public class DeptController {
 
     private final CompositeOrgBaseService compositeOrgBaseService;

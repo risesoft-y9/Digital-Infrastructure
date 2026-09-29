@@ -103,7 +103,7 @@ public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
         ta.setAppName(y9App.getName());
         ta.setApplyName(Optional.ofNullable(Y9LoginUserHolder.getUserInfo())
             .map(UserInfo::getName)
-            .orElse(ManagerLevelEnum.SYSTEM_MANAGER.getName()));
+            .orElse(ManagerLevelEnum.TENANT_SYSTEM_MANAGER.getName()));
         ta.setApplyId(Y9LoginUserHolder.getPersonId());
         ta.setApplyReason(applyReason);
         ta.setTenancy(Boolean.TRUE);
@@ -112,7 +112,7 @@ public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
             ta.setVerify(Boolean.TRUE);
             ta.setVerifyUserName(Optional.ofNullable(Y9LoginUserHolder.getUserInfo())
                 .map(UserInfo::getName)
-                .orElse(ManagerLevelEnum.SYSTEM_MANAGER.getName()));
+                .orElse(ManagerLevelEnum.TENANT_SYSTEM_MANAGER.getName()));
             ta.setVerifyTime(time);
             ta.setReason("同意申请");
         } else {

@@ -27,12 +27,15 @@ public class OracleDatabaseManager extends AbstractDatabaseManager {
     }
 
     @Override
-    protected CreatedDataSource createSchemaInternal(JdbcTemplate jdbcTemplate, String dbName, String originalUrl,
-        String originalUsername, String originalPassword) {
-        String username = dbName.toUpperCase();
+    protected CreatedDataSource buildInternal(String dbName, String originalUrl, String originalUsername,
+        String originalPassword) {
+        return new CreatedDataSource(originalUrl, dbName.toUpperCase(), originalPassword);
+    }
 
-        String tableSpace = username + "_DATA";
-        String dataFile = y9PlatformProperties.getNewTableSpacePath() + tableSpace + ".DBF";
+    @Override
+    protected void createInternal(JdbcTemplate jdbcTemplate, CreatedDataSource createdDataSource, String dbName) {
+        String tableSpace = createdDataSource.getUsername() + "_DATA";
+        String dataFile = y9PlatformProperties.getInit().getNewTableSpacePath() + tableSpace + ".DBF";
 
         // 创建表空间
         String sql1 = Y9StringUtil.format(
@@ -41,17 +44,16 @@ public class OracleDatabaseManager extends AbstractDatabaseManager {
         // 创建用户
         String sql2 = Y9StringUtil.format(
             "CREATE USER {} IDENTIFIED BY {} ACCOUNT UNLOCK DEFAULT TABLESPACE {} TEMPORARY TABLESPACE TEMP PROFILE DEFAULT",
-            username, originalPassword, tableSpace);
+            createdDataSource.getUsername(), createdDataSource.getPassword(), tableSpace);
         // 给用户授权
-        String sql3 = Y9StringUtil.format("GRANT DBA TO {} WITH ADMIN OPTION", username);
+        String sql3 = Y9StringUtil.format("GRANT DBA TO {} WITH ADMIN OPTION", createdDataSource.getUsername());
         // 修改权限
-        String sql4 = Y9StringUtil.format("ALTER USER {} DEFAULT ROLE DBA", username);
+        String sql4 = Y9StringUtil.format("ALTER USER {} DEFAULT ROLE DBA", createdDataSource.getUsername());
 
         jdbcTemplate.update(sql1);
         jdbcTemplate.update(sql2);
         jdbcTemplate.update(sql3);
         jdbcTemplate.update(sql4);
-        return new CreatedDataSource(originalUrl, username, originalPassword);
     }
 
     @Override

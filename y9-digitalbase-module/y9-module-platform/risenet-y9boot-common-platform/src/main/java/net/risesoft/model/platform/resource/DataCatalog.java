@@ -4,7 +4,6 @@ import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
 
-import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.resource.DataCatalogTypeEnum;
 
 /**
@@ -52,7 +51,7 @@ public class DataCatalog extends Resource {
 
     @Override
     public String getAppId() {
-        return InitDataConsts.APP_ID;
+        return "";
     }
 
     @Override

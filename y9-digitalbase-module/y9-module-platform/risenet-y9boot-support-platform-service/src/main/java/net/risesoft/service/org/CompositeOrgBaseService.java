@@ -146,6 +146,14 @@ public interface CompositeOrgBaseService {
      */
     HashMap<String, Serializable> getSyncMap(String syncId, OrgTypeEnum orgType, Integer needRecursion);
 
+    /**
+     * 获取用于同步的组织节点数据
+     *
+     * @param organizationId 组织节点id
+     * @param orgTypeEnum 组织节点类型
+     * @param recursionRequired 是否递归获取下级节点
+     * @return {@link SyncOrgUnits}
+     */
     SyncOrgUnits getSyncOrgUnits(String organizationId, OrgTypeEnum orgTypeEnum, boolean recursionRequired);
 
     /**
@@ -264,5 +272,11 @@ public interface CompositeOrgBaseService {
      */
     List<OrgUnit> listOrgUnitsAsParentByParentId(String parentId);
 
+    /**
+     * 根据id列表获取人员或岗位列表
+     *
+     * @param ids 人员或岗位id列表
+     * @return {@code List<OrgUnit>}
+     */
     List<OrgUnit> listPersonOrPositionByIds(List<String> ids);
 }

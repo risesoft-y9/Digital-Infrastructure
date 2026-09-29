@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,7 +21,6 @@ import net.risesoft.api.platform.org.PersonApi;
 import net.risesoft.log.domain.Y9LogUserLoginInfoDO;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.pojo.PersonInformation;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.mime.ContentDispositionUtil;
 import net.risesoft.y9public.service.Y9logUserLoginInfoService;
 
@@ -49,10 +47,6 @@ public class DownloadController {
     @ResponseBody
     @RequestMapping(value = "/exportNotLoginXLS", method = RequestMethod.GET)
     public void exportNotLoginXLS(String tenantId, HttpServletResponse response) {
-        if (StringUtils.isNotBlank(tenantId)) {
-            Y9LoginUserHolder.setTenantId(tenantId);
-        }
-
         try (OutputStream outStream = response.getOutputStream()) {
 
             response.setContentType("application/octet-stream");
@@ -75,9 +69,6 @@ public class DownloadController {
     @ResponseBody
     @RequestMapping(value = "/exportLoginXLS", method = RequestMethod.GET)
     public void exportPersonXLS(String tenantId, HttpServletResponse response) {
-        if (StringUtils.isNotBlank(tenantId)) {
-            Y9LoginUserHolder.setTenantId(tenantId);
-        }
         try (OutputStream outStream = response.getOutputStream()) {
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", ContentDispositionUtil.standardizeAttachment(

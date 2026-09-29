@@ -26,7 +26,7 @@ import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.service.permission.cache.Y9PersonalAppService;
 import net.risesoft.service.setting.Y9AppCategoryService;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
 import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
@@ -80,7 +80,7 @@ public class SyncPersonalAppController {
             for (String tenantId : tenantIds) {
                 List<UserInfo> listUser = y9UserService.listByTenantId(tenantId);
 
-                Y9LoginUserHolder.setTenantId(tenantId);
+                Y9TenantHolder.setCurrentTenantId(tenantId);
                 LOGGER.info("当前租户ID为---------》{}", tenantId);
                 List<AppCategory> categoryList = y9AppCategoryService.buildDefaultAppCategoryList();
                 for (UserInfo user : listUser) {
@@ -117,7 +117,7 @@ public class SyncPersonalAppController {
         if (y9SystemOptional.isPresent()) {
             List<String> tenantIds = y9TenantSystemService.listTenantIdBySystemId(y9SystemOptional.get().getId());
             for (String tenantId : tenantIds) {
-                Y9LoginUserHolder.setTenantId(tenantId);
+                Y9TenantHolder.setCurrentTenantId(tenantId);
                 LOGGER.info("当前租户ID为---------》{}", tenantId);
                 List<AppCategory> appCategoryList = y9AppCategoryService.buildDefaultAppCategoryList();
                 List<Organization> organizations = y9OrganizationService.list(false, false);
@@ -157,7 +157,7 @@ public class SyncPersonalAppController {
         LOGGER.info("开始人员图标更新操作时间:{}", DATE_FORMAT.format(start));
 
         List<UserInfo> listUser = y9UserService.listByTenantId(tenantId);
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         List<AppCategory> appOrderList = y9AppCategoryService.buildDefaultAppCategoryList();
         for (UserInfo user : listUser) {
             String personId = user.getPersonId();
@@ -190,7 +190,7 @@ public class SyncPersonalAppController {
         long start = Instant.now().toEpochMilli();
         LOGGER.info("开始人员图标更新操作时间:{}", DATE_FORMAT.format(start));
 
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         List<AppCategory> appOrderList = y9AppCategoryService.buildDefaultAppCategoryList();
         List<Organization> organizations = y9OrganizationService.list(false, false);
         for (Organization org : organizations) {

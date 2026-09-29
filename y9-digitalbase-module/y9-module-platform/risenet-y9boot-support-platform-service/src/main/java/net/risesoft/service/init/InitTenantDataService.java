@@ -10,7 +10,7 @@ package net.risesoft.service.init;
 public interface InitTenantDataService {
 
     /**
-     * 给某个租户进行数据的初始化，使用之前需先调用 Y9LoginUserHolder.setTenantId 设置租户 id 以便使用对应的数据源
+     * 给某个租户进行数据的初始化，使用之前需先调用 Y9TenantHolder.setCurrentTenantId 设置租户 id 以便使用对应的数据源
      */
     void initAll();
 

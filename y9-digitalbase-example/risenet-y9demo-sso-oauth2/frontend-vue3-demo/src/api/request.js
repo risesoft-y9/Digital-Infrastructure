@@ -1,90 +1,84 @@
-import axios from 'axios';
+/*
+ * @Author: your name
+ * @Date: 2021-04-15 10:16:53
+ * @LastEditTime: 2023-07-10 10:41:42
+ * @LastEditors: mengjuhua
+ * @Description: In User Settings Edit
+ */
+
+import y9_storage from '@/utils/storage';
+import axios from 'axios'; // 考虑CDN
+import {$y9_SSO} from '@/main';
+
 
 // 创建一个axios实例
-const service = axios.create({
-    baseURL: import.meta.env.VUE_APP_HOST,
-    withCredentials: true,
-    timeout: 0,
-});
+function y9Request(baseUrl = '') {
+    let requestList = new Set();
 
-//添加请求拦截器
-service.interceptors.request.use(
-    (config) => {
-        // 在发送请求之前做些什么
-        config.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
-        // 自定义
-        if (config.cType) {
-            config.headers['userLoginName'] = config.data.userLoginName;
-        }
-        let sessionObj = JSON.parse(sessionStorage.getItem(import.meta.env.VUE_APP_SITETOKEN));
-        if (sessionObj.access_token) {
-            // console.log("access_token = ",access_token);
-            config.headers['Authorization'] = 'Bearer ' + sessionObj.access_token;
-        }
+    const service = axios.create({
+        baseURL: import.meta.env.VUE_APP_CONTEXT,
+        withCredentials: true,
+        timeout: 0
+    });
+    // 请求拦截器(发送请求的时候，携带一些信息)
+    service.interceptors.request.use(
+        (config) => {
 
-        console.log("config", config)
-
-        return config;
-    },
-    (error) => {
-        // 对请求错误做些什么
-        console.log(error);
-        return Promise.reject(error);
-    }
-);
-
-//添加响应拦截器
-service.interceptors.response.use(
-    (response) => {
-        let res;
-        if (response.data) {
-            res = response.data;
-        } else {
-            res = response;
-        }
-        const {code} = res;
-        if (code !== 0) {
-            console.log("code", code)
-            // 获取替换后的字符串
-            const reqUrl = response.config.url.split('?')[0].replace(response.config.baseURL, '');
-            switch (code) {
-                case 40101:
-                case 40101:
-                case 40102:
-                case 40102:
-                case 401: // 未登陆
-                    alert('当前用户登入信息已失效，请重新登入再操作')
-
-                    break;
-                case 40300:
-                    window.location.href = import.meta.env.VUE_APP_PUBLIC_PATH + '/401';
-                    break;
-                case 40400:
-                    window.location.href = import.meta.env.VUE_APP_PUBLIC_PATH + '/404';
-                    break;
-                case 50000:
-                    return res;
-                default:
-                    console.error(res.msg);
-                    // ElMessage({
-                    //     message: res.msg || 'Errors',
-                    //     type: 'error',
-                    //     duration: 1500,
-                    // });
-                    break;
+            config.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
+            // 自定义
+            const access_token = y9_storage.getObjectItem(import.meta.env.VUE_APP_SSO_SITETOKEN_KEY, 'access_token');
+            if (access_token) {
+                // console.log("access_token = ",access_token);
+                config.headers['Authorization'] = 'Bearer ' + access_token;
             }
 
-            // 返回错误 走 catch
-            return Promise.reject(res);
-        } else {
-            return res;
+            return config;
+        },
+        (error) => {
+            // 处理请求错误
+            console.log(error); // for debug
+            return Promise.reject(error);
         }
-    },
-    (error) => {
-        // 对响应错误做些什么
-        console.log(error);
-        return Promise.reject(error);
-    }
-);
+    );
 
-export default service;
+    // 响应拦截器(接收到数据的时候，进行数据过滤、对状态码判断，进行对应的操作)
+    service.interceptors.response.use(
+        (response) => {
+            // 相同请求不得在600毫秒内重复发送，反之继续执行
+            setTimeout(() => {
+                requestList.delete(response.config.url);
+            }, 600);
+            if (response.data) {
+                return response.data;
+            } else {
+                return response;
+            }
+        },
+        (error) => {
+            // 异常情况
+            if (axios.isCancel(error)) {
+                // log
+                // 请求取消
+                console.warn(error);
+                // console.table([error.message.split('---')[0]], 'cancel')
+            } else if (error.response) {
+                // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
+                requestList.delete(error.config.url);
+                let data = error.response.data;
+                if (error.response.status === 401) {
+                    $y9_SSO.clearCurrentSessionStorage();
+                    $y9_SSO.checkLogin();
+                } else if (error.response.status === 400) {
+                    // 参数、业务上的错误统一返回 http 状态 400，返回原始 body 到请求处自行处理
+                    return data;
+                }
+            }
+
+            return Promise.reject(error);
+        }
+    );
+
+    return service;
+}
+
+export default y9Request;

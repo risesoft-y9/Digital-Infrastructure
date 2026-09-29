@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2026-01-12 14:39:00
+ * @LastEditTime: 2025-12-24 10:36:01
  * @Description: 组织架构
 -->
 <template>
@@ -10,7 +10,7 @@
         ref="fixedTreeRef"
         :treeApiObj="treeApiObj"
         nodeLabel="newName"
-        :virtualScroll="false"
+        :virtualScroll="true"
         @onDeleteTree="onDeleteTree"
         @onTreeClick="onTreeClick"
     >

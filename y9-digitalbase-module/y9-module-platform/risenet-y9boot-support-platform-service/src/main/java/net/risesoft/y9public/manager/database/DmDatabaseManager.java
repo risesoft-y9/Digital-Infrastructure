@@ -27,13 +27,15 @@ public class DmDatabaseManager extends AbstractDatabaseManager {
     }
 
     @Override
-    protected CreatedDataSource createSchemaInternal(JdbcTemplate jdbcTemplate, String dbName, String originalUrl,
-        String originalUsername, String originalPassword) {
-        String upperCaseDbName = dbName.toUpperCase();
-        String username = upperCaseDbName;
+    protected CreatedDataSource buildInternal(String dbName, String originalUrl, String originalUsername,
+        String originalPassword) {
+        return new CreatedDataSource(originalUrl, dbName.toUpperCase(), originalPassword);
+    }
 
-        String tableSpace = upperCaseDbName + "_DATA";
-        String dataFile = y9PlatformProperties.getNewTableSpacePath() + tableSpace + ".DBF";
+    @Override
+    protected void createInternal(JdbcTemplate jdbcTemplate, CreatedDataSource createdDataSource, String dbName) {
+        String tableSpace = createdDataSource.getUsername() + "_DATA";
+        String dataFile = y9PlatformProperties.getInit().getNewTableSpacePath() + tableSpace + ".DBF";
 
         // 创建表空间
         String sql1 = Y9StringUtil.format(
@@ -41,16 +43,14 @@ public class DmDatabaseManager extends AbstractDatabaseManager {
         // 创建用户
         String sql2 = Y9StringUtil.format(
             "create user {} identified by \"{}\" password_policy 15 PROFILE \"DEFAULT\" default tablespace \"{}\"",
-            username, originalPassword, tableSpace);
+            createdDataSource.getUsername(), createdDataSource.getPassword(), tableSpace);
 
         // 给用户授权
-        String sql3 = Y9StringUtil.format("grant \"DBA\" to {}", username);
+        String sql3 = Y9StringUtil.format("grant \"DBA\" to {}", createdDataSource.getUsername());
 
         jdbcTemplate.update(sql1);
         jdbcTemplate.update(sql2);
         jdbcTemplate.update(sql3);
-
-        return new CreatedDataSource(originalUrl, username, originalPassword);
     }
 
     @Override

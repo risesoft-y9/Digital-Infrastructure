@@ -5,6 +5,23 @@
  * @LastEditors: mengjuhua
  * @Description:   搜索
 -->
+<template>
+    <el-drawer v-model="searchVisible" :show-close="false" :z-index="9000" direction="ttb">
+        <div :class="{ search: true, 'is-pc': settingStore.getDevice === 'pc' }">
+            <el-input
+                v-model="searchKey"
+                class="input"
+                placeholder="Please Input"
+                @change="(searchVisible = false), searchFunc()"
+                @focus="searchKey = ''"
+            >
+                <template #append>
+                    <el-button :icon="Search" />
+                </template>
+            </el-input>
+        </div>
+    </el-drawer>
+</template>
 <script lang="ts" setup>
     import { Search } from '@element-plus/icons-vue';
     import { useSettingStore } from '@/store/modules/settingStore';
@@ -31,25 +48,6 @@
         }, 500);
     });
 </script>
-
-<template>
-    <el-drawer v-model="searchVisible" :show-close="false" :z-index="9000" direction="ttb">
-        <div :class="{ search: true, 'is-pc': settingStore.getDevice === 'pc' }">
-            <el-input
-                v-model="searchKey"
-                class="input"
-                placeholder="Please Input"
-                @change="(searchVisible = false), searchFunc()"
-                @focus="searchKey = ''"
-            >
-                <template #append>
-                    <el-button :icon="Search" />
-                </template>
-            </el-input>
-        </div>
-    </el-drawer>
-</template>
-
 <style lang="scss" scoped>
     .search {
         margin: 0 auto;

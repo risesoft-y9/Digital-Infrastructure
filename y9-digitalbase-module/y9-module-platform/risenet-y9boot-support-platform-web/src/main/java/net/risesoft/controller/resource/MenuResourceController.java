@@ -31,7 +31,8 @@ import net.risesoft.y9public.service.resource.Y9MenuService;
 @RestController
 @RequestMapping(value = "/api/rest/resource/menu", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
+@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER,
+    ManagerLevelEnum.SYSTEM_VENDOR})
 public class MenuResourceController {
 
     private final Y9MenuService y9MenuService;
@@ -81,8 +82,8 @@ public class MenuResourceController {
      */
     @RiseLog(operationName = "根据id获取菜单资源详情")
     @GetMapping(value = "/{id}")
-    @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
-        ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
+    @IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER,
+        ManagerLevelEnum.OPERATION_SYSTEM_MANAGER, ManagerLevelEnum.SYSTEM_VENDOR})
     public Y9Result<Menu> getById(@PathVariable @NotBlank String id) {
         return Y9Result.success(y9MenuService.getById(id), "根据id获取菜单资源详情成功");
     }

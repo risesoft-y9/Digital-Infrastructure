@@ -39,14 +39,6 @@ public interface Y9OrganizationService {
     void delete(String orgId);
 
     /**
-     * 根据id判断组织机构是否存在
-     *
-     * @param id 组织id
-     * @return boolean
-     */
-    boolean existsById(String id);
-
-    /**
      * 根据id查找组织机构
      *
      * @param id 组织id
@@ -86,14 +78,6 @@ public interface Y9OrganizationService {
      * @return {@code List<Organization>}
      */
     List<Organization> list(Boolean virtual, Boolean disabled);
-
-    /**
-     * 根据dn查找
-     *
-     * @param dn 域
-     * @return {@code List<Organization>}
-     */
-    List<Organization> listByDn(String dn);
 
     /**
      * 保存或者更新组织机构基本信息

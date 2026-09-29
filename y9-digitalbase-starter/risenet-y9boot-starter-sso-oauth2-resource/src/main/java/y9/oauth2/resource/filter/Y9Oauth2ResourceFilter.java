@@ -151,9 +151,6 @@ public class Y9Oauth2ResourceFilter implements Filter {
                     String[] postionList = userInfo.getPositions().split(",");
                     Y9LoginUserHolder.setPositionId(postionList[0]);
                 }
-                Y9LoginUserHolder.setTenantId(userInfo.getTenantId());
-                Y9LoginUserHolder.setTenantName(userInfo.getTenantName());
-                Y9LoginUserHolder.setTenantShortName(userInfo.getTenantShortName());
                 Y9LoginUserHolder.setUserInfo(userInfo);
             }
 

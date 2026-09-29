@@ -16,6 +16,7 @@ import net.risesoft.model.platform.Role;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.vo.role.RoleTreeNodeVO;
+import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.role.Y9RoleService;
 
 /**
@@ -28,11 +29,12 @@ import net.risesoft.y9public.service.role.Y9RoleService;
 @RestController
 @RequestMapping(value = "/api/rest/publicRole", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
-    ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
+@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER,
+    ManagerLevelEnum.OPERATION_SYSTEM_MANAGER, ManagerLevelEnum.SYSTEM_VENDOR})
 public class PublicRoleController {
 
     private final Y9RoleService y9RoleService;
+    private final Y9SystemService y9SystemService;
 
     /**
      * 获取系统公共角色顶节点
@@ -44,7 +46,7 @@ public class PublicRoleController {
     public Y9Result<List<RoleTreeNodeVO>> treeRoot2() {
         Role role = y9RoleService.getById(InitDataConsts.TOP_PUBLIC_ROLE_ID);
         List<Role> y9RoleList = List.of(role);
-        return Y9Result.success(RoleTreeNodeVO.convertRoleList(y9RoleList), "展开应用角色树成功");
+        return Y9Result.success(RoleTreeNodeVO.convertRoleList(y9RoleList, y9SystemService), "展开应用角色树成功");
     }
 
     /**
@@ -57,6 +59,6 @@ public class PublicRoleController {
     @RequestMapping(value = "/treeSearch2")
     public Y9Result<List<RoleTreeNodeVO>> treeSearch2(@RequestParam String name) {
         List<Role> roleList = y9RoleService.treeSearch(name, InitDataConsts.TOP_PUBLIC_ROLE_ID);
-        return Y9Result.success(RoleTreeNodeVO.convertRoleList(roleList), "根据角色名称查询角色节点成功");
+        return Y9Result.success(RoleTreeNodeVO.convertRoleList(roleList, y9SystemService), "根据角色名称查询角色节点成功");
     }
 }

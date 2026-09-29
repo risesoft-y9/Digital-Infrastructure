@@ -9,6 +9,7 @@ import lombok.Setter;
 import net.risesoft.enums.TreeTypeEnum;
 import net.risesoft.model.platform.resource.DataCatalog;
 import net.risesoft.vo.TreeNodeVO;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9BeanUtil;
 
 /**
@@ -52,6 +53,10 @@ public class DataCatalogTreeNodeVO extends TreeNodeVO {
         Y9BeanUtil.copyProperties(dataCatalog, dataCatalogTreeNodeVO);
         dataCatalogTreeNodeVO.setDataCatalogTreeType(dataCatalog.getTreeType());
         dataCatalogTreeNodeVO.setDataCatalogType(dataCatalog.getType().getValue());
+        if (Y9LoginUserHolder.getUserInfo().isTenantSystemManager()) {
+            dataCatalogTreeNodeVO.setManageable(true);
+            dataCatalogTreeNodeVO.setDeletable(true);
+        }
         return dataCatalogTreeNodeVO;
     }
 

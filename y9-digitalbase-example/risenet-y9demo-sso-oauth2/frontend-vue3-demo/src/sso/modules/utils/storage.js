@@ -74,7 +74,7 @@ export default {
     getObjectItem: function (key, item = '') {
         const object = storageType.getItem(key);
         if (!object) {
-            // console.log(`getObjectItem - 没有${object}这个缓存`);
+
             return false;
         }
         if (object == 'undefined') {

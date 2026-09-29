@@ -21,12 +21,6 @@ public interface Y9SystemRepository extends JpaRepository<Y9System, String>, Jpa
 
     List<Y9System> findByAutoInit(Boolean autoInit);
 
-    List<Y9System> findByCnNameContainingOrderByTabIndexAsc(String cnName);
-
-    List<Y9System> findByContextPath(String contextPath);
-
-    List<Y9System> findByTenantIdOrderByTabIndexAsc(String tenantId);
-
     Optional<Y9System> findByName(String name);
 
     Optional<Y9System> findTopByOrderByTabIndexDesc();

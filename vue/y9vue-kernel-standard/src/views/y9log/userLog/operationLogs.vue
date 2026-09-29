@@ -308,7 +308,7 @@
         }
     };
     const elapsedTimeFormat = (row?, column?, cellValue?) => {
-        var msec = cellValue / 1000 / 1000;
+        var msec = cellValue;
         if (msec < 1) {
             let s = msec / 1000;
             return Math.round(s * Math.pow(10, 6)) / Math.pow(10, 6) + '秒';

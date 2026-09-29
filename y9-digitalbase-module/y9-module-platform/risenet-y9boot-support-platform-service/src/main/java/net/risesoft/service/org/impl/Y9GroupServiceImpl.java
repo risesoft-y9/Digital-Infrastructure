@@ -18,6 +18,7 @@ import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.enums.AuditLogEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9GroupManager;
 import net.risesoft.manager.relation.Y9PersonsToGroupsManager;
@@ -31,6 +32,7 @@ import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 
 /**
@@ -194,6 +196,8 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     @Override
     @Transactional
     public Group saveOrUpdate(Group group) {
+        checkCustomIdAvailable(group.getCustomId(), group.getId());
+
         if (StringUtils.isNotBlank(group.getId())) {
             Optional<Y9Group> groupOptional = y9GroupManager.findById(group.getId());
             if (groupOptional.isPresent()) {
@@ -232,6 +236,15 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         Y9Context.publishEvent(auditLogEvent);
 
         return PlatformModelConvertUtil.y9GroupToGroup(savedGroup);
+    }
+
+    private void checkCustomIdAvailable(String customId, String id) {
+        if (StringUtils.isBlank(customId)) {
+            return;
+        }
+        Optional<Y9Group> y9GroupOptional = y9GroupRepository.findByCustomId(customId);
+        Y9AssertUtil.isTrue(y9GroupOptional.isEmpty() || y9GroupOptional.get().getId().equals(id),
+            OrgUnitErrorCodeEnum.CUSTOM_ID_USED, customId);
     }
 
     @Override

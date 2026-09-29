@@ -24,13 +24,9 @@ public interface Y9PositionsToGroupsRepository extends JpaRepository<Y9Positions
     @Transactional(readOnly = false)
     void deleteByPositionId(String positionId);
 
-    List<Y9PositionsToGroups> findByGroupId(String groupId);
-
     Optional<Y9PositionsToGroups> findByGroupIdAndPositionId(String groupId, String positionId);
 
     List<Y9PositionsToGroups> findByGroupIdOrderByPositionOrder(String groupId);
-
-    List<Y9PositionsToGroups> findByPositionId(String positionId);
 
     Optional<Y9PositionsToGroups> findTopByGroupIdOrderByPositionOrderDesc(String groupId);
 

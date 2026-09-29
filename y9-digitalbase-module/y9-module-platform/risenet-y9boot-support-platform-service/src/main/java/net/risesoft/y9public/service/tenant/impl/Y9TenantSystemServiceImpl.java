@@ -63,25 +63,6 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     }
 
     @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public void deleteByTenantId(String tenantId) {
-        List<Y9TenantSystem> y9TenantSystemList = y9TenantSystemRepository.findByTenantId(tenantId);
-        for (Y9TenantSystem t : y9TenantSystemList) {
-            this.delete(t.getId());
-        }
-    }
-
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public void deleteByTenantIdAndSystemId(String tenantId, String systemId) {
-        Optional<Y9TenantSystem> systemOptional =
-            y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
-        if (systemOptional.isPresent()) {
-            this.delete(systemOptional.get().getId());
-        }
-    }
-
-    @Override
     public Optional<TenantSystem> findById(String id) {
         return y9TenantSystemRepository.findById(id).map(Y9TenantSystemServiceImpl::entityToModel);
     }
@@ -133,13 +114,7 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
 
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public TenantSystem saveTenantSystem(String systemId, String tenantId) {
-        return entityToModel(y9TenantSystemManager.saveTenantSystem(systemId, tenantId));
-    }
-
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public List<TenantSystem> saveTenantSystems(String[] systemIds, String tenantId) {
+    public List<TenantSystem> saveTenantSystems(List<String> systemIds, String tenantId) {
         return entityToModel(y9TenantSystemManager.saveTenantSystems(systemIds, tenantId));
     }
 

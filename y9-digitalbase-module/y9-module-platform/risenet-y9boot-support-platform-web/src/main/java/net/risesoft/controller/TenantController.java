@@ -30,7 +30,7 @@ import net.risesoft.y9public.service.tenant.Y9TenantService;
 @RestController
 @RequestMapping(value = "/api/rest/y9Tenant", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
+@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
 public class TenantController {
 
     private final Y9FileStoreService y9FileStoreService;

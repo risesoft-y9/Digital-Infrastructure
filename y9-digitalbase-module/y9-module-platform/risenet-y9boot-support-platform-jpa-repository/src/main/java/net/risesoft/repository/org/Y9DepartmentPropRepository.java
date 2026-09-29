@@ -35,8 +35,6 @@ public interface Y9DepartmentPropRepository
     @Transactional(readOnly = false)
     void deleteByOrgBaseId(String orgBaseId);
 
-    List<Y9DepartmentProp> findByCategoryOrderByTabIndex(Integer category);
-
     List<Y9DepartmentProp> findByDeptId(String deptId);
 
     List<Y9DepartmentProp> findByDeptIdAndCategoryOrderByTabIndex(String deptId, Integer category);

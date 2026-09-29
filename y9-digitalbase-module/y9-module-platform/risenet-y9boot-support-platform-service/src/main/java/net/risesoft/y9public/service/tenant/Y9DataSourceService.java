@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 import net.risesoft.model.platform.tenant.DataSourceInfo;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
@@ -26,7 +27,14 @@ public interface Y9DataSourceService {
      */
     void changePassword(String id, String oldPassword, String newPassword);
 
-    DataSourceInfo createTenantDefaultDataSource(String dbName, String id);
+    /**
+     * 根据数据库名称创建数据源
+     *
+     * @param dbName 数据库名称
+     * @param createSchema 是否创建数据库、schema
+     * @return {@link DataSourceInfo}
+     */
+    DataSourceInfo createDataSource(String dbName, boolean createSchema);
 
     /**
      * 根据id删除数据源
@@ -35,6 +43,12 @@ public interface Y9DataSourceService {
      */
     void delete(String id);
 
+    /**
+     * 检查数据源关联关系后根据 id 删除
+     *
+     * @param id 数据源 id
+     * @throws Y9BusinessException 数据源正在被租户系统使用的情况
+     */
     void deleteAfterCheck(String id);
 
     /**
@@ -71,13 +85,6 @@ public interface Y9DataSourceService {
     Y9Page<DataSourceInfo> page(Y9PageQuery pageQuery);
 
     /**
-     * 重置默认密码
-     *
-     * @param id ID
-     */
-    void resetDefaultPassword(String id);
-
-    /**
      * 保存租户数据源
      *
      * @param y9DataSource 数据源对象
@@ -85,5 +92,11 @@ public interface Y9DataSourceService {
      */
     DataSourceInfo save(DataSourceInfo y9DataSource);
 
+    /**
+     * 保存租户数据源并发布变更消息
+     *
+     * @param y9DataSource 数据源对象
+     * @return {@link DataSourceInfo}
+     */
     DataSourceInfo saveAndPublishMessage(DataSourceInfo y9DataSource);
 }

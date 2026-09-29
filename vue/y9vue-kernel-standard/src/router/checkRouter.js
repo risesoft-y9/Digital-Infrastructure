@@ -78,6 +78,8 @@ async function check() {
         userRole = ['subSystemAdmin'];
     } else if (y9UserInfo.managerLevel === 2) {
         userRole = ['subSecurityAdmin'];
+    } else if (y9UserInfo.managerLevel === 7) {
+        userRole = ['systemVendor'];
     } else {
         // 抱歉，该登录账号非管理员用户账号，没有权限！！！
         window.location = window.location.origin + import.meta.env.VUE_APP_PUBLIC_PATH + `401`;

@@ -12,6 +12,13 @@ import net.risesoft.model.platform.org.Job;
  */
 public interface Y9JobService {
 
+    /**
+     * 创建职位
+     *
+     * @param name 职位名称
+     * @param code 职位编码
+     * @return {@link Job}
+     */
     Job create(String name, String code);
 
     /**

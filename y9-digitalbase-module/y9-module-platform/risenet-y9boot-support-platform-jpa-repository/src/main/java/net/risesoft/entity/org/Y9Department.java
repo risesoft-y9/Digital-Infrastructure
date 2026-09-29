@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ColumnDefault;
@@ -40,7 +41,8 @@ import net.risesoft.y9.util.Y9BeanUtil;
  * @date 2022/2/10
  */
 @Entity
-@Table(name = "Y9_ORG_DEPARTMENT")
+@Table(name = "Y9_ORG_DEPARTMENT",
+    uniqueConstraints = {@UniqueConstraint(name = Y9Department.UK_CUSTOM_ID, columnNames = {"CUSTOM_ID"})})
 @DynamicUpdate
 @org.hibernate.annotations.Table(comment = "部门实体表", appliesTo = "Y9_ORG_DEPARTMENT")
 @Data
@@ -48,6 +50,8 @@ import net.risesoft.y9.util.Y9BeanUtil;
 public class Y9Department extends Y9OrgBase {
 
     private static final long serialVersionUID = 231356577350213851L;
+
+    public static final String UK_CUSTOM_ID = "UK_DEPARTMENT_CUSTOM_ID";
 
     {
         super.setOrgType(OrgTypeEnum.DEPARTMENT);
@@ -138,11 +142,29 @@ public class Y9Department extends Y9OrgBase {
     @ColumnDefault("0")
     private Boolean bureau = false;
 
+    @Override
+    public String getParentId() {
+        return this.parentId;
+    }
+
+    @Override
+    public String getCustomId() {
+        if (StringUtils.equals(this.customId, this.id)) {
+            // 对上层隐藏“非必填”的 customId 字段唯一索引的实现细节
+            return null;
+        }
+        return this.customId;
+    }
+
     public Y9Department(Department department, Y9OrgBase parent, Integer nextSubTabIndex) {
         Y9BeanUtil.copyProperties(department, this);
 
         if (StringUtils.isBlank(this.id)) {
             this.id = Y9IdGenerator.genId(IdType.SNOWFLAKE);
+        }
+        if (StringUtils.isBlank(this.customId)) {
+            // customId 字段有唯一约束，不同数据库对唯一约束的允许不一致，此处保证 customId 列始终有值，所有数据库通用
+            this.customId = this.id;
         }
         if (DefaultConsts.TAB_INDEX.equals(this.tabIndex)) {
             this.tabIndex = nextSubTabIndex;
@@ -150,11 +172,6 @@ public class Y9Department extends Y9OrgBase {
         this.parentId = parent.getId();
         this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.DEPARTMENT, this.name, parent.getDn());
         this.guidPath = Y9OrgUtil.buildGuidPath(parent.getGuidPath(), this.id);
-    }
-
-    @Override
-    public String getParentId() {
-        return this.parentId;
     }
 
     public void changeParent(Y9OrgBase parent, Integer nextSubTabIndex) {
@@ -172,6 +189,10 @@ public class Y9Department extends Y9OrgBase {
     public void update(Department department, Y9OrgBase parent) {
         Y9BeanUtil.copyProperties(department, this);
 
+        if (StringUtils.isBlank(this.customId)) {
+            // customId 字段有唯一约束，不同数据库对唯一约束的允许不一致，此处保证 customId 列始终有值，所有数据库通用
+            this.customId = this.id;
+        }
         this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.DEPARTMENT, this.name, parent.getDn());
         this.guidPath = Y9OrgUtil.buildGuidPath(parent.getGuidPath(), this.id);
     }

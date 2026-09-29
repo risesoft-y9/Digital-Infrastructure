@@ -7,10 +7,10 @@ spring:
             config:
                 enabled: false
                 group: DEFAULT_GROUP
-                namespace: local
-                server-addr: 127.0.0.1:8848
-                username: nacos
-                password: nacos
+                namespace: ${NACOS_NAMESPACE:local}
+                server-addr: ${NACOS_SERVER_ADDR:http://localhost:8848}
+                username: ${NACOS_USERNAME:nacos}
+                password: ${NACOS_PASSWORD:111111}
                 extension-configs:
                     - dataId: sso.yml
 ---
@@ -23,10 +23,10 @@ spring:
         nacos:
             config:
                 enabled: true
-                namespace: dev
+                namespace: ${NACOS_NAMESPACE:dev}
                 group: DEFAULT_GROUP
-                server-addr: https://dev.youshengyun.com:443
-                username: nacos
+                server-addr: ${NACOS_SERVER_ADDR:https://dev.youshengyun.com:443}
+                username: ${NACOS_USERNAME:nacos}
                 password: ${NACOS_PASSWORD:111111}
                 extension-configs:
                     - dataId: sso.yml
@@ -40,10 +40,10 @@ spring:
         nacos:
             config:
                 enabled: true
-                namespace: vue
+                namespace: ${NACOS_NAMESPACE:prod}
                 group: DEFAULT_GROUP
-                server-addr: https://vue.youshengyun.com:443
-                username: nacos
+                server-addr: ${NACOS_SERVER_ADDR:http://nacos:8848}
+                username: ${NACOS_USERNAME:nacos}
                 password: ${NACOS_PASSWORD:111111}
                 extension-configs:
                     - dataId: sso.yml
@@ -58,26 +58,9 @@ spring:
             config:
                 enabled: true
                 group: DEFAULT_GROUP
-                namespace: test
-                server-addr: nacos:8848
-                username: nacos
+                namespace: ${NACOS_NAMESPACE:test}
+                server-addr: ${NACOS_SERVER_ADDR:http://nacos:8848}
+                username: ${NACOS_USERNAME:nacos}
                 password: ${NACOS_PASSWORD:111111}
                 extension-configs:
                     - dataId: sso.yml
----
-spring:
-    config:
-        activate:
-            on-profile: demo
-    cloud:
-        enabled: true
-        nacos:
-            config:
-                enabled: true
-                group: DEFAULT_GROUP
-                namespace: demo
-                server-addr: nacos:8848
-                username: nacos
-                password: ${NACOS_PASSWORD:111111}
-                extension-configs:
-                    -   dataId: sso.yml

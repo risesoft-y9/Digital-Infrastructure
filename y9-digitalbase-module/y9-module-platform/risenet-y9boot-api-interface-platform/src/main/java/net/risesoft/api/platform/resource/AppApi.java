@@ -96,21 +96,19 @@ public interface AppApi {
      * @param name 应用名称
      * @param url 链接地址
      * @param customId customId
-     * @param tenantGuid 租户id
      * @return {@code Y9Result<App>} 通用请求返回对象 - data 是注册的应用
      * @since 9.6.3
      */
     @PostMapping("/registerApp")
     Y9Result<App> registerApp(@RequestParam("systemName") @NotBlank String systemName,
         @RequestParam("name") @NotBlank String name, @RequestParam("url") @NotBlank String url,
-        @RequestParam("customId") String customId, @RequestParam("tenantGuid") String tenantGuid);
+        @RequestParam("customId") String customId);
 
     /**
      * 注册系统和应用信息
      *
      * @param systemName 系统名称
      * @param systemCnName 系统中文名称
-     * @param isvGuid 租户id
      * @param contextPath 系统上下文
      * @param appName 应用名称
      * @param url 链接地址
@@ -120,9 +118,9 @@ public interface AppApi {
      */
     @PostMapping("/registerSystemAndApp")
     Y9Result<App> registerSystemAndApp(@RequestParam("systemName") @NotBlank String systemName,
-        @RequestParam("systemCnName") @NotBlank String systemCnName, @RequestParam("isvGuid") String isvGuid,
-        @RequestParam("contextPath") String contextPath, @RequestParam("appName") @NotBlank String appName,
-        @RequestParam("url") @NotBlank String url, @RequestParam("customId") String customId);
+        @RequestParam("systemCnName") @NotBlank String systemCnName, @RequestParam("contextPath") String contextPath,
+        @RequestParam("appName") @NotBlank String appName, @RequestParam("url") @NotBlank String url,
+        @RequestParam("customId") String customId);
 
     /**
      * 保存应用

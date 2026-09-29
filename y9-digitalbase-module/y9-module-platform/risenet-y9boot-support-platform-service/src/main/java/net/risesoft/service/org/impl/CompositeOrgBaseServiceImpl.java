@@ -352,7 +352,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
         if (ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
             return new ArrayList<>();
         }
-        if (userInfo.isGlobalManager()) {
+        if (userInfo.isGlobalManager() || userInfo.isSystemVendor()) {
             return this.getTree(parentOrgUnitId, treeType, disabled);
         }
         return this.getTree4DeptManager(parentOrgUnitId, treeType, disabled, userInfo);

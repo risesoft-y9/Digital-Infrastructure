@@ -1,3 +1,31 @@
+## v9.6.11 2026-09-28
+
+### Added
+
+- 新增公私钥转 pem 方法
+- 新增 rsa 签名算法
+- 初始化时可选是否创建数据库、schema（会存在已提前创建的情况或由于权限问题不能自动创建的问题）
+- 引入Apache HttpClient 4.x，新增Y9RemoteClientUtil用来替换原来的RemoteCallUtil，并将RemoteCallUtil标记成过时代码。
+- 新增系统开发商账号管理，该账号可管理多个系统、以及相关系统的授权。
+- 日志管理系统添加日志保存接口，同时调整访问操作用时记录的单位为毫秒
+
+### Changed
+
+- 移除常量中的某些固定 id
+- 重新整理租户相关接口
+- 将 rest 接口移入 risenet-y9boot-support-platform-web 中
+- 单点登录页面的图标和 title 显示调整，同时增加输入的密码可查看的功能
+- nacos 的 server-addr、namespace、username 可从系统环境变量里获取
+- 优化工程日志输出
+- 数字底座前端工程将树节点能否删除、管理的逻辑挪到后端
+- 重构数字底座前端工程的layouts代码
+
+### Fixed
+
+- 仅在 idType 为身份证时校验 idNum
+- jpa 及 jpaVendor 相关配置属性的优先级对齐 Spring Boot，移除无用及重复项jpa配置。
+- 单点登录示例工程切换oidc认证.以及更新单点登录的前端示例工程
+
 ## v9.6.10 2026-06-25
 
 ### Added
@@ -74,7 +102,7 @@
   对于已经前后端分离的后端工程名做了修改，应用上下文统一小写，举例：risenet-y9boot-webapp-addressbook ->
   risenet-y9boot-server-addressbook，对应的上下文 /server-addressbook
 - 移除risenet-y9boot-common-util的webService接口调用
-- 修改默认的岗位名模板："#jobName.equals('无') ? #personNames : #personNames+ '（' + #jobName + '）'"
+- 修改默认的岗位名模板："#jobName.equals ('无') ? #personNames : #personNames+ '（' + #jobName + '）'"
 - 移除 ftpStoreService 的 @Primary 注解，所有文件存储服务同级，通过开关控制只有一个存储服务注入
 - 应用的 docker 基础镜像 tomcat 更新至 9.0.107-jdk11-temurin
 - 将登录表单的提交的代码挪回页面中，清晰整个登录提交流程，与点选验证码的代码解耦，以及调整点选验证码样式，移除未使用的页面
@@ -101,7 +129,7 @@
 - version 无需手动设置以及实体的 tenantId 无需手动设置
 - 操作日志展示字段调整，优化日志记录功能，方法和类级别的注解 RiseLog 属性 moduleName 的“合并”
 - ID 生成器工具类不依赖 Spring 容器
-- 移除 Y9FileStoreService 的 Y9FileStore uploadFile(MultipartFile multipartFile, String customPath, String fileName) 方法
+- 移除 Y9FileStoreService 的 Y9FileStore uploadFile (MultipartFile multipartFile, String customPath, String fileName) 方法
 
 ### Fixed
 
@@ -300,7 +328,7 @@
 - 部门属性类型使用字典表代替枚举以实现动态的增删
 - 单点登录（sso）拆分两个版本，引入纯净版仅使用关系型数据库。
 - 数字底座分布式锁（ShedLock provider） 由 redis 切换到 JdbcTemplate
-- 日志保存插件更新，新增属性y9.feature.log.logSaveTarget(用来切换日志保存方式)：kafka或者api，默认为kafka。
+- 日志保存插件更新，新增属性y9.feature.log.logSaveTarget (用来切换日志保存方式)：kafka或者api，默认为kafka。
 - 单点登录插件保存用户在线和访问日志日志的方法增加切换方式)：kafka或者api，默认为kafka。
 
 ## v9.6.4 2024-03-13

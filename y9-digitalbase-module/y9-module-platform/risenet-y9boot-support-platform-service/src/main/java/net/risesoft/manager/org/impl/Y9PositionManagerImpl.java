@@ -68,14 +68,8 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
     }
 
     @Override
-    @CacheEvict(key = "#position.id")
-    public Y9Position save(Y9Position position) {
-        return y9PositionRepository.save(position);
-    }
-
-    @Override
     public Y9Position insert(Y9Position position) {
-        final Y9Position savedPosition = save(position);
+        final Y9Position savedPosition = y9PositionRepository.save(position);
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedPosition));
 
@@ -85,7 +79,7 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
     @CacheEvict(key = "#position.id")
     @Override
     public Y9Position update(Y9Position position, Y9Position originalPosition) {
-        final Y9Position savedY9Position = save(position);
+        final Y9Position savedY9Position = y9PositionRepository.save(position);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalPosition, savedY9Position));
 

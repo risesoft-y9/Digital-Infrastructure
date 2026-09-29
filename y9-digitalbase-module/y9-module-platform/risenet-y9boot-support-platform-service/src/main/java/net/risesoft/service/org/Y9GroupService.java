@@ -96,6 +96,14 @@ public interface Y9GroupService {
      */
     List<Group> listByPersonId(String personId, Boolean disabled);
 
+    /**
+     * 移动用户组到新的父节点
+     *
+     * @param id 用户组id
+     * @param parentId 新的父节点id
+     * @return {@link Group}
+     * @throws Y9NotFoundException 用户组或父节点不存在
+     */
     Group move(String id, String parentId);
 
     /**

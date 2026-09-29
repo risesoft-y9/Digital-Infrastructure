@@ -42,6 +42,7 @@ import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
@@ -95,7 +96,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     private List<String> filterAccessibleOrgUnitIds(List<String> orgIds) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-        if (userInfo == null || userInfo.isGlobalManager()) {
+        if (userInfo == null || userInfo.isGlobalManager() || userInfo.isSystemVendor()) {
             return orgIds;
         }
         return y9ManagerService.filterManagableOrgUnitList(Y9LoginUserHolder.getDeptId(), orgIds)
@@ -331,7 +332,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     @Async
     public void deleteByRole(String tenantId, Y9Role entity) {
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         y9OrgBasesToRolesRepository.deleteByRoleId(entity.getId());
         LOGGER.debug("角色[{}]删除时同步删除租户[{}]的角色组织关联数据", entity.getId(), tenantId);
     }

@@ -101,13 +101,6 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
     }
 
     @Override
-    public List<String> listPositionIdsByPersonId(String personId) {
-        List<Y9PersonsToPositions> list =
-            y9PersonsToPositionsRepository.findByPersonIdOrderByPositionOrderAsc(personId);
-        return list.stream().map(Y9PersonsToPositions::getPositionId).collect(Collectors.toList());
-    }
-
-    @Override
     @Transactional
     public List<PersonsPositions> orderPersons(String positionId, String[] personIds) {
         List<Y9PersonsToPositions> y9PersonsToPositionsList = new ArrayList<>();

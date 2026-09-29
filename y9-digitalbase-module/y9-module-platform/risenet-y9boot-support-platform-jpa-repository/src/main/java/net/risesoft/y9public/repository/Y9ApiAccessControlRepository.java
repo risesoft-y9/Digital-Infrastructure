@@ -21,7 +21,5 @@ public interface Y9ApiAccessControlRepository extends JpaRepository<Y9ApiAccessC
 
     List<Y9ApiAccessControl> findByTypeOrderByCreateTime(ApiAccessControlType type);
 
-    List<Y9ApiAccessControl> findByTypeAndEnabledTrueOrderByCreateTime(ApiAccessControlType type);
-
     Optional<Y9ApiAccessControl> findTopByTypeOrderByCreateTime(ApiAccessControlType type);
 }

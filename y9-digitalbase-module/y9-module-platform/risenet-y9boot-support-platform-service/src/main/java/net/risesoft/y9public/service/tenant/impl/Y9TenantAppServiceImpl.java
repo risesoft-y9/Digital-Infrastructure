@@ -27,6 +27,7 @@ import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
+import net.risesoft.y9public.manager.tenant.Y9TenantManager;
 import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
 import net.risesoft.y9public.service.tenant.Y9TenantAppService;
 import net.risesoft.y9public.specification.Y9TenantAppSpecification;
@@ -45,6 +46,8 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     private final Y9TenantAppRepository y9TenantAppRepository;
 
     private final Y9TenantAppManager y9TenantAppManager;
+
+    private final Y9TenantManager y9TenantManager;
 
     private static List<TenantApp> entityToModel(List<Y9TenantApp> y9TenantAppList) {
         return PlatformModelConvertUtil.convert(y9TenantAppList, TenantApp.class);

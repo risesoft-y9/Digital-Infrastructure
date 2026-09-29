@@ -6,6 +6,7 @@ import java.util.Optional;
 import net.risesoft.model.platform.System;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
@@ -23,6 +24,13 @@ public interface Y9SystemService {
      */
     void delete(String id);
 
+    /**
+     * 检查系统关联关系后根据 id 删除
+     *
+     * @param id 唯一标识
+     * @throws Y9BusinessException 系统存在关联应用或已被租户租用的情况
+     * @throws Y9NotFoundException id 对应的记录不存在的情况
+     */
     void deleteAfterCheck(String id);
 
     /**
@@ -97,13 +105,11 @@ public interface Y9SystemService {
     List<System> listByManager();
 
     /**
-     * 根据contextPath获取系统实体
+     * 根据 id 列表查询系统
      *
-     * @param contextPath 上下文路径
+     * @param ids 系统 id 列表
      * @return {@code List<System>}
      */
-    List<System> listByContextPath(String contextPath);
-
     List<System> listByIds(List<String> ids);
 
     /**
@@ -114,6 +120,13 @@ public interface Y9SystemService {
      */
     Y9Page<System> page(Y9PageQuery pageQuery);
 
+    /**
+     * 保存系统并为租户租用
+     *
+     * @param y9System 系统对象
+     * @return {@link System}
+     * @throws Y9BusinessException 系统名称已被使用的情况
+     */
     System saveAndRegister4Tenant(System y9System);
 
     /**

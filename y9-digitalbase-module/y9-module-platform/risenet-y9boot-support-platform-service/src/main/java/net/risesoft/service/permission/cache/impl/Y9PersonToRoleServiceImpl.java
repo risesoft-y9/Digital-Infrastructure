@@ -4,17 +4,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.InitDataConsts;
-import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.permission.cache.person.Y9PersonToRole;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.manager.org.Y9PersonManager;
@@ -24,9 +20,6 @@ import net.risesoft.model.platform.permission.cache.PersonToRole;
 import net.risesoft.repository.permission.cache.person.Y9PersonToRoleRepository;
 import net.risesoft.service.permission.cache.Y9PersonToRoleService;
 import net.risesoft.util.PlatformModelConvertUtil;
-import net.risesoft.util.Y9PlatformUtil;
-import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9public.entity.Y9Role;
 import net.risesoft.y9public.entity.Y9System;
 import net.risesoft.y9public.manager.resource.Y9SystemManager;

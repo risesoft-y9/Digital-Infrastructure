@@ -196,6 +196,11 @@
                         item.name = item.name + (item.disabledRemark ? item.disabledRemark : '[禁用]');
                     }
                     break;
+
+                case 'SYSTEM':
+                    item.title_icon = 'ri-settings-line';
+                    break;
+
                 case 'APP': //应用
                     item.title_icon = 'ri-apps-line';
                     break;
@@ -337,12 +342,9 @@
         if (searchkey) {
             //有值就请求搜索api
             //整合参数
-            let params = {};
-            const searchParams = props.treeApiObj?.search?.params;
-            if (searchParams) {
-                params = searchParams;
-            }
-            params.key = searchkey;
+            const params = {
+                ...(props.treeApiObj?.search?.params ?? {})
+            };
 
             //请求搜索接口
             const res = await props.treeApiObj?.search?.api(params);

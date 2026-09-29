@@ -63,4 +63,12 @@ public class Y9Base64Util {
         return encoder.encodeToString(plainText.getBytes());
     }
 
+
+    public static String byteToBase64(byte[] bytes) {
+        return new String(Base64.encodeBase64(bytes));
+    }
+
+    public static byte[] base64ToByte(String base64Key) {
+        return Base64.decodeBase64(base64Key);
+    }
 }

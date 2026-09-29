@@ -3,11 +3,8 @@ package net.risesoft.repository.permission.cache.position;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,8 +48,6 @@ public interface Y9PositionToResourceRepository extends JpaRepository<Y9Position
 
     List<Y9PositionToResource> findByPositionId(String positionId);
 
-    Page<Y9PositionToResource> findByPositionId(String positionId, Pageable pageable);
-
     List<Y9PositionToResource> findByPositionIdAndAuthorityAndResourceType(String positionId, AuthorityEnum authority,
         ResourceTypeEnum resourceType);
 
@@ -71,7 +66,4 @@ public interface Y9PositionToResourceRepository extends JpaRepository<Y9Position
     Optional<Y9PositionToResource> findByPositionIdAndResourceIdAndAuthorizationIdAndAuthority(String positionId,
         String resourceId, String authorizationId, AuthorityEnum authority);
 
-    @Query("select distinct p.resourceId from Y9PositionToResource p where p.positionId = ?1 and p.authority = ?2 and p.resourceType = ?3")
-    Page<String> findResourceIdByPositionIdAndAuthorityAndResourceType(String positionId, AuthorityEnum authority,
-        ResourceTypeEnum resourceTypeEnum, Pageable pageable);
 }

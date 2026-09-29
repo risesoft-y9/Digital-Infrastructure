@@ -57,7 +57,7 @@ import cn.hutool.core.util.DesensitizedUtil;
 @RequestMapping(value = "/api/rest/person", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @RequiredArgsConstructor
-@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER})
+@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER})
 public class PersonController {
 
     private final Y9PersonsToGroupsService y9PersonsToGroupsService;
@@ -157,7 +157,7 @@ public class PersonController {
      * @return {@code Y9Result<Person>}
      */
     @RiseLog(operationName = "根据人员id，获取人员信息")
-    @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
+    @IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER})
     @RequestMapping(value = "/getPersonById")
     public Y9Result<Person> getPersonById(@NotBlank @RequestParam String personId) {
         return Y9Result.success(y9PersonService.getById(personId), "根据人员id，获取人员信息成功");

@@ -14,8 +14,19 @@ import net.risesoft.y9.exception.Y9NotFoundException;
  */
 public interface Y9DepartmentManager {
 
+    /**
+     * 删除部门
+     *
+     * @param y9Department 部门信息
+     */
     void delete(Y9Department y9Department);
 
+    /**
+     * 根据id获取部门信息
+     *
+     * @param id 部门id
+     * @return {@code Optional<Y9Department>}
+     */
     Optional<Y9Department> findByIdFromCache(String id);
 
     /**
@@ -40,11 +51,25 @@ public interface Y9DepartmentManager {
      *
      * @param id 部门id
      * @return {@link Y9Department }
+     * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     Y9Department getById(String id);
 
+    /**
+     * 新增部门
+     *
+     * @param dept 部门信息
+     * @return {@link Y9Department}
+     */
     Y9Department insert(Y9Department dept);
 
+    /**
+     * 更新部门
+     *
+     * @param dept 部门信息
+     * @param originalDepartment 原部门信息
+     * @return {@link Y9Department}
+     */
     Y9Department update(Y9Department dept, Y9Department originalDepartment);
 
 }

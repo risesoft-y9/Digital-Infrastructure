@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
@@ -21,14 +20,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import y9.controller.dto.Tenant;
+import net.risesoft.y9.json.Y9JsonUtil;
+import net.risesoft.y9.validation.ValidateUtil;
+
+import y9.controller.dto.TenantVO;
 import y9.entity.Y9Tenant;
 import y9.entity.Y9User;
 import y9.service.Y9TenantService;
 import y9.service.Y9UserService;
-import y9.util.MobileUtil;
 import y9.util.common.XSSCheckUtil;
-import y9.util.json.Y9JacksonUtil;
 
 @Lazy(false)
 @Controller
@@ -50,10 +50,10 @@ public class TenantController {
     public ResponseEntity<String> allTenants() {
         try {
             List<Y9Tenant> tenants = y9TenantService.listByEnabled(Boolean.TRUE);
-            List<Tenant> tenants1 = convertAndSort(tenants);
+            List<TenantVO> tenantVOList = convertAndSort(tenants);
 
             ObjectMapper mapper = new ObjectMapper();
-            String jsonStr = mapper.writeValueAsString(tenants1);
+            String jsonStr = mapper.writeValueAsString(tenantVOList);
 
             final HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -75,7 +75,7 @@ public class TenantController {
         List<Map<String, Object>> list = new ArrayList<>();
         try {
             loginName = XSSCheckUtil.filter(loginName);
-            if (MobileUtil.isMobile(loginName)) {
+            if (ValidateUtil.isMobile(loginName)) {
                 List<Y9User> users = y9UserService.findByMobileAndOriginal(loginName, Boolean.TRUE);
                 if (users.size() > 0) {
                     for (Y9User user : users) {
@@ -113,23 +113,28 @@ public class TenantController {
     public ResponseEntity<String> singleTenant() {
         try {
             List<Y9Tenant> tenants = y9TenantService.listByEnabled(Boolean.TRUE);
-            Optional<Y9Tenant> tenantOptional = tenants.stream().findFirst();
+            TenantVO tenantVO = tenants.stream()
+                .findFirst()
+                .map(tenant -> new TenantVO(tenant.getName(), tenant.getShortName(), tenant.getLogoIcon(),
+                    tenant.getDescription()))
+                .get();
             final HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            return new ResponseEntity<>(Y9JacksonUtil.writeValueAsString(tenantOptional.get()), headers, HttpStatus.OK);
+            return new ResponseEntity<>(Y9JsonUtil.writeValueAsString(tenantVO), headers, HttpStatus.OK);
         } catch (final Throwable e) {
             LOGGER.error(e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    private List<Tenant> convertAndSort(List<Y9Tenant> tenantList) {
-        List<Tenant> newTenantList = new ArrayList<>();
+    private List<TenantVO> convertAndSort(List<Y9Tenant> tenantList) {
+        List<TenantVO> newTenantVOList = new ArrayList<>();
         for (Y9Tenant tenant : tenantList) {
-            newTenantList.add(new Tenant(tenant.getName(), tenant.getShortName()));
+            newTenantVOList.add(
+                new TenantVO(tenant.getName(), tenant.getShortName(), tenant.getLogoIcon(), tenant.getDescription()));
         }
         // 运维租户总是放在最后
-        newTenantList.add(Tenant.OPERATION_TENANT);
-        return newTenantList;
+        newTenantVOList.add(TenantVO.operationTenantVO);
+        return newTenantVOList;
     }
 }

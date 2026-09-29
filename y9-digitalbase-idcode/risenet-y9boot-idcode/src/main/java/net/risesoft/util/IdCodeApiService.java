@@ -52,7 +52,6 @@ public class IdCodeApiService {
      * @return String
      */
     public String get(String url, Map<String, Object> params) {
-        HttpUtil http = new HttpUtil();
         if (!params.isEmpty()) {
             String urlParams = sortMapToString(params);
             if (url.contains("?")) {
@@ -62,12 +61,12 @@ public class IdCodeApiService {
             }
             String hash = MD5Util.md5Encode(url + urlParams + Config.API_CODE).toUpperCase();
             urlParams += "&hash=" + hash;
-            String resultJson = http.get(Config.IDCODE_URL + url + urlParams);
+            String resultJson = HttpUtil.get(Config.IDCODE_URL + url + urlParams);
             printResult("get json结果：" + resultJson);
             return resultJson;
         } else {
             String hash = MD5Util.md5Encode(url + Config.API_CODE).toUpperCase();
-            String resultJson = http.get(Config.IDCODE_URL + url + "&" + hash);
+            String resultJson = HttpUtil.get(Config.IDCODE_URL + url + "&" + hash);
             printResult("get json结果：" + resultJson);
             return resultJson;
         }
@@ -90,12 +89,11 @@ public class IdCodeApiService {
         }
         String hash = MD5Util.md5Encode(encodeUrl + urlParams + Config.API_CODE).toUpperCase();
         params.put("hash", hash);
-        HttpUtil http = new HttpUtil();
         String resultJson = "";
         if (containFile) {
-            resultJson = http.postMapContainFile(Config.IDCODE_URL + url, params, files);
+            resultJson = HttpUtil.postMapContainFile(Config.IDCODE_URL + url, params, files);
         } else {
-            resultJson = http.postMap(Config.IDCODE_URL + url, params);
+            resultJson = HttpUtil.postMap(Config.IDCODE_URL + url, params);
         }
         printResult("post json结果：" + resultJson);
         return resultJson;

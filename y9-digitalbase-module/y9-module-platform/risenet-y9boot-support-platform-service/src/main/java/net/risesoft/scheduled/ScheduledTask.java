@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,7 @@ import net.risesoft.service.permission.cache.IdentityResourceCalculator;
 import net.risesoft.service.permission.cache.IdentityRoleCalculator;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
 
 @Service
@@ -47,9 +46,8 @@ public class ScheduledTask {
     private AccessLogReporter accessLogReporter;
 
     /**
-     * 每天凌晨1点检查是否登录系统进行审查
+     * 检查是否登录系统进行审查
      */
-    @Scheduled(cron = "0 0 1 * * ?")
     @SchedulerLock(name = "checkManagerLogReviewLock", lockAtLeastFor = "PT30M")
     public void checkManagerLogReview() {
         LOGGER.info("********************检查三员审查情况-开始**********************");
@@ -58,7 +56,7 @@ public class ScheduledTask {
         String systemName = Y9Context.getSystemName();
         List<String> tenantIds = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIds) {
-            Y9LoginUserHolder.setTenantId(tenantId);
+            Y9TenantHolder.setCurrentTenantId(tenantId);
             LOGGER.debug("检查租户[{}]三员审查情况", tenantId);
 
             List<Manager> managerList = y9ManagerService.listAll();
@@ -79,7 +77,7 @@ public class ScheduledTask {
                     long now = System.currentTimeMillis();
                     if (calendar.getTimeInMillis() < now) {
                         long end = System.nanoTime();
-                        long elapsedTime = end - start;
+                        long elapsedTime = (end - start) / 1_000_000;
                         AccessLog log = new AccessLog();
                         log.setLogLevel(LogLevelEnum.MANAGERLOG.toString());
                         log.setLogTime(new Date());
@@ -112,9 +110,8 @@ public class ScheduledTask {
     }
 
     /**
-     * 每天凌晨1点检查三员密码是不是按时修改
+     * 检查三员密码是不是按时修改
      */
-    @Scheduled(cron = "0 0 1 * * ?")
     @SchedulerLock(name = "checkManagerPasswordModificationLock", lockAtLeastFor = "PT30M")
     public void checkManagerPasswordModification() {
         LOGGER.info("********************检查三员密码修改情况-开始**********************");
@@ -123,7 +120,7 @@ public class ScheduledTask {
         String systemName = Y9Context.getSystemName();
         List<String> tenantIds = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIds) {
-            Y9LoginUserHolder.setTenantId(tenantId);
+            Y9TenantHolder.setCurrentTenantId(tenantId);
             LOGGER.debug("检查租户[{}]三员密码修改情况", tenantId);
 
             List<Manager> managerList = y9ManagerService.listAll();
@@ -144,7 +141,7 @@ public class ScheduledTask {
                 }
                 if (saveLog) {
                     long end = System.nanoTime();
-                    long elapsedTime = end - start;
+                    long elapsedTime = (end - start) / 1_000_000;
                     AccessLog accessLog = new AccessLog();
                     accessLog.setLogLevel(LogLevelEnum.MANAGERLOG.toString());
                     accessLog.setLogTime(new Date());
@@ -178,14 +175,13 @@ public class ScheduledTask {
     }
 
     /**
-     * 每天凌晨2点同步授权主体的资源权限
+     * 同步授权主体的资源权限
      */
-    @Scheduled(cron = "0 0 2 * * ?")
     @SchedulerLock(name = "syncIdentityResourceLock", lockAtLeastFor = "PT30M")
     public void syncIdentityResource() {
         List<Tenant> y9TenantList = y9TenantService.listAll();
         for (Tenant y9Tenant : y9TenantList) {
-            Y9LoginUserHolder.setTenantId(y9Tenant.getId());
+            Y9TenantHolder.setCurrentTenantId(y9Tenant.getId());
             LOGGER.debug("同步租户[{}]授权主体的资源权限", y9Tenant.getId());
 
             for (Organization y9Organization : y9OrganizationService.list()) {
@@ -197,14 +193,13 @@ public class ScheduledTask {
     }
 
     /**
-     * 每天凌晨4点同步授权主体的角色
+     * 同步授权主体的角色
      */
-    @Scheduled(cron = "0 0 4 * * ?")
     @SchedulerLock(name = "syncIdentityRoleLock", lockAtLeastFor = "PT30M")
     public void syncIdentityRole() {
         List<Tenant> y9TenantList = y9TenantService.listAll();
         for (Tenant y9Tenant : y9TenantList) {
-            Y9LoginUserHolder.setTenantId(y9Tenant.getId());
+            Y9TenantHolder.setCurrentTenantId(y9Tenant.getId());
             LOGGER.debug("同步租户[{}]授权主体的角色", y9Tenant.getId());
 
             for (Organization y9Organization : y9OrganizationService.list()) {

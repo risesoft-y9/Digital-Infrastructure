@@ -13,7 +13,6 @@ import org.springframework.context.event.EventListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.InitDataConsts;
 import net.risesoft.dao.MultiTenantDao;
 import net.risesoft.model.platform.tenant.TenantApp;
 import net.risesoft.model.platform.tenant.TenantSystem;
@@ -145,8 +144,6 @@ public class DbScanner {
         // 获取已移除的系统租用租户发送事件
         Set<String> allTenantIdSet =
             tenantSystemList.stream().map(TenantSystem::getTenantId).collect(Collectors.toSet());
-        // 特殊的默认租户
-        allTenantIdSet.add(InitDataConsts.TENANT_ID);
         Collection<String> removedTenantIds = CollectionUtils.subtract(loadedTenantIdSet, allTenantIdSet);
         if (!removedTenantIds.isEmpty()) {
             Y9EventCommon tenantDataSourceSyncEvent = new Y9EventCommon();

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
-import net.risesoft.entity.setting.Y9AppCategory;
 import net.risesoft.pojo.AppCategory;
 import net.risesoft.pojo.Y9PageQuery;
 
@@ -26,36 +25,6 @@ public interface Y9AppCategoryService {
     void delete(String[] ids);
 
     /**
-     * 根据应用id，删除图标排序
-     *
-     * @param appId 应用id
-     */
-    void deleteByAppId(String appId);
-
-    /**
-     * 根据资源id，删除图标排序
-     *
-     * @param categoryId 资源id
-     */
-    void deleteByCategoryId(String categoryId);
-
-    /**
-     * 根据应用id，获取图标排序
-     *
-     * @param appId 应用id
-     * @return
-     */
-    Y9AppCategory findByAppId(String appId);
-
-    /**
-     * 根据id，获取图标排序
-     *
-     * @param id 唯一标识
-     * @return
-     */
-    Y9AppCategory findById(String id);
-
-    /**
      * 返回默认已排序的应用分类列表 首先排已分类的应用，然后排剩下未分类的应用
      *
      * @return
@@ -63,19 +32,12 @@ public interface Y9AppCategoryService {
     List<AppCategory> buildDefaultAppCategoryList();
 
     /**
-     * 根据所有应用分类，获取所有应用-分类的配置
-     *
-     * @return
-     */
-    List<Y9AppCategory> listByAllAppCategory();
-
-    /**
      * 根据资源id，获取图标排序列表
      *
      * @param categoryId 资源id
      * @return
      */
-    List<Y9AppCategory> listByCategoryId(String categoryId);
+    List<AppCategory> listByCategoryId(String categoryId);
 
     /**
      * 根据资源id，获取图标排序分页列表
@@ -84,7 +46,7 @@ public interface Y9AppCategoryService {
      * @param pageQuery
      * @return
      */
-    Page<Y9AppCategory> pageByCategoryId(String categoryId, Y9PageQuery pageQuery);
+    Page<AppCategory> pageByCategoryId(String categoryId, Y9PageQuery pageQuery);
 
     /**
      * 保存排序
@@ -92,14 +54,6 @@ public interface Y9AppCategoryService {
      * @param ids id数组
      */
     void saveOrder(String[] ids);
-
-    /**
-     * 保存应用排序
-     *
-     * @param y9AppCategory 图标排序对象
-     * @return
-     */
-    Y9AppCategory saveOrUpdate(Y9AppCategory y9AppCategory);
 
     /**
      * 保存应用排序

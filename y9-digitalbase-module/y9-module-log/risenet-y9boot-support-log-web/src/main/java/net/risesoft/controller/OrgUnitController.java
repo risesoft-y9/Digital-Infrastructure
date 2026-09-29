@@ -21,6 +21,7 @@ import net.risesoft.model.platform.org.Organization;
 import net.risesoft.model.platform.tenant.Tenant;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
 
 /**
  * 组织管理
@@ -65,7 +66,7 @@ public class OrgUnitController {
         List<Organization> organizationList = new ArrayList<>();
         if (!tenants.isEmpty()) {
             for (Tenant tenant : tenants) {
-                Y9LoginUserHolder.setTenantId(tenant.getId());
+                Y9TenantHolder.setCurrentTenantId(tenant.getId());
                 List<Organization> list = organizationApi.list(tenant.getId()).getData();
                 organizationList.addAll(list);
             }

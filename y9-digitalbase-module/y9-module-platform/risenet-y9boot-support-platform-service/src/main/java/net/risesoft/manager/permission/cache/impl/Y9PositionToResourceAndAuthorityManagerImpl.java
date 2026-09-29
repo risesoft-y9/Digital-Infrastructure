@@ -34,8 +34,7 @@ public class Y9PositionToResourceAndAuthorityManagerImpl implements Y9PositionTo
             y9PositionToResourceRepository.deleteByPositionId(positionId);
             return;
         }
-        y9PositionToResourceRepository.deleteByPositionIdAndAuthorizationIdNotIn(positionId,
-            authorizationIdList);
+        y9PositionToResourceRepository.deleteByPositionIdAndAuthorizationIdNotIn(positionId, authorizationIdList);
     }
 
     @Override

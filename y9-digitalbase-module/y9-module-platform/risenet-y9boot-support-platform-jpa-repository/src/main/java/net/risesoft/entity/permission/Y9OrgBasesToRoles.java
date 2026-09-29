@@ -39,7 +39,7 @@ public class Y9OrgBasesToRoles extends BaseEntity {
 
     /** 主键 */
     @Id
-    @Column(name = "ID")
+    @Column(name = "ID", length = 38)
     @Comment("主键")
     private String id;
 

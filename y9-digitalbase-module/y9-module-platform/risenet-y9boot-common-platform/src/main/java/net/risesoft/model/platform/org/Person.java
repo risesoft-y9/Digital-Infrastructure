@@ -79,8 +79,7 @@ public class Person extends OrgUnit implements Serializable {
     private String officialType;
 
     /**
-     * 密码
-     * 敏感字段 不返回
+     * 密码 敏感字段 不返回
      */
     @JsonIgnore
     private String password;

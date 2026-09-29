@@ -46,14 +46,6 @@ public interface Y9PersonService {
     Person changeDisabled(String id);
 
     /**
-     * 根据guidPath和Boolean值查询
-     *
-     * @param guidPath guid路径
-     * @return long
-     */
-    long countByGuidPathLikeAndDisabledAndDeletedFalse(String guidPath);
-
-    /**
      * 根据必须字段创建人员
      *
      * @param parentId 父ID

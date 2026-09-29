@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -25,16 +24,17 @@ import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.util.PlatformModelConvertUtil;
-import net.risesoft.y9.TenantCache;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.Y9System;
 import net.risesoft.y9public.entity.resource.Y9App;
+import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
+import net.risesoft.y9public.manager.tenant.Y9TenantManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
 import net.risesoft.y9public.repository.Y9SystemRepository;
 import net.risesoft.y9public.repository.resource.Y9AppRepository;
@@ -54,6 +54,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     protected final Y9TenantAppManager y9TenantAppManager;
     private final Y9AppManager y9AppManager;
     private final Y9TenantSystemManager y9TenantSystemManager;
+    private final Y9TenantManager y9TenantManager;
 
     private final Y9AppRepository y9AppRepository;
     private final Y9SystemRepository y9SystemRepository;
@@ -172,19 +173,18 @@ public class Y9AppServiceImpl implements Y9AppService {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         // 审核应用
         this.verifyApp(savedApp.getId(), true, userInfo == null ? "系统" : userInfo.getName());
-        if (userInfo != null && userInfo.getManagerLevel().isTenantManager()) {
+        if (userInfo != null && userInfo.isTenantManager()) {
             // 租用系统
             y9TenantSystemManager.saveTenantSystem(savedApp.getSystemId(), Y9LoginUserHolder.getTenantId());
             // 租用应用
             y9TenantAppManager.save(savedApp.getId(), Y9LoginUserHolder.getTenantId(), "系统默认租用");
         } else {
-            Set<String> tenantIdSet = TenantCache.getTenantIdSet();
+            Optional<Y9Tenant> y9TenantOptional = y9TenantManager.findIfSingleTenant();
             // 单租户时默认租用
-            if (tenantIdSet.size() == 1) {
-                for (String tenantId : tenantIdSet) {
-                    y9TenantSystemManager.saveTenantSystem(savedApp.getSystemId(), tenantId);
-                    y9TenantAppManager.save(savedApp.getId(), tenantId, "系统默认租用");
-                }
+            if (y9TenantOptional.isPresent()) {
+                String tenantId = y9TenantOptional.get().getId();
+                y9TenantSystemManager.saveTenantSystem(savedApp.getSystemId(), tenantId);
+                y9TenantAppManager.save(savedApp.getId(), tenantId, "系统默认租用");
             }
         }
         return savedApp;
@@ -310,11 +310,6 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    public boolean existsById(String id) {
-        return y9AppRepository.existsById(id);
-    }
-
-    @Override
     public Optional<App> findById(String id) {
         return y9AppManager.findByIdFromCache(id).map(y9App -> entityToModel(y9App));
     }
@@ -333,6 +328,8 @@ public class Y9AppServiceImpl implements Y9AppService {
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public App saveOrUpdate(App app) {
+        checkCustomIdAvailable(app.getCustomId(), app.getId());
+
         if (StringUtils.isNotBlank(app.getId())) {
             Optional<Y9App> y9AppOptional = y9AppManager.findById(app.getId());
             if (y9AppOptional.isPresent()) {
@@ -368,6 +365,15 @@ public class Y9AppServiceImpl implements Y9AppService {
         Y9Context.publishEvent(auditLogEvent);
 
         return entityToModel(savedApp);
+    }
+
+    private void checkCustomIdAvailable(String customId, String id) {
+        if (StringUtils.isBlank(customId)) {
+            return;
+        }
+        Optional<Y9App> y9AppOptional = y9AppRepository.findByCustomId(customId);
+        Y9AssertUtil.isTrue(y9AppOptional.isEmpty() || y9AppOptional.get().getId().equals(id),
+            ResourceErrorCodeEnum.CUSTOM_ID_USED, customId);
     }
 
     private Integer getNextTabIndex(String systemId) {

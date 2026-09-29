@@ -34,7 +34,7 @@ import net.risesoft.service.relation.Y9PositionsToGroupsService;
 @RequestMapping(value = "/api/rest/groupPosition", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER})
+@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER})
 public class PositionsToGroupsController {
 
     private final Y9PositionsToGroupsService y9PositionsToGroupsService;

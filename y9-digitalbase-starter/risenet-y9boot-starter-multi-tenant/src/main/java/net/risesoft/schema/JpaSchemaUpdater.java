@@ -5,7 +5,7 @@ import org.hibernate.integrator.api.integrator.Y9TenantHibernateInfoHolder;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 
 /**
@@ -22,14 +22,14 @@ public class JpaSchemaUpdater implements SchemaUpdater {
 
     @Override
     public void updateByTenant(String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         Y9TenantHibernateInfoHolder.schemaUpdate(Y9Context.getEnvironment());
     }
 
     @Override
     public void updateAllTenants() {
         for (String tenantId : y9TenantDataSourceLookup.getDataSources().keySet()) {
-            Y9LoginUserHolder.setTenantId(tenantId);
+            Y9TenantHolder.setCurrentTenantId(tenantId);
             Y9TenantHibernateInfoHolder.schemaUpdate(Y9Context.getEnvironment());
         }
     }

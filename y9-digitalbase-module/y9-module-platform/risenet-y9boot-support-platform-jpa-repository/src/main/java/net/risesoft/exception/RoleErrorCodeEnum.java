@@ -16,7 +16,8 @@ public enum RoleErrorCodeEnum implements ErrorCode {
     ROLE_NOT_FOUND(0, "角色[{}]不存在"),
     ORG_UNIT_ROLE_NOT_FOUND(1, "组织节点和角色的关联[{}]不存在"),
     ORG_UNIT_INCLUDED(2, "当前角色的角色成员中已包含要添加的组织节点[{}]"),
-    ROLE_PARENT_NOT_FOUND(3, "角色父节点[{}]不存在");
+    ROLE_PARENT_NOT_FOUND(3, "角色父节点[{}]不存在"),
+    CUSTOM_ID_USED(4, "自定义 ID[{}]已经被使用");
 
     private final int moduleErrorCode;
     private final String description;

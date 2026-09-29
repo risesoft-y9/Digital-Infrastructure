@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
 
 /**
  * 多租户数据源
@@ -34,7 +34,7 @@ public class Y9TenantDataSource extends AbstractDataSource {
     public DruidDataSource determineTargetDataSource() {
         DruidDataSource dataSource = defaultDataSource;
 
-        String lookupKey = Y9LoginUserHolder.getTenantId();
+        String lookupKey = Y9TenantHolder.getCurrentTenantId();
         if (StringUtils.hasText(lookupKey)) {
             DruidDataSource tenantDataSource = (DruidDataSource)this.dataSourceLookup.getDataSource(lookupKey);
             if (tenantDataSource == null) {

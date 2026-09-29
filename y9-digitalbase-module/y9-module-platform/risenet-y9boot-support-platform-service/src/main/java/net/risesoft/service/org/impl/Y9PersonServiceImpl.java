@@ -26,6 +26,8 @@ import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.org.Y9PersonExt;
 import net.risesoft.entity.org.Y9Position;
 import net.risesoft.enums.AuditLogEnum;
+import net.risesoft.enums.platform.org.IdTypeEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
@@ -52,8 +54,10 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9StringUtil;
+import net.risesoft.y9.validation.ValidateUtil;
 
 /**
  * @author dingzhaojun
@@ -146,11 +150,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Context.publishEvent(auditLogEvent);
 
         return PlatformModelConvertUtil.y9PersonToPerson(savedPerson);
-    }
-
-    @Override
-    public long countByGuidPathLikeAndDisabledAndDeletedFalse(String guidPath) {
-        return y9PersonRepository.countByDisabledAndGuidPathContaining(Boolean.FALSE, guidPath);
     }
 
     @Override
@@ -439,7 +438,11 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional
     public Person saveOrUpdate(Person person, PersonExt personExt) {
+
         Y9PersonExt y9PersonExt = PlatformModelConvertUtil.convert(personExt, Y9PersonExt.class);
+
+        checkIdCardNumber(y9PersonExt);
+        checkCustomIdAvailable(person.getCustomId(), person.getId());
 
         if (StringUtils.isNotBlank(person.getId())) {
             Optional<Y9Person> personOptional = y9PersonManager.findById(person.getId());
@@ -488,6 +491,24 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Context.publishEvent(auditLogEvent);
 
         return PlatformModelConvertUtil.y9PersonToPerson(savedPerson);
+    }
+
+    private void checkIdCardNumber(Y9PersonExt y9PersonExt) {
+        if (y9PersonExt == null || !IdTypeEnum.ID_CARD.getValue().equals(y9PersonExt.getIdType())
+            || StringUtils.isBlank(y9PersonExt.getIdNum())) {
+            return;
+        }
+        Y9AssertUtil.isTrue(ValidateUtil.isIdCardNumber(y9PersonExt.getIdNum()),
+            OrgUnitErrorCodeEnum.ID_CARD_NUMBER_INVALID, y9PersonExt.getIdNum());
+    }
+
+    private void checkCustomIdAvailable(String customId, String id) {
+        if (StringUtils.isBlank(customId)) {
+            return;
+        }
+        Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByCustomId(customId);
+        Y9AssertUtil.isTrue(y9PersonOptional.isEmpty() || y9PersonOptional.get().getId().equals(id),
+            OrgUnitErrorCodeEnum.CUSTOM_ID_USED, customId);
     }
 
     @Override

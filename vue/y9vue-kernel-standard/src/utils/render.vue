@@ -1,17 +1,27 @@
-<script lang="ts">
-    export default {
+﻿<script lang="ts">
+    import { defineComponent, h } from 'vue';
+
+    export default defineComponent({
         name: 'renderComponent',
-        functional: true,
         props: {
-            render: Function,
+            renderFn: Function,
             data: Object
         },
-        render(h, ctx) {
-            if (h.data) {
-                return h.render(h.data.row, h.data);
-            } else {
-                return h.render(h);
-            }
+        setup(props) {
+            return () => {
+                const fn = props.renderFn as Function | undefined;
+                if (typeof fn !== 'function') return null;
+                const data = props.data;
+                if (data !== undefined && data !== null && typeof data === 'object' && 'row' in data) {
+                    return fn(data.row, data);
+                }
+                if (data !== undefined) return fn(data);
+                return fn();
+            };
         }
-    };
+    });
 </script>
+
+<template>
+    <!-- 留空，用 setup 返回的 render 函数 -->
+</template>

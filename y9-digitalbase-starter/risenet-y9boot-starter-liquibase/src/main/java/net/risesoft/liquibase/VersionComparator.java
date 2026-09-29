@@ -13,8 +13,6 @@ public class VersionComparator implements Comparator<String> {
 
     @Override
     public int compare(String f1, String f2) {
-        System.out.println(f1);
-        System.out.println(f2);
         String v1 = extractVersion(f1);
         String v2 = extractVersion(f2);
 

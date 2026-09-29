@@ -2,7 +2,7 @@ const authRouter = [
     {
         path: '/auth',
         redirect: '/sysManagerLog',
-        name: 'authOrg',
+        name: 'authOrgAudit',
         hidden: true,
         meta: {
             title: '安全审计员',
@@ -12,8 +12,8 @@ const authRouter = [
     },
     {
         path: '/auth',
-        redirect: '/grantAuthorize',
-        name: 'authOrg',
+        redirect: '/authorizationRole',
+        name: 'authOrgSecurity',
         hidden: true,
         meta: {
             title: '安全保密员',
@@ -24,13 +24,24 @@ const authRouter = [
     {
         path: '/auth',
         redirect: '/home',
-        name: 'authOrg',
+        name: 'authOrgSystem',
         hidden: true,
         meta: {
             title: '系统管理员',
             icon: 'el-icon-s-custom',
             roles: ['systemAdmin', 'subSystemAdmin'],
             notShowAdmin: true
+        }
+    },
+    {
+        path: '/auth',
+        redirect: '/system',
+        name: 'authSystemVendor',
+        hidden: true,
+        meta: {
+            title: '系统管理员',
+            icon: 'el-icon-s-custom',
+            roles: ['systemVendor']
         }
     }
 ];

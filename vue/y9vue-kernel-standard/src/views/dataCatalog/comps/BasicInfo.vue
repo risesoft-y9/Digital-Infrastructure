@@ -29,7 +29,7 @@
         </template>
 
         <template v-slot>
-            <div v-show="managerLevel === 1" class="basic-btns">
+            <div class="basic-btns">
                 <div v-if="currTreeNodeInfo.nodeType === 'DATA_CATALOG'">
                     <span v-if="editBtnFlag">
                         <el-button
@@ -140,7 +140,6 @@
     import y9_storage from '@/utils/storage';
     import settings from '@/settings';
 
-    const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
     const settingStore = useSettingStore();
     const { t } = useI18n();
     const fontSizeObj: any = inject('sizeObjInfo');

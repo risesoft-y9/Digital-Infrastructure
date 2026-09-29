@@ -51,13 +51,12 @@ public interface SystemApi {
      * @param name 系统英文名称
      * @param cnName 系统名称
      * @param contextPath 系统上下文
-     * @param isvGuid 租户id
      * @return {@code Y9Result<System>} 通用请求返回对象 - data 是注册的系统对象
      * @since 9.6.3
      */
     @PostMapping("/registrySystem")
     Y9Result<System> registrySystem(@RequestParam("name") String name, @RequestParam("cnName") String cnName,
-        @RequestParam("contextPath") String contextPath, @RequestParam("isvGuid") String isvGuid);
+        @RequestParam("contextPath") String contextPath);
 
     /**
      * 系统、资源、角色注册。

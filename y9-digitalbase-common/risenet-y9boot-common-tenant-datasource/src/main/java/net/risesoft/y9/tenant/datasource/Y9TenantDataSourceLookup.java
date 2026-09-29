@@ -26,9 +26,8 @@ import com.alibaba.druid.pool.DruidDataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.DataSourceTypeEnum;
-import net.risesoft.y9.TenantCache;
+import net.risesoft.y9.Y9TenantHolder;
 import net.risesoft.y9.util.base64.Y9Base64Util;
 
 /**
@@ -51,16 +50,6 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
     private final Map<String, DruidDataSource> loadedTenantIdDataSourceMap = new ConcurrentHashMap<>();
     private final JndiDataSourceLookup jndiDataSourceLookup = new JndiDataSourceLookup();
     private boolean loaded = false;
-
-    private void createDefaultTenantDataSource(JdbcTemplate publicJdbcTemplate) {
-        List<Map<String, Object>> defaultTenant = publicJdbcTemplate.queryForList(
-            "SELECT ID, DEFAULT_DATA_SOURCE_ID FROM Y9_COMMON_TENANT WHERE ID=?", InitDataConsts.TENANT_ID);
-        List<Map<String, Object>> defaultDataSource = publicJdbcTemplate
-            .queryForList("SELECT * FROM Y9_COMMON_DATASOURCE T WHERE T.ID = ?", InitDataConsts.DATASOURCE_ID);
-        if (!defaultTenant.isEmpty() && !defaultDataSource.isEmpty()) {
-            createOrUpdateDataSource(defaultDataSource.get(0), null, InitDataConsts.TENANT_ID);
-        }
-    }
 
     private void createOrUpdateDataSource(Map<String, Object> record, DruidDataSource ds, String tenantId) {
         Integer type = Integer.valueOf(record.get("TYPE").toString());
@@ -207,7 +196,8 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         JdbcTemplate publicJdbcTemplate = new JdbcTemplate(this.publicDataSource);
 
         List<String> allTenantIds = publicJdbcTemplate.queryForList("select ID FROM Y9_COMMON_TENANT", String.class);
-        TenantCache.updateTenantIdSet(allTenantIds);
+        Y9TenantHolder.setAllTenantIds(allTenantIds);
+
         // 1 移除不存在的租户的连接池
         Set<String> loadedTenantIdSet = new HashSet<>(this.loadedTenantIdDataSourceMap.keySet());
         for (String loadedTenantId : loadedTenantIdSet) {
@@ -216,7 +206,45 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
             }
         }
 
-        // 2 重新设置租户的连接池
+        if (allTenantIds.size() == 1) {
+            // 单租户
+            createSingleTenantDataSource(publicJdbcTemplate, allTenantIds.get(0));
+        } else if (allTenantIds.size() > 1) {
+            // 多租户
+            createMultiTenantDataSource(publicJdbcTemplate);
+        }
+
+        // 3 初始化租户的数据库连接池
+        Collection<DruidDataSource> druidDataSources = loadedTenantIdDataSourceMap.values();
+        if (!druidDataSources.isEmpty()) {
+            for (DruidDataSource ds : druidDataSources) {
+                try {
+                    ds.init();
+                } catch (SQLException e) {
+                    LOGGER.warn(e.getMessage(), e);
+                }
+            }
+        }
+    }
+
+    /**
+     * 单租户时可忽略租用，所有系统都能使用租户默认数据源
+     */
+    private void createSingleTenantDataSource(JdbcTemplate publicJdbcTemplate, String tenantId) {
+        List<Map<String, Object>> defaultTenant = publicJdbcTemplate
+            .queryForList("SELECT ID, DEFAULT_DATA_SOURCE_ID FROM Y9_COMMON_TENANT WHERE ID=?", tenantId);
+        List<Map<String, Object>> defaultDataSource = publicJdbcTemplate.queryForList(
+            "SELECT * FROM Y9_COMMON_DATASOURCE T WHERE T.ID = ?", defaultTenant.get(0).get("DEFAULT_DATA_SOURCE_ID"));
+        if (!defaultTenant.isEmpty() && !defaultDataSource.isEmpty()) {
+            createOrUpdateDataSource(defaultDataSource.get(0), null, tenantId);
+        }
+    }
+
+    /**
+     * 多租户时就必需先租用才能使用对应数据源
+     */
+    private void createMultiTenantDataSource(JdbcTemplate publicJdbcTemplate) {
+        Set<String> loadedTenantIdSet;
         String systemId = null;
         try {
             systemId = publicJdbcTemplate.queryForObject("SELECT ID FROM Y9_COMMON_SYSTEM WHERE NAME=?", String.class,
@@ -224,7 +252,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         } catch (EmptyResultDataAccessException ignoreException) {
         }
 
-        // 2.1 系统存在(已在数字底座的应用系统管理添加系统),重新设置租户的连接池
+        // 系统存在(已在数字底座的应用系统管理添加系统),重新设置租户的连接池
         if (systemId != null) {
             List<Map<String, Object>> tenantSystems = publicJdbcTemplate.queryForList(
                 "SELECT TENANT_ID, TENANT_DATA_SOURCE FROM Y9_COMMON_TENANT_SYSTEM WHERE SYSTEM_ID = ?", systemId);
@@ -232,11 +260,10 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                 .map(tenantSystem -> (String)tenantSystem.get("TENANT_ID"))
                 .collect(Collectors.toSet());
 
-            // 2.1.1 有租户租用系统
+            // 有租户租用系统
             if (!tenantSystems.isEmpty()) {
                 // 移除已取消租用的
                 loadedTenantIdSet = new HashSet<>(this.loadedTenantIdDataSourceMap.keySet());
-                loadedTenantIdSet.remove(InitDataConsts.TENANT_ID);
                 Collection<String> removedTenantIds = CollectionUtils.subtract(loadedTenantIdSet, tenantIdSet);
                 for (String removedTenantId : removedTenantIds) {
                     removeDataSource(removedTenantId);
@@ -254,24 +281,6 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                         Map<String, Object> dsMap = dataSources.get(0);
                         createOrUpdateDataSource(dsMap, ds, tenantId);
                     }
-                }
-            } else {
-                // 2.1.1 没有租户租用系统,设置默认租户的连接池
-                createDefaultTenantDataSource(publicJdbcTemplate);
-            }
-        } else {
-            // 2.2 系统不存在(未在数字底座的应用系统管理添加系统),设置默认租户的连接池
-            createDefaultTenantDataSource(publicJdbcTemplate);
-        }
-
-        // 3 初始化租户的数据库连接池
-        Collection<DruidDataSource> druidDataSources = loadedTenantIdDataSourceMap.values();
-        if (!druidDataSources.isEmpty()) {
-            for (DruidDataSource ds : druidDataSources) {
-                try {
-                    ds.init();
-                } catch (SQLException e) {
-                    LOGGER.warn(e.getMessage(), e);
                 }
             }
         }

@@ -1,5 +1,8 @@
 package net.risesoft.y9public.manager.tenant.impl;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -87,6 +90,15 @@ public class Y9TenantManagerImpl implements Y9TenantManager {
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalTenant, savedTenant));
 
         return savedTenant;
+    }
+
+    @Override
+    public Optional<Y9Tenant> findIfSingleTenant() {
+        List<Y9Tenant> tenantList = y9TenantRepository.findAll();
+        if (tenantList.size() == 1) {
+            return tenantList.stream().findFirst();
+        }
+        return Optional.empty();
     }
 
     private Integer getNextTabIndex() {

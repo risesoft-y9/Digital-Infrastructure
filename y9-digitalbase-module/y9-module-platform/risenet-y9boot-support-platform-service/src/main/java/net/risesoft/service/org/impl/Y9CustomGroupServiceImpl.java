@@ -26,6 +26,7 @@ import net.risesoft.service.org.Y9CustomGroupService;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
+import net.risesoft.y9.util.Y9AssertUtil;
 
 /**
  * @author dingzhaojun
@@ -98,8 +99,14 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
     public CustomGroup save(CustomGroup customGroup) {
         Y9CustomGroup y9CustomGroup = PlatformModelConvertUtil.convert(customGroup, Y9CustomGroup.class);
 
+        checkCustomIdAvailable(y9CustomGroup.getCustomId(), y9CustomGroup.getId());
+
         if (StringUtils.isBlank(y9CustomGroup.getId())) {
             y9CustomGroup.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+        }
+        if (StringUtils.isBlank(y9CustomGroup.getCustomId())) {
+            // customId 字段有唯一约束，不同数据库对唯一约束的允许不一致，此处保证 customId 列始终有值，所有数据库通用
+            y9CustomGroup.setCustomId(y9CustomGroup.getCustomId());
         }
         return entityToModel(customGroupRepository.save(y9CustomGroup));
     }
@@ -139,6 +146,15 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
 
     private Integer getNextTabIndex(String personId) {
         return customGroupRepository.getMaxTabIndex(personId).map(index -> index + 1).orElse(1);
+    }
+
+    private void checkCustomIdAvailable(String customId, String id) {
+        if (StringUtils.isBlank(customId)) {
+            return;
+        }
+        Optional<Y9CustomGroup> y9CustomGroupOptional = customGroupRepository.findByCustomId(customId);
+        Y9AssertUtil.isTrue(y9CustomGroupOptional.isEmpty() || y9CustomGroupOptional.get().getId().equals(id),
+            OrgUnitErrorCodeEnum.CUSTOM_ID_USED, customId);
     }
 
     @Override

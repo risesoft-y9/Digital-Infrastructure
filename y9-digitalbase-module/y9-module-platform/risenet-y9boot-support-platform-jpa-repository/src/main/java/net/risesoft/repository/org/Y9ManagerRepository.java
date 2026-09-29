@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import net.risesoft.entity.org.Y9Manager;
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
 
 /**
  * @author dingzhaojun
@@ -22,7 +23,11 @@ public interface Y9ManagerRepository extends JpaRepository<Y9Manager, String> {
 
     List<Y9Manager> findByGlobalManager(Boolean globalManager);
 
+    List<Y9Manager> findByManagerLevelOrderByTabIndex(ManagerLevelEnum managerLevel);
+
     Optional<Y9Manager> findByLoginName(String loginName);
+
+    Optional<Y9Manager> findByCustomId(String customId);
 
     List<Y9Manager> findByNameContainingAndDnContaining(String name, String dnName);
 
@@ -40,4 +45,5 @@ public interface Y9ManagerRepository extends JpaRepository<Y9Manager, String> {
     List<Y9Manager> findByParentIdOrderByTabIndex(String parentId);
 
     Optional<Y9Manager> findTopByParentIdOrderByTabIndexDesc(String parentId);
+
 }

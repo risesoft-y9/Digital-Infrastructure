@@ -29,7 +29,7 @@ public class Y9IdentityToRoleBase extends BaseTenantEntity {
 
     /** id */
     @Id
-    @Column(name = "ID")
+    @Column(name = "ID", length = 38)
     @Comment("主键id")
     protected String id;
 

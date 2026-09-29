@@ -24,6 +24,8 @@ public interface Y9PersonRepository extends JpaRepository<Y9Person, String>, Jpa
 
     List<Y9Person> findByDisabled(Boolean disabled);
 
+    Optional<Y9Person> findByCustomId(String customId);
+
     Optional<Y9Person> findByDisabledFalseAndMobileAndOriginal(String mobile, Boolean original);
 
     Optional<Y9Person> findByLoginNameAndOriginalTrue(String loginName);

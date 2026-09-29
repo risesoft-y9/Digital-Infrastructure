@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.log.AccessLog;
+import net.risesoft.model.log.AccessLogDTO;
 import net.risesoft.model.log.AccessLogQuery;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9Result;
@@ -32,7 +33,7 @@ public interface AccessLogApi {
     Y9Result<Object> asyncSaveLog(@RequestBody AccessLog accessLog);
 
     /**
-     * 保存日志 保存访问日志
+     * 保存访问日志
      *
      * @param accessLog 访问日志实体对象
      * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
@@ -40,6 +41,16 @@ public interface AccessLogApi {
      */
     @PostMapping("/saveLog")
     Y9Result<Object> saveLog(@RequestBody AccessLog accessLog);
+
+    /**
+     * 保存访问日志
+     *
+     * @param accessLogDTO 访问日志实体对象
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
+     * @since 9.6.11
+     */
+    @PostMapping("/save")
+    Y9Result<Object> save(@RequestBody @Validated AccessLogDTO accessLogDTO);
 
     /**
      * 多条件分页查询访问日志

@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.init.TenantDataInitializer;
 import net.risesoft.service.init.InitTenantDataService;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
 
 /**
  * 租户数据初始化器
@@ -23,7 +23,7 @@ public class PlatformTenantDataInitializer implements TenantDataInitializer {
 
     @Override
     public void init(String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         initTenantDataService.initAll();
     }
 }

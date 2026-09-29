@@ -2,7 +2,6 @@ package net.risesoft.repository.permission;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,10 +24,6 @@ import net.risesoft.entity.permission.Y9OrgBasesToRoles;
 @Repository
 public interface Y9OrgBasesToRolesRepository extends JpaRepository<Y9OrgBasesToRoles, String> {
 
-    long countByRoleIdAndOrgIdIn(String roleId, List<String> orgIds);
-
-    long countByRoleIdAndOrgIdInAndNegative(String roleId, Set<String> orgIds, Boolean negative);
-
     @Modifying
     @Transactional(readOnly = false)
     void deleteByOrgId(String orgId);
@@ -37,8 +32,6 @@ public interface Y9OrgBasesToRolesRepository extends JpaRepository<Y9OrgBasesToR
     @Transactional(readOnly = false)
     void deleteByRoleId(String roleId);
 
-    List<Y9OrgBasesToRoles> findByOrgIdAndNegativeOrderByOrgOrderDesc(String orgId, Boolean negative);
-
     List<Y9OrgBasesToRoles> findByRoleId(String roleId, Sort sort);
 
     List<Y9OrgBasesToRoles> findByRoleIdAndNegativeOrderByOrgOrderDesc(String roleId, Boolean negative);
@@ -46,12 +39,6 @@ public interface Y9OrgBasesToRolesRepository extends JpaRepository<Y9OrgBasesToR
     List<Y9OrgBasesToRoles> findByRoleIdAndOrgId(String roleId, String orgId);
 
     Optional<Y9OrgBasesToRoles> findByRoleIdAndOrgIdAndNegative(String roleId, String orgId, Boolean negative);
-
-    @Query("select distinct t.roleId from Y9OrgBasesToRoles t where t.orgId = ?1")
-    List<String> findDistinctRoleIdByOrgId(String orgId);
-
-    @Query("select distinct t.roleId from Y9OrgBasesToRoles t where t.parentId = ?1")
-    List<String> findDistinctRoleIdByParentId(String parentId);
 
     @Query("select distinct t.roleId from Y9OrgBasesToRoles t where t.orgId = ?1 and t.negative = ?2")
     List<String> findRoleIdsByOrgIdAndNegative(String orgId, Boolean negative);

@@ -73,7 +73,7 @@ public class AccessLog implements Serializable {
     private String operateName;
 
     /**
-     * 用时
+     * 用时（毫秒）
      */
     private long elapsedTime;
 

@@ -7,6 +7,11 @@ import net.risesoft.y9.exception.Y9NotFoundException;
 
 public interface Y9GroupManager {
 
+    /**
+     * 删除用户组
+     *
+     * @param y9Group 用户组信息
+     */
     void delete(Y9Group y9Group);
 
     /**
@@ -34,9 +39,29 @@ public interface Y9GroupManager {
      */
     Y9Group getByIdFromCache(String id);
 
+    /**
+     * 根据id获取用户组信息（直接读取数据库）
+     *
+     * @param id 用户组id
+     * @return {@link Y9Group}
+     * @throws Y9NotFoundException id 对应的记录不存在的情况
+     */
     Y9Group getById(String id);
 
+    /**
+     * 新增用户组
+     *
+     * @param group 用户组信息
+     * @return {@link Y9Group}
+     */
     Y9Group insert(Y9Group group);
 
+    /**
+     * 更新用户组
+     *
+     * @param group 用户组信息
+     * @param originalGroup 原用户组信息
+     * @return {@link Y9Group}
+     */
     Y9Group update(Y9Group group, Y9Group originalGroup);
 }

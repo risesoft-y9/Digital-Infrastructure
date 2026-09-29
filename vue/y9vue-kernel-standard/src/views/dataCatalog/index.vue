@@ -21,7 +21,7 @@
                     <el-option v-for="item in treeTypeList" :key="item.code" :label="item.name" :value="item.code" />
                 </el-select>
 
-                <el-popover v-if="managerLevel === 1" placement="bottom" trigger="hover" @hide="onHidePopover">
+                <el-popover placement="bottom" trigger="hover" @hide="onHidePopover">
                     <template #reference>
                         <el-button
                             :size="fontSizeObj.buttonSize"
@@ -49,42 +49,6 @@
                         :postNode="postNode"
                         :treeType="currentTreeType"
                     />
-
-                    <!-- 角色关联 -->
-                    <y9Card
-                        v-if="managerLevel === 2 && currData.nodeType === 'DATA_CATALOG'"
-                        :title="`${$t('角色关联授权')} - ${currData.name ? currData.name : ''}`"
-                    >
-                        <template v-slot>
-                            <RelationRole :id="currData.id" :appId="currData.appId" />
-                        </template>
-                    </y9Card>
-
-                    <!-- 角色关联授权继承 -->
-                    <y9Card
-                        v-if="managerLevel === 2 && currData.nodeType === 'DATA_CATALOG' && currData.parentId"
-                        :title="`${$t('角色关联授权继承')} - ${currData.name ? currData.name : ''}`"
-                    >
-                        <template v-slot>
-                            <InheritRole :id="currData.id" />
-                        </template>
-                    </y9Card>
-
-                    <!-- 组织关联 -->
-                    <y9Card
-                        v-if="managerLevel === 2 && currData.nodeType === 'DATA_CATALOG'"
-                        :title="`${$t('组织关联授权')} - ${currData.name ? currData.name : ''}`"
-                    >
-                        <RelationOrg :id="currData.id" />
-                    </y9Card>
-
-                    <!-- 组织关联授权继承 -->
-                    <y9Card
-                        v-if="managerLevel === 2 && currData.nodeType === 'DATA_CATALOG' && currData.parentId"
-                        :title="`${$t('组织关联授权继承')} - ${currData.name ? currData.name : ''}`"
-                    >
-                        <InheritOrg :id="currData.id" />
-                    </y9Card>
                 </div>
             </template>
         </fixedTreeModule>
@@ -115,17 +79,12 @@
         saveDataCatalog
     } from '@/api/dataCatalog';
     // 基本信息
-    import BasicInfo from './comps/BasicInfo.vue';
     import { useI18n } from 'vue-i18n';
-    import RelationRole from '@/views/grantAuthorize/comps/RelationRole.vue';
-    import RelationOrg from '@/views/grantAuthorize/comps/RelationOrg.vue';
-    import InheritRole from '@/views/grantAuthorize/comps/InheritRole.vue';
-    import InheritOrg from '@/views/grantAuthorize/comps/InheritOrg.vue';
+    import BasicInfo from '@/views/dataCatalog/comps/BasicInfo.vue';
     import ImportDataCatalog from '@/views/dataCatalog/dialogContent/importDataCatalog.vue';
     import settings from '@/settings';
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
-    const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
 
     const { t } = useI18n();
 

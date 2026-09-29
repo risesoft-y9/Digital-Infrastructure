@@ -2,14 +2,9 @@ package net.risesoft.y9;
 
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.alibaba.ttl.TransmittableThreadLocal;
 
-import net.risesoft.consts.InitDataConsts;
-import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.model.user.UserInfo;
-import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 
 /**
  * 当前登录用户 holder
@@ -20,8 +15,6 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
  * @date 2022/2/10
  */
 public class Y9LoginUserHolder {
-    // 当前租户 id，可用于多数据源的切换
-    private static final TransmittableThreadLocal<String> TENANT_ID_HOLDER = new TransmittableThreadLocal<>();
     private static final TransmittableThreadLocal<String> TENANT_NAME_HOLDER = new TransmittableThreadLocal<>();
     private static final TransmittableThreadLocal<String> TENANT_SHORT_NAME_HOLDER = new TransmittableThreadLocal<>();
 
@@ -33,7 +26,6 @@ public class Y9LoginUserHolder {
     private static final TransmittableThreadLocal<Map<String, Object>> MAP_HOLDER = new TransmittableThreadLocal<>();
 
     public static void clear() {
-        TENANT_ID_HOLDER.remove();
         TENANT_NAME_HOLDER.remove();
         TENANT_SHORT_NAME_HOLDER.remove();
 
@@ -75,15 +67,18 @@ public class Y9LoginUserHolder {
     }
 
     public static String getTenantId() {
-        return TENANT_ID_HOLDER.get();
+        return Y9TenantHolder.getCurrentTenantId();
     }
 
+    /**
+     * 设置租户 ID
+     *
+     * @param tenantId 租户 ID
+     * @deprecated 使用 {@link Y9TenantHolder#setCurrentTenantId } 替代
+     */
+    @Deprecated
     public static void setTenantId(final String tenantId) {
-        if (StringUtils.isNotBlank(tenantId) && !InitDataConsts.OPERATION_TENANT_ID.equals(tenantId)
-            && !TenantCache.isEmpty() && !TenantCache.containsTenantId(tenantId)) {
-            throw Y9ExceptionUtil.businessException(GlobalErrorCodeEnum.TENANT_NOT_FOUND, tenantId);
-        }
-        TENANT_ID_HOLDER.set(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
     }
 
     public static String getTenantName() {
@@ -112,7 +107,7 @@ public class Y9LoginUserHolder {
         PERSON_ID_HOLDER.set(userInfo.getPersonId());
         POSITION_ID_HOLDER.set(userInfo.getPositionId());
 
-        setTenantId(userInfo.getTenantId());
+        Y9TenantHolder.setCurrentTenantId(userInfo.getTenantId());
         TENANT_NAME_HOLDER.set(userInfo.getTenantName());
         TENANT_SHORT_NAME_HOLDER.set(userInfo.getTenantShortName());
     }

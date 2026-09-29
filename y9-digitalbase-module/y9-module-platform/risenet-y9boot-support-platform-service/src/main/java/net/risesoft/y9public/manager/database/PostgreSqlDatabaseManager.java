@@ -20,17 +20,20 @@ public class PostgreSqlDatabaseManager extends AbstractDatabaseManager {
     }
 
     @Override
-    protected CreatedDataSource createSchemaInternal(JdbcTemplate jdbcTemplate, String dbName, String originalUrl,
-        String originalUsername, String originalPassword) {
+    protected CreatedDataSource buildInternal(String dbName, String originalUrl, String originalUsername,
+        String originalPassword) {
         String url = replaceDatabaseNameInJdbcUrl(originalUrl, dbName);
-        dbName = dbName.toLowerCase();
+        return new CreatedDataSource(url, originalUsername, originalPassword);
+    }
 
-        String sql1 =
-            Y9StringUtil.format("CREATE DATABASE {} WITH ENCODING = 'UTF8' OWNER = {}", dbName, originalUsername);
-        String sql2 = Y9StringUtil.format("GRANT ALL PRIVILEGES ON DATABASE {} TO {}", dbName, originalUsername);
+    @Override
+    protected void createInternal(JdbcTemplate jdbcTemplate, CreatedDataSource createdDataSource, String dbName) {
+        String sql1 = Y9StringUtil.format("CREATE DATABASE {} WITH ENCODING = 'UTF8' OWNER = {}", dbName,
+            createdDataSource.getUsername());
+        String sql2 =
+            Y9StringUtil.format("GRANT ALL PRIVILEGES ON DATABASE {} TO {}", dbName, createdDataSource.getUsername());
         jdbcTemplate.update(sql1);
         jdbcTemplate.update(sql2);
-        return new CreatedDataSource(url, originalUsername, originalPassword);
     }
 
     @Override

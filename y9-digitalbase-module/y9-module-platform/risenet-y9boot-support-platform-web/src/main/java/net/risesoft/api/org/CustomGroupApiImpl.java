@@ -1,0 +1,297 @@
+package net.risesoft.api.org;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Primary;
+import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
+
+import net.risesoft.api.platform.org.CustomGroupApi;
+import net.risesoft.model.platform.org.CustomGroup;
+import net.risesoft.model.platform.org.CustomGroupMember;
+import net.risesoft.model.platform.org.Person;
+import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.pojo.Y9Result;
+import net.risesoft.query.platform.CustomGroupMemberQuery;
+import net.risesoft.service.org.CompositeOrgBaseService;
+import net.risesoft.service.org.Y9CustomGroupService;
+import net.risesoft.service.relation.Y9CustomGroupMembersService;
+
+/**
+ * 自定义用户组
+ *
+ * @author dingzhaojun
+ * @author qinman
+ * @author mengjuhua
+ * @date 2022/2/10
+ * @since 9.6.0
+ */
+@Primary
+@Validated
+@RestController
+@RequestMapping(value = "/services/rest/v1/customGroup", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
+public class CustomGroupApiImpl implements CustomGroupApi {
+
+    private final Y9CustomGroupMembersService customGroupMembersService;
+    private final Y9CustomGroupService customGroupService;
+    private final CompositeOrgBaseService compositeOrgBaseService;
+
+    /**
+     * 添加组成员
+     *
+     * @param tenantId 租户id
+     * @param customGroupId 用户组id
+     * @param orgUnitList 组织id列表
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<Object> addMember(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("customGroupId") @NotBlank String customGroupId,
+        @RequestParam("orgUnitList") @NotEmpty List<String> orgUnitList) {
+
+        customGroupMembersService.save(orgUnitList, customGroupId);
+        return Y9Result.success();
+    }
+
+    private List<CustomGroup> convertCustomGroupList(List<CustomGroup> customGroupList) {
+        return customGroupList.stream().map(group -> {
+            if (StringUtils.isNotBlank(group.getPersonId())) {
+                group.setPersonName(compositeOrgBaseService.getOrgUnit(group.getPersonId()).getName());
+            }
+            if (StringUtils.isNotBlank(group.getShareId())) {
+                group.setShareName(compositeOrgBaseService.getOrgUnit(group.getShareId()).getName());
+            }
+            return group;
+        }).collect(Collectors.toList());
+    }
+
+    /**
+     * 删除用户组
+     *
+     * @param tenantId 租户id
+     * @param groupIds 用户组id，多个用英文逗号,隔开
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<Object> deleteAllGroup(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("groupIds") @NotEmpty List<String> groupIds) {
+
+        customGroupService.delete(groupIds);
+        return Y9Result.success();
+    }
+
+    /**
+     * 根据自定义id查找自定义用户组
+     *
+     * @param tenantId 租户id
+     * @param customId 自定义id
+     * @return {@code Y9Result<CustomGroup>} 通用请求返回对象 - data 是查找的自定义用户组
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<CustomGroup> findCustomGroupByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("customId") @NotBlank String customId) {
+
+        return Y9Result.success(customGroupService.findByCustomId(customId).orElse(null));
+    }
+
+    /**
+     * 根据id获取用户组
+     *
+     * @param tenantId 租户id
+     * @param personId 人员Id
+     * @param groupId 用户组id
+     * @return {@code Y9Result<CustomGroup>} 通用请求返回对象 - data 是查找的自定义用户组
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<CustomGroup> findCustomGroupById(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("groupId") @NotBlank String groupId) {
+
+        return Y9Result.success(customGroupService.findById(groupId).orElse(null));
+    }
+
+    /**
+     * 根据id解析该自定义用户组下的人员列表
+     *
+     * @param tenantId 租户id
+     * @param groupId 用户组id
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是查找的人员列表
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<List<Person>> listAllPersonByGroupId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("groupId") @NotBlank String groupId) {
+
+        return Y9Result.success(customGroupMembersService.listAllPersonsByGroupId(groupId));
+    }
+
+    /**
+     * 根据人员id获取用户组列表
+     *
+     * @param tenantId 租户id
+     * @param personId 人员Id
+     * @return {@code Y9Result<List<CustomGroup>>} 通用请求返回对象 - data 是查找的用户组列表
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<List<CustomGroup>> listCustomGroupByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId) {
+
+        List<CustomGroup> customGroupList = customGroupService.listByPersonId(personId);
+        if (!customGroupList.isEmpty()) {
+            return Y9Result.success(this.convertCustomGroupList(customGroupList));
+        }
+        return Y9Result.success();
+    }
+
+    @Override
+    public Y9Result<List<CustomGroupMember>> listCustomGroupMember(String tenantId,
+        CustomGroupMemberQuery customGroupMemberQuery) {
+
+        return Y9Result.success(customGroupMembersService.list(customGroupMemberQuery));
+    }
+
+    /**
+     * 根据人员id分页获取其自定义用户组列表
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @param pageQuery 分页查询参数
+     * @return {@code Y9Page<CustomGroup>} 通用分页请求返回对象 - rows 是返回的用户组列表
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Page<CustomGroup> pageCustomGroupByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId, @Validated Y9PageQuery pageQuery) {
+
+        Y9Page<CustomGroup> customGroupY9Page = customGroupService.pageByPersonId(personId, pageQuery);
+        return Y9Page.success(pageQuery.getPage(), customGroupY9Page.getTotalPages(), customGroupY9Page.getTotal(),
+            this.convertCustomGroupList(customGroupY9Page.getRows()));
+    }
+
+    @Override
+    public Y9Page<CustomGroupMember> pageCustomGroupMember(@RequestParam("tenantId") @NotBlank String tenantId,
+        @Validated CustomGroupMemberQuery customGroupMemberQuery, @RequestParam("page") Integer page,
+        @RequestParam("size") Integer size) {
+
+        return customGroupMembersService.page(customGroupMemberQuery, new Y9PageQuery(page, size));
+    }
+
+    /**
+     * 删除组成员
+     *
+     * @param tenantId 租户id
+     * @param memberIds 用户组成员id，多个用英文逗号,隔开
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<Object> removeMembers(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("memberIds") @NotEmpty List<String> memberIds) {
+
+        customGroupMembersService.delete(memberIds);
+        return Y9Result.success();
+    }
+
+    /**
+     * 保存自定义用户组
+     *
+     * @param tenantId 租户id
+     * @param customGroup 自定义用户组
+     * @return {@code Y9Result<CustomGroup>} 通用请求返回对象 - data 是保存的自定义用户组
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<CustomGroup> saveCustomGroup(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestBody CustomGroup customGroup) {
+
+        return Y9Result.success(customGroupService.save(customGroup));
+    }
+
+    /**
+     * 保存自定义用户组排序
+     *
+     * @param tenantId 租户id
+     * @param sortIds 排序后的用户组id，多个用英文逗号,隔开
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<Object> saveCustomGroupOrder(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("sortIds") @NotEmpty List<String> sortIds) {
+
+        customGroupService.saveCustomGroupOrder(sortIds);
+        return Y9Result.success();
+    }
+
+    /**
+     * 保存自定义用户组成员排序
+     *
+     * @param tenantId 租户id
+     * @param memberIds 排序的用户组成员id，多个用英文逗号,隔开
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<Object> saveMemberOrder(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("memberIds") @NotEmpty List<String> memberIds) {
+
+        customGroupMembersService.saveOrder(memberIds);
+        return Y9Result.success();
+    }
+
+    /**
+     * 保存用户组
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @param personIds 人员id，多个用英文逗号,隔开
+     * @param groupId 用户组Id
+     * @param groupName 用户组名称
+     * @return {@code Y9Result<CustomGroup>} 通用请求返回对象 - data 是保存的自定义用户组
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<CustomGroup> saveOrUpdateCustomGroup(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId,
+        @RequestParam("personIds") @NotEmpty List<String> personIds, @RequestParam("groupId") String groupId,
+        @RequestParam("groupName") @NotBlank String groupName) {
+
+        return Y9Result.success(customGroupService.saveOrUpdate(personId, personIds, groupId, groupName));
+    }
+
+    /**
+     * 分享用户组给其他人使用
+     *
+     * @param tenantId 租户id
+     * @param personIds 人员id，多个用英文逗号,隔开
+     * @param groupIds 用户组id，多个用英文逗号,隔开
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<Object> shareCustomGroup(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personIds") @NotEmpty List<String> personIds,
+        @RequestParam("groupIds") @NotEmpty List<String> groupIds) {
+
+        customGroupService.share(personIds, groupIds);
+        return Y9Result.success();
+    }
+
+}

@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.resource.DataCatalogTypeEnum;
 import net.risesoft.model.platform.resource.DataCatalog;
 
@@ -26,7 +25,7 @@ class Y9DataCatalogTest {
         dataCatalog.setTreeType("archive");
         dataCatalog.setType(DataCatalogTypeEnum.YEAR);
 
-        Y9DataCatalog y9DataCatalog = new Y9DataCatalog(dataCatalog, parent, 7, "tenant-1");
+        Y9DataCatalog y9DataCatalog = new Y9DataCatalog(dataCatalog, parent, 7, "system-1", "tenant-1");
 
         assertNotNull(y9DataCatalog.getId());
         assertFalse(y9DataCatalog.getId().isBlank());
@@ -35,7 +34,7 @@ class Y9DataCatalogTest {
         assertEquals("archive", y9DataCatalog.getTreeType());
         assertEquals(DataCatalogTypeEnum.YEAR, y9DataCatalog.getType());
         assertEquals("tenant-1", y9DataCatalog.getTenantId());
-        assertEquals(InitDataConsts.SYSTEM_ID, y9DataCatalog.getSystemId());
+        assertEquals("system-1", y9DataCatalog.getSystemId());
         assertTrue(y9DataCatalog.getInherit());
         assertEquals(7, y9DataCatalog.getTabIndex());
         assertEquals(parent.getGuidPath() + "," + y9DataCatalog.getId(), y9DataCatalog.getGuidPath());
@@ -48,14 +47,14 @@ class Y9DataCatalogTest {
         rootCatalog.setParentId("");
         rootCatalog.setTreeType("archive");
 
-        Y9DataCatalog y9DataCatalog = new Y9DataCatalog(rootCatalog, null, 3, "tenant-1");
+        Y9DataCatalog y9DataCatalog = new Y9DataCatalog(rootCatalog, null, 3, "system-1", "tenant-1");
 
         assertNull(y9DataCatalog.getParentId());
         assertEquals(3, y9DataCatalog.getTabIndex());
         assertEquals(y9DataCatalog.getId(), y9DataCatalog.getGuidPath());
 
         y9DataCatalog.setTenantId("tenant-1");
-        y9DataCatalog.setSystemId(InitDataConsts.SYSTEM_ID);
+        y9DataCatalog.setSystemId("system-1");
         y9DataCatalog.setInherit(Boolean.TRUE);
         y9DataCatalog.setEnabled(Boolean.TRUE);
 
@@ -69,7 +68,7 @@ class Y9DataCatalogTest {
         assertNull(y9DataCatalog.getParentId());
         assertEquals(y9DataCatalog.getId(), y9DataCatalog.getGuidPath());
         assertEquals("tenant-1", y9DataCatalog.getTenantId());
-        assertEquals(InitDataConsts.SYSTEM_ID, y9DataCatalog.getSystemId());
+        assertEquals("system-1", y9DataCatalog.getSystemId());
         assertTrue(y9DataCatalog.getInherit());
 
         y9DataCatalog.disable();

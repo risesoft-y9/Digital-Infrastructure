@@ -1,12 +1,11 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-11 18:38:31
- * @LastEditTime: 2023-12-26 11:21:21
+ * @LastEditTime: 2026-09-07 14:17:36
  * @LastEditors: mengjuhua
  * @Description: 菜单项
 -->
 <template>
-    <!-- <div id="y9-menu"> -->
     <el-menu
         :collapse="menuCollapsed"
         :collapse-transition="false"
@@ -21,7 +20,6 @@
             :routeItem="item"
         ></sider-menu-item>
     </el-menu>
-    <!-- </div> -->
 </template>
 <script lang="ts" setup>
     import { computed, ComputedRef, toRefs } from 'vue';
@@ -50,35 +48,39 @@
             default: ''
         },
         menuData: {
-            type: Array,
-            default: () => {
-                return [];
-            }
+            type: Array as () => RoutesDataItem[],
+            default: () => []
         }
     });
 
     const { menuData } = toRefs(props);
     const newMenuData = computed<RoutesDataItem[]>(() => {
-        // 对每一个路由模块（位置：src->router->modules）（即菜单）进一步数据处理，以适配菜单列表样式
-        const MenuItems: RoutesDataItem[] = [];
-        for (let index = 0, len = menuData.value.length; index < len; index += 1) {
-            const route: RoutesDataItem = menuData.value[index];
-            // 如果对应的路由模块（位置：src->router->modules）只有一个子路由，提升为单个菜单（即它不需要菜单下拉显示）
-            if (!route.hidden && route.children) {
-                route.children.length === 1
-                    ? MenuItems.push(...(route.children as RoutesDataItem))
-                    : MenuItems.push(route as RoutesDataItem[]);
-            }
+        // 增加对menuData.value的空值判断
+        if (!menuData.value) {
+            return [];
         }
-        return MenuItems;
+
+        return menuData.value.reduce<RoutesDataItem[]>((accumulator, route) => {
+            // 确保route是有效的RoutesDataItem类型
+            if (!route) {
+                return accumulator;
+            }
+            // 如果route.hidden为true，直接跳过该路由
+            if (route.hidden) {
+                return accumulator;
+            }
+            // 检查route.children是否为数组
+            if (Array.isArray(route.children) && route.children.length === 1) {
+                const child = route.children[0];
+                // 确保子路由也是有效的RoutesDataItem类型
+                if (child) {
+                    accumulator.push(child);
+                }
+            } else {
+                accumulator.push(route);
+            }
+            return accumulator;
+        }, []);
     });
 </script>
-<style lang="scss" scoped>
-    //  #y9-menu{
-    //    & > ul{
-    //      :deep(a){
-    //        text-decoration: none;
-    //      }
-    //    }
-    //  }
-</style>
+<style lang="scss" scoped></style>

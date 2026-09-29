@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.entity.org.Y9OrgBase;
 import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.enums.AuditLogEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9OrganizationManager;
 import net.risesoft.model.platform.org.Organization;
@@ -23,6 +24,7 @@ import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 
 /**
@@ -94,11 +96,6 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     }
 
     @Override
-    public boolean existsById(String id) {
-        return y9OrganizationRepository.existsById(id);
-    }
-
-    @Override
     public Optional<Organization> findById(String id) {
         return y9OrganizationManager.findByIdFromCache(id).map(PlatformModelConvertUtil::y9OrganizationToOrganization);
     }
@@ -144,14 +141,10 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     }
 
     @Override
-    public List<Organization> listByDn(String dn) {
-        List<Y9Organization> y9OrganizationList = y9OrganizationRepository.findByDn(dn);
-        return PlatformModelConvertUtil.y9OrganizationToOrganization(y9OrganizationList);
-    }
-
-    @Override
     @Transactional
     public Organization saveOrUpdate(Organization organization) {
+        checkCustomIdAvailable(organization.getCustomId(), organization.getId());
+
         if (StringUtils.isNotBlank(organization.getId())) {
             Optional<Y9Organization> organizationOptional = y9OrganizationManager.findById(organization.getId());
             if (organizationOptional.isPresent()) {
@@ -190,6 +183,15 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         Y9Context.publishEvent(auditLogEvent);
 
         return PlatformModelConvertUtil.y9OrganizationToOrganization(savedOrganization);
+    }
+
+    private void checkCustomIdAvailable(String customId, String id) {
+        if (StringUtils.isBlank(customId)) {
+            return;
+        }
+        Optional<Y9Organization> y9OrganizationOptional = y9OrganizationRepository.findByCustomId(customId);
+        Y9AssertUtil.isTrue(y9OrganizationOptional.isEmpty() || y9OrganizationOptional.get().getId().equals(id),
+            OrgUnitErrorCodeEnum.CUSTOM_ID_USED, customId);
     }
 
     @Override

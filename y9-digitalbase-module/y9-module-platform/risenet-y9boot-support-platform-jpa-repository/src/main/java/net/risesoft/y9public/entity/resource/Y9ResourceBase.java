@@ -42,7 +42,7 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
     protected String id;
 
     /** 自定义id */
-    @Column(name = "CUSTOM_ID", length = 500)
+    @Column(name = "CUSTOM_ID", length = 255)
     @Comment("自定义id")
     protected String customId;
 
@@ -110,7 +110,7 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
     protected Integer tabIndex = DefaultConsts.TAB_INDEX;
 
     /** 由ID组成的父子关系列表(正序)，之间用逗号分隔 */
-    @Column(name = "GUID_PATH", unique = true, length = 400)
+    @Column(name = "GUID_PATH", length = 400)
     @Comment("由ID组成的父子关系列表(正序)，之间用逗号分隔")
     protected String guidPath;
 

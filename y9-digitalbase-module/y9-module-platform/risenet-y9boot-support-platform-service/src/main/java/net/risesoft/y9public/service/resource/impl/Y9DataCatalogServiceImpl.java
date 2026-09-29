@@ -23,6 +23,7 @@ import net.risesoft.entity.org.Y9Department;
 import net.risesoft.entity.org.Y9Organization;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.enums.platform.resource.DataCatalogTypeEnum;
+import net.risesoft.exception.ResourceErrorCodeEnum;
 import net.risesoft.model.platform.dictionary.OptionValue;
 import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.resource.DataCatalog;
@@ -32,14 +33,18 @@ import net.risesoft.service.permission.cache.Y9PersonToResourceService;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
+import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9public.entity.Y9System;
 import net.risesoft.y9public.entity.resource.Y9DataCatalog;
 import net.risesoft.y9public.manager.resource.Y9DataCatalogManager;
+import net.risesoft.y9public.manager.resource.Y9SystemManager;
 import net.risesoft.y9public.repository.resource.Y9DataCatalogRepository;
 import net.risesoft.y9public.service.resource.Y9DataCatalogService;
 
@@ -56,9 +61,11 @@ import net.risesoft.y9public.service.resource.Y9DataCatalogService;
 public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
 
     private final Y9PlatformProperties y9PlatformProperties;
+    private final Y9Properties y9Properties;
 
     private final Y9DataCatalogRepository y9DataCatalogRepository;
     private final Y9DataCatalogManager y9DataCatalogManager;
+    private final Y9SystemManager y9SystemManager;
 
     private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9PersonToResourceService y9PersonToResourceService;
@@ -73,6 +80,8 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public DataCatalog saveOrUpdate(DataCatalog dataCatalog) {
+        checkCustomIdAvailable(dataCatalog.getCustomId(), dataCatalog.getId());
+
         if (StringUtils.isNotBlank(dataCatalog.getId())) {
             Optional<Y9DataCatalog> y9DataCatalogOptional = y9DataCatalogManager.findById(dataCatalog.getId());
             if (y9DataCatalogOptional.isPresent()) {
@@ -80,14 +89,25 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
                 Y9DataCatalog originalDataCatalog = Y9ModelConvertUtil.convert(currentDataCatalog, Y9DataCatalog.class);
 
                 currentDataCatalog.update(dataCatalog, findParent(dataCatalog.getParentId()).orElse(null));
-                return PlatformModelConvertUtil.convert(y9DataCatalogManager.update(currentDataCatalog, originalDataCatalog),
-                    DataCatalog.class);
+                return PlatformModelConvertUtil
+                    .convert(y9DataCatalogManager.update(currentDataCatalog, originalDataCatalog), DataCatalog.class);
             }
         }
 
+        Optional<Y9System> y9SystemOptional = y9SystemManager.findByName(y9Properties.getSystemName());
         Y9DataCatalog y9DataCatalog = new Y9DataCatalog(dataCatalog, findParent(dataCatalog.getParentId()).orElse(null),
-            getNextTabIndex(dataCatalog.getParentId()), Y9LoginUserHolder.getTenantId());
+            getNextTabIndex(dataCatalog.getParentId()), y9SystemOptional.get().getId(),
+            Y9LoginUserHolder.getTenantId());
         return PlatformModelConvertUtil.convert(y9DataCatalogManager.insert(y9DataCatalog), DataCatalog.class);
+    }
+
+    private void checkCustomIdAvailable(String customId, String id) {
+        if (StringUtils.isBlank(customId)) {
+            return;
+        }
+        Optional<Y9DataCatalog> y9DataCatalogOptional = y9DataCatalogRepository.findByCustomId(customId);
+        Y9AssertUtil.isTrue(y9DataCatalogOptional.isEmpty() || y9DataCatalogOptional.get().getId().equals(id),
+            ResourceErrorCodeEnum.CUSTOM_ID_USED, customId);
     }
 
     @Override
@@ -288,8 +308,8 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
                 orgUnitDataCatalog.setParentId(parentDataCatalogId);
                 orgUnitDataCatalog.setType(DataCatalogTypeEnum.ORG_UNIT);
                 orgUnitDataCatalog.setTreeType(treeType);
-                this.saveOrUpdate(orgUnitDataCatalog);
-                recursivelySaveOrgUnitDataCatalog(orgUnitDataCatalog.getId(), treeType, y9OrgBase.getId());
+                DataCatalog savedDataCatalog = this.saveOrUpdate(orgUnitDataCatalog);
+                recursivelySaveOrgUnitDataCatalog(savedDataCatalog.getId(), treeType, y9OrgBase.getId());
             }
         }
     }

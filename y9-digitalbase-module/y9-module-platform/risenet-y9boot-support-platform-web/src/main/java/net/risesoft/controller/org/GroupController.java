@@ -35,7 +35,7 @@ import net.risesoft.service.relation.Y9PersonsToGroupsService;
 @RestController
 @RequestMapping(value = "/api/rest/group", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
+@IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
 public class GroupController {
 
     private final Y9PersonsToGroupsService y9PersonsToGroupsService;

@@ -36,8 +36,8 @@ import cn.hutool.core.util.DesensitizedUtil;
 @Slf4j
 @RequiredArgsConstructor
 @Validated
-@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER,
-    ManagerLevelEnum.SECURITY_MANAGER, ManagerLevelEnum.OPERATION_SECURITY_MANAGER})
+@IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER,
+    ManagerLevelEnum.TENANT_SECURITY_MANAGER, ManagerLevelEnum.OPERATION_SECURITY_MANAGER})
 public class ApiAccessControlController {
 
     private final Y9ApiAccessControlService y9ApiAccessControlService;
@@ -52,7 +52,7 @@ public class ApiAccessControlController {
     @GetMapping("/list")
     public Y9Result<List<ApiAccessControl>> list(ApiAccessControlType type) {
         List<ApiAccessControl> apiAccessControlList = y9ApiAccessControlService.listByType(type);
-        if (ApiAccessControlType.APP_ID_SECRET.equals(type) && (ManagerLevelEnum.SYSTEM_MANAGER
+        if (ApiAccessControlType.APP_ID_SECRET.equals(type) && (ManagerLevelEnum.TENANT_SYSTEM_MANAGER
             .equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())
             || ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel()))) {
             for (ApiAccessControl apiAccessControl : apiAccessControlList) {
@@ -92,7 +92,7 @@ public class ApiAccessControlController {
      * @param id ID
      * @return {@code Y9Result<ApiAccessControl> }
      */
-    @IsAnyManager({ManagerLevelEnum.SECURITY_MANAGER, ManagerLevelEnum.OPERATION_SECURITY_MANAGER})
+    @IsAnyManager({ManagerLevelEnum.TENANT_SECURITY_MANAGER, ManagerLevelEnum.OPERATION_SECURITY_MANAGER})
     @RiseLog(operationName = "修改启用状态", operationType = OperationTypeEnum.MODIFY)
     @PostMapping("/changeEnabled")
     public Y9Result<ApiAccessControl> changeEnabled(String id) {

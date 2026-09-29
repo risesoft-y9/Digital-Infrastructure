@@ -31,7 +31,6 @@ import net.risesoft.model.log.LoginInfo;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.service.Y9logIpDeptMappingService;
 import net.risesoft.y9public.service.Y9logUserHostIpInfoService;
@@ -91,7 +90,6 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
         @RequestParam(value = "success", required = false) String success,
         @RequestParam(value = "startTime", required = false) String startTime,
         @RequestParam(value = "endTime", required = false) String endTime, @Validated Y9PageQuery pageQuery) {
-        Y9LoginUserHolder.setTenantId(tenantId);
         Y9Page<Y9LogUserLoginInfoDO> loginList =
             userLoginInfoService.page(tenantId, userHostIp, userHostIp, success, startTime, endTime, pageQuery);
         List<Y9LogUserLoginInfoDO> list = loginList.getRows();

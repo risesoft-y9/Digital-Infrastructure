@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-    import { computed, onMounted, reactive, ref, watch } from 'vue';
+    import { computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
     import { useSettingStore } from '@/store/modules/settingStore'; // 数据响应
 
     // 数据响应
@@ -10,14 +10,33 @@
     const device = computed(() => settingStore.getDevice);
 
     // 监听设置事件
-    onMounted(() => {
-        setTimeout(() => {
-            document.getElementsByClassName('web-setting')[0].addEventListener('click', () => {
+    let webSettingTimer: ReturnType<typeof setTimeout> | null = null;
+    let webSettingHandler: (() => void) | null = null;
+
+    onMounted(async () => {
+        await nextTick();
+        webSettingTimer = setTimeout(() => {
+            const el = document.getElementsByClassName('web-setting')[0];
+            if (!el) return;
+            webSettingHandler = () => {
                 if (!webSettingVisible.value) {
                     webSettingVisible.value = true;
                 }
-            });
+            };
+            el.addEventListener('click', webSettingHandler);
         }, 500);
+    });
+
+    onUnmounted(() => {
+        if (webSettingTimer) {
+            clearTimeout(webSettingTimer);
+            webSettingTimer = null;
+        }
+        if (webSettingHandler) {
+            const el = document.getElementsByClassName('web-setting')[0];
+            el?.removeEventListener('click', webSettingHandler);
+            webSettingHandler = null;
+        }
     });
 
     const form = reactive({
@@ -31,6 +50,7 @@
         menuAnimation: settingStore.menuAnimation,
         menuStyle: settingStore.getMenuStyle,
         menuWidth: settingStore.getMenuWidth,
+        menuBg: settingStore.getMenuBg,
         showLabel: settingStore.getShowLabel,
         showLabelIcon: settingStore.getShowLabelIcon,
         labelStyle: settingStore.getLabelStyle,
@@ -49,6 +69,45 @@
         settingAnimation: settingStore.getSettingAnimation,
         settingWidth: settingStore.getSettingWidth
     });
+
+    // 抽屉打开时同步 form，避免 form 停留在初始快照导致保存写回旧值
+    function syncForm() {
+        form.allPcLayout = settingStore.getAllPcLayout;
+        form.pcLayout = settingStore.getLayout;
+        form.webName = settingStore.getWebName;
+        form.logoSvgName = settingStore.getLogoSvgName;
+        form.webLanguage = settingStore.getWebLanguage;
+        form.fontSize = settingStore.getFontSize;
+        form.themeName = settingStore.getThemeName;
+        form.menuAnimation = settingStore.menuAnimation;
+        form.menuStyle = settingStore.getMenuStyle;
+        form.menuWidth = settingStore.getMenuWidth;
+        form.menuBg = settingStore.getMenuBg;
+        form.showLabel = settingStore.getShowLabel;
+        form.showLabelIcon = settingStore.getShowLabelIcon;
+        form.labelStyle = settingStore.getLabelStyle;
+        form.fixedHeader = settingStore.getFixedHeader;
+        form.progress = settingStore.getProgress;
+        form.refresh = settingStore.getRefresh;
+        form.search = settingStore.getSearch;
+        form.notify = settingStore.getNotify;
+        form.fullScreeen = settingStore.getFullScreeen;
+        form.lock = settingStore.getLock;
+        form.lockScreen = settingStore.getLockScreen;
+        form.unlockScreenPwd = settingStore.getUnlockScreenPwd;
+        form.pageAnimation = settingStore.getPageAnimation;
+        form.settingPageStyle = settingStore.getSettingPageStyle;
+        form.settingAnimation = settingStore.getSettingAnimation;
+        form.settingWidth = settingStore.getSettingWidth;
+    }
+
+    syncForm();
+
+    watch(webSettingVisible, (visible) => {
+        if (!visible) return;
+        syncForm();
+    });
+
     // 布局 value-实际选中值 全局或者单一
     const allLayoutOptions = [
         { value: '全局模块', label: 'globalModule' },
@@ -78,6 +137,7 @@
         { value: 'theme-default', label: '默认' },
         { value: 'theme-green', label: '绿' },
         { value: 'theme-blue', label: '蓝' },
+        { value: 'theme-dark', label: '暗黑' },
         { value: 'theme-red', label: '红', disabled: true }
     ];
 
@@ -97,6 +157,7 @@
         new URL('../../assets/images/menu-bg9.png', import.meta.url).href,
         new URL('../../assets/images/menu-bg10.png', import.meta.url).href
     ];
+
     // 把已选中的背景排在第一位
     const currentMenuBg = computed(() => settingStore.getMenuBg);
 
@@ -115,11 +176,6 @@
         { key: 'bg4', src: menuBgs[3] },
         { key: 'bg5', src: menuBgs[4] }
     ];
-    const menuBgChange = () => {
-        settingStore.$patch({
-            menuBg: form.menuBg
-        });
-    };
 
     // 菜单宽度
     const menuWidthOptions = [
@@ -172,30 +228,38 @@
     ]);
 
     // 修复在上/下拉效果的时候，宽度问题
-    watch(settingPageAnimationdirection, (newV, oldV) => {
-        if (newV === 'ttb' || newV === 'btt') {
-            settingWidthOptions[0].label = '40%';
-            settingWidthOptions[1].label = '50%';
-            settingWidthOptions[2].label = '60%';
-            settingWidthOptions[3].label = '70%';
-            settingWidthOptions[0].value = '40%';
-            settingWidthOptions[1].value = '50%';
-            settingWidthOptions[2].value = '60%';
-            settingWidthOptions[3].value = '70%';
-        } else {
-            settingWidthOptions[0].label = '15%';
-            settingWidthOptions[1].label = '20%';
-            settingWidthOptions[2].label = '25%';
-            settingWidthOptions[3].label = '30%';
-            settingWidthOptions[0].value = '15%';
-            settingWidthOptions[1].value = '20%';
-            settingWidthOptions[2].value = '25%';
-            settingWidthOptions[3].value = '30%';
-        }
+    watch(
+        settingPageAnimationdirection,
+        (newV) => {
+            if (newV === 'ttb' || newV === 'btt') {
+                settingWidthOptions[0].label = '40%';
+                settingWidthOptions[1].label = '50%';
+                settingWidthOptions[2].label = '60%';
+                settingWidthOptions[3].label = '70%';
+                settingWidthOptions[0].value = '40%';
+                settingWidthOptions[1].value = '50%';
+                settingWidthOptions[2].value = '60%';
+                settingWidthOptions[3].value = '70%';
+            } else {
+                settingWidthOptions[0].label = '15%';
+                settingWidthOptions[1].label = '20%';
+                settingWidthOptions[2].label = '25%';
+                settingWidthOptions[3].label = '30%';
+                settingWidthOptions[0].value = '15%';
+                settingWidthOptions[1].value = '20%';
+                settingWidthOptions[2].value = '25%';
+                settingWidthOptions[3].value = '30%';
+            }
 
-        form.settingWidth = settingWidthOptions[1].value;
-        settingChange('settingWidth');
-    });
+            // 仅当当前 settingWidth 不在新选项范围内时，才设为默认值
+            const validValues = settingWidthOptions.map((opt) => opt.value);
+            if (!validValues.includes(form.settingWidth)) {
+                form.settingWidth = settingWidthOptions[1].value;
+                settingStore.$patch({ settingWidth: form.settingWidth });
+            }
+        },
+        { immediate: true }
+    );
 
     // 修改设置
     const settingChange = (key) => {
@@ -216,9 +280,20 @@
                 getAllPcLayoutList.push(obj);
             }
             settingStore.$patch({
-                allLayoutList: getAllPcLayoutList
+                allLayoutList: getAllPcLayoutList,
+                // 同步更新 layout，确保 globalModule 模式下 getLayout 能返回新布局
+                layout: settingStore.getDevice === 'mobile' ? 'Y9Mobile' : form.pcLayout
             });
         }
+        if (key === 'themeName') {
+            settingStore.$patch({
+                themeName: form.themeName,
+                isDark: form.themeName === 'theme-dark',
+                lightThemeName: form.themeName === 'theme-dark' ? settingStore.lightThemeName : form.themeName
+            });
+            return;
+        }
+
         settingStore.$patch({
             [key]: form[key]
         });
@@ -226,12 +301,17 @@
     // 重置表单
     const resetFunc = () => {
         // 恢复默认值
+        form.allPcLayout = 'globalModule'; //布局影响
         form.pcLayout = 'Y9Default'; //布局
+        form.webName = '数字底座'; //网站名称
+        form.logoSvgName = ''; //网站logo
         form.webLanguage = 'zh'; // 语言
         form.fontSize = 'default'; // 字号大小
         form.themeName = 'theme-default'; //主题
         form.menuAnimation = 'rtl'; //菜单动画
+        form.menuStyle = 'Light'; //菜单样式
         form.menuWidth = '25%'; //菜单宽度
+        form.menuBg = ''; //菜单背景
         form.showLabel = false; //标签显示
         form.showLabelIcon = false; //标签图标
         form.labelStyle = 'top'; //标签位置
@@ -246,17 +326,25 @@
         form.lockScreen = false; //锁屏
         form.unlockScreenPwd = '123456'; // 重置密码为默认值
         form.pageAnimation = true; //页面动画
+        form.settingPageStyle = 'Admin-plus'; //设置页面风格
         form.settingWidth = '20%'; //设置宽度
 
         // 更新store中的值
         settingStore.$patch({
+            allPcLayout: form.allPcLayout,
             pcLayout: form.pcLayout,
+            layout: settingStore.getDevice === 'mobile' ? 'Y9Mobile' : form.pcLayout,
+            webName: form.webName,
+            logoSvgName: form.logoSvgName,
             webLanguage: form.webLanguage,
             fontSize: form.fontSize,
             themeName: form.themeName,
+            lightThemeName: 'theme-default',
+            isDark: false,
             menuAnimation: form.menuAnimation,
+            menuStyle: form.menuStyle,
             menuWidth: form.menuWidth,
-            menuBg: '',
+            menuBg: form.menuBg,
             showLabel: form.showLabel,
             showLabelIcon: form.showLabelIcon,
             labelStyle: form.labelStyle,
@@ -270,6 +358,8 @@
             lockScreen: form.lockScreen,
             unlockScreenPwd: form.unlockScreenPwd,
             pageAnimation: form.pageAnimation,
+            settingPageStyle: form.settingPageStyle,
+            settingAnimation: form.settingAnimation,
             settingWidth: form.settingWidth
         });
     };
@@ -277,6 +367,8 @@
     const submit = () => {
         settingStore.$patch({
             allPcLayout: form.allPcLayout,
+            pcLayout: form.pcLayout,
+            layout: settingStore.getDevice === 'mobile' ? 'Y9Mobile' : form.pcLayout,
             webName: form.webName,
             logoSvgName: form.logoSvgName,
             webLanguage: form.webLanguage,
@@ -285,6 +377,7 @@
             menuAnimation: form.menuAnimation,
             menuStyle: form.menuStyle,
             menuWidth: form.menuWidth,
+            menuBg: form.menuBg,
             showLabel: form.showLabel,
             showLabelIcon: form.showLabelIcon,
             labelStyle: form.labelStyle,
@@ -295,6 +388,8 @@
             notify: form.notify,
             fullScreeen: form.fullScreeen,
             lock: form.lock,
+            lockScreen: form.lockScreen,
+            unlockScreenPwd: form.unlockScreenPwd,
             pageAnimation: form.pageAnimation,
             settingPageStyle: form.settingPageStyle,
             settingAnimation: form.settingAnimation,
@@ -307,9 +402,8 @@
         const targetElement = e.target;
         if (!Array.from(targetElement.classList).includes('selected')) {
             const url = targetElement.style.backgroundImage.split('"')[1];
-            settingStore.$patch({
-                menuBg: url ? url : ''
-            });
+            form.menuBg = url ? url : '';
+            settingChange('menuBg');
         }
     }
 </script>
@@ -325,14 +419,7 @@
         custom-class="indexlayout-settings"
     >
         <el-form id="webSettingForm">
-            <el-form-item
-                :label="$t('布局')"
-                :rules="[
-                    {
-                        required: true
-                    }
-                ]"
-            >
+            <el-form-item :label="$t('布局')" :rules="[{ required: true }]">
                 <el-select
                     v-model="form.pcLayout"
                     :disabled="device === 'mobile' ? true : false"
@@ -347,49 +434,28 @@
                     />
                 </el-select>
             </el-form-item>
-            <!--            <el-form-item :label="$t('布局影响')" :rules="[{ required: true }]">-->
-            <!--                <el-radio-group v-model="form.allPcLayout" @change="settingChange('allPcLayout')">-->
-            <!--                    <el-radio v-for="item in allLayoutOptions" :key="item.label" :label="item.label" size="large"-->
-            <!--                        >{{ $t(item.value) }}-->
-            <!--                    </el-radio>-->
-            <!--                </el-radio-group>-->
-            <!--            </el-form-item>-->
-            <el-form-item
-                :label="$t('语言')"
-                :rules="[
-                    {
-                        required: true
-                    }
-                ]"
-            >
+            <!-- <el-form-item :label="$t('布局影响')" :rules="[{ required: true }]">
+                <el-radio-group v-model="form.allPcLayout" @change="settingChange('allPcLayout')">
+                    <el-radio v-for="item in allLayoutOptions" :key="item.label" :label="item.label" size="large"
+                        >{{ $t(item.value) }}
+                    </el-radio>
+                </el-radio-group>
+            </el-form-item> -->
+            <el-form-item :label="$t('语言')" :rules="[{ required: true }]">
                 <el-radio-group v-model="form.webLanguage" @change="settingChange('webLanguage')">
                     <el-radio v-for="item in webLanguageOptions" :key="item.value" :label="item.label" size="large"
                         >{{ $t(`${item.value}`) }}
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item
-                :label="$t('字号')"
-                :rules="[
-                    {
-                        required: true
-                    }
-                ]"
-            >
+            <el-form-item :label="$t('字号')" :rules="[{ required: true }]">
                 <el-radio-group v-model="form.fontSize" @change="settingChange('fontSize')">
                     <el-radio v-for="item in fontSizeOptions" :key="item.label" :label="item.label" size="large"
                         >{{ $t(`${item.value}`) }}
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item
-                :label="$t('主题')"
-                :rules="[
-                    {
-                        required: true
-                    }
-                ]"
-            >
+            <el-form-item :label="$t('主题')" :rules="[{ required: true }]">
                 <el-select v-model="form.themeName" placeholder="选择" @change="settingChange('themeName')">
                     <el-option
                         v-for="item in themeOptions"

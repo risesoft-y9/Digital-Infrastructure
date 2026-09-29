@@ -49,7 +49,7 @@ public class DeptManagerController {
      */
     @RiseLog(operationName = "禁用/解除禁用三员", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/changeDisabled")
-    @IsAnyManager(ManagerLevelEnum.SECURITY_MANAGER)
+    @IsAnyManager(ManagerLevelEnum.TENANT_SECURITY_MANAGER)
     public Y9Result<Manager> changeDisabled(@RequestParam @NotBlank String id) {
         return Y9Result.success(y9ManagerService.changeDisabled(id), "禁用人员成功");
     }
@@ -62,7 +62,7 @@ public class DeptManagerController {
      */
     @RiseLog(operationName = "根据部门id，验证该成员是否部门管理员")
     @PostMapping(value = "/checkDeptManager")
-    @IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
+    @IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
     public Y9Result<Boolean> checkDeptManager(@RequestParam @NotBlank String deptId) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         return Y9Result.success(y9ManagerService.isDeptManager(userInfo.getPersonId(), deptId));
@@ -77,7 +77,7 @@ public class DeptManagerController {
      */
     @RiseLog(operationName = "判断登录名是否可用")
     @RequestMapping(value = "/checkLoginName")
-    @IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
+    @IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
     public Y9Result<Boolean> checkLoginName(@RequestParam String personId, @RequestParam @NotBlank String loginName) {
         return Y9Result.success(y9ManagerService.isLoginNameAvailable(personId, loginName), "判断登录名是否可用成功");
     }
@@ -90,7 +90,7 @@ public class DeptManagerController {
      */
     @RiseLog(operationName = "根据人员id，获取人员信息")
     @RequestMapping(value = "/getManagerById")
-    @IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
+    @IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
     public Y9Result<Manager> getManagerById(@RequestParam @NotBlank String managerId) {
         return Y9Result.success(y9ManagerService.getById(managerId), "根据人员id，获取人员信息成功！");
     }
@@ -104,7 +104,7 @@ public class DeptManagerController {
      */
     @RiseLog(operationName = "获取人员列表")
     @RequestMapping(value = "/listManagersByParentId")
-    @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
+    @IsAnyManager({ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER})
     public Y9Result<List<Manager>> listManagersByParentId(@RequestParam @NotBlank String parentId) {
         return Y9Result.success(y9ManagerService.listByParentId(parentId), "获取人员列表成功！");
     }
@@ -117,7 +117,7 @@ public class DeptManagerController {
      */
     @RiseLog(operationName = "删除部门管理员", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
-    @IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
+    @IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
     public Y9Result<String> remove(@RequestParam(value = "ids") @NotEmpty List<String> ids) {
         y9ManagerService.delete(ids);
         return Y9Result.successMsg("删除人员成功");
@@ -131,7 +131,7 @@ public class DeptManagerController {
      */
     @RiseLog(operationName = "重置密码", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/resetPassword")
-    @IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
+    @IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
     public Y9Result<String> resetPassword(@NotBlank @RequestParam String personId) {
         y9ManagerService.resetDefaultPassword(personId);
         return Y9Result.successMsg("重置密码成功");
@@ -145,7 +145,7 @@ public class DeptManagerController {
      */
     @RiseLog(operationName = "新建或者更新部门管理员信息", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")
-    @IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
+    @IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
     public Y9Result<Manager> saveOrUpdate(Manager manager) {
         return Y9Result.success(y9ManagerService.saveOrUpdate(manager), "保存人员信息成功");
     }

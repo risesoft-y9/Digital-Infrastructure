@@ -1,6 +1,7 @@
 package net.risesoft.service.init.impl;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -107,10 +108,10 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
         if (!y9ManagerService.existsByLoginName(InitDataConsts.DEFAULT_AUDIT_MANAGER)) {
             Manager auditManager = new Manager();
             auditManager.setParentId(parentId);
-            auditManager.setName(ManagerLevelEnum.AUDIT_MANAGER.getName());
+            auditManager.setName(ManagerLevelEnum.TENANT_AUDIT_MANAGER.getName());
             auditManager.setLoginName(InitDataConsts.DEFAULT_AUDIT_MANAGER);
             auditManager.setGlobalManager(true);
-            auditManager.setManagerLevel(ManagerLevelEnum.AUDIT_MANAGER);
+            auditManager.setManagerLevel(ManagerLevelEnum.TENANT_AUDIT_MANAGER);
             auditManager.setUserHostIp("");
             auditManager.setLastReviewLogTime(new Date());
             auditManager.setLastModifyPasswordTime(new Date());
@@ -290,10 +291,10 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
         if (!y9ManagerService.existsByLoginName(InitDataConsts.DEFAULT_SECURITY_MANAGER)) {
             Manager securityManager = new Manager();
             securityManager.setParentId(parentId);
-            securityManager.setName(ManagerLevelEnum.SECURITY_MANAGER.getName());
+            securityManager.setName(ManagerLevelEnum.TENANT_SECURITY_MANAGER.getName());
             securityManager.setLoginName(InitDataConsts.DEFAULT_SECURITY_MANAGER);
             securityManager.setGlobalManager(true);
-            securityManager.setManagerLevel(ManagerLevelEnum.SECURITY_MANAGER);
+            securityManager.setManagerLevel(ManagerLevelEnum.TENANT_SECURITY_MANAGER);
             securityManager.setUserHostIp("");
             securityManager.setLastReviewLogTime(new Date());
             securityManager.setLastModifyPasswordTime(new Date());
@@ -305,10 +306,10 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
         if (!y9ManagerService.existsByLoginName(InitDataConsts.DEFAULT_SYSTEM_MANAGER)) {
             Manager systemManager = new Manager();
             systemManager.setParentId(parentId);
-            systemManager.setName(ManagerLevelEnum.SYSTEM_MANAGER.getName());
+            systemManager.setName(ManagerLevelEnum.TENANT_SYSTEM_MANAGER.getName());
             systemManager.setLoginName(InitDataConsts.DEFAULT_SYSTEM_MANAGER);
             systemManager.setGlobalManager(true);
-            systemManager.setManagerLevel(ManagerLevelEnum.SYSTEM_MANAGER);
+            systemManager.setManagerLevel(ManagerLevelEnum.TENANT_SYSTEM_MANAGER);
             systemManager.setUserHostIp("");
             systemManager.setLastReviewLogTime(new Date());
             systemManager.setLastModifyPasswordTime(new Date());
@@ -331,13 +332,17 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     @Transactional
     public void initManagers() {
         // 新建租户三员及他们所在的虚拟组织
-        boolean virtualOrganizationNotExists = y9OrganizationService.list(true, false).isEmpty();
-        if (virtualOrganizationNotExists) {
-            Organization y9Organization = y9OrganizationService.create("虚拟组织", Boolean.TRUE);
-            createSystemManager(y9Organization.getId());
-            createSecurityManager(y9Organization.getId());
-            createAuditManager(y9Organization.getId());
+        Organization organization;
+        List<Organization> virtualOrganizationList = y9OrganizationService.list(true, false);
+        if (virtualOrganizationList.isEmpty()) {
+            organization = y9OrganizationService.create("虚拟组织", Boolean.TRUE);
+        } else {
+            organization = virtualOrganizationList.get(0);
         }
+
+        createSystemManager(organization.getId());
+        createSecurityManager(organization.getId());
+        createAuditManager(organization.getId());
     }
 
     @Override
@@ -357,15 +362,15 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     public void initOrg() {
         boolean organizationNotExists = y9OrganizationService.list(false, false).isEmpty();
         if (organizationNotExists) {
-            Job y9Job = y9JobService.create("无", "001");
+            Job job = y9JobService.create("无", "001");
 
-            Organization y9Organization = y9OrganizationService.create("组织", Boolean.FALSE);
+            Organization organization = y9OrganizationService.create("组织", Boolean.FALSE);
 
-            Person y9Person = y9PersonService.create(y9Organization.getId(), "业务用户", "user", "13511111111");
+            Person person = y9PersonService.create(organization.getId(), "业务用户", "user", "13511111111");
 
-            Position y9Position = y9PositionService.create(y9Organization.getId(), y9Job.getId());
+            Position position = y9PositionService.create(organization.getId(), job.getId());
 
-            y9PersonsToPositionsService.addPositions(y9Person.getId(), new String[] {y9Position.getId()});
+            y9PersonsToPositionsService.addPositions(person.getId(), new String[] {position.getId()});
         }
     }
 }

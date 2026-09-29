@@ -35,6 +35,16 @@ public abstract class TreeNodeVO implements Serializable {
      **/
     public String nodeType;
 
+    /**
+     * 当前节点是否可删除
+     */
+    public boolean deletable = false;
+
+    /**
+     * 当前节点是否可管理、编辑
+     */
+    public boolean manageable = false;
+
     public abstract TreeTypeEnum getTreeType();
 
 }

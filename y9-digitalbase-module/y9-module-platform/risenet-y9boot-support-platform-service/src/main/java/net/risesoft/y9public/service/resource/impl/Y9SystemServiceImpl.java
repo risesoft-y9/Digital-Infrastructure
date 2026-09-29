@@ -4,7 +4,6 @@ import static net.risesoft.consts.JpaPublicConsts.PUBLIC_TRANSACTION_MANAGER;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,16 +25,18 @@ import net.risesoft.model.user.UserInfo;
 import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.service.relation.Y9SystemVendorService;
 import net.risesoft.util.PlatformModelConvertUtil;
-import net.risesoft.y9.TenantCache;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9public.entity.Y9System;
+import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.resource.Y9SystemManager;
+import net.risesoft.y9public.manager.tenant.Y9TenantManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
 import net.risesoft.y9public.repository.Y9SystemRepository;
 import net.risesoft.y9public.repository.resource.Y9AppRepository;
@@ -60,6 +61,9 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     private final Y9AppManager y9AppManager;
     private final Y9TenantSystemManager y9TenantSystemManager;
     private final Y9SystemManager y9SystemManager;
+    private final Y9TenantManager y9TenantManager;
+
+    private final Y9SystemVendorService y9SystemVendorService;
 
     private static System entityToModel(Y9System savedSystem) {
         return PlatformModelConvertUtil.convert(savedSystem, System.class);
@@ -72,6 +76,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
         y9AppManager.deleteBySystemId(id);
         y9TenantSystemManager.deleteBySystemId(id);
         y9SystemManager.delete(id);
+        y9SystemVendorService.deleteBySystemId(id);
 
         AuditLogEvent auditLogEvent = AuditLogEvent.builder()
             .action(AuditLogEnum.SYSTEM_DELETE.getAction())
@@ -100,7 +105,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     @Override
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public void deleteForManager(String id) {
-        if (Y9LoginUserHolder.getUserInfo().getManagerLevel().isOperationManager()) {
+        if (Y9LoginUserHolder.getUserInfo().isOperationManager()) {
             this.deleteAfterCheck(id);
             return;
         }
@@ -190,6 +195,11 @@ public class Y9SystemServiceImpl implements Y9SystemService {
             return this.listAll();
         }
 
+        if (Y9LoginUserHolder.getUserInfo().isSystemVendor()) {
+            List<String> systemIds = y9SystemVendorService.listSystemIdByManagerId(Y9LoginUserHolder.getPersonId());
+            return this.listByIds(systemIds);
+        }
+
         // 租户租用的系统
         return y9TenantSystemRepository.findByTenantId(Y9LoginUserHolder.getTenantId())
             .stream()
@@ -198,11 +208,6 @@ public class Y9SystemServiceImpl implements Y9SystemService {
             .sorted()
             .map(Y9SystemServiceImpl::entityToModel)
             .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<System> listByContextPath(String contextPath) {
-        return entityToModel(y9SystemRepository.findByContextPath(contextPath));
     }
 
     @Override
@@ -223,24 +228,26 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public System saveAndRegister4Tenant(System y9System) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-        if (userInfo != null && userInfo.getManagerLevel().isTenantManager()) {
+        if (userInfo != null && userInfo.isTenantManager()) {
+            // 租户系统管理员手动注册
             y9System.setTenantId(Y9LoginUserHolder.getTenantId());
             System savedSystem = this.saveOrUpdate(y9System);
             y9TenantSystemManager.saveTenantSystem(savedSystem.getId(), Y9LoginUserHolder.getTenantId());
             return savedSystem;
         } else {
-            Set<String> tenantIdSet = TenantCache.getTenantIdSet();
+            // 系统启动自动注册
+            Optional<Y9Tenant> y9TenantOptional = y9TenantManager.findIfSingleTenant();
             // 单租户时默认租用
-            if (tenantIdSet.size() == 1) {
-                for (String tenantId : tenantIdSet) {
-                    y9System.setTenantId(tenantId);
-                    System savedSystem = this.saveOrUpdate(y9System);
-                    y9TenantSystemManager.saveTenantSystem(savedSystem.getId(), tenantId);
-                    return savedSystem;
-                }
+            if (y9TenantOptional.isPresent()) {
+                String tenantId = y9TenantOptional.get().getId();
+                y9System.setTenantId(tenantId);
+                System savedSystem = this.saveOrUpdate(y9System);
+                y9TenantSystemManager.saveTenantSystem(savedSystem.getId(), tenantId);
+                return savedSystem;
             }
         }
 
+        // 运维系统管理员手动注册
         y9System.setTenantId(null);
         return this.saveOrUpdate(y9System);
     }
@@ -261,8 +268,8 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
     public System saveOrUpdate(System system) {
         Y9System y9System = PlatformModelConvertUtil.convert(system, Y9System.class);
-        Y9AssertUtil.isTrue(isNameAvailable(y9System.getId(), y9System.getName()),
-            SystemErrorCodeEnum.SYSTEM_WITH_SPECIFIC_NAME_EXISTS, y9System.getName());
+
+        checkNameAvailable(y9System.getId(), y9System.getName());
 
         if (StringUtils.isNotBlank(y9System.getId())) {
             Optional<Y9System> y9SystemOptional = y9SystemManager.findById(y9System.getId());
@@ -304,13 +311,10 @@ public class Y9SystemServiceImpl implements Y9SystemService {
         return entityToModel(savedSystem);
     }
 
-    private boolean isNameAvailable(String id, String name) {
+    private void checkNameAvailable(String id, String name) {
         Optional<Y9System> y9SystemOptional = y9SystemRepository.findByName(name);
-        if (y9SystemOptional.isEmpty()) {
-            return true;
-        }
-        // 修改系统时的检查也为可用
-        return y9SystemOptional.get().getId().equals(id);
+        Y9AssertUtil.isTrue(y9SystemOptional.isEmpty() || y9SystemOptional.get().getId().equals(id),
+            SystemErrorCodeEnum.SYSTEM_WITH_SPECIFIC_NAME_EXISTS, name);
     }
 
     private List<System> entityToModel(List<Y9System> y9SystemList) {

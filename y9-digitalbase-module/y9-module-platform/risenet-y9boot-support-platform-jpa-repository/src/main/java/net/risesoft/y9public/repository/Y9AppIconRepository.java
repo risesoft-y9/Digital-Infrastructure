@@ -14,8 +14,6 @@ public interface Y9AppIconRepository extends JpaRepository<Y9AppIcon, String>, J
 
     List<Y9AppIcon> findByName(String name);
 
-    List<Y9AppIcon> findByNameContaining(String name);
-
     Page<Y9AppIcon> findByNameContaining(String name, Pageable pageable);
 
     Optional<Y9AppIcon> findByNameAndColorType(String name, String colorType);

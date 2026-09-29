@@ -125,7 +125,7 @@ public class CompositeResourceManagerImpl implements CompositeResourceManager {
         if (y9DataCatalogOptional.isPresent()) {
             return y9DataCatalogOptional.get();
         }
-        
+
         throw Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.RESOURCE_NOT_FOUND, customId);
     }
 

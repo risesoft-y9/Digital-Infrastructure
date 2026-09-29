@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-12 17:06:57
- * @LastEditTime: 2023-08-03 09:43:06
+ * @LastEditTime: 2026-09-07 11:09:24
  * @LastEditors: mengjuhua
  * @Description: 自定义 svg icon 
 -->
@@ -10,7 +10,8 @@
         <use :xlink:href="`#${type}`" />
     </svg>
 </template>
-<script lang="ts">
+
+<script lang="ts" setup>
     /**
      * 自定义 svg icon
      * @author LiQingSong
@@ -27,18 +28,15 @@
      *      })
      *      <IconSvg type="svg文件名" class="" style=""/>
      */
-    import { defineComponent } from 'vue';
+    // 定义 Props 接口
+    interface IconSvgProps {
+        type: string;
+    }
 
-    export default defineComponent({
-        name: 'IconSvg',
-        props: {
-            type: {
-                type: String,
-                required: true
-            }
-        }
-    });
+    // 声明 Props
+    const props = defineProps<IconSvgProps>();
 </script>
+
 <style scoped>
     .svg-icon {
         width: 1em;
@@ -46,5 +44,6 @@
         vertical-align: -0.15em;
         fill: currentColor;
         overflow: hidden;
+        display: inline-block; /* 确保对齐行为一致 */
     }
 </style>

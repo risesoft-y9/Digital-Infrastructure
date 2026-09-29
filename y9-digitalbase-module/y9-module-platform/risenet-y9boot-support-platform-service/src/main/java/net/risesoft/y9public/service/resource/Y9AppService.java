@@ -6,6 +6,8 @@ import java.util.Optional;
 import net.risesoft.model.platform.resource.App;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.y9.exception.Y9BusinessException;
+import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
  * @author dingzhaojun
@@ -91,8 +93,19 @@ public interface Y9AppService extends ResourceCommonService<App> {
      */
     List<App> listByCustomId(String customId);
 
+    /**
+     * 查询所有已启用的应用
+     *
+     * @return {@code List<App>}
+     */
     List<App> listByEnable();
 
+    /**
+     * 根据 id 列表查询应用
+     *
+     * @param ids 应用 id 列表
+     * @return {@code List<App>}
+     */
     List<App> listByIds(List<String> ids);
 
     /**
@@ -121,6 +134,13 @@ public interface Y9AppService extends ResourceCommonService<App> {
      */
     Y9Page<App> page(Y9PageQuery pageQuery, String systemId, String name);
 
+    /**
+     * 保存应用并为租户租用
+     *
+     * @param y9App 应用对象
+     * @return {@link App}
+     * @throws Y9BusinessException 自定义 id 已被使用的情况
+     */
     App saveAndRegister4Tenant(App y9App);
 
     /**
@@ -140,7 +160,20 @@ public interface Y9AppService extends ResourceCommonService<App> {
      */
     App verifyApp(String id, boolean checked, String verifyUserName);
 
+    /**
+     * 检查应用关联关系后根据 id 删除
+     *
+     * @param id 应用 id
+     * @throws Y9BusinessException 应用已被租户租用的情况
+     * @throws Y9NotFoundException id 对应的记录不存在的情况
+     */
     void deleteAfterCheck(String id);
 
+    /**
+     * 根据自定义 id 查找应用
+     *
+     * @param customId 自定义 id
+     * @return {@code Optional<App>}
+     */
     Optional<App> findByCustomId(String customId);
 }

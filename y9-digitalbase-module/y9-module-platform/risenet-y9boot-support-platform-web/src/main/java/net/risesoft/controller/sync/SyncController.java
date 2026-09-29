@@ -30,7 +30,7 @@ import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.util.Y9PlatformUtil;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
 import net.risesoft.y9public.service.resource.CompositeResourceService;
 import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.resource.Y9DataCatalogService;
@@ -75,7 +75,7 @@ public class SyncController {
     public Y9Result<String> initManagers() {
         List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIdList) {
-            Y9LoginUserHolder.setTenantId(tenantId);
+            Y9TenantHolder.setCurrentTenantId(tenantId);
             LOGGER.debug("初始化租户[{}]三员", tenantId);
             initTenantDataService.initManagers();
         }
@@ -92,7 +92,7 @@ public class SyncController {
     public Y9Result<String> initOptionClass() {
         List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIdList) {
-            Y9LoginUserHolder.setTenantId(tenantId);
+            Y9TenantHolder.setCurrentTenantId(tenantId);
             LOGGER.debug("初始化租户[{}]数据字典", tenantId);
             initTenantDataService.initOptionClass();
         }
@@ -109,7 +109,7 @@ public class SyncController {
     public Y9Result<String> syncAllPersonInAllTenants() {
         List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIdList) {
-            Y9LoginUserHolder.setTenantId(tenantId);
+            Y9TenantHolder.setCurrentTenantId(tenantId);
             LOGGER.debug("同步租户[{}]人员信息", tenantId);
             List<Organization> organizationList = y9OrganizationService.list();
             for (Organization organization : organizationList) {
@@ -138,7 +138,7 @@ public class SyncController {
     @RequestMapping("/personInfo/{tenantId}")
     @RiseLog(operationName = "同步人员信息", operationType = OperationTypeEnum.MODIFY)
     public Y9Result<String> syncPersonByTenantId(@PathVariable String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         List<Person> persons = y9PersonService.list(null);
         for (Person person : persons) {
             if (person != null && person.getId() != null) {
@@ -165,7 +165,7 @@ public class SyncController {
     @RiseLog(operationName = "根据租户id和登录名称同步人员信息", operationType = OperationTypeEnum.MODIFY)
     public Y9Result<String> syncPersonByTenantIdAndLoginName(@PathVariable String tenantId,
         @PathVariable String loginName) {
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         Person person = y9PersonService.getPersonByLoginName(loginName);
         if (person != null && person.getId() != null) {
             y9PersonService.saveOrUpdate(person, null);
@@ -183,7 +183,7 @@ public class SyncController {
     public Y9Result<String> syncPosition() {
         List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIdList) {
-            Y9LoginUserHolder.setTenantId(tenantId);
+            Y9TenantHolder.setCurrentTenantId(tenantId);
             LOGGER.debug("同步租户[{}]岗位信息", tenantId);
             List<Position> positions = y9PositionService.listAll();
             for (Position position : positions) {
@@ -203,7 +203,7 @@ public class SyncController {
     @RequestMapping("/positionInfo/{tenantId}")
     @RiseLog(operationName = "同步岗位信息", operationType = OperationTypeEnum.MODIFY)
     public Y9Result<String> syncPositionByTenantId(@PathVariable String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9TenantHolder.setCurrentTenantId(tenantId);
         List<Position> positionList = y9PositionService.listAll();
         for (Position position : positionList) {
             position.setTenantId(tenantId);

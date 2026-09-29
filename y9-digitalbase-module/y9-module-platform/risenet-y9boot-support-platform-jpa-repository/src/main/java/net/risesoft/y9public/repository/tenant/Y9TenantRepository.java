@@ -19,10 +19,6 @@ import net.risesoft.y9public.entity.tenant.Y9Tenant;
 @Repository
 public interface Y9TenantRepository extends JpaRepository<Y9Tenant, String>, JpaSpecificationExecutor<Y9Tenant> {
 
-    long countByShortName(String shortName);
-
-    long countByShortNameAndIdIsNot(String shortName, String tenantId);
-
     List<Y9Tenant> findByGuidPathContaining(String guidPath);
 
     Optional<Y9Tenant> findByName(String name);

@@ -27,7 +27,7 @@ import net.risesoft.service.permission.cache.Y9PersonalAppService;
 @RequestMapping(value = "/api/rest/personalApp", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-@IsAnyManager(value = {ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
+@IsAnyManager(value = {ManagerLevelEnum.TENANT_SYSTEM_MANAGER, ManagerLevelEnum.TENANT_SECURITY_MANAGER})
 public class PersonalAppController {
 
     private final Y9PersonalAppService y9PersonalAppService;
@@ -41,7 +41,7 @@ public class PersonalAppController {
     @RiseLog(operationName = "更新部门图标", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/sync4Dept")
     public Y9Result<Object> sync4Dept(@NotBlank String deptId) {
-        y9PersonalAppService.buildDeptAppIconForPosition(deptId);
+        y9PersonalAppService.buildDeptPersonalAppForPosition(deptId);
         return Y9Result.successMsg("更新部门图标成功!");
     }
 

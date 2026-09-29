@@ -17,7 +17,7 @@
             <div v-if="currData.id">
                 <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
                     <template v-slot>
-                        <div v-if="managerLevel === 1" class="basic-btns">
+                        <div class="basic-btns">
                             <div class="btn-top">
                                 <span v-if="currData.parentId !== null" style="margin-right: 15px">
                                     <el-button
@@ -89,26 +89,7 @@
                         />
                     </template>
                 </y9Card>
-                <audit-log v-show="currData.isManageable" :currTreeNodeInfo="currData"></audit-log>
-                <!-- 角色成员 -->
-                <y9Card
-                    v-if="managerLevel === 2 && currData.nodeType === 'role'"
-                    :title="`${$t('角色成员')} - ${currData.name ? currData.name : ''}`"
-                >
-                    <OrgBasesToRoles :id="currData.id"></OrgBasesToRoles>
-                </y9Card>
-
-                <y9Card
-                    v-if="managerLevel === 2 && currData.nodeType === 'role'"
-                    :title="`${$t('授权列表')} - ${currData.name ? currData.name : ''}`"
-                >
-                    <Authorization
-                        :id="currData.id"
-                        :appId="currData.appId"
-                        :parentId="currData.parentId"
-                        type="public"
-                    ></Authorization>
-                </y9Card>
+                <audit-log :currTreeNodeInfo="currData"></audit-log>
             </div>
         </template>
     </fixedTreeModule>
@@ -125,15 +106,12 @@
 </template>
 
 <script lang="ts" setup>
-    import y9_storage from '@/utils/storage';
     import { computed, inject, ref, watch } from 'vue';
     import { useI18n } from 'vue-i18n';
     import { useSettingStore } from '@/store/modules/settingStore';
 
     // 基本信息
     import BasicInfo from './comps/BasicInfo.vue';
-    import OrgBasesToRoles from './comps/OrgBasesToRoles.vue';
-    import Authorization from './comps/Authorization.vue';
     import auditLog from '@/views/y9log/entityAuditLog/index.vue';
     import {
         deleteRoleById,
@@ -148,7 +126,6 @@
     const { t } = useI18n();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
-    const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
 
     // 全局 loading
     let loading = ref(false);

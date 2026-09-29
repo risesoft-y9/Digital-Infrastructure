@@ -56,14 +56,6 @@ public interface Y9RoleService {
     List<Role> listByIds(List<String> ids);
 
     /**
-     * 根据角色名称查找
-     *
-     * @param name 角色名
-     * @return {@code List<}{@link Role}{@code >}
-     */
-    List<Role> listByName(String name);
-
-    /**
      * 根据父节点id,获取本层级的角色节点列表
      *
      * @param parentId 父节点id
@@ -71,6 +63,13 @@ public interface Y9RoleService {
      */
     List<Role> listByParentId(String parentId);
 
+    /**
+     * 根据父节点 id 和租户 id 获取角色节点列表
+     *
+     * @param parentId 父节点 id
+     * @param tenantId 租户 id
+     * @return {@code List<Role>}
+     */
     List<Role> listByParentId4Tenant(String parentId, String tenantId);
 
     /**
@@ -105,6 +104,13 @@ public interface Y9RoleService {
      */
     Role saveProperties(String id, String properties);
 
+    /**
+     * 根据名称在指定父节点下搜索角色节点
+     *
+     * @param name 角色名
+     * @param parentId 父节点 id
+     * @return {@code List<Role>}
+     */
     List<Role> treeSearch(String name, String parentId);
 
     /**

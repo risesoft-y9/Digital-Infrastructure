@@ -112,7 +112,7 @@ public class RiseLogAdvice implements MethodInterceptor {
 
             AccessLog log = new AccessLog();
             long end = System.nanoTime();
-            long elapsedTime = end - start;
+            long elapsedTime = (end - start) / 1_000_000;
 
             ServletRequestAttributes sra = (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
             if (sra != null) {
