@@ -94,11 +94,11 @@
         <aspectj.version>1.9.20.1</aspectj.version>
         <antisamy.version>1.7.8</antisamy.version>
         <bcprov-ext-jdk15to18.version>1.78.1</bcprov-ext-jdk15to18.version>
-        <commons-fileupload.version>1.5</commons-fileupload.version>
-        <commons-io.version>2.19.0</commons-io.version>
-        <commons-lang3.version>3.17.0</commons-lang3.version>
-        <commons-net.version>3.10.0</commons-net.version>
-        <commons-text.version>1.12.0</commons-text.version>
+        <commons-fileupload.version>1.6.0</commons-fileupload.version>
+        <commons-io.version>2.22.0</commons-io.version>
+        <commons-lang3.version>3.20.0</commons-lang3.version>
+        <commons-net.version>3.13.0</commons-net.version>
+        <commons-text.version>1.15.0</commons-text.version>
         <commons-discovery.version>0.5</commons-discovery.version>
         <commons-beanutils.version>1.11.0</commons-beanutils.version>
         <commons-httpclient.version>3.1</commons-httpclient.version>
@@ -106,7 +106,7 @@
         <druid.version>1.2.25</druid.version>
         <druid-starter.version>1.2.25</druid-starter.version>
         <etcd-java.version>0.0.24</etcd-java.version>
-        <fastjson.version>2.0.57</fastjson.version>
+        <fastjson.version>2.0.65</fastjson.version>
         <fastexcel.version>1.2.0</fastexcel.version>
         <guava.version>32.1.2-jre</guava.version>
         <hutool.version>5.8.38</hutool.version>
@@ -138,7 +138,7 @@
         <!-- db driver -->
         <mysql-driver.version>8.2.0</mysql-driver.version>
         <mariadb-driver.version>3.1.4</mariadb-driver.version>
-        <postgresql-driver.version>42.7.3</postgresql-driver.version>
+        <postgresql-driver.version>42.7.14</postgresql-driver.version>
         <kingbase-driver.version>8.6.0</kingbase-driver.version>
         <kingbase-hibernate-dialect.version>5.4.6.Finaldialect</kingbase-hibernate-dialect.version>
         <kingbase-hibernate-jpa-api.version>2.1.0.Final</kingbase-hibernate-jpa-api.version>
