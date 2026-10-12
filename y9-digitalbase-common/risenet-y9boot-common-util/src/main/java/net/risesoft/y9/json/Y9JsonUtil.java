@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -36,11 +37,14 @@ import net.risesoft.pojo.Y9Result;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Y9JsonUtil {
 
-    /** jackson的objectMapper 设计为单例，其他地方使用时，不要重复创建 */
+    /**
+     * jackson的objectMapper 设计为单例，其他地方使用时，不要重复创建
+     */
     public static ObjectMapper objectMapper = new ObjectMapper();
 
     static {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.registerModule(new JavaTimeModule());
         Y9DateFormat sdf = new Y9DateFormat();
         objectMapper.setDateFormat(sdf);
     }
