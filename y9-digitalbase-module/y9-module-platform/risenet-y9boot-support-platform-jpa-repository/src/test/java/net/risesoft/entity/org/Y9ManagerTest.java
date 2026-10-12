@@ -46,7 +46,7 @@ class Y9ManagerTest {
         manager.setMobile("13800138000");
         manager.setSex(SexEnum.MALE);
         manager.setManagerLevel(ManagerLevelEnum.TENANT_SYSTEM_MANAGER);
-        manager.setGlobalManager(false);
+        manager.setGlobalManager(true);
 
         // 调用有参构造函数创建Y9Manager实例
         Y9Manager y9Manager = new Y9Manager(manager, department, nextSubTabIndex, ancestorList, defaultPassword);
@@ -55,7 +55,7 @@ class Y9ManagerTest {
         assertThat(y9Manager).isNotNull();
         assertThat(y9Manager.getId()).isNotNull(); // ID由构造函数中的Y9IdGenerator生成
         assertThat(y9Manager.getTabIndex()).isEqualTo(nextSubTabIndex);
-        assertThat(y9Manager.getDisabled()).isTrue(); // 构造函数中设置为true
+        assertThat(y9Manager.getDisabled()).isFalse(); // 构造函数中设置为true
 
         // 验证从Manager复制过来的属性
         assertThat(y9Manager.getName()).isEqualTo(manager.getName());
