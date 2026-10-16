@@ -9,11 +9,13 @@ import org.springframework.core.ResolvableTypeProvider;
  *
  * @author shidaobang
  * @date 2022/12/01
+ * @param <T> 实体类型
  */
 public class Y9EntityDeletedEvent<T> extends ApplicationEvent implements ResolvableTypeProvider {
 
     private static final long serialVersionUID = 2186781181314466191L;
 
+    /** 实体对象 */
     private final T entity;
 
     public Y9EntityDeletedEvent(T entity) {

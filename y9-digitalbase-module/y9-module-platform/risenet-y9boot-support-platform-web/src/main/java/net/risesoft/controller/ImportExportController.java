@@ -139,6 +139,7 @@ public class ImportExportController {
      * 导出数据目录XLS
      *
      * @param treeType 数据目录树类型
+     * @param id 节点id
      * @param response 响应
      */
     @RiseLog(operationName = "导出数据目录XLS", operationType = OperationTypeEnum.ADD)
@@ -235,6 +236,7 @@ public class ImportExportController {
      * 导入数据目录 xls
      *
      * @param file 文件
+     * @param treeType 数据目录树类型
      * @return {@code Y9Result<Object>}
      */
     @RiseLog(operationName = "导入人员 xls", operationType = OperationTypeEnum.ADD)

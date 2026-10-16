@@ -13,6 +13,13 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class IdCardNumberValidator implements ConstraintValidator<IdCardNumber, String> {
 
+    /**
+     * 校验证件号是否合法
+     *
+     * @param idCardNumber 证件号
+     * @param constraintValidatorContext 校验上下文
+     * @return true 表示合法
+     */
     @Override
     public boolean isValid(String idCardNumber, ConstraintValidatorContext constraintValidatorContext) {
         if (StringUtils.isEmpty(idCardNumber)) {

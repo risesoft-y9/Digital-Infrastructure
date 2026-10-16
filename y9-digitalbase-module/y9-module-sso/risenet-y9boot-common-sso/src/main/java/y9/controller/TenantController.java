@@ -44,7 +44,7 @@ public class TenantController {
     /**
      * 获取全部租户信息（租户名称，租户登录名称）
      * 
-     * @return
+     * @return {@code ResponseEntity<String>} 租户信息列表
      */
     @GetMapping(value = "/allTenants")
     public ResponseEntity<String> allTenants() {
@@ -67,8 +67,8 @@ public class TenantController {
     /**
      * 根据登录名，获取租户信息列表（目前手机端在用）
      *
-     * @param loginName
-     * @return
+     * @param loginName 登录名
+     * @return {@code ResponseEntity<String>} 租户信息列表
      */
     @RequestMapping(value = "/tenants")
     public final ResponseEntity<String> getTenants(@RequestParam String loginName) {

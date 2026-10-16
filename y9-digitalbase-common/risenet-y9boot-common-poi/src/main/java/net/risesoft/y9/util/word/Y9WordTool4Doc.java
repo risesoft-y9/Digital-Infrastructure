@@ -48,6 +48,7 @@ public class Y9WordTool4Doc {
      * 获取文档内容
      *
      * @param is 输入流
+     * @return String 文档内容
      */
     public static String getText(InputStream is) {
         String content = "";

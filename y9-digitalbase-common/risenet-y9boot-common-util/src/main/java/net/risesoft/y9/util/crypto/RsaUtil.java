@@ -33,16 +33,13 @@ import net.risesoft.y9.util.base64.Y9Base64Util;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RsaUtil {
 
+    /** 算法名称 */
     public static final String RSA = "RSA";
 
-    /**
-     * 加解密算法
-     */
+    /** 加解密算法 */
     public static final String RSA_OAEP_SHA256_PADDING = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding";
 
-    /**
-     * 签名算法
-     */
+    /** 签名算法 */
     public static final String RSA_PSS = "RSASSA-PSS";
 
     private static final OAEPParameterSpec OAEP_PARAMETER_SPEC =
@@ -80,6 +77,12 @@ public class RsaUtil {
         return Y9Base64Util.byteToBase64(bytes);
     }
 
+    /**
+     * 生成RSA公私钥对
+     *
+     * @return String[] 长度为2的数组，下标0为Base64编码的公钥，下标1为Base64编码的私钥
+     * @throws Exception 异常
+     */
     public static String[] genKeyPair() throws Exception {
         KeyPair keyPair = getKeyPair();
         String[] keyPairArr = new String[2];
@@ -90,6 +93,10 @@ public class RsaUtil {
 
     /**
      * 将Base64编码后的公钥转换成PublicKey对象
+     *
+     * @param pubStr Base64编码的公钥
+     * @return PublicKey 公钥对象
+     * @throws Exception 异常
      */
     public static PublicKey string2PublicKey(String pubStr) throws Exception {
         byte[] keyBytes = Y9Base64Util.base64ToByte(pubStr);
@@ -110,6 +117,11 @@ public class RsaUtil {
 
     /**
      * 公钥加密
+     *
+     * @param content 待加密内容
+     * @param publicKey Base64编码的公钥
+     * @return String Base64编码的密文
+     * @throws Exception 异常
      */
     public static String publicEncrypt(String content, String publicKey) throws Exception {
         Cipher cipher = Cipher.getInstance(RSA_OAEP_SHA256_PADDING);
@@ -120,6 +132,11 @@ public class RsaUtil {
 
     /**
      * 私钥解密
+     *
+     * @param contentBase64 Base64编码的密文
+     * @param privateKey Base64编码的PKCS#8私钥
+     * @return String 解密后的明文
+     * @throws Exception 异常
      */
     public static String privateDecrypt(String contentBase64, String privateKey) throws Exception {
         Cipher cipher = Cipher.getInstance(RSA_OAEP_SHA256_PADDING);
@@ -134,6 +151,7 @@ public class RsaUtil {
      * @param content 待签名内容
      * @param privateKey Base64编码的PKCS#8私钥
      * @return Base64编码的签名
+     * @throws Exception 签名过程中的异常
      */
     public static String sign(String content, String privateKey) throws Exception {
         Signature signature = Signature.getInstance(RSA_PSS);
@@ -150,6 +168,7 @@ public class RsaUtil {
      * @param signBase64 Base64编码的签名
      * @param publicKey Base64编码的X.509公钥
      * @return 验签是否成功
+     * @throws Exception 验签过程中的异常
      */
     public static boolean verify(String content, String signBase64, String publicKey) throws Exception {
         Signature signature = Signature.getInstance(RSA_PSS);
@@ -161,6 +180,9 @@ public class RsaUtil {
 
     /**
      * 将Base64编码的私钥转换为PEM格式
+     *
+     * @param privateKey Base64编码的PKCS#8私钥
+     * @return String PEM格式的私钥
      */
     public static String privateKeyToPem(String privateKey) {
         return keyToPem(Y9Base64Util.base64ToByte(privateKey), "PRIVATE KEY");
@@ -168,6 +190,9 @@ public class RsaUtil {
 
     /**
      * 将Base64编码的公钥转换为PEM格式
+     *
+     * @param publicKey Base64编码的X.509公钥
+     * @return String PEM格式的公钥
      */
     public static String publicKeyToPem(String publicKey) {
         return keyToPem(Y9Base64Util.base64ToByte(publicKey), "PUBLIC KEY");
@@ -186,6 +211,11 @@ public class RsaUtil {
         return sb.toString();
     }
 
+    /**
+     * 示例方法，用于本地演示密钥生成、加解密与签名验签流程
+     *
+     * @param args 命令行参数（未使用）
+     */
     public static void main(String[] args) {
         try {
             String[] arr = genKeyPair();

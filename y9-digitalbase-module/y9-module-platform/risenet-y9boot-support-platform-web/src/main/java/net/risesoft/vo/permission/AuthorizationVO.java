@@ -36,7 +36,7 @@ public class AuthorizationVO implements Serializable {
     private String roleName;
 
     /**
-     * 角色名称路径，包含上级，> 分隔
+     * 角色名称路径，包含上级，{@code > }分隔
      */
     private String roleNamePath;
 
@@ -56,7 +56,7 @@ public class AuthorizationVO implements Serializable {
     private String orgUnitName;
 
     /**
-     * 组织节点名称路径，包含上级，> 分隔
+     * 组织节点名称路径，{@code 包含上级，> 分隔}
      */
     private String orgUnitNamePath;
 
@@ -76,7 +76,7 @@ public class AuthorizationVO implements Serializable {
     private String resourceName;
 
     /**
-     * 资源名称路径，包含上级，> 分隔
+     * 资源名称路径，{@code 包含上级，> 分隔}
      */
     private String resourceNamePath;
 

@@ -22,10 +22,11 @@ public class Y9ModelConvertUtil {
 
     /**
      * 将源对象列表转换为目标类型的对象列表
-     * 
+     *
+     * @param <T> 目标对象类型
      * @param sourceList 源对象列表
      * @param targetClass 目标对象的Class
-     * @return List<T> 转换后的目标对象列表
+     * @return {@code List<T>} 转换后的目标对象列表
      */
     public static <T> List<T> convert(List<?> sourceList, Class<T> targetClass) {
         return convert(sourceList, targetClass, (String[])null);
@@ -33,11 +34,11 @@ public class Y9ModelConvertUtil {
 
     /**
      * 将源对象列表转换为目标类型的对象列表，可忽略部分属性
-     ** 
+     **
      * @param sourceList 源对象列表
      * @param targetClass 目标对象的Class
      * @param ignoreProperties 忽略的属性数组
-     * @return List<T> 转换后的目标对象列表
+     * @return {@code List<T>} 转换后的目标对象列表
      */
     public static <T> List<T> convert(List<?> sourceList, Class<T> targetClass, String... ignoreProperties) {
         List<T> modelList = new ArrayList<>();
@@ -51,7 +52,8 @@ public class Y9ModelConvertUtil {
 
     /**
      * 将源对象转换为目标类型的对象
-     * 
+     *
+     * @param <T> 目标对象类型
      * @param source 源对象
      * @param modelClass 目标对象的Class
      * @return T 转换后的目标对象
@@ -62,7 +64,8 @@ public class Y9ModelConvertUtil {
 
     /**
      * 将源对象转换为目标类型的对象，可忽略部分属性
-     * 
+     *
+     * @param <T> 目标对象类型
      * @param source 源对象
      * @param modelClass 目标对象的Class
      * @param ignoreProperties 忽略的属性数组

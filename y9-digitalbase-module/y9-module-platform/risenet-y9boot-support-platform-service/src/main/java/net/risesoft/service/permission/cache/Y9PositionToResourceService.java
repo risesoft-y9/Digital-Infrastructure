@@ -115,7 +115,7 @@ public interface Y9PositionToResourceService {
      * @param positionId 岗位id
      * @param resourceId 资源id
      * @param authority 权限类型{@link AuthorityEnum}
-     * @param resourceType
+     * @param resourceType 资源类型{@link ResourceTypeEnum}
      * @return {@code List<Y9ResourceBase>}
      */
     List<Resource> listSubResources(String positionId, String resourceId, AuthorityEnum authority,

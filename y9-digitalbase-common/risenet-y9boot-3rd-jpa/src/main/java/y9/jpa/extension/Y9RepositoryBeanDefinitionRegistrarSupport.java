@@ -17,13 +17,14 @@ import org.springframework.data.repository.config.RepositoryConfigurationDelegat
 import org.springframework.data.repository.config.RepositoryConfigurationExtension;
 import org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport;
 import org.springframework.data.repository.config.RepositoryConfigurationUtils;
+import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 
 public abstract class Y9RepositoryBeanDefinitionRegistrarSupport
     implements ImportBeanDefinitionRegistrar, ResourceLoaderAware, EnvironmentAware {
 
-    private ResourceLoader resourceLoader;
-    private Environment environment;
+    private @SuppressWarnings("null") @NonNull ResourceLoader resourceLoader;
+    private @SuppressWarnings("null") @NonNull Environment environment;
 
     /**
      * Return the annotation to obtain configuration information from. Will be wrappen into an
@@ -64,16 +65,15 @@ public abstract class Y9RepositoryBeanDefinitionRegistrarSupport
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.springframework.context.annotation.ImportBeanDefinitionRegistrar#registerBeanDefinitions(org.springframework.core.type.AnnotationMetadata, org.springframework.beans.factory.support.BeanDefinitionRegistry, org.springframework.beans.factory.support.BeanNameGenerator)
      */
     @Override
     public void registerBeanDefinitions(AnnotationMetadata metadata, BeanDefinitionRegistry registry,
         BeanNameGenerator generator) {
 
-        Assert.notNull(metadata, "AnnotationMetadata must not be null!");
-        Assert.notNull(registry, "BeanDefinitionRegistry must not be null!");
-        Assert.notNull(resourceLoader, "ResourceLoader must not be null!");
+        Assert.notNull(metadata, "AnnotationMetadata must not be null");
+        Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
+        Assert.notNull(resourceLoader, "ResourceLoader must not be null");
 
         // Guard against calls for sub-classes
         if (metadata.getAnnotationAttributes(getAnnotation().getName()) == null) {
@@ -94,7 +94,6 @@ public abstract class Y9RepositoryBeanDefinitionRegistrarSupport
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.springframework.context.EnvironmentAware#setEnvironment(org.springframework.core.env.Environment)
      */
     @Override
@@ -104,7 +103,6 @@ public abstract class Y9RepositoryBeanDefinitionRegistrarSupport
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.springframework.context.ResourceLoaderAware#setResourceLoader(org.springframework.core.io.ResourceLoader)
      */
     @Override

@@ -10,6 +10,9 @@ public class Y9BaseException extends RuntimeException {
 
     private static final long serialVersionUID = 8475272281204909095L;
 
+    /**
+     * 构造无异常信息的异常
+     */
     public Y9BaseException() {}
 
     public Y9BaseException(String message) {

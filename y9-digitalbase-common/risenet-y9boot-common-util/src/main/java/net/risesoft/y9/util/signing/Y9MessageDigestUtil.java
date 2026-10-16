@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Y9MessageDigestUtil {
 
+    /** BCrypt 密文匹配正则表达式 */
     public static final Pattern BCRYPT_PATTERN = Pattern.compile("^\\$2[abxy]?\\$\\d{2}\\$[./A-Za-z0-9]{53}$");
 
     /**

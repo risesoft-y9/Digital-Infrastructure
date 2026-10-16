@@ -321,8 +321,8 @@ public interface PersonApi {
      *
      * @param tenantId 租户id
      * @param personQuery 查询参数
-     * @param page
-     * @param size
+     * @param page 页数
+     * @param size 每页的条数
      * @return {@code Y9Page<Person>} 通用请求返回对象 - data 是人员对象
      */
     @GetMapping("/page")

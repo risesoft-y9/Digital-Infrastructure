@@ -46,7 +46,13 @@ public class SystemVendorController {
     private final Y9SystemService y9SystemService;
     private final Y9TenantSystemService y9TenantSystemService;
 
-    /** 判断登录名是否可用 */
+    /**
+     * 判断登录名是否可用
+     *
+     * @param managerId 系统开发商id
+     * @param loginName 系统开发商登录名
+     * @return {@code Y9Result<Boolean>} 判断结果
+     */
     @RiseLog(operationName = "判断系统开发商登录名是否可用")
     @RequestMapping(value = "/checkLoginName")
     @IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
@@ -54,7 +60,12 @@ public class SystemVendorController {
         return Y9Result.success(y9ManagerService.isLoginNameAvailable(managerId, loginName), "判断登录名是否可用成功");
     }
 
-    /** 获取系统开发商信息 */
+    /**
+     * 获取系统开发商信息
+     *
+     * @param managerId 系统开发商id
+     * @return {@code Y9Result<Manager>} 系统开发商信息
+     */
     @RiseLog(operationName = "获取系统开发商信息")
     @RequestMapping(value = "/getById")
     @IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
@@ -62,7 +73,12 @@ public class SystemVendorController {
         return Y9Result.success(y9ManagerService.getById(managerId), "获取系统开发商信息成功！");
     }
 
-    /** 获取系统开发商列表 */
+    /**
+     * 获取系统开发商列表
+     * 
+     * @param name 系统开发商名称
+     * @return {@code Y9Result<List<Manager>>} 系统开发商列表
+     */
     @RiseLog(operationName = "获取系统开发商列表")
     @RequestMapping(value = "/list")
     @IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
@@ -77,7 +93,12 @@ public class SystemVendorController {
         return Y9Result.success(vendorList, "获取系统开发商列表成功！");
     }
 
-    /** 获取系统开发商已管理的系统 */
+    /**
+     * 获取系统开发商已管理的系统
+     * 
+     * @param managerId 系统开发商id
+     * @return {@code Y9Result<List<System>>} 已管理的系统列表
+     */
     @RiseLog(operationName = "获取系统开发商已管理的系统")
     @RequestMapping(value = "/listSystems")
     @IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
@@ -86,7 +107,12 @@ public class SystemVendorController {
         return Y9Result.success(y9SystemService.listByIds(systemIds), "获取系统开发商的系统列表成功！");
     }
 
-    /** 获取系统开发商尚未管理的租户系统 */
+    /**
+     * 获取系统开发商尚未管理的租户系统
+     *
+     * @param managerId 系统开发商id
+     * @return {@code Y9Result<List<System>>} 尚未管理的租户系统列表
+     */
     @RiseLog(operationName = "获取系统开发商可添加的系统")
     @RequestMapping(value = "/listUnrelatedSystems")
     @IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
@@ -99,7 +125,12 @@ public class SystemVendorController {
         return Y9Result.success(systemList, "获取系统开发商可添加的系统成功！");
     }
 
-    /** 删除系统开发商 */
+    /**
+     * 删除系统开发商
+     *
+     * @param ids 系统开发商id列表
+     * @return {@code Y9Result<String>} 操作结果
+     */
     @RiseLog(operationName = "删除系统开发商", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
     @IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
@@ -108,7 +139,13 @@ public class SystemVendorController {
         return Y9Result.successMsg("删除系统开发商成功");
     }
 
-    /** 解除系统开发商和系统的关联 */
+    /**
+     * 解除系统开发商和系统的关联
+     *
+     * @param managerId 系统开发商id
+     * @param systemId 系统id
+     * @return {@code Y9Result<String>} 操作结果
+     */
     @RiseLog(operationName = "解除系统开发商和系统的关联", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/removeSystem")
     @IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
@@ -118,7 +155,13 @@ public class SystemVendorController {
         return Y9Result.successMsg("解除关联成功");
     }
 
-    /** 添加系统开发商和系统的关联 */
+    /**
+     * 添加系统开发商和系统的关联
+     * 
+     * @param managerId 系统开发商id
+     * @param systemIds 系统id列表
+     * @return {@code Y9Result<String>} 关联结果
+     */
     @RiseLog(operationName = "添加系统开发商和系统的关联", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveSystems")
     @IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
@@ -132,7 +175,12 @@ public class SystemVendorController {
         return Y9Result.successMsg("添加系统成功");
     }
 
-    /** 新建或者更新系统开发商 */
+    /**
+     * 新建或者更新系统开发商
+     * 
+     * @param vendor 系统开发商信息
+     * @return {@code Y9Result<Manager>} 系统开发商信息
+     */
     @RiseLog(operationName = "新建或者更新系统开发商", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")
     @IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)

@@ -160,50 +160,143 @@ public class Y9RemoteClientUtil {
         return doExecuteRequest(httpMethod, null, urlParams, null, null, OBJECT_MAPPER.constructType(clz));
     }
 
+    /**
+     * 发送 DELETE 请求
+     * 
+     * @param <T> 响应结果类型
+     * @param url 请求地址
+     * @param params 请求参数
+     * @param clz 响应结果类型
+     * @return T 响应结果对象，请求失败时返回 {@code null}
+     */
     public static <T> T delete(String url, List<NameValuePair> params, Class<T> clz) {
         return executeWithoutBody(new HttpDelete(url), params, clz);
     }
 
+    /**
+     * 发送 GET 请求
+     * 
+     * @param <T> 响应结果类型
+     * @param url 请求地址
+     * @param params 请求参数
+     * @param clz 响应结果类型
+     * @return {@code Y9Result<T>} 响应结果
+     */
     public static <T> Y9Result<T> get(String url, List<NameValuePair> params, Class<T> clz) {
         JavaType resultType = OBJECT_MAPPER.getTypeFactory().constructParametricType(Y9Result.class, clz);
         return doExecuteRequest(new HttpGet(url), null, params, null, null, resultType);
     }
 
+    /**
+     * 发送 GET 请求调用远程服务
+     * 
+     * @param <T> 响应结果类型
+     * @param url 请求地址
+     * @param params 请求参数
+     * @param clz 响应结果类型
+     * @return T 响应结果对象，请求失败时返回 {@code null}
+     */
     public static <T> T getCallRemoteService(String url, List<NameValuePair> params, Class<T> clz) {
         return executeWithoutBody(new HttpGet(url), params, clz);
     }
 
+    /**
+     * 发送 GET 请求调用远程服务，返回列表
+     * 
+     * @param <T> 响应结果类型
+     * @param url 请求地址
+     * @param params 请求参数
+     * @param clz 响应结果元素类型
+     * @return {@code List<T>} 响应结果列表，请求失败时返回 {@code null}
+     */
     public static <T> List<T> getCallRemoteServiceByList(String url, List<NameValuePair> params, Class<T> clz) {
         CollectionType listType = OBJECT_MAPPER.getTypeFactory().constructCollectionType(ArrayList.class, clz);
         return doExecuteRequest(new HttpGet(url), null, params, null, null, listType);
     }
 
+    /**
+     * 携带请求头发送 GET 请求调用远程服务，返回列表
+     * 
+     * @param <T> 响应结果类型
+     * @param url 请求地址
+     * @param headerParams 请求头参数
+     * @param params 请求参数
+     * @param clz 响应结果元素类型
+     * @return {@code List<T>} 响应结果列表，请求失败时返回 {@code null}
+     */
     public static <T> List<T> getCallRemoteServiceWithHeaderToList(String url, List<NameValuePair> headerParams,
         List<NameValuePair> params, Class<T> clz) {
         CollectionType listType = OBJECT_MAPPER.getTypeFactory().constructCollectionType(ArrayList.class, clz);
         return doExecuteRequest(new HttpGet(url), headerParams, params, null, null, listType);
     }
 
+    /**
+     * 携带请求头发送 GET 请求调用远程服务
+     * 
+     * @param <T> 响应结果类型
+     * @param url 请求地址
+     * @param headerParams 请求头参数
+     * @param params 请求参数
+     * @param clz 响应结果类型
+     * @return T 响应结果对象，请求失败时返回 {@code null}
+     */
     public static <T> T getCallRemoteServiceWithHeader(String url, List<NameValuePair> headerParams,
         List<NameValuePair> params, Class<T> clz) {
         return doExecuteRequest(new HttpGet(url), headerParams, params, null, null, OBJECT_MAPPER.constructType(clz));
     }
 
+    /**
+     * 发送 GET 请求
+     * 
+     * @param <T> 响应结果类型
+     * @param url 请求地址
+     * @param params 请求参数
+     * @param clz 响应结果元素类型
+     * @return {@code Y9Result<List<T>>} 响应结果
+     */
     public static <T> Y9Result<List<T>> getList(String url, List<NameValuePair> params, Class<T> clz) {
         CollectionType listType = OBJECT_MAPPER.getTypeFactory().constructCollectionType(ArrayList.class, clz);
         JavaType resultType = OBJECT_MAPPER.getTypeFactory().constructParametricType(Y9Result.class, listType);
         return doExecuteRequest(new HttpGet(url), null, params, null, null, resultType);
     }
 
+    /**
+     * 发送 GET 请求
+     * 
+     * @param <T> 响应结果类型
+     * @param url 请求地址
+     * @param params 请求参数
+     * @param clz 响应结果元素类型
+     * @return {@code Y9Page<T>} 分页响应结果
+     */
     public static <T> Y9Page<T> getPage(String url, List<NameValuePair> params, Class<T> clz) {
         JavaType pageType = OBJECT_MAPPER.getTypeFactory().constructParametricType(Y9Page.class, clz);
         return doExecuteRequest(new HttpGet(url), null, params, null, null, pageType);
     }
 
+    /**
+     * 发送 POST 请求
+     * 
+     * @param <T> 响应结果类型
+     * @param url 请求地址
+     * @param params 请求参数
+     * @param clz 响应结果类型
+     * @return {@code Y9Result<T>} 响应结果
+     */
     public static <T> Y9Result<T> post(String url, List<NameValuePair> params, Class<T> clz) {
         return post(url, params, List.of(), clz);
     }
 
+    /**
+     * 发送 POST 请求，携带请求体参数
+     * 
+     * @param <T> 响应结果类型
+     * @param url 请求地址
+     * @param params 请求参数
+     * @param bodyParams 请求体参数
+     * @param clz 响应结果类型
+     * @return {@code Y9Result<T>} 响应结果
+     */
     public static <T> Y9Result<T> post(String url, List<NameValuePair> params, List<NameValuePair> bodyParams,
         Class<T> clz) {
         JavaType resultType = OBJECT_MAPPER.getTypeFactory().constructParametricType(Y9Result.class, clz);
@@ -222,35 +315,98 @@ public class Y9RemoteClientUtil {
         return doExecuteRequest(httpPost, null, params, null, null, resultType);
     }
 
+    /**
+     * 发送 POST 请求，携带 JSON 请求体
+     * 
+     * @param <T> 响应结果类型
+     * @param url 请求地址
+     * @param params 请求参数
+     * @param requestBodyJson 请求体 JSON 字符串
+     * @param clz 响应结果类型
+     * @return T 响应结果对象，请求失败时返回 {@code null}
+     */
     public static <T> T post(String url, List<NameValuePair> params, String requestBodyJson, Class<T> clz) {
         return doExecuteRequest(new HttpPost(url), null, params, requestBodyJson, null,
             OBJECT_MAPPER.constructType(clz));
     }
 
+    /**
+     * 发送 POST 请求调用远程服务
+     * 
+     * @param <T> 响应结果类型
+     * @param url 请求地址
+     * @param params 请求参数
+     * @param clz 响应结果类型
+     * @return T 响应结果对象，请求失败时返回 {@code null}
+     */
     public static <T> T postCallRemoteService(String url, List<NameValuePair> params, Class<T> clz) {
         return executeWithoutBody(new HttpPost(url), params, clz);
     }
 
+    /**
+     * 发送 POST 请求调用远程服务，返回列表
+     * 
+     * @param <T> 响应结果类型
+     * @param url 请求地址
+     * @param params 请求参数
+     * @param clz 响应结果元素类型
+     * @return {@code List<T>} 响应结果列表，请求失败时返回 {@code null}
+     */
     public static <T> List<T> postCallRemoteServiceByList(String url, List<NameValuePair> params, Class<T> clz) {
         CollectionType listType = OBJECT_MAPPER.getTypeFactory().constructCollectionType(ArrayList.class, clz);
         return doExecuteRequest(new HttpPost(url), null, params, null, null, listType);
     }
 
+    /**
+     * 携带请求头发送 POST 请求调用远程服务
+     * 
+     * @param <T> 响应结果类型
+     * @param url 请求地址
+     * @param headerParams 请求头参数
+     * @param params 请求参数
+     * @param clz 响应结果类型
+     * @return T 响应结果对象，请求失败时返回 {@code null}
+     */
     public static <T> T postCallRemoteServiceWithHeader(String url, List<NameValuePair> headerParams,
         List<NameValuePair> params, Class<T> clz) {
         return doExecuteRequest(new HttpPost(url), headerParams, params, null, null, OBJECT_MAPPER.constructType(clz));
     }
 
+    /**
+     * 携带请求头发送 POST 请求调用远程服务，返回列表
+     * 
+     * @param <T> 响应结果类型
+     * @param url 请求地址
+     * @param headerParams 请求头参数
+     * @param params 请求参数
+     * @param clz 响应结果元素类型
+     * @return {@code List<T>} 响应结果列表，请求失败时返回 {@code null}
+     */
     public static <T> List<T> postCallRemoteServiceWithHeaderToList(String url, List<NameValuePair> headerParams,
         List<NameValuePair> params, Class<T> clz) {
         CollectionType listType = OBJECT_MAPPER.getTypeFactory().constructCollectionType(ArrayList.class, clz);
         return doExecuteRequest(new HttpPost(url), headerParams, params, null, null, listType);
     }
 
+    /**
+     * 发送 POST 请求提交 XML 数据
+     * 
+     * @param url 请求地址
+     * @param xmlData XML 数据
+     * @return String 响应内容，请求失败时返回 {@code null}
+     */
     public static String postXml(String url, String xmlData) {
         return postXml(url, null, xmlData);
     }
 
+    /**
+     * 发送 POST 请求提交 XML 数据，携带 URL 参数
+     * 
+     * @param url 请求地址
+     * @param urlParams URL 参数
+     * @param xmlData XML 数据
+     * @return String 响应内容，请求失败时返回 {@code null}
+     */
     public static String postXml(String url, List<NameValuePair> urlParams, String xmlData) {
         HttpPost httpPost = new HttpPost(url);
         appendUrlParams(httpPost, urlParams);
@@ -274,11 +430,27 @@ public class Y9RemoteClientUtil {
         return null;
     }
 
+    /**
+     * 发送 PUT 请求，携带 JSON 请求体
+     * 
+     * @param <T> 响应结果类型
+     * @param url 请求地址
+     * @param params 请求参数
+     * @param requestBodyJson 请求体 JSON 字符串
+     * @param clz 响应结果类型
+     * @return T 响应结果对象，请求失败时返回 {@code null}
+     */
     public static <T> T put(String url, List<NameValuePair> params, String requestBodyJson, Class<T> clz) {
         return doExecuteRequest(new HttpPut(url), null, params, requestBodyJson, null,
             OBJECT_MAPPER.constructType(clz));
     }
 
+    /**
+     * 将对象转换为 NameValuePair 列表
+     * 
+     * @param object 对象
+     * @return {@code List<NameValuePair>} NameValuePair 列表
+     */
     public static List<NameValuePair> objectToNameValuePairList(Object object) {
         List<NameValuePair> requestBody = new ArrayList<>();
         Map<String, String> keyValueMap =

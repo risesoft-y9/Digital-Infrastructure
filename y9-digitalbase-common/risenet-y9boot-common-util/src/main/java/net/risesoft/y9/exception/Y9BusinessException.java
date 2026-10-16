@@ -13,6 +13,9 @@ public class Y9BusinessException extends Y9BaseException {
 
     private static final long serialVersionUID = 7938636025971118356L;
 
+    /**
+     * 业务错误码
+     */
     protected int code;
 
     public Y9BusinessException(int code, String message) {

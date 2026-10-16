@@ -153,7 +153,7 @@ public class Y9WordTool4Docx {
      * 获取书签列表
      * 
      * @param templatePath 模板路径
-     * @return Collection<Y9BookMark4Docx> 书签列表
+     * @return {@code Collection<Y9BookMark4Docx>}书签列表
      */
     public static Collection<Y9BookMark4Docx> getBookmarkList(String templatePath) {
         Collection<Y9BookMark4Docx> coll = null;
@@ -171,7 +171,7 @@ public class Y9WordTool4Docx {
      * 获取书签名称列表
      * 
      * @param is 输入流
-     * @return List<String> 书签名称列表
+     * @return {@code List<String>} 书签名称列表
      */
     public static List<String> getBookMarkNameList(InputStream is) {
         List<String> list = new ArrayList<>();

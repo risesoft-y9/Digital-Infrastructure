@@ -67,6 +67,8 @@ public class SyncPersonalAppController {
 
     /**
      * 同步人员的个人应用
+     * 
+     * @return {@code Y9Result<Object>} 操作结果
      */
     @RiseLog(operationName = "同步人员的个人应用", operationType = OperationTypeEnum.MODIFY)
     @RequestMapping("/personalAppForPerson")
@@ -106,6 +108,8 @@ public class SyncPersonalAppController {
 
     /**
      * 同步岗位的个人应用
+     * 
+     * @return {@code Y9Result<Object>} 操作结果
      */
     @RiseLog(operationName = "同步岗位的个人应用", operationType = OperationTypeEnum.MODIFY)
     @RequestMapping("/personalAppForPosition")
@@ -148,7 +152,7 @@ public class SyncPersonalAppController {
      * 同步租户人员的个人应用
      *
      * @param tenantId 租户id
-     * @return
+     * @return {@code Y9Result<Object>} 操作结果
      */
     @RiseLog(operationName = "同步租户人员的个人应用", operationType = OperationTypeEnum.MODIFY)
     @RequestMapping("/personalAppForPersonByTenantId")
@@ -182,7 +186,7 @@ public class SyncPersonalAppController {
      * 同步租户岗位的个人应用
      *
      * @param tenantId 租户id
-     * @return
+     * @return {@code Y9Result<Object>} 操作结果
      */
     @RiseLog(operationName = "同步租户岗位的个人应用", operationType = OperationTypeEnum.MODIFY)
     @RequestMapping("/personalAppForPositionByTenantId")

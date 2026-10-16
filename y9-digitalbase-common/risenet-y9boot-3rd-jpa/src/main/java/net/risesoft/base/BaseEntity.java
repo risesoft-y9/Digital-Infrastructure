@@ -57,7 +57,7 @@ public class BaseEntity implements Serializable {
     /**
      * 创建时会自动设值
      * 
-     * @param createTime
+     * @param createTime 创建时间
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
@@ -66,7 +66,7 @@ public class BaseEntity implements Serializable {
     /**
      * 更新时会自动设值
      * 
-     * @param updateTime
+     * @param updateTime 更新时间
      */
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;

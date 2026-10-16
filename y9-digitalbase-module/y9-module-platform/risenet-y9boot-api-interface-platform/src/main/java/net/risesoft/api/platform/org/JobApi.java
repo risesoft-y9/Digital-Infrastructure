@@ -41,6 +41,7 @@ public interface JobApi {
     /**
      * 获取所有职位
      * 
+     * @param tenantId 租户id
      * @return {@code Y9Result<List<Job>>} 通用请求返回对象 - data 是职位列表
      */
     @GetMapping("/listAll")

@@ -46,5 +46,26 @@
         </dependency>
 
     </dependencies>
-
+    <profiles>
+        <profile>
+            <!-- 修改注释的时候 勾选（避免有些工程没加） -->
+            <id>javadoc</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <!-- 启用所有检查，但排除 missing 组（即忽略缺失标签警告） -->
+                            <!--<doclint>all,-missing</doclint>-->
+                            <doclint>none</doclint>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

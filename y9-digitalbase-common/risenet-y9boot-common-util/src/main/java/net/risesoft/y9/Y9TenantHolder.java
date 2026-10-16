@@ -28,10 +28,20 @@ public final class Y9TenantHolder {
 
     private static final Set<String> TENANT_ID_SET = ConcurrentHashMap.newKeySet();
 
+    /**
+     * 获取当前租户 ID
+     *
+     * @return 当前租户 ID
+     */
     public static String getCurrentTenantId() {
         return TENANT_ID_HOLDER.get();
     }
 
+    /**
+     * 设置当前租户 ID
+     *
+     * @param tenantId 租户 ID
+     */
     public static void setCurrentTenantId(final String tenantId) {
         if (StringUtils.isNotBlank(tenantId) && !InitDataConsts.OPERATION_TENANT_ID.equals(tenantId)
             && !Y9TenantHolder.getAllTenantIds().isEmpty() && !Y9TenantHolder.getAllTenantIds().contains(tenantId)) {
@@ -40,15 +50,28 @@ public final class Y9TenantHolder {
         TENANT_ID_HOLDER.set(tenantId);
     }
 
+    /**
+     * 获取全部租户 ID 集合
+     *
+     * @return 全部租户 ID 集合
+     */
     public static Set<String> getAllTenantIds() {
         return TENANT_ID_SET;
     }
 
+    /**
+     * 设置全部租户 ID 集合
+     *
+     * @param tenantIds 租户 ID 集合
+     */
     public static void setAllTenantIds(Collection<String> tenantIds) {
         TENANT_ID_SET.clear();
         TENANT_ID_SET.addAll(tenantIds);
     }
 
+    /**
+     * 清除当前租户 ID
+     */
     public static void clearCurrentTenantId() {
         TENANT_ID_HOLDER.remove();
     }

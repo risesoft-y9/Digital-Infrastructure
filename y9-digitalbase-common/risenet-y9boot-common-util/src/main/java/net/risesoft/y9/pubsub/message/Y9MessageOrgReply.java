@@ -20,8 +20,12 @@ import lombok.NoArgsConstructor;
 public class Y9MessageOrgReply implements Serializable {
     private static final long serialVersionUID = 1834756729435414044L;
 
+    /** 事件类型 */
     private String eventType;
+    /** 租户id */
     private String tenantId;
+    /** 客户端ip */
     private String clientIp;
+    /** 系统名 */
     private String systemName;
 }

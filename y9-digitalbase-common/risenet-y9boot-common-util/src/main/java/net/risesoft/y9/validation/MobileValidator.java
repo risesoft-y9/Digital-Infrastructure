@@ -13,6 +13,13 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class MobileValidator implements ConstraintValidator<Mobile, String> {
 
+    /**
+     * 校验手机号是否合法
+     *
+     * @param mobile 手机号
+     * @param constraintValidatorContext 校验上下文
+     * @return true 表示合法
+     */
     @Override
     public boolean isValid(String mobile, ConstraintValidatorContext constraintValidatorContext) {
         if (StringUtils.isEmpty(mobile)) {

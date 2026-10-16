@@ -9,12 +9,15 @@ import org.springframework.core.ResolvableTypeProvider;
  *
  * @author shidaobang
  * @date 2022/12/01
+ * @param <T> 实体类型
  */
 public class Y9EntityUpdatedEvent<T> extends ApplicationEvent implements ResolvableTypeProvider {
 
     private static final long serialVersionUID = 8544144545521310870L;
 
+    /** 原始实体对象 */
     private final T originEntity;
+    /** 更新后的实体对象 */
     private final T updatedEntity;
 
     public Y9EntityUpdatedEvent(T originEntity, T updatedEntity) {

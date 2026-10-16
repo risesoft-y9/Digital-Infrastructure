@@ -24,9 +24,13 @@ public class Y9MessageTask implements Serializable {
     private static final long serialVersionUID = -4044715647192713249L;
 
     // 解决 jackson 序列化丢失类型
+    /** 任务对象 */
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
     private Serializable taskObj;
+    /** 事件类型 */
     private String eventType;
+    /** 租户id */
     private String tenantId;
+    /** 人员id */
     private String personId;
 }

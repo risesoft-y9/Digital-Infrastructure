@@ -41,11 +41,14 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AesUtil {
 
+    /** 算法名称 */
     private static final String AES = "AES";
     // 其他模式有可能会导致解密后数据跟原始数据不一致
     private static final String AES_CTR_NOPADDING = "AES/CTR/NoPadding";
 
+    /** 密钥长度（位） */
     private static final int KEY_BIT_NUMBER = 128;
+    /** 初始向量长度（字节） */
     private static final int IV_BYTE_NUMBER = 16;
 
     /**

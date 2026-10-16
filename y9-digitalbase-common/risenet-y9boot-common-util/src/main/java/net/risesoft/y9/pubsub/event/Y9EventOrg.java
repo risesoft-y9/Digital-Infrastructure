@@ -20,8 +20,11 @@ import lombok.Setter;
 public class Y9EventOrg extends ApplicationEvent {
     private static final long serialVersionUID = 5693234105948292780L;
 
+    /** 组织对象 */
     private Object orgObj;
+    /** 事件类型 */
     private String eventType;
+    /** 租户id */
     private String tenantId;
 
     public Y9EventOrg() {

@@ -27,7 +27,7 @@ public interface Y9AppCategoryService {
     /**
      * 返回默认已排序的应用分类列表 首先排已分类的应用，然后排剩下未分类的应用
      *
-     * @return
+     * @return {@code List<AppCategory>}
      */
     List<AppCategory> buildDefaultAppCategoryList();
 
@@ -35,7 +35,7 @@ public interface Y9AppCategoryService {
      * 根据资源id，获取图标排序列表
      *
      * @param categoryId 资源id
-     * @return
+     * @return {@code List<AppCategory>}
      */
     List<AppCategory> listByCategoryId(String categoryId);
 
@@ -43,8 +43,8 @@ public interface Y9AppCategoryService {
      * 根据资源id，获取图标排序分页列表
      *
      * @param categoryId 分类 id
-     * @param pageQuery
-     * @return
+     * @param pageQuery 分页信息
+     * @return {@code Page<AppCategory>}
      */
     Page<AppCategory> pageByCategoryId(String categoryId, Y9PageQuery pageQuery);
 

@@ -57,7 +57,8 @@ public interface DataCatalogApi {
 
     /**
      * 根据 id 获取目录
-     *
+     * 
+     * @param tenantId 租户 id
      * @param id ID
      * @return {@code Y9Result<DataCatalog> }
      */
@@ -67,7 +68,8 @@ public interface DataCatalogApi {
 
     /**
      * 根据目录 id 获取其顶级节点的信息
-     *
+     * 
+     * @param tenantId 租户 id
      * @param id ID
      * @return {@code Y9Result<DataCatalog> }
      */

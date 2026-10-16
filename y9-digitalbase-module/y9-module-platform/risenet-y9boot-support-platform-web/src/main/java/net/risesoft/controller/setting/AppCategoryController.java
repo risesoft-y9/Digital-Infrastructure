@@ -79,7 +79,7 @@ public class AppCategoryController {
      * 批量移除应用分类配置
      *
      * @param ids 应用分类配置的ids
-     * @return
+     * @return {@code Y9Result<Object>} 操作结果
      */
     @RiseLog(operationName = "批量移除应用分类配置", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/delete")
@@ -91,7 +91,7 @@ public class AppCategoryController {
     /**
      * 获取全部应用列表
      *
-     * @return
+     * @return {@code Y9Result<List<Map<String, Object>>>} 全部应用列表
      */
     @RiseLog(operationName = "获取全部应用列表")
     @RequestMapping(value = "/listAllAppsByTenantId")
@@ -125,8 +125,8 @@ public class AppCategoryController {
     /**
      * 根据人员Id,获取个人的图标app列表
      *
-     * @param personId
-     * @return
+     * @param personId 人员id
+     * @return {@code  Y9Result<List<App>> } 个人的图标app列表
      */
     @RiseLog(operationName = "根据人员Id,获取个人的图标app列表")
     @RequestMapping(value = "/listAppByPersonId2")
@@ -138,7 +138,7 @@ public class AppCategoryController {
      * 获取全部应用排序数据
      *
      * @param categoryId 分类id
-     * @return
+     * @return {@code  Y9Result<List<AppCategoryVO>>} 应用排序数据
      */
     @RiseLog(operationName = "获取应用排序数据")
     @RequestMapping(value = "/listByCategoryId")
@@ -172,7 +172,7 @@ public class AppCategoryController {
      * @param pageQuery 分页信息
      * @param appId 应用id
      * @param deptName 部门名称
-     * @return
+     * @return {@code Y9Page<OrgUnit>} 搜索结果
      */
     @RiseLog(operationName = "根据人员名称或者部门名称进行模糊查询")
     @RequestMapping(value = "/pageByApp")
@@ -187,7 +187,7 @@ public class AppCategoryController {
      *
      * @param categoryId 分类id
      * @param pageQuery 分页信息
-     * @return
+     * @return {@code Y9Page<AppCategoryVO>} 分页结果
      */
     @RiseLog(operationName = "分页获取应用分类")
     @RequestMapping(value = "/pageByCategoryId")
@@ -202,7 +202,7 @@ public class AppCategoryController {
      *
      * @param appIds 应用ids
      * @param categoryId 分类id
-     * @return
+     * @return {@code Y9Result<Boolean>} 操作结果
      */
     @RiseLog(operationName = "保存应用信息", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/save")
@@ -214,8 +214,8 @@ public class AppCategoryController {
     /**
      * 根据系统名称或应用名称，获取应用列表
      *
-     * @param appName
-     * @return
+     * @param appName 应用名称
+     * @return {@code Y9Result<List<App>>} 应用列表
      */
     @RiseLog(operationName = "根据系统名称或应用名称，获取应用列表")
     @RequestMapping(value = "/searchAppList")
@@ -228,7 +228,7 @@ public class AppCategoryController {
      * 更新应用的排序信息
      *
      * @param ids 应用排序的ids
-     * @return
+     * @return {@code Y9Result<Boolean>} 操作结果
      */
     @RiseLog(operationName = "更新应用的排序信息", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/updateOrder")

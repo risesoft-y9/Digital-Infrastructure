@@ -248,6 +248,7 @@ public interface CompositeOrgBaseService {
      * @param name 组织节点名称
      * @param treeType 树类型{@link OrgTreeTypeEnum}
      * @param disabled 是否禁用
+     * @param includeOrgUnitAndAncestor 是否填充组织节点及其祖先节点
      * @return {@code List<OrgUnit>}
      */
     List<OrgUnit> treeSearch(String orgUnitId, String name, OrgTreeTypeEnum treeType, Boolean disabled,

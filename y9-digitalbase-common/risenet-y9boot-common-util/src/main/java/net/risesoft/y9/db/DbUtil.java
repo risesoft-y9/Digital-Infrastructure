@@ -15,6 +15,12 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class DbUtil {
 
+    /**
+     * 获取数据库目录（catalog）名称
+     *
+     * @param dataSource 数据源
+     * @return 目录名称，获取失败时返回 null
+     */
     public static String getCatalog(DataSource dataSource) {
         try (Connection connection = dataSource.getConnection();) {
             String catalog = connection.getCatalog();
@@ -27,6 +33,12 @@ public class DbUtil {
         }
     }
 
+    /**
+     * 根据数据源获取数据库类型
+     *
+     * @param dataSource 数据源
+     * @return 数据库类型，识别失败时返回 null
+     */
     public static DbType getDbType(DataSource dataSource) {
         try (Connection connection = dataSource.getConnection();) {
             return getDbType(connection.getMetaData().getURL());
@@ -35,6 +47,12 @@ public class DbUtil {
         }
     }
 
+    /**
+     * 根据 JDBC URL 获取数据库类型
+     *
+     * @param rawUrl JDBC URL
+     * @return 数据库类型，识别失败时返回 null
+     */
     public static DbType getDbType(String rawUrl) {
         if (rawUrl == null) {
             return null;
@@ -146,6 +164,12 @@ public class DbUtil {
         }
     }
 
+    /**
+     * 根据数据源获取数据库类型名称
+     *
+     * @param dataSource 数据源
+     * @return 数据库类型名称，识别失败时返回 null
+     */
     public static String getDbTypeString(DataSource dataSource) {
         DbType dbType = getDbType(dataSource);
         if (dbType == null) {
@@ -154,6 +178,12 @@ public class DbUtil {
         return dbType.name();
     }
 
+    /**
+     * 根据 JDBC URL 获取数据库类型名称
+     *
+     * @param rawUrl JDBC URL
+     * @return 数据库类型名称，识别失败时返回 null
+     */
     public static String getDbTypeString(String rawUrl) {
         DbType dbType = getDbType(rawUrl);
 
@@ -164,6 +194,12 @@ public class DbUtil {
         return dbType.name();
     }
 
+    /**
+     * 获取数据库 schema 名称
+     *
+     * @param dataSource 数据源
+     * @return schema 名称，获取失败时返回 null
+     */
     public static String getSchema(DataSource dataSource) {
         try (Connection connection = dataSource.getConnection();) {
             String schema;

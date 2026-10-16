@@ -9,9 +9,21 @@ import java.util.Arrays;
  * @date 2022/02/26
  */
 public final class FnvHash {
+    /**
+     * FNV-1a 哈希的初始基数（offset basis）
+     */
     public final static long BASIC = 0xcbf29ce484222325L;
+    /**
+     * FNV-1a 哈希的质数
+     */
     public final static long PRIME = 0x100000001b3L;
 
+    /**
+     * 计算字符串的 32 位哈希值，忽略下划线、连字符并将字母转为小写
+     *
+     * @param key 字符串
+     * @return 哈希值
+     */
     public static long fnv_32_lower(String key) {
         long hashCode = 0x811c9dc5;
         for (int i = 0; i < key.length(); ++i) {
@@ -31,6 +43,14 @@ public final class FnvHash {
         return hashCode;
     }
 
+    /**
+     * 计算字节数组指定区间 [offset, end) 的 FNV-1a 64 位哈希值
+     *
+     * @param input 字节数组
+     * @param offset 起始下标（含）
+     * @param end 结束下标（不含）
+     * @return 哈希值
+     */
     public static long fnv1a_64(byte[] input, int offset, int end) {
         if (input == null) {
             return 0;
@@ -50,6 +70,12 @@ public final class FnvHash {
         return hash;
     }
 
+    /**
+     * 计算字符数组的 FNV-1a 64 位哈希值
+     *
+     * @param chars 字符数组
+     * @return 哈希值
+     */
     public static long fnv1a_64(char[] chars) {
         if (chars == null) {
             return 0;
@@ -64,6 +90,12 @@ public final class FnvHash {
         return hash;
     }
 
+    /**
+     * 计算字符串的 FNV-1a 64 位哈希值
+     *
+     * @param input 字符串
+     * @return 哈希值
+     */
     public static long fnv1a_64(String input) {
         if (input == null) {
             return 0;
@@ -79,6 +111,14 @@ public final class FnvHash {
         return hash;
     }
 
+    /**
+     * 计算字符串指定区间 [offset, end) 的 FNV-1a 64 位哈希值
+     *
+     * @param input 字符串
+     * @param offset 起始下标（含）
+     * @param end 结束下标（不含）
+     * @return 哈希值
+     */
     public static long fnv1a_64(String input, int offset, int end) {
         if (input == null) {
             return 0;
@@ -98,6 +138,12 @@ public final class FnvHash {
         return hash;
     }
 
+    /**
+     * 计算 StringBuilder 的 FNV-1a 64 位哈希值
+     *
+     * @param input StringBuilder 对象
+     * @return 哈希值
+     */
     public static long fnv1a_64(StringBuilder input) {
         if (input == null) {
             return 0;
@@ -113,6 +159,13 @@ public final class FnvHash {
         return hash;
     }
 
+    /**
+     * 以给定基数计算 StringBuilder 的 FNV-1a 64 位哈希值（转小写）
+     *
+     * @param basic 初始基数
+     * @param key StringBuilder 对象
+     * @return 哈希值
+     */
     public static long fnv1a_64_lower(long basic, StringBuilder key) {
         long hashCode = basic;
         for (int i = 0; i < key.length(); ++i) {
@@ -129,6 +182,12 @@ public final class FnvHash {
         return hashCode;
     }
 
+    /**
+     * 计算字符串的 FNV-1a 64 位哈希值（转小写）
+     *
+     * @param key 字符串
+     * @return 哈希值
+     */
     public static long fnv1a_64_lower(String key) {
         long hashCode = BASIC;
         for (int i = 0; i < key.length(); ++i) {
@@ -145,6 +204,13 @@ public final class FnvHash {
         return hashCode;
     }
 
+    /**
+     * 批量计算字符串数组各元素的 FNV-1a 64 位哈希值（转小写）
+     *
+     * @param strings 字符串数组
+     * @param sort 是否对结果排序
+     * @return 哈希值数组
+     */
     public static long[] fnv1a_64_lower(String[] strings, boolean sort) {
         long[] hashCodes = new long[strings.length];
         for (int i = 0; i < strings.length; i++) {
@@ -156,6 +222,12 @@ public final class FnvHash {
         return hashCodes;
     }
 
+    /**
+     * 计算 StringBuilder 的 FNV-1a 64 位哈希值（转小写）
+     *
+     * @param key StringBuilder 对象
+     * @return 哈希值
+     */
     public static long fnv1a_64_lower(StringBuilder key) {
         long hashCode = BASIC;
         for (int i = 0; i < key.length(); ++i) {
@@ -172,6 +244,13 @@ public final class FnvHash {
         return hashCode;
     }
 
+    /**
+     * 计算名称的 64 位哈希值，自动去除首尾引号并转小写
+     *
+     * @param basic 初始基数
+     * @param name 名称
+     * @return 哈希值
+     */
     public static long hashCode64(long basic, String name) {
         if (name == null) {
             return basic;
@@ -205,6 +284,15 @@ public final class FnvHash {
         }
     }
 
+    /**
+     * 计算名称指定区间 [offset, end) 的 64 位哈希值（转小写）
+     *
+     * @param basic 初始基数
+     * @param key 名称
+     * @param offset 起始下标（含）
+     * @param end 结束下标（不含）
+     * @return 哈希值
+     */
     public static long hashCode64(long basic, String key, int offset, int end) {
         long hashCode = basic;
         for (int i = offset; i < end; ++i) {
@@ -250,6 +338,14 @@ public final class FnvHash {
         }
     }
 
+    /**
+     * 计算名称指定区间 [offset, end) 的 64 位哈希值（转小写）
+     *
+     * @param key 名称
+     * @param offset 起始下标（含）
+     * @param end 结束下标（不含）
+     * @return 哈希值
+     */
     public static long hashCode64(String key, int offset, int end) {
         long hashCode = BASIC;
         for (int i = offset; i < end; ++i) {
@@ -340,6 +436,9 @@ public final class FnvHash {
         return hashCode;
     }
 
+    /**
+     * SQL 关键字与函数名的 FNV-1a 64 位哈希常量
+     */
     public interface Constants {
         long HIGH_PRIORITY = fnv1a_64_lower("HIGH_PRIORITY");
         long DISTINCTROW = fnv1a_64_lower("DISTINCTROW");

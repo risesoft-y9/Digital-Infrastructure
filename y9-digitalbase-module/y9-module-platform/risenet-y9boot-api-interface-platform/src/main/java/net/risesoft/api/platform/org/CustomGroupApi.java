@@ -136,8 +136,8 @@ public interface CustomGroupApi {
      *
      * @param tenantId 租户id
      * @param customGroupMemberQuery 查询条件
-     * @param page
-     * @param size
+     * @param page 页数
+     * @param size 每页的条数
      * @return {@code Y9Page<CustomGroupMember>} 通用分页请求返回对象 - rows 是返回的用户组成员列表
      * @since 9.6.0
      */

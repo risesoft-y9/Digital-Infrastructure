@@ -25,6 +25,7 @@ public class Y9MessageOrg<T extends Serializable> implements Serializable {
     private static final long serialVersionUID = 6408566736524500841L;
 
     // 解决 jackson 序列化丢失类型
+    /** 组织对象 */
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
     private T orgObj;
 

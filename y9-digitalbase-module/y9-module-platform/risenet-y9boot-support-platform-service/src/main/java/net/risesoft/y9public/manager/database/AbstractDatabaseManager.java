@@ -41,8 +41,8 @@ public abstract class AbstractDatabaseManager {
     /**
      * 替换 jdbc url 中的数据库名称 <br>
      *
-     * 例如：replaceDatabaseNameInJdbcUrl("jdbc:mysql://localhost:3306/y9_public?allowPublicKeyRetrieval=true",
-     * "y9_default") -> "jdbc:mysql://localhost:3306/y9_default?allowPublicKeyRetrieval=true"
+     * 例如：{@code  replaceDatabaseNameInJdbcUrl("jdbc:mysql://localhost:3306/y9_public?allowPublicKeyRetrieval=true",
+     * "y9_default") -> "jdbc:mysql://localhost:3306/y9_default?allowPublicKeyRetrieval=true" }
      *
      * @param originalJdbcUrl 原始 jdbc url
      * @param newDatabaseName 新数据库名称

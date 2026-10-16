@@ -37,6 +37,12 @@ public class InetAddressUtil {
     private static volatile InetAddress LOCAL_ADDRESS = null;
 
     // return ip to avoid lookup dns
+    /**
+     * 获取Socket地址对应的主机地址
+     * 
+     * @param socketAddress Socket地址
+     * @return String 主机地址，无法获取时返回 {@code null}
+     */
     public static String getHostName(SocketAddress socketAddress) {
         if (socketAddress == null) {
             return null;
@@ -68,6 +74,7 @@ public class InetAddressUtil {
      * </pre>
      * 
      * @param destHostPorts host端口信息
+     * @param validSubnets 有效的子网段，多个可用英文逗号,分隔
      * @return InetAddress locaip
      */
     public static InetAddress getLocalAddress(Map<String, Integer> destHostPorts, String validSubnets) {
@@ -152,6 +159,12 @@ public class InetAddressUtil {
         return null;
     }
 
+    /**
+     * 判断是否为无效的本地主机地址
+     * 
+     * @param host 主机地址
+     * @return boolean 是否为无效的本地主机地址
+     */
     public static boolean isInvalidLocalHost(String host) {
         return host == null || host.length() == 0 || "localhost".equalsIgnoreCase(host) || "0.0.0.0".equals(host)
             || (LOCAL_IP_PATTERN.matcher(host).matches());
@@ -188,6 +201,12 @@ public class InetAddressUtil {
         return true;
     }
 
+    /**
+     * 判断是否为合法的 host:port 形式的地址
+     * 
+     * @param address 地址
+     * @return boolean 是否为合法的 host:port 形式的地址
+     */
     public static boolean isValidAddress(String address) {
         return ADDRESS_PATTERN.matcher(address).matches();
     }

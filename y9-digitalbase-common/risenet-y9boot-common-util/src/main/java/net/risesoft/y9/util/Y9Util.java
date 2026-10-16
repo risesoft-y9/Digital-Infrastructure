@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 通用工具类
  *
  * @author dingzhaojun
  * @author qinman
@@ -53,10 +54,10 @@ public class Y9Util {
     }
 
     /**
-     * 字符串拼接，中间用英文逗号分隔 例：<br/>
-     * genCustomStr("a,b", "c,d") -> a,b,c,d <br/>
-     * genCustomStr(null, "c,d") -> c,d <br/>
-     * genCustomStr("", "c,d") -> c,d <br/>
+     * 字符串拼接，中间用英文逗号分隔 例：<br>
+     * {@code genCustomStr("a,b", "c,d") -> a,b,c,d} <br>
+     * {@code genCustomStr(null, "c,d") -> c,d} <br>
+     * {@code genCustomStr("", "c,d") -> c,d} <br>
      * 
      * @param str 字符串
      * @param addNew 添加的字符串
@@ -75,10 +76,10 @@ public class Y9Util {
     }
 
     /**
-     * 字符串拼接，用指定的分隔符 例：<br/>
-     * genCustomStr("a,b", "c,d", "|") -> a,b|c,d <br/>
-     * genCustomStr(null, "c,d", "|") -> c,d <br/>
-     * genCustomStr("", "c,d", "|") -> c,d <br/>
+     * 字符串拼接，用指定的分隔符 例：<br>
+     * {@code genCustomStr("a,b", "c,d", "|") -> a,b|c,d} <br>
+     * {@code genCustomStr(null, "c,d", "|") -> c,d} <br>
+     * {@code genCustomStr("", "c,d", "|") -> c,d} <br>
      *
      * @param str 字符串
      * @param addNew 添加的字符串
@@ -271,7 +272,7 @@ public class Y9Util {
      * 将字符串数组转换为Set集合
      * 
      * @param array 字符串数组
-     * @return Set<String> 字符串Set集合
+     * @return {@code Set<String>} 字符串Set集合
      */
     public static Set<String> stringArrayToSet(String[] array) {
         Set<String> retSet = new HashSet<String>();
@@ -289,7 +290,7 @@ public class Y9Util {
      * 
      * @param str 字符串
      * @param delimiter 分隔符
-     * @return Collection<String> 字符串集合
+     * @return {@code Collection<String>} 字符串集合
      */
     public static Collection<String> stringToCollection(String str, String delimiter) {
         Collection<String> ret = new ArrayList<String>();
@@ -312,7 +313,7 @@ public class Y9Util {
      * 
      * @param str 字符串
      * @param delimiter 分隔符
-     * @return List<String> 字符串列表
+     * @return {@code List<String>} 字符串列表
      */
     public static List<String> stringToList(String str, String delimiter) {
         List<String> ret = new ArrayList<String>();

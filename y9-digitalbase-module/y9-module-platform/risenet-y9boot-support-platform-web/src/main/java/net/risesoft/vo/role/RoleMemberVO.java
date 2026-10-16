@@ -41,7 +41,7 @@ public class RoleMemberVO implements Serializable {
     /** 组织节点名称 */
     private String orgUnitName;
 
-    /** 组织节点名称路径 > 分隔 */
+    /** 组织节点名称路径 {@code > } 分隔 */
     private String orgUnitNamePath;
 
     /** 组织节点类型 */

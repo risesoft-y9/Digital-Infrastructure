@@ -41,6 +41,9 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
     private static String hostName;
     private static String hostIp;
 
+    /**
+     * 初始化系统名称、本机 IP 与主机名
+     */
     @PostConstruct
     public void init() {
         Y9Context.systemName = environment.getProperty("y9.systemName");
@@ -63,6 +66,11 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
         return applicationContext.containsBean(name);
     }
 
+    /**
+     * 获取 Spring 应用上下文
+     *
+     * @return Spring 应用上下文
+     */
     public static ApplicationContext getAc() {
         return applicationContext;
     }
@@ -121,10 +129,20 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
         return applicationContext.getBeansOfType(clz);
     }
 
+    /**
+     * 获取 Servlet 上下文路径
+     *
+     * @return 上下文路径
+     */
     public static String getContextPath() {
         return servletContext.getContextPath();
     }
 
+    /**
+     * 获取 Spring 环境对象
+     *
+     * @return 环境对象
+     */
     public static Environment getEnvironment() {
         return environment;
     }
@@ -134,10 +152,20 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
         Y9Context.environment = environment;
     }
 
+    /**
+     * 获取本机 IP
+     *
+     * @return 本机 IP
+     */
     public static String getHostIp() {
         return Y9Context.hostIp;
     }
 
+    /**
+     * 获取主机名
+     *
+     * @return 主机名
+     */
     public static String getHostName() {
         return Y9Context.hostName;
     }
@@ -175,24 +203,53 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
         return addr;
     }
 
+    /**
+     * 获取单点注销地址
+     *
+     * @return 注销地址
+     */
     public static String getLogoutUrl() {
         String path = environment.getProperty("y9.feature.sso.logoutUrl");
         String logoutUrl = path + servletContext.getContextPath();
         return logoutUrl;
     }
 
+    /**
+     * 获取配置项的值
+     *
+     * @param key 配置项键
+     * @return 配置项的值
+     */
     public static String getProperty(String key) {
         return environment.getProperty(key);
     }
 
+    /**
+     * 获取配置项的值，不存在时返回默认值
+     *
+     * @param key 配置项键
+     * @param defaultValue 默认值
+     * @return 配置项的值
+     */
     public static String getProperty(String key, String defaultValue) {
         return environment.getProperty(key, defaultValue);
     }
 
+    /**
+     * 获取相对于 Web 应用根目录的真实路径
+     *
+     * @param path 相对路径
+     * @return 真实路径
+     */
     public static String getRealPath(String path) {
         return servletContext.getRealPath(path);
     }
 
+    /**
+     * 获取 ServletContext
+     *
+     * @return ServletContext
+     */
     public static ServletContext getServletContext() {
         return servletContext;
     }
@@ -202,14 +259,30 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
         Y9Context.servletContext = servletContext;
     }
 
+    /**
+     * 获取指定 URI 路径对应的 ServletContext
+     *
+     * @param uripath URI 路径
+     * @return ServletContext
+     */
     public static ServletContext getServletContext(String uripath) {
         return servletContext.getContext(uripath);
     }
 
+    /**
+     * 获取系统名称
+     *
+     * @return 系统名称
+     */
     public static String getSystemName() {
         return Y9Context.systemName;
     }
 
+    /**
+     * 设置系统名称
+     *
+     * @param systemName 系统名称
+     */
     public static void setSystemName(String systemName) {
         Y9Context.systemName = systemName;
     }
@@ -225,6 +298,11 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
         return applicationContext.getType(name);
     }
 
+    /**
+     * 获取 Web 应用根目录的真实路径
+     *
+     * @return Web 应用根目录的真实路径
+     */
     public static String getWebRootRealPath() {
         return servletContext.getRealPath("/");
     }
@@ -242,10 +320,20 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
         return applicationContext.isSingleton(name);
     }
 
+    /**
+     * 发布 Spring 事件
+     *
+     * @param event 事件
+     */
     public static void publishEvent(ApplicationEvent event) {
         applicationContext.publishEvent(event);
     }
 
+    /**
+     * 发布事件对象
+     *
+     * @param event 事件对象
+     */
     public static void publishEvent(Object event) {
         applicationContext.publishEvent(event);
     }

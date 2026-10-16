@@ -41,6 +41,13 @@ public class Y9Banner implements Banner {
         GIT_PROPERTIES = loadGitProperties();
     }
 
+    /**
+     * 打印自定义 banner，输出应用、Git、JVM 与操作系统等信息
+     *
+     * @param environment 环境
+     * @param sourceClass 启动类
+     * @param out 输出流
+     */
     @Override
     public void printBanner(Environment environment, Class<?> sourceClass, PrintStream out) {
         String applicationName = environment.getProperty("spring.application.name");

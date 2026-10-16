@@ -114,7 +114,7 @@ public interface Y9PersonToResourceService {
      * @param personId 人员id
      * @param resourceId 资源id
      * @param authority 权限类型
-     * @param resourceType
+     * @param resourceType 资源类型{@link ResourceTypeEnum}
      * @return {@code List<Y9ResourceBase>}
      */
     List<Resource> listSubResources(String personId, String resourceId, AuthorityEnum authority,

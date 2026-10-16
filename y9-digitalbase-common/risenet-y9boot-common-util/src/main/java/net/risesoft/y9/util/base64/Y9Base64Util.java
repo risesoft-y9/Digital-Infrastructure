@@ -64,10 +64,22 @@ public class Y9Base64Util {
     }
 
 
+    /**
+     * 将字节数组进行Base64编码
+     * 
+     * @param bytes 字节数组
+     * @return String Base64编码后的字符串
+     */
     public static String byteToBase64(byte[] bytes) {
         return new String(Base64.encodeBase64(bytes));
     }
 
+    /**
+     * 将Base64编码的字符串解码为字节数组
+     * 
+     * @param base64Key Base64编码的字符串
+     * @return byte[] 解码后的字节数组
+     */
     public static byte[] base64ToByte(String base64Key) {
         return Base64.decodeBase64(base64Key);
     }

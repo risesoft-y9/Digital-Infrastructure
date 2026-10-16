@@ -36,7 +36,7 @@ public class PersonalAppController {
      * 更新部门图标
      *
      * @param deptId 部门id
-     * @return
+     * @return {@code Y9Result<Object>} 操作结果
      */
     @RiseLog(operationName = "更新部门图标", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/sync4Dept")
@@ -49,7 +49,7 @@ public class PersonalAppController {
      * 更新个人图标
      *
      * @param personId 人员id
-     * @return
+     * @return {@code Y9Result<Object>} 操作结果
      */
     @RiseLog(operationName = "更新个人图标", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/sync4Person")
@@ -62,7 +62,7 @@ public class PersonalAppController {
      * 更新岗位图标
      *
      * @param positionId 岗位id
-     * @return
+     * @return {@code Y9Result<Object>} 操作结果
      */
     @RiseLog(operationName = "更新岗位图标", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/sync4Position")
