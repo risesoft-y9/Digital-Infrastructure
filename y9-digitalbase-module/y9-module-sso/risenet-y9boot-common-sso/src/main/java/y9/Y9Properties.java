@@ -22,6 +22,7 @@ import lombok.Setter;
 // @ConfigurationPropertiesScan
 // @EnableConfigurationProperties(Y9Properties.class)
 public class Y9Properties {
+
     /** 日志保存目标：kafka、jpa */
     private String loginInfoSaveTarget = "jpa";
 
@@ -36,4 +37,8 @@ public class Y9Properties {
 
     /** 对称加密密钥 */
     private String aesKey = "";
+
+    /** 只允许单设备在线的服务URL */
+    private String singleSessionServiceUrl = "";
+
 }
