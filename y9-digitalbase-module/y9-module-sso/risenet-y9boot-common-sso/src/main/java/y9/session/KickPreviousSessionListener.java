@@ -43,24 +43,24 @@ public class KickPreviousSessionListener {
     }
 
     private void kickOthers(final String tgtId, final String principalId) {
-        List<TicketGrantingTicket> others = ticketRegistry.getSessionsFor(principalId)
+        ticketRegistry.getSessionsFor(principalId)
+            .filter(t -> !t.getId().equals(tgtId))
+            .map(ticket -> ticketRegistry.getTicket(ticket.getId()))
+            .filter(Objects::nonNull)
             .filter(TicketGrantingTicket.class::isInstance)
             .map(TicketGrantingTicket.class::cast)
-            .filter(t -> !t.getId().equals(tgtId))
-            .map(ticket -> ticketRegistry.getTicket(ticket.getId(), TicketGrantingTicket.class))
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
-        others.forEach(tgt -> {
-            try {
-                tgt.getDescendantTickets().forEach(Unchecked.consumer(ticketId -> {
-                    LOGGER.debug("Deleting ticket [{}] from the registry as a descendant of [{}]", ticketId, tgt.getId());
-                    ticketRegistry.deleteTicket(ticketId);
-                }));
-                ticketRegistry.deleteTicket(tgt.getId());
-            } catch (Exception e) {
-                LOGGER.error("Failed to kick previous sessions for principal [{}]", principalId, e);
-            }
-        });
+            .forEach(tgt -> {
+                try {
+                    tgt.getDescendantTickets().forEach(Unchecked.consumer(ticketId -> {
+                        LOGGER.debug("Deleting ticket [{}] from the registry as a descendant of [{}]", ticketId,
+                            tgt.getId());
+                        ticketRegistry.deleteTicket(ticketId);
+                    }));
+                    ticketRegistry.deleteTicket(tgt.getId());
+                } catch (Exception e) {
+                    LOGGER.error("Failed to kick previous sessions for principal [{}]", principalId, e);
+                }
+            });
     }
 
 }
