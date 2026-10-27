@@ -167,20 +167,20 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
 
     @Override
     public int getPasswordModifiedCycle(ManagerLevelEnum managerLevel) {
-        return y9PlatformProperties.getManagerModifyPasswordCycle();
+        return y9PlatformProperties.getManager().getManagerModifyPasswordCycle();
     }
 
     @Override
     public int getReviewLogCycle(ManagerLevelEnum managerLevel) {
         int checkCycle = 0;
         if (ManagerLevelEnum.TENANT_SYSTEM_MANAGER.equals(managerLevel)) {
-            checkCycle = y9PlatformProperties.getSystemManagerReviewLogCycle();
+            checkCycle = y9PlatformProperties.getManager().getSystemManagerReviewLogCycle();
         }
         if (ManagerLevelEnum.TENANT_SECURITY_MANAGER.equals(managerLevel)) {
-            checkCycle = y9PlatformProperties.getSecurityManagerReviewLogCycle();
+            checkCycle = y9PlatformProperties.getManager().getSecurityManagerReviewLogCycle();
         }
         if (ManagerLevelEnum.TENANT_AUDIT_MANAGER.equals(managerLevel)) {
-            checkCycle = y9PlatformProperties.getAuditManagerReviewLogCycle();
+            checkCycle = y9PlatformProperties.getManager().getAuditManagerReviewLogCycle();
         }
         return checkCycle;
     }

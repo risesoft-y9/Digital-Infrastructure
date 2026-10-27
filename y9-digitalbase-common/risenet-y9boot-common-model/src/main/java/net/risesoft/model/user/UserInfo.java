@@ -38,6 +38,9 @@ public class UserInfo implements Serializable {
     /** 登录名称 */
     private String loginName;
 
+    /** 密码哈希算法 */
+    private String passwordHashAlgorithm;
+
     /** 性别 */
     private SexEnum sex;
 

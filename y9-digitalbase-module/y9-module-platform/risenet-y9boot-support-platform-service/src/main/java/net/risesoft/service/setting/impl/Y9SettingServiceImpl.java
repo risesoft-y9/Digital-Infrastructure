@@ -9,11 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.entity.setting.Y9Setting;
 import net.risesoft.manager.setting.Y9SettingManager;
 import net.risesoft.service.setting.Y9SettingService;
+import net.risesoft.service.setting.UserPasswordPolicyService;
+import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 
 /**
  * 设置 Service 实现类
@@ -21,13 +22,13 @@ import net.risesoft.service.setting.Y9SettingService;
  * @author shidaobang
  * @date 2024/03/27
  */
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class Y9SettingServiceImpl implements Y9SettingService {
 
     private final Y9SettingManager y9SettingManager;
     private final Environment environment;
+    private final Y9PlatformProperties y9PlatformProperties;
 
     private Object convert(String stringValue, Class<?> tClass) {
         if (tClass == Integer.class || tClass == int.class) {
@@ -54,17 +55,12 @@ public class Y9SettingServiceImpl implements Y9SettingService {
         return environment.getProperty(key);
     }
 
-    private AbstractSetting fillObjectFiledWithSettingItem(Class<? extends AbstractSetting> tClass) {
-        AbstractSetting setting = null;
-        try {
-            setting = tClass.getDeclaredConstructor().newInstance();
-        } catch (Exception e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-        Field[] declaredFields = tClass.getDeclaredFields();
+    private <T extends AbstractSetting> T fillObjectFiledWithSettingItem(T setting) {
+        Field[] declaredFields = setting.getClass().getDeclaredFields();
         for (Field declaredField : declaredFields) {
             if (!Modifier.isStatic(declaredField.getModifiers())) {
-                String value = this.get(setting.getPrefix() + declaredField.getName());
+                String value = y9SettingManager.findById(setting.getPrefix() + declaredField.getName())
+                    .map(Y9Setting::getValue).orElse(null);
                 try {
                     if (value != null) {
                         declaredField.setAccessible(true);
@@ -88,7 +84,8 @@ public class Y9SettingServiceImpl implements Y9SettingService {
                 Y9Setting y9Setting = new Y9Setting();
                 y9Setting.setKey(setting.getPrefix() + declaredField.getName());
                 try {
-                    y9Setting.setValue(String.valueOf(declaredField.get(setting)));
+                    Object value = declaredField.get(setting);
+                    y9Setting.setValue(value == null ? null : String.valueOf(value));
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
@@ -103,12 +100,13 @@ public class Y9SettingServiceImpl implements Y9SettingService {
 
     @Override
     public TenantSetting getTenantSetting() {
-        return (TenantSetting)this.fillObjectFiledWithSettingItem(TenantSetting.class);
+        return this.fillObjectFiledWithSettingItem(new TenantSetting(y9PlatformProperties.getTenantDefault()));
     }
 
     @Override
     @Transactional
     public void saveTenantSetting(TenantSetting tenantSetting) {
+        UserPasswordPolicyService.validateSettings(tenantSetting);
         this.saveObjectFiledAsSettingItem(tenantSetting);
     }
 }

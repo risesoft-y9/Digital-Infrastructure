@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+    <changeSet id="1793088821075-1" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="Y9_COMMON_ACCOUNT" columnName="PASSWORD_HASH_ALGORITHM"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="Y9_COMMON_ACCOUNT">
+            <column name="PASSWORD_HASH_ALGORITHM" type="VARCHAR(50)" remarks="密码哈希算法"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1793088821075-2" author="shidaobang">
+        <preConditions onFail="HALT">
+            <columnExists tableName="Y9_COMMON_ACCOUNT" columnName="PASSWORD_HASH_ALGORITHM"/>
+        </preConditions>
+        <update tableName="Y9_COMMON_ACCOUNT">
+            <column name="PASSWORD_HASH_ALGORITHM" value="bcrypt"/>
+            <where>PASSWORD_HASH_ALGORITHM IS NULL</where>
+        </update>
+        <addNotNullConstraint tableName="Y9_COMMON_ACCOUNT" columnName="PASSWORD_HASH_ALGORITHM"
+                              columnDataType="VARCHAR(50)"/>
+    </changeSet>
+</databaseChangeLog>

@@ -9,15 +9,20 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import net.risesoft.consts.PasswordHashAlgorithmConsts;
 import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.enums.platform.org.SexEnum;
 import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.user.UserInfo;
+import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.util.signing.Y9MessageDigestUtil;
+import net.risesoft.y9public.entity.Y9User;
 
 class Y9PersonTest {
 
@@ -61,7 +66,9 @@ class Y9PersonTest {
     @Test
     void testConstructorWithPersonAndParent() {
         String defaultPassword = "default123";
+        Date beforeCreation = new Date();
         Y9Person person = new Y9Person(personModel, parentDept, ancestorList, 1, defaultPassword);
+        Date afterCreation = new Date();
 
         // 验证基本属性复制
         assertEquals("张三", person.getName());
@@ -81,6 +88,10 @@ class Y9PersonTest {
 
         // 验证密码加密
         assertTrue(Y9MessageDigestUtil.bcryptMatch("plainPassword123", person.getPassword()));
+        assertEquals(PasswordHashAlgorithmConsts.BCRYPT, person.getPasswordHashAlgorithm());
+        assertNotNull(person.getLastModifyPasswordTime());
+        assertFalse(person.getLastModifyPasswordTime().before(beforeCreation));
+        assertFalse(person.getLastModifyPasswordTime().after(afterCreation));
 
         // 验证是否在编状态
         assertEquals(Integer.valueOf(1), person.getOfficial());
@@ -96,6 +107,8 @@ class Y9PersonTest {
     void testUpdatePerson() {
         String defaultPassword = "default123";
         Y9Person person = new Y9Person(personModel, parentDept, ancestorList, 1, defaultPassword);
+        Date passwordTime = new Date(0);
+        person.setLastModifyPasswordTime(passwordTime);
 
         // 准备更新数据
         Person updatedPerson = new Person();
@@ -121,12 +134,15 @@ class Y9PersonTest {
 
         // 验证排序路径更新 - 应该包含父节点的tabIndex和当前节点的tabIndex
         assertEquals("00000,00000,00001", person.getOrderedPath()); // 现在父节点tabIndex是0，当前节点是1
+        assertEquals(passwordTime, person.getLastModifyPasswordTime());
     }
 
     @Test
     void testChangePassword() {
         String defaultPassword = "default123";
         Y9Person person = new Y9Person(personModel, parentDept, ancestorList, 1, defaultPassword);
+        Date passwordTime = new Date(0);
+        person.setLastModifyPasswordTime(passwordTime);
 
         String oldPassword = "plainPassword123";
         String newPassword = "newPassword456";
@@ -136,20 +152,46 @@ class Y9PersonTest {
 
         // 验证新密码是否正确加密
         assertTrue(Y9MessageDigestUtil.bcryptMatch("newPassword456", person.getPassword()));
+        assertTrue(person.getLastModifyPasswordTime().after(passwordTime));
     }
 
     @Test
     void testChangePasswordWithoutOldPassword() {
         String defaultPassword = "default123";
         Y9Person person = new Y9Person(personModel, parentDept, ancestorList, 1, defaultPassword);
+        Date passwordTime = new Date(0);
+        person.setLastModifyPasswordTime(passwordTime);
 
         String newPassword = "newPassword456";
 
         // 更改密码，不提供旧密码（应成功更改）
+        person.setPasswordHashAlgorithm("legacy");
         person.changePassword(null, newPassword);
 
         // 验证新密码是否正确加密
         assertTrue(Y9MessageDigestUtil.bcryptMatch("newPassword456", person.getPassword()));
+        assertEquals(PasswordHashAlgorithmConsts.BCRYPT, person.getPasswordHashAlgorithm());
+        assertTrue(person.getLastModifyPasswordTime().after(passwordTime));
+    }
+
+    @Test
+    void passwordHashAlgorithmSurvivesModelConversionAndProfileUpdate() {
+        Y9Person person = new Y9Person(personModel, parentDept, ancestorList, 1, "default123");
+        person.setPasswordHashAlgorithm("future-algorithm");
+        Person model = PlatformModelConvertUtil.y9PersonToPerson(person);
+        assertEquals("future-algorithm", model.getPasswordHashAlgorithm());
+
+        Person profileUpdate = new Person();
+        profileUpdate.setName("李四");
+        person.update(profileUpdate, parentDept, ancestorList);
+        assertEquals("future-algorithm", person.getPasswordHashAlgorithm());
+
+        Y9User account = new Y9User();
+        account.setPasswordHashAlgorithm("future-algorithm");
+        UserInfo userInfo = PlatformModelConvertUtil.convert(account, UserInfo.class);
+        assertEquals("future-algorithm", userInfo.getPasswordHashAlgorithm());
+        assertEquals("future-algorithm",
+            PlatformModelConvertUtil.convert(userInfo, Y9User.class).getPasswordHashAlgorithm());
     }
 
     @Test
@@ -164,6 +206,20 @@ class Y9PersonTest {
         assertThrows(net.risesoft.y9.exception.Y9BusinessException.class, () -> {
             person.changePassword(wrongOldPassword, newPassword);
         });
+    }
+
+    @Test
+    void changePasswordUsesStoredAlgorithmAndDoesNotModifyPasswordOnFailure() {
+        Y9Person person = new Y9Person(personModel, parentDept, ancestorList, 1, "default123");
+        String hash = person.getPassword();
+        Date passwordTime = person.getLastModifyPasswordTime();
+        person.setPasswordHashAlgorithm("unknown");
+
+        assertThrows(net.risesoft.y9.exception.Y9BusinessException.class,
+            () -> person.changePassword("plainPassword123", "newPassword456"));
+        assertEquals(hash, person.getPassword());
+        assertEquals("unknown", person.getPasswordHashAlgorithm());
+        assertEquals(passwordTime, person.getLastModifyPasswordTime());
     }
 
     @Test
@@ -267,6 +323,16 @@ class Y9PersonTest {
         // 验证导入的BCrypt密码不会被重复加密，所以值会变化，但应该能被匹配
         assertTrue(person.getPassword().startsWith("$2a$10$")); // 检查是否是BCrypt格式
         assertEquals(importedBcryptPassword, person.getPassword());
+        assertNotNull(person.getLastModifyPasswordTime());
+    }
+
+    @Test
+    void constructorRecordsTimeForDefaultPassword() {
+        personModel.setPassword(null);
+        Y9Person person = new Y9Person(personModel, parentDept, ancestorList, 1, "default123");
+
+        assertTrue(Y9MessageDigestUtil.bcryptMatch("default123", person.getPassword()));
+        assertNotNull(person.getLastModifyPasswordTime());
     }
 
     @Test

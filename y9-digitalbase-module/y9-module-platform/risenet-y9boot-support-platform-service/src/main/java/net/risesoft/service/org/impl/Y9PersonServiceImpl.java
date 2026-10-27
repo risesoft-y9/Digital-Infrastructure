@@ -37,6 +37,8 @@ import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
 import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.org.PasswordPolicy;
+import net.risesoft.model.platform.org.PasswordValidity;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.org.PersonExt;
 import net.risesoft.model.platform.org.Position;
@@ -46,6 +48,7 @@ import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.query.platform.PersonQuery;
 import net.risesoft.repository.org.Y9PersonRepository;
 import net.risesoft.service.org.Y9PersonService;
+import net.risesoft.service.setting.UserPasswordPolicyService;
 import net.risesoft.service.setting.Y9SettingService;
 import net.risesoft.specification.Y9PersonSpecification;
 import net.risesoft.util.PlatformModelConvertUtil;
@@ -57,6 +60,7 @@ import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9StringUtil;
+import net.risesoft.y9.util.signing.Y9MessageDigestUtil;
 import net.risesoft.y9.validation.ValidateUtil;
 
 /**
@@ -80,6 +84,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     private final Y9PersonsToPositionsManager y9PersonsToPositionsManager;
 
     private final Y9SettingService y9SettingService;
+    private final UserPasswordPolicyService userPasswordPolicyService;
 
     @Override
     public boolean isCaidAvailable(String personId, String caId) {
@@ -348,6 +353,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Person currentPerson = y9PersonManager.getById(id);
         Y9Person originalPerson = PlatformModelConvertUtil.convert(currentPerson, Y9Person.class);
 
+        userPasswordPolicyService.validatePassword(newPassword);
         currentPerson.changePassword(oldPassword, newPassword);
         Y9Person savedPerson = y9PersonManager.update(currentPerson, originalPerson);
 
@@ -362,6 +368,18 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Context.publishEvent(auditLogEvent);
 
         return PlatformModelConvertUtil.y9PersonToPerson(savedPerson);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PasswordValidity checkPasswordValidity(String personId) {
+        return userPasswordPolicyService.getValidity(y9PersonManager.getById(personId));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PasswordPolicy getPasswordPolicy(String personId) {
+        return userPasswordPolicyService.getPolicy();
     }
 
     @Override
@@ -453,6 +471,12 @@ public class Y9PersonServiceImpl implements Y9PersonService {
                 Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(y9Person.getParentId());
                 List<Y9OrgBase> ancestorList = compositeOrgBaseManager.listOrgUnitAndAncestor(person.getParentId());
                 y9Person.update(person, parent, ancestorList);
+                if (person.getPassword() != null
+                    && !StringUtils.equals(person.getPassword(), originalPerson.getPassword())) {
+                    userPasswordPolicyService.validatePassword(person.getPassword());
+                    y9Person.setPassword(originalPerson.getPassword());
+                    y9Person.changePassword(null, person.getPassword());
+                }
                 Y9Person savedPerson = y9PersonManager.update(y9Person, originalPerson);
 
                 y9PersonExtManager.saveOrUpdate(y9PersonExt, savedPerson);
@@ -475,6 +499,11 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
         Integer nextSubTabIndex = compositeOrgBaseManager.getNextSubTabIndex(parent.getId());
         String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
+        // 默认密码不校验强度；导入的 bcrypt 密文保持兼容，无法追溯校验明文强度。
+        if (StringUtils.isNotEmpty(person.getPassword()) && !defaultPassword.equals(person.getPassword())
+            && !Y9MessageDigestUtil.BCRYPT_PATTERN.matcher(person.getPassword()).matches()) {
+            userPasswordPolicyService.validatePassword(person.getPassword());
+        }
         List<Y9OrgBase> ancestorList = compositeOrgBaseManager.listOrgUnitAndAncestor(person.getParentId());
 
         Y9Person y9Person = new Y9Person(person, parent, ancestorList, nextSubTabIndex, defaultPassword);

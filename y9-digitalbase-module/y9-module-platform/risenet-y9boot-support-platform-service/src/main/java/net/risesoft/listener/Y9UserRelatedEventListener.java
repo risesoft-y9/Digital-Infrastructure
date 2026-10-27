@@ -11,6 +11,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.consts.PasswordHashAlgorithmConsts;
 import net.risesoft.entity.org.Y9Manager;
 import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.org.Y9Position;
@@ -95,6 +96,7 @@ public class Y9UserRelatedEventListener {
         y9User.setOriginal(true);
         y9User.setOriginalId(null);
         y9User.setGlobalManager(y9Manager.getGlobalManager());
+        y9User.setPasswordHashAlgorithm(PasswordHashAlgorithmConsts.BCRYPT);
         y9UserService.save(y9User, y9Manager.getPassword());
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("新增管理员->{}执行完成", y9Manager.getId());
@@ -174,6 +176,7 @@ public class Y9UserRelatedEventListener {
         y9User.setOriginal(true);
         y9User.setOriginalId(null);
         y9User.setGlobalManager(y9Manager.getGlobalManager());
+        y9User.setPasswordHashAlgorithm(PasswordHashAlgorithmConsts.BCRYPT);
         y9UserService.save(y9User, y9Manager.getPassword());
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("更新管理员->{}执行完成", y9Manager.getId());
@@ -234,6 +237,7 @@ public class Y9UserRelatedEventListener {
         y9User.setGlobalManager(false);
         String positionIds = y9PersonsToPositionsService.getPositionIdsByPersonId(person.getId(), Boolean.FALSE);
         y9User.setPositions(positionIds);
+        y9User.setPasswordHashAlgorithm(person.getPasswordHashAlgorithm());
         y9UserService.save(y9User, person.getPassword());
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("新增人员->{}执行完成", person.getId());
@@ -317,6 +321,7 @@ public class Y9UserRelatedEventListener {
         y9User.setGlobalManager(false);
         String positionIds = y9PersonsToPositionsService.getPositionIdsByPersonId(person.getId(), Boolean.FALSE);
         y9User.setPositions(positionIds);
+        y9User.setPasswordHashAlgorithm(person.getPasswordHashAlgorithm());
         y9UserService.save(y9User, person.getPassword());
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("更新人员->{}执行完成", person.getId());

@@ -140,7 +140,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
                 } else {
                     y9User = agentUsers.get(0);
                     String hashed = y9User.getPassword();
-                    if (!Y9MessageDigestUtil.bcryptMatch(plainPassword, hashed)) {
+                    if (!Y9MessageDigestUtil.passwordMatch(plainPassword, hashed, y9User.getPasswordHashAlgorithm())) {
                         loginMsg = "代理用户密码错误。";
                         throw new FailedLoginException("代理用户密码错误。");
                     } else {
@@ -167,8 +167,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
                         y9User.getTenantShortName());
                 } else {
                     y9User = users.get(0);
-                    String hashed = y9User.getPassword();
-                    if (!Y9MessageDigestUtil.bcryptMatch(plainPassword, hashed)) {
+                    if (!Y9MessageDigestUtil.passwordMatch(plainPassword, y9User.getPassword(), y9User.getPasswordHashAlgorithm())) {
                         loginMsg = "用户密码错误。";
                         throw new FailedLoginException("用户密码错误。");
                     }

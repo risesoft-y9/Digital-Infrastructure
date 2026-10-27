@@ -84,6 +84,11 @@ public class Y9User implements Serializable {
     @Comment("密码")
     private String password;
 
+    /** 密码哈希算法 */
+    @Column(name = "PASSWORD_HASH_ALGORITHM", length = 50, nullable = false)
+    @Comment("密码哈希算法")
+    private String passwordHashAlgorithm;
+
     @Column(name = "CAID", length = 255)
     @Comment("ca认证号")
     private String caid;

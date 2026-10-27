@@ -5,7 +5,7 @@ import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
+import net.risesoft.y9.configuration.app.y9platform.tenantdefault.TenantDefaultProperties;
 
 /**
  * 租户设置
@@ -20,13 +20,47 @@ public class TenantSetting extends AbstractSetting implements Serializable {
     private static final long serialVersionUID = 6275047619882074132L;
 
     /** 用户默认密码 */
-    private String userDefaultPassword = Y9PlatformProperties.USER_PASSWORD_DEFAULT;
+    private String userDefaultPassword;
+
+    /** 普通用户默认密码是否强制修改 */
+    private boolean userDefaultPasswordChangeRequired;
+
+    /** 普通用户密码有效期（天），0 为永久 */
+    private int userPasswordMaxAge;
+
+    /** 普通用户密码最小长度，配置范围为 6～32 */
+    private int userPasswordMinLength;
+
+    private boolean userPasswordRequireUppercase;
+
+    private boolean userPasswordRequireLowercase;
+
+    private boolean userPasswordRequireDigit;
+
+    /** 必须包含英文标点符号 */
+    private boolean userPasswordRequireSymbol;
 
     /** 岗位名称格式 */
-    private String positionNameTemplate = Y9PlatformProperties.POSITION_NAME_TEMPLATE_DEFAULT;
+    private String positionNameTemplate;
+
+    public TenantSetting() {
+        this(new TenantDefaultProperties());
+    }
+
+    public TenantSetting(TenantDefaultProperties tenantDefault) {
+        this.userDefaultPassword = tenantDefault.getUserDefaultPassword();
+        this.userDefaultPasswordChangeRequired = tenantDefault.isUserDefaultPasswordChangeRequired();
+        this.userPasswordMaxAge = tenantDefault.getUserPasswordMaxAge();
+        this.userPasswordMinLength = tenantDefault.getUserPasswordMinLength();
+        this.userPasswordRequireUppercase = tenantDefault.isUserPasswordRequireUppercase();
+        this.userPasswordRequireLowercase = tenantDefault.isUserPasswordRequireLowercase();
+        this.userPasswordRequireDigit = tenantDefault.isUserPasswordRequireDigit();
+        this.userPasswordRequireSymbol = tenantDefault.isUserPasswordRequireSymbol();
+        this.positionNameTemplate = tenantDefault.getPositionNameTemplate();
+    }
 
     @Override
     public String getPrefix() {
-        return "y9.app.platform.";
+        return "y9.app.platform.tenant-default.";
     }
 }

@@ -2,6 +2,7 @@ package net.risesoft.y9.util.signing;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -9,6 +10,8 @@ import org.mindrot.jbcrypt.BCrypt;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import net.risesoft.consts.PasswordHashAlgorithmConsts;
 
 /**
  * 消息摘要、加密工具类
@@ -210,6 +213,33 @@ public class Y9MessageDigestUtil {
      */
     public static boolean bcryptMatch(String plaintext, String hashed) {
         return BCrypt.checkpw(plaintext, hashed);
+    }
+
+    /**
+     * 按密码记录的哈希算法校验密码。缺失、未支持的算法或无效密文均不匹配，不回退到其他算法。
+     *
+     * @param plaintext 明文密码
+     * @param hashed 已存储的密码哈希
+     * @param algorithm 已存储的密码哈希算法，目前支持 bcrypt
+     * @return 是否匹配
+     */
+    public static boolean passwordMatch(String plaintext, String hashed, String algorithm) {
+        if (plaintext == null || hashed == null || algorithm == null) {
+            return false;
+        }
+        switch (algorithm.toLowerCase(Locale.ROOT)) {
+            case PasswordHashAlgorithmConsts.BCRYPT:
+                if (!BCRYPT_PATTERN.matcher(hashed).matches()) {
+                    return false;
+                }
+                try {
+                    return bcryptMatch(plaintext, hashed);
+                } catch (IllegalArgumentException e) {
+                    return false;
+                }
+            default:
+                return false;
+        }
     }
 
 }

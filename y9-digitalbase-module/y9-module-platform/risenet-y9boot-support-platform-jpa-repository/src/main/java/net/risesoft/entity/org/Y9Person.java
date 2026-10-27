@@ -1,5 +1,6 @@
 package net.risesoft.entity.org;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -18,6 +19,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.consts.DefaultConsts;
+import net.risesoft.consts.PasswordHashAlgorithmConsts;
 import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.enums.platform.org.PersonTypeEnum;
 import net.risesoft.enums.platform.org.SexEnum;
@@ -137,6 +139,16 @@ public class Y9Person extends Y9OrgBase {
     @Comment("登录密码")
     private String password;
 
+    /** 密码哈希算法 */
+    @Column(name = "PASSWORD_HASH_ALGORITHM", length = 50, nullable = false)
+    @Comment("密码哈希算法")
+    private String passwordHashAlgorithm;
+
+    /** 初始密码设置或最后修改密码的时间，历史账号使用创建时间回填 */
+    @Column(name = "LAST_MODIFY_PASSWORD_TIME")
+    @Comment("最后修改密码时间")
+    private Date lastModifyPasswordTime;
+
     /** 性别 */
     @ColumnDefault("1")
     @Column(name = "SEX", nullable = false)
@@ -222,6 +234,8 @@ public class Y9Person extends Y9OrgBase {
                 this.password = Y9MessageDigestUtil.bcrypt(this.password);
             }
         }
+        this.passwordHashAlgorithm = PasswordHashAlgorithmConsts.BCRYPT;
+        this.lastModifyPasswordTime = new Date();
         this.official = 1;
         this.parentId = parent.getId();
         this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, this.name, parent.getDn());
@@ -262,10 +276,12 @@ public class Y9Person extends Y9OrgBase {
     public void changePassword(String oldPassword, String newPassword) {
         if (StringUtils.isNotBlank(oldPassword)) {
             // 兼容旧接口（无 oldPassword）或重设密码
-            Y9AssertUtil.isTrue(Y9MessageDigestUtil.bcryptMatch(oldPassword, this.password),
+            Y9AssertUtil.isTrue(Y9MessageDigestUtil.passwordMatch(oldPassword, this.password, this.passwordHashAlgorithm),
                 OrgUnitErrorCodeEnum.OLD_PASSWORD_IS_INCORRECT);
         }
         this.password = Y9MessageDigestUtil.bcrypt(newPassword);
+        this.passwordHashAlgorithm = PasswordHashAlgorithmConsts.BCRYPT;
+        this.lastModifyPasswordTime = new Date();
     }
 
     public void changeParent(Y9OrgBase parent, Integer nextSubTabIndex, List<Y9OrgBase> ancestorList) {

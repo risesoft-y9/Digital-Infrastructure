@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+    <changeSet id="1793088862075-1" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="Y9_ORG_PERSON" columnName="LAST_MODIFY_PASSWORD_TIME"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="Y9_ORG_PERSON">
+            <column name="LAST_MODIFY_PASSWORD_TIME" type="datetime" remarks="最后修改密码时间"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1793088862075-2" author="shidaobang">
+        <preConditions onFail="HALT">
+            <columnExists tableName="Y9_ORG_PERSON" columnName="LAST_MODIFY_PASSWORD_TIME"/>
+            <columnExists tableName="Y9_ORG_PERSON" columnName="CREATE_TIME"/>
+        </preConditions>
+        <update tableName="Y9_ORG_PERSON">
+            <column name="LAST_MODIFY_PASSWORD_TIME" valueComputed="CREATE_TIME"/>
+            <where>LAST_MODIFY_PASSWORD_TIME IS NULL</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="1793088874075-1" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="Y9_ORG_PERSON" columnName="PASSWORD_HASH_ALGORITHM"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="Y9_ORG_PERSON">
+            <column name="PASSWORD_HASH_ALGORITHM" type="VARCHAR(50)" remarks="密码哈希算法"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1793088874075-2" author="shidaobang">
+        <preConditions onFail="HALT">
+            <columnExists tableName="Y9_ORG_PERSON" columnName="PASSWORD_HASH_ALGORITHM"/>
+        </preConditions>
+        <update tableName="Y9_ORG_PERSON">
+            <column name="PASSWORD_HASH_ALGORITHM" value="bcrypt"/>
+            <where>PASSWORD_HASH_ALGORITHM IS NULL</where>
+        </update>
+        <addNotNullConstraint tableName="Y9_ORG_PERSON" columnName="PASSWORD_HASH_ALGORITHM"
+                              columnDataType="VARCHAR(50)"/>
+    </changeSet>
+</databaseChangeLog>

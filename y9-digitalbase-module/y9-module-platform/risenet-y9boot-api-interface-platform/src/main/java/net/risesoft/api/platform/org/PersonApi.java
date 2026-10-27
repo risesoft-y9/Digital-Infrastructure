@@ -15,7 +15,9 @@ import net.risesoft.dto.platform.PersonInfoDTO;
 import net.risesoft.model.platform.Role;
 import net.risesoft.model.platform.org.Group;
 import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.org.PasswordPolicy;
 import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.PasswordValidity;
 import net.risesoft.model.platform.org.PersonExt;
 import net.risesoft.model.platform.org.Position;
 import net.risesoft.pojo.Y9Page;
@@ -33,6 +35,30 @@ import net.risesoft.query.platform.PersonQuery;
  */
 @Validated
 public interface PersonApi {
+
+    /**
+     * 获取当前普通用户所属租户的密码策略，供业务系统前端展示。
+     * 仅返回策略配置，不包含默认密码；管理员不适用。
+     *
+     * @param tenantId 当前登录人所属租户id
+     * @param personId 当前登录的普通用户id（兼容兼职人员id）
+     * @return 默认密码强制修改、有效期及密码强度要求
+     */
+    @GetMapping("/getPasswordPolicy")
+    Y9Result<PasswordPolicy> getPasswordPolicy(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId);
+
+    /**
+     * 检查普通用户密码有效性。data.valid 为 false 时，调用方应要求先修改密码。
+     * 不检查当前密码是否符合新强度规则；管理员不适用。
+     *
+     * @param tenantId 租户id
+     * @param personId 普通用户id（兼容兼职人员id）
+     * @return 有效性及默认密码强制修改、密码过期状态
+     */
+    @GetMapping("/checkPasswordValidity")
+    Y9Result<PasswordValidity> checkPasswordValidity(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 检查登录名是否存在

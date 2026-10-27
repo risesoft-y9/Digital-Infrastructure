@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationListener;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.consts.PasswordHashAlgorithmConsts;
 import net.risesoft.y9.util.signing.Y9MessageDigestUtil;
 
 import y9.entity.Y9User;
@@ -47,6 +48,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             y9User.setName("系统管理员");
             y9User.setOriginal(true);
             y9User.setPassword(Y9MessageDigestUtil.bcrypt("Risesoft@2025"));
+            y9User.setPasswordHashAlgorithm(PasswordHashAlgorithmConsts.BCRYPT);
             y9User.setPersonType("Manager");
             y9User.setSex(1);
             y9User.setTenantName("default");

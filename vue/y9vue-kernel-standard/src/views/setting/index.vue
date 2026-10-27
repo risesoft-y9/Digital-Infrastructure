@@ -1,169 +1,138 @@
 <template>
-    <y9Card v-if="config_setting.itemList.length" key="setting" :showCloseButton="false" :title="$t('系统信息')">
-        <y9Form ref="settingY9FormRef" :config="config_setting">
-            <template #slotAlterPwdButton>
-                <el-button
-                    :loading="isLoading"
-                    :size="fontSizeObj.buttonSize"
-                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                    class="alter-personInfo"
-                    type="danger"
-                    @click="onEdit"
-                >
-                    {{ $t(`${editBtnText}`) }}
+    <y9Card :showCloseButton="false" :title="$t('系统设置')">
+        <el-form
+            ref="settingFormRef"
+            v-loading="loading"
+            :model="model"
+            :rules="rules"
+            :label-width="settingStore.device === 'mobile' ? '140px' : '180px'"
+            class="setting-form"
+        >
+            <el-form-item :label="$t('默认密码')" prop="userDefaultPassword">
+                <el-input v-model="model.userDefaultPassword" type="password" show-password />
+            </el-form-item>
+            <el-form-item :label="$t('岗位名称格式')" prop="positionNameTemplate">
+                <el-input v-model="model.positionNameTemplate" :placeholder="positionNamePlaceholder" />
+            </el-form-item>
+            <el-divider content-position="left">{{ $t('普通用户密码策略') }}</el-divider>
+            <el-form-item :label="$t('默认密码强制修改')" prop="userDefaultPasswordChangeRequired">
+                <el-switch v-model="model.userDefaultPasswordChangeRequired" />
+            </el-form-item>
+            <el-form-item :label="$t('密码有效天数')" prop="userPasswordMaxAge">
+                <el-input-number v-model="model.userPasswordMaxAge" :min="0" :max="365" :step="1" step-strictly />
+                <span class="setting-tip">{{ $t('0 为永久，设置范围 0～365') }}</span>
+            </el-form-item>
+            <el-form-item :label="$t('密码最小长度')" prop="userPasswordMinLength">
+                <el-input-number v-model="model.userPasswordMinLength" :min="6" :max="32" :step="1" step-strictly />
+                <span class="setting-tip">{{ $t('设置范围 6～32 位') }}</span>
+            </el-form-item>
+            <el-form-item :label="$t('密码必须包含')">
+                <el-checkbox v-model="model.userPasswordRequireUppercase">{{ $t('大写字母') }}</el-checkbox>
+                <el-checkbox v-model="model.userPasswordRequireLowercase">{{ $t('小写字母') }}</el-checkbox>
+                <el-checkbox v-model="model.userPasswordRequireDigit">{{ $t('数字') }}</el-checkbox>
+                <el-checkbox v-model="model.userPasswordRequireSymbol">{{ $t('英文标点符号') }}</el-checkbox>
+            </el-form-item>
+            <el-form-item>
+                <el-button :loading="isLoading" :disabled="loading || !loaded" type="primary" @click="onSave">
+                    {{ $t('保存') }}
                 </el-button>
-            </template>
-        </y9Form>
+            </el-form-item>
+        </el-form>
     </y9Card>
-    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>
+    import { computed, onMounted, reactive, ref } from 'vue';
     import { useI18n } from 'vue-i18n';
-    import { computed, inject, reactive, ref } from 'vue';
+    import type { FormInstance, FormRules } from 'element-plus';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { getTenantSetting, saveTenantSetting } from '@/api/setting';
 
-    const settingStore = useSettingStore();
     const { t } = useI18n();
-    // 注入 字体对象
-    const fontSizeObj: any = inject('sizeObjInfo');
-
-    // 全局loading
-    let loading = ref(false);
-
-    // 初始化
-    initEdit();
-
-    // 编辑个人信息的button文本
-    const editBtnText = ref('保存');
-    const settingY9FormRef = ref('');
+    const settingStore = useSettingStore();
+    const positionNamePlaceholder = computed(() =>
+        t("默认格式为：#jobName + '（' + #personNames + '）'，#jobName 会替换为职位名，#personNames 会替换为人员名称")
+    );
+    const settingFormRef = ref<FormInstance>();
+    const loading = ref(false);
+    const loaded = ref(false);
     const isLoading = ref(false);
+    const model = reactive({
+        userDefaultPassword: '',
+        positionNameTemplate: '',
+        userDefaultPasswordChangeRequired: false,
+        userPasswordMaxAge: 0,
+        userPasswordMinLength: 6,
+        userPasswordRequireUppercase: false,
+        userPasswordRequireLowercase: false,
+        userPasswordRequireDigit: false,
+        userPasswordRequireSymbol: false
+    });
+    const rules = computed<FormRules>(() => ({
+        userPasswordMaxAge: [
+            { type: 'integer', min: 0, max: 365, message: t('请输入 0～365 的整数'), trigger: 'change' }
+        ],
+        userPasswordMinLength: [
+            { type: 'integer', min: 6, max: 32, message: t('最小长度须设置为 6～32 的整数'), trigger: 'change' }
+        ]
+    }));
 
-    // 个人信息配置 - 传入封装的y9Form组件
-    const config_setting = reactive({
-        descriptionsFormConfig: {
-            //描述表单配置
-            column: settingStore.device === 1,
-            labelAlign: 'center',
-            labelWidth: '150px',
-            contentWidth: '200px'
-        },
-        // labelWidth: settingStore.device === 'mobile' ? '130px' : '236px',
-        rules: {},
-        itemList: [],
-        model: {}
+    onMounted(async () => {
+        loading.value = true;
+        try {
+            const result = await getTenantSetting();
+            if (!result.success) {
+                ElMessage.error(result.msg || t('读取系统设置失败'));
+                return;
+            }
+            for (const key of Object.keys(model)) {
+                if (result.data[key] != null) model[key] = result.data[key];
+            }
+            loaded.value = true;
+        } catch (error) {
+            ElMessage.error(t('读取系统设置失败'));
+        } finally {
+            loading.value = false;
+        }
     });
 
-    // 个人信息表单验证规则
-    const personFormRules = {};
-
-    // 可编辑状态下
-    async function initEdit() {
-        const result = await getTenantSetting().catch((e) => e);
-
-        // 设置默认值
-        const model = {
-            userDefaultPassword: result.data.userDefaultPassword,
-            positionNameTemplate: result.data.positionNameTemplate
-        };
-
-        const edit_itemList = [
-            {
-                type: 'input',
-                label: computed(() => t('默认用户密码')),
-                prop: 'userDefaultPassword'
-            },
-            {
-                type: 'input',
-                label: computed(() => t('岗位名称格式')),
-                prop: 'positionNameTemplate',
-                props: {
-                    placeholder:
-                        "默认格式为：#jobName + '（' + #personNames + '）'，#jobName 会替换为职位名，#personNames 会替换为人员名称"
-                }
-            },
-            {
-                type: 'slot', //插槽类型,
-                labelWidth: settingStore.device === 'mobile' ? '50px' : '150px',
-                props: {
-                    slotName: 'slotAlterPwdButton' //插槽名称
-                }
-            }
-        ];
-        config_setting.model = model;
-        config_setting.itemList = edit_itemList;
-        config_setting.rules = personFormRules;
-    }
-
-    // 提交表单
-    function onSubmitSettingForm() {
-        isLoading.value = true;
-        // 接口可提交的所有字段
-        const settingForm = reactive({
-            userDefaultPassword: ''
-        });
-
-        // 合并已填写的字段
-        let formData = { ...settingForm, ...settingY9FormRef.value.model };
-
-        console.log(formData);
-
-        // 删除不知怎么来的 undefined 属性
-        for (let key in formData) {
-            if (key === 'undefined') {
-                delete formData.undefined;
-            }
+    async function onSave() {
+        if (!(await settingFormRef.value?.validate().catch(() => false))) {
+            ElMessage.warning(t('验证不通过，请检查'));
+            return;
         }
-        return new Promise((resolve, reject) => {
-            const y9FormInstance = settingY9FormRef.value.elFormRef;
-            y9FormInstance.validate(async (valid) => {
-                if (valid) {
-                    let res = await saveTenantSetting(formData);
-                    // 无论接口成功或失败都给出提示信息
-                    ElNotification({
-                        title: res.success ? t('成功') : t('失败'),
-                        message: res.msg,
-                        type: res.success ? 'success' : 'error',
-                        duration: 2000,
-                        offset: 80
-                    });
-                    if (res.code != 200) {
-                        // 接口状态错误，三秒后关闭loading动画
-                        setTimeout(() => {
-                            isLoading.value = false;
-                        }, 3000);
-                    } else {
-                        isLoading.value = false;
-                    }
-                    resolve();
-                } else {
-                    ElMessage({
-                        type: 'error',
-                        message: t('验证不通过，请检查'),
-                        offset: 65
-                    });
-                    reject();
-                }
+        isLoading.value = true;
+        try {
+            const result = await saveTenantSetting({ ...model });
+            ElNotification({
+                title: result.success ? t('成功') : t('失败'),
+                message: result.success ? t('保存成功') : result.msg || t('保存失败'),
+                type: result.success ? 'success' : 'error',
+                duration: 2000,
+                offset: 80
             });
-        });
-    }
-
-    function onEdit() {
-        onSubmitSettingForm();
+        } catch (error) {
+            ElMessage.error(t('保存系统设置失败'));
+        } finally {
+            isLoading.value = false;
+        }
     }
 </script>
 
 <style lang="scss" scoped>
-    .y9-card {
-        & .y9-form {
-            :deep(.alter-pwd) {
-                cursor: pointer;
+    .setting-form {
+        max-width: 1000px;
 
-                &:hover {
-                    color: var(--el-color-primary);
-                }
-            }
+        :deep(.el-form-item__label) {
+            height: auto;
+            min-height: 32px;
+            line-height: 1.5;
+            align-items: center;
         }
+    }
+    .setting-tip {
+        margin-left: 12px;
+        color: var(--el-text-color-secondary);
+        font-size: 13px;
     }
 </style>

@@ -240,9 +240,9 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
 
         List<String> dataCatalogPeriods = new ArrayList<>();
         if (DataCatalogTypeEnum.RETENTION_PERIOD.equals(dataCatalogType)) {
-            dataCatalogPeriods = y9PlatformProperties.getDataCatalogRetentionPeriods();
+            dataCatalogPeriods = y9PlatformProperties.getDataCatalog().getRetentionPeriods();
         } else if (DataCatalogTypeEnum.CONFIDENTIALITY_PERIOD.equals(dataCatalogType)) {
-            dataCatalogPeriods = y9PlatformProperties.getDataCatalogConfidentialityPeriods();
+            dataCatalogPeriods = y9PlatformProperties.getDataCatalog().getConfidentialityPeriods();
         }
         for (String dataCatalogPeriod : dataCatalogPeriods) {
             DataCatalog retentionDataCatalog = new DataCatalog();

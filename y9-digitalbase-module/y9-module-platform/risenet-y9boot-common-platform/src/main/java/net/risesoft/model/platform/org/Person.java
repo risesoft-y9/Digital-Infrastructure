@@ -84,6 +84,9 @@ public class Person extends OrgUnit implements Serializable {
     @JsonIgnore
     private String password;
 
+    /** 密码哈希算法 */
+    private String passwordHashAlgorithm;
+
     /**
      * 性别
      */

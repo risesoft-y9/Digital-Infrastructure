@@ -38,7 +38,9 @@ public enum OrgUnitErrorCodeEnum implements ErrorCode {
     NOT_ALL_DESCENDENTS_DISABLED(23, "存在未禁用的后代组织节点，不能禁用当前节点"),
     PERSON_OR_POSITION_NOT_FOUND(22, "人员或岗位[{}]不存在"),
     CUSTOM_ID_USED(23, "自定义 ID[{}]已经被使用"),
-    ID_CARD_NUMBER_INVALID(24, "身份证号码[{}]不合法"),;
+    ID_CARD_NUMBER_INVALID(24, "身份证号码[{}]不合法"),
+    PASSWORD_POLICY_INVALID(25, "密码策略不合法：{}"),
+    PASSWORD_STRENGTH_INVALID(26, "密码不符合强度要求：{}"),;
 
     private final int moduleErrorCode;
     private final String description;

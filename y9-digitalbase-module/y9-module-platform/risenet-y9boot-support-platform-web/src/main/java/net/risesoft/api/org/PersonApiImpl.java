@@ -21,7 +21,9 @@ import net.risesoft.dto.platform.PersonInfoDTO;
 import net.risesoft.model.platform.Role;
 import net.risesoft.model.platform.org.Group;
 import net.risesoft.model.platform.org.OrgUnit;
+import net.risesoft.model.platform.org.PasswordPolicy;
 import net.risesoft.model.platform.org.Person;
+import net.risesoft.model.platform.org.PasswordValidity;
 import net.risesoft.model.platform.org.PersonExt;
 import net.risesoft.model.platform.org.Position;
 import net.risesoft.pojo.Y9Page;
@@ -58,6 +60,18 @@ public class PersonApiImpl implements PersonApi {
     private final Y9PersonService y9PersonService;
     private final Y9PositionService y9PositionService;
     private final Y9PersonToRoleService y9PersonToRoleService;
+
+    @Override
+    public Y9Result<PasswordPolicy> getPasswordPolicy(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId) {
+        return Y9Result.success(y9PersonService.getPasswordPolicy(personId));
+    }
+
+    @Override
+    public Y9Result<PasswordValidity> checkPasswordValidity(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId) {
+        return Y9Result.success(y9PersonService.checkPasswordValidity(personId));
+    }
 
     /**
      * 检查登录名是否存在

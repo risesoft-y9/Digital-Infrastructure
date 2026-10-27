@@ -145,6 +145,8 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
             person.setEmail(originalPerson.getEmail());
             person.setMobile(originalPerson.getMobile());
             person.setPassword(originalPerson.getPassword());
+            person.setPasswordHashAlgorithm(originalPerson.getPasswordHashAlgorithm());
+            person.setLastModifyPasswordTime(originalPerson.getLastModifyPasswordTime());
             person.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, person.getName(), parent.getDn()));
 
             this.save(person);
