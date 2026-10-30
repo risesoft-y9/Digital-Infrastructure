@@ -19,43 +19,52 @@ public class TenantSetting extends AbstractSetting implements Serializable {
 
     private static final long serialVersionUID = 6275047619882074132L;
 
-    /** 用户默认密码 */
-    private String userDefaultPassword;
+    /** 创建或重置账号时使用的默认密码。 */
+    private String defaultPassword;
 
-    /** 普通用户默认密码是否强制修改 */
-    private boolean userDefaultPasswordChangeRequired;
+    /** 人员是否要求修改与租户当前默认密码相同的密码。 */
+    private boolean defaultPasswordChangeRequired;
 
-    /** 普通用户密码有效期（天），0 为永久 */
-    private int userPasswordMaxAge;
+    /** 人员密码有效期，单位天，配置范围为 0～365，0 为永久。 */
+    private int passwordMaxAge;
 
-    /** 普通用户密码最小长度，配置范围为 6～32 */
-    private int userPasswordMinLength;
+    /** 密码最小长度，配置范围为 6～32 */
+    private int passwordMinLength;
 
-    private boolean userPasswordRequireUppercase;
+    /** 密码是否必须包含大写英文字母 A～Z。 */
+    private boolean passwordRequireUppercase;
 
-    private boolean userPasswordRequireLowercase;
+    /** 密码是否必须包含小写英文字母 a～z。 */
+    private boolean passwordRequireLowercase;
 
-    private boolean userPasswordRequireDigit;
+    /** 密码是否必须包含数字 0～9。 */
+    private boolean passwordRequireDigit;
 
-    /** 必须包含英文标点符号 */
-    private boolean userPasswordRequireSymbol;
+    /** 密码是否必须包含 ASCII 英文标点符号，空格和中文标点不计入。 */
+    private boolean passwordRequireSymbol;
 
     /** 岗位名称格式 */
     private String positionNameTemplate;
 
+    /** 使用内置默认配置初始化租户设置。 */
     public TenantSetting() {
         this(new TenantDefaultProperties());
     }
 
+    /**
+     * 使用指定默认配置初始化租户设置，作为读取租户已保存设置时的兜底值。
+     *
+     * @param tenantDefault 租户默认配置
+     */
     public TenantSetting(TenantDefaultProperties tenantDefault) {
-        this.userDefaultPassword = tenantDefault.getUserDefaultPassword();
-        this.userDefaultPasswordChangeRequired = tenantDefault.isUserDefaultPasswordChangeRequired();
-        this.userPasswordMaxAge = tenantDefault.getUserPasswordMaxAge();
-        this.userPasswordMinLength = tenantDefault.getUserPasswordMinLength();
-        this.userPasswordRequireUppercase = tenantDefault.isUserPasswordRequireUppercase();
-        this.userPasswordRequireLowercase = tenantDefault.isUserPasswordRequireLowercase();
-        this.userPasswordRequireDigit = tenantDefault.isUserPasswordRequireDigit();
-        this.userPasswordRequireSymbol = tenantDefault.isUserPasswordRequireSymbol();
+        this.defaultPassword = tenantDefault.getDefaultPassword();
+        this.defaultPasswordChangeRequired = tenantDefault.isDefaultPasswordChangeRequired();
+        this.passwordMaxAge = tenantDefault.getPasswordMaxAge();
+        this.passwordMinLength = tenantDefault.getPasswordMinLength();
+        this.passwordRequireUppercase = tenantDefault.isPasswordRequireUppercase();
+        this.passwordRequireLowercase = tenantDefault.isPasswordRequireLowercase();
+        this.passwordRequireDigit = tenantDefault.isPasswordRequireDigit();
+        this.passwordRequireSymbol = tenantDefault.isPasswordRequireSymbol();
         this.positionNameTemplate = tenantDefault.getPositionNameTemplate();
     }
 

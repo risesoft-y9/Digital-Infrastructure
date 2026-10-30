@@ -18,6 +18,7 @@ import org.hibernate.annotations.Type;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import net.risesoft.consts.PasswordHashAlgorithmConsts;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.enums.platform.org.SexEnum;
@@ -96,6 +97,11 @@ public class Y9Manager extends Y9OrgBase {
     @Column(name = "PASSWORD", length = 255)
     @Comment("登录密码")
     private String password;
+
+    /** 密码哈希算法 */
+    @Column(name = "PASSWORD_HASH_ALGORITHM", length = 50, nullable = false)
+    @Comment("密码哈希算法")
+    private String passwordHashAlgorithm;
 
     /**
      * 排序序列号
@@ -183,6 +189,7 @@ public class Y9Manager extends Y9OrgBase {
         }
         this.tabIndex = nextSubTabIndex;
         this.password = Y9MessageDigestUtil.bcrypt(defaultPassword);
+        this.passwordHashAlgorithm = PasswordHashAlgorithmConsts.BCRYPT;
         if (parent == null) {
             this.dn = Y9OrgUtil.buildDn(OrgTypeEnum.MANAGER, this.name, null);
             this.guidPath = Y9OrgUtil.buildGuidPath(null, this.id);
@@ -218,11 +225,12 @@ public class Y9Manager extends Y9OrgBase {
 
     public void changePassword(String newPassword) {
         this.password = Y9MessageDigestUtil.bcrypt(newPassword);
+        this.passwordHashAlgorithm = PasswordHashAlgorithmConsts.BCRYPT;
         this.lastModifyPasswordTime = new Date();
     }
 
     public boolean isPasswordCorrect(String password) {
-        return Y9MessageDigestUtil.bcryptMatch(password, this.password);
+        return Y9MessageDigestUtil.passwordMatch(password, this.password, this.passwordHashAlgorithm);
     }
 
     public Boolean isPasswordExpired(int passwordModifiedCycle) {

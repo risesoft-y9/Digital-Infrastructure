@@ -303,7 +303,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
 
     private UserInfo toUserInfo(DecodedJWT jwt) {
         UserInfo userInfo = new UserInfo();
-        userInfo.setCaid(jwt.getClaim("caid").asString());
+        userInfo.setCaId(jwt.getClaim("caId").asString());
         userInfo.setEmail(jwt.getClaim("email").asString());
         userInfo.setGuidPath(jwt.getClaim("guidPath").asString());
         userInfo.setDn(jwt.getClaim("dn").asString());

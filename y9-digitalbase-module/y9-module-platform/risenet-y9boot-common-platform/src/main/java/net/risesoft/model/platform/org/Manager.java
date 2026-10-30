@@ -58,6 +58,10 @@ public class Manager extends OrgUnit implements Serializable {
     @JsonIgnore
     private String password;
 
+    /** 密码哈希算法 */
+    @JsonIgnore
+    private String passwordHashAlgorithm;
+
     /**
      * 排序序列号
      */

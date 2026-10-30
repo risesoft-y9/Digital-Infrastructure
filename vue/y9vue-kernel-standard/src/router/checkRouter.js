@@ -170,21 +170,8 @@ export const routerBeforeEach = async (to, from) => {
         // 每跳转一次 url 就进行一次判断
         if (flag > 1 && to.path !== '/password') {
             // console.log(flag, 'flag');
-            const y9UserInfo = JSON.parse(sessionStorage.getItem('ssoUserInfo'));
-            let result = await verifyPasswordExpiration(y9UserInfo.personId);
+            let result = await verifyPasswordExpiration();
             if (result.data) {
-                ElMessage({
-                    message: '密码已过期，请立即更新密码。',
-                    type: 'error',
-                    offset: 60
-                });
-                // ElNotification({
-                //     title: '失败',
-                //     message: '密码已过期，请立即更新密码',
-                //     type: 'error',
-                //     duration: 2000,
-                //     offset: 80
-                // });
                 router.push({ path: '/password' });
             }
         }

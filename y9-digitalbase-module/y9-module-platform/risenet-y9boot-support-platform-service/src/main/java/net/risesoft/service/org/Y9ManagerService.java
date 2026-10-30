@@ -26,21 +26,13 @@ public interface Y9ManagerService {
     Manager changeDisabled(String id);
 
     /**
-     * 更改密码
+     * 校验原密码和密码强度后修改密码。
      *
      * @param id id
+     * @param oldPassword 原密码（明文），必填
      * @param newPassword 新密码
      */
-    void changePassword(String id, String newPassword);
-
-    /**
-     * 检查密码是否正确
-     *
-     * @param personId 人员ID
-     * @param password 密码
-     * @return boolean
-     */
-    boolean isPasswordCorrect(String personId, String password);
+    void changePassword(String id, String oldPassword, String newPassword);
 
     /**
      * 根据管理员id数组删除管理员信息

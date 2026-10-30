@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import net.risesoft.model.platform.org.OrgUnit;
-import net.risesoft.model.platform.org.PasswordPolicy;
+import net.risesoft.model.platform.org.PasswordStrength;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.org.PasswordValidity;
 import net.risesoft.model.platform.org.PersonExt;
@@ -234,11 +234,11 @@ public interface Y9PersonService {
      */
     Person modifyPassword(String id, String oldPassword, String newPassword);
 
-    /** 检查普通用户密码是否有效，不追溯检查密码强度。 */
+    /** 检查人员密码是否有效，不追溯检查密码强度。 */
     PasswordValidity checkPasswordValidity(String personId);
 
-    /** 获取普通用户所属租户的密码策略，兼容兼职人员，不包含默认密码。 */
-    PasswordPolicy getPasswordPolicy(String personId);
+    /** 获取人员所属租户的密码强度要求，兼容兼职人员。 */
+    PasswordStrength getPasswordStrength(String personId);
 
     /**
      * 移动

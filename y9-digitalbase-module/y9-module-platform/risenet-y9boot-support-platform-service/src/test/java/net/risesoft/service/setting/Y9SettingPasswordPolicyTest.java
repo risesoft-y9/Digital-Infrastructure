@@ -44,81 +44,81 @@ class Y9SettingPasswordPolicyTest {
     @Test
     void canSaveReadAndUpdatePasswordPolicy() {
         TenantSetting setting = service.getTenantSetting();
-        assertEquals(6, setting.getUserPasswordMinLength());
-        setting.setUserPasswordMinLength(8);
-        setting.setUserPasswordMaxAge(365);
-        setting.setUserPasswordRequireDigit(true);
-        setting.setUserDefaultPasswordChangeRequired(true);
+        assertEquals(6, setting.getPasswordMinLength());
+        setting.setPasswordMinLength(8);
+        setting.setPasswordMaxAge(365);
+        setting.setPasswordRequireDigit(true);
+        setting.setDefaultPasswordChangeRequired(true);
         service.saveTenantSetting(setting);
         verify(manager).save(argThat(item ->
-            "y9.app.platform.tenant-default.userDefaultPasswordChangeRequired".equals(item.getKey())
+            "y9.app.platform.tenant-default.defaultPasswordChangeRequired".equals(item.getKey())
                 && "true".equals(item.getValue())));
         TenantSetting saved = service.getTenantSetting();
-        assertEquals(8, saved.getUserPasswordMinLength());
-        assertEquals(365, saved.getUserPasswordMaxAge());
-        assertTrue(saved.isUserPasswordRequireDigit());
-        assertTrue(saved.isUserDefaultPasswordChangeRequired());
-        saved.setUserPasswordMinLength(6);
+        assertEquals(8, saved.getPasswordMinLength());
+        assertEquals(365, saved.getPasswordMaxAge());
+        assertTrue(saved.isPasswordRequireDigit());
+        assertTrue(saved.isDefaultPasswordChangeRequired());
+        saved.setPasswordMinLength(6);
         service.saveTenantSetting(saved);
-        assertEquals(6, service.getTenantSetting().getUserPasswordMinLength());
+        assertEquals(6, service.getTenantSetting().getPasswordMinLength());
     }
 
     @Test
     void readsAllDefaultsFromBoundTenantDefaultConfiguration() {
         MockEnvironment environment = new MockEnvironment()
-            .withProperty("y9.app.platform.tenant-default.user-default-password", "configuredPassword")
+            .withProperty("y9.app.platform.tenant-default.default-password", "configuredPassword")
             .withProperty("y9.app.platform.tenant-default.position-name-template", "#personNames")
-            .withProperty("y9.app.platform.tenant-default.user-default-password-change-required", "true")
-            .withProperty("y9.app.platform.tenant-default.user-password-max-age", "90")
-            .withProperty("y9.app.platform.tenant-default.user-password-min-length", "12")
-            .withProperty("y9.app.platform.tenant-default.user-password-require-uppercase", "true")
-            .withProperty("y9.app.platform.tenant-default.user-password-require-lowercase", "true")
-            .withProperty("y9.app.platform.tenant-default.user-password-require-digit", "true")
-            .withProperty("y9.app.platform.tenant-default.user-password-require-symbol", "true");
+            .withProperty("y9.app.platform.tenant-default.default-password-change-required", "true")
+            .withProperty("y9.app.platform.tenant-default.password-max-age", "90")
+            .withProperty("y9.app.platform.tenant-default.password-min-length", "12")
+            .withProperty("y9.app.platform.tenant-default.password-require-uppercase", "true")
+            .withProperty("y9.app.platform.tenant-default.password-require-lowercase", "true")
+            .withProperty("y9.app.platform.tenant-default.password-require-digit", "true")
+            .withProperty("y9.app.platform.tenant-default.password-require-symbol", "true");
         Y9PlatformProperties bound = Binder.get(environment).bind("y9.app.platform", Y9PlatformProperties.class).get();
         service = new Y9SettingServiceImpl(manager, environment, bound);
 
         TenantSetting setting = service.getTenantSetting();
-        assertEquals("configuredPassword", setting.getUserDefaultPassword());
+        assertEquals("configuredPassword", setting.getDefaultPassword());
         assertEquals("#personNames", setting.getPositionNameTemplate());
-        assertTrue(setting.isUserDefaultPasswordChangeRequired());
-        assertEquals(90, setting.getUserPasswordMaxAge());
-        assertEquals(12, setting.getUserPasswordMinLength());
-        assertTrue(setting.isUserPasswordRequireUppercase());
-        assertTrue(setting.isUserPasswordRequireLowercase());
-        assertTrue(setting.isUserPasswordRequireDigit());
-        assertTrue(setting.isUserPasswordRequireSymbol());
+        assertTrue(setting.isDefaultPasswordChangeRequired());
+        assertEquals(90, setting.getPasswordMaxAge());
+        assertEquals(12, setting.getPasswordMinLength());
+        assertTrue(setting.isPasswordRequireUppercase());
+        assertTrue(setting.isPasswordRequireLowercase());
+        assertTrue(setting.isPasswordRequireDigit());
+        assertTrue(setting.isPasswordRequireSymbol());
     }
 
     @Test
     void persistedFalseAndZeroOverrideDefaultsWhileMissingFieldsUseDefaults() {
-        properties.getTenantDefault().setUserDefaultPasswordChangeRequired(true);
-        properties.getTenantDefault().setUserPasswordMaxAge(90);
-        properties.getTenantDefault().setUserPasswordMinLength(12);
-        properties.getTenantDefault().setUserPasswordRequireDigit(true);
+        properties.getTenantDefault().setDefaultPasswordChangeRequired(true);
+        properties.getTenantDefault().setPasswordMaxAge(90);
+        properties.getTenantDefault().setPasswordMinLength(12);
+        properties.getTenantDefault().setPasswordRequireDigit(true);
         TenantSetting setting = service.getTenantSetting();
-        setting.setUserDefaultPasswordChangeRequired(false);
-        setting.setUserPasswordMaxAge(0);
-        setting.setUserPasswordRequireDigit(false);
+        setting.setDefaultPasswordChangeRequired(false);
+        setting.setPasswordMaxAge(0);
+        setting.setPasswordRequireDigit(false);
         service.saveTenantSetting(setting);
 
         // 后续调整默认值，已保存的租户设置仍优先。
-        properties.getTenantDefault().setUserPasswordMinLength(16);
+        properties.getTenantDefault().setPasswordMinLength(16);
         TenantSetting saved = service.getTenantSetting();
-        assertFalse(saved.isUserDefaultPasswordChangeRequired());
-        assertEquals(0, saved.getUserPasswordMaxAge());
-        assertFalse(saved.isUserPasswordRequireDigit());
-        assertEquals(12, saved.getUserPasswordMinLength());
+        assertFalse(saved.isDefaultPasswordChangeRequired());
+        assertEquals(0, saved.getPasswordMaxAge());
+        assertFalse(saved.isPasswordRequireDigit());
+        assertEquals(12, saved.getPasswordMinLength());
 
-        when(manager.findById("y9.app.platform.tenant-default.userPasswordMinLength"))
+        when(manager.findById("y9.app.platform.tenant-default.passwordMinLength"))
             .thenReturn(Optional.empty());
-        assertEquals(16, service.getTenantSetting().getUserPasswordMinLength());
+        assertEquals(16, service.getTenantSetting().getPasswordMinLength());
     }
 
     @Test
     void rejectsInvalidPolicyBeforeWritingAnySetting() {
         TenantSetting setting = new TenantSetting();
-        setting.setUserPasswordMaxAge(366);
+        setting.setPasswordMaxAge(366);
         assertThrows(Y9BusinessException.class, () -> service.saveTenantSetting(setting));
         verify(manager, never()).save(any());
     }

@@ -45,4 +45,26 @@
         <addNotNullConstraint tableName="Y9_ORG_PERSON" columnName="PASSWORD_HASH_ALGORITHM"
                               columnDataType="VARCHAR(50)"/>
     </changeSet>
+
+    <changeSet id="1793577600000-1" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="Y9_ORG_MANAGER" columnName="PASSWORD_HASH_ALGORITHM"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="Y9_ORG_MANAGER">
+            <column name="PASSWORD_HASH_ALGORITHM" type="VARCHAR(50)" remarks="密码哈希算法"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1793577600000-2" author="shidaobang">
+        <preConditions onFail="HALT">
+            <columnExists tableName="Y9_ORG_MANAGER" columnName="PASSWORD_HASH_ALGORITHM"/>
+        </preConditions>
+        <update tableName="Y9_ORG_MANAGER">
+            <column name="PASSWORD_HASH_ALGORITHM" value="bcrypt"/>
+            <where>PASSWORD_HASH_ALGORITHM IS NULL</where>
+        </update>
+        <addNotNullConstraint tableName="Y9_ORG_MANAGER" columnName="PASSWORD_HASH_ALGORITHM"
+                              columnDataType="VARCHAR(50)"/>
+    </changeSet>
 </databaseChangeLog>

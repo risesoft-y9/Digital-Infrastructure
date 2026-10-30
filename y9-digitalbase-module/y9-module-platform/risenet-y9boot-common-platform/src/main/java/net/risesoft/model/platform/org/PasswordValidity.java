@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/** 普通用户密码有效性，仅检查默认密码和有效期，不追溯检查密码强度。 */
+/** 人员密码有效性，仅检查默认密码和有效期，不追溯检查密码强度。 */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

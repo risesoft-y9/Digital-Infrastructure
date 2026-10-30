@@ -40,7 +40,8 @@ public enum OrgUnitErrorCodeEnum implements ErrorCode {
     CUSTOM_ID_USED(23, "自定义 ID[{}]已经被使用"),
     ID_CARD_NUMBER_INVALID(24, "身份证号码[{}]不合法"),
     PASSWORD_POLICY_INVALID(25, "密码策略不合法：{}"),
-    PASSWORD_STRENGTH_INVALID(26, "密码不符合强度要求：{}"),;
+    PASSWORD_STRENGTH_INVALID(26, "密码不符合强度要求：{}"),
+    NEW_PASSWORD_SAME_AS_OLD(27, "新密码不能与当前密码相同");
 
     private final int moduleErrorCode;
     private final String description;

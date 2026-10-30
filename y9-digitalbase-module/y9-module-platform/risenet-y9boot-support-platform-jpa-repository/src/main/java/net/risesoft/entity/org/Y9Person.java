@@ -23,12 +23,10 @@ import net.risesoft.consts.PasswordHashAlgorithmConsts;
 import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.enums.platform.org.PersonTypeEnum;
 import net.risesoft.enums.platform.org.SexEnum;
-import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.persistence.EnumConverter;
 import net.risesoft.util.Y9OrgUtil;
-import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.signing.Y9MessageDigestUtil;
 
@@ -273,12 +271,7 @@ public class Y9Person extends Y9OrgBase {
         this.orderedPath = Y9OrgUtil.buildOrderedPath(this, ancestorList);
     }
 
-    public void changePassword(String oldPassword, String newPassword) {
-        if (StringUtils.isNotBlank(oldPassword)) {
-            // 兼容旧接口（无 oldPassword）或重设密码
-            Y9AssertUtil.isTrue(Y9MessageDigestUtil.passwordMatch(oldPassword, this.password, this.passwordHashAlgorithm),
-                OrgUnitErrorCodeEnum.OLD_PASSWORD_IS_INCORRECT);
-        }
+    public void changePassword(String newPassword) {
         this.password = Y9MessageDigestUtil.bcrypt(newPassword);
         this.passwordHashAlgorithm = PasswordHashAlgorithmConsts.BCRYPT;
         this.lastModifyPasswordTime = new Date();

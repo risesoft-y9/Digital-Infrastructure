@@ -12,41 +12,26 @@ import qs from 'qs';
 
 const platformRequest = Request();
 /**
- * 根据管理员id，获取管理员信息
- * @param {*} managerId 管理员id
+ * 获取当前登录管理员的个人资料，用户 ID 由后端获取。
  * @returns
  */
-export const getManagerById = async (managerId) => {
+export const getCurrentManager = async () => {
     return await platformRequest({
-        url: '/api/rest/personalCenter/getManagerById',
+        url: '/api/rest/personalCenter/getCurrentManager',
         method: 'GET',
-        cType: false,
-        params: { managerId: managerId }
+        cType: false
     });
 };
 
 /**
- * 验证密码是否正确
- * @param {*} personID
- * @param {*} passWord
- * @returns
- */
-export const checkPassword = async (personId, password) => {
-    return await platformRequest({
-        url: '/api/rest/personalCenter/checkPassword',
-        method: 'GET',
-        cType: false,
-        params: { personId: personId, password: password }
-    });
-};
-
-/**
- * 保存人员信息
- * @param {*} params
+ * 按原有字段保存当前管理员资料，用户 ID 由后端获取。
+ * @param {*} params 管理员资料
  * @returns
  */
 export const updateManager = async (params) => {
-    const data = qs.stringify(params);
+    const profile = { ...params };
+    delete profile.id;
+    const data = qs.stringify(profile);
     return await platformRequest({
         url: '/api/rest/personalCenter/updateManager',
         method: 'POST',
@@ -56,14 +41,14 @@ export const updateManager = async (params) => {
 };
 
 /**
- * 修改密码
- * @param {*} personId
+ * 修改当前登录管理员的密码，用户 ID 由后端从登录上下文获取。
+ * @param {*} oldPassword 原密码（明文）
  * @param {*} newPassword
  * @returns
  */
-export const modifyPassword = async (personId, newPassword) => {
+export const modifyPassword = async (oldPassword, newPassword) => {
     const params = {
-        personId: personId,
+        oldPassword: oldPassword,
         newPassword: newPassword
     };
     const data = qs.stringify(params);
@@ -75,30 +60,20 @@ export const modifyPassword = async (personId, newPassword) => {
     });
 };
 
-/**
- * 上传图片
- * @param {*} iconFile
- * @param {*} personID
- * @returns
- */
-export const savePersonPhoto = async (iconFile, personId) => {
-    const data = new FormData();
-    data.append('iconFile', iconFile);
-    data.append('personId', personId);
-    return await platformRequest({
-        url: '/api/rest/personalCenter/savePersonPhoto',
-        method: 'POST',
-        cType: false,
-        data: data
-    });
-};
-
 // 检验三员密码是否过期
-export const verifyPasswordExpiration = async (id) => {
+export const verifyPasswordExpiration = async () => {
     return await platformRequest({
         url: '/api/rest/personalCenter/isPasswordExpired',
         method: 'GET',
-        cType: false,
-        params: { id }
+        cType: false
+    });
+};
+
+/** 获取当前租户的密码强度要求。 */
+export const getPasswordStrength = async () => {
+    return await platformRequest({
+        url: '/api/rest/personalCenter/getPasswordStrength',
+        method: 'GET',
+        cType: false
     });
 };

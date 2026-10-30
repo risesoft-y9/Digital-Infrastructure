@@ -11,7 +11,6 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.PasswordHashAlgorithmConsts;
 import net.risesoft.entity.org.Y9Manager;
 import net.risesoft.entity.org.Y9Person;
 import net.risesoft.entity.org.Y9Position;
@@ -22,15 +21,15 @@ import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.tenant.Tenant;
-import net.risesoft.model.user.UserInfo;
 import net.risesoft.service.relation.Y9PersonsToPositionsService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
+import net.risesoft.y9public.entity.Y9User;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
+import net.risesoft.y9public.repository.Y9UserRepository;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
-import net.risesoft.y9public.service.user.Y9UserService;
 
 /**
  * 监听需要更新全局用户的事件并执行操作
@@ -43,8 +42,9 @@ import net.risesoft.y9public.service.user.Y9UserService;
 public class Y9UserRelatedEventListener {
 
     private final Y9TenantService y9TenantService;
-    private final Y9UserService y9UserService;
     private final Y9PersonsToPositionsService y9PersonsToPositionsService;
+
+    private final Y9UserRepository y9UserRepository;
 
     /**
      * 监听管理员添加事件
@@ -59,18 +59,18 @@ public class Y9UserRelatedEventListener {
         String tenantId = y9Manager.getTenantId();
         LOGGER.debug("开始处理管理员员新增->{}", y9Manager.getId());
         Tenant y9Tenant = y9TenantService.getById(tenantId);
-        Optional<UserInfo> y9UserOptional = y9UserService.findByPersonIdAndTenantId(personId, tenantId);
-        UserInfo y9User;
+        Optional<Y9User> y9UserOptional = y9UserRepository.findByPersonIdAndTenantId(personId, tenantId);
+        Y9User y9User;
         if (y9UserOptional.isEmpty()) {
             if (Boolean.TRUE.equals(y9Manager.getDisabled())) {
                 return;
             }
-            y9User = new UserInfo();
+            y9User = new Y9User();
             y9User.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         } else {
             y9User = y9UserOptional.get();
             if (Boolean.TRUE.equals(y9Manager.getDisabled())) {
-                y9UserService.delete(y9User.getId());
+                y9UserRepository.deleteById(y9User.getId());
                 return;
             }
         }
@@ -82,7 +82,7 @@ public class Y9UserRelatedEventListener {
         y9User.setEmail(y9Manager.getEmail());
         y9User.setMobile(y9Manager.getMobile());
         y9User.setSex(y9Manager.getSex());
-        y9User.setCaid(null);
+        y9User.setCaId(null);
         y9User.setWeixinId(null);
         y9User.setGuidPath(y9Manager.getGuidPath());
         y9User.setOrderedPath(y9Manager.getOrderedPath());
@@ -96,8 +96,9 @@ public class Y9UserRelatedEventListener {
         y9User.setOriginal(true);
         y9User.setOriginalId(null);
         y9User.setGlobalManager(y9Manager.getGlobalManager());
-        y9User.setPasswordHashAlgorithm(PasswordHashAlgorithmConsts.BCRYPT);
-        y9UserService.save(y9User, y9Manager.getPassword());
+        y9User.setPassword(y9Manager.getPassword());
+        y9User.setPasswordHashAlgorithm(y9Manager.getPasswordHashAlgorithm());
+        y9UserRepository.save(y9User);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("新增管理员->{}执行完成", y9Manager.getId());
         }
@@ -113,10 +114,10 @@ public class Y9UserRelatedEventListener {
     public void onY9ManagerDeleted(Y9EntityDeletedEvent<Y9Manager> event) {
         Y9Manager y9Manager = event.getEntity();
         LOGGER.debug("开始处理管理员员删除->{}", y9Manager.getId());
-        Optional<UserInfo> y9UserOptional =
-            y9UserService.findByPersonIdAndTenantId(y9Manager.getId(), y9Manager.getTenantId());
+        Optional<Y9User> y9UserOptional =
+            y9UserRepository.findByPersonIdAndTenantId(y9Manager.getId(), y9Manager.getTenantId());
         if (y9UserOptional.isPresent()) {
-            y9UserService.delete(y9UserOptional.get().getId());
+            y9UserRepository.deleteById(y9UserOptional.get().getId());
         }
 
         if (LOGGER.isDebugEnabled()) {
@@ -136,18 +137,18 @@ public class Y9UserRelatedEventListener {
         String tenantId = y9Manager.getTenantId();
         LOGGER.debug("开始处理管理员员修改->{}", y9Manager.getId());
         Tenant y9Tenant = y9TenantService.getById(tenantId);
-        Optional<UserInfo> y9UserOptional = y9UserService.findByPersonIdAndTenantId(y9Manager.getId(), tenantId);
-        UserInfo y9User;
+        Optional<Y9User> y9UserOptional = y9UserRepository.findByPersonIdAndTenantId(y9Manager.getId(), tenantId);
+        Y9User y9User;
         if (y9UserOptional.isEmpty()) {
             if (Boolean.TRUE.equals(y9Manager.getDisabled())) {
                 return;
             }
-            y9User = new UserInfo();
+            y9User = new Y9User();
             y9User.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         } else {
             y9User = y9UserOptional.get();
             if (Boolean.TRUE.equals(y9Manager.getDisabled())) {
-                y9UserService.delete(y9User.getId());
+                y9UserRepository.deleteById(y9User.getId());
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug("删除管理员->{}执行完成", y9User.getPersonId());
                 }
@@ -162,7 +163,7 @@ public class Y9UserRelatedEventListener {
         y9User.setEmail(y9Manager.getEmail());
         y9User.setMobile(y9Manager.getMobile());
         y9User.setSex(y9Manager.getSex());
-        y9User.setCaid(null);
+        y9User.setCaId(null);
         y9User.setWeixinId(null);
         y9User.setGuidPath(y9Manager.getGuidPath());
         y9User.setOrderedPath(y9Manager.getOrderedPath());
@@ -176,8 +177,9 @@ public class Y9UserRelatedEventListener {
         y9User.setOriginal(true);
         y9User.setOriginalId(null);
         y9User.setGlobalManager(y9Manager.getGlobalManager());
-        y9User.setPasswordHashAlgorithm(PasswordHashAlgorithmConsts.BCRYPT);
-        y9UserService.save(y9User, y9Manager.getPassword());
+        y9User.setPassword(y9Manager.getPassword());
+        y9User.setPasswordHashAlgorithm(y9Manager.getPasswordHashAlgorithm());
+        y9UserRepository.save(y9User);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("更新管理员->{}执行完成", y9Manager.getId());
         }
@@ -196,19 +198,19 @@ public class Y9UserRelatedEventListener {
         LOGGER.debug("开始处理人员新增->{}", person.getId());
         String tenantId = person.getTenantId();
         Tenant y9Tenant = y9TenantService.getById(tenantId);
-        Optional<UserInfo> y9UserOptional = y9UserService.findByPersonIdAndTenantId(personId, tenantId);
-        UserInfo y9User;
+        Optional<Y9User> y9UserOptional = y9UserRepository.findByPersonIdAndTenantId(personId, tenantId);
+        Y9User y9User;
         if (y9UserOptional.isEmpty()) {
             if (Boolean.TRUE.equals(person.getDisabled())) {
                 return;
             }
 
-            y9User = new UserInfo();
+            y9User = new Y9User();
             y9User.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         } else {
             y9User = y9UserOptional.get();
             if (Boolean.TRUE.equals(person.getDisabled())) {
-                y9UserService.delete(y9User.getId());
+                y9UserRepository.deleteById(y9User.getId());
                 return;
             }
         }
@@ -221,7 +223,7 @@ public class Y9UserRelatedEventListener {
         y9User.setEmail(person.getEmail());
         y9User.setMobile(person.getMobile());
         y9User.setSex(person.getSex());
-        y9User.setCaid(person.getCaId());
+        y9User.setCaId(person.getCaId());
         y9User.setWeixinId(person.getWeixinId());
         y9User.setGuidPath(person.getGuidPath());
         y9User.setOrderedPath(person.getOrderedPath());
@@ -237,8 +239,9 @@ public class Y9UserRelatedEventListener {
         y9User.setGlobalManager(false);
         String positionIds = y9PersonsToPositionsService.getPositionIdsByPersonId(person.getId(), Boolean.FALSE);
         y9User.setPositions(positionIds);
+        y9User.setPassword(person.getPassword());
         y9User.setPasswordHashAlgorithm(person.getPasswordHashAlgorithm());
-        y9UserService.save(y9User, person.getPassword());
+        y9UserRepository.save(y9User);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("新增人员->{}执行完成", person.getId());
         }
@@ -254,10 +257,10 @@ public class Y9UserRelatedEventListener {
     public void onY9PersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
         Y9Person person = event.getEntity();
         LOGGER.debug("开始处理人员删除->{}", person.getId());
-        Optional<UserInfo> y9UserOptional =
-            y9UserService.findByPersonIdAndTenantId(person.getId(), person.getTenantId());
+        Optional<Y9User> y9UserOptional =
+            y9UserRepository.findByPersonIdAndTenantId(person.getId(), person.getTenantId());
         if (y9UserOptional.isPresent()) {
-            y9UserService.delete(y9UserOptional.get().getId());
+            y9UserRepository.deleteById(y9UserOptional.get().getId());
         }
 
         if (LOGGER.isDebugEnabled()) {
@@ -277,19 +280,19 @@ public class Y9UserRelatedEventListener {
         String tenantId = person.getTenantId();
         LOGGER.debug("开始处理人员更新->{}", person.getId());
         Tenant y9Tenant = y9TenantService.getById(tenantId);
-        Optional<UserInfo> y9UserOptional = y9UserService.findByPersonIdAndTenantId(person.getId(), tenantId);
-        UserInfo y9User;
+        Optional<Y9User> y9UserOptional = y9UserRepository.findByPersonIdAndTenantId(person.getId(), tenantId);
+        Y9User y9User;
         if (y9UserOptional.isEmpty()) {
             if (Boolean.TRUE.equals(person.getDisabled())) {
                 return;
             }
 
-            y9User = new UserInfo();
+            y9User = new Y9User();
             y9User.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         } else {
             y9User = y9UserOptional.get();
             if (Boolean.TRUE.equals(person.getDisabled())) {
-                y9UserService.delete(y9User.getId());
+                y9UserRepository.deleteById(y9User.getId());
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug("更新人员已删除，执行删除人员->{}执行完成", y9User.getPersonId());
                 }
@@ -305,7 +308,7 @@ public class Y9UserRelatedEventListener {
         y9User.setEmail(person.getEmail());
         y9User.setMobile(person.getMobile());
         y9User.setSex(person.getSex());
-        y9User.setCaid(person.getCaId());
+        y9User.setCaId(person.getCaId());
         y9User.setWeixinId(person.getWeixinId());
         y9User.setGuidPath(person.getGuidPath());
         y9User.setOrderedPath(person.getOrderedPath());
@@ -321,8 +324,9 @@ public class Y9UserRelatedEventListener {
         y9User.setGlobalManager(false);
         String positionIds = y9PersonsToPositionsService.getPositionIdsByPersonId(person.getId(), Boolean.FALSE);
         y9User.setPositions(positionIds);
+        y9User.setPassword(person.getPassword());
         y9User.setPasswordHashAlgorithm(person.getPasswordHashAlgorithm());
-        y9UserService.save(y9User, person.getPassword());
+        y9UserRepository.save(y9User);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("更新人员->{}执行完成", person.getId());
         }
@@ -348,15 +352,15 @@ public class Y9UserRelatedEventListener {
             List<Person> personList = y9PersonsToPositionsService.listPersonByPositionId(updatedPosition.getId());
             for (Person person : personList) {
 
-                Optional<UserInfo> y9UserOptional =
-                    y9UserService.findByPersonIdAndTenantId(person.getId(), person.getTenantId());
-                UserInfo y9User;
+                Optional<Y9User> y9UserOptional =
+                    y9UserRepository.findByPersonIdAndTenantId(person.getId(), person.getTenantId());
+                Y9User y9User;
                 if (y9UserOptional.isPresent()) {
                     y9User = y9UserOptional.get();
                     String positionIds =
                         y9PersonsToPositionsService.getPositionIdsByPersonId(person.getId(), Boolean.FALSE);
                     y9User.setPositions(positionIds);
-                    y9UserService.save(y9User, null);
+                    y9UserRepository.save(y9User);
                 }
             }
         }
@@ -376,14 +380,14 @@ public class Y9UserRelatedEventListener {
     public void onY9PersonsToPositionsCreated(Y9EntityCreatedEvent<Y9PersonsToPositions> event) {
         Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
 
-        Optional<UserInfo> y9UserOptional = y9UserService.findByPersonIdAndTenantId(y9PersonsToPositions.getPersonId(),
+        Optional<Y9User> y9UserOptional = y9UserRepository.findByPersonIdAndTenantId(y9PersonsToPositions.getPersonId(),
             Y9LoginUserHolder.getTenantId());
         if (y9UserOptional.isPresent()) {
-            UserInfo y9User = y9UserOptional.get();
+            Y9User y9User = y9UserOptional.get();
             String positionIds =
                 y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId(), Boolean.FALSE);
             y9User.setPositions(positionIds);
-            y9UserService.save(y9User, null);
+            y9UserRepository.save(y9User);
         }
 
         if (LOGGER.isDebugEnabled()) {
@@ -401,14 +405,14 @@ public class Y9UserRelatedEventListener {
     public void onY9PersonsToPositionsDeleted(Y9EntityDeletedEvent<Y9PersonsToPositions> event) {
         Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
 
-        Optional<UserInfo> y9UserOptional = y9UserService.findByPersonIdAndTenantId(y9PersonsToPositions.getPersonId(),
+        Optional<Y9User> y9UserOptional = y9UserRepository.findByPersonIdAndTenantId(y9PersonsToPositions.getPersonId(),
             Y9LoginUserHolder.getTenantId());
         if (y9UserOptional.isPresent()) {
-            UserInfo y9User = y9UserOptional.get();
+            Y9User y9User = y9UserOptional.get();
             String positionIds =
                 y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId(), Boolean.FALSE);
             y9User.setPositions(positionIds);
-            y9UserService.save(y9User, null);
+            y9UserRepository.save(y9User);
         }
 
         if (LOGGER.isDebugEnabled()) {
@@ -426,14 +430,14 @@ public class Y9UserRelatedEventListener {
     public void onY9PersonsToPositionsUpdated(Y9EntityUpdatedEvent<Y9PersonsToPositions> event) {
         Y9PersonsToPositions y9PersonsToPositions = event.getUpdatedEntity();
 
-        Optional<UserInfo> y9UserOptional = y9UserService.findByPersonIdAndTenantId(y9PersonsToPositions.getPersonId(),
+        Optional<Y9User> y9UserOptional = y9UserRepository.findByPersonIdAndTenantId(y9PersonsToPositions.getPersonId(),
             Y9LoginUserHolder.getTenantId());
         if (y9UserOptional.isPresent()) {
-            UserInfo y9User = y9UserOptional.get();
+            Y9User y9User = y9UserOptional.get();
             String positionIds =
                 y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId(), Boolean.FALSE);
             y9User.setPositions(positionIds);
-            y9UserService.save(y9User, null);
+            y9UserRepository.save(y9User);
         }
 
         if (LOGGER.isDebugEnabled()) {
@@ -454,8 +458,12 @@ public class Y9UserRelatedEventListener {
         LOGGER.debug("租户[{}]更新触发的更新用户开始", updatedEntity.getId());
 
         if (!Objects.equals(originEntity.getName(), updatedEntity.getName())) {
-            y9UserService.updateByTenantId(updatedEntity.getId(), updatedEntity.getName(),
-                updatedEntity.getShortName());
+            List<Y9User> list = y9UserRepository.findByTenantId(updatedEntity.getId());
+            for (Y9User y9User : list) {
+                y9User.setTenantName(updatedEntity.getName());
+                y9User.setTenantShortName(updatedEntity.getShortName());
+                y9UserRepository.save(y9User);
+            }
         }
 
         LOGGER.debug("租户[{}]更新触发的更新用户结束", updatedEntity.getId());

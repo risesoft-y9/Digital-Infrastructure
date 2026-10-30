@@ -91,7 +91,7 @@ public class Y9User implements Serializable {
 
     @Column(name = "CAID", length = 255)
     @Comment("ca认证号")
-    private String caid;
+    private String caId;
 
     @Column(name = "EMAIL", length = 255)
     @Comment("邮箱")

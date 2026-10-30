@@ -62,27 +62,6 @@ public class Y9UserServiceImpl implements Y9UserService {
         return entityToModel(y9UserList);
     }
 
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public UserInfo save(UserInfo userInfo, String password) {
-        Y9User y9User = PlatformModelConvertUtil.convert(userInfo, Y9User.class);
-        if (StringUtils.isNotBlank(password)) {
-            y9User.setPassword(password);
-        }
-        return entityToModel(y9UserRepository.save(y9User));
-    }
-
-    @Override
-    @Transactional(value = PUBLIC_TRANSACTION_MANAGER)
-    public void updateByTenantId(String tenantId, String tenantName, String tenantShortName) {
-        List<UserInfo> list = this.listByTenantId(tenantId);
-        for (UserInfo userInfo : list) {
-            userInfo.setTenantName(tenantName);
-            userInfo.setTenantShortName(tenantShortName);
-            save(userInfo, null);
-        }
-    }
-
     private List<UserInfo> entityToModel(List<Y9User> y9UserList) {
         return PlatformModelConvertUtil.convert(y9UserList, UserInfo.class);
     }

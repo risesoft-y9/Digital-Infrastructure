@@ -250,7 +250,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         attributes.put("personId", toArrayList(y9User.getPersonId()));
         attributes.put("loginName", toArrayList(username));
         attributes.put("sex", toArrayList(y9User.getSex()));
-        attributes.put("caid", toArrayList(y9User.getCaid()));
+        attributes.put("caId", toArrayList(y9User.getCaId()));
         attributes.put("email", toArrayList(y9User.getEmail()));
         attributes.put("mobile", toArrayList(y9User.getMobile()));
         attributes.put("guidPath", toArrayList(y9User.getGuidPath()));

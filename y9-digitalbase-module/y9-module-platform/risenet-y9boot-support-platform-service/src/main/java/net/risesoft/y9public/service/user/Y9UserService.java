@@ -51,21 +51,4 @@ public interface Y9UserService {
      */
     List<UserInfo> listByTenantId(String tenantId);
 
-    /**
-     * 向用户总表里添加一个用户
-     *
-     * @param y9User 用户对象
-     * @param password 加密后的密码
-     * @return {@link UserInfo}
-     */
-    UserInfo save(UserInfo y9User, String password);
-
-    /**
-     * 根据tenantId,tenantName，tenantLoginName进行更新
-     *
-     * @param tenantId 租户id
-     * @param tenantName 租户名
-     * @param tenantShortName 租户英文名
-     */
-    void updateByTenantId(String tenantId, String tenantName, String tenantShortName);
 }

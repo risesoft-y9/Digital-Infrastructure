@@ -21,7 +21,7 @@ import net.risesoft.dto.platform.PersonInfoDTO;
 import net.risesoft.model.platform.Role;
 import net.risesoft.model.platform.org.Group;
 import net.risesoft.model.platform.org.OrgUnit;
-import net.risesoft.model.platform.org.PasswordPolicy;
+import net.risesoft.model.platform.org.PasswordStrength;
 import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.org.PasswordValidity;
 import net.risesoft.model.platform.org.PersonExt;
@@ -61,12 +61,29 @@ public class PersonApiImpl implements PersonApi {
     private final Y9PositionService y9PositionService;
     private final Y9PersonToRoleService y9PersonToRoleService;
 
+    /**
+     * 获取当前租户的密码强度要求
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @return 当前租户的密码强度要求
+     * @since 9.6.12
+     */
     @Override
-    public Y9Result<PasswordPolicy> getPasswordPolicy(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<PasswordStrength> getPasswordStrength(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
-        return Y9Result.success(y9PersonService.getPasswordPolicy(personId));
+        return Y9Result.success(y9PersonService.getPasswordStrength(personId));
     }
 
+    /**
+     * 检查人员密码有效性
+     * 不检查当前密码是否符合新强度规则
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @return 有效性及默认密码强制修改、密码过期状态
+     * @since 9.6.12
+     */
     @Override
     public Y9Result<PasswordValidity> checkPasswordValidity(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {

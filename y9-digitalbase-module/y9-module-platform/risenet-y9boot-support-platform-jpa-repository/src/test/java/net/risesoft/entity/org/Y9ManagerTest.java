@@ -7,7 +7,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
+import net.risesoft.consts.PasswordHashAlgorithmConsts;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.enums.platform.org.OrgTypeEnum;
 import net.risesoft.enums.platform.org.SexEnum;
@@ -68,6 +72,7 @@ class Y9ManagerTest {
 
         // 验证密码加密
         assertThat(y9Manager.getPassword()).isNotNull();
+        assertThat(y9Manager.getPasswordHashAlgorithm()).isEqualTo(PasswordHashAlgorithmConsts.BCRYPT);
         assertThat(Y9MessageDigestUtil.bcryptMatch(defaultPassword, y9Manager.getPassword())).isTrue();
 
         // 验证DN构建
@@ -107,6 +112,7 @@ class Y9ManagerTest {
     @Test
     void testChangePassword() {
         Y9Manager manager = new Y9Manager();
+        manager.setPasswordHashAlgorithm("legacy");
         String newPassword = "newSecurePassword456";
 
         Date beforeChange = new Date();
@@ -114,6 +120,7 @@ class Y9ManagerTest {
         Date afterChange = new Date();
 
         assertThat(Y9MessageDigestUtil.bcryptMatch(newPassword, manager.getPassword())).isTrue();
+        assertThat(manager.getPasswordHashAlgorithm()).isEqualTo(PasswordHashAlgorithmConsts.BCRYPT);
         assertThat(manager.getLastModifyPasswordTime()).isNotNull();
         assertThat(manager.getLastModifyPasswordTime()).isAfterOrEqualTo(beforeChange);
         assertThat(manager.getLastModifyPasswordTime()).isBeforeOrEqualTo(afterChange);
@@ -124,9 +131,22 @@ class Y9ManagerTest {
         Y9Manager manager = new Y9Manager();
         String plainPassword = "plainPassword789";
         manager.setPassword(Y9MessageDigestUtil.bcrypt(plainPassword));
+        manager.setPasswordHashAlgorithm(PasswordHashAlgorithmConsts.BCRYPT);
 
         assertThat(manager.isPasswordCorrect(plainPassword)).isTrue();
         assertThat(manager.isPasswordCorrect("wrongPassword")).isFalse();
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"unknown"})
+    void testIsPasswordCorrectRejectsMissingOrUnsupportedAlgorithm(String algorithm) {
+        Y9Manager manager = new Y9Manager();
+        String plainPassword = "plainPassword789";
+        manager.setPassword(Y9MessageDigestUtil.bcrypt(plainPassword));
+        manager.setPasswordHashAlgorithm(algorithm);
+
+        assertThat(manager.isPasswordCorrect(plainPassword)).isFalse();
     }
 
     @Test

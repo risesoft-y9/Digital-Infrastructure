@@ -45,7 +45,7 @@ public class UserInfo implements Serializable {
     private SexEnum sex;
 
     /** CA认证码 */
-    private String caid;
+    private String caId;
 
     /** 邮箱 */
     private String email;

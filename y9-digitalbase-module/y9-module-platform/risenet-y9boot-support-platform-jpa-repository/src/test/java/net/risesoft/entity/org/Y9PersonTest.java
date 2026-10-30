@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -144,11 +143,10 @@ class Y9PersonTest {
         Date passwordTime = new Date(0);
         person.setLastModifyPasswordTime(passwordTime);
 
-        String oldPassword = "plainPassword123";
         String newPassword = "newPassword456";
 
         // 更改密码
-        person.changePassword(oldPassword, newPassword);
+        person.changePassword(newPassword);
 
         // 验证新密码是否正确加密
         assertTrue(Y9MessageDigestUtil.bcryptMatch("newPassword456", person.getPassword()));
@@ -156,7 +154,7 @@ class Y9PersonTest {
     }
 
     @Test
-    void testChangePasswordWithoutOldPassword() {
+    void changePasswordMigratesStoredHashAlgorithm() {
         String defaultPassword = "default123";
         Y9Person person = new Y9Person(personModel, parentDept, ancestorList, 1, defaultPassword);
         Date passwordTime = new Date(0);
@@ -164,9 +162,9 @@ class Y9PersonTest {
 
         String newPassword = "newPassword456";
 
-        // 更改密码，不提供旧密码（应成功更改）
+        // 写入密码时使用当前的哈希算法
         person.setPasswordHashAlgorithm("legacy");
-        person.changePassword(null, newPassword);
+        person.changePassword(newPassword);
 
         // 验证新密码是否正确加密
         assertTrue(Y9MessageDigestUtil.bcryptMatch("newPassword456", person.getPassword()));
@@ -192,34 +190,6 @@ class Y9PersonTest {
         assertEquals("future-algorithm", userInfo.getPasswordHashAlgorithm());
         assertEquals("future-algorithm",
             PlatformModelConvertUtil.convert(userInfo, Y9User.class).getPasswordHashAlgorithm());
-    }
-
-    @Test
-    void testChangePasswordWrongOldPassword() {
-        String defaultPassword = "default123";
-        Y9Person person = new Y9Person(personModel, parentDept, ancestorList, 1, defaultPassword);
-
-        String wrongOldPassword = "wrongPassword";
-        String newPassword = "newPassword456";
-
-        // 尝试使用错误的旧密码更改密码，应该抛出异常
-        assertThrows(net.risesoft.y9.exception.Y9BusinessException.class, () -> {
-            person.changePassword(wrongOldPassword, newPassword);
-        });
-    }
-
-    @Test
-    void changePasswordUsesStoredAlgorithmAndDoesNotModifyPasswordOnFailure() {
-        Y9Person person = new Y9Person(personModel, parentDept, ancestorList, 1, "default123");
-        String hash = person.getPassword();
-        Date passwordTime = person.getLastModifyPasswordTime();
-        person.setPasswordHashAlgorithm("unknown");
-
-        assertThrows(net.risesoft.y9.exception.Y9BusinessException.class,
-            () -> person.changePassword("plainPassword123", "newPassword456"));
-        assertEquals(hash, person.getPassword());
-        assertEquals("unknown", person.getPasswordHashAlgorithm());
-        assertEquals(passwordTime, person.getLastModifyPasswordTime());
     }
 
     @Test

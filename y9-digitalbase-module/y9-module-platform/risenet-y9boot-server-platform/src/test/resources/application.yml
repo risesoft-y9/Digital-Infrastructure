@@ -157,14 +157,14 @@ y9:
                 managerModifyPasswordCycle: 7
             tenantDefault:
                 positionNameTemplate: "#jobName + '（' + #personNames + '）'"
-                userDefaultPassword: Risesoft@2022
-                userDefaultPasswordChangeRequired: false
-                userPasswordMaxAge: 0
-                userPasswordMinLength: 6
-                userPasswordRequireUppercase: false
-                userPasswordRequireLowercase: false
-                userPasswordRequireDigit: false
-                userPasswordRequireSymbol: false
+                defaultPassword: Risesoft@2022
+                defaultPasswordChangeRequired: false
+                passwordMaxAge: 0
+                passwordMinLength: 6
+                passwordRequireUppercase: false
+                passwordRequireLowercase: false
+                passwordRequireDigit: false
+                passwordRequireSymbol: false
     service:
         log:
             directUrl: http://localhost:7055

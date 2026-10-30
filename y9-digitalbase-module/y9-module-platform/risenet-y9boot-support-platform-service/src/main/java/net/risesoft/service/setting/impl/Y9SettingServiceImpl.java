@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.entity.setting.Y9Setting;
 import net.risesoft.manager.setting.Y9SettingManager;
 import net.risesoft.service.setting.Y9SettingService;
-import net.risesoft.service.setting.UserPasswordPolicyService;
+import net.risesoft.service.setting.PasswordPolicyService;
 import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 
 /**
@@ -30,6 +30,13 @@ public class Y9SettingServiceImpl implements Y9SettingService {
     private final Environment environment;
     private final Y9PlatformProperties y9PlatformProperties;
 
+    /**
+     * 将持久化的字符串设置值转换为字段类型，非数值和布尔类型保留字符串值。
+     *
+     * @param stringValue 持久化的设置值
+     * @param tClass 目标字段类型
+     * @return 转换后的字段值
+     */
     private Object convert(String stringValue, Class<?> tClass) {
         if (tClass == Integer.class || tClass == int.class) {
             return Integer.valueOf(stringValue);
@@ -55,6 +62,13 @@ public class Y9SettingServiceImpl implements Y9SettingService {
         return environment.getProperty(key);
     }
 
+    /**
+     * 按“配置前缀 + 字段名”读取租户已保存的设置，未保存或值为 null 的字段保留传入对象的默认值。
+     *
+     * @param setting 已填充默认值的设置对象
+     * @param <T> 设置对象类型
+     * @return 由租户已保存值覆盖后的设置对象
+     */
     private <T extends AbstractSetting> T fillObjectFiledWithSettingItem(T setting) {
         Field[] declaredFields = setting.getClass().getDeclaredFields();
         for (Field declaredField : declaredFields) {
@@ -74,6 +88,11 @@ public class Y9SettingServiceImpl implements Y9SettingService {
         return setting;
     }
 
+    /**
+     * 将设置对象的非静态字段逐项保存，配置键由前缀和当前字段名组成。
+     *
+     * @param setting 待保存的设置对象
+     */
     @Transactional
     public void saveObjectFiledAsSettingItem(AbstractSetting setting) {
         Field[] declaredFields = setting.getClass().getDeclaredFields();
@@ -100,13 +119,14 @@ public class Y9SettingServiceImpl implements Y9SettingService {
 
     @Override
     public TenantSetting getTenantSetting() {
+        // 先使用绑定的租户默认配置，再由数据库中已保存的租户设置覆盖。
         return this.fillObjectFiledWithSettingItem(new TenantSetting(y9PlatformProperties.getTenantDefault()));
     }
 
     @Override
     @Transactional
     public void saveTenantSetting(TenantSetting tenantSetting) {
-        UserPasswordPolicyService.validateSettings(tenantSetting);
+        PasswordPolicyService.validateSettings(tenantSetting);
         this.saveObjectFiledAsSettingItem(tenantSetting);
     }
 }

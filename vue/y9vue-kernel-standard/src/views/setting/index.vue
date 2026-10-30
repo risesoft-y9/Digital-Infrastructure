@@ -8,29 +8,30 @@
             :label-width="settingStore.device === 'mobile' ? '140px' : '180px'"
             class="setting-form"
         >
-            <el-form-item :label="$t('默认密码')" prop="userDefaultPassword">
-                <el-input v-model="model.userDefaultPassword" type="password" show-password />
+            <el-form-item :label="$t('默认密码')" prop="defaultPassword">
+                <el-input v-model="model.defaultPassword" type="password" show-password />
             </el-form-item>
             <el-form-item :label="$t('岗位名称格式')" prop="positionNameTemplate">
                 <el-input v-model="model.positionNameTemplate" :placeholder="positionNamePlaceholder" />
             </el-form-item>
-            <el-divider content-position="left">{{ $t('普通用户密码策略') }}</el-divider>
-            <el-form-item :label="$t('默认密码强制修改')" prop="userDefaultPasswordChangeRequired">
-                <el-switch v-model="model.userDefaultPasswordChangeRequired" />
+            <el-divider content-position="left">{{ $t('人员密码策略') }}</el-divider>
+            <el-form-item :label="$t('默认密码强制修改')" prop="defaultPasswordChangeRequired">
+                <el-switch v-model="model.defaultPasswordChangeRequired" />
             </el-form-item>
-            <el-form-item :label="$t('密码有效天数')" prop="userPasswordMaxAge">
-                <el-input-number v-model="model.userPasswordMaxAge" :min="0" :max="365" :step="1" step-strictly />
+            <el-form-item :label="$t('密码有效天数')" prop="passwordMaxAge">
+                <el-input-number v-model="model.passwordMaxAge" :min="0" :max="365" :step="1" step-strictly />
                 <span class="setting-tip">{{ $t('0 为永久，设置范围 0～365') }}</span>
             </el-form-item>
-            <el-form-item :label="$t('密码最小长度')" prop="userPasswordMinLength">
-                <el-input-number v-model="model.userPasswordMinLength" :min="6" :max="32" :step="1" step-strictly />
+            <el-divider content-position="left">{{ $t('密码强度') }}</el-divider>
+            <el-form-item :label="$t('密码最小长度')" prop="passwordMinLength">
+                <el-input-number v-model="model.passwordMinLength" :min="6" :max="32" :step="1" step-strictly />
                 <span class="setting-tip">{{ $t('设置范围 6～32 位') }}</span>
             </el-form-item>
             <el-form-item :label="$t('密码必须包含')">
-                <el-checkbox v-model="model.userPasswordRequireUppercase">{{ $t('大写字母') }}</el-checkbox>
-                <el-checkbox v-model="model.userPasswordRequireLowercase">{{ $t('小写字母') }}</el-checkbox>
-                <el-checkbox v-model="model.userPasswordRequireDigit">{{ $t('数字') }}</el-checkbox>
-                <el-checkbox v-model="model.userPasswordRequireSymbol">{{ $t('英文标点符号') }}</el-checkbox>
+                <el-checkbox v-model="model.passwordRequireUppercase">{{ $t('大写字母') }}</el-checkbox>
+                <el-checkbox v-model="model.passwordRequireLowercase">{{ $t('小写字母') }}</el-checkbox>
+                <el-checkbox v-model="model.passwordRequireDigit">{{ $t('数字') }}</el-checkbox>
+                <el-checkbox v-model="model.passwordRequireSymbol">{{ $t('英文标点符号') }}</el-checkbox>
             </el-form-item>
             <el-form-item>
                 <el-button :loading="isLoading" :disabled="loading || !loaded" type="primary" @click="onSave">
@@ -58,21 +59,19 @@
     const loaded = ref(false);
     const isLoading = ref(false);
     const model = reactive({
-        userDefaultPassword: '',
+        defaultPassword: '',
         positionNameTemplate: '',
-        userDefaultPasswordChangeRequired: false,
-        userPasswordMaxAge: 0,
-        userPasswordMinLength: 6,
-        userPasswordRequireUppercase: false,
-        userPasswordRequireLowercase: false,
-        userPasswordRequireDigit: false,
-        userPasswordRequireSymbol: false
+        defaultPasswordChangeRequired: false,
+        passwordMaxAge: 0,
+        passwordMinLength: 6,
+        passwordRequireUppercase: false,
+        passwordRequireLowercase: false,
+        passwordRequireDigit: false,
+        passwordRequireSymbol: false
     });
     const rules = computed<FormRules>(() => ({
-        userPasswordMaxAge: [
-            { type: 'integer', min: 0, max: 365, message: t('请输入 0～365 的整数'), trigger: 'change' }
-        ],
-        userPasswordMinLength: [
+        passwordMaxAge: [{ type: 'integer', min: 0, max: 365, message: t('请输入 0～365 的整数'), trigger: 'change' }],
+        passwordMinLength: [
             { type: 'integer', min: 6, max: 32, message: t('最小长度须设置为 6～32 的整数'), trigger: 'change' }
         ]
     }));

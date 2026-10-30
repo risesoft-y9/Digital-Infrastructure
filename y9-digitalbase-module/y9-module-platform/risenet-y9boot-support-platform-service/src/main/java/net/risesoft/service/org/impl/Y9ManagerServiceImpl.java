@@ -25,6 +25,7 @@ import net.risesoft.pojo.AuditLogEvent;
 import net.risesoft.repository.org.Y9ManagerRepository;
 import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.service.relation.Y9SystemVendorService;
+import net.risesoft.service.setting.PasswordPolicyService;
 import net.risesoft.service.setting.Y9SettingService;
 import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.util.Y9OrgUtil;
@@ -52,6 +53,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9SettingService y9SettingService;
+    private final PasswordPolicyService passwordPolicyService;
 
     private final Y9PlatformProperties y9PlatformProperties;
 
@@ -87,8 +89,10 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
 
     @Override
     @Transactional
-    public void changePassword(String id, String newPassword) {
+    public void changePassword(String id, String oldPassword, String newPassword) {
         Y9Manager currentManager = this.get(id);
+        passwordPolicyService.validatePassword(StringUtils.defaultString(oldPassword), newPassword,
+            currentManager.getPassword(), currentManager.getPasswordHashAlgorithm());
         Y9Manager originalManager = PlatformModelConvertUtil.convert(currentManager, Y9Manager.class);
 
         currentManager.changePassword(newPassword);
@@ -103,12 +107,6 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
             .currentObject(savedManager)
             .build();
         Y9Context.publishEvent(auditLogEvent);
-    }
-
-    @Override
-    public boolean isPasswordCorrect(String personId, String password) {
-        Y9Manager manager = this.get(personId);
-        return manager.isPasswordCorrect(password);
     }
 
     @Override
@@ -240,7 +238,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     public Manager resetDefaultPassword(String id) {
         Y9Manager currentManager = this.get(id);
         Y9Manager originalManager = PlatformModelConvertUtil.convert(currentManager, Y9Manager.class);
-        String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
+        String defaultPassword = y9SettingService.getTenantSetting().getDefaultPassword();
 
         currentManager.changePassword(defaultPassword);
         Y9Manager savedManager = this.update(currentManager, originalManager);
@@ -311,7 +309,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
             }
         }
 
-        String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
+        String defaultPassword = y9SettingService.getTenantSetting().getDefaultPassword();
         Y9OrgBase parent = null;
         Integer nextSubTabIndex = 0;
         List<Y9OrgBase> ancestorList = new ArrayList<>();
