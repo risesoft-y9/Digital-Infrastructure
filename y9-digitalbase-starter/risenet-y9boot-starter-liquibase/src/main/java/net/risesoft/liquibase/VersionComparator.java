@@ -4,6 +4,9 @@ import java.util.Comparator;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * 版本脚本按数字版本排序；同版本的不同脚本按完整路径排序。
+ */
 public class VersionComparator implements Comparator<String> {
 
     private String extractVersion(String filename) {
@@ -29,6 +32,6 @@ public class VersionComparator implements Comparator<String> {
                 return Integer.compare(n1, n2);
             }
         }
-        return 0;
+        return f1.compareTo(f2);
     }
 }

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
-    <include file="liquibase/public/init.xml"/>
-    <includeAll path="liquibase/public/release/" resourceComparator="net.risesoft.liquibase.VersionComparator" errorIfMissingOrEmpty="false"/>
+    <includeAll path="liquibase/audit/public/release/" resourceComparator="net.risesoft.liquibase.VersionComparator" errorIfMissingOrEmpty="false"/>
 
 </databaseChangeLog>

@@ -175,33 +175,6 @@
             <column name="USERNAME" remarks="用户名" type="VARCHAR(50)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1697708034037-5" author="shidaobang" runOnChange="true">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="Y9_COMMON_FILE_STORE"/>
-            </not>
-        </preConditions>
-        <createTable remarks="文件仓库表" tableName="Y9_COMMON_FILE_STORE">
-            <column name="STOREID" remarks="主键" type="VARCHAR(38)">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="FILEENVELOPE" remarks="文件数字信封: 即AES的随机密钥，然后进行RSA加密后的结果"
-                    type="VARCHAR(200)"/>
-            <column name="FILEEXT" remarks="文件扩展名称" type="VARCHAR(50)"/>
-            <column name="FILENAME" remarks="上传的文件名称" type="VARCHAR(600)"/>
-            <column name="FILESHA" remarks="文件SHA值" type="VARCHAR(200)"/>
-            <column defaultValueNumeric="0" name="FILESIZE" remarks="文件长度" type="BIGINT"/>
-            <column name="FULLPATH" remarks="绝对路径" type="VARCHAR(300)"/>
-            <column name="PREFIX" remarks="根目录前缀" type="VARCHAR(50)"/>
-            <column name="REALFILENAME" remarks="存放的文件名称" type="VARCHAR(100)"/>
-            <column name="STORETYPE" remarks="仓库类型" type="INT"/>
-            <column name="SYSTEMNAME" remarks="系统名称" type="VARCHAR(50)"/>
-            <column name="TENANTID" remarks="租户Id" type="VARCHAR(38)"/>
-            <column name="UPLOADTIME" remarks="上传时间" type="datetime"/>
-            <column name="UPLOADER" remarks="上传人" type="VARCHAR(100)"/>
-            <column name="FILEURL" remarks="完整的文件地址" type="VARCHAR(500)"/>
-        </createTable>
-    </changeSet>
     <changeSet id="1697708034037-6" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>

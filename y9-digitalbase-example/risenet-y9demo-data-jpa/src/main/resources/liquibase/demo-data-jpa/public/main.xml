@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
-    <include file="liquibase/public/init.xml"/>
-    <includeAll path="liquibase/public/release/" resourceComparator="net.risesoft.liquibase.VersionComparator" errorIfMissingOrEmpty="false"/>
+    <include file="liquibase/demo-data-jpa/public/init.xml"/>
+    <includeAll path="liquibase/demo-data-jpa/public/release/" resourceComparator="net.risesoft.liquibase.VersionComparator" errorIfMissingOrEmpty="false"/>
 
 </databaseChangeLog>

@@ -17,14 +17,14 @@ import lombok.Setter;
 public class Y9LiquibaseProperties {
 
     /**
-     * Change log configuration path for public.
+     * Public change log entry point. By default, discovers public/main.xml under liquibase/ across dependency JARs.
      */
-    private String publicChangeLog = "classpath:/liquibase/public/main.xml";
+    private String publicChangeLog = "classpath:/liquibase/main-public.xml";
 
     /**
-     * Change log configuration path for tenant.
+     * Tenant change log entry point. By default, discovers tenant/main.xml under liquibase/ across dependency JARs.
      */
-    private String tenantChangeLog = "classpath:/liquibase/tenant/main.xml";
+    private String tenantChangeLog = "classpath:/liquibase/main-tenant.xml";
 
     /**
      * Whether to clear all checksums in the current changelog, so they will be recalculated upon the next update.
