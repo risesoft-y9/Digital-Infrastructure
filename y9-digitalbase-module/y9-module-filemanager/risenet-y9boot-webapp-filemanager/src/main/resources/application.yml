@@ -107,20 +107,6 @@ spring:
                     batch_size: 100
     main:
         allow-bean-definition-overriding: false
-    redis:
-        database: 8
-        host: localhost
-        password: 111111
-        port: 6379
-        lettuce:
-            pool:
-                max-active: 8
-                max-idle: 8
-                max-wait: -1
-                min-idle: 0
-            shutdown-timeout: 100ms
-        ssl: false
-        timeout: 10000
     web:
         resources:
             static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:///d:/y9config/
@@ -135,9 +121,3 @@ y9:
             packagesToScanEntityTenant: net.risesoft.entity
             packagesToScanRepositoryPublic: net.risesoft.y9public.repository
             packagesToScanRepositoryTenant: net.risesoft.repository
-        listener:
-            redis:
-                enabled: true
-        publish:
-            redis:
-                enabled: true

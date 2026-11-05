@@ -108,20 +108,6 @@ spring:
             group-id: y9log-server
     main:
         allow-bean-definition-overriding: true
-    redis:
-        database: 8
-        host: localhost
-        password: 111111
-        port: 6379
-        lettuce:
-            pool:
-                max-active: 8
-                max-idle: 8
-                max-wait: -1
-                min-idle: 0
-            shutdown-timeout: 100ms
-        ssl: false
-        timeout: 10000
 y9:
     systemName: ${spring.application.name}
     internalIp: 192.168.x.x,10.x.x.x,172.20.x.x
