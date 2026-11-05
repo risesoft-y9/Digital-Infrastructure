@@ -25,6 +25,6 @@ public class Y9TokenProperties {
     /** 客户端密码 */
     private String clientSecret = "secret";
 
-    /** 获取令牌URL */
+    /** 获取令牌URL，使用 client_credentials 授权认证 */
     private String tokenUrl = "http://localhost:7055/sso/oauth2.0/accessToken";
 }

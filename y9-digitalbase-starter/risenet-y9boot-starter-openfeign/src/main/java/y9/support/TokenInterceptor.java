@@ -1,25 +1,12 @@
 package y9.support;
 
-import java.io.Serializable;
-import java.net.URI;
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
+import org.springframework.util.Assert;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
-
-import net.risesoft.y9.configuration.feature.openfeign.Y9TokenProperties;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -33,70 +20,24 @@ import feign.RequestTemplate;
 @RequiredArgsConstructor
 public class TokenInterceptor implements RequestInterceptor {
 
-    private static final String KEY_PREFIX = "y9-api-token:";
-
-    private final Y9TokenProperties y9TokenProperties;
-    private final RedisTemplate<String, String> redisTemplate;
-
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final String clientRegistrationId;
+    private final OAuth2AuthorizedClientManager authorizedClientManager;
 
     @Override
     public void apply(RequestTemplate requestTemplate) {
-        String accessToken = getAccessTokenFromCache();
-        if (StringUtils.isBlank(accessToken)) {
-            accessToken = getAndCacheAccessToken();
-        }
-        if (StringUtils.isNotBlank(accessToken)) {
-            // 将 access_token 往下游服务传
-            requestTemplate.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
-        }
+        String accessToken = getAccessToken();
+        requestTemplate.removeHeader(HttpHeaders.AUTHORIZATION);
+        requestTemplate.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
     }
 
-    private String getAccessTokenFromCache() {
-        String clientId = y9TokenProperties.getClientId();
-        String key = KEY_PREFIX + clientId;
-        return redisTemplate.opsForValue().get(key);
-    }
-
-    private String getAndCacheAccessToken() {
-        String accessTokenUri = y9TokenProperties.getTokenUrl();
-        String clientId = y9TokenProperties.getClientId();
-        String clientSecret = y9TokenProperties.getClientSecret();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-
-        URI uri = URI.create(accessTokenUri + "?client_id=" + clientId + "&client_secret=" + clientSecret
-            + "&grant_type=client_credentials");
-        RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, uri);
-        ResponseEntity<OAuth2AccessToken> responseEntity =
-            restTemplate.exchange(requestEntity, OAuth2AccessToken.class);
-        OAuth2AccessToken oAuth2AccessToken = responseEntity.getBody();
-        String accessToken = oAuth2AccessToken.getAccessToken();
-        String key = KEY_PREFIX + clientId;
-        redisTemplate.opsForValue().set(key, accessToken, 1, TimeUnit.HOURS);
-
-        return accessToken;
-    }
-
-    @Data
-    public static class OAuth2AccessToken implements Serializable {
-        private static final long serialVersionUID = 8242278854463512207L;
-
-        @JsonProperty("access_token")
-        private String accessToken;
-
-        @JsonProperty("token_type")
-        private String tokenType;
-
-        @JsonProperty("expires_in")
-        private Integer expiresIn;
-
-        @JsonProperty("refresh_token")
-        private String refreshToken;
-
-        private String scope;
-
+    private synchronized String getAccessToken() {
+        // 使用固定的应用身份，使同一实例的所有请求复用一个令牌，不依赖当前登录用户。
+        OAuth2AuthorizeRequest authorizeRequest = OAuth2AuthorizeRequest.withClientRegistrationId(clientRegistrationId)
+            .principal(clientRegistrationId).build();
+        // 串行执行检查和申请，避免同一实例在令牌过期时并发申请。
+        OAuth2AuthorizedClient authorizedClient = authorizedClientManager.authorize(authorizeRequest);
+        Assert.state(authorizedClient != null, "Failed to authorize OpenFeign OAuth2 client: " + clientRegistrationId);
+        return authorizedClient.getAccessToken().getTokenValue();
     }
 
 }
