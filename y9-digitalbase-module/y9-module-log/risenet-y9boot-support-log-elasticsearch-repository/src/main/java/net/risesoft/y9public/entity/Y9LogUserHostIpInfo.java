@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-@Document(indexName = "userhostipinfo")
+@Document(indexName = "#{@y9IndexNameResolver.resolve('userhostipinfo')}")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Y9LogUserHostIpInfo implements Serializable {
     private static final long serialVersionUID = -6096173983030412296L;

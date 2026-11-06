@@ -16,6 +16,7 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.y9.configuration.feature.elasticsearch.Y9ElasticProperties;
+import net.risesoft.y9.elasticsearch.Y9IndexNameResolver;
 
 @Configuration
 @EnableConfigurationProperties(Y9ElasticProperties.class)
@@ -28,6 +29,11 @@ public class Y9ElasticsearchConfiguration {
     public Y9ElasticsearchConfiguration() {
         LOGGER.info("Y9ElasticsearchConfiguration init. ");
         System.setProperty("es.set.netty.runtime.available.processors", "false");
+    }
+
+    @Bean
+    public Y9IndexNameResolver y9IndexNameResolver(Y9ElasticProperties properties) {
+        return new Y9IndexNameResolver(properties.getIndexNamePrefix());
     }
 
     @Bean

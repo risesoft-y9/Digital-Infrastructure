@@ -14,7 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-@Document(indexName = "appclickindex")
+@Document(indexName = "#{@y9IndexNameResolver.resolve('appclickindex')}")
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Y9ClickedApp implements Serializable {

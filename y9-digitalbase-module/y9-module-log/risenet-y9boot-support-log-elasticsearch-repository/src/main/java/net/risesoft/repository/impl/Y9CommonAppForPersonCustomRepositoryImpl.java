@@ -12,7 +12,6 @@ import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -27,6 +26,7 @@ import net.risesoft.log.domain.Y9CommonAppForPersonDO;
 import net.risesoft.log.domain.Y9LogAccessLogDO;
 import net.risesoft.log.repository.Y9CommonAppForPersonCustomRepository;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.elasticsearch.Y9IndexNameResolver;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9Util;
 import net.risesoft.y9public.entity.Y9ClickedApp;
@@ -47,7 +47,8 @@ import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 @RequiredArgsConstructor
 public class Y9CommonAppForPersonCustomRepositoryImpl implements Y9CommonAppForPersonCustomRepository {
 
-    private static final IndexCoordinates INDEX = IndexCoordinates.of(Y9ESIndexConst.CLICKED_APP_INDEX);
+    private final Y9IndexNameResolver indexNameResolver;
+
     private final ElasticsearchOperations elasticsearchOperations;
 
     private final Y9CommonAppForPersonRepository y9CommonAppForPersonRepository;
@@ -67,7 +68,8 @@ public class Y9CommonAppForPersonCustomRepositoryImpl implements Y9CommonAppForP
         try {
             List<String> list = new ArrayList<>();
             SearchHits<Y9ClickedApp> searchHits =
-                elasticsearchOperations.search(builder.build(), Y9ClickedApp.class, INDEX);
+                elasticsearchOperations.search(builder.build(), Y9ClickedApp.class,
+                    indexNameResolver.coordinates(Y9ESIndexConst.CLICKED_APP_INDEX));
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
             if (aggregations != null) {
                 Terms terms = aggregations.aggregations().get("by_appName");

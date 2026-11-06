@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor
 @Data
-@Document(indexName = "flowable_log_index-#{@esIndexDate.getDateStr()}")
+@Document(indexName = "#{@y9IndexNameResolver.resolve('flowable_log_index-')}#{@esIndexDate.getDateStr()}")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Y9LogFlowableAccessLog implements Serializable {
 

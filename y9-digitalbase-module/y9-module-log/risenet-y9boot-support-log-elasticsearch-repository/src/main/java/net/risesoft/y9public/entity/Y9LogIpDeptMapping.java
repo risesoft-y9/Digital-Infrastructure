@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-@Document(indexName = "ipdeptmapping")
+@Document(indexName = "#{@y9IndexNameResolver.resolve('ipdeptmapping')}")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Y9LogIpDeptMapping implements Serializable {
     private static final long serialVersionUID = -3758903946162468650L;

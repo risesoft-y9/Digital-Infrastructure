@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-@Document(indexName = "common_app_for_person")
+@Document(indexName = "#{@y9IndexNameResolver.resolve('common_app_for_person')}")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Y9CommonAppForPerson implements Serializable {
 

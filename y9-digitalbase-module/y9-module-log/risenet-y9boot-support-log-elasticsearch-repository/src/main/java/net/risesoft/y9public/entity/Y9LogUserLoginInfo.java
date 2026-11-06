@@ -17,7 +17,7 @@ import net.risesoft.enums.platform.org.ManagerLevelEnum;
 
 @NoArgsConstructor
 @Data
-@Document(indexName = "userlogininfo")
+@Document(indexName = "#{@y9IndexNameResolver.resolve('userlogininfo')}")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Y9LogUserLoginInfo implements Serializable {
     private static final long serialVersionUID = -6476891120156676097L;

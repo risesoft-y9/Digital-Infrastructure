@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Document(indexName = "log_mapping_index")
+@Document(indexName = "#{@y9IndexNameResolver.resolve('log_mapping_index')}")
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)

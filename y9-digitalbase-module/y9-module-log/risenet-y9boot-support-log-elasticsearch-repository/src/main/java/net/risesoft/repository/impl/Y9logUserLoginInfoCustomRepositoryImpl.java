@@ -31,7 +31,6 @@ import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.data.elasticsearch.core.query.CriteriaQueryBuilder;
@@ -54,6 +53,7 @@ import net.risesoft.model.log.LoginLogQuery;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.elasticsearch.Y9IndexNameResolver;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.Y9Util;
@@ -73,7 +73,7 @@ import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
 @RequiredArgsConstructor
 public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInfoCustomRepository {
 
-    private static final IndexCoordinates INDEX = IndexCoordinates.of(Y9ESIndexConst.LOGIN_INFO_INDEX);
+    private final Y9IndexNameResolver indexNameResolver;
 
     private final Y9LogUserLoginInfoRepository y9logUserLoginInfoRepository;
     private final ElasticsearchOperations elasticsearchOperations;
@@ -89,7 +89,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
         }
         Query query = new CriteriaQueryBuilder(criteria).build();
-        return elasticsearchOperations.count(query, INDEX);
+        return elasticsearchOperations.count(query, indexNameResolver.coordinates(Y9ESIndexConst.LOGIN_INFO_INDEX));
     }
 
     @Override
@@ -111,7 +111,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
         }
         Query query = new CriteriaQuery(criteria);
-        return elasticsearchOperations.count(query, INDEX);
+        return elasticsearchOperations.count(query, indexNameResolver.coordinates(Y9ESIndexConst.LOGIN_INFO_INDEX));
     }
 
     @Override
@@ -129,7 +129,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
         }
         Query query = new CriteriaQuery(criteria);
-        return elasticsearchOperations.count(query, INDEX);
+        return elasticsearchOperations.count(query, indexNameResolver.coordinates(Y9ESIndexConst.LOGIN_INFO_INDEX));
     }
 
     @Override
@@ -147,7 +147,8 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
 
         try {
             SearchHits<Y9LogUserLoginInfo> searchHits =
-                elasticsearchOperations.search(builder.build(), Y9LogUserLoginInfo.class, INDEX);
+                elasticsearchOperations.search(builder.build(), Y9LogUserLoginInfo.class,
+                    indexNameResolver.coordinates(Y9ESIndexConst.LOGIN_INFO_INDEX));
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
             if (aggregations != null) {
                 Terms terms = aggregations.aggregations().get("by_UserHostIP");
@@ -203,7 +204,8 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             .addSort(Sort.by(Direction.DESC, Y9LogSearchConsts.LOGIN_TIME));
 
         SearchHits<Y9LogUserLoginInfo> searchHits =
-            elasticsearchOperations.search(query, Y9LogUserLoginInfo.class, INDEX);
+            elasticsearchOperations.search(query, Y9LogUserLoginInfo.class,
+                indexNameResolver.coordinates(Y9ESIndexConst.LOGIN_INFO_INDEX));
         List<Y9LogUserLoginInfoDO> list = searchHits.stream()
             .map(SearchHit::getContent)
             .map(l -> Y9ModelConvertUtil.convert(l, Y9LogUserLoginInfoDO.class))
@@ -242,7 +244,8 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         builder.withAggregations(termsAggregation);
 
         SearchHits<Y9LogUserLoginInfo> searchHits =
-            elasticsearchOperations.search(builder.build(), Y9LogUserLoginInfo.class, INDEX);
+            elasticsearchOperations.search(builder.build(), Y9LogUserLoginInfo.class,
+                indexNameResolver.coordinates(Y9ESIndexConst.LOGIN_INFO_INDEX));
         ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
         if (aggregations != null) {
             Terms terms = aggregations.aggregations().get("username-aggs");
@@ -302,7 +305,8 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
 
         try {
             SearchHits<Y9LogUserLoginInfo> searchHits =
-                elasticsearchOperations.search(builder.build(), Y9LogUserLoginInfo.class, INDEX);
+                elasticsearchOperations.search(builder.build(), Y9LogUserLoginInfo.class,
+                    indexNameResolver.coordinates(Y9ESIndexConst.LOGIN_INFO_INDEX));
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
             if (aggregations != null) {
                 Terms terms = aggregations.aggregations().get("username-aggs");
@@ -355,7 +359,8 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         Query query = new CriteriaQuery(criteria).setPageable(PageRequest.of((page < 1) ? 0 : page - 1, rows))
             .addSort(Sort.by(Direction.DESC, Y9LogSearchConsts.LOGIN_TIME));
         SearchHits<Y9LogUserLoginInfo> searchHits =
-            elasticsearchOperations.search(query, Y9LogUserLoginInfo.class, INDEX);
+            elasticsearchOperations.search(query, Y9LogUserLoginInfo.class,
+                indexNameResolver.coordinates(Y9ESIndexConst.LOGIN_INFO_INDEX));
 
         List<Y9LogUserLoginInfoDO> list = searchHits.stream()
             .map(SearchHit::getContent)
@@ -411,7 +416,8 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         }
         Query query = new CriteriaQuery(criteria).setPageable(pageable);
         SearchHits<Y9LogUserLoginInfo> searchHits =
-            elasticsearchOperations.search(query, Y9LogUserLoginInfo.class, INDEX);
+            elasticsearchOperations.search(query, Y9LogUserLoginInfo.class,
+                indexNameResolver.coordinates(Y9ESIndexConst.LOGIN_INFO_INDEX));
 
         List<Y9LogUserLoginInfoDO> list = searchHits.stream()
             .map(SearchHit::getContent)

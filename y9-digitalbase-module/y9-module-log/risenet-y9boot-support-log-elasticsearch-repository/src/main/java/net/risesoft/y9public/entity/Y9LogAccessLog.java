@@ -26,7 +26,7 @@ import net.risesoft.enums.platform.org.ManagerLevelEnum;
  */
 @NoArgsConstructor
 @Data
-@Document(indexName = "logindex-#{@esIndexDate.getDateStr()}")
+@Document(indexName = "#{@y9IndexNameResolver.resolve('logindex-')}#{@esIndexDate.getDateStr()}")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Y9LogAccessLog implements Serializable {
     private static final long serialVersionUID = 8905896381019503361L;

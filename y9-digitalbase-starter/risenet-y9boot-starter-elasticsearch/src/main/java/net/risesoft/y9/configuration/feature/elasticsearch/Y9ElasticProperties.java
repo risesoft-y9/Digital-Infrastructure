@@ -17,6 +17,11 @@ import lombok.Setter;
 public class Y9ElasticProperties {
 
     /**
+     * 索引名前缀，包含分隔符，例如 dev_。默认为空，兼容已有索引。
+     */
+    private String indexNamePrefix = "";
+
+    /**
      * 公共库实体包扫描路径
      */
     private String packagesToScanEntityPublic;

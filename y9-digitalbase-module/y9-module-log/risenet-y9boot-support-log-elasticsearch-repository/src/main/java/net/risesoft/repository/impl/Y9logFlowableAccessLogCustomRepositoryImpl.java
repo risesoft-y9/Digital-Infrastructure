@@ -49,6 +49,7 @@ import net.risesoft.model.log.FlowableAccessLogQuery;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.util.AccessLogModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.elasticsearch.Y9IndexNameResolver;
 import net.risesoft.y9.util.Y9DayUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.Y9LogFlowableAccessLog;
@@ -63,6 +64,8 @@ import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 @Slf4j
 @RequiredArgsConstructor
 public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowableAccessLogCustomRepository {
+
+    private final Y9IndexNameResolver indexNameResolver;
 
     private static final FastDateFormat DATETIME_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
     private static final FastDateFormat DATETIME_UTC_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -131,7 +134,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
         nativebuilder.withQuery(boolQueryBuilder);
         nativebuilder.withAggregations(ranges);
         try {
-            IndexCoordinates index = IndexCoordinates.of(createIndexNames(startDay, endDay));
+            IndexCoordinates index = indexNameResolver.coordinates(createIndexNames(startDay, endDay));
             SearchHits<Y9LogFlowableAccessLog> searchHits =
                 elasticsearchOperations.search(nativebuilder.build(), Y9LogFlowableAccessLog.class, index);
             ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
@@ -153,7 +156,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
 
     @Override
     public Page<Y9LogFlowableAccessLogDO> page(int page, int rows, String sort) {
-        IndexCoordinates index = IndexCoordinates.of(getCurrentYearIndexName());
+        IndexCoordinates index = indexNameResolver.coordinates(getCurrentYearIndexName());
         String tenantId = Y9LoginUserHolder.getTenantId();
         Pageable pageable;
         Criteria criteria = new Criteria(Y9LogSearchConsts.USER_NAME).exists();
@@ -181,7 +184,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
 
     @Override
     public Y9Page<FlowableAccessLog> pageByCondition(FlowableAccessLogQuery search, Integer page, Integer rows) {
-        IndexCoordinates index = IndexCoordinates.of(createIndexNames(search.getStartTime(), search.getEndTime()));
+        IndexCoordinates index = indexNameResolver.coordinates(createIndexNames(search.getStartTime(), search.getEndTime()));
         Criteria criteria = new Criteria(Y9LogSearchConsts.USER_NAME).exists();
         if (StringUtils.isNotBlank(search.getLogLevel())) {
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.LOG_LEVEL).is(search.getLogLevel()));
@@ -264,7 +267,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
             PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
         Query query = new CriteriaQuery(criteria).setPageable(pageable);
         query.setTrackTotalHits(true);
-        IndexCoordinates index = IndexCoordinates.of(createIndexNames(startDay, endDay));
+        IndexCoordinates index = indexNameResolver.coordinates(createIndexNames(startDay, endDay));
 
         SearchHits<Y9LogFlowableAccessLog> searchHits =
             elasticsearchOperations.search(query, Y9LogFlowableAccessLog.class, index);
@@ -328,7 +331,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
         Query query = new CriteriaQuery(criteria).setPageable(pageable);
         query.setTrackTotalHits(true);
 
-        IndexCoordinates index = IndexCoordinates.of(createIndexNames(date, null));
+        IndexCoordinates index = indexNameResolver.coordinates(createIndexNames(date, null));
         SearchHits<Y9LogFlowableAccessLog> searchHits =
             elasticsearchOperations.search(query, Y9LogFlowableAccessLog.class, index);
         List<Y9LogFlowableAccessLogDO> list = searchHits.stream()
@@ -391,7 +394,7 @@ public class Y9logFlowableAccessLogCustomRepositoryImpl implements Y9logFlowable
         Query query = new CriteriaQuery(criteria).setPageable(pageable);
         query.setTrackTotalHits(true);
 
-        IndexCoordinates index = IndexCoordinates.of(createIndexNames(startTime, endTime));
+        IndexCoordinates index = indexNameResolver.coordinates(createIndexNames(startTime, endTime));
         SearchHits<Y9LogFlowableAccessLog> searchHits =
             elasticsearchOperations.search(query, Y9LogFlowableAccessLog.class, index);
         List<Y9LogFlowableAccessLogDO> list = searchHits.stream()
