@@ -1,8 +1,16 @@
 package net.risesoft.service.setting;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,8 +58,8 @@ class Y9SettingPasswordPolicyTest {
         setting.setPasswordRequireDigit(true);
         setting.setDefaultPasswordChangeRequired(true);
         service.saveTenantSetting(setting);
-        verify(manager).save(argThat(item ->
-            "y9.app.platform.tenant-default.defaultPasswordChangeRequired".equals(item.getKey())
+        verify(manager)
+            .save(argThat(item -> "y9.app.platform.tenant-default.defaultPasswordChangeRequired".equals(item.getKey())
                 && "true".equals(item.getValue())));
         TenantSetting saved = service.getTenantSetting();
         assertEquals(8, saved.getPasswordMinLength());
@@ -65,16 +73,16 @@ class Y9SettingPasswordPolicyTest {
 
     @Test
     void readsAllDefaultsFromBoundTenantDefaultConfiguration() {
-        MockEnvironment environment = new MockEnvironment()
-            .withProperty("y9.app.platform.tenant-default.default-password", "configuredPassword")
-            .withProperty("y9.app.platform.tenant-default.position-name-template", "#personNames")
-            .withProperty("y9.app.platform.tenant-default.default-password-change-required", "true")
-            .withProperty("y9.app.platform.tenant-default.password-max-age", "90")
-            .withProperty("y9.app.platform.tenant-default.password-min-length", "12")
-            .withProperty("y9.app.platform.tenant-default.password-require-uppercase", "true")
-            .withProperty("y9.app.platform.tenant-default.password-require-lowercase", "true")
-            .withProperty("y9.app.platform.tenant-default.password-require-digit", "true")
-            .withProperty("y9.app.platform.tenant-default.password-require-symbol", "true");
+        MockEnvironment environment =
+            new MockEnvironment().withProperty("y9.app.platform.tenant-default.default-password", "configuredPassword")
+                .withProperty("y9.app.platform.tenant-default.position-name-template", "#personNames")
+                .withProperty("y9.app.platform.tenant-default.default-password-change-required", "true")
+                .withProperty("y9.app.platform.tenant-default.password-max-age", "90")
+                .withProperty("y9.app.platform.tenant-default.password-min-length", "12")
+                .withProperty("y9.app.platform.tenant-default.password-require-uppercase", "true")
+                .withProperty("y9.app.platform.tenant-default.password-require-lowercase", "true")
+                .withProperty("y9.app.platform.tenant-default.password-require-digit", "true")
+                .withProperty("y9.app.platform.tenant-default.password-require-symbol", "true");
         Y9PlatformProperties bound = Binder.get(environment).bind("y9.app.platform", Y9PlatformProperties.class).get();
         service = new Y9SettingServiceImpl(manager, environment, bound);
 
@@ -110,8 +118,7 @@ class Y9SettingPasswordPolicyTest {
         assertFalse(saved.isPasswordRequireDigit());
         assertEquals(12, saved.getPasswordMinLength());
 
-        when(manager.findById("y9.app.platform.tenant-default.passwordMinLength"))
-            .thenReturn(Optional.empty());
+        when(manager.findById("y9.app.platform.tenant-default.passwordMinLength")).thenReturn(Optional.empty());
         assertEquals(16, service.getTenantSetting().getPasswordMinLength());
     }
 

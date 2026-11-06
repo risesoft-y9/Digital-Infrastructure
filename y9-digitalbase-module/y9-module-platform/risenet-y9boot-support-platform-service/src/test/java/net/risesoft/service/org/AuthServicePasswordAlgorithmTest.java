@@ -1,8 +1,12 @@
 package net.risesoft.service.org;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
@@ -52,8 +56,7 @@ class AuthServicePasswordAlgorithmTest {
         person.setPassword(Y9MessageDigestUtil.bcrypt("Chosen1!"));
         person.setPasswordHashAlgorithm(PasswordHashAlgorithmConsts.BCRYPT);
         when(persons.findByLoginNameAndOriginalTrue(anyString())).thenReturn(Optional.of(person));
-        when(persons.findByDisabledFalseAndMobileAndOriginal(anyString(), eq(true)))
-            .thenReturn(Optional.of(person));
+        when(persons.findByDisabledFalseAndMobileAndOriginal(anyString(), eq(true))).thenReturn(Optional.of(person));
         Y9Department dept = new Y9Department();
         dept.setName("department");
         when(orgs.getOrgUnitAsParent(anyString())).thenReturn(dept);
@@ -62,8 +65,7 @@ class AuthServicePasswordAlgorithmTest {
         agent = new Y9User();
         agent.setPassword(person.getPassword());
         agent.setPasswordHashAlgorithm(PasswordHashAlgorithmConsts.BCRYPT);
-        when(users.findByLoginNameAndTenantIdAndOriginalTrue("agent", "operation-id"))
-            .thenReturn(Optional.of(agent));
+        when(users.findByLoginNameAndTenantIdAndOriginalTrue("agent", "operation-id")).thenReturn(Optional.of(agent));
         previousJdbcTemplate = ReflectionTestUtils.getField(Y9PlatformUtil.class, "jdbcTemplate4Public");
         JdbcTemplate jdbc = mock(JdbcTemplate.class);
         when(jdbc.queryForList(anyString(), eq(String.class))).thenReturn(List.of("operation-id"));
@@ -116,6 +118,7 @@ class AuthServicePasswordAlgorithmTest {
         agent.setPasswordHashAlgorithm(algorithm);
         assertThrows(Y9BusinessException.class, () -> service.authenticate3("person&agent", PASSWORD));
         assertEquals(Message.STATUS_FAIL, service.authenticate3("tenant", "person&agent", PASSWORD).getStatus());
-        assertEquals(Message.STATUS_FAIL, service.authenticate6("tenant", "person&agent", PASSWORD, "dept1").getStatus());
+        assertEquals(Message.STATUS_FAIL,
+            service.authenticate6("tenant", "person&agent", PASSWORD, "dept1").getStatus());
     }
 }

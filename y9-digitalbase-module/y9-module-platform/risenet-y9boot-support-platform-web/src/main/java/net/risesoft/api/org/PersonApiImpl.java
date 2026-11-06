@@ -22,8 +22,8 @@ import net.risesoft.model.platform.Role;
 import net.risesoft.model.platform.org.Group;
 import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.org.PasswordStrength;
-import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.org.PasswordValidity;
+import net.risesoft.model.platform.org.Person;
 import net.risesoft.model.platform.org.PersonExt;
 import net.risesoft.model.platform.org.Position;
 import net.risesoft.pojo.Y9Page;
@@ -76,8 +76,7 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
-     * 检查人员密码有效性
-     * 不检查当前密码是否符合新强度规则
+     * 检查人员密码有效性 不检查当前密码是否符合新强度规则
      *
      * @param tenantId 租户id
      * @param personId 人员id

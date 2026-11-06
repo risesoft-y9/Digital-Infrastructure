@@ -33,7 +33,8 @@ public class TokenInterceptor implements RequestInterceptor {
     private synchronized String getAccessToken() {
         // 使用固定的应用身份，使同一实例的所有请求复用一个令牌，不依赖当前登录用户。
         OAuth2AuthorizeRequest authorizeRequest = OAuth2AuthorizeRequest.withClientRegistrationId(clientRegistrationId)
-            .principal(clientRegistrationId).build();
+            .principal(clientRegistrationId)
+            .build();
         // 串行执行检查和申请，避免同一实例在令牌过期时并发申请。
         OAuth2AuthorizedClient authorizedClient = authorizedClientManager.authorize(authorizeRequest);
         Assert.state(authorizedClient != null, "Failed to authorize OpenFeign OAuth2 client: " + clientRegistrationId);

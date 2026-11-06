@@ -1,16 +1,25 @@
 package net.risesoft.service.setting;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.risesoft.consts.PasswordHashAlgorithmConsts;
 import net.risesoft.entity.org.Y9Person;
@@ -103,7 +112,8 @@ class PasswordPolicyServiceTest {
     @Test
     void differentPasswordStillMustMeetStrengthRequirements() {
         String hash = Y9MessageDigestUtil.bcrypt("currentPassword");
-        assertDoesNotThrow(() -> policy.validatePassword("currentPassword", "Chosen1!", hash, PasswordHashAlgorithmConsts.BCRYPT));
+        assertDoesNotThrow(
+            () -> policy.validatePassword("currentPassword", "Chosen1!", hash, PasswordHashAlgorithmConsts.BCRYPT));
         assertThrows(Y9BusinessException.class,
             () -> policy.validatePassword("currentPassword", "weak", hash, PasswordHashAlgorithmConsts.BCRYPT));
     }
@@ -142,8 +152,8 @@ class PasswordPolicyServiceTest {
     @Test
     void incorrectOldPasswordIsRejectedBeforeNewPasswordChecks() {
         String hash = Y9MessageDigestUtil.bcrypt("currentPassword");
-        Y9BusinessException exception = assertThrows(Y9BusinessException.class,
-            () -> policy.validatePassword("differentInput", "currentPassword", hash, PasswordHashAlgorithmConsts.BCRYPT));
+        Y9BusinessException exception = assertThrows(Y9BusinessException.class, () -> policy
+            .validatePassword("differentInput", "currentPassword", hash, PasswordHashAlgorithmConsts.BCRYPT));
         assertEquals(OrgUnitErrorCodeEnum.OLD_PASSWORD_IS_INCORRECT.getCode(), exception.getCode());
         verifyNoInteractions(settingService);
     }
@@ -153,7 +163,8 @@ class PasswordPolicyServiceTest {
         String hash = Y9MessageDigestUtil.bcrypt("currentPassword");
         assertThrows(Y9BusinessException.class,
             () -> policy.validatePassword(null, "x", hash, PasswordHashAlgorithmConsts.BCRYPT));
-        assertDoesNotThrow(() -> policy.validatePassword("currentPassword", "Chosen1!", hash, PasswordHashAlgorithmConsts.BCRYPT));
+        assertDoesNotThrow(
+            () -> policy.validatePassword("currentPassword", "Chosen1!", hash, PasswordHashAlgorithmConsts.BCRYPT));
     }
 
     @Test
@@ -324,6 +335,7 @@ class PasswordPolicyServiceTest {
             }
         }
     }
+
     /** 强度接口仅返回强度字段，不包含有效期和默认密码配置。 */
     @Test
     void strengthResponseContainsOnlySharedRequirements() {

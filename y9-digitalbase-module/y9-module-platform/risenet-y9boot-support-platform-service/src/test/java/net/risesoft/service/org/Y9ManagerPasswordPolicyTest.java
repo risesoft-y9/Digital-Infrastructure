@@ -1,14 +1,28 @@
 package net.risesoft.service.org;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.AdditionalAnswers.delegatesTo;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
-import java.util.Optional;
-import java.util.Date;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,8 +73,8 @@ class Y9ManagerPasswordPolicyTest {
     void setUp() {
         mocks = MockitoAnnotations.openMocks(this);
         when(settings.getTenantSetting()).thenReturn(new TenantSetting());
-        doAnswer(delegatesTo(new PasswordPolicyService(settings)))
-            .when(policy).validatePassword(any(), any(), any(), any());
+        doAnswer(delegatesTo(new PasswordPolicyService(settings))).when(policy)
+            .validatePassword(any(), any(), any(), any());
         when(properties.getManager()).thenReturn(new ManagerProperties());
         previousContext = Y9Context.getAc();
         new Y9Context().setApplicationContext(mock(ApplicationContext.class));
@@ -83,7 +97,8 @@ class Y9ManagerPasswordPolicyTest {
     @Test
     void changeValidatesTenantPolicyAndRecordsTime() {
         service.changePassword("manager1", "currentPassword", "Chosen1!");
-        verify(policy).validatePassword(eq("currentPassword"), eq("Chosen1!"), anyString(), eq(PasswordHashAlgorithmConsts.BCRYPT));
+        verify(policy).validatePassword(eq("currentPassword"), eq("Chosen1!"), anyString(),
+            eq(PasswordHashAlgorithmConsts.BCRYPT));
         verify(repository).save(manager);
         assertTrue(manager.isPasswordCorrect("Chosen1!"));
         assertEquals(PasswordHashAlgorithmConsts.BCRYPT, manager.getPasswordHashAlgorithm());
@@ -111,8 +126,7 @@ class Y9ManagerPasswordPolicyTest {
     @Test
     void missingOrIncorrectCurrentPasswordDoesNotModifyAccount() {
         for (String oldPassword : new String[] {null, "", " ", "incorrectPassword"}) {
-            assertThrows(Y9BusinessException.class,
-                () -> service.changePassword("manager1", oldPassword, "Chosen1!"));
+            assertThrows(Y9BusinessException.class, () -> service.changePassword("manager1", oldPassword, "Chosen1!"));
         }
         verify(policy, times(4)).validatePassword(anyString(), eq("Chosen1!"), anyString(),
             eq(PasswordHashAlgorithmConsts.BCRYPT));
@@ -124,9 +138,9 @@ class Y9ManagerPasswordPolicyTest {
 
     @Test
     void failedStrengthValidationDoesNotModifyAccount() {
-        doThrow(Y9BusinessException.class).when(policy).validatePassword(eq("currentPassword"), eq("weak"), anyString(), eq(PasswordHashAlgorithmConsts.BCRYPT));
-        assertThrows(Y9BusinessException.class,
-            () -> service.changePassword("manager1", "currentPassword", "weak"));
+        doThrow(Y9BusinessException.class).when(policy)
+            .validatePassword(eq("currentPassword"), eq("weak"), anyString(), eq(PasswordHashAlgorithmConsts.BCRYPT));
+        assertThrows(Y9BusinessException.class, () -> service.changePassword("manager1", "currentPassword", "weak"));
         verify(repository, never()).save(any());
         assertTrue(manager.isPasswordCorrect("currentPassword"));
         assertNull(manager.getLastModifyPasswordTime());

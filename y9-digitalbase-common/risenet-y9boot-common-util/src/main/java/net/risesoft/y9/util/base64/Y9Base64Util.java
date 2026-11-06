@@ -63,7 +63,6 @@ public class Y9Base64Util {
         return encoder.encodeToString(plainText.getBytes());
     }
 
-
     /**
      * 将字节数组进行Base64编码
      * 

@@ -73,11 +73,13 @@ public class PasswordPolicyService {
     public void validatePassword(String oldPassword, String newPassword, String oldPasswordHash,
         String oldPasswordHashAlgorithm) {
         if (oldPassword != null) {
-            Y9AssertUtil.isTrue(StringUtils.isNotBlank(oldPassword)
-                && Y9MessageDigestUtil.passwordMatch(oldPassword, oldPasswordHash, oldPasswordHashAlgorithm),
+            Y9AssertUtil.isTrue(
+                StringUtils.isNotBlank(oldPassword)
+                    && Y9MessageDigestUtil.passwordMatch(oldPassword, oldPasswordHash, oldPasswordHashAlgorithm),
                 OrgUnitErrorCodeEnum.OLD_PASSWORD_IS_INCORRECT);
         }
-        Y9AssertUtil.isTrue(StringUtils.isNotBlank(newPassword), OrgUnitErrorCodeEnum.PASSWORD_STRENGTH_INVALID, "密码不能为空");
+        Y9AssertUtil.isTrue(StringUtils.isNotBlank(newPassword), OrgUnitErrorCodeEnum.PASSWORD_STRENGTH_INVALID,
+            "密码不能为空");
         boolean samePassword = StringUtils.equals(oldPassword, newPassword)
             || Y9MessageDigestUtil.passwordMatch(newPassword, oldPasswordHash, oldPasswordHashAlgorithm);
         Y9AssertUtil.isTrue(!samePassword, OrgUnitErrorCodeEnum.NEW_PASSWORD_SAME_AS_OLD);

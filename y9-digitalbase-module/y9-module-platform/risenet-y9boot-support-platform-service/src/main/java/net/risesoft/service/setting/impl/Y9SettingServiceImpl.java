@@ -12,8 +12,8 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.setting.Y9Setting;
 import net.risesoft.manager.setting.Y9SettingManager;
-import net.risesoft.service.setting.Y9SettingService;
 import net.risesoft.service.setting.PasswordPolicyService;
+import net.risesoft.service.setting.Y9SettingService;
 import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 
 /**
@@ -74,7 +74,8 @@ public class Y9SettingServiceImpl implements Y9SettingService {
         for (Field declaredField : declaredFields) {
             if (!Modifier.isStatic(declaredField.getModifiers())) {
                 String value = y9SettingManager.findById(setting.getPrefix() + declaredField.getName())
-                    .map(Y9Setting::getValue).orElse(null);
+                    .map(Y9Setting::getValue)
+                    .orElse(null);
                 try {
                     if (value != null) {
                         declaredField.setAccessible(true);

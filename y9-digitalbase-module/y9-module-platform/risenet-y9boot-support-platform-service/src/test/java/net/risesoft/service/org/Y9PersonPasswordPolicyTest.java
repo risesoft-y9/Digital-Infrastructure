@@ -1,9 +1,23 @@
 package net.risesoft.service.org;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.AdditionalAnswers.delegatesTo;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 import java.util.Date;
@@ -60,8 +74,8 @@ class Y9PersonPasswordPolicyTest {
     void setUp() {
         mocks = MockitoAnnotations.openMocks(this);
         when(settings.getTenantSetting()).thenReturn(new TenantSetting());
-        doAnswer(delegatesTo(new PasswordPolicyService(settings)))
-            .when(policy).validatePassword(any(), any(), any(), any());
+        doAnswer(delegatesTo(new PasswordPolicyService(settings))).when(policy)
+            .validatePassword(any(), any(), any(), any());
         previousContext = Y9Context.getAc();
         new Y9Context().setApplicationContext(mock(ApplicationContext.class));
         person = new Y9Person();
@@ -82,14 +96,16 @@ class Y9PersonPasswordPolicyTest {
     @Test
     void changeValidatesStrengthAndRecordsTime() {
         service.modifyPassword("person1", "default", "Chosen1!");
-        verify(policy).validatePassword(eq("default"), eq("Chosen1!"), anyString(), eq(PasswordHashAlgorithmConsts.BCRYPT));
+        verify(policy).validatePassword(eq("default"), eq("Chosen1!"), anyString(),
+            eq(PasswordHashAlgorithmConsts.BCRYPT));
         assertNotNull(person.getLastModifyPasswordTime());
         assertTrue(Y9MessageDigestUtil.bcryptMatch("Chosen1!", person.getPassword()));
     }
 
     @Test
     void failedStrengthValidationDoesNotChangePasswordOrRecordTime() {
-        doThrow(Y9BusinessException.class).when(policy).validatePassword(eq("default"), eq("weak"), anyString(), eq(PasswordHashAlgorithmConsts.BCRYPT));
+        doThrow(Y9BusinessException.class).when(policy)
+            .validatePassword(eq("default"), eq("weak"), anyString(), eq(PasswordHashAlgorithmConsts.BCRYPT));
         assertThrows(Y9BusinessException.class, () -> service.modifyPassword("person1", "default", "weak"));
         assertNull(person.getLastModifyPasswordTime());
         assertTrue(Y9MessageDigestUtil.bcryptMatch("default", person.getPassword()));
@@ -115,8 +131,8 @@ class Y9PersonPasswordPolicyTest {
     void oldPasswordVerificationUsesStoredAlgorithm() {
         person.setPasswordHashAlgorithm("unknown");
         String hash = person.getPassword();
-        Y9BusinessException exception = assertThrows(Y9BusinessException.class,
-            () -> service.modifyPassword("person1", "default", "Chosen1!"));
+        Y9BusinessException exception =
+            assertThrows(Y9BusinessException.class, () -> service.modifyPassword("person1", "default", "Chosen1!"));
         assertEquals(OrgUnitErrorCodeEnum.OLD_PASSWORD_IS_INCORRECT.getCode(), exception.getCode());
         verify(manager, never()).update(any(), any());
         assertEquals(hash, person.getPassword());
