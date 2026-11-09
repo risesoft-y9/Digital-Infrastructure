@@ -18,19 +18,4 @@ public class Y9PublishKafkaProperties {
      */
     private boolean enabled;
 
-    /**
-     * org消息主题
-     */
-    private String orgMessageTopic = "y9_org_event";
-
-    /**
-     * 公共消息主题
-     */
-    private String commonMessageTopic = "y9_common_event";
-
-    /**
-     * 任务消息主题
-     */
-    private String taskMessageTopic = "y9_task_event";
-
 }

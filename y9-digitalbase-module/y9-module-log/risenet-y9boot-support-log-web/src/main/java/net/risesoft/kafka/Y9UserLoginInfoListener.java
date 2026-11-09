@@ -6,9 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.kafka.annotation.KafkaListener;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,6 +13,8 @@ import net.risesoft.log.domain.Y9LogIpDeptMappingDO;
 import net.risesoft.log.domain.Y9LogUserHostIpInfoDO;
 import net.risesoft.log.domain.Y9LogUserLoginInfoDO;
 import net.risesoft.y9.json.Y9JsonUtil;
+import net.risesoft.y9.pubsub.Y9MessageListener;
+import net.risesoft.y9.pubsub.Y9ReceivedMessage;
 import net.risesoft.y9.pubsub.constant.Y9TopicConst;
 import net.risesoft.y9public.service.Y9logIpDeptMappingService;
 import net.risesoft.y9public.service.Y9logUserHostIpInfoService;
@@ -23,16 +22,21 @@ import net.risesoft.y9public.service.Y9logUserLoginInfoService;
 
 @Slf4j
 @RequiredArgsConstructor
-public class Y9UserLoginInfoListener {
+public class Y9UserLoginInfoListener implements Y9MessageListener {
 
     private final Y9logUserLoginInfoService y9logUserLoginInfoService;
     private final Y9logUserHostIpInfoService y9logUserHostIpInfoService;
     private final Y9logIpDeptMappingService y9logIpDeptMappingService;
 
-    @KafkaListener(topics = {Y9TopicConst.Y9_USERLOGININFO_MESSAGE})
-    public void listener(ConsumerRecord<String, String> data) {
+    @Override
+    public String topic() {
+        return Y9TopicConst.Y9_USERLOGININFO_MESSAGE;
+    }
+
+    @Override
+    public void onMessage(Y9ReceivedMessage data) {
         try {
-            String msg = data.value();
+            String msg = data.getPayload();
             HashMap<String, Object> map = Y9JsonUtil.readHashMap(msg);
 
             String userHostIp = String.valueOf(map.get("userHostIp"));

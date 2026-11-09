@@ -14,10 +14,6 @@ public class Y9TopicConst {
     public static final String Y9_ORG_EVENT = "y9_org_event";
     /** 通用事件主题 */
     public static final String Y9_COMMON_EVENT = "y9_common_event";
-    /** 任务事件主题 */
-    public static final String Y9_TASK_EVENT = "y9_task_event";
-    /** 组织事件响应主题 */
-    public static final String Y9_ORG_EVENT_REPLY = "y9_org_event_reply";
 
     /** 用户在线消息主题 */
     public static final String Y9_USERONLINE_MESSAGE = "y9_userOnline_message";
@@ -29,15 +25,6 @@ public class Y9TopicConst {
 
     /** 用户登录信息消息主题 */
     public static final String Y9_USERLOGININFO_MESSAGE = "y9_userLoginInfo_message";
-
-    /** 数据复制消息主题 */
-    public static final String Y9_DATACOPY_MESSAGE = "y9_dataCopy_message";
-    /** 系统数据复制消息主题 */
-    public static final String Y9_DATACOPY4SYSTEM_MESSAGE = "y9_dataCopy4System_message";
-    /** 插入租户渠道消息主题 */
-    public static final String Y9_INSERT_TENANTCHNL_MESSAGE = "y9_insertTenantChnl_message";
-    /** 插入公共渠道消息主题 */
-    public static final String Y9_INSERT_PUBLIC_CHNL_MESSAGE = "y9_insertPublicChnl_message";
 
     /** CMS 信息主题 */
     public static final String Y9_CMS_INFO = "y9_cmsinfo";

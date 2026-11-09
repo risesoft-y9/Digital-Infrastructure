@@ -226,6 +226,9 @@ y9:
             enabled: true
             # kafka, api
             reportMethod: api
+        listener:
+            kafka:
+                enabled: false
         publish:
             kafka:
                 enabled: false

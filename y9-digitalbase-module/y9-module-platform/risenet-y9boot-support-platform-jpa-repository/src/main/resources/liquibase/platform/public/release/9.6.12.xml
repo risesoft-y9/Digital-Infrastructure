@@ -24,4 +24,10 @@
         <addNotNullConstraint tableName="Y9_COMMON_ACCOUNT" columnName="PASSWORD_HASH_ALGORITHM"
                               columnDataType="VARCHAR(50)"/>
     </changeSet>
+    <changeSet id="1794205317-1" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="Y9_PUBLISHED_EVENT_LISTENER"/>
+        </preConditions>
+        <dropTable tableName="Y9_PUBLISHED_EVENT_LISTENER"/>
+    </changeSet>
 </databaseChangeLog>

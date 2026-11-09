@@ -41,7 +41,9 @@ import net.risesoft.schema.JpaSchemaUpdater;
 import net.risesoft.schema.LiquibaseSchemaUpdater;
 import net.risesoft.schema.SchemaUpdater;
 import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.feature.kafka.Y9KafkaProperties;
 import net.risesoft.y9.configuration.feature.multitenant.Y9MultiTenantProperties;
+import net.risesoft.y9.pubsub.kafka.Y9TopicNameResolver;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 
 /**
@@ -131,7 +133,14 @@ public class Y9MultiTenantAutoConfiguration {
     @ConditionalOnBean(ProducerFactory.class)
     @ConditionalOnProperty(prefix = "y9.feature.multi-tenant", name = "event-source", havingValue = "kafka",
         matchIfMissing = true)
+    @EnableConfigurationProperties(Y9KafkaProperties.class)
     public static class KafkaConfiguration {
+
+        @Bean
+        @ConditionalOnMissingBean(name = "y9TopicNameResolver")
+        public Y9TopicNameResolver y9TopicNameResolver(Y9KafkaProperties properties) {
+            return new Y9TopicNameResolver(properties.getTopicNamePrefix());
+        }
 
         @Bean("y9KafkaTemplate")
         @Primary

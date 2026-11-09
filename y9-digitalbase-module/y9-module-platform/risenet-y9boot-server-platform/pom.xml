@@ -22,6 +22,12 @@
     <dependencies>
         <dependency>
             <groupId>net.risesoft</groupId>
+            <artifactId>risenet-y9boot-starter-listener-kafka</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-support-platform-web</artifactId>
             <version>${project.version}</version>
             <exclusions>

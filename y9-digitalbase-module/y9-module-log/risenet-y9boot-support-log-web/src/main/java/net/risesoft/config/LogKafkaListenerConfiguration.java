@@ -1,13 +1,8 @@
 package net.risesoft.config;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.kafka.annotation.EnableKafka;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.core.ProducerFactory;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,7 +16,6 @@ import net.risesoft.y9public.service.Y9logUserHostIpInfoService;
 import net.risesoft.y9public.service.Y9logUserLoginInfoService;
 
 @Configuration
-@EnableKafka
 @ConditionalOnProperty(prefix = "y9.app.log", name = "kafkaEnabled", havingValue = "true", matchIfMissing = true)
 @Slf4j
 public class LogKafkaListenerConfiguration {
@@ -37,14 +31,6 @@ public class LogKafkaListenerConfiguration {
         y9FlowableAccessLogListener(final Y9logFlowableAccessLogService y9logFlowableAccessLogService) {
         LOGGER.info("LogKafkaConfiguration y9FlowableAccessLogListener init ......");
         return new Y9FlowableAccessLogListener(y9logFlowableAccessLogService);
-    }
-
-    @Primary
-    @Bean("y9KafkaTemplate")
-    @ConditionalOnMissingBean(name = "y9KafkaTemplate")
-    public KafkaTemplate<?, ?> y9KafkaTemplate(ProducerFactory<Object, Object> kafkaProducerFactory) {
-        LOGGER.info("LogKafkaConfiguration y9KafkaTemplate init ......");
-        return new KafkaTemplate<>(kafkaProducerFactory);
     }
 
     @Bean

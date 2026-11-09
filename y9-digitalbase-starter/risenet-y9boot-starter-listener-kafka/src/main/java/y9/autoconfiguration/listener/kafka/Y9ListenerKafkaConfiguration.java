@@ -2,7 +2,7 @@ package y9.autoconfiguration.listener.kafka;
 
 import java.util.Objects;
 
-import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -10,57 +10,70 @@ import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.annotation.KafkaListenerConfigurer;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.configuration.feature.kafka.Y9KafkaProperties;
 import net.risesoft.y9.configuration.feature.listener.kafka.Y9ListenerKafkaProperties;
 import net.risesoft.y9.json.Y9JsonUtil;
+import net.risesoft.y9.pubsub.kafka.Y9TopicNameResolver;
+import net.risesoft.y9.pubsub.Y9MessageListener;
+import net.risesoft.y9.pubsub.Y9ReceivedMessage;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
 import net.risesoft.y9.pubsub.constant.Y9TopicConst;
 import net.risesoft.y9.pubsub.event.Y9EventOrg;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
-import net.risesoft.y9.pubsub.message.Y9MessageOrgReply;
 
 @Configuration(proxyBeanMethods = false)
 @AutoConfigureAfter(KafkaAutoConfiguration.class)
 @ConditionalOnProperty(name = "y9.feature.listener.kafka.enabled", havingValue = "true", matchIfMissing = true)
 @Slf4j
-@EnableConfigurationProperties(Y9ListenerKafkaProperties.class)
+@EnableKafka
+@EnableConfigurationProperties({Y9KafkaProperties.class, Y9ListenerKafkaProperties.class})
 public class Y9ListenerKafkaConfiguration {
 
-    @Configuration(proxyBeanMethods = false)
+    @Bean
+    @ConditionalOnMissingBean(name = "y9TopicNameResolver")
+    public Y9TopicNameResolver y9TopicNameResolver(Y9KafkaProperties properties) {
+        return new Y9TopicNameResolver(properties.getTopicNamePrefix());
+    }
+
+    @Bean
+    public KafkaListenerConfigurer y9MessageListenerConfigurer(ListableBeanFactory beanFactory,
+        Y9TopicNameResolver topicNameResolver) {
+        return new Y9KafkaMessageListenerConfigurer(beanFactory, topicNameResolver);
+    }
+
+    @Bean
     @ConditionalOnProperty(name = "y9.feature.listener.kafka.message-org-enabled", havingValue = "true")
-    @RequiredArgsConstructor
-    public static class Y9MessageOrgKafkaListener {
+    public Y9MessageOrgKafkaListener y9MessageOrgKafkaListener() {
+        return new Y9MessageOrgKafkaListener();
+    }
 
-        private final KafkaTemplate<Object, Object> y9KafkaTemplate;
+    public static class Y9MessageOrgKafkaListener implements Y9MessageListener {
 
-        @KafkaListener(topics = {"y9_org_event"})
-        public void messageOrgListener4kafka(ConsumerRecord<String, String> data) {
-            String value = data.value();
+        @Override
+        public String topic() {
+            return Y9TopicConst.Y9_ORG_EVENT;
+        }
+
+        @Override
+        public void onMessage(Y9ReceivedMessage message) {
+            String value = message.getPayload();
             Y9MessageOrg msg = null;
             try {
                 msg = Y9JsonUtil.readValue(value, Y9MessageOrg.class);
-                Y9MessageOrgReply msgReply = new Y9MessageOrgReply();
-                msgReply.setClientIp(Y9Context.getHostIp());
-                msgReply.setSystemName(Y9Context.getSystemName());
-                msgReply.setEventType(msg.getEventType());
-                msgReply.setTenantId(msg.getTenantId());
-                String json = Y9JsonUtil.writeValueAsString(msgReply);
-
-                this.y9KafkaTemplate.send(Y9TopicConst.Y9_ORG_EVENT_REPLY, json);
-                LOGGER.info("向消息中间件发送回执。");
             } catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
             }
 
             if (Y9OrgEventConst.EVENT_TARGET_ALL.equals(msg.getEventTarget())
-                || Objects.equals(Y9Context.getSystemName(), msg.getEventTarget())) {
+                    || Objects.equals(Y9Context.getSystemName(), msg.getEventTarget())) {
                 // 只有消息目标是 所有系统 或 当前引入系统 时才处理
                 try {
                     Y9EventOrg event = new Y9EventOrg();
@@ -74,7 +87,6 @@ public class Y9ListenerKafkaConfiguration {
                     LOGGER.error(e.getMessage(), e);
                 }
             }
-
         }
     }
 
@@ -89,5 +101,4 @@ public class Y9ListenerKafkaConfiguration {
     public KafkaTemplate<?, ?> y9KafkaTemplate(ProducerFactory<Object, Object> kafkaProducerFactory) {
         return new KafkaTemplate<>(kafkaProducerFactory);
     }
-
 }

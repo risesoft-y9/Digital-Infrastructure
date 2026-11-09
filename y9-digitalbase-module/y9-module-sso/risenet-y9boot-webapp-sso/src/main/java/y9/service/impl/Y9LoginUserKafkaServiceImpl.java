@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apereo.cas.authentication.credential.UsernamePasswordCredential;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -14,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.json.Y9JsonUtil;
+import net.risesoft.y9.pubsub.Y9PublishService;
+import net.risesoft.y9.pubsub.constant.Y9TopicConst;
 
 import y9.entity.Y9LoginUser;
 import y9.entity.Y9User;
@@ -28,7 +29,7 @@ import cz.mallat.uasparser.UserAgentInfo;
 public class Y9LoginUserKafkaServiceImpl implements Y9LoginUserService {
 
     private final Y9UserRepository y9UserRepository;
-    private final KafkaTemplate<String, Object> y9KafkaTemplate;
+    private final Y9PublishService y9PublishService;
 
     @Override
     public void save(UsernamePasswordCredential credential, String success, String logMessage) {
@@ -101,9 +102,8 @@ public class Y9LoginUserKafkaServiceImpl implements Y9LoginUserService {
             user.setScreenResolution(screenResolution);
             user.setOsName(uaInfo.getOsName());
             user.setManagerLevel(managerLevel);
-            String jsonString = Y9JsonUtil.writeValueAsString(user);
-            y9KafkaTemplate.send("y9_userLoginInfo_message", jsonString);
-            LOGGER.info("保存登录日志成功至Kafka成功,登录信息：{}", user.getLogMessage());
+            y9PublishService.publishJson(Y9JsonUtil.writeValueAsString(user), Y9TopicConst.Y9_USERLOGININFO_MESSAGE);
+            LOGGER.info("已提交登录日志，登录信息：{}", user.getLogMessage());
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -33,7 +33,9 @@ import net.risesoft.log.service.impl.AccessLogConsoleReporter;
 import net.risesoft.log.service.impl.AccessLogKafkaReporter;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.feature.kafka.Y9KafkaProperties;
 import net.risesoft.y9.configuration.feature.log.Y9LogProperties;
+import net.risesoft.y9.pubsub.kafka.Y9TopicNameResolver;
 
 /**
  * @author dzj
@@ -86,7 +88,14 @@ public class Y9LogConfiguration {
     @AutoConfigureAfter(KafkaAutoConfiguration.class)
     @ConditionalOnProperty(value = "y9.feature.log.reportMethod", havingValue = "kafka", matchIfMissing = true)
     @Slf4j
+    @EnableConfigurationProperties(Y9KafkaProperties.class)
     static class Y9LogKafkaConfiguration {
+
+        @Bean
+        @ConditionalOnMissingBean(name = "y9TopicNameResolver")
+        public Y9TopicNameResolver y9TopicNameResolver(Y9KafkaProperties properties) {
+            return new Y9TopicNameResolver(properties.getTopicNamePrefix());
+        }
 
         @Bean("y9KafkaTemplate")
         @ConditionalOnMissingBean(name = "y9KafkaTemplate")
@@ -96,8 +105,9 @@ public class Y9LogConfiguration {
         }
 
         @Bean
-        public AccessLogReporter accessLogKafkaPusher(KafkaTemplate<String, Object> y9KafkaTemplate) {
-            return new AccessLogKafkaReporter(y9KafkaTemplate);
+        public AccessLogReporter accessLogKafkaPusher(KafkaTemplate<String, Object> y9KafkaTemplate,
+            Y9TopicNameResolver y9TopicNameResolver) {
+            return new AccessLogKafkaReporter(y9KafkaTemplate, y9TopicNameResolver);
         }
 
     }
