@@ -154,11 +154,11 @@ public interface PersonApi {
         @RequestParam("personId") @NotBlank String personId);
 
     /**
-     * 获取 Base64加密之后的照片字符串
+     * 获取 Base64编码之后的照片字符串
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return String Base64加密之后的照片字符串
+     * @return String Base64编码之后的照片字符串
      * @since 9.6.0
      */
     @GetMapping("/getPersonPhoto")
@@ -365,7 +365,7 @@ public interface PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @param photo Base64加密之后的照片字符串
+     * @param photo Base64编码之后的照片字符串
      * @return Boolean 是否保存成功
      * @since 9.6.0
      */

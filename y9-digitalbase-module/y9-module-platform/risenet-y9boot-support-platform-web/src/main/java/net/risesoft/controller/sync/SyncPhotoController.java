@@ -2,7 +2,6 @@ package net.risesoft.controller.sync;
 
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -51,19 +50,18 @@ public class SyncPhotoController {
         this.y9PersonExtService = y9PersonExtService;
     }
 
-    public String getPhotoById(@RequestParam String personId) {
+    public byte[] getPhotoById(@RequestParam String personId) {
         List<Blob> photoList =
             jdbcTemplate4Tenant.queryForList("select PHOTO from Y9_ORG_PERSON t where t.id=? ", Blob.class, personId);
         if (!photoList.isEmpty() && null != photoList.get(0)) {
             Blob p = photoList.get(0);
             try {
-                return Base64.getEncoder().encodeToString(p.getBytes(1, (int)p.length()));
+                return p.getBytes(1, (int)p.length());
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage(), e);
-                return Base64.getEncoder().encodeToString(new byte[0]);
             }
         }
-        return Base64.getEncoder().encodeToString(new byte[0]);
+        return new byte[0];
     }
 
     /**

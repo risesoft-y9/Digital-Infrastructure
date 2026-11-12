@@ -17,16 +17,12 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.v0.resource.ResourceApi;
 import net.risesoft.enums.platform.resource.ResourceTypeEnum;
-import net.risesoft.model.platform.System;
 import net.risesoft.model.platform.resource.Menu;
 import net.risesoft.model.platform.resource.Resource;
-import net.risesoft.util.PlatformModelConvertUtil;
 import net.risesoft.y9.util.Y9EnumUtil;
-import net.risesoft.y9public.entity.resource.Y9App;
-import net.risesoft.y9public.repository.resource.Y9AppRepository;
 import net.risesoft.y9public.service.resource.CompositeResourceService;
+import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.resource.Y9MenuService;
-import net.risesoft.y9public.service.resource.Y9SystemService;
 
 /**
  * 资源管理组件
@@ -46,8 +42,7 @@ import net.risesoft.y9public.service.resource.Y9SystemService;
 public class ResourceApiImpl implements ResourceApi {
 
     private final CompositeResourceService compositeResourceService;
-    private final Y9SystemService y9SystemService;
-    private final Y9AppRepository y9AppRepository;
+    private final Y9AppService y9AppService;
     private final Y9MenuService y9MenuService;
 
     /**
@@ -138,13 +133,7 @@ public class ResourceApiImpl implements ResourceApi {
      */
     @Override
     public Resource getRootResourceBySystemName(@RequestParam("systemName") @NotBlank String systemName) {
-        Optional<System> y9SystemOptional = y9SystemService.findByName(systemName);
-        if (y9SystemOptional.isPresent()) {
-            Y9App app =
-                y9AppRepository.findBySystemIdAndCustomId(y9SystemOptional.get().getId(), systemName).orElse(null);
-            return PlatformModelConvertUtil.resourceBaseToResource(app);
-        }
-        return null;
+        return y9AppService.findBySystemNameAndCustomId(systemName, systemName).orElse(null);
     }
 
     /**

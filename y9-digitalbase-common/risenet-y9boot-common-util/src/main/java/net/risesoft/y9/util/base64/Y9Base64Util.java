@@ -19,26 +19,26 @@ import lombok.NoArgsConstructor;
 public class Y9Base64Util {
 
     /**
-     * 解密Base64编码的字符串
+     * 解码 Base64 编码的字符串
      * 
-     * @param encryptedText 加密的文本
-     * @return String 解密后的字符串
+     * @param encodedText Base64 编码的文本
+     * @return String 解码后的字符串
      */
-    public static String decode(String encryptedText) {
+    public static String decode(String encodedText) {
         Base64 dec = new Base64(-1);
-        byte[] bTemp = dec.decode(encryptedText);
+        byte[] bTemp = dec.decode(encodedText);
         return new String(bTemp, StandardCharsets.UTF_8);
     }
 
     /**
-     * 解密Base64编码的字符串为字节数组
+     * 解码 Base64 编码的字符串为字节数组
      * 
-     * @param encryptedText 加密的文本
-     * @return byte[] 解密后的字节数组
+     * @param encodedText Base64 编码的文本
+     * @return byte[] 解码后的字节数组
      */
-    public static byte[] decodeAsBytes(String encryptedText) {
+    public static byte[] decodeAsBytes(String encodedText) {
         Base64 dec = new Base64(-1);
-        return dec.decode(encryptedText);
+        return dec.decode(encodedText);
     }
 
     /**
