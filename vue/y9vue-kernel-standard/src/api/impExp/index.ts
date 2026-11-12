@@ -9,18 +9,6 @@ import Request from '@/api/lib/request';
 
 const platformRequest = Request();
 
-// 导入系统JSON
-export const importSystemJSON = async (file) => {
-    var data = new FormData();
-    data.append('file', file);
-    return await platformRequest({
-        url: '/api/rest/impExp/importSystemJSON',
-        method: 'POST',
-        cType: false,
-        data: data
-    });
-};
-
 // 导入应用JSON
 export const importAppJSON = async (file, systemId) => {
     var data = new FormData();

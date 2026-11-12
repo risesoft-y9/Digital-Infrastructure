@@ -1,7 +1,6 @@
 package net.risesoft.controller.resource;
 
 import java.util.Base64;
-import java.util.List;
 import java.util.Optional;
 
 import javax.validation.constraints.NotBlank;
@@ -64,44 +63,6 @@ public class AppIconController {
     }
 
     /**
-     * 获取应用图标
-     *
-     * @param id 应用图标id
-     * @return {@code Y9Result<AppIcon>}
-     */
-    @RiseLog(operationName = "获取应用图标")
-    @RequestMapping("/getAppIconById")
-    public Y9Result<AppIcon> getAppIconById(@RequestParam @NotBlank String id) {
-        return Y9Result.success(appIconService.getById(id), "获取成功！");
-    }
-
-    /**
-     * 图片文件读取
-     *
-     * @return {@code Y9Result<List<AppIcon>>}
-     * @since 9.6.1
-     */
-    @RiseLog(operationName = "图片列表的读取")
-    @RequestMapping(value = "/listAll")
-    public Y9Result<List<AppIcon>> listAll() {
-        return Y9Result.success(appIconService.listAll(), "图片列表的读取！");
-    }
-
-    /**
-     * 根据名称，获取图片列表
-     *
-     * @param name 图标名称
-     *
-     * @return {@code Y9Result<List<AppIcon>>}
-     * @since 9.6.8
-     */
-    @RiseLog(operationName = "根据名称，获取图片列表")
-    @RequestMapping(value = "/listByName")
-    public Y9Result<List<AppIcon>> listByName(@RequestParam @NotBlank String name) {
-        return Y9Result.success(appIconService.listByName(name), "图片列表的读取！");
-    }
-
-    /**
      * 查询图标分页列表
      *
      * @param pageQuery 分页信息
@@ -112,18 +73,6 @@ public class AppIconController {
     @RequestMapping("/pageAppIcons")
     public Y9Page<AppIcon> pageAppIcons(Y9PageQuery pageQuery) {
         return appIconService.pageAll(pageQuery);
-    }
-
-    /**
-     * 刷新图标数据
-     *
-     * @return {@code Y9Result<String>}
-     */
-    @RiseLog(operationType = OperationTypeEnum.MODIFY, operationName = "刷新图标数据")
-    @RequestMapping(value = "/refreshAppIconDatas")
-    public Y9Result<String> refreshAppIconDatas() {
-        appIconService.refreshAppIconData();
-        return Y9Result.successMsg("刷新成功！");
     }
 
     /**
@@ -153,61 +102,6 @@ public class AppIconController {
         }
         appIconService.save(appIcon);
         return Y9Result.successMsg("保存成功");
-    }
-
-    /**
-     * 根据名称搜索图标
-     *
-     * @param name 图标名
-     * @return {@code Y9Result<List<AppIcon>>}
-     */
-    @RiseLog(operationName = "根据名称搜索图标")
-    @RequestMapping(value = "/searchAppIcon")
-    public Y9Result<List<AppIcon>> searchAppIcon(@RequestParam String name) {
-        return Y9Result.success(appIconService.listByName(name), "图标列表搜索成功");
-    }
-
-    /**
-     * 按名字模糊图标
-     *
-     * @param pageQuery 分页信息
-     * @param name 图标名称
-     * @return {@code Y9Page<AppIcon>}
-     */
-    @RiseLog(operationName = "搜索图标")
-    @RequestMapping("/searchIconPageByName")
-    public Y9Page<AppIcon> searchIconPageByName(Y9PageQuery pageQuery, String name) {
-        return appIconService.pageByName(name, pageQuery);
-    }
-
-    /**
-     * 上传图标
-     *
-     * @param iconFile 需要上传的图标文件
-     * @param remark 备注
-     * @return {@code Y9Result<String>}
-     * @throws Y9BusinessException 业务异常
-     */
-    @RiseLog(operationType = OperationTypeEnum.ADD, operationName = "上传图标")
-    @RequestMapping("/uploadIcon")
-    public Y9Result<String> uploadIcon(@RequestParam MultipartFile iconFile, @RequestParam String remark)
-        throws Y9BusinessException {
-        if (iconFile != null && !iconFile.isEmpty()) {
-            // 文件名称
-            String originalFilename = iconFile.getOriginalFilename();
-            // 图片名称
-            String imgName = FilenameUtils.getName(originalFilename);
-            // 文件类型
-            List<AppIcon> appIconList = appIconService.listByName(imgName);
-            appIconService.save(iconFile, remark);
-            if (!appIconList.isEmpty()) {
-                return Y9Result.success("上传成功,文件重名，图标已被覆盖!");
-            } else {
-                return Y9Result.success("上传成功");
-            }
-        } else {
-            return Y9Result.failure("上传失败！请选择图标文件！");
-        }
     }
 
     /**

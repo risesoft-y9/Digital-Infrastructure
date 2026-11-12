@@ -54,54 +54,6 @@ public class OptionValueController {
     }
 
     /**
-     * 获取职务名称列表
-     *
-     * @return {@code Y9Result<List<OptionValue>>}
-     * @since 9.6.1
-     */
-    @RiseLog(operationName = "获取职务名称列表")
-    @RequestMapping(value = "/listDuty")
-    public Y9Result<List<OptionValue>> listDuty() {
-        return Y9Result.success(y9OptionValueService.listByType(OptionClassConsts.DUTY), "获取职务名称列表成功");
-    }
-
-    /**
-     * 获取职备级别列表
-     *
-     * @return {@code Y9Result<List<OptionValue>>}
-     * @since 9.6.1
-     */
-    @RiseLog(operationName = "获取职备级别列表")
-    @RequestMapping(value = "/listDutyLevel")
-    public Y9Result<List<OptionValue>> listDutyLevel() {
-        return Y9Result.success(y9OptionValueService.listByType(OptionClassConsts.DUTY_LEVEL), "获取职备级别列表成功");
-    }
-
-    /**
-     * 获取职务类型列表
-     *
-     * @return {@code Y9Result<List<OptionValue>>}
-     * @since 9.6.1
-     */
-    @RiseLog(operationName = "获取职务类型列表")
-    @RequestMapping(value = "/listDutyType")
-    public Y9Result<List<OptionValue>> listDutyType() {
-        return Y9Result.success(y9OptionValueService.listByType(OptionClassConsts.DUTY_TYPE), "获取职务类型列表成功");
-    }
-
-    /**
-     * 获取人员编制列表
-     *
-     * @return {@code Y9Result<List<OptionValue>>}
-     * @since 9.6.1
-     */
-    @RiseLog(operationName = "获取人员编制列表")
-    @RequestMapping(value = "/listOfficialType")
-    public Y9Result<List<OptionValue>> listOfficialType() {
-        return Y9Result.success(y9OptionValueService.listByType(OptionClassConsts.OFFICIAL_TYPE), "获取人员编制列表成功");
-    }
-
-    /**
      * 获取组织机构类型列表
      *
      * @return {@code Y9Result<List<OptionValue>>}
@@ -111,18 +63,6 @@ public class OptionValueController {
     @RequestMapping(value = "/listOrgType")
     public Y9Result<List<OptionValue>> listOrgType() {
         return Y9Result.success(y9OptionValueService.listByType(OptionClassConsts.ORGANIZATION_TYPE), "获取组织机构类型列表成功");
-    }
-
-    /**
-     * 获取证件类型列表
-     *
-     * @return {@code Y9Result<List<OptionValue>>}
-     * @since 9.6.1
-     */
-    @RiseLog(operationName = "获取证件类型列表")
-    @RequestMapping(value = "/listPrincipalIdType")
-    public Y9Result<List<OptionValue>> listPrincipalIdType() {
-        return Y9Result.success(y9OptionValueService.listByType(OptionClassConsts.PRINCIPAL_ID_TYPE), "获取证件类型列表成功");
     }
 
     /**

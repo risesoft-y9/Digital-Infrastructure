@@ -3,20 +3,6 @@ import qs from 'qs';
 
 const platformRequest = Request();
 /**
- * 根据部门id，获取部门信息
- * @param {*} deptID
- * @returns
- */
-export const getDepartmentById = async (deptId) => {
-    return await platformRequest({
-        url: '/api/rest/dept/getDepartmentById',
-        method: 'GET',
-        cType: false,
-        params: { deptId: deptId }
-    });
-};
-
-/**
  * 获取部门属性对应组织节点列表
  * @param {*} deptId
  * @param {*} category

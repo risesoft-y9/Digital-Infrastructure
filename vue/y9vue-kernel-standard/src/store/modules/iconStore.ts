@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import i18n from '@/language/index';
-import { deleteIcon, getAppIconPageList, saveIcon, searchIconPageByName, uploadIcon } from '@/api/appIcon/index';
+import { deleteIcon, getAppIconPageList, saveIcon, uploadIcon } from '@/api/appIcon/index';
 import { forIn } from 'lodash';
 
 const { t } = i18n.global;

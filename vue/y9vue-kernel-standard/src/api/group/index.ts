@@ -11,20 +11,6 @@ import qs from 'qs';
 
 const platformRequest = Request();
 /**
- * 根据用户组id，获取用户组信息
- * @param {*} groupID 用户组id
- * @returns
- */
-export const getGroupById = async (groupId) => {
-    return await platformRequest({
-        url: '/api/rest/group/getGroupById',
-        method: 'GET',
-        cType: false,
-        params: { groupId: groupId }
-    });
-};
-
-/**
  * 根据人员id，获取用户组列表
  * @param {*} personID
  * @returns

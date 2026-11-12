@@ -176,18 +176,6 @@ export const applicationEnable = async (idArr) => {
     });
 };
 
-// 导入 应用
-export const importAppJSON = async (file) => {
-    var formData = new FormData();
-    formData.append('file', file);
-    return await systemRequest({
-        url: '/api/rest/impExp/importAppJSON',
-        method: 'POST',
-        cType: false,
-        data: formData
-    });
-};
-
 // 根据系统id获取应用列表
 export const getApplicationList = async (systemId) => {
     return await systemRequest({

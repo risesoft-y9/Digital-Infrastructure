@@ -13,20 +13,6 @@ import qs from 'qs';
 const platformRequest = Request();
 
 /**
- * 根据用户id，获取用户信息
- * @param {*} personID 人员id
- * @returns
- */
-export const getPersonById = async (personId) => {
-    return await platformRequest({
-        url: '/api/rest/person/getPersonById',
-        method: 'GET',
-        cType: false,
-        params: { personId: personId }
-    });
-};
-
-/**
  * 获取人员扩展信息
  * @param {*} personID
  * @returns
@@ -66,36 +52,6 @@ export const loginNameCheck = async (personId, loginName) => {
         method: 'GET',
         cType: false,
         params: { personId: personId, loginName: loginName }
-    });
-};
-
-/**
- *  判断邮箱是否可用
- * @param {*} personID
- * @param {*} email
- * @returns
- */
-export const EmailCheck = async (personId, email) => {
-    return await platformRequest({
-        url: '/api/rest/person/checkEmail',
-        method: 'GET',
-        cType: false,
-        params: { personId: personId, email: email }
-    });
-};
-
-/**
- * 判断同一个租户CA认证码是否重复（false 重复，true 不重复）
- * @param {*} personID
- * @param {*} CAID
- * @returns
- */
-export const CAIDCheck = async (personId, CAID) => {
-    return await platformRequest({
-        url: '/api/rest/person/checkCaid',
-        method: 'GET',
-        cType: false,
-        params: { personId: personId, CAID: CAID }
     });
 };
 
@@ -272,24 +228,6 @@ export const changeDisabledPerson = async (id) => {
 };
 
 /**
- * 解锁账号
- * @param {*} personId
- * @returns
- */
-export const accountUnlock = async (personId) => {
-    const params = {
-        personId: personId
-    };
-    const data = qs.stringify(params);
-    return await platformRequest({
-        url: '/api/rest/person/accountUnlock',
-        method: 'POST',
-        cType: false,
-        data: data
-    });
-};
-
-/**
  * 重置密码
  * @param {*} personID
  * @returns
@@ -381,24 +319,6 @@ export const removePositions = async (personId, positionIds) => {
     const data = qs.stringify(params);
     return await platformRequest({
         url: '/api/rest/person/removePositions',
-        method: 'POST',
-        cType: false,
-        data: data
-    });
-};
-
-/**
- * 上传图片
- * @param {*} iconFile
- * @param {*} personID
- * @returns
- */
-export const savePersonPhoto = async (iconFile, personId) => {
-    const data = new FormData();
-    data.append('iconFile', iconFile);
-    data.append('personId', personId);
-    return await platformRequest({
-        url: '/api/rest/person/savePersonPhoto',
         method: 'POST',
         cType: false,
         data: data

@@ -12,19 +12,6 @@ import qs from 'qs';
 
 const platformRequest = Request();
 /**
- * 获取应用图标
- * @returns
- */
-export const getAppIconById = async (id) => {
-    return await platformRequest({
-        url: '/api/rest/appIcon/getAppIconById',
-        method: 'GET',
-        cType: false,
-        params: { id: id }
-    });
-};
-
-/**
  * 查询所有父菜单分页列表
  * @param {*} page
  * @param {*} rows
@@ -36,22 +23,6 @@ export const getAppIconPageList = async ({ page, rows }) => {
         method: 'GET',
         cType: false,
         params: { page: page, size: rows }
-    });
-};
-
-/**
- * 按名字模糊图标
- * @param {*} name
- * @param {*} page
- * @param {*} rows
- * @returns
- */
-export const searchIconPageByName = async ({ name, page, rows }) => {
-    return await platformRequest({
-        url: '/api/rest/appIcon/searchIconPageByName',
-        method: 'GET',
-        cType: false,
-        params: { name: name, page: page, size: rows }
     });
 };
 
@@ -74,33 +45,6 @@ export const uploadIcon = async (data) => {
         method: 'POST',
         cType: false,
         data: data
-    });
-};
-
-/**
- * 上传图标
- * @param {*} iconFile
- * @param {*} remark
- * @returns
- */
-export const uploadIcon4Colors = async (params) => {
-    var formData = new FormData();
-
-    for (var prop in params) {
-        if (Object.prototype.hasOwnProperty.call(params, prop)) {
-            if (params[prop] instanceof File) {
-                formData.append('colors', prop);
-                formData.append('iconFiles', params[prop]);
-            } else {
-                formData.append(prop, params[prop]);
-            }
-        }
-    }
-    return await platformRequest({
-        url: '/api/rest/appIcon/uploadIcon4Colors',
-        method: 'POST',
-        cType: false,
-        data: formData
     });
 };
 

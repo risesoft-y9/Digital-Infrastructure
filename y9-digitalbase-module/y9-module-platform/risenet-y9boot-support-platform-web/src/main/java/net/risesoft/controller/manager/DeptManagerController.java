@@ -124,20 +124,6 @@ public class DeptManagerController {
     }
 
     /**
-     * 重置密码
-     *
-     * @param personId 人员id
-     * @return {@code Y9Result<String>}
-     */
-    @RiseLog(operationName = "重置密码", operationType = OperationTypeEnum.MODIFY)
-    @PostMapping(value = "/resetPassword")
-    @IsAnyManager(ManagerLevelEnum.TENANT_SYSTEM_MANAGER)
-    public Y9Result<String> resetPassword(@NotBlank @RequestParam String personId) {
-        y9ManagerService.resetDefaultPassword(personId);
-        return Y9Result.successMsg("重置密码成功");
-    }
-
-    /**
      * 新建或者更新部门管理员
      *
      * @param manager 部门管理员实体

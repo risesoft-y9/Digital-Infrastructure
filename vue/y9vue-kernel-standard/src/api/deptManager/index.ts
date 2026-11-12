@@ -88,24 +88,6 @@ export const loginNameCheck = async (personId, loginName) => {
 };
 
 /**
- * 重置密码
- * @param {*} personID
- * @returns
- */
-export const resetPassword = async (personId) => {
-    const params = {
-        personId: personId
-    };
-    const data = qs.stringify(params);
-    return await platformRequest({
-        url: '/api/rest/deptManager/resetPassword',
-        method: 'POST',
-        cType: false,
-        data: data
-    });
-};
-
-/**
  * 验证是否为该部门的管理员
  */
 export const checkDeptManager = async (deptId) => {

@@ -132,7 +132,6 @@
     } from '@/api/system/index';
 
     // 应用图标列表 搜索接口
-    import { getAppIconPageList, searchIconPageByName } from '@/api/appIcon/index';
 
     import { importAppJSON } from '@/api/impExp';
     import IconList from '@/views/iconManager/comps/IconList.vue';

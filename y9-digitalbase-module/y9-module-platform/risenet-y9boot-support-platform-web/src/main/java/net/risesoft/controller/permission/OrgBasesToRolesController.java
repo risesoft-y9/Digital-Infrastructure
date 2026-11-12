@@ -19,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.model.platform.org.OrgUnit;
 import net.risesoft.model.platform.permission.OrgBasesToRoles;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Page;
@@ -62,40 +61,6 @@ public class OrgBasesToRolesController {
 
         y9OrgBasesToRolesService.addManagableOrgUnitsForRole(roleId, orgUnitIds, negative);
         return Y9Result.successMsg("对角色，添加组织节点的映射成功");
-    }
-
-    /**
-     * 对组织节点，添加角色的映射
-     *
-     * @param orgUnitId 组织节点id
-     * @param roleIds 角色id数组
-     * @param negative 是否为负角色关联
-     * @return {@code Y9Result<Object> }
-     */
-    @RiseLog(operationName = "对组织节点，添加角色的映射", operationType = OperationTypeEnum.ADD)
-    @PostMapping(value = "/saveRoles")
-    public Y9Result<Object> addRolesForOrgUnit(@RequestParam @NotBlank String orgUnitId,
-        @RequestParam(value = "roleIds") @NotEmpty List<String> roleIds, @RequestParam Boolean negative) {
-        y9OrgBasesToRolesService.addRolesForOrgUnit(orgUnitId, roleIds, negative);
-        return Y9Result.successMsg("对组织机构节点，添加角色的映射成功");
-    }
-
-    /**
-     * 根据角色id，返回角色关联的机构节点（机构，部门，用户组，岗位，人员）
-     *
-     * @param roleId 角色id
-     * @return {@code Y9Result<List<}{@link RoleMemberVO}{@code >>}
-     * @since 9.6.1
-     */
-    @RiseLog(operationName = "根据角色id，返回角色关联的机构节点（机构，部门，用户组，岗位，人员）")
-    @RequestMapping(value = "/listByRoleId")
-    public Y9Result<List<RoleMemberVO>> listByRoleId(@RequestParam @NotBlank String roleId) {
-        List<RoleMemberVO> roleMemberVOList =
-            y9OrgBasesToRolesService.listManagableByRoleId(roleId).stream().map(orgBasesToRoles -> {
-                OrgUnit orgUnit = compositeOrgBaseService.getOrgUnit(orgBasesToRoles.getOrgId());
-                return RoleMemberVO.of(orgBasesToRoles, orgUnit);
-            }).collect(Collectors.toList());
-        return Y9Result.success(roleMemberVOList, "获取数据成功");
     }
 
     @RiseLog(operationName = "根据角色id，返回角色关联的机构节点 id 集合（用于添加角色成员的组织架构树的选择回显）")

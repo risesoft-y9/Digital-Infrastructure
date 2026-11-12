@@ -88,7 +88,6 @@
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
     import { computed, inject, nextTick, onMounted, reactive, ref, toRefs, watch } from 'vue';
-    import { deleteIcon, getAppIconPageList, saveIcon, searchIconPageByName, uploadIcon } from '@/api/appIcon/index';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useIconStore } from '@/store/modules/iconStore';
     import UploadForm from './UploadForm.vue';

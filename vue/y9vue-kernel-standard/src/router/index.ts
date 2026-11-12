@@ -96,7 +96,6 @@ export const asyncRoutes = [
     dictionaryRouter,
     appCategoryRouter,
     iconManagerRouter,
-    // iconManagerOldRouter,
     personalRouter,
     settingRouter,
     userLogRouter,
