@@ -102,15 +102,6 @@ public class PasswordPolicyService {
     }
 
     /**
-     * 校验新密码的强度。
-     *
-     * @param newPassword 用户输入的新明文密码
-     */
-    public void validateStrength(String newPassword) {
-        validatePassword(null, newPassword, null, null);
-    }
-
-    /**
      * 仅在启用对应字符要求时检查密码是否至少包含一个匹配字符。
      *
      * @param required 是否启用该字符要求

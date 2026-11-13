@@ -81,12 +81,15 @@ class PasswordPolicyServiceTest {
         Y9LoginUserHolder.setUserInfo(userInfo);
 
         assertEquals(new PasswordStrength(8, true, true, true, true), policy.getStrength());
+        String oldPassword = "Previous1!";
+        String oldPasswordHash = Y9MessageDigestUtil.bcrypt(oldPassword);
         for (String weakPassword : new String[] {" ", "Abc12!", "abcdef1!", "ABCDEF1!", "Abcdefg!", "Abcdef12"}) {
-            Y9BusinessException exception =
-                assertThrows(Y9BusinessException.class, () -> policy.validateStrength(weakPassword));
+            Y9BusinessException exception = assertThrows(Y9BusinessException.class, () -> policy
+                .validatePassword(oldPassword, weakPassword, oldPasswordHash, PasswordHashAlgorithmConsts.BCRYPT));
             assertEquals(OrgUnitErrorCodeEnum.PASSWORD_STRENGTH_INVALID.getCode(), exception.getCode());
         }
-        assertDoesNotThrow(() -> policy.validateStrength("Abcdef1!"));
+        assertDoesNotThrow(
+            () -> policy.validatePassword(oldPassword, "Abcdef1!", oldPasswordHash, PasswordHashAlgorithmConsts.BCRYPT));
         verifyNoInteractions(settingService);
     }
 
