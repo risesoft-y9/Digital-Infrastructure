@@ -15,18 +15,26 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import net.risesoft.consts.InitDataConsts;
 import net.risesoft.consts.PasswordHashAlgorithmConsts;
 import net.risesoft.entity.org.Y9Person;
+import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.model.platform.org.PasswordStrength;
 import net.risesoft.model.platform.org.PasswordValidity;
+import net.risesoft.model.user.UserInfo;
 import net.risesoft.service.setting.impl.TenantSetting;
+import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.Y9TenantHolder;
+import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
+import net.risesoft.y9.configuration.app.y9platform.tenantdefault.TenantDefaultProperties;
 import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.util.signing.Y9MessageDigestUtil;
 
@@ -36,18 +44,50 @@ class PasswordPolicyServiceTest {
     private TenantSetting setting;
     private PasswordPolicyService policy;
     private Y9SettingService settingService;
+    private Y9PlatformProperties platformProperties;
 
     @BeforeEach
     void setUp() {
         setting = new TenantSetting();
         settingService = mock(Y9SettingService.class);
         when(settingService.getTenantSetting()).thenReturn(setting);
-        policy = new PasswordPolicyService(settingService);
+        platformProperties = new Y9PlatformProperties();
+        policy = new PasswordPolicyService(settingService, platformProperties);
+    }
+
+    @AfterEach
+    void clearLoginContext() {
+        Y9LoginUserHolder.clear();
+        Y9TenantHolder.clearCurrentTenantId();
     }
 
     @Test
     void strengthDefaultsRequireSixCharacters() {
         assertEquals(new PasswordStrength(6, false, false, false, false), policy.getStrength());
+    }
+
+    @Test
+    void operationManagersReadAndValidatePlatformStrengthWithoutTenantSettings() {
+        TenantDefaultProperties defaults = platformProperties.getTenantDefault();
+        defaults.setPasswordMinLength(8);
+        defaults.setPasswordRequireUppercase(true);
+        defaults.setPasswordRequireLowercase(true);
+        defaults.setPasswordRequireDigit(true);
+        defaults.setPasswordRequireSymbol(true);
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.setTenantId(InitDataConsts.OPERATION_TENANT_ID);
+        userInfo.setManagerLevel(ManagerLevelEnum.OPERATION_SECURITY_MANAGER);
+        Y9LoginUserHolder.setUserInfo(userInfo);
+
+        assertEquals(new PasswordStrength(8, true, true, true, true), policy.getStrength());
+        for (String weakPassword : new String[] {" ", "Abc12!", "abcdef1!", "ABCDEF1!", "Abcdefg!", "Abcdef12"}) {
+            Y9BusinessException exception =
+                assertThrows(Y9BusinessException.class, () -> policy.validateStrength(weakPassword));
+            assertEquals(OrgUnitErrorCodeEnum.PASSWORD_STRENGTH_INVALID.getCode(), exception.getCode());
+        }
+        assertDoesNotThrow(() -> policy.validateStrength("Abcdef1!"));
+        verifyNoInteractions(settingService);
     }
 
     @Test

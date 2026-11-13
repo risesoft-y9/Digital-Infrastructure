@@ -47,6 +47,7 @@ import net.risesoft.service.setting.PasswordPolicyService;
 import net.risesoft.service.setting.Y9SettingService;
 import net.risesoft.service.setting.impl.TenantSetting;
 import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9.util.signing.Y9MessageDigestUtil;
@@ -74,7 +75,7 @@ class Y9PersonPasswordPolicyTest {
     void setUp() {
         mocks = MockitoAnnotations.openMocks(this);
         when(settings.getTenantSetting()).thenReturn(new TenantSetting());
-        doAnswer(delegatesTo(new PasswordPolicyService(settings))).when(policy)
+        doAnswer(delegatesTo(new PasswordPolicyService(settings, new Y9PlatformProperties()))).when(policy)
             .validatePassword(any(), any(), any(), any());
         previousContext = Y9Context.getAc();
         new Y9Context().setApplicationContext(mock(ApplicationContext.class));

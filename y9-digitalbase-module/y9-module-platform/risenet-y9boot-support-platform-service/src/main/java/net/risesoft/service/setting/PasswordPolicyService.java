@@ -13,7 +13,10 @@ import net.risesoft.entity.org.Y9Person;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.model.platform.org.PasswordStrength;
 import net.risesoft.model.platform.org.PasswordValidity;
+import net.risesoft.model.user.UserInfo;
 import net.risesoft.service.setting.impl.TenantSetting;
+import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 import net.risesoft.y9.util.Y9AssertUtil;
 import net.risesoft.y9.util.signing.Y9MessageDigestUtil;
 
@@ -36,13 +39,18 @@ public class PasswordPolicyService {
 
     private final Y9SettingService y9SettingService;
 
+    private final Y9PlatformProperties y9PlatformProperties;
+
     /**
-     * 获取当前租户的密码强度要求。
+     * 获取密码强度要求，运维管理员使用平台默认配置，其他用户使用当前租户设置。
      *
-     * @return 当前租户的密码强度要求
+     * @return 密码强度要求
      */
     public PasswordStrength getStrength() {
-        TenantSetting setting = y9SettingService.getTenantSetting();
+        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
+        TenantSetting setting = userInfo != null && userInfo.isOperationManager()
+            ? new TenantSetting(y9PlatformProperties.getTenantDefault())
+            : y9SettingService.getTenantSetting();
         return new PasswordStrength(setting.getPasswordMinLength(), setting.isPasswordRequireUppercase(),
             setting.isPasswordRequireLowercase(), setting.isPasswordRequireDigit(), setting.isPasswordRequireSymbol());
     }
@@ -83,14 +91,23 @@ public class PasswordPolicyService {
         boolean samePassword = StringUtils.equals(oldPassword, newPassword)
             || Y9MessageDigestUtil.passwordMatch(newPassword, oldPasswordHash, oldPasswordHashAlgorithm);
         Y9AssertUtil.isTrue(!samePassword, OrgUnitErrorCodeEnum.NEW_PASSWORD_SAME_AS_OLD);
-        TenantSetting setting = y9SettingService.getTenantSetting();
-        int minLength = setting.getPasswordMinLength();
+        PasswordStrength strength = getStrength();
+        int minLength = strength.getMinLength();
         Y9AssertUtil.isTrue(newPassword.length() >= minLength, OrgUnitErrorCodeEnum.PASSWORD_STRENGTH_INVALID,
             "长度至少为 " + minLength + " 位");
-        checkCharacter(setting.isPasswordRequireUppercase(), UPPERCASE, newPassword, "必须包含大写字母");
-        checkCharacter(setting.isPasswordRequireLowercase(), LOWERCASE, newPassword, "必须包含小写字母");
-        checkCharacter(setting.isPasswordRequireDigit(), DIGIT, newPassword, "必须包含数字");
-        checkCharacter(setting.isPasswordRequireSymbol(), SYMBOL, newPassword, "必须包含英文标点符号");
+        checkCharacter(strength.isRequireUppercase(), UPPERCASE, newPassword, "必须包含大写字母");
+        checkCharacter(strength.isRequireLowercase(), LOWERCASE, newPassword, "必须包含小写字母");
+        checkCharacter(strength.isRequireDigit(), DIGIT, newPassword, "必须包含数字");
+        checkCharacter(strength.isRequireSymbol(), SYMBOL, newPassword, "必须包含英文标点符号");
+    }
+
+    /**
+     * 校验新密码的强度。
+     *
+     * @param newPassword 用户输入的新明文密码
+     */
+    public void validateStrength(String newPassword) {
+        validatePassword(null, newPassword, null, null);
     }
 
     /**

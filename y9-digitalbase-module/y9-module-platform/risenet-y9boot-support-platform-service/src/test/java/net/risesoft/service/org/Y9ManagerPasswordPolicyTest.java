@@ -73,7 +73,7 @@ class Y9ManagerPasswordPolicyTest {
     void setUp() {
         mocks = MockitoAnnotations.openMocks(this);
         when(settings.getTenantSetting()).thenReturn(new TenantSetting());
-        doAnswer(delegatesTo(new PasswordPolicyService(settings))).when(policy)
+        doAnswer(delegatesTo(new PasswordPolicyService(settings, properties))).when(policy)
             .validatePassword(any(), any(), any(), any());
         when(properties.getManager()).thenReturn(new ManagerProperties());
         previousContext = Y9Context.getAc();
