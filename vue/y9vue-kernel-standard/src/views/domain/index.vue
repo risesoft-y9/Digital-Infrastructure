@@ -8,7 +8,7 @@
 -->
 <template>
     <fixedTreeModule :showNodeDelete="false" :treeApiObj="treeApiObj" @onTreeClick="onTreeClick">
-        <template v-if="Object.keys(currTreeNodeInfo).length > 0" #rightContainer>
+        <template v-if="currTreeNodeInfo.id" #rightContainer>
             <addDomain
                 v-if="currTreeNodeInfo.nodeType == 'Department'"
                 :currTreeNodeInfo="currTreeNodeInfo"

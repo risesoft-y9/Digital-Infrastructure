@@ -25,7 +25,7 @@
         </template>
 
         <template #rightContainer>
-            <div v-if="currentVendor.id">
+            <template v-if="currentVendor.id">
                 <BasicInfo :currTreeNodeInfo="currentVendor" @saved="onVendorSaved" />
 
                 <y9Card :title="`${$t('管理的系统')} - ${currentVendor.name}`">
@@ -42,7 +42,7 @@
                     </div>
                     <y9Table :config="systemTableConfig"></y9Table>
                 </y9Card>
-            </div>
+            </template>
             <y9Card v-else>
                 <el-empty :description="$t('暂无系统开发商')"></el-empty>
             </y9Card>

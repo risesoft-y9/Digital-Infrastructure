@@ -14,21 +14,19 @@
         nodeLabel="cnName"
         @onTreeClick="handlerTreeClick"
     >
-        <template v-slot:rightContainer>
-            <div v-if="currData.id">
-                <BasicInfo :currTreeNodeInfo="currData" />
+        <template v-if="currData.id" v-slot:rightContainer>
+            <BasicInfo :currTreeNodeInfo="currData" />
 
-                <y9Card
-                    v-show="currData.manageable"
-                    :title="`${$t('应用管理')} - ${currData.cnName ? currData.cnName : ''}`"
-                >
-                    <template v-slot>
-                        <AppList :id="currData.id" />
-                    </template>
-                </y9Card>
+            <y9Card
+                v-show="currData.manageable"
+                :title="`${$t('应用管理')} - ${currData.cnName ? currData.cnName : ''}`"
+            >
+                <template v-slot>
+                    <AppList :id="currData.id" />
+                </template>
+            </y9Card>
 
-                <audit-log v-show="currData.manageable" :currTreeNodeInfo="currData"></audit-log>
-            </div>
+            <audit-log v-show="currData.manageable" :currTreeNodeInfo="currData"></audit-log>
         </template>
     </fixedTreeModule>
     <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>

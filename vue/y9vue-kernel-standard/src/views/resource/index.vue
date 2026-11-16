@@ -20,38 +20,36 @@
                     <span>资源</span>
                 </el-button>-->
         </template>
-        <template v-slot:rightContainer>
+        <template v-if="currData.id" v-slot:rightContainer>
             <!-- 右边卡片 -->
-            <div v-if="currData.id">
-                <!-- <y9Card :title="`查看修改日志 - ${ currData.name? currData.name : '' }`" >
-                        <y9Table 
-                            :config="modifyLogTableConfig" border >
-                        </y9Table>
-                    </y9Card>
-                    <y9Card :title="`角色关联 - ${currData.name? currData.name : ''}`">
-                        <RoleRelation />
-                    </y9Card>-->
-
-                <y9Card
-                    v-if="currData.nodeType === 'SYSTEM'"
-                    :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`"
-                >
-                    <template v-slot>
-                        <SystemBasicInfo :id="currData.id" :editFlag="true" />
-                    </template>
+            <!-- <y9Card :title="`查看修改日志 - ${ currData.name? currData.name : '' }`" >
+                    <y9Table
+                        :config="modifyLogTableConfig" border >
+                    </y9Table>
                 </y9Card>
-                <BasicInfo
-                    v-else
-                    :currTreeNodeInfo="currData"
-                    :findNode="findNode"
-                    :getTreeData="getTreeData"
-                    :getTreeInstance="getTreeInstance"
-                    :handClickNode="handClickNode"
-                    :postNode="postNode"
-                />
+                <y9Card :title="`角色关联 - ${currData.name? currData.name : ''}`">
+                    <RoleRelation />
+                </y9Card>-->
 
-                <audit-log :currTreeNodeInfo="currData"></audit-log>
-            </div>
+            <y9Card
+                v-if="currData.nodeType === 'SYSTEM'"
+                :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`"
+            >
+                <template v-slot>
+                    <SystemBasicInfo :id="currData.id" :editFlag="true" />
+                </template>
+            </y9Card>
+            <BasicInfo
+                v-else
+                :currTreeNodeInfo="currData"
+                :findNode="findNode"
+                :getTreeData="getTreeData"
+                :getTreeInstance="getTreeInstance"
+                :handClickNode="handClickNode"
+                :postNode="postNode"
+            />
+
+            <audit-log :currTreeNodeInfo="currData"></audit-log>
         </template>
     </fixedTreeModule>
     <!-- 制造loading效果 -->

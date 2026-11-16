@@ -7,7 +7,7 @@
             :treeApiObj="iconTreeApi"
             @onTreeClick="handlerIconTreeClick"
         >
-            <template #rightContainer>
+            <template v-if="currData.id" #rightContainer>
                 <y9Card :title="`${currData.name ? currData.name : ''}`">
                     <y9Table
                         :config="personTableConfig"

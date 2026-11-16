@@ -15,14 +15,14 @@
         >
             <template v-if="currData.id" v-slot:rightContainer>
                 <!-- 右边卡片 -->
-                <div v-if="currData.nodeType === 'SYSTEM'">
+                <template v-if="currData.nodeType === 'SYSTEM'">
                     <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
                         <template v-slot>
                             <BasicInfo :id="currData.id" :type="currData.nodeType" />
                         </template>
                     </y9Card>
-                </div>
-                <div v-else>
+                </template>
+                <template v-else>
                     <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
                         <template v-slot>
                             <BasicInfo :id="currData.id" :type="currData.nodeType" />
@@ -54,7 +54,7 @@
                     >
                         <InheritOrg :id="currData.id" />
                     </y9Card>
-                </div>
+                </template>
             </template>
         </fixedTreeModule>
         <!-- 制造loading效果 -->

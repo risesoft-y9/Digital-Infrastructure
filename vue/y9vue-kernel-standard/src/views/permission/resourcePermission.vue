@@ -9,47 +9,45 @@
     <fixedTreeModule ref="fixedTreeRef" :showNodeDelete="false" :treeApiObj="treeApiObj" @onTreeClick="onTreeClick">
         <template #treeHeaderRight></template>
 
-        <template #rightContainer>
-            <template v-if="Object.keys(currTreeNodeInfo).length > 0">
-                <y9Card :title="`${currTreeNodeInfo.name ? currTreeNodeInfo.name : ''}`">
-                    <template v-if="currTreeNodeInfo.nodeType === 'Position' || currTreeNodeInfo.nodeType === 'Person'">
-                        <y9Table
-                            :config="y9TableConfig"
-                            :filterConfig="filterConfig"
-                            @window-height-change="windowHeightChange"
-                        >
-                            <template v-slot:slotsync>
-                                <el-button
-                                    :size="fontSizeObj.buttonSize"
-                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                    class="global-btn-main"
-                                    type="primary"
-                                    @click="syncPosition()"
-                                >
-                                    <i class="ri-refresh-line"></i>
-                                    {{ $t('权限') }}
-                                </el-button>
-                            </template>
-                        </y9Table>
-                    </template>
-                    <template v-else>
-                        <div style="height: 213px">
+        <template v-if="currTreeNodeInfo.id" #rightContainer>
+            <y9Card :title="`${currTreeNodeInfo.name ? currTreeNodeInfo.name : ''}`">
+                <template v-if="currTreeNodeInfo.nodeType === 'Position' || currTreeNodeInfo.nodeType === 'Person'">
+                    <y9Table
+                        :config="y9TableConfig"
+                        :filterConfig="filterConfig"
+                        @window-height-change="windowHeightChange"
+                    >
+                        <template v-slot:slotsync>
                             <el-button
                                 :size="fontSizeObj.buttonSize"
                                 :style="{ fontSize: fontSizeObj.baseFontSize }"
                                 class="global-btn-main"
-                                style="margin-bottom: 10px"
                                 type="primary"
                                 @click="syncPosition()"
                             >
                                 <i class="ri-refresh-line"></i>
                                 {{ $t('权限') }}
                             </el-button>
-                            <el-alert title="请点击左侧树，选择人员/岗位。" type="warning" />
-                        </div>
-                    </template>
-                </y9Card>
-            </template>
+                        </template>
+                    </y9Table>
+                </template>
+                <template v-else>
+                    <div style="height: 213px">
+                        <el-button
+                            :size="fontSizeObj.buttonSize"
+                            :style="{ fontSize: fontSizeObj.baseFontSize }"
+                            class="global-btn-main"
+                            style="margin-bottom: 10px"
+                            type="primary"
+                            @click="syncPosition()"
+                        >
+                            <i class="ri-refresh-line"></i>
+                            {{ $t('权限') }}
+                        </el-button>
+                        <el-alert title="请点击左侧树，选择人员/岗位。" type="warning" />
+                    </div>
+                </template>
+            </y9Card>
         </template>
     </fixedTreeModule>
 

@@ -37,19 +37,17 @@
                     <y9List ref="y9ListRef" :config="actionListConfig" @on-click-row="onActionPopListClick"></y9List>
                 </el-popover>
             </template>
-            <template v-slot:rightContainer>
+            <template v-if="currData.id" v-slot:rightContainer>
                 <!-- 右边卡片 -->
-                <div v-if="currData.id">
-                    <BasicInfo
-                        :currTreeNodeInfo="currData"
-                        :findNode="findNode"
-                        :getTreeData="getTreeData"
-                        :getTreeInstance="getTreeInstance"
-                        :handClickNode="handClickNode"
-                        :postNode="postNode"
-                        :treeType="currentTreeType"
-                    />
-                </div>
+                <BasicInfo
+                    :currTreeNodeInfo="currData"
+                    :findNode="findNode"
+                    :getTreeData="getTreeData"
+                    :getTreeInstance="getTreeInstance"
+                    :handClickNode="handClickNode"
+                    :postNode="postNode"
+                    :treeType="currentTreeType"
+                />
             </template>
         </fixedTreeModule>
 

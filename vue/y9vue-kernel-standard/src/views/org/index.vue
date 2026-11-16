@@ -32,42 +32,40 @@
             </el-popover>
         </template>
 
-        <template #rightContainer>
-            <template v-if="Object.keys(currTreeNodeInfo).length > 0">
-                <baseInfo
-                    :currTreeNodeInfo="currTreeNodeInfo"
-                    :findNode="findNode"
-                    :getTreeData="getTreeData"
-                    :getTreeInstance="getTreeInstance"
-                    :handAssginNode="handAssginNode"
-                    :postNode="postNode"
-                    :refreshTree="refreshTree"
-                    :updateTreePersonCount="updateTreePersonCount"
-                >
-                </baseInfo>
+        <template v-if="currTreeNodeInfo.id" #rightContainer>
+            <baseInfo
+                :currTreeNodeInfo="currTreeNodeInfo"
+                :findNode="findNode"
+                :getTreeData="getTreeData"
+                :getTreeInstance="getTreeInstance"
+                :handAssginNode="handAssginNode"
+                :postNode="postNode"
+                :refreshTree="refreshTree"
+                :updateTreePersonCount="updateTreePersonCount"
+            >
+            </baseInfo>
 
-                <template v-if="currTreeNodeInfo.nodeType == 'Person'">
-                    <positionList :currTreeNodeInfo="currTreeNodeInfo"></positionList>
-                    <groupList :currTreeNodeInfo="currTreeNodeInfo"></groupList>
-                    <QRcodeCom :currTreeNodeInfo="currTreeNodeInfo"></QRcodeCom>
-                </template>
-                <personList
-                    v-else
-                    :currTreeNodeInfo="currTreeNodeInfo"
-                    :handAssginNode="handAssginNode"
-                    :updateTreePersonCount="updateTreePersonCount"
-                ></personList>
-
-                <template v-if="currTreeNodeInfo.nodeType == 'Department'">
-                    <setDepartmentPropList :currTreeNodeInfo="currTreeNodeInfo" typeName="org"></setDepartmentPropList>
-                    <inheritableDepartmentPropList
-                        :currTreeNodeInfo="currTreeNodeInfo"
-                        typeName="org"
-                    ></inheritableDepartmentPropList>
-                </template>
-
-                <audit-log :currTreeNodeInfo="currTreeNodeInfo"></audit-log>
+            <template v-if="currTreeNodeInfo.nodeType == 'Person'">
+                <positionList :currTreeNodeInfo="currTreeNodeInfo"></positionList>
+                <groupList :currTreeNodeInfo="currTreeNodeInfo"></groupList>
+                <QRcodeCom :currTreeNodeInfo="currTreeNodeInfo"></QRcodeCom>
             </template>
+            <personList
+                v-else
+                :currTreeNodeInfo="currTreeNodeInfo"
+                :handAssginNode="handAssginNode"
+                :updateTreePersonCount="updateTreePersonCount"
+            ></personList>
+
+            <template v-if="currTreeNodeInfo.nodeType == 'Department'">
+                <setDepartmentPropList :currTreeNodeInfo="currTreeNodeInfo" typeName="org"></setDepartmentPropList>
+                <inheritableDepartmentPropList
+                    :currTreeNodeInfo="currTreeNodeInfo"
+                    typeName="org"
+                ></inheritableDepartmentPropList>
+            </template>
+
+            <audit-log :currTreeNodeInfo="currTreeNodeInfo"></audit-log>
         </template>
     </fixedTreeModule>
 

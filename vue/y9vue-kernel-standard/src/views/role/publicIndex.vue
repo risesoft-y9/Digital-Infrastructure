@@ -12,85 +12,83 @@
         @onDeleteTree="roleRemove"
         @onTreeClick="handlerTreeClick"
     >
-        <template v-slot:rightContainer>
+        <template v-if="currData.id" v-slot:rightContainer>
             <!-- 右边卡片 -->
-            <div v-if="currData.id">
-                <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
-                    <template v-slot>
-                        <div class="basic-btns">
-                            <div class="btn-top">
-                                <span v-if="currData.parentId !== null" style="margin-right: 15px">
-                                    <el-button
-                                        v-if="editBtnFlag"
-                                        :size="fontSizeObj.buttonSize"
-                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                        class="global-btn-main"
-                                        type="primary"
-                                        @click="editBtnFlag = false"
-                                    >
-                                        <i class="ri-edit-line"></i>
-                                        {{ $t('编辑') }}
-                                    </el-button>
-                                    <span v-else>
-                                        <el-button
-                                            :loading="saveBtnLoading"
-                                            :size="fontSizeObj.buttonSize"
-                                            :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                            class="global-btn-main"
-                                            type="primary"
-                                            @click="saveBtnClick = true"
-                                        >
-                                            <i class="ri-save-line"></i>
-                                            {{ $t('保存') }}
-                                        </el-button>
-                                        <el-button
-                                            :size="fontSizeObj.buttonSize"
-                                            :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                            class="global-btn-second"
-                                            @click="editBtnFlag = true"
-                                        >
-                                            <i class="ri-close-line"></i>
-                                            {{ $t('取消') }}
-                                        </el-button>
-                                    </span>
-                                </span>
-                                <span v-if="currData.nodeType !== 'role'">
-                                    <el-button
-                                        :size="fontSizeObj.buttonSize"
-                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                        class="global-btn-main"
-                                        type="primary"
-                                        @click="handlerAddRole"
-                                    >
-                                        <i class="ri-add-line"></i>
-                                        {{ $t('角色') }}
-                                    </el-button>
-                                </span>
-                            </div>
-                            <div>
+            <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
+                <template v-slot>
+                    <div class="basic-btns">
+                        <div class="btn-top">
+                            <span v-if="currData.parentId !== null" style="margin-right: 15px">
                                 <el-button
-                                    v-if="currData.nodeType !== 'role'"
+                                    v-if="editBtnFlag"
                                     :size="fontSizeObj.buttonSize"
                                     :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                    class="global-btn-second"
-                                    @click="onSort('sort')"
+                                    class="global-btn-main"
+                                    type="primary"
+                                    @click="editBtnFlag = false"
                                 >
-                                    <i class="ri-order-play-line"></i>
-                                    {{ $t('排序') }}
+                                    <i class="ri-edit-line"></i>
+                                    {{ $t('编辑') }}
                                 </el-button>
-                            </div>
+                                <span v-else>
+                                    <el-button
+                                        :loading="saveBtnLoading"
+                                        :size="fontSizeObj.buttonSize"
+                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                        class="global-btn-main"
+                                        type="primary"
+                                        @click="saveBtnClick = true"
+                                    >
+                                        <i class="ri-save-line"></i>
+                                        {{ $t('保存') }}
+                                    </el-button>
+                                    <el-button
+                                        :size="fontSizeObj.buttonSize"
+                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                        class="global-btn-second"
+                                        @click="editBtnFlag = true"
+                                    >
+                                        <i class="ri-close-line"></i>
+                                        {{ $t('取消') }}
+                                    </el-button>
+                                </span>
+                            </span>
+                            <span v-if="currData.nodeType !== 'role'">
+                                <el-button
+                                    :size="fontSizeObj.buttonSize"
+                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                    class="global-btn-main"
+                                    type="primary"
+                                    @click="handlerAddRole"
+                                >
+                                    <i class="ri-add-line"></i>
+                                    {{ $t('角色') }}
+                                </el-button>
+                            </span>
                         </div>
-                        <BasicInfo
-                            :id="currData.id"
-                            :editFlag="editBtnFlag"
-                            :saveClickFlag="saveBtnClick"
-                            :type="currData.nodeType"
-                            @getInfoData="handlerEditSave"
-                        />
-                    </template>
-                </y9Card>
-                <audit-log :currTreeNodeInfo="currData"></audit-log>
-            </div>
+                        <div>
+                            <el-button
+                                v-if="currData.nodeType !== 'role'"
+                                :size="fontSizeObj.buttonSize"
+                                :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                class="global-btn-second"
+                                @click="onSort('sort')"
+                            >
+                                <i class="ri-order-play-line"></i>
+                                {{ $t('排序') }}
+                            </el-button>
+                        </div>
+                    </div>
+                    <BasicInfo
+                        :id="currData.id"
+                        :editFlag="editBtnFlag"
+                        :saveClickFlag="saveBtnClick"
+                        :type="currData.nodeType"
+                        @getInfoData="handlerEditSave"
+                    />
+                </template>
+            </y9Card>
+            <audit-log :currTreeNodeInfo="currData"></audit-log>
         </template>
     </fixedTreeModule>
     <!-- 新增子节点 角色 弹框 -->

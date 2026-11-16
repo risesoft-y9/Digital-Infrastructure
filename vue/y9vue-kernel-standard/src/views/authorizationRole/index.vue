@@ -13,47 +13,40 @@
         :showNodeDelete="false"
         @onTreeClick="handlerTreeClick"
     >
-        <template v-slot:rightContainer>
+        <template v-if="currData.id" v-slot:rightContainer>
             <!-- 右边卡片 -->
-            <div v-if="currData.id">
-                <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
-                    <template v-slot>
-                        <BasicInfo
-                            v-if="
-                                currData.nodeType === 'folder' ||
-                                currData.nodeType === 'role' ||
-                                currData.nodeType === 'APP'
-                            "
-                            :id="currData.id"
-                            :editFlag="editBtnFlag"
-                            :saveClickFlag="saveBtnClick"
-                            :type="currData.nodeType"
-                            @getInfoData="handlerEditSave"
-                        />
-                        <SystemBasicInfo v-if="currData.nodeType === 'SYSTEM'" :id="currData.id" :editFlag="true" />
-                    </template>
-                </y9Card>
-
-                <y9Card
-                    v-if="currData.nodeType === 'role'"
-                    :title="`${$t('角色成员')} - ${currData.name ? currData.name : ''}`"
-                >
-                    <OrgBasesToRoles :id="currData.id"></OrgBasesToRoles>
-                </y9Card>
-
-                <y9Card
-                    v-if="currData.nodeType === 'role'"
-                    :title="`${$t('授权列表')} - ${currData.name ? currData.name : ''}`"
-                >
-                    <Authorization
+            <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
+                <template v-slot>
+                    <BasicInfo
+                        v-if="
+                            currData.nodeType === 'folder' ||
+                            currData.nodeType === 'role' ||
+                            currData.nodeType === 'APP'
+                        "
                         :id="currData.id"
-                        :appId="currData.appId"
-                        :parentId="currData.parentId"
-                        type="private"
-                    >
-                    </Authorization>
-                </y9Card>
-            </div>
+                        :editFlag="editBtnFlag"
+                        :saveClickFlag="saveBtnClick"
+                        :type="currData.nodeType"
+                        @getInfoData="handlerEditSave"
+                    />
+                    <SystemBasicInfo v-if="currData.nodeType === 'SYSTEM'" :id="currData.id" :editFlag="true" />
+                </template>
+            </y9Card>
+
+            <y9Card
+                v-if="currData.nodeType === 'role'"
+                :title="`${$t('角色成员')} - ${currData.name ? currData.name : ''}`"
+            >
+                <OrgBasesToRoles :id="currData.id"></OrgBasesToRoles>
+            </y9Card>
+
+            <y9Card
+                v-if="currData.nodeType === 'role'"
+                :title="`${$t('授权列表')} - ${currData.name ? currData.name : ''}`"
+            >
+                <Authorization :id="currData.id" :appId="currData.appId" :parentId="currData.parentId" type="private">
+                </Authorization>
+            </y9Card>
         </template>
     </fixedTreeModule>
     <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>

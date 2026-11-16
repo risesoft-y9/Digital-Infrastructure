@@ -7,7 +7,7 @@
             :treeApiObj="treeApiObj"
             @onTreeClick="handlerTreeClick"
         >
-            <template #rightContainer>
+            <template v-if="currData.id" #rightContainer>
                 <y9Card :title="`${currData.name ? currData.name : ''}`">
                     <template v-if="currData.name !== '应用分类导航'">
                         <y9Table

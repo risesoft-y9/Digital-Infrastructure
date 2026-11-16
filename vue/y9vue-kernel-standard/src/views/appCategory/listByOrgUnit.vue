@@ -6,7 +6,7 @@
             :treeApiObj="positionTreeApi"
             @onTreeClick="handlerPositionTreeClick"
         >
-            <template #rightContainer>
+            <template v-if="currData.id" #rightContainer>
                 <y9Card :title="`${currData.name ? currData.name : ''}`">
                     <template v-if="currData.nodeType === 'Position'">
                         <y9Table

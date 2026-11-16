@@ -20,51 +20,49 @@
                     <el-option v-for="item in treeTypeList" :key="item.code" :label="item.name" :value="item.code" />
                 </el-select>
             </template>
-            <template v-slot:rightContainer>
+            <template v-if="currData.id" v-slot:rightContainer>
                 <!-- 右边卡片 -->
-                <div v-if="currData.id">
-                    <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
-                        <template v-slot>
-                            <BasicInfo :id="currData.id" :type="currData.nodeType" />
-                        </template>
-                    </y9Card>
+                <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
+                    <template v-slot>
+                        <BasicInfo :id="currData.id" :type="currData.nodeType" />
+                    </template>
+                </y9Card>
 
-                    <!-- 角色关联 -->
-                    <y9Card
-                        v-if="currData.nodeType === 'DATA_CATALOG'"
-                        :title="`${$t('角色关联授权')} - ${currData.name ? currData.name : ''}`"
-                    >
-                        <template v-slot>
-                            <RelationRole :id="currData.id" :appId="currData.appId" />
-                        </template>
-                    </y9Card>
+                <!-- 角色关联 -->
+                <y9Card
+                    v-if="currData.nodeType === 'DATA_CATALOG'"
+                    :title="`${$t('角色关联授权')} - ${currData.name ? currData.name : ''}`"
+                >
+                    <template v-slot>
+                        <RelationRole :id="currData.id" :appId="currData.appId" />
+                    </template>
+                </y9Card>
 
-                    <!-- 角色关联授权继承 -->
-                    <y9Card
-                        v-if="currData.nodeType === 'DATA_CATALOG' && currData.parentId"
-                        :title="`${$t('角色关联授权继承')} - ${currData.name ? currData.name : ''}`"
-                    >
-                        <template v-slot>
-                            <InheritRole :id="currData.id" />
-                        </template>
-                    </y9Card>
+                <!-- 角色关联授权继承 -->
+                <y9Card
+                    v-if="currData.nodeType === 'DATA_CATALOG' && currData.parentId"
+                    :title="`${$t('角色关联授权继承')} - ${currData.name ? currData.name : ''}`"
+                >
+                    <template v-slot>
+                        <InheritRole :id="currData.id" />
+                    </template>
+                </y9Card>
 
-                    <!-- 组织关联 -->
-                    <y9Card
-                        v-if="currData.nodeType === 'DATA_CATALOG'"
-                        :title="`${$t('组织关联授权')} - ${currData.name ? currData.name : ''}`"
-                    >
-                        <RelationOrg :id="currData.id" />
-                    </y9Card>
+                <!-- 组织关联 -->
+                <y9Card
+                    v-if="currData.nodeType === 'DATA_CATALOG'"
+                    :title="`${$t('组织关联授权')} - ${currData.name ? currData.name : ''}`"
+                >
+                    <RelationOrg :id="currData.id" />
+                </y9Card>
 
-                    <!-- 组织关联授权继承 -->
-                    <y9Card
-                        v-if="currData.nodeType === 'DATA_CATALOG' && currData.parentId"
-                        :title="`${$t('组织关联授权继承')} - ${currData.name ? currData.name : ''}`"
-                    >
-                        <InheritOrg :id="currData.id" />
-                    </y9Card>
-                </div>
+                <!-- 组织关联授权继承 -->
+                <y9Card
+                    v-if="currData.nodeType === 'DATA_CATALOG' && currData.parentId"
+                    :title="`${$t('组织关联授权继承')} - ${currData.name ? currData.name : ''}`"
+                >
+                    <InheritOrg :id="currData.id" />
+                </y9Card>
             </template>
         </fixedTreeModule>
 

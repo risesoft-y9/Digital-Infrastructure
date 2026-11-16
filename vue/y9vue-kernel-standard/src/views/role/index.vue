@@ -13,133 +13,131 @@
         @onDeleteTree="roleRemove"
         @onTreeClick="handlerTreeClick"
     >
-        <template v-slot:rightContainer>
+        <template v-if="currData.id" v-slot:rightContainer>
             <!-- 右边卡片 -->
-            <div v-if="currData.id">
-                <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
-                    <template v-slot>
-                        <div v-show="currData.manageable" class="basic-btns">
-                            <div class="btn-top">
-                                <span
-                                    v-if="currData.nodeType == 'role' || currData.nodeType == 'folder'"
-                                    style="margin-right: 15px"
+            <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
+                <template v-slot>
+                    <div v-show="currData.manageable" class="basic-btns">
+                        <div class="btn-top">
+                            <span
+                                v-if="currData.nodeType == 'role' || currData.nodeType == 'folder'"
+                                style="margin-right: 15px"
+                            >
+                                <el-button
+                                    v-if="editBtnFlag"
+                                    :size="fontSizeObj.buttonSize"
+                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                    class="global-btn-main"
+                                    type="primary"
+                                    @click="editBtnFlag = false"
                                 >
+                                    <i class="ri-edit-line"></i>
+                                    {{ $t('编辑') }}
+                                </el-button>
+                                <span v-else>
                                     <el-button
-                                        v-if="editBtnFlag"
+                                        :loading="saveBtnLoading"
                                         :size="fontSizeObj.buttonSize"
                                         :style="{ fontSize: fontSizeObj.baseFontSize }"
                                         class="global-btn-main"
                                         type="primary"
-                                        @click="editBtnFlag = false"
+                                        @click="saveBtnClick = true"
                                     >
-                                        <i class="ri-edit-line"></i>
-                                        {{ $t('编辑') }}
-                                    </el-button>
-                                    <span v-else>
-                                        <el-button
-                                            :loading="saveBtnLoading"
-                                            :size="fontSizeObj.buttonSize"
-                                            :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                            class="global-btn-main"
-                                            type="primary"
-                                            @click="saveBtnClick = true"
-                                        >
-                                            <i class="ri-save-line"></i>
-                                            {{ $t('保存') }}
-                                        </el-button>
-                                        <el-button
-                                            :size="fontSizeObj.buttonSize"
-                                            :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                            class="global-btn-second"
-                                            @click="editBtnFlag = true"
-                                        >
-                                            <i class="ri-close-line"></i>
-                                            {{ $t('取消') }}
-                                        </el-button>
-                                    </span>
-                                </span>
-                                <span>
-                                    <el-button
-                                        v-if="currData.nodeType == 'APP' || currData.nodeType == 'folder'"
-                                        :size="fontSizeObj.buttonSize"
-                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                        class="global-btn-main"
-                                        type="primary"
-                                        @click="handlerAddNode"
-                                    >
-                                        <i class="ri-add-line"></i>
-                                        {{ $t('子节点') }}
+                                        <i class="ri-save-line"></i>
+                                        {{ $t('保存') }}
                                     </el-button>
                                     <el-button
-                                        v-if="currData.nodeType != 'role'"
-                                        :size="fontSizeObj.buttonSize"
-                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                        class="global-btn-main"
-                                        type="primary"
-                                        @click="handlerAddRole"
-                                    >
-                                        <i class="ri-add-line"></i>
-                                        {{ $t('角色') }}
-                                    </el-button>
-                                </span>
-                            </div>
-                            <div>
-                                <template v-if="currData.appId">
-                                    <el-button
-                                        v-if="currData.nodeType == 'APP' || currData.nodeType == 'folder'"
                                         :size="fontSizeObj.buttonSize"
                                         :style="{ fontSize: fontSizeObj.baseFontSize }"
                                         class="global-btn-second"
-                                        @click="onSort('sort')"
+                                        @click="editBtnFlag = true"
                                     >
-                                        <i class="ri-order-play-line"></i>
-                                        {{ $t('排序') }}
+                                        <i class="ri-close-line"></i>
+                                        {{ $t('取消') }}
                                     </el-button>
-                                    <!-- v-if="currData.resourceType !== 0" -->
-                                    <el-button
-                                        v-if="currData.nodeType == 'role' || currData.nodeType == 'folder'"
-                                        :size="fontSizeObj.buttonSize"
-                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                        class="global-btn-second"
-                                        @click="onSort('move')"
-                                    >
-                                        <i class="ri-route-line"></i>
-                                        {{ $t('移动') }}
-                                    </el-button>
-                                    <!-- <el-button class="global-btn-second" @click="extendFlag = true"  >
-                                            <i class="ri-external-link-line"></i>
-                                            扩展属性
-                                        </el-button>
-                                        <span style="margin-left: 10px">
-                                            <el-button class="global-btn-second" @click="upRoleDialog.show = true" >
-                                                <i class="ri-file-download-line"></i>
-                                                上传角色信息
-                                            </el-button>
-                                            <el-button class="global-btn-second">
-                                                <i class="ri-file-upload-line"></i>
-                                                导出角色XML
-                                            </el-button>
-                                        </span> -->
-                                </template>
-                            </div>
+                                </span>
+                            </span>
+                            <span>
+                                <el-button
+                                    v-if="currData.nodeType == 'APP' || currData.nodeType == 'folder'"
+                                    :size="fontSizeObj.buttonSize"
+                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                    class="global-btn-main"
+                                    type="primary"
+                                    @click="handlerAddNode"
+                                >
+                                    <i class="ri-add-line"></i>
+                                    {{ $t('子节点') }}
+                                </el-button>
+                                <el-button
+                                    v-if="currData.nodeType != 'role'"
+                                    :size="fontSizeObj.buttonSize"
+                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                    class="global-btn-main"
+                                    type="primary"
+                                    @click="handlerAddRole"
+                                >
+                                    <i class="ri-add-line"></i>
+                                    {{ $t('角色') }}
+                                </el-button>
+                            </span>
                         </div>
-                        <BasicInfo
-                            v-if="
-                                currData.nodeType === 'folder' ||
-                                currData.nodeType === 'role' ||
-                                currData.nodeType === 'APP'
-                            "
-                            :id="currData.id"
-                            :editFlag="editBtnFlag"
-                            :saveClickFlag="saveBtnClick"
-                            :type="currData.nodeType"
-                            @getInfoData="handlerEditSave"
-                        />
-                        <SystemBasicInfo v-if="currData.nodeType === 'SYSTEM'" :id="currData.id" :editFlag="true" />
-                    </template>
-                </y9Card>
-                <audit-log :currTreeNodeInfo="currData"></audit-log>
-            </div>
+                        <div>
+                            <template v-if="currData.appId">
+                                <el-button
+                                    v-if="currData.nodeType == 'APP' || currData.nodeType == 'folder'"
+                                    :size="fontSizeObj.buttonSize"
+                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                    class="global-btn-second"
+                                    @click="onSort('sort')"
+                                >
+                                    <i class="ri-order-play-line"></i>
+                                    {{ $t('排序') }}
+                                </el-button>
+                                <!-- v-if="currData.resourceType !== 0" -->
+                                <el-button
+                                    v-if="currData.nodeType == 'role' || currData.nodeType == 'folder'"
+                                    :size="fontSizeObj.buttonSize"
+                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                    class="global-btn-second"
+                                    @click="onSort('move')"
+                                >
+                                    <i class="ri-route-line"></i>
+                                    {{ $t('移动') }}
+                                </el-button>
+                                <!-- <el-button class="global-btn-second" @click="extendFlag = true"  >
+                                        <i class="ri-external-link-line"></i>
+                                        扩展属性
+                                    </el-button>
+                                    <span style="margin-left: 10px">
+                                        <el-button class="global-btn-second" @click="upRoleDialog.show = true" >
+                                            <i class="ri-file-download-line"></i>
+                                            上传角色信息
+                                        </el-button>
+                                        <el-button class="global-btn-second">
+                                            <i class="ri-file-upload-line"></i>
+                                            导出角色XML
+                                        </el-button>
+                                    </span> -->
+                            </template>
+                        </div>
+                    </div>
+                    <BasicInfo
+                        v-if="
+                            currData.nodeType === 'folder' ||
+                            currData.nodeType === 'role' ||
+                            currData.nodeType === 'APP'
+                        "
+                        :id="currData.id"
+                        :editFlag="editBtnFlag"
+                        :saveClickFlag="saveBtnClick"
+                        :type="currData.nodeType"
+                        @getInfoData="handlerEditSave"
+                    />
+                    <SystemBasicInfo v-if="currData.nodeType === 'SYSTEM'" :id="currData.id" :editFlag="true" />
+                </template>
+            </y9Card>
+            <audit-log :currTreeNodeInfo="currData"></audit-log>
         </template>
     </fixedTreeModule>
     <!-- 新增子节点 角色 弹框 -->

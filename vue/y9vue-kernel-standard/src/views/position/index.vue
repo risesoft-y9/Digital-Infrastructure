@@ -13,7 +13,7 @@
         @onDeleteTree="onDeleteTree"
         @onTreeClick="onTreeClick"
     >
-        <template v-if="Object.keys(currTreeNodeInfo).length > 0" #rightContainer>
+        <template v-if="currTreeNodeInfo.id" #rightContainer>
             <baseInfo
                 :currTreeNodeInfo="currTreeNodeInfo"
                 :findNode="findNode"
