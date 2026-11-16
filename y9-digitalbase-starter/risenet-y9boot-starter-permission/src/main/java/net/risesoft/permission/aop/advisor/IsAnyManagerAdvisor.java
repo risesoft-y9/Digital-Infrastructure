@@ -1,15 +1,14 @@
 package net.risesoft.permission.aop.advisor;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
-import org.springframework.core.annotation.AnnotationUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.permission.annotation.IsAnyManager;
+import net.risesoft.permission.aop.PermissionAnnotationResolver;
 
 /**
  *
@@ -27,15 +26,8 @@ public class IsAnyManagerAdvisor extends StaticMethodMatcherPointcutAdvisor {
 
     @Override
     public boolean matches(Method method, Class<?> targetClass) {
-
-        Annotation annotation = AnnotationUtils.findAnnotation(method, IsAnyManager.class);
-        if (annotation != null) {
-            LOGGER.trace("findAnnotation IsManager: " + method.getName());
-            return true;
-        }
-        annotation = AnnotationUtils.findAnnotation(targetClass, IsAnyManager.class);
-        if (annotation != null) {
-            LOGGER.trace("findAnnotation IsManager: " + targetClass.getName());
+        if (PermissionAnnotationResolver.findAnnotation(method, targetClass, IsAnyManager.class) != null) {
+            LOGGER.trace("findAnnotation IsAnyManager: {}", method.getName());
             return true;
         }
 

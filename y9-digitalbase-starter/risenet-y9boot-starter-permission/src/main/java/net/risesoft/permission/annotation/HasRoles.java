@@ -10,7 +10,8 @@ import net.risesoft.enums.LogicalEnum;
 import net.risesoft.enums.platform.org.IdentityTypeEnum;
 
 /**
- * 是否拥有角色 只有拥有相应角色，方法才能继续调用
+ * 是否拥有角色 只有拥有相应角色，方法才能继续调用 <br>
+ * 可用在方法及类上，方法上的注解优先于类上的
  *
  * @author shidaobang
  * @date 2022/11/10

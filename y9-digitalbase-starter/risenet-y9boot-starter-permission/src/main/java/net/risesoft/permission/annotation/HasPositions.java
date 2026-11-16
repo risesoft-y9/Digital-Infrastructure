@@ -9,7 +9,8 @@ import java.lang.annotation.Target;
 import net.risesoft.enums.LogicalEnum;
 
 /**
- * 是否拥有相应的岗位 只有拥有相应权限，方法才能继续调用
+ * 检查当前用户是否拥有指定岗位 <br>
+ * 可用在方法及类上，方法上的注解优先于类上的
  * 
  * @author shidaobang
  * @date 2022/11/10

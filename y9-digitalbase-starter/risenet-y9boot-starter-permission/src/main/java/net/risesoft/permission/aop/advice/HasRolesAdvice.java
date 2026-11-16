@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import org.springframework.aop.MethodBeforeAdvice;
-import org.springframework.core.annotation.AnnotationUtils;
 
 import net.risesoft.api.platform.permission.cache.PersonRoleApi;
 import net.risesoft.api.platform.permission.cache.PositionRoleApi;
@@ -12,6 +11,7 @@ import net.risesoft.enums.LogicalEnum;
 import net.risesoft.enums.platform.org.IdentityTypeEnum;
 import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.permission.annotation.HasRoles;
+import net.risesoft.permission.aop.PermissionAnnotationResolver;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 
@@ -33,7 +33,7 @@ public class HasRolesAdvice implements MethodBeforeAdvice {
 
     @Override
     public void before(Method method, Object[] args, Object target) throws Throwable {
-        HasRoles hasRoles = AnnotationUtils.findAnnotation(method, HasRoles.class);
+        HasRoles hasRoles = PermissionAnnotationResolver.findAnnotationForInvocation(method, target, HasRoles.class);
         if (hasRoles != null && hasRoles.value() != null) {
             String[] customIds = hasRoles.value();
             LogicalEnum logical = hasRoles.logical();

@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import org.springframework.aop.MethodBeforeAdvice;
-import org.springframework.core.annotation.AnnotationUtils;
 
 import net.risesoft.api.platform.permission.cache.PersonResourceApi;
 import net.risesoft.api.platform.permission.cache.PositionResourceApi;
@@ -13,6 +12,7 @@ import net.risesoft.enums.platform.org.IdentityTypeEnum;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.permission.annotation.HasAuthorities;
+import net.risesoft.permission.aop.PermissionAnnotationResolver;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 
@@ -34,7 +34,8 @@ public class HasAuthoritiesAdvice implements MethodBeforeAdvice {
 
     @Override
     public void before(Method method, Object[] args, Object target) throws Throwable {
-        HasAuthorities hasAuthorities = AnnotationUtils.findAnnotation(method, HasAuthorities.class);
+        HasAuthorities hasAuthorities =
+            PermissionAnnotationResolver.findAnnotationForInvocation(method, target, HasAuthorities.class);
         if (hasAuthorities != null && hasAuthorities.value() != null) {
             String[] customIds = hasAuthorities.value();
             AuthorityEnum authority = hasAuthorities.authority();
@@ -84,7 +85,7 @@ public class HasAuthoritiesAdvice implements MethodBeforeAdvice {
 
     private void checkAllPositionPermission(String[] customIds, AuthorityEnum authority) {
         for (String customId : customIds) {
-            if (!hasPersonPermission(customId, authority)) {
+            if (!hasPositionPermission(customId, authority)) {
                 throw Y9ExceptionUtil.permissionException(GlobalErrorCodeEnum.POSITION_UNAUTHORIZED_RESOURCE, customId);
             }
         }

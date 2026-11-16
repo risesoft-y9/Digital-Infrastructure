@@ -11,7 +11,8 @@ import net.risesoft.enums.platform.org.IdentityTypeEnum;
 import net.risesoft.enums.platform.permission.AuthorityEnum;
 
 /**
- * 是否拥有相应的资源权限 只有拥有相应权限，方法才能继续调用
+ * 是否拥有相应的资源权限 只有拥有相应权限，方法才能继续调用 <br>
+ * 可用在方法及类上，方法上的注解优先于类上的
  *
  * @author shidaobang
  * @date 2022/11/10

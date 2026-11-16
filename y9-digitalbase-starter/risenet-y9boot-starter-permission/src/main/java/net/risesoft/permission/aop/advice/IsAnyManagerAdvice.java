@@ -5,11 +5,11 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.springframework.aop.MethodBeforeAdvice;
-import org.springframework.core.annotation.AnnotationUtils;
 
 import net.risesoft.enums.platform.org.ManagerLevelEnum;
 import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.permission.annotation.IsAnyManager;
+import net.risesoft.permission.aop.PermissionAnnotationResolver;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 
@@ -23,15 +23,10 @@ public class IsAnyManagerAdvice implements MethodBeforeAdvice {
 
     @Override
     public void before(Method method, Object[] args, Object target) throws Throwable {
-        IsAnyManager isAnyManager = AnnotationUtils.findAnnotation(method, IsAnyManager.class);
+        IsAnyManager isAnyManager =
+            PermissionAnnotationResolver.findAnnotationForInvocation(method, target, IsAnyManager.class);
         if (isAnyManager != null) {
             checkAnyManager(isAnyManager.value(), isAnyManager.globalOnly());
-            return;
-        }
-        isAnyManager = AnnotationUtils.findAnnotation(method.getDeclaringClass(), IsAnyManager.class);
-        if (isAnyManager != null) {
-            checkAnyManager(isAnyManager.value(), isAnyManager.globalOnly());
-            return;
         }
     }
 
