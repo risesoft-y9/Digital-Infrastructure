@@ -18,7 +18,6 @@ public enum ResourceErrorCodeEnum implements ErrorCode {
     APP_NOT_FOUND(2, "应用[{}]不存在"),
     APP_ICON_NOT_FOUND(3, "应用图标[{}]不存在"),
     DATA_CATALOG_NOT_FOUND(4, "数据目录[{}]不存在"),
-    IP_NOT_VALID(5, "IP 地址[{}]格式不合法"),
     RESOURCE_PARENT_NOT_FOUND(6, "资源父节点[{}]不存在"),
     RESOURCE_NOT_FOUND(7, "资源节点[{}]不存在"),
     APP_IS_REGISTERED_BY_TENANT(8, "应用[{}]已有租户租用"),
