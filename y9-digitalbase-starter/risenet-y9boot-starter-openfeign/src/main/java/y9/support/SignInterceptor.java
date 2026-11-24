@@ -6,8 +6,8 @@ import java.time.Instant;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.ApiSignUtil;
 import net.risesoft.y9.configuration.feature.openfeign.Y9SignProperties;
+import net.risesoft.y9.util.signing.ApiSignUtil;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
